@@ -30,7 +30,7 @@ export default function getSelectedBlockElementsInRegion(
             blocks.push(block);
         }
 
-        // Remove unmeaningful nodes
+        // Remove meaningless nodes
         blocks = blocks.filter(block => {
             const startNode = block.getStartNode();
             const endNode = block.getEndNode();

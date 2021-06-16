@@ -36,7 +36,7 @@ export type CssStyleCallback = (
 export type ElementCallbackMap = Record<string, ElementCallback>;
 
 /**
- * A map of atttribute callbacks. Tag name should be in lower case
+ * A map of attribute callbacks. Tag name should be in lower case
  */
 export type AttributeCallbackMap = Record<string, AttributeCallback>;
 
@@ -51,6 +51,6 @@ export type CssStyleCallbackMap = Record<string, CssStyleCallback>;
 export type PredefinedCssMap = Record<string, StringMap>;
 
 /**
- * A map of atttribute callbacks. Tag name should be in lower case
+ * A map of attribute callbacks. Tag name should be in lower case
  */
 export type StringMap = Record<string, string>;

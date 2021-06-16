@@ -113,7 +113,7 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * AutoBullet edit feature, provides the ablility to automatically convert current line into a list.
+ * AutoBullet edit feature, provides the ability to automatically convert current line into a list.
  * When user input "1. ", convert into a numbering list
  * When user input "- " or "* ", convert into a bullet list
  */
@@ -125,7 +125,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
             let textBeforeCursor = searcher.getSubStringBefore(4);
 
             // Auto list is triggered if:
-            // 1. Text before cursor exactly mathces '*', '-' or '1.'
+            // 1. Text before cursor exactly matches '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
             return (
                 /^(\*|-|[0-9]{1,2}\.)$/.test(textBeforeCursor) &&

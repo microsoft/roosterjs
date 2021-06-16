@@ -36,13 +36,13 @@ export default interface EditorCore extends PluginState {
  * @param core The EditorCore object
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
- * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+ * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition) => any,
     changeSource: ChangeSource | string,
-    canUndoByBacksapce: boolean
+    canUndoByBackspace: boolean
 ) => void;
 
 /**
@@ -62,7 +62,7 @@ export type AttachDomEvent = (
  * @param position The position to paste to
  * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
  * @param applyCurrentStyle True if apply format of current selection to the pasted content,
- * false to keep original foramt
+ * false to keep original format
  */
 export type CreatePasteFragment = (
     core: EditorCore,
@@ -139,7 +139,7 @@ export type RestoreUndoSnapshot = (core: EditorCore, step: number) => void;
  * @param core The EditorCore object
  * @param range The range to select
  * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
- * in editor, otherwise it will always remove current selection ranage and set to the given one.
+ * in editor, otherwise it will always remove current selection range and set to the given one.
  * This parameter is always treat as true in Edge to avoid some weird runtime exception.
  */
 export type SelectRange = (core: EditorCore, range: Range, skipSameRange?: boolean) => boolean;
@@ -195,7 +195,7 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
      * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
      */
     addUndoSnapshot: AddUndoSnapshot;
 
@@ -215,7 +215,7 @@ export interface CoreApiMap {
      * @param position The position to paste to
      * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
-     * false to keep original foramt
+     * false to keep original format
      */
     createPasteFragment: CreatePasteFragment;
 
@@ -282,7 +282,7 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param range The range to select
      * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
-     * in editor, otherwise it will always remove current selection ranage and set to the given one.
+     * in editor, otherwise it will always remove current selection range and set to the given one.
      * This parameter is always treat as true in Edge to avoid some weird runtime exception.
      */
     selectRange: SelectRange;

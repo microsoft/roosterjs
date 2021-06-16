@@ -5,7 +5,7 @@ import { Region, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Get the selection range in the given region.
- * The original range can cover multiple regions, this function will narrow the origianl selection
+ * The original range can cover multiple regions, this function will narrow the original selection
  * of a region into current region
  * @param regionBase The region to get range from
  */

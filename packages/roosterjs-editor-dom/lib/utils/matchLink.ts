@@ -7,7 +7,7 @@ interface LinkMatchRule {
 }
 
 // http exclude matching regex
-// invalid URL example (in paricular on IE and Edge):
+// invalid URL example (in particular on IE and Edge):
 // - http://www.bing.com%00, %00 before ? (question mark) is considered invalid. IE/Edge throws invalid argument exception
 // - http://www.bing.com%1, %1 is invalid
 // - http://www.bing.com%g, %g is invalid (IE and Edge expects a two hex value after a %)
@@ -16,7 +16,7 @@ interface LinkMatchRule {
 // Similar for @, it needs to be after / (forward slash), or ? (question mark). Otherwise IE/Edge will throw security exception
 // - http://www.bing.com@name, @name before ? (question mark) is considered invalid
 // - http://www.bing.com/@name, is valid sine it is after / (forward slash)
-// - http://www.bing.com?@name, is also valid sinve it is after ? (question mark)
+// - http://www.bing.com?@name, is also valid since it is after ? (question mark)
 // The regex below is essentially a break down of:
 // ^[^?]+%[^0-9a-f]+ => to exclude URL like www.bing.com%%
 // ^[^?]+%[0-9a-f][^0-9a-f]+ => to exclude URL like www.bing.com%1

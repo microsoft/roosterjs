@@ -65,7 +65,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
     const listItemBlocks: ListItemBlock[] = getListItemBlocks(fragment);
 
     listItemBlocks.forEach(itemBlock => {
-        // There are cases where consecutive List Elements are seperated into different divs:
+        // There are cases where consecutive List Elements are separated into different nodes:
         // <div>
         //   <div>
         //      <ol></ol>
@@ -79,7 +79,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
         //      <ol></ol>
         //   </div>
         // </div>
-        // in the above case we want to collapse the two root level div into one and unwrap the list item divs.
+        // in the above case we want to collapse the two root level div into one and unwrap the list item nodes.
         // after the following flattening the list will become following:
         //
         // <div>
@@ -102,7 +102,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
 
         itemBlock.listItemContainers.forEach(listItemContainer => {
             let listType: 'OL' | 'UL' = getContainerListType(listItemContainer); // list type that is contained by iterator.
-            // Initialize processed element with propery listType if this is the first element
+            // Initialize processed element with proper listType if this is the first element
             if (!convertedListElement) {
                 convertedListElement = doc.createElement(listType);
             }
@@ -114,7 +114,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
                 // insert the current list into body and then reinitialize the convertedListElement
                 // Word Online is using data-aria-level to determine the the depth of the list item.
                 const itemLevel = parseInt(item.getAttribute('data-aria-level'));
-                // In first level list, there are cases where a consecutive list item divs may have different list type
+                // In first level list, there are cases where a consecutive list item DIV may have different list type
                 // When that happens we need to insert the processed elements into the document, then change the list type
                 // and keep the processing going.
                 if (getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
@@ -141,7 +141,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
 
 /**
  * The node processing is based on the premise of only ol/ul is in ListContainerWrapper class
- * However the html might be melformed, this function is to split all the other elements out of ListContainerWrapper
+ * However the html might be malformed, this function is to split all the other elements out of ListContainerWrapper
  * @param fragment pasted document that contains all the list element.
  */
 function sanitizeListItemContainer(fragment: DocumentFragment) {

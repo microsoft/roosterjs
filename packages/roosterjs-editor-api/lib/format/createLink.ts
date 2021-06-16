@@ -110,12 +110,12 @@ function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string)
 }
 
 function checkXss(link: string): string {
-    const santizer = new HtmlSanitizer();
+    const sanitizer = new HtmlSanitizer();
     const doc = new DOMParser().parseFromString('<a></a>', 'text/html');
     const a = doc.body.firstChild as HTMLAnchorElement;
 
     a.href = link || '';
-    santizer.sanitize(doc.body);
+    sanitizer.sanitize(doc.body);
     // We use getAttribute because some browsers will try to make the href property a valid link.
     // This has unintended side effects when the link lacks a protocol.
     return a.getAttribute('href');

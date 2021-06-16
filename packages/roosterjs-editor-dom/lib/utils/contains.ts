@@ -7,7 +7,7 @@ import { NodeType } from 'roosterjs-editor-types';
  * @param contained The node to check if it is inside container
  * @param treatSameNodeAsContain When container and contained are the same node,
  * return true if this param is set to true, otherwise return false. Default value is false
- * @returns True if contained is insied container, or they are the same node when treatSameNodeAsContain is true.
+ * @returns True if contained is inside container, or they are the same node when treatSameNodeAsContain is true.
  * Otherwise false.
  */
 export default function contains(
@@ -20,7 +20,7 @@ export default function contains(
  * Test if a node contains a given range
  * @param container The container node
  * @param contained The range to check if it is inside container
- * @returns True if contained is insied container, otherwise false
+ * @returns True if contained is inside container, otherwise false
  */
 export default function contains(container: Node, contained: Range): boolean;
 

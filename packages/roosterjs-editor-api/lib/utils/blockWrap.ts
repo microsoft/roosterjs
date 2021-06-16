@@ -13,7 +13,7 @@ import {
 /**
  * @internal
  * Toggle a tag at selection, if selection already contains elements of such tag,
- * the elements will be untagge and other elements will take no affect
+ * the elements will be untagged and other elements will take no affect
  * @param editor The editor instance
  * @param wrapFunction  The wrap function
  * @param beforeRunCallback A callback function to run before looping all regions. If it returns false,

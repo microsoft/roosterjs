@@ -16,7 +16,7 @@ import {
  * @param core The EditorCore object
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
- * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+ * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,

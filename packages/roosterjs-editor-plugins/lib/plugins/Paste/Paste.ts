@@ -5,7 +5,7 @@ import convertPastedContentFromWord from './wordConverter/convertPastedContentFr
 import handleLineMerge from './lineMerge/handleLineMerge';
 import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
-import { WAC_IDENTIFING_SELECTOR } from './officeOnlineConverter/constants';
+import { WAC_IDENTIFY_SELECTOR } from './officeOnlineConverter/constants';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './officeOnlineConverter/convertPastedContentFromWordOnline';
@@ -23,7 +23,7 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
  * 1. Content copied from Word
  * 2. Content copied from Excel
- * 3. Content copied from Word Online or Onenote Online
+ * 3. Content copied from Word Online or OneNote Online
  */
 export default class Paste implements EditorPlugin {
     /**
@@ -71,7 +71,7 @@ export default class Paste implements EditorPlugin {
             } else if (htmlAttributes[PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE) {
                 convertPastedContentFromPowerPoint(event);
             } else if (
-                (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFING_SELECTOR))) &&
+                (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR))) &&
                 wacListElements.length > 0
             ) {
                 // Once it is known that the document is from WAC

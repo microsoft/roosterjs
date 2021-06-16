@@ -8,7 +8,7 @@ import { getFirstInlineElement } from '../inlineElements/getFirstLastInlineEleme
 
 /**
  * @internal
- * provides scoper for traversing the entire editor body starting from the beginning
+ * provides a scope object for traversing the entire editor body starting from the beginning
  */
 export default class BodyScoper implements TraversingScoper {
     private startNode: Node;

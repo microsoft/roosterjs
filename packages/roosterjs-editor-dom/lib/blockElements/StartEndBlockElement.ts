@@ -12,7 +12,7 @@ const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 
 /**
  * @internal
- * This reprents a block that is identified by a start and end node
+ * This represents a block that is identified by a start and end node
  * This is for cases like &lt;root&gt;Hello&lt;BR&gt;World&lt;/root&gt;
  * in that case, Hello&lt;BR&gt; is a block, World is another block
  * Such block cannot be represented by a NodeBlockElement since they don't chained up

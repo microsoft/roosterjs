@@ -88,7 +88,7 @@ export const enum DocumentCommand {
     FontSize = 'fontSize',
 
     /**
-     * Changes a font color for the selection or at the insertion point. This requires a hexidecimal color value string
+     * Changes a font color for the selection or at the insertion point. This requires a hexadecimal color value string
      * as a value argument.
      */
     ForeColor = 'foreColor',
@@ -107,7 +107,7 @@ export const enum DocumentCommand {
     ForwardDelete = 'forwardDelete',
 
     /**
-     * Adds a heading element around a selection or insertion point line. Requires the tag-name stringas a value argument (i.e. "H1", "H6").
+     * Adds a heading element around a selection or insertion point line. Requires the tag-name strings a value argument (i.e. "H1", "H6").
      * (Not supported by Internet Explorer and Safari.)
      */
     Heading = 'heading',

@@ -6,7 +6,7 @@ import { getNextLeafSibling } from './getLeafSibling';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from './splitParentNode';
 
-const STYLETAGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
+const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
 
 /**
  * Apply style using a styler function to the given container node in the given range
@@ -64,7 +64,7 @@ export default function applyTextStyle(
             // So that the inner style tag such as U, STRIKE can inherit the style we added
             while (
                 getTagOfNode(node) != 'SPAN' &&
-                STYLETAGS.indexOf(getTagOfNode(node.parentNode)) >= 0
+                STYLET_AGS.indexOf(getTagOfNode(node.parentNode)) >= 0
             ) {
                 callStylerWithInnerNode(node, styler);
                 node = splitBalancedNodeRange(node);

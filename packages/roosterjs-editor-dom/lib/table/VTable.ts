@@ -84,7 +84,7 @@ export default class VTable {
                 this.table.appendChild(tr);
                 row.forEach((cell, c) => {
                     if (cell.td) {
-                        this.recalcSpans(r, c);
+                        this.recalculateSpans(r, c);
                         tr.appendChild(cell.td);
                     }
                 });
@@ -403,7 +403,7 @@ export default class VTable {
         }
     }
 
-    private recalcSpans(row: number, col: number) {
+    private recalculateSpans(row: number, col: number) {
         let td = this.getCell(row, col).td;
         if (td) {
             td.colSpan = this.countSpanLeft(row, col);

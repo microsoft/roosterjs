@@ -10,10 +10,10 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
- * This presents an inline element that can be reprented by a single html node.
- * This serves as base for most inline element as it contains most implentation
+ * This presents an inline element that can be represented by a single html node.
+ * This serves as base for most inline element as it contains most implementation
  * of all operations that can happen on an inline element. Other sub inline elements mostly
- * just identify themself for a certain type
+ * just identify themselves for a certain type
  */
 export default class NodeInlineElement implements InlineElement {
     constructor(private containerNode: Node, private parentBlock: BlockElement) {}

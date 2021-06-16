@@ -65,7 +65,7 @@ export default class PendingFormatStatePlugin
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
             case PluginEventType.PendingFormatStateChanged:
-                // Got PendingFormatStateChagned event, cache current position and pending format
+                // Got PendingFormatStateChanged event, cache current position and pending format
                 this.state.pendableFormatPosition = this.getCurrentPosition();
                 this.state.pendableFormatState = event.formatState;
                 break;

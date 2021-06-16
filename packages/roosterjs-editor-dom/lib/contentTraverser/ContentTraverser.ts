@@ -19,7 +19,7 @@ import {
 /**
  * The provides traversing of content inside editor.
  * There are two ways to traverse, block by block, or inline element by inline element
- * Block and inline traversing is independent from each other, meanning if you traverse block by block, it does not change
+ * Block and inline traversing is independent from each other, meaning if you traverse block by block, it does not change
  * the current inline element position
  */
 export default class ContentTraverser implements IContentTraverser {
@@ -191,7 +191,7 @@ export default class ContentTraverser implements IContentTraverser {
 
         // For inline, we need to make sure:
         // 1) it is really next/previous to current
-        // 2) pass on the new inline to this.scoper to do the triming and we still get back an inline
+        // 2) pass on the new inline to this.scoper to do the trimming and we still get back an inline
         // Then
         // 1) re-position current inline
         if (newInline && (newInline = this.scoper.trimInlineElement(newInline))) {
@@ -212,7 +212,7 @@ function getNextPreviousInlineElement(
         return null;
     }
     if (current instanceof PartialInlineElement) {
-        // if current is partial, get the the othe half of the inline unless it is no more
+        // if current is partial, get the other half of the inline unless it is no more
         let result = isNext ? current.nextInlineElement : current.previousInlineElement;
 
         if (result) {

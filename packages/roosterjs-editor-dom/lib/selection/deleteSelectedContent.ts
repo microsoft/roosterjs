@@ -10,14 +10,14 @@ import splitTextNode from '../utils/splitTextNode';
 import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
 
 /**
- * Delete selected content, and return the new positon to select
+ * Delete selected content, and return the new position to select
  * @param core The EditorCore object.
  * @param range The range to delete
  */
 export default function deleteSelectedContent(root: HTMLElement, range: Range) {
     let nodeBefore: Node = null;
 
-    // 1. TABLE and TR node in selected should be deleted. It is possible we don't detecte them from step 2
+    // 1. TABLE and TR node in selected should be deleted. It is possible we don't detect them from step 2
     // since table cells will fall in to different regions
     const nodesToDelete: Node[] = queryElements(
         root,

@@ -14,7 +14,7 @@ export interface SelectorToTypeMap {
 /**
  * @internal
  * Get Root list node from the given node within the given region
- * @param region Region to scope the search inot
+ * @param region Region to scope the search into
  * @param selector The selector to search
  * @param node The start node
  */

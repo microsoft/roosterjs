@@ -105,8 +105,8 @@ function transformToDarkMode(element: HTMLElement, getDarkColor: (color: string)
     });
 }
 
-function getValueOrDefault(value: string, defualtValue: string | null) {
-    return value && value != 'undefined' && value != 'null' ? value : defualtValue;
+function getValueOrDefault(value: string, defaultValue: string | null) {
+    return value && value != 'undefined' && value != 'null' ? value : defaultValue;
 }
 
 function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {

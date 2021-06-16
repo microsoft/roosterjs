@@ -15,7 +15,7 @@ import {
  * @param core The EditorCore object
  * @param range The range to select
  * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
- * in editor, otherwise it will always remove current selection ranage and set to the given one.
+ * in editor, otherwise it will always remove current selection range and set to the given one.
  * This parameter is always treat as true in Edge to avoid some weird runtime exception.
  */
 export const selectRange: SelectRange = (

@@ -82,7 +82,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             // 4. Drop event
             drop: this.onDrop,
 
-            // 5. Focus mangement
+            // 5. Focus management
             focus: this.onFocus,
 
             // 6. Input event
@@ -175,12 +175,12 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             ? {
                   pluginEventType: eventType,
                   beforeDispatch:
-                      eventType == PluginEventType.Input ? this.onInputEvent : this.onKeybaordEvent,
+                      eventType == PluginEventType.Input ? this.onInputEvent : this.onKeyboardEvent,
               }
             : eventType;
     }
 
-    private onKeybaordEvent = (event: KeyboardEvent) => {
+    private onKeyboardEvent = (event: KeyboardEvent) => {
         if (isCharacterValue(event)) {
             event.stopPropagation();
         }

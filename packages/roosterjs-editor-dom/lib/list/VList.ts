@@ -96,7 +96,7 @@ export default class VList {
         moveChildNodesToLi(this.rootList);
         queryElements(this.rootList, 'ol,ul', moveChildNodesToLi);
 
-        // 2. Move LI node embeded into another LI node out to directly under OL/UL node
+        // 2. Move LI node embedded into another LI node out to directly under OL/UL node
         // Ideally browser we do this for us automatically when out the HTML into DOM. However after
         // step 1, it is possible that we move some LI node into another one. e.g:
         // ```HTML
@@ -119,7 +119,7 @@ export default class VList {
         //   <li>
         // </ol>
         // ```
-        // Now we have a LI tag embeded into another LI tag. So we need step 2 to move the inner LI tag out to be:
+        // Now we have a LI tag embedded into another LI tag. So we need step 2 to move the inner LI tag out to be:
         // ```html
         // <ol>
         //   <li>item1
@@ -202,7 +202,7 @@ export default class VList {
             lastList = topList;
         });
 
-        // Restore the content to the positioni of placeholder
+        // Restore the content to the position of placeholder
         placeholder.parentNode.replaceChild(listStack[0], placeholder);
 
         // Set rootList to null to avoid this to be called again for the same VList, because
@@ -213,7 +213,7 @@ export default class VList {
     /**
      * Set indentation of the given range of this list
      * @param start Start position to operate from
-     * @param end End positon to operate to
+     * @param end End position to operate to
      * @param indentation Indent or outdent
      */
     setIndentation(start: NodePosition, end: NodePosition, indentation: Indentation): void;
@@ -221,7 +221,7 @@ export default class VList {
     /**
      * Outdent the give range of this list
      * @param start Start position to operate from
-     * @param end End positon to operate to
+     * @param end End position to operate to
      * @param indentation Specify to outdent
      * @param softOutdent (Optional) True to make the item to by dummy (no bullet or number) if the item is not dummy,
      * otherwise outdent the item

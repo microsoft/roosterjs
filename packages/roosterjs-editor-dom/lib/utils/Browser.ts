@@ -56,7 +56,7 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
 }
 
 /**
- * Browser object contains browser and operating system informations of current environment
+ * Browser object contains browser and operating system information of current environment
  */
 export const Browser = window
     ? getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion)

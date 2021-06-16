@@ -31,7 +31,7 @@ export default class Position implements NodePosition {
     /**
      * Create a Position from node and a type of position
      * @param node The node of this position
-     * @param positionType Type of the postion, can be Begin, End, Before, After
+     * @param positionType Type of the position, can be Begin, End, Before, After
      */
     constructor(node: Node, positionType: PositionType);
 

@@ -58,13 +58,13 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
                     uniqueListId: wordConverter.nextUniqueId++,
                     firstFakeBullet: firstFakeBullet,
 
-                    // If the bullet we got is emtpy or not found, we ignore the list out.. this means
+                    // If the bullet we got is empty or not found, we ignore the list out.. this means
                     // that this is not an item we need to convert of that the format doesn't match what
                     // we are expecting
                     ignore: !firstFakeBullet || firstFakeBullet.length == 0,
 
                     // We'll use the first fake bullet to try to figure out which type of list we create. If this list has a second
-                    // item, we'll perform a better comparasion, but for one item lists, this will be check that will determine the list type
+                    // item, we'll perform a better comparison, but for one item lists, this will be check that will determine the list type
                     tagName: getFakeBulletTagName(firstFakeBullet),
                 };
                 levelInfo.listsMetadata[itemMetadata.wordListId] = listMetadata;
@@ -246,7 +246,7 @@ function convertListIfNeeded(
 ): Node {
     // Check if we need to convert the list out
     if (listMetadata.tagName != getTagOfNode(list)) {
-        // We have the wrong list type.. convert it, set the id again and tranfer all the childs
+        // We have the wrong list type.. convert it, set the id again and transfer all the children
         let newList = list.ownerDocument.createElement(listMetadata.tagName);
         setObject(
             wordConverter.wordCustomData,
@@ -298,7 +298,7 @@ function recurringGetOrCreateListAtNode(
     // this code path will always create new lists as UL lists
     let newList = node.ownerDocument.createElement(listMetadata ? listMetadata.tagName : 'UL');
     if (level == 1) {
-        // For level 1, we'll insert the list beofre the node
+        // For level 1, we'll insert the list before the node
         node.parentNode.insertBefore(newList, node);
     } else {
         // Any level 2 or above, we insert the list as the last
@@ -310,7 +310,7 @@ function recurringGetOrCreateListAtNode(
 }
 
 /**
- * Cleans up the node children by removing the childs marked as mso-list: Ignore.
+ * Cleans up the node children by removing the children marked as mso-list: Ignore.
  * This nodes hold the fake bullet information that Word puts in and when
  * conversion is happening, we want to get rid of these elements
  */
@@ -336,27 +336,27 @@ function cleanupListIgnore(node: Node, levels: number) {
 }
 
 /**
- * Reads the word list metadada out of the specified node. If the node
+ * Reads the word list meta dada out of the specified node. If the node
  * is not a Word list item, it returns null.
  */
 function getListItemMetadata(node: HTMLElement): ListItemMetadata {
     if (node.nodeType == NodeType.Element) {
-        let listatt = getStyleValue(node, MSO_LIST_STYLE_NAME);
-        if (listatt && listatt.length > 0) {
+        let listAttribute = getStyleValue(node, MSO_LIST_STYLE_NAME);
+        if (listAttribute && listAttribute.length > 0) {
             try {
                 // Word mso-list property holds 3 space separated values in the following format: lst1 level1 lfo0
                 // Where:
-                // (0) List identified for the metadata in the &lt;head&gt; of the document. We cannot read the &lt;head&gt; metada
+                // (0) List identified for the metadata in the &lt;head&gt; of the document. We cannot read the &lt;head&gt; meta data
                 // (1) Level of the list. This also maps to the &lt;head&gt; metadata that we cannot read, but
-                // for almost all cases, it maps to the list identation (or level). We'll use it as the
+                // for almost all cases, it maps to the list indentation (or level). We'll use it as the
                 // list indentation value
                 // (2) Contains a specific list identifier.
                 // Example value: "l0 level1 lfo1"
-                let listprops = listatt.split(' ');
-                if (listprops.length == 3) {
+                let listProps = listAttribute.split(' ');
+                if (listProps.length == 3) {
                     return <ListItemMetadata>{
-                        level: parseInt(listprops[1].substr('level'.length)),
-                        wordListId: listatt,
+                        level: parseInt(listProps[1].substr('level'.length)),
+                        wordListId: listAttribute,
                         originalNode: node,
                         uniqueListId: 0,
                     };
@@ -476,7 +476,7 @@ function fixWordListComments(child: Node, removeComments: boolean): Node {
     return child;
 }
 
-/** Finds the real previous sibling, ignoring emtpy text nodes */
+/** Finds the real previous sibling, ignoring empty text nodes */
 function getRealPreviousSibling(node: Node): Node {
     let prevSibling = node;
     do {
@@ -502,8 +502,12 @@ function getRealNextSibling(node: Node): Node {
  */
 function isIgnoreNode(node: Node): boolean {
     if (node.nodeType == NodeType.Element) {
-        let listatt = getStyleValue(node as HTMLElement, MSO_LIST_STYLE_NAME);
-        if (listatt && listatt.length > 0 && listatt.trim().toLowerCase() == 'ignore') {
+        let listAttribute = getStyleValue(node as HTMLElement, MSO_LIST_STYLE_NAME);
+        if (
+            listAttribute &&
+            listAttribute.length > 0 &&
+            listAttribute.trim().toLowerCase() == 'ignore'
+        ) {
             return true;
         }
     }
@@ -519,7 +523,7 @@ function isEmptySpan(node: Node): boolean {
 /** Reads the specified style value from the node */
 function getStyleValue(node: HTMLElement, styleName: string): string {
     // Word uses non-standard names for the metadata that puts in the style of the element...
-    // Most browsers will not provide the information for those unstandard values throug the node.style
+    // Most browsers will not provide the information for those nonstandard values through the node.style
     // property, so the only reliable way to read them is to get the attribute directly and do
     // the required parsing..
     return getStyles(node)[styleName] || null;

@@ -6,7 +6,7 @@ import { ContentPosition, IEditor, IPositionContentSearcher } from 'roosterjs-ed
  * @param text The text for matching. We will try to match the text with the text before cursor
  * @param node The node to replace the text with
  * @param exactMatch True if the text must appear exactly before selection,
- * otherwise there can be some text between the tearget text and selection
+ * otherwise there can be some text between the target text and selection
  * @param searcher Optional PositionContentSearcher of current selection to help search text
  */
 export default function replaceWithNode(
@@ -23,7 +23,7 @@ export default function replaceWithNode(
  * @param range The range to replace from
  * @param node The node to replace the text with
  * @param exactMatch True if the text must appear exactly before selection,
- * otherwise there can be some text between the tearget text and selection
+ * otherwise there can be some text between the target text and selection
  */
 export default function replaceWithNode(
     editor: IEditor,
