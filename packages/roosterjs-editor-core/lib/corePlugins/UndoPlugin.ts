@@ -14,7 +14,7 @@ import {
     clearProceedingSnapshots,
     createSnapshots,
     isCtrlOrMetaPressed,
-    moveCurrentSnapsnot,
+    moveCurrentSnapshot,
     canUndoAutoComplete,
 } from 'roosterjs-editor-dom';
 
@@ -211,7 +211,7 @@ function createUndoSnapshots(): UndoSnapshotsService {
 
     return {
         canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),
-        move: (delta: number): string => moveCurrentSnapsnot(snapshots, delta),
+        move: (delta: number): string => moveCurrentSnapshot(snapshots, delta),
         addSnapshot: (snapshot: string, isAutoCompleteSnapshot: boolean) =>
             addSnapshot(snapshots, snapshot, isAutoCompleteSnapshot),
         clearRedo: () => clearProceedingSnapshots(snapshots),

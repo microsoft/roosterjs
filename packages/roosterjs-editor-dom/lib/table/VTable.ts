@@ -33,7 +33,7 @@ export default class VTable {
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      */
-    constructor(node: HTMLTableElement | HTMLTableCellElement) {
+    constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
@@ -53,15 +53,23 @@ export default class VTable {
 
                     for (let colSpan = 0; colSpan < td.colSpan; colSpan++, targetCol++) {
                         for (let rowSpan = 0; rowSpan < td.rowSpan; rowSpan++) {
+                            const hasTd: boolean = colSpan + rowSpan == 0;
+                            const rect = td.getBoundingClientRect();
                             this.cells[rowIndex + rowSpan][targetCol] = {
-                                td: colSpan + rowSpan == 0 ? td : null,
+                                td: hasTd ? td : null,
                                 spanLeft: colSpan > 0,
                                 spanAbove: rowSpan > 0,
+                                width: hasTd ? rect.width : undefined,
+                                height: hasTd ? rect.height : undefined,
                             };
                         }
                     }
                 }
             });
+
+            if (normalizeSize) {
+                this.normalizeSize();
+            }
         }
     }
 
@@ -282,7 +290,7 @@ export default class VTable {
 
     /**
      * Loop each table cell and get all the cells that share the same border from one side
-     * The result is an array of table cell elements where the first element is the narrowest td
+     * The result is an array of table cell elements
      * @param borderPos The position of the border
      * @param getLeftCells Get left-hand-side or right-hand-side cells of the border
      *
@@ -293,21 +301,19 @@ export default class VTable {
      *     |   3   |   10  |
      *
      *  input => borderPos: the 3rd border, getLeftCells: true
-     *  output => [4, 5, 3], where the first element (4) is the narrowest cell
+     *  output => [4, 5, 3]
      *
      *  input => borderPos: the 3rd border, getLeftCells: false
-     *  output => [7, 9, 10], where the first element (7) is the narrowest cell
+     *  output => [7, 9, 10]
      *
      *  input => borderPos: the 2nd border, getLeftCells: true
-     *  output => [1], where the first element (1) is the narrowest (and only) cell
+     *  output => [1]
      *
      *  input => borderPos: the 2nd border, getLeftCells: false
-     *  output => [4], where the first element (4) is the narrowest (and only) cell
+     *  output => [4]
      */
     getCellsWithBorder(borderPos: number, getLeftCells: boolean): HTMLTableCellElement[] {
         const cells: HTMLTableCellElement[] = [];
-        let closestIndex: number = 0;
-        let closestValue: number = getLeftCells ? -1 : Number.MAX_SAFE_INTEGER;
         for (let i = 0; i < this.cells.length; i++) {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.getCell(i, j);
@@ -317,11 +323,6 @@ export default class VTable {
                     if (getLeftCells) {
                         if (cellRect.right == borderPos) {
                             found = true;
-                            if (cellRect.left > closestValue) {
-                                closestValue = cellRect.left;
-                                closestIndex = cells.length;
-                            }
-                            cell.td.setAttribute('originalLeftBorder', cellRect.left.toString());
                             cells.push(cell.td);
                         } else if (found) {
                             break;
@@ -329,11 +330,6 @@ export default class VTable {
                     } else {
                         if (cellRect.left == borderPos) {
                             found = true;
-                            if (cellRect.right < closestValue) {
-                                closestValue = cellRect.right;
-                                closestIndex = cells.length;
-                            }
-                            cell.td.setAttribute('originalRightBorder', cellRect.right.toString());
                             cells.push(cell.td);
                         } else if (found) {
                             break;
@@ -341,12 +337,6 @@ export default class VTable {
                     }
                 }
             }
-        }
-
-        if (cells.length > 0) {
-            const temp = cells[0];
-            cells[0] = cells[closestIndex];
-            cells[closestIndex] = temp;
         }
         return cells;
     }
@@ -449,6 +439,56 @@ export default class VTable {
             result++;
         }
         return result;
+    }
+
+    private normalizeEmptyTableCells() {
+        for (let i = 0, row; (row = this.table.rows[i]); i++) {
+            for (let j = 0, cell; (cell = row.cells[j]); j++) {
+                if (cell) {
+                    if (!cell.innerHTML || !cell.innerHTML.trim()) {
+                        cell.appendChild(document.createElement('br'));
+                    }
+                }
+            }
+        }
+    }
+
+    /* normalize width/height for each cell in the table */
+    public normalizeTableCellSize() {
+        // remove width/height for each row
+        for (let i = 0, row; (row = this.table.rows[i]); i++) {
+            row.removeAttribute('width');
+            row.style.width = null;
+            row.removeAttribute('height');
+            row.style.height = null;
+        }
+
+        // set width/height for each cell
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let j = 0; j < this.cells[i].length; j++) {
+                const cell = this.cells[i][j];
+                if (cell) {
+                    setHTMLElementSizeInPx(cell.td, cell.width, cell.height);
+                }
+            }
+        }
+    }
+
+    private normalizeSize() {
+        this.normalizeEmptyTableCells();
+        this.normalizeTableCellSize();
+        setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
+    }
+}
+
+function setHTMLElementSizeInPx(element: HTMLElement, newWidth?: number, newHeight?: number) {
+    if (!!element) {
+        element.removeAttribute('width');
+        element.removeAttribute('height');
+        element.style.boxSizing = 'border-box';
+        const rect = element.getBoundingClientRect();
+        element.style.width = `${newWidth !== undefined ? newWidth : rect.width}px`;
+        element.style.height = `${newHeight !== undefined ? newHeight : rect.height}px`;
     }
 }
 
