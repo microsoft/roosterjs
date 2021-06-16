@@ -25,7 +25,12 @@ export interface PluginMouseDownEvent
  * This interface represents a PluginEvent wrapping native MouseUp event
  */
 export interface PluginMouseUpEvent
-    extends PluginDomEventBase<PluginEventType.MouseUp, MouseEvent> {}
+    extends PluginDomEventBase<PluginEventType.MouseUp, MouseEvent> {
+    /**
+     * Whether this is a mouse click event (mouse up and down on the same position)
+     */
+    isClicking?: boolean;
+}
 
 /**
  * This interface represents a PluginEvent wrapping native ContextMenu event
