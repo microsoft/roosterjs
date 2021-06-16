@@ -1,7 +1,7 @@
-import moveCurrentSnapsnot from '../../lib/snapshots/moveCurrentSnapsnot';
+import moveCurrentSnapshot from '../../lib/snapshots/moveCurrentSnapshot';
 import { Snapshots } from 'roosterjs-editor-types';
 
-describe('moveCurrentSnapsnot', () => {
+describe('moveCurrentSnapshot', () => {
     function runTest(
         currentIndex: number,
         snapshotArray: string[],
@@ -20,7 +20,7 @@ describe('moveCurrentSnapsnot', () => {
             autoCompleteIndex: -1,
         };
 
-        let result = moveCurrentSnapsnot(snapshots, step);
+        let result = moveCurrentSnapshot(snapshots, step);
 
         expect(snapshots.currentIndex).toEqual(expectedIndex);
         expect(result).toBe(expectedSnapshot);
