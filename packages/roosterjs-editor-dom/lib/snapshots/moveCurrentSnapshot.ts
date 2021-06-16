@@ -16,3 +16,9 @@ export default function moveCurrentSnapshot(snapshots: Snapshots, step: number):
         return null;
     }
 }
+
+/**
+ * @deprecated
+ * For backward compatibility only
+ */
+export const moveCurrentSnapsnot = moveCurrentSnapshot;
