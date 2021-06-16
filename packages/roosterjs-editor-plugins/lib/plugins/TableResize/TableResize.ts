@@ -603,23 +603,17 @@ export default class TableResize implements EditorPlugin {
 
     private canResizeColums = (newPos: number): boolean => {
         for (let i = 0; i < this.currentCellsToResize.length; i++) {
-            //this.currentCellsToResize.forEach(td => {
             const td = this.currentCellsToResize[i];
             const rect = normalizeRect(td.getBoundingClientRect());
             if (this.isRTL && rect.right - newPos < MIN_CELL_WIDTH) {
                 return false;
             }
 
-            console.log('**** width: ' + (newPos - rect.left));
-            console.log('*** min cell width: ' + MIN_CELL_WIDTH);
-
             if (!this.isRTL && newPos - rect.left < MIN_CELL_WIDTH) {
                 return false;
             }
         }
-        //});
 
-        //this.nextCellsToResize.forEach(td => {
         for (let i = 0; i < this.nextCellsToResize.length; i++) {
             const td = this.nextCellsToResize[i];
             const rect = normalizeRect(td.getBoundingClientRect());
@@ -637,18 +631,13 @@ export default class TableResize implements EditorPlugin {
                 return false;
             }
         }
-        //});
-
         return true;
     };
 
     private resizeColumns = (newPos: number, isShiftPressed: boolean) => {
         if (!this.canResizeColums(newPos)) {
-            console.log('*** cannot resize');
             return;
         }
-
-        console.log('*** can resize');
 
         // Since we allow the user to resize the table width on adjusting the border of the last cell,
         // we need to make the table width resizeable by setting it as null;
