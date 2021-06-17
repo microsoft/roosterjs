@@ -601,7 +601,7 @@ export default class TableResize implements EditorPlugin {
         });
     };
 
-    private canResizeColums = (newPos: number): boolean => {
+    private canResizeColumns = (newPos: number): boolean => {
         for (let i = 0; i < this.currentCellsToResize.length; i++) {
             const td = this.currentCellsToResize[i];
             const rect = normalizeRect(td.getBoundingClientRect());
@@ -628,7 +628,7 @@ export default class TableResize implements EditorPlugin {
     };
 
     private resizeColumns = (newPos: number, isShiftPressed: boolean) => {
-        if (!this.canResizeColums(newPos)) {
+        if (!this.canResizeColumns(newPos)) {
             return;
         }
 
