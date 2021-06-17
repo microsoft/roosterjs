@@ -36,11 +36,7 @@ const enum ResizeState {
 }
 
 function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
-    if (toLeft) {
-        return pos - rect.left;
-    } else {
-        return rect.right - pos;
-    }
+    return toLeft ? pos - rect.left : rect.right - pos;
 }
 
 /**
