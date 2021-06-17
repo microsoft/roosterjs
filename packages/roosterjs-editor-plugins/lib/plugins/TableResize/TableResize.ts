@@ -35,6 +35,14 @@ const enum ResizeState {
     Both, // when resizing the whole table
 }
 
+function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
+    if (toLeft) {
+        return pos - rect.left;
+    } else {
+        return rect.right - pos;
+    }
+}
+
 /**
  * TableResize plugin, provides the ability to resize a table by drag-and-drop
  */
@@ -605,7 +613,7 @@ export default class TableResize implements EditorPlugin {
         for (let i = 0; i < this.currentCellsToResize.length; i++) {
             const td = this.currentCellsToResize[i];
             const rect = normalizeRect(td.getBoundingClientRect());
-            const width = this.isRTL ? rect.right - newPos : newPos - rect.left;
+            const width = getHorizontalDistance(rect, newPos, !this.isRTL);
             if (width < MIN_CELL_WIDTH) {
                 return false;
             }
@@ -613,12 +621,11 @@ export default class TableResize implements EditorPlugin {
 
         for (let i = 0; i < this.nextCellsToResize.length; i++) {
             const td = this.nextCellsToResize[i];
-            const rect = normalizeRect(td.getBoundingClientRect());
-            const width = td
-                ? this.isRTL
-                    ? newPos - rect.left
-                    : rect.right - newPos
-                : Number.MAX_SAFE_INTEGER;
+            let width: number = Number.MAX_SAFE_INTEGER;
+            if (td) {
+                const rect = normalizeRect(td.getBoundingClientRect());
+                width = getHorizontalDistance(rect, newPos, this.isRTL);
+            }
 
             if (width < MIN_CELL_WIDTH) {
                 return false;
@@ -646,7 +653,7 @@ export default class TableResize implements EditorPlugin {
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
-            td.style.width = this.isRTL ? `${rect.right - newPos}px` : `${newPos - rect.left}px`;
+            td.style.width = `${getHorizontalDistance(rect, newPos, !this.isRTL)}px`;
         });
 
         this.nextCellsToResize.forEach(td => {
