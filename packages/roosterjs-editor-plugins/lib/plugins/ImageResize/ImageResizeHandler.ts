@@ -216,9 +216,9 @@ export default class ImageResizeHandler {
                       this.minHeight
                   );
 
-            if (shouldPreserveRatio) {
-                newHeight = Math.min(newHeight, (newWidth * this.initHeight) / this.initWidth);
-                newWidth = Math.min(newWidth, (newHeight * this.initWidth) / this.initHeight);
+            if (shouldPreserveRatio && this.ratio > 0) {
+                newHeight = Math.min(newHeight, newWidth / this.ratio);
+                newWidth = Math.min(newWidth, newHeight * this.ratio);
 
                 if (this.ratio > 0) {
                     if (newWidth < newHeight * this.ratio) {
@@ -232,7 +232,7 @@ export default class ImageResizeHandler {
             this.setSize(newWidth, newHeight);
 
             // double check
-            if (shouldPreserveRatio) {
+            if (shouldPreserveRatio && this.ratio > 0) {
                 const clientWidth = Math.floor(this.image.clientWidth);
                 const clientHeight = Math.floor(this.image.clientHeight);
                 newWidth = Math.floor(newWidth);
