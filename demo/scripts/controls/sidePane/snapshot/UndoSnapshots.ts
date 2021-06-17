@@ -2,7 +2,7 @@ import { Snapshots, UndoSnapshotsService } from 'roosterjs-editor-types';
 import {
     addSnapshot,
     canMoveCurrentSnapshot,
-    moveCurrentSnapsnot,
+    moveCurrentSnapshot,
     clearProceedingSnapshots,
     canUndoAutoComplete,
 } from 'roosterjs-editor-dom';
@@ -15,7 +15,7 @@ export default class UndoSnapshots implements UndoSnapshotsService {
     }
 
     public move(delta: number): string {
-        const result = moveCurrentSnapsnot(this.snapshots, delta);
+        const result = moveCurrentSnapshot(this.snapshots, delta);
         this.onChange();
         return result;
     }

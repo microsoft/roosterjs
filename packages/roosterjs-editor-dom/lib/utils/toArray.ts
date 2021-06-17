@@ -5,6 +5,12 @@
 export default function toArray(collection: NamedNodeMap): Attr[];
 
 /**
+ * Convert a named node map to an array
+ * @param collection The map to convert
+ */
+export default function toArray(collection: DataTransferItemList): DataTransferItem[];
+
+/**
  * Convert a collection to an array
  * @param collection The collection to convert
  */

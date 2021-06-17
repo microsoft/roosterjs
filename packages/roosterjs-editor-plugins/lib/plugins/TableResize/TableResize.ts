@@ -58,6 +58,10 @@ export default class TableResize implements EditorPlugin {
     private inserter: HTMLDivElement;
     private isRTL: boolean;
 
+    private currentTableVerticalBorder: number;
+    private currentTableHorizontalBorder: number;
+    private resizingVtable: VTable;
+
     /**
      * Get a friendly name of  this plugin
      */
@@ -338,8 +342,14 @@ export default class TableResize implements EditorPlugin {
     }
 
     private insertTd = () => {
+        let vtable = new VTable(this.currentInsertTd);
+        if (this.insertingState === ResizeState.Vertical) {
+            vtable.normalizeTableCellSize();
+            // Since adding new column will cause table width to change, we need to remove width properties
+            vtable.table.removeAttribute('width');
+            vtable.table.style.width = null;
+        }
         this.editor.addUndoSnapshot((start, end) => {
-            const vtable = new VTable(this.currentInsertTd);
             vtable.edit(
                 this.insertingState == ResizeState.Horizontal
                     ? TableOperation.InsertBelow
@@ -465,43 +475,57 @@ export default class TableResize implements EditorPlugin {
     }
 
     private startResizingTable = (e: MouseEvent) => {
-        if (this.currentTable == null) {
+        if (!this.currentTable) {
             return;
         }
+        this.resizingVtable = new VTable(
+            this.currentTable,
+            true /* normalize the table for resizing */
+        );
         this.resizingState = ResizeState.Both;
-        const rect = normalizeRect(this.currentTable.getBoundingClientRect());
-        if (this.isRTL) {
-            this.currentTable.setAttribute('currentLeftBorder', rect.left.toString());
-        } else {
-            this.currentTable.setAttribute('currentRightBorder', rect.right.toString());
-        }
-        this.currentTable.setAttribute('currentBottomBorder', rect.bottom.toString());
+
+        const rect = this.resizingVtable.table.getBoundingClientRect();
+        this.currentTableVerticalBorder = this.isRTL ? rect.left : rect.right;
+        this.currentTableHorizontalBorder = rect.bottom;
+
         this.startResizeCells(e);
     };
 
     private startHorizontalResizeCells = (e: MouseEvent) => {
+        if (!this.currentTd) {
+            return;
+        }
+        this.resizingVtable = new VTable(
+            this.currentTd,
+            true /* normalize the table for resizing */
+        );
         this.resizingState = ResizeState.Horizontal;
         this.startResizeCells(e);
     };
 
     private startVerticalResizeCells = (e: MouseEvent) => {
+        if (!this.currentTd) {
+            return;
+        }
+        this.resizingVtable = new VTable(
+            this.currentTd,
+            true /* normalize the table for resizing */
+        );
         this.resizingState = ResizeState.Vertical;
-
-        const vtable = new VTable(this.currentTd);
-        if (vtable) {
+        if (this.resizingVtable) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
 
             // calculate and retrieve the cells of the two columns shared by the current vertical resizer
-            this.currentCellsToResize = vtable.getCellsWithBorder(
+            this.currentCellsToResize = this.resizingVtable.getCellsWithBorder(
                 this.isRTL ? rect.left : rect.right,
                 !this.isRTL
             );
-            this.nextCellsToResize = vtable.getCellsWithBorder(
+
+            this.nextCellsToResize = this.resizingVtable.getCellsWithBorder(
                 this.isRTL ? rect.left : rect.right,
                 this.isRTL
             );
         }
-
         this.startResizeCells(e);
     };
 
@@ -515,159 +539,134 @@ export default class TableResize implements EditorPlugin {
         this.editor.runAsync(() => this.resizeCells(e));
     };
 
-    private resizeCells = (e: MouseEvent) => {
-        this.setTableResizer(null);
-        if (this.resizingState === ResizeState.None) {
-            return;
-        } else if (this.resizingState === ResizeState.Both) {
-            let rect = normalizeRect(this.currentTable.getBoundingClientRect());
-            let vtable = new VTable(this.currentTable);
+    private resizeTable = (mouseX: number, mouseY: number) => {
+        const rect = normalizeRect(this.resizingVtable.table.getBoundingClientRect());
+        const ratioX =
+            1.0 +
+            (this.isRTL
+                ? (this.currentTableVerticalBorder - mouseX) /
+                  (rect.right - this.currentTableVerticalBorder)
+                : (mouseX - this.currentTableVerticalBorder) /
+                  (this.currentTableVerticalBorder - rect.left));
+        const ratioY =
+            1.0 +
+            (mouseY - this.currentTableHorizontalBorder) /
+                (this.currentTableHorizontalBorder - rect.top);
 
-            let currentBorder: number = parseFloat(
-                this.currentTable.getAttribute(
-                    this.isRTL ? 'currentLeftBorder' : 'currentRightBorder'
-                )
-            );
-            const tableBottomBorder: number = parseFloat(
-                this.currentTable.getAttribute('currentBottomBorder')
-            );
-            const ratioX =
-                1.0 +
-                (this.isRTL
-                    ? (currentBorder - e.pageX) / (rect.right - currentBorder)
-                    : (e.pageX - currentBorder) / (currentBorder - rect.left));
-            const ratioY = 1.0 + (e.pageY - tableBottomBorder) / (tableBottomBorder - rect.top);
-
-            const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
-            const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
-            if (shouldResizeX || shouldResizeY) {
-                for (let i = 0; i < vtable.cells.length; i++) {
-                    for (let j = 0; j < vtable.cells[i].length; j++) {
-                        const cell = vtable.cells[i][j];
-                        if (cell.td) {
-                            if (shouldResizeX) {
-                                const originalWidth: number = cell.td.style.width
-                                    ? parseFloat(
-                                          cell.td.style.width.substr(
-                                              0,
-                                              cell.td.style.width.length - 2
-                                          )
-                                      )
-                                    : cell.td.getBoundingClientRect().right -
-                                      cell.td.getBoundingClientRect().left;
-                                const newWidth = originalWidth * ratioX;
-                                cell.td.style.boxSizing = 'border-box';
-                                if (newWidth >= MIN_CELL_WIDTH) {
-                                    cell.td.style.wordBreak = 'break-word';
-                                    cell.td.style.width = `${newWidth}px`;
-                                }
+        const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
+        const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
+        if (shouldResizeX || shouldResizeY) {
+            for (let i = 0; i < this.resizingVtable.cells.length; i++) {
+                for (let j = 0; j < this.resizingVtable.cells[i].length; j++) {
+                    const cell = this.resizingVtable.cells[i][j];
+                    if (cell.td) {
+                        if (shouldResizeX) {
+                            // the width of some external table is fixed, we need to make it resizeable
+                            this.resizingVtable.table.style.width = null;
+                            const newWidth = cell.width * ratioX;
+                            cell.td.style.boxSizing = 'border-box';
+                            if (newWidth >= MIN_CELL_WIDTH) {
+                                cell.td.style.wordBreak = 'break-word';
+                                cell.td.style.whiteSpace = 'normal';
+                                cell.td.style.width = `${newWidth}px`;
                             }
+                        }
 
-                            if (shouldResizeY) {
-                                if (j == 0) {
-                                    const originalHeight =
-                                        cell.td.getBoundingClientRect().bottom -
-                                        cell.td.getBoundingClientRect().top;
-                                    const newHeight = originalHeight * ratioY;
-                                    if (newHeight >= MIN_CELL_HEIGHT) {
-                                        cell.td.style.height = `${newHeight}px`;
-                                    }
-                                } else {
-                                    cell.td.style.height = '';
+                        if (shouldResizeY) {
+                            // the height of some external table is fixed, we need to make it resizeable
+                            this.resizingVtable.table.style.height = null;
+                            if (j == 0) {
+                                const newHeight = cell.height * ratioY;
+                                if (newHeight >= MIN_CELL_HEIGHT) {
+                                    cell.td.style.height = `${newHeight}px`;
                                 }
+                            } else {
+                                cell.td.style.height = null;
                             }
                         }
                     }
                 }
             }
-            rect = normalizeRect(this.currentTable.getBoundingClientRect());
-            currentBorder = this.isRTL ? rect.left : rect.right;
-            this.currentTable.setAttribute(
-                this.isRTL ? 'currentLeftBorder' : 'currentRightBorder',
-                currentBorder.toString()
-            );
+        }
+        return;
+    };
 
-            const currentBottomBorder = this.currentTable.getBoundingClientRect().bottom;
-            this.currentTable.setAttribute('currentBottomBorder', currentBottomBorder.toString());
-            vtable.writeBack();
+    private resizeRows = (newPos: number, rect: Rect) => {
+        this.resizingVtable.table.removeAttribute('height');
+        this.resizingVtable.table.style.height = null;
+        this.resizingVtable.forEachCellOfCurrentRow(cell => {
+            if (cell.td) {
+                cell.td.style.height = cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
+            }
+        });
+    };
+
+    private resizeColumns = (newPos: number, isShiftPressed: boolean) => {
+        // Since we allow the user to resize the table width on adjusting the border of the last cell,
+        // we need to make the table width resizeable by setting it as null;
+        // We also allow the user to resize the table width if Shift key is pressed
+        const isLastCell: boolean = this.nextCellsToResize.length == 0;
+
+        if (isLastCell || isShiftPressed) {
+            this.resizingVtable.table.style.width = null;
+        }
+
+        this.currentCellsToResize.forEach((td, rowIndex) => {
+            const nextTd = this.nextCellsToResize[rowIndex];
+            const nextTdRect = normalizeRect(nextTd?.getBoundingClientRect());
+            const nextTdWidth = nextTd
+                ? this.isRTL
+                    ? newPos - nextTdRect.left
+                    : nextTdRect.right - newPos
+                : Number.MAX_SAFE_INTEGER;
+
+            const rect = normalizeRect(td.getBoundingClientRect());
+            if (
+                this.isRTL &&
+                (rect.right - newPos < MIN_CELL_WIDTH || nextTdWidth < MIN_CELL_WIDTH)
+            ) {
+                return;
+            }
+
+            if (
+                !this.isRTL &&
+                (newPos - rect.left < MIN_CELL_WIDTH || nextTdWidth < MIN_CELL_WIDTH)
+            ) {
+                return;
+            }
+
+            td.style.wordBreak = 'break-word';
+            td.style.whiteSpace = 'normal';
+            td.style.boxSizing = 'border-box';
+
+            td.style.width = this.isRTL ? `${rect.right - newPos}px` : `${newPos - rect.left}px`;
+
+            if (!isShiftPressed && nextTd && nextTdWidth >= MIN_CELL_WIDTH) {
+                nextTd.style.wordBreak = 'break-word';
+                nextTd.style.whiteSpace = 'normal';
+                nextTd.style.boxSizing = 'border-box';
+                nextTd.style.width = null;
+            }
+        });
+    };
+
+    private resizeCells = (e: MouseEvent) => {
+        this.setTableResizer(null);
+        if (this.resizingState === ResizeState.None) {
             return;
+        } else if (this.resizingState === ResizeState.Both) {
+            this.resizeTable(e.pageX, e.pageY);
+            this.resizingVtable.writeBack();
         } else if (this.currentTd) {
             const rect = normalizeRect(this.currentTd.getBoundingClientRect());
-
             if (rect) {
                 const newPos = this.resizingState == ResizeState.Horizontal ? e.pageY : e.pageX;
-
-                let vtable = new VTable(this.currentTd);
-
-                if (this.resizingState == ResizeState.Horizontal) {
-                    vtable.table.style.height = null;
-                    vtable.forEachCellOfCurrentRow(cell => {
-                        if (cell.td) {
-                            cell.td.style.height =
-                                cell.td == this.currentTd ? `${newPos - rect.top}px` : null;
-                        }
-                    });
+                if (this.resizingState === ResizeState.Horizontal) {
+                    this.resizeRows(newPos, rect);
                 } else {
-                    let leftBoundary: number;
-                    let rightBoundary: number;
-
-                    if (this.isRTL) {
-                        leftBoundary =
-                            this.nextCellsToResize.length > 0
-                                ? parseInt(
-                                      this.nextCellsToResize[0].getAttribute('originalLeftBorder')
-                                  )
-                                : 0;
-                        rightBoundary = parseInt(
-                            this.currentCellsToResize[0].getAttribute('originalRightBorder')
-                        );
-                    } else {
-                        leftBoundary = parseInt(
-                            this.currentCellsToResize[0].getAttribute('originalLeftBorder')
-                        );
-                        rightBoundary =
-                            this.nextCellsToResize.length > 0
-                                ? parseInt(
-                                      this.nextCellsToResize[0].getAttribute('originalRightBorder')
-                                  )
-                                : Number.MAX_SAFE_INTEGER;
-                    }
-
-                    if (e.shiftKey) {
-                        if (
-                            (!this.isRTL && newPos <= leftBoundary + MIN_CELL_WIDTH) ||
-                            (this.isRTL && newPos >= rightBoundary - MIN_CELL_WIDTH)
-                        ) {
-                            return;
-                        }
-                    } else if (
-                        newPos <= leftBoundary + MIN_CELL_WIDTH ||
-                        newPos >= rightBoundary - MIN_CELL_WIDTH
-                    ) {
-                        return;
-                    }
-
-                    this.currentCellsToResize.forEach(td => {
-                        const rect = normalizeRect(td.getBoundingClientRect());
-                        td.style.wordBreak = 'break-word';
-                        td.style.boxSizing = 'border-box';
-                        td.style.width = this.isRTL
-                            ? `${rect.right - newPos}px`
-                            : `${newPos - rect.left}px`;
-                    });
-
-                    if (!e.shiftKey) {
-                        this.nextCellsToResize.forEach(td => {
-                            td.style.wordBreak = 'break-word';
-                            const tdWidth = this.isRTL
-                                ? newPos - parseInt(td.getAttribute('originalLeftBorder'))
-                                : parseInt(td.getAttribute('originalRightBorder')) - newPos;
-                            td.style.boxSizing = 'border-box';
-                            td.style.width = `${tdWidth}px`;
-                        });
-                    }
+                    this.resizeColumns(newPos, e.shiftKey);
                 }
-                vtable.writeBack();
+                this.resizingVtable.writeBack();
             }
         }
     };
@@ -686,6 +685,8 @@ export default class TableResize implements EditorPlugin {
 
         this.setCurrentTd(null);
         this.setTableResizer(null);
+
+        this.resizingVtable = null;
         this.resizingState = ResizeState.None;
     };
 
