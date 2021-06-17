@@ -605,11 +605,8 @@ export default class TableResize implements EditorPlugin {
         for (let i = 0; i < this.currentCellsToResize.length; i++) {
             const td = this.currentCellsToResize[i];
             const rect = normalizeRect(td.getBoundingClientRect());
-            if (this.isRTL && rect.right - newPos < MIN_CELL_WIDTH) {
-                return false;
-            }
-
-            if (!this.isRTL && newPos - rect.left < MIN_CELL_WIDTH) {
+            const width = this.isRTL ? rect.right - newPos : newPos - rect.left;
+            if (width < MIN_CELL_WIDTH) {
                 return false;
             }
         }
@@ -623,11 +620,7 @@ export default class TableResize implements EditorPlugin {
                     : rect.right - newPos
                 : Number.MAX_SAFE_INTEGER;
 
-            if (this.isRTL && width < MIN_CELL_WIDTH) {
-                return false;
-            }
-
-            if (!this.isRTL && width < MIN_CELL_WIDTH) {
+            if (width < MIN_CELL_WIDTH) {
                 return false;
             }
         }
