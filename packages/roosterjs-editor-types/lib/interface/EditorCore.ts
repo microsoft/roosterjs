@@ -140,7 +140,7 @@ export type RestoreUndoSnapshot = (core: EditorCore, step: number) => void;
  * @param range The range to select
  * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
  * in editor, otherwise it will always remove current selection range and set to the given one.
- * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+ * This parameter is always treated as true in Edge to avoid some weird runtime exception.
  */
 export type SelectRange = (core: EditorCore, range: Range, skipSameRange?: boolean) => boolean;
 
@@ -195,7 +195,7 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
      * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+     * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
      */
     addUndoSnapshot: AddUndoSnapshot;
 
@@ -283,7 +283,7 @@ export interface CoreApiMap {
      * @param range The range to select
      * @param skipSameRange When set to true, do nothing if the given range is the same with current selection
      * in editor, otherwise it will always remove current selection range and set to the given one.
-     * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+     * This parameter is always treated as true in Edge to avoid some weird runtime exception.
      */
     selectRange: SelectRange;
 

@@ -385,7 +385,7 @@ export default interface IEditor {
      * the data field in ContentChangedEvent if changeSource is not null.
      * @param changeSource The change source to use when fire ContentChangedEvent. When the value is not null,
      * a ContentChangedEvent will be fired with change source equal to this value
-     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+     * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
      */
     addUndoSnapshot(
         callback?: (start: NodePosition, end: NodePosition) => any,

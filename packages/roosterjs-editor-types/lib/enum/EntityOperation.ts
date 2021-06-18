@@ -38,7 +38,7 @@ export const enum EntityOperation {
 
     /**
      * Notify plugins that an entity is being overwritten.
-     * This can be causes by key in, cut, paste, delete, backspace ... on a selection
+     * This can be caused by key in, cut, paste, delete, backspace ... on a selection
      * which contains some entities.
      */
     Overwrite,

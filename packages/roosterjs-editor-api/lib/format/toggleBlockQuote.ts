@@ -12,7 +12,7 @@ const DEFAULT_STYLER = (element: HTMLElement): void => {
 
 /**
  * Toggle blockquote at selection, if selection already contains any blockquote elements,
- * the blockquote elements will be unquote and other elements will take no affect
+ * the blockquote elements will be unquote and other elements will take no effect
  * @param editor The editor instance
  * @param styler (Optional) The custom styler for setting the style for the blockquote element
  */

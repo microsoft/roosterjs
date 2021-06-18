@@ -29,7 +29,7 @@ interface WindowForIE extends Window {
  * Extract a Clipboard event
  * @param event The paste event
  * @param callback Callback function when data is ready
- * @param fallbackHtmlRetriever If direct HTML retrieving is not support (e.g. Internet Explorer), as a fallback,
+ * @param fallbackHtmlRetriever If direct HTML retrieving is not supported (e.g. Internet Explorer), as a fallback,
  * using this helper function to retrieve HTML content
  * @returns An object with the following properties:
  *  types: Available types from the clipboard event

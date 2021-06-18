@@ -8,7 +8,7 @@ import { setColor } from 'roosterjs-editor-dom';
  * @param color One of two options:
  * The color string, can be any of the predefined color names (e.g, 'red')
  * or hexadecimal color string (e.g, '#FF0000') or rgb value (e.g, 'rgb(255, 0, 0)') supported by browser.
- * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
+ * Currently there's no validation to the string, if the passed string is invalid, it won't take effect
  * Alternatively, you can pass a @typedef ModeIndependentColor. If in light mode, the lightModeColor property will be used.
  * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
  **/
