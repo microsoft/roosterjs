@@ -1217,15 +1217,15 @@ import {
 // Character codes.
 // IE11 uses different character codes. which are noted below.
 // If adding a new key, test in IE to figure out what the code is.
-const BACKSPACE_CHARCODE = 'Backspace';
-const TAB_CHARCODE = 'Tab';
-const ENTER_CHARCODE = 'Enter';
-const ESC_CHARCODE = !Browser.isIE ? 'Escape' : <span class="branch-1 cbranch-no" title="branch not covered" >'Esc';</span>
-const LEFT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowLeft' : <span class="branch-1 cbranch-no" title="branch not covered" >'Left';</span>
-const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : <span class="branch-1 cbranch-no" title="branch not covered" >'Up';</span>
-const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : <span class="branch-1 cbranch-no" title="branch not covered" >'Right';</span>
-const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : <span class="branch-1 cbranch-no" title="branch not covered" >'Down';</span>
-const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : <span class="branch-1 cbranch-no" title="branch not covered" >'Del';</span>
+const BACKSPACE_CHAR_CODE = 'Backspace';
+const TAB_CHAR_CODE = 'Tab';
+const ENTER_CHAR_CODE = 'Enter';
+const ESC_CHAR_CODE = !Browser.isIE ? 'Escape' : <span class="branch-1 cbranch-no" title="branch not covered" >'Esc';</span>
+const LEFT_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowLeft' : <span class="branch-1 cbranch-no" title="branch not covered" >'Left';</span>
+const UP_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowUp' : <span class="branch-1 cbranch-no" title="branch not covered" >'Up';</span>
+const RIGHT_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowRight' : <span class="branch-1 cbranch-no" title="branch not covered" >'Right';</span>
+const DOWN_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowDown' : <span class="branch-1 cbranch-no" title="branch not covered" >'Down';</span>
+const DELETE_CHAR_CODE = !Browser.isIE ? 'Delete' : <span class="branch-1 cbranch-no" title="branch not covered" >'Del';</span>
 &nbsp;
 // Input event input types.
 const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
@@ -1352,7 +1352,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 <span class="cstat-no" title="statement not covered" >                        this.setIsSuggesting(false);</span>
                     }
 &nbsp;
-                    // Undos and other major changes to document content fire this type of event.
+                    // Undo and other major changes to document content fire this type of event.
                     // Inform the data provider of the current picker placed elements in the body.
                     let elementIds: string[] = <span class="cstat-no" title="statement not covered" >[];</span>
 <span class="cstat-no" title="statement not covered" >                    this.editor.queryElements(</span>
@@ -1587,11 +1587,11 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 <span class="fstat-no" title="function not covered" >    private o</span>nKeyDownEvent(event: PluginKeyboardEvent) {
         let keyboardEvent = <span class="cstat-no" title="statement not covered" >event.rawEvent;</span>
 <span class="cstat-no" title="statement not covered" >        if (this.isSuggesting) {</span>
-<span class="cstat-no" title="statement not covered" >            if (keyboardEvent.key == ESC_CHARCODE) {</span>
+<span class="cstat-no" title="statement not covered" >            if (keyboardEvent.key == ESC_CHAR_CODE) {</span>
 <span class="cstat-no" title="statement not covered" >                this.setIsSuggesting(false);</span>
 <span class="cstat-no" title="statement not covered" >                this.blockSuggestions = true;</span>
 <span class="cstat-no" title="statement not covered" >                this.cancelDefaultKeyDownEvent(event);</span>
-            } else <span class="cstat-no" title="statement not covered" >if (keyboardEvent.key == BACKSPACE_CHARCODE) {</span>
+            } else <span class="cstat-no" title="statement not covered" >if (keyboardEvent.key == BACKSPACE_CHAR_CODE) {</span>
                 // #483: If we are backspacing over the trigger character that triggered this Picker
                 // then we need to hide the Picker
                 const wordBeforeCursor = <span class="cstat-no" title="statement not covered" >this.getWord(event);</span>
@@ -1601,15 +1601,15 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
             } else <span class="cstat-no" title="statement not covered" >if (</span>
                 this.dataProvider.shiftHighlight &amp;&amp;
                 (this.pickerOptions.isHorizontal
-                    ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
-                    : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                    ? keyboardEvent.key == LEFT_ARROW_CHAR_CODE ||
+                      keyboardEvent.key == RIGHT_ARROW_CHAR_CODE
+                    : keyboardEvent.key == UP_ARROW_CHAR_CODE ||
+                      keyboardEvent.key == DOWN_ARROW_CHAR_CODE)
             ) {
 <span class="cstat-no" title="statement not covered" >                this.dataProvider.shiftHighlight(</span>
                     this.pickerOptions.isHorizontal
-                        ? keyboardEvent.key == RIGHT_ARROW_CHARCODE
-                        : keyboardEvent.key == DOWN_ARROW_CHARCODE
+                        ? keyboardEvent.key == RIGHT_ARROW_CHAR_CODE
+                        : keyboardEvent.key == DOWN_ARROW_CHAR_CODE
                 );
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (this.dataProvider.getSelectedIndex) {</span>
@@ -1619,7 +1619,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
 <span class="cstat-no" title="statement not covered" >                this.cancelDefaultKeyDownEvent(event);</span>
             } else <span class="cstat-no" title="statement not covered" >if (</span>
                 this.dataProvider.selectOption &amp;&amp;
-                (keyboardEvent.key == ENTER_CHARCODE || keyboardEvent.key == TAB_CHARCODE)
+                (keyboardEvent.key == ENTER_CHAR_CODE || keyboardEvent.key == TAB_CHAR_CODE)
             ) {
 <span class="cstat-no" title="statement not covered" >                this.dataProvider.selectOption();</span>
 <span class="cstat-no" title="statement not covered" >                this.cancelDefaultKeyDownEvent(event);</span>
@@ -1627,12 +1627,12 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
                 // Currently no op.
             }
         } else {
-<span class="cstat-no" title="statement not covered" >            if (keyboardEvent.key == BACKSPACE_CHARCODE) {</span>
+<span class="cstat-no" title="statement not covered" >            if (keyboardEvent.key == BACKSPACE_CHAR_CODE) {</span>
                 const nodeRemoved = <span class="cstat-no" title="statement not covered" >this.tryRemoveNode(event);</span>
 <span class="cstat-no" title="statement not covered" >                if (nodeRemoved) {</span>
 <span class="cstat-no" title="statement not covered" >                    this.cancelDefaultKeyDownEvent(event);</span>
                 }
-            } else <span class="cstat-no" title="statement not covered" >if (keyboardEvent.key == DELETE_CHARCODE) {</span>
+            } else <span class="cstat-no" title="statement not covered" >if (keyboardEvent.key == DELETE_CHAR_CODE) {</span>
                 let searcher = <span class="cstat-no" title="statement not covered" >this.editor.getContentSearcherOfCursor(event);</span>
                 let nodeAfterCursor = <span class="cstat-no" title="statement not covered" >searcher.getInlineElementAfter()</span>
                     ? searcher.getInlineElementAfter().getContainerNode()
@@ -1765,7 +1765,7 @@ export default class PickerPlugin&lt;T extends PickerDataProvider = PickerDataPr
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 18 2021 16:57:59 GMT+0000 (Coordinated Universal Time)
+                at Fri Jun 18 2021 20:16:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
