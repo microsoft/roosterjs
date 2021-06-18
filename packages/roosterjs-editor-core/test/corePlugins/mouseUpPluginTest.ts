@@ -32,7 +32,7 @@ describe('MouseUpPlugin', () => {
     it('Trigger mouse down event', () => {
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
-            rawEvent: null,
+            rawEvent: <any>{},
         });
         expect(addEventListener).toHaveBeenCalledTimes(1);
         expect(addEventListener.calls.argsFor(0)[0]).toBe('mouseup');
@@ -43,24 +43,56 @@ describe('MouseUpPlugin', () => {
         expect(mouseUp).toBeNull();
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
-            rawEvent: null,
+            rawEvent: <any>{
+                pageX: 0,
+                pageY: 0,
+            },
         });
         expect(mouseUp).not.toBeNull();
 
-        const rawEvent = {};
+        const rawEvent = {
+            pageX: 0,
+            pageY: 1,
+        };
         mouseUp(rawEvent);
         expect(removeEventListener).toHaveBeenCalled();
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, { rawEvent });
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
+            rawEvent,
+            isClicking: false,
+        });
+    });
+
+    it('Trigger mouse up event with clicking', () => {
+        expect(mouseUp).toBeNull();
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: <any>{
+                pageX: 0,
+                pageY: 0,
+            },
+        });
+        expect(mouseUp).not.toBeNull();
+
+        const rawEvent = <any>{
+            pageX: 0,
+            pageY: 0,
+        };
+        mouseUp(rawEvent);
+        expect(removeEventListener).toHaveBeenCalled();
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.MouseUp, {
+            rawEvent,
+            isClicking: true,
+        });
     });
 
     it('Do not add event handler if it is already added', () => {
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
-            rawEvent: null,
+            rawEvent: <any>{},
         });
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseDown,
-            rawEvent: null,
+            rawEvent: <any>{},
         });
 
         expect(addEventListener).toHaveBeenCalledTimes(1);

@@ -80,55 +80,6 @@ describe('CopyPastePlugin paste', () => {
         expect(paste).toHaveBeenCalledWith(items);
         expect(tempNode).toBeNull();
     });
-
-    it('trigger paste event for image', () => {
-        const items: ClipboardData = {
-            rawHtml: '',
-            text: '',
-            image: <any>{},
-            types: [],
-            customValues: {},
-        };
-        spyOn(dom, 'extractClipboardEvent').and.callFake((event, callback) => {
-            callback(items);
-        });
-        spyOn(dom, 'readFile').and.callFake((file, callback) => {
-            callback('dataurl');
-        });
-
-        handler.paste(<any>{});
-        expect(paste).toHaveBeenCalledWith({
-            ...items,
-            imageDataUri: 'dataurl',
-        });
-        expect(tempNode).toBeNull();
-    });
-
-    it('trigger paste, simulate IE behavioar', () => {
-        const items: ClipboardData = {
-            rawHtml: undefined,
-            text: '',
-            image: <any>{},
-            types: [],
-            customValues: {},
-        };
-        const expected = { ...items };
-        spyOn(dom, 'extractClipboardEvent').and.callFake((event, callback) => {
-            callback(items);
-        });
-        spyOn(dom, 'readFile').and.callFake((file, callback) => {
-            callback('dataurl');
-        });
-
-        handler.paste(<any>{});
-        expect(paste).toHaveBeenCalledWith({
-            ...expected,
-            rawHtml: 'test html',
-            imageDataUri: 'dataurl',
-        });
-        expect(tempNode).not.toBeNull();
-        expect(tempNode.innerHTML).toBe('');
-    });
 });
 
 describe('CopyPastePlugin copy', () => {

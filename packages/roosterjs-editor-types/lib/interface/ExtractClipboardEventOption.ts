@@ -1,7 +1,7 @@
 /**
- * Options for extractClipboardEvent API
+ * Options for ExtractClipboardItems API
  */
-export default interface ExtractClipboardEventOption {
+export interface ExtractClipboardItemsOption {
     /**
      * Whether retrieving value of text/link-preview is allowed
      */
@@ -13,3 +13,26 @@ export default interface ExtractClipboardEventOption {
      */
     allowedCustomPasteType?: string[];
 }
+
+/**
+ * Options for ExtractClipboardItemsForIE API
+ */
+export interface ExtractClipboardItemsForIEOptions {
+    /**
+     * A callback to help create a temporary DIV for IE to receive pasted content
+     */
+    getTempDiv?: () => HTMLDivElement;
+
+    /**
+     * A callback to help remove the temporary DIV for IE
+     */
+    removeTempDiv?: (div: HTMLDivElement) => void;
+}
+
+/**
+ * @deprecated
+ * Options for extractClipboardEvent API
+ */
+export default interface ExtractClipboardEventOption
+    extends ExtractClipboardItemsOption,
+        ExtractClipboardItemsForIEOptions {}

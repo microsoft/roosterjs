@@ -2,12 +2,10 @@ import {
     addRangeToSelection,
     extractClipboardEvent,
     fromHtml,
-    readFile,
     setHtmlWithSelectionPath,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
-    ClipboardData,
     ContentPosition,
     CopyPastePluginState,
     EditorOptions,
@@ -109,43 +107,26 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private onPaste = (event: Event) => {
+        let range: Range;
+
         extractClipboardEvent(
             event as ClipboardEvent,
-            items => {
-                if (items.rawHtml === undefined) {
-                    // Can't get pasted HTML directly, need to use a temp DIV to retrieve pasted content.
-                    // This is mostly for IE
-                    const originalSelectionRange = this.editor.getSelectionRange();
-                    const tempDiv = this.getTempDiv();
-
-                    this.editor.runAsync(() => {
-                        items.rawHtml = tempDiv.innerHTML;
-                        this.cleanUpAndRestoreSelection(tempDiv, originalSelectionRange);
-                        this.paste(items);
-                    });
-                } else {
-                    this.paste(items);
-                }
-            },
+            clipboardData => this.editor.paste(clipboardData),
             {
                 allowLinkPreview: this.editor.isFeatureEnabled(
                     ExperimentalFeatures.PasteWithLinkPreview
                 ),
                 allowedCustomPasteType: this.state.allowedCustomPasteType,
+                getTempDiv: () => {
+                    range = this.editor.getSelectionRange();
+                    return this.getTempDiv();
+                },
+                removeTempDiv: div => {
+                    this.cleanUpAndRestoreSelection(div, range);
+                },
             }
         );
     };
-
-    private paste(clipboardData: ClipboardData) {
-        if (clipboardData.image) {
-            readFile(clipboardData.image, dataUrl => {
-                clipboardData.imageDataUri = dataUrl;
-                this.editor.paste(clipboardData);
-            });
-        } else {
-            this.editor.paste(clipboardData);
-        }
-    }
 
     private getTempDiv(forceInLightMode?: boolean) {
         const div = this.editor.getCustomData(

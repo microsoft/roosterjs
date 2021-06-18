@@ -35,6 +35,10 @@ const enum ResizeState {
     Both, // when resizing the whole table
 }
 
+function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
+    return toLeft ? pos - rect.left : rect.right - pos;
+}
+
 /**
  * TableResize plugin, provides the ability to resize a table by drag-and-drop
  */
@@ -601,7 +605,36 @@ export default class TableResize implements EditorPlugin {
         });
     };
 
+    private canResizeColumns = (newPos: number): boolean => {
+        for (let i = 0; i < this.currentCellsToResize.length; i++) {
+            const td = this.currentCellsToResize[i];
+            const rect = normalizeRect(td.getBoundingClientRect());
+            const width = getHorizontalDistance(rect, newPos, !this.isRTL);
+            if (width < MIN_CELL_WIDTH) {
+                return false;
+            }
+        }
+
+        for (let i = 0; i < this.nextCellsToResize.length; i++) {
+            const td = this.nextCellsToResize[i];
+            let width: number = Number.MAX_SAFE_INTEGER;
+            if (td) {
+                const rect = normalizeRect(td.getBoundingClientRect());
+                width = getHorizontalDistance(rect, newPos, this.isRTL);
+            }
+
+            if (width < MIN_CELL_WIDTH) {
+                return false;
+            }
+        }
+        return true;
+    };
+
     private resizeColumns = (newPos: number, isShiftPressed: boolean) => {
+        if (!this.canResizeColumns(newPos)) {
+            return;
+        }
+
         // Since we allow the user to resize the table width on adjusting the border of the last cell,
         // we need to make the table width resizable by setting it as null;
         // We also allow the user to resize the table width if Shift key is pressed
@@ -611,41 +644,20 @@ export default class TableResize implements EditorPlugin {
             this.resizingVtable.table.style.width = null;
         }
 
-        this.currentCellsToResize.forEach((td, rowIndex) => {
-            const nextTd = this.nextCellsToResize[rowIndex];
-            const nextTdRect = normalizeRect(nextTd?.getBoundingClientRect());
-            const nextTdWidth = nextTd
-                ? this.isRTL
-                    ? newPos - nextTdRect.left
-                    : nextTdRect.right - newPos
-                : Number.MAX_SAFE_INTEGER;
-
+        this.currentCellsToResize.forEach(td => {
             const rect = normalizeRect(td.getBoundingClientRect());
-            if (
-                this.isRTL &&
-                (rect.right - newPos < MIN_CELL_WIDTH || nextTdWidth < MIN_CELL_WIDTH)
-            ) {
-                return;
-            }
-
-            if (
-                !this.isRTL &&
-                (newPos - rect.left < MIN_CELL_WIDTH || nextTdWidth < MIN_CELL_WIDTH)
-            ) {
-                return;
-            }
-
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
+            td.style.width = `${getHorizontalDistance(rect, newPos, !this.isRTL)}px`;
+        });
 
-            td.style.width = this.isRTL ? `${rect.right - newPos}px` : `${newPos - rect.left}px`;
-
-            if (!isShiftPressed && nextTd && nextTdWidth >= MIN_CELL_WIDTH) {
-                nextTd.style.wordBreak = 'break-word';
-                nextTd.style.whiteSpace = 'normal';
-                nextTd.style.boxSizing = 'border-box';
-                nextTd.style.width = null;
+        this.nextCellsToResize.forEach(td => {
+            if (!isShiftPressed) {
+                td.style.wordBreak = 'break-word';
+                td.style.whiteSpace = 'normal';
+                td.style.boxSizing = 'border-box';
+                td.style.width = null;
             }
         });
     };

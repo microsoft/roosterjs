@@ -8,6 +8,8 @@ import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-e
 export default class MouseUpPlugin implements EditorPlugin {
     private editor: IEditor;
     private mouseUpEventListerAdded: boolean;
+    private mouseDownX: number;
+    private mouseDownY: number;
 
     /**
      * Get a friendly name of  this plugin
@@ -42,6 +44,8 @@ export default class MouseUpPlugin implements EditorPlugin {
                 .getDocument()
                 .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
             this.mouseUpEventListerAdded = true;
+            this.mouseDownX = event.rawEvent.pageX;
+            this.mouseDownY = event.rawEvent.pageY;
         }
     }
     private removeMouseUpEventListener() {
@@ -56,6 +60,7 @@ export default class MouseUpPlugin implements EditorPlugin {
             this.removeMouseUpEventListener();
             this.editor.triggerPluginEvent(PluginEventType.MouseUp, {
                 rawEvent,
+                isClicking: this.mouseDownX == rawEvent.pageX && this.mouseDownY == rawEvent.pageY,
             });
         }
     };
