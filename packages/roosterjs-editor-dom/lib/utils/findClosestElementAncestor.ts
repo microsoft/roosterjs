@@ -1,9 +1,6 @@
 import contains from './contains';
+import matchesSelector from './matchesSelector';
 import { NodeType } from 'roosterjs-editor-types';
-
-interface HTMLElementForIE extends HTMLElement {
-    msMatchesSelector: (selector: string) => boolean;
-}
 
 /**
  * Find closest element ancestor start from the given node which matches the given selector
@@ -25,14 +22,7 @@ export default function findClosestElementAncestor(
         if (element.closest) {
             element = element.closest(selector) as HTMLElement;
         } else {
-            while (
-                element &&
-                element != root &&
-                !(element.matches || (<HTMLElementForIE>element).msMatchesSelector).call(
-                    element,
-                    selector
-                )
-            ) {
+            while (element && element != root && !matchesSelector(element, selector)) {
                 element = element.parentElement;
             }
         }
