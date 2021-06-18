@@ -29,7 +29,7 @@ export default class VListItem {
     /**
      * Construct a new instance of VListItem class
      * @param node The DOM node for this item
-     * @param listTypes An array represnets list types of all parent and current level.
+     * @param listTypes An array represents list types of all parent and current level.
      * Skip this parameter for a non-list item.
      */
     constructor(node: Node, ...listTypes: (ListType.Ordered | ListType.Unordered)[]) {
@@ -74,7 +74,7 @@ export default class VListItem {
      * @param node The node to check
      */
     contains(node: Node): boolean {
-        return contains(this.node, node, true /*treateSameNodeAsContain*/);
+        return contains(this.node, node, true /*treatSameNodeAsContain*/);
     }
 
     /**

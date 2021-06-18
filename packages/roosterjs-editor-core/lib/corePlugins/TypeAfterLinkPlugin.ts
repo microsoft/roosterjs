@@ -10,7 +10,7 @@ import {
 /**
  * @internal
  * TypeAfterLinkPlugin Component helps handle typing event when cursor is right after a link.
- * When typing/pasting after a link, browser may put the new charactor inside link.
+ * When typing/pasting after a link, browser may put the new character inside link.
  * This plugin overrides this behavior to always insert outside of link.
  */
 export default class TypeAfterLinkPlugin implements EditorPlugin {

@@ -30,7 +30,7 @@ const NBSP_HTML = '\u00A0';
  * @param position The position to paste to
  * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
  * @param applyCurrentStyle True if apply format of current selection to the pasted content,
- * false to keep original foramt
+ * false to keep original format
  */
 export const createPasteFragment: CreatePasteFragment = (
     core: EditorCore,
@@ -147,14 +147,14 @@ export const createPasteFragment: CreatePasteFragment = (
 
 function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
     const pendableFormat = getPendableFormatState(core.contentDiv.ownerDocument);
-    const styleBasedForamt = core.api.getStyleBasedFormatState(core, node);
+    const styleBasedFormat = core.api.getStyleBasedFormatState(core, node);
     return {
-        fontFamily: styleBasedForamt.fontName,
-        fontSize: styleBasedForamt.fontSize,
-        textColor: styleBasedForamt.textColor,
-        backgroundColor: styleBasedForamt.backgroundColor,
-        textColors: styleBasedForamt.textColors,
-        backgroundColors: styleBasedForamt.backgroundColors,
+        fontFamily: styleBasedFormat.fontName,
+        fontSize: styleBasedFormat.fontSize,
+        textColor: styleBasedFormat.textColor,
+        backgroundColor: styleBasedFormat.backgroundColor,
+        textColors: styleBasedFormat.textColors,
+        backgroundColors: styleBasedFormat.backgroundColors,
         bold: pendableFormat.isBold,
         italic: pendableFormat.isItalic,
         underline: pendableFormat.isUnderline,

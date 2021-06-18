@@ -14,7 +14,7 @@ export default function isPositionAtBeginningOf(position: NodePosition, targetNo
     if (position) {
         let { node, offset } = position.normalize();
         if (offset == 0) {
-            while (contains(targetNode, node) && areAllPrevousNodesEmpty(node)) {
+            while (contains(targetNode, node) && areAllPreviousNodesEmpty(node)) {
                 node = node.parentNode;
             }
 
@@ -25,7 +25,7 @@ export default function isPositionAtBeginningOf(position: NodePosition, targetNo
     return false;
 }
 
-function areAllPrevousNodesEmpty(node: Node): boolean {
+function areAllPreviousNodesEmpty(node: Node): boolean {
     while (node.previousSibling) {
         node = node.previousSibling;
         if (getTagOfNode(node) == 'BR' || !isNodeEmpty(node)) {

@@ -24,15 +24,15 @@ import {
 // Character codes.
 // IE11 uses different character codes. which are noted below.
 // If adding a new key, test in IE to figure out what the code is.
-const BACKSPACE_CHARCODE = 'Backspace';
-const TAB_CHARCODE = 'Tab';
-const ENTER_CHARCODE = 'Enter';
-const ESC_CHARCODE = !Browser.isIE ? 'Escape' : 'Esc';
-const LEFT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowLeft' : 'Left';
-const UP_ARROW_CHARCODE = !Browser.isIE ? 'ArrowUp' : 'Up';
-const RIGHT_ARROW_CHARCODE = !Browser.isIE ? 'ArrowRight' : 'Right';
-const DOWN_ARROW_CHARCODE = !Browser.isIE ? 'ArrowDown' : 'Down';
-const DELETE_CHARCODE = !Browser.isIE ? 'Delete' : 'Del';
+const BACKSPACE_CHAR_CODE = 'Backspace';
+const TAB_CHAR_CODE = 'Tab';
+const ENTER_CHAR_CODE = 'Enter';
+const ESC_CHAR_CODE = !Browser.isIE ? 'Escape' : 'Esc';
+const LEFT_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowLeft' : 'Left';
+const UP_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowUp' : 'Up';
+const RIGHT_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowRight' : 'Right';
+const DOWN_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowDown' : 'Down';
+const DELETE_CHAR_CODE = !Browser.isIE ? 'Delete' : 'Del';
 
 // Input event input types.
 const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
@@ -159,7 +159,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                         this.setIsSuggesting(false);
                     }
 
-                    // Undos and other major changes to document content fire this type of event.
+                    // Undo and other major changes to document content fire this type of event.
                     // Inform the data provider of the current picker placed elements in the body.
                     let elementIds: string[] = [];
                     this.editor.queryElements(
@@ -394,11 +394,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private onKeyDownEvent(event: PluginKeyboardEvent) {
         let keyboardEvent = event.rawEvent;
         if (this.isSuggesting) {
-            if (keyboardEvent.key == ESC_CHARCODE) {
+            if (keyboardEvent.key == ESC_CHAR_CODE) {
                 this.setIsSuggesting(false);
                 this.blockSuggestions = true;
                 this.cancelDefaultKeyDownEvent(event);
-            } else if (keyboardEvent.key == BACKSPACE_CHARCODE) {
+            } else if (keyboardEvent.key == BACKSPACE_CHAR_CODE) {
                 // #483: If we are backspacing over the trigger character that triggered this Picker
                 // then we need to hide the Picker
                 const wordBeforeCursor = this.getWord(event);
@@ -408,15 +408,15 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             } else if (
                 this.dataProvider.shiftHighlight &&
                 (this.pickerOptions.isHorizontal
-                    ? keyboardEvent.key == LEFT_ARROW_CHARCODE ||
-                      keyboardEvent.key == RIGHT_ARROW_CHARCODE
-                    : keyboardEvent.key == UP_ARROW_CHARCODE ||
-                      keyboardEvent.key == DOWN_ARROW_CHARCODE)
+                    ? keyboardEvent.key == LEFT_ARROW_CHAR_CODE ||
+                      keyboardEvent.key == RIGHT_ARROW_CHAR_CODE
+                    : keyboardEvent.key == UP_ARROW_CHAR_CODE ||
+                      keyboardEvent.key == DOWN_ARROW_CHAR_CODE)
             ) {
                 this.dataProvider.shiftHighlight(
                     this.pickerOptions.isHorizontal
-                        ? keyboardEvent.key == RIGHT_ARROW_CHARCODE
-                        : keyboardEvent.key == DOWN_ARROW_CHARCODE
+                        ? keyboardEvent.key == RIGHT_ARROW_CHAR_CODE
+                        : keyboardEvent.key == DOWN_ARROW_CHAR_CODE
                 );
 
                 if (this.dataProvider.getSelectedIndex) {
@@ -426,7 +426,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 this.cancelDefaultKeyDownEvent(event);
             } else if (
                 this.dataProvider.selectOption &&
-                (keyboardEvent.key == ENTER_CHARCODE || keyboardEvent.key == TAB_CHARCODE)
+                (keyboardEvent.key == ENTER_CHAR_CODE || keyboardEvent.key == TAB_CHAR_CODE)
             ) {
                 this.dataProvider.selectOption();
                 this.cancelDefaultKeyDownEvent(event);
@@ -434,12 +434,12 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 // Currently no op.
             }
         } else {
-            if (keyboardEvent.key == BACKSPACE_CHARCODE) {
+            if (keyboardEvent.key == BACKSPACE_CHAR_CODE) {
                 const nodeRemoved = this.tryRemoveNode(event);
                 if (nodeRemoved) {
                     this.cancelDefaultKeyDownEvent(event);
                 }
-            } else if (keyboardEvent.key == DELETE_CHARCODE) {
+            } else if (keyboardEvent.key == DELETE_CHAR_CODE) {
                 let searcher = this.editor.getContentSearcherOfCursor(event);
                 let nodeAfterCursor = searcher.getInlineElementAfter()
                     ? searcher.getInlineElementAfter().getContainerNode()

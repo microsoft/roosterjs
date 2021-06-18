@@ -3,7 +3,7 @@
  */
 export const enum RegionType {
     /**
-     * Region splitted by Table
+     * Region split by Table
      */
     Table,
 }

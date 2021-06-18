@@ -25,7 +25,7 @@ const COMMANDS: {
     : Browser.isIE
     ? {
           /**
-           * Change the default paragraph separater to DIV. This is mainly for IE since its default setting is P
+           * Change the default paragraph separator to DIV. This is mainly for IE since its default setting is P
            */
           [DocumentCommand.DefaultParagraphSeparator]: 'div',
 

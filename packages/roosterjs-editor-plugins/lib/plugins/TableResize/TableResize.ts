@@ -565,7 +565,7 @@ export default class TableResize implements EditorPlugin {
                     const cell = this.resizingVtable.cells[i][j];
                     if (cell.td) {
                         if (shouldResizeX) {
-                            // the width of some external table is fixed, we need to make it resizeable
+                            // the width of some external table is fixed, we need to make it resizable
                             this.resizingVtable.table.style.width = null;
                             const newWidth = cell.width * ratioX;
                             cell.td.style.boxSizing = 'border-box';
@@ -577,7 +577,7 @@ export default class TableResize implements EditorPlugin {
                         }
 
                         if (shouldResizeY) {
-                            // the height of some external table is fixed, we need to make it resizeable
+                            // the height of some external table is fixed, we need to make it resizable
                             this.resizingVtable.table.style.height = null;
                             if (j == 0) {
                                 const newHeight = cell.height * ratioY;
@@ -636,7 +636,7 @@ export default class TableResize implements EditorPlugin {
         }
 
         // Since we allow the user to resize the table width on adjusting the border of the last cell,
-        // we need to make the table width resizeable by setting it as null;
+        // we need to make the table width resizable by setting it as null;
         // We also allow the user to resize the table width if Shift key is pressed
         const isLastCell: boolean = this.nextCellsToResize.length == 0;
 

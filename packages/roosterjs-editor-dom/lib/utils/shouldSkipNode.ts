@@ -3,7 +3,7 @@ import { getComputedStyle } from './getComputedStyles';
 import { NodeType } from 'roosterjs-editor-types';
 
 const CRLF = /^[\r\n]+$/gm;
-const CRLFSPACE = /[\t\r\n\u0020\u200B]/gm; // We should only find new line, real space or ZeroWidthSpace (TAB, %20, but not &nbsp;)
+const CRLF_SPACE = /[\t\r\n\u0020\u200B]/gm; // We should only find new line, real space or ZeroWidthSpace (TAB, %20, but not &nbsp;)
 
 /**
  * Skip a node when any of following conditions are true
@@ -14,14 +14,14 @@ const CRLFSPACE = /[\t\r\n\u0020\u200B]/gm; // We should only find new line, rea
  * - it is just <div></div>
  * @param node The node to check
  * @param ignoreSpace (Optional) True to ignore pure space text node of the node when check.
- * If the value of a node value is only space, set this to true will treat this node as skippable.
+ * If the value of a node value is only space, set this to true will treat this node can be skipped.
  * Default value is false
  */
 export default function shouldSkipNode(node: Node, ignoreSpace?: boolean): boolean {
     if (node.nodeType == NodeType.Text) {
         if (!node.nodeValue || node.textContent == '' || CRLF.test(node.nodeValue)) {
             return true;
-        } else if (ignoreSpace && node.nodeValue.replace(CRLFSPACE, '') == '') {
+        } else if (ignoreSpace && node.nodeValue.replace(CRLF_SPACE, '') == '') {
             return true;
         } else {
             return false;
@@ -34,9 +34,9 @@ export default function shouldSkipNode(node: Node, ignoreSpace?: boolean): boole
         const tag = getTagOfNode(node);
 
         if (tag == 'DIV' || tag == 'SPAN') {
-            // Empty SPAN/DIV or SPAN/DIV with only unmeaningful children is unmeaningful,
+            // Empty SPAN/DIV or SPAN/DIV with only meaningless children is meaningless,
             // because it can render nothing. If we keep them here, there may be unexpected
-            // LI elements added for those unmeaningful nodes.
+            // LI elements added for those meaningless nodes.
             for (let child = node.firstChild; !!child; child = child.nextSibling) {
                 if (!shouldSkipNode(child, ignoreSpace)) {
                     return false;

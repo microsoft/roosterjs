@@ -49,8 +49,8 @@ export default class SelectionBlockScoper implements TraversingScoper {
     /**
      * Get the start inline element
      * The start inline refers to inline before the selection start
-     *  The reason why we choose the one before rather after is, when cursor is at the end of a paragragh,
-     * the one after likely will point to inline in next paragragh which may be null if the cursor is at bottom of editor
+     *  The reason why we choose the one before rather after is, when cursor is at the end of a paragraph,
+     * the one after likely will point to inline in next paragraph which may be null if the cursor is at bottom of editor
      */
     public getStartInlineElement(): InlineElement {
         if (this.block) {

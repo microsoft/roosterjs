@@ -24,7 +24,7 @@ import { BlockElement } from 'roosterjs-editor-types';
  * 6) &lt;root&gt;&lt;div&gt;abc&lt;span&gt;123&lt;br&gt;456&lt;/span&gt;&lt;/div&gt;&lt;/root&gt;
  *   This is really tricky. Essentially there is a &lt;BR&gt; in middle of a span breaking the span into two blocks;
  *   block1: abc&lt;span&gt;123&lt;br&gt; block2: 456
- * In summary, given any arbitary node (leaf), to identify the head and tail of the block, following rules need to be followed:
+ * In summary, given any arbitrary node (leaf), to identify the head and tail of the block, following rules need to be followed:
  * 1) to identify the head, it needs to crawl DOM tre left/up till a block node or BR is encountered
  * 2) same for identifying tail
  * 3) should also apply a block ceiling, meaning as it crawls up, it should stop at a block node
@@ -52,7 +52,7 @@ export default function getBlockElementAtNode(rootNode: Node, node: Node): Block
     // 1) &lt;root&gt;&lt;div&gt;hello&lt;br&gt;&lt;/div&gt;&lt;/root&gt;, head: hello, tail: &lt;br&gt;
     // 2) &lt;root&gt;&lt;div&gt;hello&lt;span style="font-family: Arial"&gt;world&lt;/span&gt;&lt;/div&gt;&lt;/root&gt;, head: hello, tail: world
     // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
-    // So we shall try to collapse as much as we can to the nearest common ancester
+    // So we shall try to collapse as much as we can to the nearest common ancestor
     let nodes = collapseNodes(rootNode, headNode, tailNode, false /*canSplitParent*/);
     headNode = nodes[0];
     tailNode = nodes[nodes.length - 1];

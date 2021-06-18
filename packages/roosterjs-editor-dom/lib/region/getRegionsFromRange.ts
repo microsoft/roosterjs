@@ -9,7 +9,7 @@ import { QueryScope, Region, RegionType } from 'roosterjs-editor-types';
 /**
  * Get regions impacted by the given range under the root node
  * @param root Root node to get regions from
- * @param range A selection range. Regions will be created acording to this range. Each region will be
+ * @param range A selection range. Regions will be created according to this range. Each region will be
  * fully or partially covered by this range.
  * @param type Type of region. Currently we only support TABLE region.
  */
@@ -56,7 +56,7 @@ export function getRegionCreator(
 
 /**
  * This is a internal data structure used for build regions.
- * We firstly split the selection by some boundaries, then we can build region from these bundaries.
+ * We firstly split the selection by some boundaries, then we can build region from these boundaries.
  */
 interface Boundary {
     /**
@@ -74,7 +74,7 @@ interface Boundary {
         outerNode: Node;
 
         /**
-         * Child bundaries
+         * Child boundaries
          */
         boundaries: Boundary[];
     }[];
@@ -135,9 +135,9 @@ function buildBoundaryTree(root: HTMLElement, range: Range, type: RegionType): B
  * Step 2: Recursively iterate all boundaries and create regions
  * @param creator A region creator function to help create region
  * @param boundary Current root boundary
- * @param start A node where full range start from. This may not be the direct node container of range.startContenter.
+ * @param start A node where full range start from. This may not be the direct node container of range.startContainer.
  * It is the nearest ancestor which satisfies the InnerSelector of the given region type
- * @param end A node where full range end from. This may not be the direct node container of range.endContenter.
+ * @param end A node where full range end from. This may not be the direct node container of range.endContainer.
  * It is the nearest ancestor which satisfies the InnerSelector of the given region type
  * @param started Whether we have already hit the start node
  */

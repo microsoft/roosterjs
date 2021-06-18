@@ -20,7 +20,7 @@ export default interface WordConverterArguments {
     lists: { [key: string]: ListMetadata };
 
     /**
-     * Stores the list item metatada of the items we
+     * Stores the list item meta data of the items we
      * have found that need to be converted
      */
     listItems: ListItemMetadata[];

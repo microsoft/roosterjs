@@ -35,7 +35,7 @@ export interface InsertOptionBasic extends InsertOptionBase {
 }
 
 /**
- * The Range varient where insertNode will opperate on a range disjointed from the current selection state.
+ * The Range variant where insertNode will operate on a range disjointed from the current selection state.
  */
 export interface InsertOptionRange extends InsertOptionBase {
     position: ContentPosition.Range;

@@ -21,7 +21,7 @@ export interface AutoLinkFeatureSettings {
 export interface CursorFeatureSettings {
     /**
      * Chrome may make the cursor move the then end of document if press Ctrl+Left at the beginning of document
-     * Let's disable this behaivor
+     * Let's disable this behavior
      * @default true
      */
     noCycleCursorMove: boolean;
@@ -69,7 +69,7 @@ export interface EntityFeatureSettings {
  */
 export interface ListFeatureSettings {
     /**
-     * When press space after an asterik or number in an empty line, toggle bullet/numbering
+     * When press space after an astirisk or number in an empty line, toggle bullet/numbering
      * @default true
      */
     autoBullet: boolean;
@@ -127,7 +127,7 @@ export interface MarkdownFeatureSettings {
     markdownItalic: boolean;
 
     /**
-     * When typing text surrounded by '~', the symbols will be removed and the text will be striked through.
+     * When typing text surrounded by '~', the symbols will be removed and the text will be strike through.
      * @default true
      */
     markdownStrikethru: boolean;
@@ -191,7 +191,7 @@ export interface TableFeatureSettings {
 
     /**
      * When press Up or Down in table cell, jump to the table cell above/below
-     * @default true for Chrome and safari, false for other browsers since they arleady have correct behavior
+     * @default true for Chrome and safari, false for other browsers since they already have correct behavior
      */
     upDownInTable: boolean;
 }

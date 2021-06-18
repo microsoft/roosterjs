@@ -12,7 +12,7 @@ export default interface EditorOptions {
     /**
      * List of plugins.
      * The order of plugins here determines in what order each event will be dispatched.
-     * Plugins not appear in t his list will not be added to editor, including bulit-in plugins.
+     * Plugins not appear in this list will not be added to editor, including built-in plugins.
      * Default value is empty array.
      */
     plugins?: EditorPlugin[];
@@ -54,10 +54,10 @@ export default interface EditorOptions {
 
     /**
      * @deprecated
-     * RoosterJS provides an experemental "external content handler" that transforms text
+     * RoosterJS provides an experimental "external content handler" that transforms text
      * This is used when content is pasted or inserted via a method we can hook into.
      * This transform is currently "lossy" and will eliminate color information.
-     * If you want change this behavior, you may define a different function here.
+     * If you want to change this behavior, you may define a different function here.
      * It takes in the impacted HTMLElement
      */
     onExternalContentTransform?: (htmlIn: HTMLElement) => void;

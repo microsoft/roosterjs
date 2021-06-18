@@ -27,7 +27,7 @@ export default interface IPositionContentSearcher {
      * Get X number of chars before position
      * The actual returned chars may be less than what is requested.
      * @param length The length of string user want to get, the string always ends at the position,
-     * so this length determins the start position of the string
+     * so this length determines the start position of the string
      * @returns The actual string we get as a sub string, or the whole string before position when
      * there is not enough chars in the string
      */
@@ -53,7 +53,7 @@ export default interface IPositionContentSearcher {
 
     /**
      * Get first non textual inline element before position
-     * @returns First non textutal inline element before position or null if no such element exists
+     * @returns First non textual inline element before position or null if no such element exists
      */
     getNearestNonTextInlineElement(): InlineElement;
 }

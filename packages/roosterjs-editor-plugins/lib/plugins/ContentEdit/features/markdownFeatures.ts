@@ -48,7 +48,7 @@ function cacheGetRangeForMarkdownOperation(
             }
             const inlineTextContent = textInlineElement.getTextContent();
 
-            // special case for immediately preceeding character being whitespace
+            // special case for immediately preceding character being whitespace
             if (inlineTextContent[inlineTextContent.length - 1].trim().length == 0) {
                 return false;
             }
@@ -123,7 +123,7 @@ function handleMarkdownEvent(
 }
 
 /**
- * Markdown bold feature. Bolds text with markdown shortcuts.
+ * Markdown bold feature. Make bold text with markdown shortcuts.
  */
 const MarkdownBold: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.EIGHT_ASTIRISK,
@@ -133,7 +133,7 @@ const MarkdownBold: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkd
 );
 
 /**
- * Markdown italics feature. Italicises text with markdown shortcuts.
+ * Markdown italics feature. Make italic text with markdown shortcuts.
  */
 const MarkdownItalic: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.DASH_UNDERSCORE,
@@ -143,9 +143,9 @@ const MarkdownItalic: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMar
 );
 
 /**
- * Markdown strikethru feature. Strikethrus text with markdown shortcuts.
+ * Markdown strikethrough feature. MAke strikethrough text with markdown shortcuts.
  */
-const MarkdownStrikethru: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
+const MarkdownStrikethrough: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
     Keys.GRAVE_TILDE,
     '~',
     's',
@@ -171,6 +171,6 @@ export const MarkdownFeatures: Record<
 > = {
     markdownBold: MarkdownBold,
     markdownItalic: MarkdownItalic,
-    markdownStrikethru: MarkdownStrikethru,
+    markdownStrikethru: MarkdownStrikethrough,
     markdownInlineCode: MarkdownInlineCode,
 };

@@ -8,7 +8,7 @@ export const enum ColorTransformDirection {
     LightToDark = 0,
 
     /**
-     * Transform from diark to light
+     * Transform from dark to light
      */
     DarkToLight = 1,
 }

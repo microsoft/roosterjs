@@ -24,13 +24,13 @@ export default interface RegionBase {
 
     /**
      * A node to define the beginning boundary of this region.
-     * All nodes after this node before nodeAfter and contaiend by rootNode will be treated contained by this region.
+     * All nodes after this node before nodeAfter and contained by rootNode will be treated contained by this region.
      */
     nodeBefore?: Node;
 
     /**
      * A node to define the ending boundary of this region.
-     * All nodes before this node after nodeBefore and contaiend by rootNode will be treated contained by this region.
+     * All nodes before this node after nodeBefore and contained by rootNode will be treated contained by this region.
      */
     nodeAfter?: Node;
 

@@ -7,7 +7,7 @@ export const enum EntityOperation {
      * Plugin can handle this event to entity hydration.
      * This event will be only fired once for each entity DOM node.
      * After undo, or copy/paste, since new DOM nodes were added, this event will be fired
-     * for those entites represented by newly added nodes.
+     * for those entities represented by newly added nodes.
      */
     NewEntity,
 
@@ -38,8 +38,8 @@ export const enum EntityOperation {
 
     /**
      * Notify plugins that an entity is being overwritten.
-     * This can be causes by key in, cut, paste, delete, backspace ... on a selection
-     * which contains some entites.
+     * This can be caused by key in, cut, paste, delete, backspace ... on a selection
+     * which contains some entities.
      */
     Overwrite,
 

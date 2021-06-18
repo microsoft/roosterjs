@@ -25,7 +25,7 @@ export default interface DOMEventPluginState {
     stopPrintableKeyboardEventPropagation: boolean;
 
     /**
-     * Context menu providers, that can provi context menu items
+     * Context menu providers, that can provide context menu items
      */
     contextMenuProviders: ContextMenuProvider<any>[];
 }

@@ -3,15 +3,15 @@ import splitParentNode from './splitParentNode';
 import toArray from './toArray';
 
 /**
- * Collapse nodes within the given start and end nodes to their common ascenstor node,
+ * Collapse nodes within the given start and end nodes to their common ancestor node,
  * split parent nodes if necessary
  * @param root The root node of the scope
  * @param start The start node
  * @param end The end node
  * @param canSplitParent True to allow split parent node there are nodes before start or after end under the same parent
- * and the returned nodes will be all nodes from start trhough end after splitting
+ * and the returned nodes will be all nodes from start through end after splitting
  * False to disallow split parent
- * @returns When cansplitParent is true, returns all node from start through end after splitting,
+ * @returns When canSplitParent is true, returns all node from start through end after splitting,
  * otherwise just return start and end
  */
 export default function collapseNodes(
@@ -27,7 +27,7 @@ export default function collapseNodes(
     start = collapse(root, start, end, true /*isStart*/, canSplitParent);
     end = collapse(root, end, start, false /*isStart*/, canSplitParent);
 
-    if (contains(start, end, true /*treateSameNodeAsContain*/)) {
+    if (contains(start, end, true /*treatSameNodeAsContain*/)) {
         return [start];
     } else if (contains(end, start)) {
         return [end];

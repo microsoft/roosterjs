@@ -3,12 +3,12 @@
  */
 export const enum PositionType {
     /**
-     * At the begninning of a node
+     * At the beginning of a node
      */
     Begin = 0,
 
     /**
-     * At the endo of a node
+     * At the end of a node
      */
     End = -1,
 

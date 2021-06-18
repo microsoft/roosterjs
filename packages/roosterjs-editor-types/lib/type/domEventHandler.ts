@@ -10,7 +10,7 @@ export type DOMEventHandlerFunction = (event: Event) => void;
  */
 export interface DOMEventHandlerObject {
     /**
-     * Type of pluign event. The DOM event will be mapped with this plugin event type
+     * Type of plugin event. The DOM event will be mapped with this plugin event type
      */
     pluginEventType: PluginEventType;
 
@@ -22,6 +22,6 @@ export interface DOMEventHandlerObject {
 }
 
 /**
- * Combined event handler type with all 3 posibilities
+ * Combined event handler type with all 3 possibilities
  */
 export type DOMEventHandler = PluginEventType | DOMEventHandlerFunction | DOMEventHandlerObject;

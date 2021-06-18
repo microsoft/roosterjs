@@ -19,8 +19,8 @@ import {
 } from 'roosterjs-editor-dom';
 
 /**
- * When user type, they may end a link with a puncatuation, i.e. www.bing.com;
- * we need to trim off the trailing puncatuation before turning it to link match
+ * When user type, they may end a link with a punctuation, i.e. www.bing.com;
+ * we need to trim off the trailing punctuation before turning it to link match
  */
 const TRAILING_PUNCTUATION_REGEX = /[.+=\s:;"',>]+$/i;
 const MINIMUM_LENGTH = 5;

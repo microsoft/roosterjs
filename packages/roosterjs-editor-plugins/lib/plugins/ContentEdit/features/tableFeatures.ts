@@ -124,7 +124,7 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement {
-    return cacheGetEventData(event, 'TABLECELL_FOR_TABLE_FEATURES', () => {
+    return cacheGetEventData(event, 'TABLE_CELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
         let firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);
         return (

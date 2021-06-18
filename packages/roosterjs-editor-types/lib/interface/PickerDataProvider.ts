@@ -4,8 +4,9 @@ import IEditor from './IEditor';
  * Data provider for PickerPlugin
  */
 export default interface PickerDataProvider {
+    // TODO: Rename to "onInitialize"
     /**
-     * Function called when the plugin is intialized to register two callbacks with the
+     * Function called when the plugin is initialized to register two callbacks with the
      * data provider and to provide a reference to the Editor. The first callback, insertNodeCallback,
      * may be called in order to "commit" a new element to the editor body that isn't handled
      * automatically by the editor plugin. The second callback, setIsSuggestingCallback, sets

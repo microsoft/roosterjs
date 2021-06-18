@@ -136,14 +136,14 @@ export default interface IEditor {
     ): T[];
 
     /**
-     * Collapse nodes within the given start and end nodes to their common ascenstor node,
+     * Collapse nodes within the given start and end nodes to their common ancestor node,
      * split parent nodes if necessary
      * @param start The start node
      * @param end The end node
      * @param canSplitParent True to allow split parent node there are nodes before start or after end under the same parent
-     * and the returned nodes will be all nodes from start trhough end after splitting
+     * and the returned nodes will be all nodes from start through end after splitting
      * False to disallow split parent
-     * @returns When cansplitParent is true, returns all node from start through end after splitting,
+     * @returns When canSplitParent is true, returns all node from start through end after splitting,
      * otherwise just return start and end
      */
     collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[];
@@ -154,7 +154,7 @@ export default interface IEditor {
 
     /**
      * Check whether the editor contains any visible content
-     * @param trim Whether trime the content string before check. Default is false
+     * @param trim Whether trim the content string before check. Default is false
      * @returns True if there's no visible content, otherwise false
      */
     isEmpty(trim?: boolean): boolean;
@@ -194,7 +194,7 @@ export default interface IEditor {
      * @param clipboardData Clipboard data retrieved from clipboard
      * @param pasteAsText Force pasting as plain text. Default value is false
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
-     * false to keep original foramt.  Default value is false. When pasteAsText is true, this parameter is ignored
+     * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
      */
     paste(clipboardData: ClipboardData, pasteAsText?: boolean, applyCurrentFormat?: boolean): void;
 
@@ -297,7 +297,7 @@ export default interface IEditor {
      * Get an HTML element from current cursor position.
      * When expectedTags is not specified, return value is the current node (if it is HTML element)
      * or its parent node (if current node is a Text node).
-     * When expectedTags is specified, return value is the first anscestor of current node which has
+     * When expectedTags is specified, return value is the first ancestor of current node which has
      * one of the expected tags.
      * If no element found within editor by the given tag, return null.
      * @param selector Optional, an HTML selector to find HTML element with.
@@ -385,7 +385,7 @@ export default interface IEditor {
      * the data field in ContentChangedEvent if changeSource is not null.
      * @param changeSource The change source to use when fire ContentChangedEvent. When the value is not null,
      * a ContentChangedEvent will be fired with change source equal to this value
-     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complelte).
+     * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
      */
     addUndoSnapshot(
         callback?: (start: NodePosition, end: NodePosition) => any,
@@ -517,7 +517,7 @@ export default interface IEditor {
      * In Shadow Edit mode, all format change will finally be ignored.
      * This can be used for building a live preview feature for format button, to allow user
      * see format result without really apply it.
-     * This function can be called repeatly. If editor is already in shadow edit mode, we can still
+     * This function can be called repeated. If editor is already in shadow edit mode, we can still
      * use this function to do more shadow edit operation.
      */
     startShadowEdit(): void;

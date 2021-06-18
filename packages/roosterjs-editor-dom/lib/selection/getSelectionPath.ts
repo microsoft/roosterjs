@@ -22,7 +22,7 @@ export default function getSelectionPath(rootNode: Node, range: Range): Selectio
 
 /**
  * Get the path of the node relative to rootNode.
- * The path of the node is an array of integer indecies into the childNodes of the given node.
+ * The path of the node is an array of integer indices into the childNodes of the given node.
  *
  * The node path will be what the node path will be on a _normalized_ dom
  * (e.g. empty text nodes will be ignored and adjacent text nodes will be concatenated)

@@ -124,7 +124,7 @@ export default class VListChain {
     }
 
     /**
-     * Contruct a new instance of VListChain class
+     * Construct a new instance of VListChain class
      * @param editor Editor object
      */
     private constructor(private region: RegionBase, private name: string) {}

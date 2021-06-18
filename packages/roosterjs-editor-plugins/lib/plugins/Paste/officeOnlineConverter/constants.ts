@@ -34,4 +34,4 @@ const TEXT_CONTAINER_ELEMENT_CLASS_NAME = 'OutlineElement';
 /**
  * @internal
  */
-export const WAC_IDENTIFING_SELECTOR = `ul[class^="BulletListStyle"]>.${TEXT_CONTAINER_ELEMENT_CLASS_NAME},ol[class^="NumberListStyle"]>.${TEXT_CONTAINER_ELEMENT_CLASS_NAME}`;
+export const WAC_IDENTIFY_SELECTOR = `ul[class^="BulletListStyle"]>.${TEXT_CONTAINER_ELEMENT_CLASS_NAME},ol[class^="NumberListStyle"]>.${TEXT_CONTAINER_ELEMENT_CLASS_NAME}`;

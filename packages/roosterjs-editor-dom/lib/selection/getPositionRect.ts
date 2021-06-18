@@ -4,7 +4,7 @@ import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
 
 /**
  * Get bounding rect of this position
- * @param position The positioin to get rect from
+ * @param position The position to get rect from
  */
 export default function getPositionRect(position: NodePosition): Rect {
     if (!position) {
