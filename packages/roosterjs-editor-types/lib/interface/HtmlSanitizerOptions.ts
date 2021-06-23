@@ -63,6 +63,11 @@ export default interface HtmlSanitizerOptions {
     additionalPredefinedCssForElement?: PredefinedCssMap;
 
     /**
+     * Preserve HTML comments
+     */
+    preserveHtmlComments?: boolean;
+
+    /**
      * Define a replacement tag name of unknown tags.
      * A star "*" means keep as it is, no replacement
      * Other valid string means replace the tag name with this string.
