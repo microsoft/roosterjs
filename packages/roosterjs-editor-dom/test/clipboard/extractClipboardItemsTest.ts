@@ -1,5 +1,5 @@
 import extractClipboardItems from '../../lib/clipboard/extractClipboardItems';
-import { EdgeLinkPreview } from 'roosterjs/lib';
+import { EdgeLinkPreview } from 'roosterjs-editor-types';
 
 describe('extractClipboardItems', () => {
     function throwError(): any {
