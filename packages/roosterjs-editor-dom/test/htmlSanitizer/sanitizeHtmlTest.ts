@@ -81,6 +81,9 @@ describe('sanitizeHtml', () => {
             '<span dir="ltr">aa</span>'
         );
     });
+    it('Html contains comments', () => {
+        runTest('<div>aa</div><!-- html-comment --><div>bb</div>', '<div>aa</div><div>bb</div>');
+    });
     it('Html contains CSS with escaped quoted values', () => {
         let testIn: string =
             "<span style='background:url" +
@@ -319,6 +322,32 @@ describe('sanitizeHtml with additionalGlobalStyleNodes', () => {
 
     it('global styles with conflict inline style', () => {
         runTest('<div class="test" style="color: blue"></div>', '<div style="color:blue"></div>');
+    });
+});
+
+describe('sanitizeHtml with preserveHtmlComments', () => {
+    let sanitizer: HtmlSanitizer;
+
+    beforeAll(() => {
+        sanitizer = new HtmlSanitizer({
+            preserveHtmlComments: true,
+        });
+    });
+
+    afterAll(() => {
+        sanitizer = null;
+    });
+
+    function runTest(source: string, exp: string) {
+        let result = sanitizer.exec(source, false, { color: '' });
+        expect(result).toBe(exp);
+    }
+
+    it('preserve HTML comments', () => {
+        runTest(
+            '<div>aa</div><!-- html-comment --><div>bb</div>',
+            '<div>aa</div><!-- html-comment --><div>bb</div>'
+        );
     });
 });
 

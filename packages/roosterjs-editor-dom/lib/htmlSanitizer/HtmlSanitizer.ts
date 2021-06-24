@@ -66,6 +66,7 @@ export default class HtmlSanitizer {
     private defaultStyleValues: StringMap;
     private additionalPredefinedCssForElement: PredefinedCssMap;
     private additionalGlobalStyleNodes: HTMLStyleElement[];
+    private preserveHtmlComments: boolean;
     private unknownTagReplacement: string;
 
     /**
@@ -85,6 +86,7 @@ export default class HtmlSanitizer {
         this.defaultStyleValues = getDefaultStyleValues(options.additionalDefaultStyleValues);
         this.additionalPredefinedCssForElement = options.additionalPredefinedCssForElement;
         this.additionalGlobalStyleNodes = options.additionalGlobalStyleNodes || [];
+        this.preserveHtmlComments = options.preserveHtmlComments;
         this.unknownTagReplacement = options.unknownTagReplacement;
     }
 
@@ -172,6 +174,7 @@ export default class HtmlSanitizer {
         const isElement = nodeType == NodeType.Element;
         const isText = nodeType == NodeType.Text;
         const isFragment = nodeType == NodeType.DocumentFragment;
+        const isComment = nodeType == NodeType.Comment;
 
         let shouldKeep = false;
 
@@ -203,6 +206,8 @@ export default class HtmlSanitizer {
                 !/^[\r\n]*$/g.test(node.nodeValue);
         } else if (isFragment) {
             shouldKeep = true;
+        } else if (isComment) {
+            shouldKeep = this.preserveHtmlComments;
         } else {
             shouldKeep = false;
         }

@@ -14,6 +14,7 @@ export default function createDefaultHtmlSanitizerOptions(): Required<HtmlSaniti
         additionalDefaultStyleValues: {},
         additionalGlobalStyleNodes: [],
         additionalPredefinedCssForElement: {},
+        preserveHtmlComments: false,
         unknownTagReplacement: null,
     };
 }
