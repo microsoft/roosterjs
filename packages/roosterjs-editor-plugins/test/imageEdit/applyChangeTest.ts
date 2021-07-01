@@ -8,7 +8,7 @@ const WIDTH = 20;
 const HEIGHT = 10;
 const IMAGE_EDIT_EDITINFO_NAME = 'roosterEditInfo';
 
-describe('applyChange', () => {
+xdescribe('applyChange', () => {
     let img: HTMLImageElement;
     let editor: IEditor;
     let triggerPluginEvent: jasmine.Spy;
