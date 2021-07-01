@@ -175,7 +175,7 @@ describe('applyChange', () => {
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
-        img.src = IMG_SRC;
+        await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.angle = Math.PI / 4;
@@ -208,7 +208,7 @@ describe('applyChange', () => {
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
-        img.src = IMG_SRC;
+        await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.width = editInfo.width * 2;
@@ -241,7 +241,7 @@ describe('applyChange', () => {
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
-        img.src = IMG_SRC;
+        await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.left = 0.5;
@@ -274,7 +274,7 @@ describe('applyChange', () => {
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
-        img.src = IMG_SRC;
+        await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.width *= 2;
@@ -307,7 +307,7 @@ describe('applyChange', () => {
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
-        img.src = IMG_SRC;
+        await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.left = 0.5;
@@ -340,7 +340,7 @@ describe('applyChange', () => {
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
-        img.src = IMG_SRC;
+        await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.angle = Math.PI / 4;
@@ -375,6 +375,19 @@ function loadImage(src: string): Promise<HTMLImageElement> {
             img.onload = null;
             img.onerror = null;
             resolve(img);
+        };
+        img.onload = result;
+        img.onerror = result;
+        img.src = src;
+    });
+}
+
+function reloadImage(img: HTMLImageElement, src: string): Promise<void> {
+    return new Promise<void>(resolve => {
+        const result = () => {
+            img.onload = null;
+            img.onerror = null;
+            resolve();
         };
         img.onload = result;
         img.onerror = result;
