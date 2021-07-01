@@ -3,6 +3,7 @@ export * from './ContextMenu';
 export * from './CustomReplace';
 export * from './CutPasteListChain';
 export * from './HyperLink';
+export * from './ImageEdit';
 export * from './ImageResize';
 export * from './Paste';
 export * from './Picker';

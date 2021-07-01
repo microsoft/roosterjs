@@ -473,10 +473,19 @@ export default interface IEditor {
     setEditorDomAttribute(name: string, value: string): void;
 
     /**
-     * get DOM attribute of editor content DIV
+     * Get DOM attribute of editor content DIV
      * @param name Name of the attribute
      */
     getEditorDomAttribute(name: string): string;
+
+    /**
+     * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
+     * @param element The element to calculate from. If the given element is not in editor, return value will be null
+     * @param addScroll When pass true, The return value will also add scrollLeft and scrollTop if any. So the value
+     * may be different than what user is seeing from the view. When pass false, scroll position will be ignored.
+     * @returns An [x, y] array which contains the left and top distances, or null if the given element is not in editor.
+     */
+    getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[];
 
     /**
      * Add a Content Edit feature.
