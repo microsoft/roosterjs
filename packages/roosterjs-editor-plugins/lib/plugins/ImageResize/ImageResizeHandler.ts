@@ -116,6 +116,9 @@ export default class ImageResizeHandler {
         const wrapper = this.getResizeWrapper();
 
         for (let i = 0; i < this.resizeHelpers.length; i++) {
+            if (!this.resizeHelpers[i]) {
+                continue;
+            }
             for (let j = 0; j < this.resizeHelpers[i].length; j++) {
                 const helper = this.resizeHelpers[i][j];
                 helper?.dispose();
