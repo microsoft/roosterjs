@@ -43,11 +43,6 @@ const enum YCoordinate {
     Top = 2,
 }
 
-const enum STEP {
-    AllResize = 1,
-    CornerResize = 2,
-}
-
 type ResizeContext = [XCoordinate, YCoordinate];
 
 /**
@@ -145,40 +140,44 @@ export default class ImageResizeHandler {
 
         wrapper.style.position = 'relative';
         wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
-        const step = this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize)
-            ? STEP.AllResize
-            : STEP.CornerResize;
+        const sideResize = this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize);
 
-        for (let x: XCoordinate = XCoordinate.Left; x <= XCoordinate.Right; x += step) {
+        for (let x: XCoordinate = XCoordinate.Left; x <= XCoordinate.Right; x++) {
             this.resizeHelpers[x] = [];
-            for (let y: YCoordinate = YCoordinate.Bottom; y <= YCoordinate.Top; y += step) {
+            for (let y: YCoordinate = YCoordinate.Bottom; y <= YCoordinate.Top; y++) {
                 const direction = DIRECTIONS[x][y];
-                const html = direction
-                    ? `<div style="position:absolute;${x == XCoordinate.Left ? 'left' : 'right'}:${
-                          x == XCoordinate.Center ? '50%' : '0px'
-                      };${y == YCoordinate.Top ? 'top' : 'bottom'}:${
-                          y == YCoordinate.Middle ? '50%' : '0px'
-                      }">
+                const html =
+                    !sideResize && (x == XCoordinate.Center) != (y == YCoordinate.Middle)
+                        ? ''
+                        : direction
+                        ? `<div style="position:absolute;${
+                              x == XCoordinate.Left ? 'left' : 'right'
+                          }:${x == XCoordinate.Center ? '50%' : '0px'};${
+                              y == YCoordinate.Top ? 'top' : 'bottom'
+                          }:${y == YCoordinate.Middle ? '50%' : '0px'}">
                     <div style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
-                          this.selectionBorderColor
-                      };cursor:${direction}-resize;${
-                          y == YCoordinate.Top ? 'top' : 'bottom'
-                      }:-${HANDLE_MARGIN}px;${
-                          x == XCoordinate.Left ? 'left' : 'right'
-                      }:-${HANDLE_MARGIN}px"></div></div>`
-                    : `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;">`;
-                const div = fromHtml(html, doc)[0] as HTMLElement;
-                wrapper.appendChild(div);
+                              this.selectionBorderColor
+                          };cursor:${direction}-resize;${
+                              y == YCoordinate.Top ? 'top' : 'bottom'
+                          }:-${HANDLE_MARGIN}px;${
+                              x == XCoordinate.Left ? 'left' : 'right'
+                          }:-${HANDLE_MARGIN}px"></div></div>`
+                        : `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;">`;
 
-                this.resizeHelpers[x][y] = direction
-                    ? new ResizeHelper(
-                          div,
-                          [x, y],
-                          this.onResizeBegin,
-                          this.onResize,
-                          this.onResizeEnd
-                      )
-                    : null;
+                if (html) {
+                    const div = fromHtml(html, doc)[0] as HTMLElement;
+                    wrapper.appendChild(div);
+
+                    this.resizeHelpers[x][y] = direction
+                        ? new ResizeHelper(
+                              div,
+                              [x, y],
+                              this.onResizeBegin,
+                              this.onResize,
+                              this.onResizeEnd
+                          )
+                        : null;
+                }
             }
         }
 
