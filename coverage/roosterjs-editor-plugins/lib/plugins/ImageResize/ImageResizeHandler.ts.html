@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">21.14% </span>
+                <span class="strong">19.01% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/123</span>
+                <span class='fraction'>23/121</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">5.5% </span>
+                <span class="strong">3.6% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/109</span>
+                <span class='fraction'>4/111</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">20% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/16</span>
+                <span class='fraction'>3/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.22% </span>
+                <span class="strong">20% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>26/117</span>
+                <span class='fraction'>23/115</span>
             </div>
         
             
@@ -325,8 +325,7 @@
 <a name='L266'></a><a href='#L266'>266</a>
 <a name='L267'></a><a href='#L267'>267</a>
 <a name='L268'></a><a href='#L268'>268</a>
-<a name='L269'></a><a href='#L269'>269</a>
-<a name='L270'></a><a href='#L270'>270</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L269'></a><a href='#L269'>269</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -366,11 +365,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -475,30 +469,34 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -640,11 +638,6 @@ const enum YCoordinate {
     Top = 2,
 }
 &nbsp;
-const enum STEP {
-    AllResize = 1,
-    CornerResize = 2,
-}
-&nbsp;
 type ResizeContext = [XCoordinate, YCoordinate];
 &nbsp;
 /**
@@ -742,40 +735,44 @@ export default class ImageResizeHandler {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        wrapper.style.position = 'relative';</span>
 <span class="cstat-no" title="statement not covered" >        wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';</span>
-        const step = <span class="cstat-no" title="statement not covered" >this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize)</span>
-            ? STEP.AllResize
-            : STEP.CornerResize;
+        const sideResize = <span class="cstat-no" title="statement not covered" >this.editor.isFeatureEnabled(ExperimentalFeatures.SingleDirectionResize);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        for (let x<span class="cstat-no" title="statement not covered" >: XCoordinate = XCoordinate.Left;</span> x &lt;= XCoordinate.Right; x += step) {</span>
+<span class="cstat-no" title="statement not covered" >        for (let x<span class="cstat-no" title="statement not covered" >: XCoordinate = XCoordinate.Left;</span> x &lt;= XCoordinate.Right; x++) {</span>
 <span class="cstat-no" title="statement not covered" >            this.resizeHelpers[x] = [];</span>
-<span class="cstat-no" title="statement not covered" >            for (let y<span class="cstat-no" title="statement not covered" >: YCoordinate = YCoordinate.Bottom;</span> y &lt;= YCoordinate.Top; y += step) {</span>
+<span class="cstat-no" title="statement not covered" >            for (let y<span class="cstat-no" title="statement not covered" >: YCoordinate = YCoordinate.Bottom;</span> y &lt;= YCoordinate.Top; y++) {</span>
                 const direction = <span class="cstat-no" title="statement not covered" >DIRECTIONS[x][y];</span>
-                const html = <span class="cstat-no" title="statement not covered" >direction</span>
-                    ? `&lt;div style="position:absolute;${x == XCoordinate.Left ? 'left' : 'right'}:${
-                          x == XCoordinate.Center ? '50%' : '0px'
-                      };${y == YCoordinate.Top ? 'top' : 'bottom'}:${
-                          y == YCoordinate.Middle ? '50%' : '0px'
-                      }"&gt;
+                const html =
+<span class="cstat-no" title="statement not covered" >                    !sideResize &amp;&amp; (x == XCoordinate.Center) != (y == YCoordinate.Middle)</span>
+                        ? ''
+                        : direction
+                        ? `&lt;div style="position:absolute;${
+                              x == XCoordinate.Left ? 'left' : 'right'
+                          }:${x == XCoordinate.Center ? '50%' : '0px'};${
+                              y == YCoordinate.Top ? 'top' : 'bottom'
+                          }:${y == YCoordinate.Middle ? '50%' : '0px'}"&gt;
                     &lt;div style="position:relative;width:${HANDLE_SIZE}px;height:${HANDLE_SIZE}px;background-color: ${
-                          this.selectionBorderColor
-                      };cursor:${direction}-resize;${
-                          y == YCoordinate.Top ? 'top' : 'bottom'
-                      }:-${HANDLE_MARGIN}px;${
-                          x == XCoordinate.Left ? 'left' : 'right'
-                      }:-${HANDLE_MARGIN}px"&gt;&lt;/div&gt;&lt;/div&gt;`
-                    : `&lt;div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;"&gt;`;
-                const div = <span class="cstat-no" title="statement not covered" >fromHtml(html, doc)[0] as HTMLElement;</span>
-<span class="cstat-no" title="statement not covered" >                wrapper.appendChild(div);</span>
+                              this.selectionBorderColor
+                          };cursor:${direction}-resize;${
+                              y == YCoordinate.Top ? 'top' : 'bottom'
+                          }:-${HANDLE_MARGIN}px;${
+                              x == XCoordinate.Left ? 'left' : 'right'
+                          }:-${HANDLE_MARGIN}px"&gt;&lt;/div&gt;&lt;/div&gt;`
+                        : `&lt;div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${this.selectionBorderColor};pointer-events:none;"&gt;`;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                this.resizeHelpers[x][y] = direction</span>
-                    ? new ResizeHelper(
-                          div,
-                          [x, y],
-                          this.onResizeBegin,
-                          this.onResize,
-                          this.onResizeEnd
-                      )
-                    : null;
+<span class="cstat-no" title="statement not covered" >                if (html) {</span>
+                    const div = <span class="cstat-no" title="statement not covered" >fromHtml(html, doc)[0] as HTMLElement;</span>
+<span class="cstat-no" title="statement not covered" >                    wrapper.appendChild(div);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    this.resizeHelpers[x][y] = direction</span>
+                        ? new ResizeHelper(
+                              div,
+                              [x, y],
+                              this.onResizeBegin,
+                              this.onResize,
+                              this.onResizeEnd
+                          )
+                        : null;
+                }
             }
         }
 &nbsp;
@@ -871,7 +868,7 @@ export default class ImageResizeHandler {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jul 07 2021 17:02:49 GMT+0000 (Coordinated Universal Time)
+                at Wed Jul 07 2021 19:18:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
