@@ -292,7 +292,6 @@ export default class TableResize implements EditorPlugin {
             this.currentInsertTd = td;
             if (this.currentInsertTd) {
                 this.inserter = this.createInserter(tableRect);
-                this.inserter.addEventListener('mouseout', this.onMouseOutInserter);
                 this.resizerContainer.appendChild(this.inserter);
             }
         }
@@ -348,6 +347,7 @@ export default class TableResize implements EditorPlugin {
         }
 
         inserter.addEventListener('click', this.insertTd);
+        inserter.addEventListener('mouseout', this.onMouseOutInserter);
 
         return inserter;
     }

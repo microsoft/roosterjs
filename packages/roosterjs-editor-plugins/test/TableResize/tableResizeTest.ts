@@ -62,16 +62,34 @@ describe('TableResize plugin tests', () => {
         expect(body.innerHTML.includes(ADD_BUTTON)).toBe(expectedResult);
     }
 
-    it('removes the inserter when moving the cursor out of the offset zone', () => {
+    it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize();
         runTest({ x: rect.right, y: rect.top }, { x: rect.right / 2, y: rect.bottom }, false);
     });
 
-    it('keeps the inserter when moving the cursor inside the sage zone', () => {
+    it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize();
         runTest(
             { x: rect.right, y: rect.top },
             { x: rect.right - insideTheOffset, y: rect.top },
+            true
+        );
+    });
+
+    it('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
+        const rect = initialize();
+        runTest(
+            { x: rect.left, y: rect.bottom },
+            { x: (rect.right - rect.left) / 2, y: (rect.bottom - rect.top) / 2 },
+            false
+        );
+    });
+
+    it('keeps the horizontal inserter when moving the cursor out of the offset zone', () => {
+        const rect = initialize();
+        runTest(
+            { x: rect.left, y: rect.bottom },
+            { x: rect.left, y: rect.bottom - insideTheOffset },
             true
         );
     });
