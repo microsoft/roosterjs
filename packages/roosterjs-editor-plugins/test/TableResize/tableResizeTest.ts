@@ -124,11 +124,11 @@ describe('TableResize plugin tests', () => {
         );
     });
 
-    it('keeps the horitzontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
+    it('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
         const rect = initialize(true);
         runTest(
-            { x: rect.left, y: rect.top },
-            { x: rect.left + insideTheOffset, y: rect.top },
+            { x: rect.right, y: rect.bottom },
+            { x: rect.right + insideTheOffset, y: rect.bottom },
             true
         );
     });
