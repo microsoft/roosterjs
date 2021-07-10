@@ -100,7 +100,7 @@ describe('TableResize plugin tests', () => {
     it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(true);
         runTest(
-            { x: rect.left, y: rect.top },
+            { x: rect.left + insideTheOffset, y: rect.top },
             { x: (rect.right - rect.left) / 2, y: rect.bottom },
             false
         );
@@ -109,8 +109,8 @@ describe('TableResize plugin tests', () => {
     it('keeps the vertical inserter when moving the cursor inside the safe zone with culture language RTL', () => {
         const rect = initialize(true);
         runTest(
-            { x: rect.left, y: rect.top },
-            { x: rect.left, y: rect.top + insideTheOffset },
+            { x: rect.left + insideTheOffset, y: rect.top },
+            { x: rect.left + insideTheOffset, y: rect.top + insideTheOffset },
             true
         );
     });
