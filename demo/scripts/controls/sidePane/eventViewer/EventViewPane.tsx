@@ -36,6 +36,7 @@ const EventTypeMap = {
     [PluginEventType.ContextMenu]: 'ContextMenu',
     [PluginEventType.EnteredShadowEdit]: 'EnteredShadowEdit',
     [PluginEventType.LeavingShadowEdit]: 'LeavingShadowEdit',
+    [PluginEventType.EditImage]: 'EditImage',
 };
 
 export default class EventViewPane extends React.Component<
@@ -203,6 +204,13 @@ export default class EventViewPane extends React.Component<
             case PluginEventType.BeforeCutCopy:
                 const { isCut } = event;
                 return <span>isCut={isCut ? 'true' : 'false'}</span>;
+
+            case PluginEventType.EditImage:
+                return (
+                    <>
+                        <span>new src={event.newSrc.substr(0, 100)}</span>
+                    </>
+                );
 
             default:
                 return null;

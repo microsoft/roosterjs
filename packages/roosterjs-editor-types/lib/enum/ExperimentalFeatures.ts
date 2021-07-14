@@ -36,4 +36,14 @@ export const enum ExperimentalFeatures {
      * Try retrieve link preview information when paste
      */
     PasteWithLinkPreview = 'PasteWithLinkPreview',
+
+    /**
+     * Rotate an inline image (requires ImageEdit plugin)
+     */
+    ImageRotate = 'ImageRotate',
+
+    /**
+     * Crop an inline image (requires ImageEdit plugin)
+     */
+    ImageCrop = 'ImageCrop',
 }
