@@ -135,6 +135,10 @@ export default class TableResize implements EditorPlugin {
         this.tableResizerContainer = null;
     }
 
+    private onMouseOutInserter = () => {
+        this.setCurrentInsertTd(ResizeState.None);
+    };
+
     private onMouseMove = (e: MouseEvent) => {
         if (this.resizingState != ResizeState.None) {
             return;
@@ -146,8 +150,8 @@ export default class TableResize implements EditorPlugin {
 
         if (this.tableRectMap) {
             this.setCurrentTable(null);
-            let i = this.tableRectMap.length - 1;
-            while (i >= 0) {
+
+            for (let i = this.tableRectMap.length - 1; i >= 0; i--) {
                 const { table, rect } = this.tableRectMap[i];
 
                 if (
@@ -161,8 +165,6 @@ export default class TableResize implements EditorPlugin {
                     this.setCurrentTable(table);
                     break;
                 }
-
-                i--;
             }
 
             if (this.currentTable) {
@@ -181,7 +183,11 @@ export default class TableResize implements EditorPlugin {
                             e.pageY <= tdRect.bottom
                         ) {
                             // check vertical inserter
-                            if (i == 0 && e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                            if (
+                                i == 0 &&
+                                e.pageY >= tdRect.top - INSERTER_HOVER_OFFSET &&
+                                e.pageY <= tdRect.top + INSERTER_HOVER_OFFSET
+                            ) {
                                 let verticalInserterTd: HTMLTableCellElement = null;
                                 // set inserter at current td
                                 if (
@@ -341,6 +347,7 @@ export default class TableResize implements EditorPlugin {
         }
 
         inserter.addEventListener('click', this.insertTd);
+        inserter.addEventListener('mouseout', this.onMouseOutInserter);
 
         return inserter;
     }
