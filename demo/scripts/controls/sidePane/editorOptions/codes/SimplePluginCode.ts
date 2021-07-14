@@ -16,9 +16,9 @@ export class PasteCode extends SimplePluginCode {
     }
 }
 
-export class ImageResizeCode extends SimplePluginCode {
+export class ImageEditCode extends SimplePluginCode {
     constructor() {
-        super('ImageResize');
+        super('ImageEdit');
     }
 }
 

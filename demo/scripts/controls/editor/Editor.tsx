@@ -1,7 +1,7 @@
 import * as React from 'react';
 import BuildInPluginState, { UrlPlaceholder } from '../BuildInPluginState';
+import ImageEditPlugin from '../contextMenu/ImageEditPlugin';
 import ResetListPlugin from '../contextMenu/ResetListPlugin';
-import RotateImagePlugin from '../contextMenu/RotateImagePlugin';
 import SampleColorPickerPluginDataProvider from '../samplepicker/SampleColorPickerPluginDataProvider';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { CONTEXT_MENU_DATA_PROVIDER } from '../contextMenu/ContextMenuProvider';
@@ -13,7 +13,6 @@ import { EditorInstanceToggleablePlugins } from './EditorInstanceToggleablePlugi
 import { EditorOptions, EditorPlugin, IEditor, UndoSnapshotsService } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
-import { ImageResize } from 'roosterjs-editor-plugins/lib/ImageResize';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
@@ -58,8 +57,10 @@ export default function Editor(props: EditorProps) {
             hyperlink: pluginList.hyperlink ? new HyperLink(getLinkCallback()) : null,
             paste: pluginList.paste ? new Paste() : null,
             watermark: pluginList.watermark ? new Watermark(watermarkText) : null,
-            imageResize: pluginList.imageResize
-                ? new ImageResize(10, 10, undefined, forcePreserveRatio)
+            imageEdit: pluginList.imageEdit
+                ? new ImageEditPlugin({
+                      preserveRatio: forcePreserveRatio,
+                  })
                 : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
@@ -73,7 +74,6 @@ export default function Editor(props: EditorProps) {
                 : null,
             customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
             resetList: pluginList.contextMenu ? new ResetListPlugin() : null,
-            rotateImage: pluginList.contextMenu ? new RotateImagePlugin() : null,
             contextMenu: pluginList.contextMenu
                 ? new ContextMenu(CONTEXT_MENU_DATA_PROVIDER)
                 : null,

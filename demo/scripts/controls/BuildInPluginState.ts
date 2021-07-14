@@ -12,7 +12,7 @@ export interface BuildInPluginList {
     hyperlink: boolean;
     paste: boolean;
     watermark: boolean;
-    imageResize: boolean;
+    imageEdit: boolean;
     cutPasteListChain: boolean;
     tableResize: boolean;
     customReplace: boolean;
