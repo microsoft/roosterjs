@@ -1,6 +1,6 @@
+import convertPastedContentForLI from './commonConverter/convertPastedContentForLI';
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
-import convertPastedContentFromTeams from './teamsConverter/convertPastedContentFromTeams';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
@@ -88,7 +88,7 @@ export default class Paste implements EditorPlugin {
             } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
                 sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
             } else {
-                convertPastedContentFromTeams(fragment);
+                convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);
             }
 
