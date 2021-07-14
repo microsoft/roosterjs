@@ -1,8 +1,13 @@
 import ImageEditInfo, { CropInfo, ResizeInfo, RotateInfo } from '../types/ImageEditInfo';
 
-const RESIZE_KEYS: (keyof ResizeInfo)[] = ['width', 'height'];
-const ROTATE_KEYS: (keyof RotateInfo)[] = ['angle'];
-const CROP_KEYS: (keyof CropInfo)[] = ['left', 'right', 'top', 'bottom'];
+const RESIZE_KEYS: (keyof ResizeInfo)[] = ['widthPx', 'heightPx'];
+const ROTATE_KEYS: (keyof RotateInfo)[] = ['angleRad'];
+const CROP_KEYS: (keyof CropInfo)[] = [
+    'leftPercent',
+    'rightPercent',
+    'topPercent',
+    'bottomPercent',
+];
 const ROTATE_CROP_KEYS: (keyof RotateInfo | keyof CropInfo)[] = [...ROTATE_KEYS, ...CROP_KEYS];
 const ALL_KEYS = [...ROTATE_CROP_KEYS, ...RESIZE_KEYS];
 
