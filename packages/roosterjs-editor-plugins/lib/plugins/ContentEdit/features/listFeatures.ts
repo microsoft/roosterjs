@@ -127,10 +127,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
             // Auto list is triggered if:
             // 1. Text before cursor exactly matches '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
-            return (
-                /^(\*|-|[0-9]{1,2}\.)$/.test(textBeforeCursor) &&
-                !searcher.getNearestNonTextInlineElement()
-            );
+            return isAListPattern(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
         }
         return false;
     },
@@ -155,7 +152,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                 ) {
                     prepareAutoBullet(editor, rangeToDelete);
                     toggleBullet(editor);
-                } else if (textBeforeCursor.indexOf('1.') == 0) {
+                } else if (isAListPattern(textBeforeCursor)) {
                     prepareAutoBullet(editor, rangeToDelete);
                     toggleNumbering(editor);
                 } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
@@ -186,6 +183,17 @@ const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
         editor.runAsync(editor => experimentCommitListChains(editor, chains));
     },
 };
+
+/**
+ * Validate if a block of text is considered a list pattern
+ * The regex expression will look for patterns of the form:
+ * 1.  1>  1)  1-  (1)
+ * @returns if a text is considered a list pattern
+ */
+function isAListPattern(textBeforeCursor: string) {
+    const REGEX: RegExp = /^(\*|-|[0-9]{1,2}\.|[0-9]{1,2}\>|[0-9]{1,2}\)|[0-9]{1,2}\-|\([0-9]{1,2}\))$/;
+    return REGEX.test(textBeforeCursor);
+}
 
 function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
