@@ -93,6 +93,22 @@ const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
+ * IndentWhenDeleteBefore1stItem edit feature, provides the ability to indent the list if user press
+ * DELETE before the first item of a list
+ */
+const IndentWhenDeleteBefore1stItem: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.DELETE],
+    shouldHandleEvent: (event, editor) => {
+        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
+        return li && isNodeEmpty(li) && !li.previousSibling;
+    },
+    handleEvent: (event, editor) => {
+        const chains = getListChains(editor);
+        editor.runAsync(editor => experimentCommitListChains(editor, chains));
+    },
+};
+
+/**
  * OutdentWhenEnterOnEmptyLine edit feature, provides the ability to outdent current item if user press
  * ENTER at the beginning of an empty line of a list
  */
@@ -217,6 +233,7 @@ function prepareAutoBullet(editor: IEditor, range: Range) {
 
 function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor) {
     let listInfo = cacheGetListElement(event, editor);
+    console.log('whats is in the list', listInfo);
     if (listInfo) {
         let listElement = listInfo[0];
         let tag = getTagOfNode(listElement);
@@ -250,4 +267,5 @@ export const ListFeatures: Record<
     outdentWhenEnterOnEmptyLine: OutdentWhenEnterOnEmptyLine,
     mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
     maintainListChain: MaintainListChain,
+    indentWhenDeleteBefore1stItem: IndentWhenDeleteBefore1stItem,
 };
