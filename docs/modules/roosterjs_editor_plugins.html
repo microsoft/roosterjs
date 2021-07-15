@@ -103,8 +103,12 @@
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_plugins.html#canregenerateimage" class="tsd-kind-icon">can<wbr>Regenerate<wbr>Image</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_plugins.html#getallfeatures" class="tsd-kind-icon">get<wbr>All<wbr>Features</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_plugins.html#handlelinemerge" class="tsd-kind-icon">handle<wbr>Line<wbr>Merge</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_plugins.html#isresizedto" class="tsd-kind-icon">is<wbr>Resized<wbr>To</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_plugins.html#resetimage" class="tsd-kind-icon">reset<wbr>Image</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_plugins.html#resizebypercentage" class="tsd-kind-icon">resize<wbr>ByPercentage</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,13 +122,46 @@
 					<div class="tsd-signature tsd-kind-icon">IMAGE_<wbr>EDIT_<wbr>INFO_<wbr>NAME<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"roosterEditInfo"</span><span class="tsd-signature-symbol"> = &quot;roosterEditInfo&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/types/ImageEditInfo.ts#L1">roosterjs-editor-plugins/lib/plugins/ImageEdit/types/ImageEditInfo.ts:1</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e4ad4c2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/types/ImageEditInfo.ts#L1">roosterjs-editor-plugins/lib/plugins/ImageEdit/types/ImageEditInfo.ts:1</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="canregenerateimage" class="tsd-anchor"></a>
+					<h3>can<wbr>Regenerate<wbr>Image</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">can<wbr>Regenerate<wbr>Image<span class="tsd-signature-symbol">(</span>img<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e4ad4c2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/api/canRegenerateImage.ts#L7">roosterjs-editor-plugins/lib/plugins/ImageEdit/api/canRegenerateImage.ts:7</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if we can regenerate edited image from the source image.
+									An image can&#39;t regenerate result when there is CORS issue of the source content.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>img: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The image element to test</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True when we can regenerate the edited image, otherwise false</p>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
 					<a name="getallfeatures" class="tsd-anchor"></a>
 					<h3>get<wbr>All<wbr>Features</h3>
@@ -135,7 +172,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/getAllFeatures.ts#L31">roosterjs-editor-plugins/lib/plugins/ContentEdit/getAllFeatures.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e4ad4c2/packages/roosterjs-editor-plugins/lib/plugins/ContentEdit/getAllFeatures.ts#L31">roosterjs-editor-plugins/lib/plugins/ContentEdit/getAllFeatures.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -157,7 +194,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/Paste/lineMerge/handleLineMerge.ts#L15">roosterjs-editor-plugins/lib/plugins/Paste/lineMerge/handleLineMerge.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e4ad4c2/packages/roosterjs-editor-plugins/lib/plugins/Paste/lineMerge/handleLineMerge.ts#L15">roosterjs-editor-plugins/lib/plugins/Paste/lineMerge/handleLineMerge.ts:15</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -172,6 +209,136 @@
 									<h5>root: <span class="tsd-signature-type">Node</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Root node of content to process</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="isresizedto" class="tsd-anchor"></a>
+					<h3>is<wbr>Resized<wbr>To</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Resized<wbr>To<span class="tsd-signature-symbol">(</span>image<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span>, percentage<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e4ad4c2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/api/isResizedTo.ts#L9">roosterjs-editor-plugins/lib/plugins/ImageEdit/api/isResizedTo.ts:9</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the image is already resized to the given percentage</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>image: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The image to check</p>
+									</div>
+								</li>
+								<li>
+									<h5>percentage: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The percentage to check</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="resetimage" class="tsd-anchor"></a>
+					<h3>reset<wbr>Image</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">reset<wbr>Image<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a>, image<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e4ad4c2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/api/resetImage.ts#L9">roosterjs-editor-plugins/lib/plugins/ImageEdit/api/resetImage.ts:9</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Remove explicit width &amp; height attributes on the image element.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>editor: <a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The editor that contains the image</p>
+									</div>
+								</li>
+								<li>
+									<h5>image: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The image to remove w/h from</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="resizebypercentage" class="tsd-anchor"></a>
+					<h3>resize<wbr>ByPercentage</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">resize<wbr>ByPercentage<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a>, image<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span>, percentage<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, minWidth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, minHeight<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e4ad4c2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/api/resizeByPercentage.ts#L16">roosterjs-editor-plugins/lib/plugins/ImageEdit/api/resizeByPercentage.ts:16</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Resize the image by percentage of its natural size. If the image is cropped or rotated,
+									the final size will also calculated with crop and rotate info.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>editor: <a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type">IEditor</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The editor that contains the image</p>
+									</div>
+								</li>
+								<li>
+									<h5>image: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The image to resize</p>
+									</div>
+								</li>
+								<li>
+									<h5>percentage: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Percentage to resize to</p>
+									</div>
+								</li>
+								<li>
+									<h5>minWidth: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Minimum width</p>
+									</div>
+								</li>
+								<li>
+									<h5>minHeight: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Minimum height</p>
 									</div>
 								</li>
 							</ul>
@@ -255,10 +422,22 @@
 						<a href="roosterjs_editor_plugins.html#image_edit_info_name" class="tsd-kind-icon">IMAGE_<wbr>EDIT_<wbr>INFO_<wbr>NAME</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.html#canregenerateimage" class="tsd-kind-icon">can<wbr>Regenerate<wbr>Image</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="roosterjs_editor_plugins.html#getallfeatures" class="tsd-kind-icon">get<wbr>All<wbr>Features</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="roosterjs_editor_plugins.html#handlelinemerge" class="tsd-kind-icon">handle<wbr>Line<wbr>Merge</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.html#isresizedto" class="tsd-kind-icon">is<wbr>Resized<wbr>To</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.html#resetimage" class="tsd-kind-icon">reset<wbr>Image</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.html#resizebypercentage" class="tsd-kind-icon">resize<wbr>ByPercentage</a>
 					</li>
 				</ul>
 			</nav>
