@@ -100,7 +100,7 @@ const IndentWhenDeleteBefore1stItem: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.DELETE],
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
-        return li && isNodeEmpty(li) && !li.previousSibling;
+        return !li;
     },
     handleEvent: (event, editor) => {
         const chains = getListChains(editor);
