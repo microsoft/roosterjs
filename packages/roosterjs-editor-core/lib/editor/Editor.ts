@@ -686,6 +686,35 @@ export default class Editor implements IEditor {
     }
 
     /**
+     * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
+     * @param element The element to calculate from. If the given element is not in editor, return value will be null
+     * @param addScroll When pass true, The return value will also add scrollLeft and scrollTop if any. So the value
+     * may be different than what user is seeing from the view. When pass false, scroll position will be ignored.
+     * @returns An [x, y] array which contains the left and top distances, or null if the given element is not in editor.
+     */
+    getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] {
+        if (this.contains(element)) {
+            const contentDiv = this.core.contentDiv;
+            const editorRect = contentDiv.getBoundingClientRect();
+            const elementRect = element.getBoundingClientRect();
+
+            if (editorRect && elementRect) {
+                let x = elementRect.left - editorRect?.left;
+                let y = elementRect.top - editorRect?.top;
+
+                if (addScroll) {
+                    x += contentDiv.scrollLeft;
+                    y += contentDiv.scrollTop;
+                }
+
+                return [x, y];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Add a Content Edit feature.
      * @param feature The feature to add
      */

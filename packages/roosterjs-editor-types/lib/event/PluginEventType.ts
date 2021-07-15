@@ -99,4 +99,9 @@ export const enum PluginEventType {
      * Editor is about to leave shadow edit mode
      */
     LeavingShadowEdit = 18,
+
+    /**
+     * Content of image is being changed from client side
+     */
+    EditImage = 19,
 }

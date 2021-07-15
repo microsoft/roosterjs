@@ -2,6 +2,7 @@ import BeforeCutCopyEvent from './BeforeCutCopyEvent';
 import BeforeDisposeEvent from './BeforeDisposeEvent';
 import BeforePasteEvent from './BeforePasteEvent';
 import ContentChangedEvent from './ContentChangedEvent';
+import EditImageEvent from './EditImageEvent';
 import EditorReadyEvent from './EditorReadyEvent';
 import EntityOperationEvent from './EntityOperationEvent';
 import ExtractContentWithDomEvent from './ExtractContentWithDomEvent';
@@ -23,4 +24,5 @@ export type PluginEvent =
     | BeforeDisposeEvent
     | PendingFormatStateChangedEvent
     | EnterShadowEditEvent
-    | LeaveShadowEditEvent;
+    | LeaveShadowEditEvent
+    | EditImageEvent;
