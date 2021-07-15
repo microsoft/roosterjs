@@ -13,20 +13,20 @@ import ImageEditInfo from '../types/ImageEditInfo';
  */
 export default function generateDataURL(image: HTMLImageElement, editInfo: ImageEditInfo): string {
     const {
-        angle,
-        width,
-        height,
-        bottom,
-        left,
-        right,
-        top,
+        angleRad: angle,
+        widthPx: width,
+        heightPx: height,
+        bottomPercent: bottom,
+        leftPercent: left,
+        rightPercent: right,
+        topPercent: top,
         naturalWidth,
         naturalHeight,
     } = editInfo;
     const imageWidth = naturalWidth * (1 - left - right);
     const imageHeight = naturalHeight * (1 - top - bottom);
     const canvas = document.createElement('canvas');
-    const [targetWidth, targetHeight] = getGeneratedImageSize(editInfo);
+    const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     canvas.width = targetWidth;
     canvas.height = targetHeight;
 

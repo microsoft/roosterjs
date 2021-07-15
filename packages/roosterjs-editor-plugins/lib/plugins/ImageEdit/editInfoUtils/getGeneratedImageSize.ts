@@ -1,3 +1,4 @@
+import GeneratedImageSize from '../types/GeneratedImageSize';
 import ImageEditInfo from '../types/ImageEditInfo';
 
 /**
@@ -10,26 +11,42 @@ import ImageEditInfo from '../types/ImageEditInfo';
  * @param editInfo The edit info to calculate size from
  * @param beforeCrop True to calculate the full size of original image before crop, false to calculate the size
  * after crop
- * @returns an array contains width and height of the size in the sequence of:
- *  rotatedWidth, rotatedHeight: The actual size the the image will occupy after rotate
- *  fullWidth, fullHeight: Full size of the image before crop, before rotate
- *  visibleWidth, visibleHeight: Visible size after crop before rotate
+ * @returns A GeneratedImageSize object which contains original, visible and target target width and height of the image
  */
 export default function getGeneratedImageSize(
     editInfo: ImageEditInfo,
     beforeCrop?: boolean
-): number[] {
-    const { width, height, angle, left, right, top, bottom } = editInfo;
+): GeneratedImageSize {
+    const {
+        widthPx: width,
+        heightPx: height,
+        angleRad: angle,
+        leftPercent: left,
+        rightPercent: right,
+        topPercent: top,
+        bottomPercent: bottom,
+    } = editInfo;
 
-    // Full
-    const fullWidth = width / (1 - left - right);
-    const fullHeight = height / (1 - top - bottom);
-    const visibleWidth = beforeCrop ? fullWidth : width;
-    const visibleHeight = beforeCrop ? fullHeight : height;
+    // Original image size before crop and rotate
+    const originalWidth = width / (1 - left - right);
+    const originalHeight = height / (1 - top - bottom);
+
+    // Visible size
+    const visibleWidth = beforeCrop ? originalWidth : width;
+    const visibleHeight = beforeCrop ? originalHeight : height;
+
+    // Target size after crop and rotate
     const targetWidth =
         Math.abs(visibleWidth * Math.cos(angle)) + Math.abs(visibleHeight * Math.sin(angle));
     const targetHeight =
         Math.abs(visibleWidth * Math.sin(angle)) + Math.abs(visibleHeight * Math.cos(angle));
 
-    return [targetWidth, targetHeight, fullWidth, fullHeight, visibleWidth, visibleHeight];
+    return {
+        targetWidth,
+        targetHeight,
+        originalWidth,
+        originalHeight,
+        visibleWidth,
+        visibleHeight,
+    };
 }

@@ -68,7 +68,7 @@ export default function applyChange(
     }
 
     // Write back the change to image, and set its new size
-    const [targetWidth, targetHeight] = getGeneratedImageSize(editInfo);
+    const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     image.src = newSrc;
     image.style.width = targetWidth + 'px';
     image.style.height = targetHeight + 'px';
@@ -76,6 +76,8 @@ export default function applyChange(
     image.height = targetHeight;
 
     return (
-        srcChanged || editInfo.width != initEditInfo.width || editInfo.height != initEditInfo.height
+        srcChanged ||
+        editInfo.widthPx != initEditInfo.widthPx ||
+        editInfo.heightPx != initEditInfo.heightPx
     );
 }
