@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContextMenuOptions | RoosterJs API Reference</title>
+	<title>ImageEditInfoState | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,137 +55,107 @@
 					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_plugins.contextmenuoptions.html">ContextMenuOptions</a>
+					<a href="roosterjs_editor_plugins.imageeditinfostate.html">ImageEditInfoState</a>
 				</li>
 			</ul>
-			<h1>Interface ContextMenuOptions&lt;T&gt;</h1>
+			<h1>Enumeration ImageEditInfoState</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-type-parameters">
-				<h3>Type parameters</h3>
-				<ul class="tsd-type-parameters">
-					<li>
-						<h4>T</h4>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
-					<li>
-						<span class="target">ContextMenuOptions</span>
-					</li>
-				</ul>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>State of an edit info object for image editing.
+						It is returned by checkEditInfoState() function</p>
+					</div>
+				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_plugins.contextmenuoptions.html#allowdefaultmenu" class="tsd-kind-icon">allow<wbr>Default<wbr>Menu</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_plugins.contextmenuoptions.html#dismiss" class="tsd-kind-icon">dismiss</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_plugins.contextmenuoptions.html#render" class="tsd-kind-icon">render</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_plugins.imageeditinfostate.html#fullychanged" class="tsd-kind-icon">Fully<wbr>Changed</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_plugins.imageeditinfostate.html#invalid" class="tsd-kind-icon">Invalid</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_plugins.imageeditinfostate.html#resizeonly" class="tsd-kind-icon">Resize<wbr>Only</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="roosterjs_editor_plugins.imageeditinfostate.html#samewithlast" class="tsd-kind-icon">Same<wbr>With<wbr>Last</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="allowdefaultmenu" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> allow<wbr>Default<wbr>Menu</h3>
-					<div class="tsd-signature tsd-kind-icon">allow<wbr>Default<wbr>Menu<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<h2>Enumeration members</h2>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="fullychanged" class="tsd-anchor"></a>
+					<h3>Fully<wbr>Changed</h3>
+					<div class="tsd-signature tsd-kind-icon">Fully<wbr>Changed<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L17">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts#L44">roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts:44</a></li>
 						</ul>
 					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="dismiss" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> dismiss</h3>
-					<div class="tsd-signature tsd-kind-icon">dismiss<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L15">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:15</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>container: <span class="tsd-signature-type">HTMLElement</span></h5>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>When this value is returned, it means the image is edited by either cropping or
+								rotation, or both. Image source can&#39;t be reused, need to generate a new image src
+							data uri.</p>
+						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="render" class="tsd-anchor"></a>
-					<h3>render</h3>
-					<div class="tsd-signature tsd-kind-icon">render<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, items<span class="tsd-signature-symbol">: </span>, onDismiss<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="invalid" class="tsd-anchor"></a>
+					<h3>Invalid</h3>
+					<div class="tsd-signature tsd-kind-icon">Invalid<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L13">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts#L23">roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts:23</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, items<span class="tsd-signature-symbol">: </span>, onDismiss<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>container: <span class="tsd-signature-type">HTMLElement</span></h5>
-											</li>
-											<li>
-												<h5>items:</h5>
-											</li>
-											<li>
-												<h5>onDismiss: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
-												<ul class="tsd-parameters">
-													<li class="tsd-parameter-signature">
-														<ul class="tsd-signatures tsd-kind-type-literal">
-															<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-														</ul>
-														<ul class="tsd-descriptions">
-															<li class="tsd-description">
-																<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-															</li>
-														</ul>
-													</li>
-												</ul>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Invalid edit info. It means the given edit info object is either null,
+							or not all its member are of correct type</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="resizeonly" class="tsd-anchor"></a>
+					<h3>Resize<wbr>Only</h3>
+					<div class="tsd-signature tsd-kind-icon">Resize<wbr>Only<span class="tsd-signature-symbol">:</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts#L29">roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts:29</a></li>
 						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The edit info shows that it is only potentially edited by resizing action.
+							Image is not rotated or cropped, or event not changed at all.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="samewithlast" class="tsd-anchor"></a>
+					<h3>Same<wbr>With<wbr>Last</h3>
+					<div class="tsd-signature tsd-kind-icon">Same<wbr>With<wbr>Last<span class="tsd-signature-symbol">:</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8893ded/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts#L37">roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/checkEditInfoState.ts:37</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>When compare with another edit info, this value can be returned when both current
+								edit info and the other one are not been rotated, and they have same cropping
+								percentages. So that they can share the same image src, only width and height
+							need to be adjusted.</p>
+						</div>
 					</div>
 				</section>
 			</section>
@@ -221,9 +191,27 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/roosterjs_editor_plugins.imageeditinfostate.html" class="tsd-kind-icon">Image<wbr>Edit<wbr>Info<wbr>State</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-enum tsd-parent-kind-module">
+						<a href="roosterjs_editor_plugins.imageeditinfostate.html" class="tsd-kind-icon">Image<wbr>Edit<wbr>Info<wbr>State</a>
+						<ul>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="roosterjs_editor_plugins.imageeditinfostate.html#fullychanged" class="tsd-kind-icon">Fully<wbr>Changed</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="roosterjs_editor_plugins.imageeditinfostate.html#invalid" class="tsd-kind-icon">Invalid</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="roosterjs_editor_plugins.imageeditinfostate.html#resizeonly" class="tsd-kind-icon">Resize<wbr>Only</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="roosterjs_editor_plugins.imageeditinfostate.html#samewithlast" class="tsd-kind-icon">Same<wbr>With<wbr>Last</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/roosterjs_editor_plugins.contentedit.html" class="tsd-kind-icon">Content<wbr>Edit</a>
 					</li>
@@ -257,24 +245,9 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/roosterjs_editor_plugins.watermark.html" class="tsd-kind-icon">Watermark</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="roosterjs_editor_plugins.contextmenuoptions.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Options</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_plugins.contextmenuoptions.html#allowdefaultmenu" class="tsd-kind-icon">allow<wbr>Default<wbr>Menu</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_plugins.contextmenuoptions.html#dismiss" class="tsd-kind-icon">dismiss</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_plugins.contextmenuoptions.html#render" class="tsd-kind-icon">render</a>
-							</li>
-						</ul>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../interfaces/roosterjs_editor_plugins.contextmenuoptions.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Options</a>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-variable tsd-parent-kind-module">
 						<a href="../modules/roosterjs_editor_plugins.html#image_edit_info_name" class="tsd-kind-icon">IMAGE_<wbr>EDIT_<wbr>INFO_<wbr>NAME</a>
 					</li>
@@ -304,7 +277,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
