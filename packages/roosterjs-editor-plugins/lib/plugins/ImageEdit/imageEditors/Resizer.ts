@@ -15,36 +15,35 @@ const Ys: Y[] = ['s', '', 'n'];
 const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ x, y, editInfo, options }, e, base, deltaX, deltaY) => {
-        const ratio = base.width > 0 && base.height > 0 ? (base.width * 1.0) / base.height : 0;
+        const ratio =
+            base.widthPx > 0 && base.heightPx > 0 ? (base.widthPx * 1.0) / base.heightPx : 0;
 
-        [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angle);
+        [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angleRad);
 
         const horizontalOnly = x == '';
         const verticalOnly = y == '';
         const shouldPreserveRatio =
             !(horizontalOnly || verticalOnly) && (options.preserveRatio || e.shiftKey);
         let newWidth = horizontalOnly
-            ? base.width
-            : Math.max(base.width + deltaX * (x == 'w' ? -1 : 1), options.minWidth);
+            ? base.widthPx
+            : Math.max(base.widthPx + deltaX * (x == 'w' ? -1 : 1), options.minWidth);
         let newHeight = verticalOnly
-            ? base.height
-            : Math.max(base.height + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
+            ? base.heightPx
+            : Math.max(base.heightPx + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
 
         if (shouldPreserveRatio && ratio > 0) {
             newHeight = Math.min(newHeight, newWidth / ratio);
             newWidth = Math.min(newWidth, newHeight * ratio);
 
-            if (ratio > 0) {
-                if (newWidth < newHeight * ratio) {
-                    newWidth = newHeight * ratio;
-                } else {
-                    newHeight = newWidth / ratio;
-                }
+            if (newWidth < newHeight * ratio) {
+                newWidth = newHeight * ratio;
+            } else {
+                newHeight = newWidth / ratio;
             }
         }
 
-        editInfo.width = newWidth;
-        editInfo.height = newHeight;
+        editInfo.widthPx = newWidth;
+        editInfo.heightPx = newHeight;
 
         return true;
     },
@@ -87,22 +86,22 @@ export function doubleCheckResize(
     actualWidth: number,
     actualHeight: number
 ) {
-    let { width, height } = editInfo;
-    const ratio = height > 0 ? width / height : 0;
+    let { widthPx, heightPx } = editInfo;
+    const ratio = heightPx > 0 ? widthPx / heightPx : 0;
 
     actualWidth = Math.floor(actualWidth);
     actualHeight = Math.floor(actualHeight);
-    width = Math.floor(width);
-    height = Math.floor(height);
+    widthPx = Math.floor(widthPx);
+    heightPx = Math.floor(heightPx);
 
-    editInfo.width = actualWidth;
-    editInfo.height = actualHeight;
+    editInfo.widthPx = actualWidth;
+    editInfo.heightPx = actualHeight;
 
-    if (preserveRatio && ratio > 0 && (width !== actualWidth || height !== actualHeight)) {
-        if (actualWidth < width) {
-            editInfo.height = actualWidth / ratio;
+    if (preserveRatio && ratio > 0 && (widthPx !== actualWidth || heightPx !== actualHeight)) {
+        if (actualWidth < widthPx) {
+            editInfo.heightPx = actualWidth / ratio;
         } else {
-            editInfo.width = actualHeight * ratio;
+            editInfo.widthPx = actualHeight * ratio;
         }
     }
 }

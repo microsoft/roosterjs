@@ -24,9 +24,9 @@ const ROTATE_ICON_MARGIN = 8;
 const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ editInfo, options }, e, base, deltaX, deltaY) => {
-        const distance = editInfo.height / 2 + DEFAULT_ROTATE_HANDLE_HEIGHT;
-        const newX = distance * Math.sin(base.angle) + deltaX;
-        const newY = distance * Math.cos(base.angle) - deltaY;
+        const distance = editInfo.heightPx / 2 + DEFAULT_ROTATE_HANDLE_HEIGHT;
+        const newX = distance * Math.sin(base.angleRad) + deltaX;
+        const newY = distance * Math.cos(base.angleRad) - deltaY;
         let angleInRad = Math.atan2(newX, newY);
 
         if (!e.altKey) {
@@ -36,8 +36,8 @@ const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
             angleInRad = adjustedAngleInDeg / DEG_PER_RAD;
         }
 
-        if (editInfo.angle != angleInRad) {
-            editInfo.angle = angleInRad;
+        if (editInfo.angleRad != angleInRad) {
+            editInfo.angleRad = angleInRad;
             return true;
         } else {
             return false;

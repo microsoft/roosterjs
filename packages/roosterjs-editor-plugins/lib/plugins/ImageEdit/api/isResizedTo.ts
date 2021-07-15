@@ -8,9 +8,9 @@ import getTargetSizeByPercentage from '../editInfoUtils/getTargetSizeByPercentag
  */
 export default function isResizedTo(image: HTMLImageElement, percentage: number): boolean {
     const editInfo = getEditInfoFromImage(image);
-    const [width, height] = getTargetSizeByPercentage(editInfo, percentage);
+    const { width, height } = getTargetSizeByPercentage(editInfo, percentage);
     return (
-        Math.round(width) == Math.round(editInfo.width) &&
-        Math.round(height) == Math.round(editInfo.height)
+        Math.round(width) == Math.round(editInfo.widthPx) &&
+        Math.round(height) == Math.round(editInfo.heightPx)
     );
 }

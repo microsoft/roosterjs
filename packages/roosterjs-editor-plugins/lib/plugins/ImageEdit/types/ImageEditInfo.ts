@@ -11,7 +11,7 @@ export interface ResizeInfo {
      * If image is rotated, this is the width before rotation
      * @default clientWidth of the image
      */
-    width: number;
+    widthPx: number;
 
     /**
      * Height after resize, in px.
@@ -19,7 +19,7 @@ export interface ResizeInfo {
      * If image is rotated, this is the height before rotation
      * @default clientHeight of the image
      */
-    height: number;
+    heightPx: number;
 }
 
 /**
@@ -31,25 +31,25 @@ export interface CropInfo {
      * Left cropped percentage. Rotation or resizing won't impact this percentage value
      * @default 0
      */
-    left: number;
+    leftPercent: number;
 
     /**
      * Right cropped percentage. Rotation or resizing won't impact this percentage value
      * @default 0
      */
-    right: number;
+    rightPercent: number;
 
     /**
      * Top cropped percentage. Rotation or resizing won't impact this percentage value
      * @default 0
      */
-    top: number;
+    topPercent: number;
 
     /**
      * Bottom cropped percentage. Rotation or resizing won't impact this percentage value
      * @default 0
      */
-    bottom: number;
+    bottomPercent: number;
 }
 
 /**
@@ -61,7 +61,7 @@ export interface RotateInfo {
      * Rotated angle of inline image, in radian. Cropping or resizing won't impact this percentage value
      * @default 0
      */
-    angle: number;
+    angleRad: number;
 }
 
 /**

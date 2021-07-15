@@ -17,15 +17,15 @@ export default function getEditInfoFromImage(image: HTMLImageElement): ImageEdit
 function getInitialEditInfo(image: HTMLImageElement): ImageEditInfo {
     return {
         src: image.src,
-        width: image.clientWidth,
-        height: image.clientHeight,
+        widthPx: image.clientWidth,
+        heightPx: image.clientHeight,
         naturalWidth: image.naturalWidth,
         naturalHeight: image.naturalHeight,
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        angle: 0,
+        leftPercent: 0,
+        rightPercent: 0,
+        topPercent: 0,
+        bottomPercent: 0,
+        angleRad: 0,
     };
 }
 

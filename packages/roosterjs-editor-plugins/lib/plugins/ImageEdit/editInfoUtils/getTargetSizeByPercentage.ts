@@ -1,4 +1,5 @@
 import ImageEditInfo from '../types/ImageEditInfo';
+import ImageSize from '../types/ImageSize';
 
 /**
  * @internal
@@ -10,9 +11,16 @@ import ImageEditInfo from '../types/ImageEditInfo';
 export default function getTargetSizeByPercentage(
     editInfo: ImageEditInfo,
     percentage: number
-): number[] {
-    const { naturalWidth, naturalHeight, left, top, right, bottom } = editInfo;
+): ImageSize {
+    const {
+        naturalWidth,
+        naturalHeight,
+        leftPercent: left,
+        topPercent: top,
+        rightPercent: right,
+        bottomPercent: bottom,
+    } = editInfo;
     const width = naturalWidth * (1 - left - right) * percentage;
     const height = naturalHeight * (1 - top - bottom) * percentage;
-    return [width, height];
+    return { width, height };
 }
