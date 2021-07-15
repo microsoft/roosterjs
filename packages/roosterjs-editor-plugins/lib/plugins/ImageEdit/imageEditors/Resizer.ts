@@ -35,12 +35,10 @@ const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
             newHeight = Math.min(newHeight, newWidth / ratio);
             newWidth = Math.min(newWidth, newHeight * ratio);
 
-            if (ratio > 0) {
-                if (newWidth < newHeight * ratio) {
-                    newWidth = newHeight * ratio;
-                } else {
-                    newHeight = newWidth / ratio;
-                }
+            if (newWidth < newHeight * ratio) {
+                newWidth = newHeight * ratio;
+            } else {
+                newHeight = newWidth / ratio;
             }
         }
 
