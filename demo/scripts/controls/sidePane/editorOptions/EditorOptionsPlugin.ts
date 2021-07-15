@@ -11,7 +11,7 @@ const initialState: BuildInPluginState = {
         hyperlink: true,
         paste: true,
         watermark: false,
-        imageResize: true,
+        imageEdit: true,
         cutPasteListChain: true,
         tableResize: true,
         customReplace: true,
@@ -28,6 +28,8 @@ const initialState: BuildInPluginState = {
     experimentalFeatures: [
         ExperimentalFeatures.PasteWithLinkPreview,
         ExperimentalFeatures.SingleDirectionResize,
+        ExperimentalFeatures.ImageRotate,
+        ExperimentalFeatures.ImageCrop,
     ],
 };
 
