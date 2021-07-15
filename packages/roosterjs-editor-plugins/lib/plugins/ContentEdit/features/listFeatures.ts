@@ -233,7 +233,6 @@ function prepareAutoBullet(editor: IEditor, range: Range) {
 
 function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor) {
     let listInfo = cacheGetListElement(event, editor);
-    console.log('whats is in the list', listInfo);
     if (listInfo) {
         let listElement = listInfo[0];
         let tag = getTagOfNode(listElement);
