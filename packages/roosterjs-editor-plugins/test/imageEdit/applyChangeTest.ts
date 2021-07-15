@@ -46,7 +46,7 @@ xdescribe('applyChange', () => {
 
     it('Write back with resize only', async () => {
         const editInfo = getEditInfoFromImage(img);
-        editInfo.width = 100;
+        editInfo.widthPx = 100;
         const result = applyChange(editor, img, editInfo, IMG_SRC);
 
         expect(result).toBeTrue();
@@ -58,7 +58,7 @@ xdescribe('applyChange', () => {
 
     it('Write back with rotate only', async () => {
         const editInfo = getEditInfoFromImage(img);
-        editInfo.angle = Math.PI / 2;
+        editInfo.angleRad = Math.PI / 2;
         const result = applyChange(editor, img, editInfo, IMG_SRC);
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAUCAYAAAC07qxWAAAAHklEQVQokWNgYGD4TySmpUJ0MKpwVCHxCqmfHvFhAGECbqCLnXlEAAAAAElFTkSuQmCC';
@@ -84,10 +84,10 @@ xdescribe('applyChange', () => {
 
     it('Write back with crop only', async () => {
         const editInfo = getEditInfoFromImage(img);
-        editInfo.left = 0.1;
-        editInfo.right = 0.2;
-        editInfo.top = 0.3;
-        editInfo.bottom = 0.4;
+        editInfo.leftPercent = 0.1;
+        editInfo.rightPercent = 0.2;
+        editInfo.topPercent = 0.3;
+        editInfo.bottomPercent = 0.4;
         const result = applyChange(editor, img, editInfo, IMG_SRC);
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAAM0lEQVQoke3MMQ0AQAzDQPMMnm6lUYIlkOfwylhLtxrAkjwzEQCuKu9uBIC726lueMOPHt2420Esv/tNAAAAAElFTkSuQmCC';
@@ -113,11 +113,11 @@ xdescribe('applyChange', () => {
 
     it('Write back with rotate and crop', async () => {
         const editInfo = getEditInfoFromImage(img);
-        editInfo.left = 0.1;
-        editInfo.right = 0.2;
-        editInfo.top = 0.3;
-        editInfo.bottom = 0.4;
-        editInfo.angle = Math.PI / 4;
+        editInfo.leftPercent = 0.1;
+        editInfo.rightPercent = 0.2;
+        editInfo.topPercent = 0.3;
+        editInfo.bottomPercent = 0.4;
+        editInfo.angleRad = Math.PI / 4;
         const result = applyChange(editor, img, editInfo, IMG_SRC);
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAlElEQVQ4je3MsQ3DIBBG4eszH5MgOiqgxAPReRcGAN0CfyqncAQckMJFXvukj6idJqLY+dNpIoJSCtban8CaiGCMQc4ZKSV477fgD8jMAIBSyhb8BV6twk3wqtY6BQ/BFThKwDvsnDu6KjNHkTgLA3gWHEL4w3L4WIDPLroAnwBeQ3QCloNCeB4cwOtgA94Hb3ATfAMzcgdiCyJ6YgAAAABJRU5ErkJggg==';
@@ -143,7 +143,7 @@ xdescribe('applyChange', () => {
 
     it('Write back with triggerPluginEvent', async () => {
         const editInfo = getEditInfoFromImage(img);
-        editInfo.angle = Math.PI / 2;
+        editInfo.angleRad = Math.PI / 2;
 
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAlElEQVQ4je3MsQ3DIBBG4eszH5MgOiqgxAPReRcGAN0CfyqncAQckMJFXvukj6idJqLY+dNpIoJSCtban8CaiGCMQc4ZKSV477fgD8jMAIBSyhb8BV6twk3wqtY6BQ/BFThKwDvsnDu6KjNHkTgLA3gWHEL4w3L4WIDPLroAnwBeQ3QCloNCeB4cwOtgA94Hb3ATfAMzcgdiCyJ6YgAAAABJRU5ErkJggg==';
@@ -172,14 +172,14 @@ xdescribe('applyChange', () => {
 
     it('Resize then rotate', async () => {
         let editInfo = getEditInfoFromImage(img);
-        editInfo.width = editInfo.width * 2;
+        editInfo.widthPx = editInfo.widthPx * 2;
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
-        editInfo.angle = Math.PI / 4;
+        editInfo.angleRad = Math.PI / 4;
         const result = applyChange(editor, img, editInfo, src2);
 
         const newSrc =
@@ -205,14 +205,14 @@ xdescribe('applyChange', () => {
 
     it('Rotate then resize', async () => {
         let editInfo = getEditInfoFromImage(img);
-        editInfo.angle = Math.PI / 4;
+        editInfo.angleRad = Math.PI / 4;
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
-        editInfo.width = editInfo.width * 2;
+        editInfo.widthPx = editInfo.widthPx * 2;
         const result = applyChange(editor, img, editInfo, src2);
 
         const newSrc =
@@ -238,14 +238,14 @@ xdescribe('applyChange', () => {
 
     it('Resize then crop', async () => {
         let editInfo = getEditInfoFromImage(img);
-        editInfo.width *= 2;
+        editInfo.widthPx *= 2;
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
-        editInfo.left = 0.5;
+        editInfo.leftPercent = 0.5;
         const result = applyChange(editor, img, editInfo, src2);
 
         const newSrc =
@@ -271,14 +271,14 @@ xdescribe('applyChange', () => {
 
     it('Crop then resize', async () => {
         let editInfo = getEditInfoFromImage(img);
-        editInfo.left = 0.5;
+        editInfo.leftPercent = 0.5;
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
-        editInfo.width *= 2;
+        editInfo.widthPx *= 2;
         const result = applyChange(editor, img, editInfo, src2);
 
         const newSrc =
@@ -304,14 +304,14 @@ xdescribe('applyChange', () => {
 
     it('Rotate then crop', async () => {
         let editInfo = getEditInfoFromImage(img);
-        editInfo.angle = Math.PI / 4;
+        editInfo.angleRad = Math.PI / 4;
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
-        editInfo.left = 0.5;
+        editInfo.leftPercent = 0.5;
         const result = applyChange(editor, img, editInfo, src2);
 
         const newSrc =
@@ -337,14 +337,14 @@ xdescribe('applyChange', () => {
 
     it('Crop then rotate', async () => {
         let editInfo = getEditInfoFromImage(img);
-        editInfo.left = 0.5;
+        editInfo.leftPercent = 0.5;
         applyChange(editor, img, editInfo, IMG_SRC);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
-        editInfo.angle = Math.PI / 4;
+        editInfo.angleRad = Math.PI / 4;
         const result = applyChange(editor, img, editInfo, src2);
 
         const newSrc =

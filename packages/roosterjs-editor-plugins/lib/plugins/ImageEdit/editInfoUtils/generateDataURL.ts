@@ -10,23 +10,24 @@ import ImageEditInfo from '../types/ImageEditInfo';
  * If there are rotate/crop/resize info in the edit info, the generated image will also reflect the result.
  * It is possible to throw exception since the original image may not be able to read its content from
  * the code, so better check canRegenerateImage() of the image first.
+ * @throws Exception when fail to generate dataURL from canvas
  */
 export default function generateDataURL(image: HTMLImageElement, editInfo: ImageEditInfo): string {
     const {
-        angle,
-        width,
-        height,
-        bottom,
-        left,
-        right,
-        top,
+        angleRad: angle,
+        widthPx: width,
+        heightPx: height,
+        bottomPercent: bottom,
+        leftPercent: left,
+        rightPercent: right,
+        topPercent: top,
         naturalWidth,
         naturalHeight,
     } = editInfo;
     const imageWidth = naturalWidth * (1 - left - right);
     const imageHeight = naturalHeight * (1 - top - bottom);
     const canvas = document.createElement('canvas');
-    const [targetWidth, targetHeight] = getGeneratedImageSize(editInfo);
+    const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     canvas.width = targetWidth;
     canvas.height = targetHeight;
 
