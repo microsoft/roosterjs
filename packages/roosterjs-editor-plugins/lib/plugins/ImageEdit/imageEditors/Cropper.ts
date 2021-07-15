@@ -21,24 +21,39 @@ const ROTATION: Record<string, number> = {
 const Cropper: DragAndDropHandler<DragAndDropContext, CropInfo> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ editInfo, x, y, options }, e, base, dx, dy) => {
-        [dx, dy] = rotateCoordinate(dx, dy, editInfo.angle);
+        [dx, dy] = rotateCoordinate(dx, dy, editInfo.angleRad);
 
-        const { width, height, left, right, top, bottom } = editInfo;
+        const {
+            widthPx,
+            heightPx,
+            leftPercent,
+            rightPercent,
+            topPercent,
+            bottomPercent,
+        } = editInfo;
         const { minWidth, minHeight } = options;
 
-        const fullWidth = width / (1 - left - right);
-        const fullHeight = height / (1 - top - bottom);
-        const newLeft = x != 'e' ? crop(base.left, dx, fullWidth, right, minWidth) : left;
-        const newRight = x != 'w' ? crop(base.right, -dx, fullWidth, left, minWidth) : right;
-        const newTop = y != 's' ? crop(base.top, dy, fullHeight, bottom, minHeight) : top;
-        const newBottom = y != 'n' ? crop(base.bottom, -dy, fullHeight, top, minHeight) : bottom;
+        const fullWidth = widthPx / (1 - leftPercent - rightPercent);
+        const fullHeight = heightPx / (1 - topPercent - bottomPercent);
+        const newLeft =
+            x != 'e' ? crop(base.leftPercent, dx, fullWidth, rightPercent, minWidth) : leftPercent;
+        const newRight =
+            x != 'w'
+                ? crop(base.rightPercent, -dx, fullWidth, leftPercent, minWidth)
+                : rightPercent;
+        const newTop =
+            y != 's' ? crop(base.topPercent, dy, fullHeight, bottomPercent, minHeight) : topPercent;
+        const newBottom =
+            y != 'n'
+                ? crop(base.bottomPercent, -dy, fullHeight, topPercent, minHeight)
+                : bottomPercent;
 
-        editInfo.left = newLeft;
-        editInfo.right = newRight;
-        editInfo.top = newTop;
-        editInfo.bottom = newBottom;
-        editInfo.width = fullWidth * (1 - newLeft - newRight);
-        editInfo.height = fullHeight * (1 - newTop - newBottom);
+        editInfo.leftPercent = newLeft;
+        editInfo.rightPercent = newRight;
+        editInfo.topPercent = newTop;
+        editInfo.bottomPercent = newBottom;
+        editInfo.widthPx = fullWidth * (1 - newLeft - newRight);
+        editInfo.heightPx = fullHeight * (1 - newTop - newBottom);
 
         return true;
     },

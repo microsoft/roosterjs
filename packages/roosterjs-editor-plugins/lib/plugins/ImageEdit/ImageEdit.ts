@@ -413,33 +413,40 @@ export default class ImageEdit implements EditorPlugin {
 
             // Cropping and resizing will show different UI, so check if it is cropping here first
             const isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
-            const { angle, height, bottom, left, right, top } = this.editInfo;
+            const {
+                angleRad,
+                heightPx,
+                bottomPercent,
+                leftPercent,
+                rightPercent,
+                topPercent,
+            } = this.editInfo;
 
             // Width/height of the image
-            const [
-                canvasWidth,
-                canvasHeight,
-                fullWidth,
-                fullHeight,
+            const {
+                targetWidth,
+                targetHeight,
+                originalWidth,
+                originalHeight,
                 visibleWidth,
                 visibleHeight,
-            ] = getGeneratedImageSize(this.editInfo, isCropping);
-            const marginHorizontal = (canvasWidth - visibleWidth) / 2;
-            const marginVertical = (canvasHeight - visibleHeight) / 2;
-            const cropLeftPx = fullWidth * left;
-            const cropRightPx = fullWidth * right;
-            const cropTopPx = fullHeight * top;
-            const cropBottomPx = fullHeight * bottom;
+            } = getGeneratedImageSize(this.editInfo, isCropping);
+            const marginHorizontal = (targetWidth - visibleWidth) / 2;
+            const marginVertical = (targetHeight - visibleHeight) / 2;
+            const cropLeftPx = originalWidth * leftPercent;
+            const cropRightPx = originalWidth * rightPercent;
+            const cropTopPx = originalHeight * topPercent;
+            const cropBottomPx = originalHeight * bottomPercent;
 
             // Update size and margin of the wrapper
             wrapper.style.width = getPx(visibleWidth);
             wrapper.style.height = getPx(visibleHeight);
             wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
-            wrapper.style.transform = `rotate(${angle}rad)`;
+            wrapper.style.transform = `rotate(${angleRad}rad)`;
 
             // Update size of the image
-            this.image.style.width = getPx(fullWidth);
-            this.image.style.height = getPx(fullHeight);
+            this.image.style.width = getPx(originalWidth);
+            this.image.style.height = getPx(originalHeight);
 
             if (isCropping) {
                 // For crop, we also need to set position of the overlays
@@ -482,11 +489,12 @@ export default class ImageEdit implements EditorPlugin {
                 );
 
                 if (rotateCenter && rotateHandle && distance) {
-                    const cosAngle = Math.cos(angle);
+                    const cosAngle = Math.cos(angleRad);
                     const adjustedDistance =
                         cosAngle <= 0
                             ? Number.MAX_SAFE_INTEGER
-                            : (distance[1] + height / 2 + marginVertical) / cosAngle - height / 2;
+                            : (distance[1] + heightPx / 2 + marginVertical) / cosAngle -
+                              heightPx / 2;
                     const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
                     const rotateTop = Math.max(
                         Math.min(ROTATE_SIZE, adjustedDistance - rotateGap),

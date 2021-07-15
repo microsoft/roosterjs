@@ -9,7 +9,7 @@ describe('Resizer: resize only', () => {
         minHeight: 10,
     };
 
-    const initValue: ResizeInfo = { width: 100, height: 200 };
+    const initValue: ResizeInfo = { widthPx: 100, heightPx: 200 };
     const mouseEvent: MouseEvent = {} as any;
     const mouseEventShift: MouseEvent = { shiftKey: true } as any;
     const Xs: X[] = ['w', '', 'e'];
@@ -20,13 +20,13 @@ describe('Resizer: resize only', () => {
             src: '',
             naturalWidth: 100,
             naturalHeight: 200,
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            width: 100,
-            height: 200,
-            angle: 0,
+            leftPercent: 0,
+            topPercent: 0,
+            rightPercent: 0,
+            bottomPercent: 0,
+            widthPx: 100,
+            heightPx: 200,
+            angleRad: 0,
         };
     }
 
@@ -49,7 +49,7 @@ describe('Resizer: resize only', () => {
                 };
 
                 Resizer.onDragging(context, e, initValue, 20, 20);
-                actualResult[x][y] = [Math.floor(editInfo.width), Math.floor(editInfo.height)];
+                actualResult[x][y] = [Math.floor(editInfo.widthPx), Math.floor(editInfo.heightPx)];
             });
         });
 
@@ -101,7 +101,7 @@ describe('Resizer: resize only', () => {
             mouseEvent,
             () => {
                 const editInfo = getInitEditInfo();
-                editInfo.angle = Math.PI / 6;
+                editInfo.angleRad = Math.PI / 6;
                 return editInfo;
             },
             {
@@ -129,7 +129,7 @@ describe('Resizer: resize only', () => {
             mouseEventShift,
             () => {
                 const editInfo = getInitEditInfo();
-                editInfo.angle = Math.PI / 6;
+                editInfo.angleRad = Math.PI / 6;
                 return editInfo;
             },
             {
