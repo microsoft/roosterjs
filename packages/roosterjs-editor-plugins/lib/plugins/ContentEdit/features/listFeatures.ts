@@ -95,7 +95,7 @@ const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * IndentWhenDeleteBefore1stItem edit feature, provides the ability to indent the list if user press
+ * MaintainListChainWhenDelete edit feature, provides the ability to indent the list if user press
  * DELETE before the first item of a list
  */
 const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
