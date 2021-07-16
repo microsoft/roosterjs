@@ -112,7 +112,7 @@ export interface ListFeatureSettings {
     /**
      * When delete key is pressed before the first item, indent the correct list of numbers
      */
-    indentWhenDeleteBefore1stItem: boolean;
+    maintainListChainWhenDelete: boolean;
 }
 
 /**
