@@ -14,6 +14,7 @@ import {
     VListChain,
     createVListFromRegion,
     isBlockElement,
+    cacheGetEventData,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -100,8 +101,14 @@ const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.DELETE],
     shouldHandleEvent: (event, editor) => {
         const li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
-        const isAtEnd = Position.getEnd(editor.getSelectionRange()).isAtEnd;
-        return !li && isAtEnd;
+        if (li) {
+            return false;
+        }
+        const nextSibilingIsLI = getCacheNextSibiling(event, editor) === 'LI' ? true : false;
+        const isAtEndAndBeforeLI = nextSibilingIsLI
+            ? Position.getEnd(editor.getSelectionRange()).isAtEnd
+            : false;
+        return isAtEndAndBeforeLI;
     },
     handleEvent: (event, editor) => {
         const chains = getListChains(editor);
@@ -214,6 +221,17 @@ function isAListPattern(textBeforeCursor: string) {
 
 function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
+}
+
+function getCacheNextSibiling(event: PluginKeyboardEvent, editor: IEditor) {
+    const element = cacheGetEventData(event, 'nextSibiling', () => {
+        const range = editor.getSelectionRange();
+        const pos = Position.getEnd(range).normalize();
+        const traverser = editor.getBodyTraverser(pos.node);
+        const blockElement = traverser.getNextBlockElement().collapseToSingleElement();
+        return blockElement.nodeName;
+    });
+    return element;
 }
 
 function prepareAutoBullet(editor: IEditor, range: Range) {
