@@ -48,6 +48,7 @@ describe('TypeInContainerPlugin', () => {
 
     it('key press event for selection within editor', () => {
         const div = document.createElement('div');
+        div.setAttribute('style', 'color:red');
         div.innerHTML = 'test';
         editor.getSelectionRange = () =>
             <any>{
