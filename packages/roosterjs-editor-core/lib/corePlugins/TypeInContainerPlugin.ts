@@ -45,7 +45,12 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             // Only schedule when the range is not collapsed to catch this edge case.
             let range = this.editor.getSelectionRange();
 
-            if (!range || this.editor.contains(findClosestElementAncestor(range.startContainer))) {
+            if (
+                !range ||
+                this.editor.contains(
+                    findClosestElementAncestor(range.startContainer, null, '[style]')
+                )
+            ) {
                 return;
             }
 
