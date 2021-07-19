@@ -34,6 +34,8 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     markdownItalic: 'Markdown style Italics',
     markdownStrikethru: 'Markdown style Strikethrough',
     markdownInlineCode: 'Markdown style Code blocks',
+    maintainListChainWhenDelete:
+        'Maintain the list of number in the right order after press delete before the first item',
 };
 
 export interface ContentEditFeaturessProps {

@@ -14,6 +14,7 @@ import {
     VListChain,
     createVListFromRegion,
     isBlockElement,
+    cacheGetEventData,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -90,6 +91,28 @@ const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
         return li && isNodeEmpty(li) && !li.previousSibling;
     },
     handleEvent: toggleListAndPreventDefault,
+};
+
+/**
+ * MaintainListChainWhenDelete edit feature, provides the ability to indent the list if user press
+ * DELETE before the first item of a list
+ */
+const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.DELETE],
+    shouldHandleEvent: (event, editor) => {
+        const li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
+        if (li) {
+            return false;
+        }
+        const isAtEnd = Position.getEnd(editor.getSelectionRange()).isAtEnd;
+        const nextSibiling = isAtEnd ? getCacheNextSibiling(event, editor) : null;
+        const isAtEndAndBeforeLI = editor.getElementAtCursor('LI', nextSibiling, event);
+        return isAtEndAndBeforeLI;
+    },
+    handleEvent: (event, editor) => {
+        const chains = getListChains(editor);
+        editor.runAsync(editor => experimentCommitListChains(editor, chains));
+    },
 };
 
 /**
@@ -199,6 +222,16 @@ function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
 }
 
+function getCacheNextSibiling(event: PluginKeyboardEvent, editor: IEditor): Node | undefined {
+    const element = cacheGetEventData(event, 'nextSibiling', () => {
+        const range = editor.getSelectionRange();
+        const pos = Position.getEnd(range).normalize();
+        const traverser = editor.getBodyTraverser(pos.node);
+        return traverser?.getNextBlockElement()?.getStartNode();
+    });
+    return element;
+}
+
 function prepareAutoBullet(editor: IEditor, range: Range) {
     range.deleteContents();
 
@@ -250,4 +283,5 @@ export const ListFeatures: Record<
     outdentWhenEnterOnEmptyLine: OutdentWhenEnterOnEmptyLine,
     mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
     maintainListChain: MaintainListChain,
+    maintainListChainWhenDelete: MaintainListChainWhenDelete,
 };

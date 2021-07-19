@@ -108,6 +108,11 @@ export interface ListFeatureSettings {
      * When edit with lists, maintain the list numbers of list chain
      */
     maintainListChain: boolean;
+
+    /**
+     * When delete key is pressed before the first item, indent the correct list of numbers
+     */
+    maintainListChainWhenDelete: boolean;
 }
 
 /**
