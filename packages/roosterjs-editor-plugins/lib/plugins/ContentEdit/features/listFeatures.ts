@@ -15,7 +15,6 @@ import {
     createVListFromRegion,
     isBlockElement,
     cacheGetEventData,
-    findClosestElementAncestor,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -105,11 +104,9 @@ const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
         if (li) {
             return false;
         }
-        const nextSibiling = getCacheNextSibiling(event, editor);
-        const nextSibilingIsLI = findClosestElementAncestor(nextSibiling, null, 'li');
-        const isAtEndAndBeforeLI = nextSibilingIsLI
-            ? Position.getEnd(editor.getSelectionRange()).isAtEnd
-            : false;
+        const isAtEnd = Position.getEnd(editor.getSelectionRange()).isAtEnd;
+        const nextSibiling = isAtEnd ? getCacheNextSibiling(event, editor) : null;
+        const isAtEndAndBeforeLI = editor.getElementAtCursor('LI', nextSibiling, event);
         return isAtEndAndBeforeLI;
     },
     handleEvent: (event, editor) => {
@@ -225,12 +222,12 @@ function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
 }
 
-function getCacheNextSibiling(event: PluginKeyboardEvent, editor: IEditor) {
+function getCacheNextSibiling(event: PluginKeyboardEvent, editor: IEditor): Node | null {
     const element = cacheGetEventData(event, 'nextSibiling', () => {
         const range = editor.getSelectionRange();
         const pos = Position.getEnd(range).normalize();
         const traverser = editor.getBodyTraverser(pos.node);
-        return traverser.getNextBlockElement().getStartNode();
+        return traverser?.getNextBlockElement()?.getStartNode();
     });
     return element;
 }
