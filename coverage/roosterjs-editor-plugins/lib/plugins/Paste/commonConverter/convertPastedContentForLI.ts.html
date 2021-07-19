@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">96% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>24/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -92,7 +92,19 @@
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -108,24 +120,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
     changeElementTag,
@@ -139,28 +163,40 @@
  * @internal
  * Convert content copied from Teams to be well-formed
  */
-export default function <span class="fstat-no" title="function not covered" >convertPastedContentForLI(</span>fragment: DocumentFragment) {
+export default function convertPastedContentForLI(fragment: DocumentFragment) {
     // Sometimes it is possible that we get LI nodes directly under DIV.
     // In that case we need to convert DIV to UL. It is also possible to be OL, but we don't know it.
     // So always assume it is UL here, and later user can change it.
-<span class="cstat-no" title="statement not covered" >    if (isPureLiNode(fragment)) {</span>
-<span class="cstat-no" title="statement not covered" >        wrap(toArray(fragment.childNodes), 'UL');</span>
-    } else <span class="cstat-no" title="statement not covered" >if (isPureLiNode(fragment.firstChild)) {</span>
-<span class="cstat-no" title="statement not covered" >        changeElementTag(fragment.firstChild as HTMLElement, 'UL');</span>
+    if (isPureLiNode(fragment)) {
+        wrap(toArray(fragment.childNodes), 'UL');
+    } else if (
+        safeInstanceOf(fragment.firstChild, 'HTMLElement') &amp;&amp;
+        isPureLiNode(fragment.firstChild)
+    ) {
+        changeElementTag(fragment.firstChild as HTMLElement, 'UL');
     }
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >isPureLiNode(</span>node: Node) {
-<span class="cstat-no" title="statement not covered" >    return (</span>
-        node &amp;&amp;
-        !node.nextSibling &amp;&amp;
-        ['OL', 'UL', 'MENU'].indexOf(getTagOfNode(node)) &lt; 0 &amp;&amp;
-        toArray(node.childNodes).every(
-<span class="fstat-no" title="function not covered" >            childNode </span>=&gt;
-<span class="cstat-no" title="statement not covered" >                (safeInstanceOf(childNode, 'Text') &amp;&amp; !childNode.nodeValue?.trim()) ||</span>
-                getTagOfNode(childNode) == 'LI'
-        )
-    );
+function isPureLiNode(node: ParentNode &amp; Node) {
+    if (node &amp;&amp; !node.nextSibling &amp;&amp; ['OL', 'UL', 'MENU'].indexOf(getTagOfNode(node)) &lt; 0) {
+        let hasLi = false;
+        if (
+            toArray(node.childNodes).every(childNode =&gt; {
+                if (safeInstanceOf(childNode, 'Text') &amp;&amp; !childNode.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>rim()) {
+                    return true;
+                } else if (getTagOfNode(childNode) == 'LI') {
+                    hasLi = true;
+                    return true;
+                } else {
+                    return false;
+                }
+            }) &amp;&amp;
+            hasLi
+        ) {
+            return true;
+        }
+    }
+    return false;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -169,7 +205,7 @@ function <span class="fstat-no" title="function not covered" >isPureLiNode(</spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Jul 19 2021 17:09:05 GMT+0000 (Coordinated Universal Time)
+                at Mon Jul 19 2021 21:00:01 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
