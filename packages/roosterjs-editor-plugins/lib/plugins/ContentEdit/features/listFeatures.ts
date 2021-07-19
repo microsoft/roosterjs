@@ -222,7 +222,7 @@ function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
 }
 
-function getCacheNextSibiling(event: PluginKeyboardEvent, editor: IEditor): Node | null {
+function getCacheNextSibiling(event: PluginKeyboardEvent, editor: IEditor): Node | undefined {
     const element = cacheGetEventData(event, 'nextSibiling', () => {
         const range = editor.getSelectionRange();
         const pos = Position.getEnd(range).normalize();
