@@ -44,8 +44,8 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                         )
                     )}
                     {this.renderPluginItem(
-                        'imageResize',
-                        'Image Resize Plugin',
+                        'imageEdit',
+                        'Image Edit Plugin',
                         this.renderCheckBox(
                             'Force preserve ratio',
                             this.forcePreserveRatio,
@@ -130,7 +130,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                     ref={ref}
                     checked={value}
                     onChange={() =>
-                        this.props.resetState(state => onChange(state, ref.current.checked), false)
+                        this.props.resetState(state => onChange(state, ref.current.checked), true)
                     }
                     onBlur={() => this.props.resetState(null, true)}
                 />

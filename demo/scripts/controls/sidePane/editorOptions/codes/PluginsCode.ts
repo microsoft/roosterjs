@@ -7,7 +7,7 @@ import WatermarkCode from './WatermarkCode';
 import {
     CustomReplaceCode,
     CutPasteListChainCode,
-    ImageResizeCode,
+    ImageEditCode,
     PasteCode,
     TableResizeCode,
 } from './SimplePluginCode';
@@ -24,7 +24,7 @@ export default class PluginsCode extends CodeElement {
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
             pluginList.paste && new PasteCode(),
             pluginList.watermark && new WatermarkCode(this.state.watermarkText),
-            pluginList.imageResize && new ImageResizeCode(),
+            pluginList.imageEdit && new ImageEditCode(),
             pluginList.cutPasteListChain && new CutPasteListChainCode(),
             pluginList.tableResize && new TableResizeCode(),
             pluginList.pickerPlugin && new PickerPluginCode(),
