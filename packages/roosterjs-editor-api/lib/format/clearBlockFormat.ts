@@ -23,6 +23,8 @@ const ATTRIBUTES_TO_PRESERVE = ['href', 'src'];
 const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
 
 /**
+ * @deprecated
+ * Use clearFormat passing the FormatType.Autodetect as parameter
  * Clear all formats of selected blocks.
  * When selection is collapsed, only clear format of current block.
  * @param editor The editor instance

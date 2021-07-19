@@ -23,13 +23,13 @@ import {
     toggleSubscript,
     toggleStrikethrough,
     setDirection,
-    clearBlockFormat,
     clearFormat,
     toggleHeader,
     toggleCodeBlock,
     insertImage,
     setTextColor,
     setBackgroundColor,
+    FormattingStrategy,
 } from 'roosterjs-editor-api';
 
 const buttons: { [key: string]: RibbonButtonType } = {
@@ -302,10 +302,18 @@ const buttons: { [key: string]: RibbonButtonType } = {
     clearFormat: {
         title: 'Remove formatting',
         image: require('../svg/removeformat.svg'),
-        onClick: (editor, key) => (key == 'block' ? clearBlockFormat(editor) : clearFormat(editor)),
+        onClick: (editor, key) => {
+            const handlers: Record<string, FormattingStrategy> = {
+                block: FormattingStrategy.Block,
+                selection: FormattingStrategy.Inline,
+                autodetect: FormattingStrategy.AutoDetect,
+            };
+            clearFormat(editor, handlers[key]);
+        },
         dropDownItems: {
             selection: 'Remove formatting of selected text',
             block: 'Remove formatting of selected paragraphs',
+            autodetect: 'Remove format (Autodetect)',
         },
     },
     dark: {

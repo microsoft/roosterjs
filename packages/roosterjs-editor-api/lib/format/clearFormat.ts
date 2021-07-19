@@ -1,4 +1,6 @@
+import clearBlockFormat from '../format/clearBlockFormat';
 import execCommand from '../utils/execCommand';
+import PartialInlineElement from 'roosterjs-editor-dom/lib/inlineElements/PartialInlineElement';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
@@ -10,13 +12,61 @@ import { ChangeSource, DocumentCommand, IEditor, QueryScope } from 'roosterjs-ed
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 
+export const enum FormattingStrategy {
+    /**
+     * Inline format. Remove text format.
+     */
+    Inline,
+
+    /**
+     * BLock format. Remove text and structure format of the block.
+     */
+    Block,
+
+    /**
+     * Detect Inline or Block format based on the current editor selectior.
+     */
+    AutoDetect,
+}
+
 /**
- * Clear the format in current selection, after cleaning, the format will be
- * changed to default format. The format that get cleaned include B/I/U/font name/
- * font size/text color/background color/align left/align right/align center/superscript/subscript
+ * @param editor The editor instance
+ * @returns if the current selection is composed of two or more block elements
+ */
+function isMultiBlockSelection(editor: IEditor): boolean {
+    let transverser = editor.getSelectionTraverser();
+    let blockElement = transverser.currentBlockElement;
+    if (!blockElement) {
+        return false;
+    }
+
+    let nextBlockElement = transverser.getNextBlockElement();
+
+    //At least two blocks are selected
+    return !!nextBlockElement;
+}
+
+/**
+ * Clear the format of the selected text or list of blocks
+ * If the current selection is compose of multiple block elements then remove the text and struture format for all the selected blocks
+ * If the current selection is compose of a partial inline element then only the text format is removed from the current selection
  * @param editor The editor instance
  */
-export default function clearFormat(editor: IEditor) {
+function clearAutoDetectFormat(editor: IEditor) {
+    const isMultiBlock = isMultiBlockSelection(editor);
+    if (!isMultiBlock) {
+        const transverser = editor.getSelectionTraverser();
+        const inlineElement = transverser.currentInlineElement;
+        const isPartial = inlineElement instanceof PartialInlineElement;
+        if (isPartial) {
+            clearFormat(editor);
+            return;
+        }
+    }
+    clearBlockFormat(editor);
+}
+
+function clearInlineFormat(editor: IEditor) {
     editor.focus();
     editor.addUndoSnapshot(() => {
         execCommand(editor, DocumentCommand.RemoveFormat);
@@ -69,4 +119,24 @@ export default function clearFormat(editor: IEditor) {
             }
         }
     }, ChangeSource.Format);
+}
+
+/**
+ * Clear the format in current selection, after cleaning, the format will be
+ * changed to default format. The format that get cleaned include B/I/U/font name/
+ * font size/text color/background color/align left/align right/align center/superscript/subscript
+ * @param editor The editor instance
+ * @param formatType type of format to apply
+ */
+export default function clearFormat(
+    editor: IEditor,
+    formatType: FormattingStrategy = FormattingStrategy.Inline
+) {
+    if (formatType == FormattingStrategy.Inline) {
+        clearInlineFormat(editor);
+    } else if (formatType == FormattingStrategy.Block) {
+        clearBlockFormat(editor);
+    } else {
+        clearAutoDetectFormat(editor);
+    }
 }
