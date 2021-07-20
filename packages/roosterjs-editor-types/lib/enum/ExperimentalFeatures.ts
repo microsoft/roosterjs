@@ -46,4 +46,8 @@ export const enum ExperimentalFeatures {
      * Crop an inline image (requires ImageEdit plugin)
      */
     ImageCrop = 'ImageCrop',
+    /**
+     * Check if the element has a style attribute, if not, apply the default format
+     */
+    AlwaysApplyDefaultFormat = 'AlwaysApplyDefaultFormat',
 }

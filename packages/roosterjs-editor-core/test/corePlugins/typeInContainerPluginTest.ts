@@ -1,6 +1,6 @@
 import * as dom from 'roosterjs-editor-dom';
 import TypeInContainerPlugin from '../../lib/corePlugins/TypeInContainerPlugin';
-import { IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('TypeInContainerPlugin', () => {
     let plugin: TypeInContainerPlugin;
@@ -22,6 +22,7 @@ describe('TypeInContainerPlugin', () => {
             ensureTypeInContainer,
             isDarkMode: () => false,
             getDefaultFormat: () => defaultFormat,
+            isFeatureEnabled: (features: ExperimentalFeatures) => true,
         });
 
         plugin = new TypeInContainerPlugin();
@@ -46,17 +47,59 @@ describe('TypeInContainerPlugin', () => {
         expect(ensureTypeInContainer).not.toHaveBeenCalled();
     });
 
-    it('key press event for selection within editor', () => {
+    it('key press event for selection within editor [Experimental Feature Enabled]', () => {
         const div = document.createElement('div');
         div.setAttribute('style', 'color:red');
         div.innerHTML = 'test';
         editor.getSelectionRange = () =>
             <any>{
                 startContainer: div.firstChild,
+                collapsed: true,
             };
 
         editor.contains = <any>((node: Node) => node == div);
 
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyPress,
+            rawEvent: null,
+        });
+
+        expect(select).not.toHaveBeenCalled();
+        expect(runAsync).not.toHaveBeenCalled();
+        expect(ensureTypeInContainer).not.toHaveBeenCalled();
+    });
+
+    it('key press event for selection within editor [No style] [Experimental Feature Enabled]', () => {
+        const div = document.createElement('div');
+        div.innerHTML = 'test';
+        editor.getSelectionRange = () =>
+            <any>{
+                startContainer: div.firstChild,
+                collapsed: true,
+            };
+        editor.contains = <any>((node: Node) => node == div);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyPress,
+            rawEvent: null,
+        });
+
+        expect(select).not.toHaveBeenCalled();
+        expect(runAsync).not.toHaveBeenCalled();
+        expect(ensureTypeInContainer).toHaveBeenCalled();
+    });
+
+    it('key press event for selection within editor [Styled with inner div] [Experimental Feature Enabled]', () => {
+        const div = document.createElement('div');
+        div.setAttribute('style', 'color:red');
+        div.innerHTML = 'test';
+        const innerDiv = document.createElement('div');
+        div.append(innerDiv);
+        editor.getSelectionRange = () =>
+            <any>{
+                startContainer: div.firstChild,
+                collapsed: true,
+            };
+        editor.contains = <any>((node: Node) => node == div);
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyPress,
             rawEvent: null,
