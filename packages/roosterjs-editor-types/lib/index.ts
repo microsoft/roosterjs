@@ -27,7 +27,7 @@ export { QueryScope } from './enum/QueryScope';
 export { RegionType } from './enum/RegionType';
 export { TableOperation } from './enum/TableOperation';
 export { ImageEditOperation } from './enum/ImageEditOperation';
-
+export { ClearFormatMode } from './enum/ClearFormatMode';
 // Event
 export { default as BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { default as BasePluginEvent } from './event/BasePluginEvent';

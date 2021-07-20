@@ -1,7 +1,7 @@
 import * as clearFormatLib from '../../lib/format/clearFormat';
 import * as TestHelper from '../TestHelper';
-import clearFormat, { FormattingStrategy } from '../../lib/format/clearFormat';
-import { IEditor } from 'roosterjs-editor-types';
+import clearFormat from '../../lib/format/clearFormat';
+import { ClearFormatMode, IEditor } from 'roosterjs-editor-types';
 
 describe('clearFormat()', () => {
     let testID = 'clearFormat';
@@ -47,7 +47,7 @@ describe('clearFormat()', () => {
         const spy: jasmine.Spy = spyOn(clearFormatLib, 'default');
         editor.setContent(originalContent);
 
-        clearFormat(editor, FormattingStrategy.Block);
+        clearFormat(editor, ClearFormatMode.Block);
         expect(spy).toHaveBeenCalledTimes(1);
     });
 });
@@ -80,7 +80,7 @@ describe('clearAutodetectFormat tests', () => {
         range.setEnd(end, 0);
         doc.getSelection().addRange(range);
 
-        clearFormat(editor, FormattingStrategy.AutoDetect);
+        clearFormat(editor, ClearFormatMode.AutoDetect);
         expect(editor.getContent()).toBe(expectedFormat);
     });
 
@@ -98,7 +98,7 @@ describe('clearAutodetectFormat tests', () => {
         range.setEnd(headerText, 13);
         doc.getSelection().addRange(range);
 
-        clearFormat(editor, FormattingStrategy.AutoDetect);
+        clearFormat(editor, ClearFormatMode.AutoDetect);
 
         header = doc.getElementById('testHeader');
         expect(header.innerHTML).toBe(expectedFormat);
@@ -116,7 +116,7 @@ describe('clearAutodetectFormat tests', () => {
         range.setEnd(header, 1);
         doc.getSelection().addRange(range);
 
-        clearFormat(editor, FormattingStrategy.AutoDetect);
+        clearFormat(editor, ClearFormatMode.AutoDetect);
 
         expect(editor.getContent()).toBe(expectedFormat);
     });
@@ -136,7 +136,7 @@ describe('clearAutodetectFormat tests', () => {
         range.setEnd(header, 1);
         doc.getSelection().addRange(range);
 
-        clearFormat(editor, FormattingStrategy.AutoDetect);
+        clearFormat(editor, ClearFormatMode.AutoDetect);
 
         expect(editor.getContent()).toBe(expectedFormat);
     });
@@ -156,7 +156,7 @@ describe('clearAutodetectFormat tests', () => {
         range.setEnd(text, 4);
         doc.getSelection().addRange(range);
 
-        clearFormat(editor, FormattingStrategy.AutoDetect);
+        clearFormat(editor, ClearFormatMode.AutoDetect);
 
         expect(editor.getContent()).toBe(expectedFormat);
     });
@@ -176,7 +176,7 @@ describe('clearAutodetectFormat tests', () => {
         range.setEnd(li, li.children.length);
         doc.getSelection().addRange(range);
 
-        clearFormat(editor, FormattingStrategy.AutoDetect);
+        clearFormat(editor, ClearFormatMode.AutoDetect);
 
         expect(editor.getContent()).toBe(expectedFormat);
     });
@@ -195,7 +195,7 @@ describe('clearAutodetectFormat tests', () => {
         range.setEnd(span, 1);
         doc.getSelection().addRange(range);
 
-        clearFormat(editor, FormattingStrategy.AutoDetect);
+        clearFormat(editor, ClearFormatMode.AutoDetect);
 
         table = doc.getElementsByTagName('table')[0] as HTMLTableElement;
         cell = table.rows[0].cells[2];
