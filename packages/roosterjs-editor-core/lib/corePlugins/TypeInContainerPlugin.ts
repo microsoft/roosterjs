@@ -59,7 +59,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                 this.editor.contains(
                     findClosestElementAncestor(
                         range.startContainer,
-                        null,
+                        null /* root */,
                         shouldAlwaysApplyDefaultFormat ? '[style]' : null /*selector*/
                     )
                 )
