@@ -1,5 +1,11 @@
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { findClosestElementAncestor, Position } from 'roosterjs-editor-dom';
+import {
+    EditorPlugin,
+    ExperimentalFeatures,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -44,8 +50,20 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             //
             // Only schedule when the range is not collapsed to catch this edge case.
             let range = this.editor.getSelectionRange();
+            let shouldAlwaysApplyDefaultFormat = this.editor.isFeatureEnabled(
+                ExperimentalFeatures.AlwaysApplyDefaultFormat
+            );
 
-            if (!range || this.editor.contains(findClosestElementAncestor(range.startContainer))) {
+            if (
+                !range ||
+                this.editor.contains(
+                    findClosestElementAncestor(
+                        range.startContainer,
+                        null /* root */,
+                        shouldAlwaysApplyDefaultFormat ? '[style]' : null /*selector*/
+                    )
+                )
+            ) {
                 return;
             }
 

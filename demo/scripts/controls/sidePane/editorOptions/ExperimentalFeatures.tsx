@@ -12,6 +12,7 @@ const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
     [ExperimentalFeatures.PasteWithLinkPreview]: 'Try retrieve link preview information when paste',
     [ExperimentalFeatures.ImageRotate]: 'Rotate an inline image',
     [ExperimentalFeatures.ImageCrop]: 'Crop an inline image',
+    [ExperimentalFeatures.AlwaysApplyDefaultFormat]: 'Apply the default format to all elements',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
