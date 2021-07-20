@@ -6,16 +6,16 @@
  * If the same property got multiple callbacks, the final return value will be the return
  * value of the latest callback
  */
-export default function chainSanitizerCallback<T extends any[], R>(
-    map: Record<string, (...args: T) => R>,
+export default function chainSanitizerCallback<TOriginalArgs extends any[], TChainedFn extends (...args: TOriginalArgs) => R,  R>(
+    map: Record<string, (...args: TOriginalArgs) => R>,
     name: string,
-    newCallback: (...args: T) => R
+    newCallback: TChainedFn
 ) {
     if (!map[name]) {
         map[name] = newCallback;
     } else {
         const originalCallback = map[name];
-        map[name] = (...args: T) => {
+        map[name] = (...args: TOriginalArgs) => {
             originalCallback(...args);
             return newCallback(...args);
         };
