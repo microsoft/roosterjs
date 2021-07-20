@@ -30,6 +30,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.SingleDirectionResize,
         ExperimentalFeatures.ImageRotate,
         ExperimentalFeatures.ImageCrop,
+        ExperimentalFeatures.AlwaysApplyDefaultFormat,
     ],
 };
 
