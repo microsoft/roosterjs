@@ -50,7 +50,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             //
             // Only schedule when the range is not collapsed to catch this edge case.
             let range = this.editor.getSelectionRange();
-            let isFeatureEnabled = this.editor.isFeatureEnabled(
+            let shouldAlwaysApplyDefaultFormat = this.editor.isFeatureEnabled(
                 ExperimentalFeatures.AlwaysApplyDefaultFormat
             );
 
@@ -60,7 +60,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                     findClosestElementAncestor(
                         range.startContainer,
                         null,
-                        isFeatureEnabled ? '[style]' : null
+                        shouldAlwaysApplyDefaultFormat ? '[style]' : null /*selector*/
                     )
                 )
             ) {
