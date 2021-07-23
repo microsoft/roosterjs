@@ -7,6 +7,7 @@ describe('TableResize plugin tests', () => {
     let plugin: TableResize;
     const insideTheOffset = 5;
 
+    const DELTA = 2;
     const TABLE =
         '<div style="margin: 50px"><table cellspacing="0" cellpadding="1" style="border-collapse: collapse;"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table><br></div>';
     const ADD_BUTTON = '</div>+</div>';
@@ -67,13 +68,17 @@ describe('TableResize plugin tests', () => {
 
     it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize();
-        runTest({ x: rect.right, y: rect.top - 2 }, { x: rect.right / 2, y: rect.bottom }, false);
+        runTest(
+            { x: rect.right, y: rect.top - DELTA },
+            { x: rect.right / 2, y: rect.bottom },
+            false
+        );
     });
 
     it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize();
         runTest(
-            { x: rect.right, y: rect.top - 2 },
+            { x: rect.right, y: rect.top - DELTA },
             { x: rect.right - insideTheOffset, y: rect.top },
             true
         );
@@ -100,7 +105,7 @@ describe('TableResize plugin tests', () => {
     it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(true);
         runTest(
-            { x: rect.left, y: rect.top - 2 },
+            { x: rect.left, y: rect.top - DELTA },
             { x: (rect.right - rect.left) / 2, y: rect.bottom },
             false
         );
@@ -109,7 +114,7 @@ describe('TableResize plugin tests', () => {
     it('keeps the vertical inserter when moving the cursor inside the safe zone with culture language RTL', () => {
         const rect = initialize(true);
         runTest(
-            { x: rect.left + 80, y: rect.top - 2 },
+            { x: rect.left + 80, y: rect.top - DELTA },
             { x: rect.left + insideTheOffset, y: rect.top + insideTheOffset },
             true
         );
