@@ -102,24 +102,6 @@ describe('TableResize plugin tests', () => {
         );
     });
 
-    it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
-        const rect = initialize(true);
-        runTest(
-            { x: rect.left, y: rect.top - DELTA },
-            { x: (rect.right - rect.left) / 2, y: rect.bottom },
-            false
-        );
-    });
-
-    it('keeps the vertical inserter when moving the cursor inside the safe zone with culture language RTL', () => {
-        const rect = initialize(true);
-        runTest(
-            { x: rect.left + 80, y: rect.top - DELTA },
-            { x: rect.left + insideTheOffset, y: rect.top + insideTheOffset },
-            true
-        );
-    });
-
     it('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(true);
         runTest(
