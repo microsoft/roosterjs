@@ -31,6 +31,25 @@ describe('TableResize plugin tests', () => {
         y: number;
     };
 
+    function getCellRect(i: number, j: number): DOMRect {
+        const tables = editor.getDocument().getElementsByTagName('table');
+        if (tables.length < 1) {
+            throw 'coult not find any table';
+        }
+
+        const table = tables[0];
+        if (table.rows.length - 1 < i) {
+            throw 'invalid row';
+        }
+        if (table.rows[i].cells.length - 1 < j) {
+            throw 'invalid col';
+        }
+
+        const cell = table.rows[i].cells[j];
+
+        return cell.getBoundingClientRect();
+    }
+
     function initialize(isRtl: boolean = false): DOMRect {
         if (isRtl) {
             editor.getDocument().body.style.direction = 'rtl';
@@ -116,6 +135,28 @@ describe('TableResize plugin tests', () => {
         runTest(
             { x: rect.right, y: rect.bottom },
             { x: rect.right + insideTheOffset / 2, y: rect.bottom },
+            true
+        );
+    });
+
+    it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
+        const rect = initialize(true);
+        const cellRect = getCellRect(0, 0);
+
+        runTest(
+            { x: cellRect.left - DELTA, y: cellRect.top },
+            { x: (rect.right - rect.left) / 2, y: rect.bottom },
+            false
+        );
+    });
+
+    it('keeps the vertical inserter when moving the cursor inside the safe zone with culture language RTL', () => {
+        initialize(true);
+        const cellRect = getCellRect(0, 0);
+
+        runTest(
+            { x: cellRect.left - DELTA, y: cellRect.top },
+            { x: cellRect.left, y: cellRect.top },
             true
         );
     });
