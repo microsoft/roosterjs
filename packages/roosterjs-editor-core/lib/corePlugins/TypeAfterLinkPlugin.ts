@@ -42,6 +42,10 @@ export default class TypeAfterLinkPlugin implements EditorPlugin {
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
+
+    /**
+     * @deprecated after Firefox last update
+     */
     onPluginEvent(event: PluginEvent) {
         if (
             (Browser.isFirefox && event.eventType == PluginEventType.KeyPress) ||

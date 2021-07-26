@@ -45,7 +45,6 @@ describe('Editor', () => {
         expect(core.plugins.map(p => p.getName())).toEqual([
             'TypeInContainer',
             'Edit',
-            'TypeAfterLink',
             'Undo',
             'DOMEvent',
             'PendingFormatState',
@@ -149,7 +148,6 @@ describe('Editor', () => {
             'TypeInContainer',
             'Edit',
             'test plugin',
-            'TypeAfterLink',
             'Undo',
             'DOMEvent',
             'PendingFormatState',
