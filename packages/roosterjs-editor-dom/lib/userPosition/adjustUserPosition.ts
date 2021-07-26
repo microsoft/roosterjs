@@ -4,7 +4,7 @@ import {
     NodeType,
     PositionType,
     QueryScope,
-} from 'roosterjs-editor-types/lib';
+} from 'roosterjs-editor-types';
 import {
     changeElementTag,
     contains,
@@ -48,7 +48,7 @@ export function adjustInsertPositionForHyperLink(
             null /*forEachCallback*/,
             QueryScope.OnSelection,
             createRange(position)
-        ).filter(a => blockElement.contains(a))[0];
+        ).filter((a: HTMLElement) => blockElement.contains(a))[0];
 
         // If this is about to insert node to an empty A tag, clear the A tag and reset position
         if (anchor && isNodeEmpty(anchor)) {
@@ -104,7 +104,9 @@ export function adjustInsertPositionForStructuredNode(
     let rootNodeToInsert = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
-        let rootNodes = toArray(rootNodeToInsert.childNodes).filter(n => getTagOfNode(n) != 'BR');
+        let rootNodes = toArray(rootNodeToInsert.childNodes).filter(
+            (n: ChildNode) => getTagOfNode(n) != 'BR'
+        );
         rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : null;
     }
 
