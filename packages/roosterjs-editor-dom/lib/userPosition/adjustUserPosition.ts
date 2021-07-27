@@ -25,7 +25,7 @@ import {
     unwrap,
     VTable,
     wrap,
-} from 'roosterjs/lib';
+} from 'roosterjs-editor-dom';
 
 /**
  * Adjust position for <a> tag don't be nested inside another <a> tag.

@@ -68,7 +68,6 @@ function getInitialRange(
  * @param option An insert option object to specify how to insert the node
  */
 
-//changes in the core of the editor
 export const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
     option = option || {
         position: ContentPosition.SelectionStart,
@@ -78,7 +77,6 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
     };
     let contentDiv = core.contentDiv;
 
-    //why do we need update the cursor?
     if (option.updateCursor) {
         core.api.focus(core);
     }
@@ -88,7 +86,6 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
         return true;
     }
 
-    //Does it handle dark mode? Why is it always called?
     core.api.transformColor(
         core,
         node,
