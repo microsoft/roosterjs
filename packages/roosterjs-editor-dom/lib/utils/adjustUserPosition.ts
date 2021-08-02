@@ -1,10 +1,4 @@
-import {
-    EditorCore,
-    NodePosition,
-    NodeType,
-    PositionType,
-    QueryScope,
-} from 'roosterjs-editor-types';
+import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import {
     changeElementTag,
     contains,
@@ -28,15 +22,14 @@ import {
 } from 'roosterjs-editor-dom';
 
 /**
- * Adjust position for <a> tag don't be nested inside another <a> tag.
+ * Adjust position for A tag don't be nested inside another A tag.
  */
-
 export function adjustInsertPositionForHyperLink(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: NodePosition,
-    core: EditorCore
-): NodePosition {
+    position: Position,
+    range: Range
+): Position {
     let blockElement = getBlockElementAtNode(root, position.node);
 
     if (blockElement) {
@@ -92,15 +85,14 @@ export function adjustInsertPositionForHyperLink(
 }
 
 /**
- * Adjust position for a node don't be nested inside tags like <br>, <li>, <td>.
+ * Adjust position for a node don't be nested inside tags like BR, LI, TD.
  */
-
 export function adjustInsertPositionForStructuredNode(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: NodePosition,
-    core: EditorCore
-): NodePosition {
+    position: Position,
+    range: Range
+): Position {
     let rootNodeToInsert = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
@@ -174,9 +166,9 @@ export function adjustInsertPositionForStructuredNode(
 export function adjustInsertPositionForParagraph(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: NodePosition,
-    core: EditorCore
-): NodePosition {
+    position: Position,
+    range: Range
+): Position {
     if (getTagOfNode(position.node) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
@@ -197,9 +189,9 @@ export function adjustInsertPositionForParagraph(
 export function adjustInsertPositionForVoidElement(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: NodePosition,
-    core: EditorCore
-): NodePosition {
+    position: Position,
+    range: Range
+): Position {
     if (isVoidHtmlElement(position.node)) {
         position = new Position(
             position.node,
@@ -216,12 +208,11 @@ export function adjustInsertPositionForVoidElement(
 export function adjustInsertPositionForMoveCursorOutOfALink(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: NodePosition,
-    core: EditorCore
-): NodePosition {
-    let range = core.api.getSelectionRange(core, true);
+    position: Position,
+    range: Range
+): Position {
     if (range && range.collapsed) {
-        const searcher = new PositionContentSearcher(core.contentDiv, Position.getStart(range));
+        const searcher = new PositionContentSearcher(root, Position.getStart(range));
         const inlineElementBefore = searcher.getInlineElementBefore();
         const inlineElementAfter = searcher.getInlineElementAfter();
         if (inlineElementBefore instanceof LinkInlineElement) {
@@ -230,6 +221,31 @@ export function adjustInsertPositionForMoveCursorOutOfALink(
             position = new Position(inlineElementAfter.getContainerNode(), PositionType.Before);
         }
     }
+    return position;
+}
+
+export function adjustInsertPositionBySteps(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+): Position {
+    const adjustSteps: ((
+        root: HTMLElement,
+        nodeToInsert: Node,
+        position: Position,
+        range: Range
+    ) => Position)[] = [
+        adjustInsertPositionForHyperLink,
+        adjustInsertPositionForStructuredNode,
+        adjustInsertPositionForParagraph,
+        adjustInsertPositionForVoidElement,
+        adjustInsertPositionForMoveCursorOutOfALink,
+    ];
+
+    adjustSteps.forEach(handler => {
+        position = handler(root, nodeToInsert, position, range);
+    });
     return position;
 }
 

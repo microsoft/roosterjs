@@ -6,7 +6,6 @@ import {
     InsertNode,
     InsertOption,
     NodeType,
-    NodePosition,
     PositionType,
 } from 'roosterjs-editor-types';
 import {
@@ -19,27 +18,8 @@ import {
     safeInstanceOf,
     toArray,
     wrap,
+    adjustInsertPositionBySteps,
 } from 'roosterjs-editor-dom';
-import {
-    adjustInsertPositionForHyperLink,
-    adjustInsertPositionForStructuredNode,
-    adjustInsertPositionForParagraph,
-    adjustInsertPositionForVoidElement,
-    adjustInsertPositionForMoveCursorOutOfALink,
-} from 'roosterjs-editor-dom/lib/userPosition/adjustUserPosition';
-
-const adjustSteps: ((
-    root: HTMLElement,
-    nodeToInsert: Node,
-    position: NodePosition,
-    core: EditorCore
-) => NodePosition)[] = [
-    adjustInsertPositionForHyperLink,
-    adjustInsertPositionForStructuredNode,
-    adjustInsertPositionForParagraph,
-    adjustInsertPositionForVoidElement,
-    adjustInsertPositionForMoveCursorOutOfALink,
-];
 
 function getInitialRange(
     core: EditorCore,
@@ -67,7 +47,6 @@ function getInitialRange(
  * @param core The EditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-
 export const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
     option = option || {
         position: ContentPosition.SelectionStart,
@@ -175,9 +154,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     ) {
                         pos = new Position(blockElement.getEndNode(), PositionType.After);
                     } else {
-                        adjustSteps.forEach(handler => {
-                            pos = handler(contentDiv, node, pos, core);
-                        });
+                        pos = adjustInsertPositionBySteps(contentDiv, node, pos, range);
                     }
 
                     let nodeForCursor =
