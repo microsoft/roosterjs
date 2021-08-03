@@ -41,6 +41,7 @@ export default interface ImageEditOptions {
     imageSelector?: string;
 
     /**
+     * @deprecated
      * HTML for the rotate icon
      * @default A predefined SVG icon
      */

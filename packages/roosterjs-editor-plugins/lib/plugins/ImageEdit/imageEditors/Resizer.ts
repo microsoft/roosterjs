@@ -2,6 +2,7 @@ import DragAndDropContext, { X, Y } from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import ImageEditInfo, { ResizeInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
+import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 
 const RESIZE_HANDLE_SIZE = 7;
@@ -110,39 +111,60 @@ export function doubleCheckResize(
  * @internal
  * Get HTML for resize handles at the corners
  */
-export function getCornerResizeHTML({ borderColor: resizeBorderColor }: ImageHtmlOptions): string {
-    return Xs.map(x =>
-        Ys.map(y =>
-            (x == '') == (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : ''
-        ).join('')
-    ).join('');
+export function getCornerResizeHTML({
+    borderColor: resizeBorderColor,
+}: ImageHtmlOptions): CreateElementData[] {
+    const result: CreateElementData[] = [];
+    Xs.forEach(x =>
+        Ys.forEach(y =>
+            result.push(
+                (x == '') == (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : null
+            )
+        )
+    );
+    return result;
 }
 
 /**
  * @internal
  * Get HTML for resize handles on the sides
  */
-export function getSideResizeHTML({ borderColor: resizeBorderColor }: ImageHtmlOptions): string {
-    return Xs.map(x =>
-        Ys.map(y =>
-            (x == '') != (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : ''
-        ).join('')
-    ).join('');
+export function getSideResizeHTML({
+    borderColor: resizeBorderColor,
+}: ImageHtmlOptions): CreateElementData[] {
+    const result: CreateElementData[] = [];
+    Xs.forEach(x =>
+        Ys.forEach(y =>
+            result.push(
+                (x == '') != (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : null
+            )
+        )
+    );
+    return result;
 }
 
-function getResizeHandleHTML(x: X, y: Y, borderColor: string): string {
+function getResizeHandleHTML(x: X, y: Y, borderColor: string): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
     const leftOrRightValue = x == '' ? '50%' : '0px';
     const topOrBottomValue = y == '' ? '50%' : '0px';
     const direction = y + x;
-    const context = `data-x="${x}" data-y="${y}"`;
 
     return x == '' && y == ''
-        ? `<div style="position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${borderColor};pointer-events:none;"></div>`
-        : `
-    <div style="position:absolute;${leftOrRight}:${leftOrRightValue};${topOrBottom}:${topOrBottomValue}">
-        <div class="${ImageEditElementClass.ResizeHandle}" ${context} style="position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px">
-        </div>
-    </div>`;
+        ? {
+              tag: 'div',
+              style: `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${borderColor};pointer-events:none`,
+          }
+        : {
+              tag: 'div',
+              style: `position:absolute;${leftOrRight}:${leftOrRightValue};${topOrBottom}:${topOrBottomValue}`,
+              children: [
+                  {
+                      tag: 'div',
+                      style: `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px`,
+                      className: ImageEditElementClass.ResizeHandle,
+                      dataset: { x, y },
+                  },
+              ],
+          };
 }

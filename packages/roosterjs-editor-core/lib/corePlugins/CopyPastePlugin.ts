@@ -1,7 +1,7 @@
 import {
     addRangeToSelection,
+    createElement,
     extractClipboardEvent,
-    fromHtml,
     setHtmlWithSelectionPath,
 } from 'roosterjs-editor-dom';
 import {
@@ -14,10 +14,8 @@ import {
     PluginEventType,
     ExperimentalFeatures,
     PluginWithState,
+    KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
-
-const CONTAINER_HTML =
-    '<div contenteditable style="width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text"></div>';
 
 /**
  * @internal
@@ -132,10 +130,10 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         const div = this.editor.getCustomData(
             'CopyPasteTempDiv',
             () => {
-                const tempDiv = fromHtml(
-                    CONTAINER_HTML,
+                const tempDiv = createElement(
+                    KnownCreateElementDataIndex.CopyPasteTempDiv,
                     this.editor.getDocument()
-                )[0] as HTMLDivElement;
+                ) as HTMLDivElement;
                 this.editor.insertNode(tempDiv, {
                     position: ContentPosition.Outside,
                 });
