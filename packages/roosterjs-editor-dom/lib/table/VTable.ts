@@ -1,3 +1,4 @@
+import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
@@ -78,7 +79,7 @@ export default class VTable {
      */
     writeBack() {
         if (this.cells) {
-            moveChildren(this.table);
+            moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
                 let tr = cloneNode(this.trs[r % 2] || this.trs[0]);
                 this.table.appendChild(tr);
@@ -214,7 +215,11 @@ export default class VTable {
                         let aboveCell = rowIndex < this.row ? cell : currentCell;
                         let belowCell = rowIndex < this.row ? currentCell : cell;
                         if (aboveCell.td.colSpan == belowCell.td.colSpan) {
-                            moveChildren(belowCell.td, aboveCell.td);
+                            moveChildNodes(
+                                aboveCell.td,
+                                belowCell.td,
+                                true /*keepExistingChildren*/
+                            );
                             belowCell.td = null;
                             belowCell.spanAbove = true;
                         }
@@ -236,7 +241,11 @@ export default class VTable {
                         let leftCell = colIndex < this.col ? cell : currentCell;
                         let rightCell = colIndex < this.col ? currentCell : cell;
                         if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
-                            moveChildren(rightCell.td, leftCell.td);
+                            moveChildNodes(
+                                leftCell.td,
+                                rightCell.td,
+                                true /*keepExistingChildren*/
+                            );
                             rightCell.td = null;
                             rightCell.spanLeft = true;
                         }
@@ -527,19 +536,4 @@ function cloneNode<T extends Node>(node: T): T {
         }
     }
     return newNode;
-}
-
-/**
- * Move all children from one node to another
- * @param fromNode The source node to move children from
- * @param toNode Target node. If not passed, children nodes of source node will be removed
- */
-function moveChildren(fromNode: Node, toNode?: Node) {
-    while (fromNode.firstChild) {
-        if (toNode) {
-            toNode.appendChild(fromNode.firstChild);
-        } else {
-            fromNode.removeChild(fromNode.firstChild);
-        }
-    }
 }

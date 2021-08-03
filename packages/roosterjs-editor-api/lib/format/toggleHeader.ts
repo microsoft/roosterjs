@@ -1,5 +1,5 @@
 import { ChangeSource, DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
-import { HtmlSanitizer } from 'roosterjs-editor-dom';
+import { HtmlSanitizer, moveChildNodes } from 'roosterjs-editor-dom';
 
 /**
  * Toggle header at selection
@@ -21,10 +21,8 @@ export default function toggleHeader(editor: IEditor, level: number) {
                 wrapped = true;
             }
 
-            let div = editor.getDocument().createElement('div');
-            while (header.firstChild) {
-                div.appendChild(header.firstChild);
-            }
+            const div = editor.getDocument().createElement('div');
+            moveChildNodes(div, header);
             editor.replaceNode(header, div);
         });
 

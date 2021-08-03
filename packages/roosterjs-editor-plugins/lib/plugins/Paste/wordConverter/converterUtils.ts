@@ -4,7 +4,7 @@ import WordConverter from './wordConverter';
 import WordConverterArguments from './WordConverterArguments';
 import { createLevelLists } from './LevelLists';
 import { getObject, setObject } from './WordCustomData';
-import { getStyles, getTagOfNode } from 'roosterjs-editor-dom';
+import { getStyles, getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 
 /** Word list metadata style name */
@@ -130,9 +130,7 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
                 // Add 2 line breaks and move all the nodes to the last item
                 last.appendChild(last.ownerDocument.createElement('br'));
                 last.appendChild(last.ownerDocument.createElement('br'));
-                while (node.firstChild != null) {
-                    last.appendChild(node.firstChild);
-                }
+                moveChildNodes(last, node, true /*keepExistingChildren*/);
 
                 // Remove the item that we don't need anymore
                 node.parentNode.removeChild(node);
@@ -170,9 +168,7 @@ export function processNodeConvert(wordConverter: WordConverter): boolean {
 
                 // Create a new list item and transfer the children
                 let li = node.ownerDocument.createElement('LI');
-                while (node.firstChild) {
-                    li.appendChild(node.firstChild);
-                }
+                moveChildNodes(li, node);
 
                 // Append the list item into the list
                 list.appendChild(li);
@@ -254,9 +250,7 @@ function convertListIfNeeded(
             UNIQUE_LIST_ID_CUSTOM_DATA,
             getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA)
         );
-        while (list.firstChild) {
-            newList.appendChild(list.firstChild);
-        }
+        moveChildNodes(newList, list);
         list.parentNode.insertBefore(newList, list);
         list.parentNode.removeChild(list);
         list = newList;
