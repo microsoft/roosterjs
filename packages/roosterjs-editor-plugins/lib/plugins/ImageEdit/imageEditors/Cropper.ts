@@ -1,5 +1,6 @@
 import DragAndDropContext, { X, Y } from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import { CreateElementData } from 'roosterjs-editor-types';
 import { CropInfo } from '../types/ImageEditInfo';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { rotateCoordinate } from './Resizer';
@@ -91,43 +92,57 @@ export default Cropper;
  * @internal
  * Get HTML for crop elements, including 4 overlays (to show dark shadow), 1 container and 4 crop handles
  */
-export function getCropHTML(): string {
-    const overlayHTML = `<div style="position:absolute;background-color:rgb(0,0,0,0.5);pointer-events:none" class="${ImageEditElementClass.CropOverlay}"></div>`;
-    const handlesHTML = Xs.map(x => Ys.map(y => getCropHTMLInternal(x, y)).join('')).join('');
-    const containerHTML = `
-        <div style="position:absolute;overflow:hidden" class="${ImageEditElementClass.CropContainer}">
-            ${handlesHTML}
-        </div>`;
+export function getCropHTML(): CreateElementData[] {
+    const overlayHTML: CreateElementData = {
+        tag: 'div',
+        style: 'position:absolute;background-color:rgb(0,0,0,0.5);pointer-events:none',
+        className: ImageEditElementClass.CropOverlay,
+    };
+    const containerHTML: CreateElementData = {
+        tag: 'div',
+        style: 'position:absolute;overflow:hidden',
+        className: ImageEditElementClass.CropContainer,
+        children: [],
+    };
 
-    return containerHTML + overlayHTML + overlayHTML + overlayHTML + overlayHTML;
+    Xs.forEach(x => Ys.forEach(y => containerHTML.children.push(getCropHTMLInternal(x, y))));
+
+    return [containerHTML, overlayHTML, overlayHTML, overlayHTML, overlayHTML];
 }
 
-function getCropHTMLInternal(x: X, y: Y) {
+function getCropHTMLInternal(x: X, y: Y): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
     const rotation = ROTATION[y + x];
-    const context = `data-x="${x}" data-y="${y}"`;
 
-    return `
-        <div class="${
-            ImageEditElementClass.CropHandle
-        }" ${context} style="position:absolute;pointer-events:auto;cursor:${y}${x}-resize;${leftOrRight}:0;${topOrBottom}:0;width:${CROP_HANDLE_SIZE}px;height:${CROP_HANDLE_SIZE}px;transform:rotate(${rotation}deg)">
-            ${getCropHandleHTML()}
-        </div>`;
+    return {
+        tag: 'div',
+        className: ImageEditElementClass.CropHandle,
+        style: `position:absolute;pointer-events:auto;cursor:${y}${x}-resize;${leftOrRight}:0;${topOrBottom}:0;width:${CROP_HANDLE_SIZE}px;height:${CROP_HANDLE_SIZE}px;transform:rotate(${rotation}deg)`,
+        dataset: { x, y },
+        children: getCropHandleHTML(),
+    };
 }
 
-function getCropHandleHTML(): string {
-    return [0, 1]
-        .map(layer => [0, 1].map(dir => getCropHandleHTMLInternal(layer, dir)).join(''))
-        .join('');
+function getCropHandleHTML(): CreateElementData[] {
+    const result: CreateElementData[] = [];
+    [0, 1].forEach(layer =>
+        [0, 1].forEach(dir => {
+            result.push(getCropHandleHTMLInternal(layer, dir));
+        })
+    );
+    return result;
 }
 
-function getCropHandleHTMLInternal(layer: number, dir: number): string {
+function getCropHandleHTMLInternal(layer: number, dir: number): CreateElementData {
     const position =
         dir == 0
             ? `right:${layer}px;height:${CROP_HANDLE_WIDTH - layer * 2}px;`
             : `top:${layer}px;width:${CROP_HANDLE_WIDTH - layer * 2}px;`;
     const bgColor = layer == 0 ? 'white' : 'black';
 
-    return `<div style="position:absolute;left:${layer}px;bottom:${layer}px;${position};background-color:${bgColor}"></div>`;
+    return {
+        tag: 'div',
+        style: `position:absolute;left:${layer}px;bottom:${layer}px;${position};background-color:${bgColor}`,
+    };
 }

@@ -30,16 +30,19 @@ import {
     Entity,
     Keys,
     PositionType,
+    CreateElementData,
+    KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
 import {
     Browser,
-    fromHtml,
     getEntitySelector,
     getEntityFromElement,
     matchesSelector,
     safeInstanceOf,
     toArray,
     wrap,
+    arrayPush,
+    createElement,
 } from 'roosterjs-editor-dom';
 
 const SHIFT_KEYCODE = 16;
@@ -78,12 +81,6 @@ const ImageEditHTMLMap = {
     [ImageEditOperation.Rotate]: getRotateHTML,
     [ImageEditOperation.Crop]: getCropHTML,
 };
-
-/**
- * A wrapper element to help hide cropped part of image
- */
-const IMAGE_WRAPPER_HTML =
-    '<div style="width:100%;height:100%;position:relative;overflow:hidden"></div>';
 
 /**
  * Image edit entity name
@@ -330,7 +327,7 @@ export default class ImageEdit implements EditorPlugin {
         const { wrapper } = insertEntity(
             this.editor,
             IMAGE_EDIT_WRAPPER_ENTITY_TYPE,
-            wrap(this.image, IMAGE_WRAPPER_HTML),
+            wrap(this.image, KnownCreateElementDataIndex.ImageEditWrapper),
             false /*isBlock*/,
             true /*isReadonly*/
         );
@@ -356,15 +353,22 @@ export default class ImageEdit implements EditorPlugin {
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
         };
-        const html = ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[])
-            .map(thisOperation =>
-                (operation & thisOperation) == thisOperation
-                    ? ImageEditHTMLMap[thisOperation](options)
-                    : ''
-            )
-            .join('');
+        const htmlData: CreateElementData[] = [];
 
-        fromHtml(html, this.image.ownerDocument).forEach(node => wrapper.appendChild(node));
+        ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
+            thisOperation => {
+                if ((operation & thisOperation) == thisOperation) {
+                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options));
+                }
+            }
+        );
+
+        htmlData.forEach(data => {
+            const element = createElement(data, this.image.ownerDocument);
+            if (element) {
+                wrapper.appendChild(element);
+            }
+        });
 
         return wrapper;
     }

@@ -2,14 +2,14 @@ import {
     ContentPosition,
     EditorCore,
     EnsureTypeInContainer,
+    KnownCreateElementDataIndex,
     NodePosition,
     PositionType,
 } from 'roosterjs-editor-types';
 import {
     applyFormat,
-    Browser,
+    createElement,
     createRange,
-    fromHtml,
     getBlockElementAtNode,
     isNodeEmpty,
     Position,
@@ -44,10 +44,10 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
         // Only reason we don't get the selection block is that we have an empty content div
         // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
         // The fix is to add a DIV wrapping, apply default format and move cursor over
-        formatNode = fromHtml(
-            Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>',
+        formatNode = createElement(
+            KnownCreateElementDataIndex.EmptyLine,
             core.contentDiv.ownerDocument
-        )[0] as HTMLElement;
+        ) as HTMLElement;
         core.api.insertNode(core, formatNode, {
             position: ContentPosition.End,
             updateCursor: false,

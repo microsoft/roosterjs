@@ -1,5 +1,11 @@
 import blockFormat from '../utils/blockFormat';
-import { BlockElement, IEditor, Indentation, RegionBase } from 'roosterjs-editor-types';
+import {
+    BlockElement,
+    IEditor,
+    Indentation,
+    KnownCreateElementDataIndex,
+    RegionBase,
+} from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
     createVListFromRegion,
@@ -12,8 +18,6 @@ import {
     unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
-
-const BlockWrapper = '<blockquote style="margin-top:0;margin-bottom:0"></blockquote>';
 
 /**
  * Set indentation at selection
@@ -52,7 +56,7 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
 
 function indent(region: RegionBase, blocks: BlockElement[]) {
     const nodes = collapseNodesInRegion(region, blocks);
-    wrap(nodes, BlockWrapper);
+    wrap(nodes, KnownCreateElementDataIndex.BlockquoteWrapper);
 }
 
 function outdent(region: RegionBase, blocks: BlockElement[]) {

@@ -1,4 +1,4 @@
-import fromHtml from '../utils/fromHtml';
+import createElement from '../utils/createElement';
 import getRootListNode from './getRootListNode';
 import getSelectedBlockElementsInRegion from '../region/getSelectedBlockElementsInRegion';
 import isNodeInRegion from '../region/isNodeInRegion';
@@ -10,7 +10,7 @@ import VList from './VList';
 import wrap from '../utils/wrap';
 import { getLeafSibling } from '../utils/getLeafSibling';
 import { isListElement } from './getListTypeFromNode';
-import { ListType, Region } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex, ListType, Region } from 'roosterjs-editor-types';
 import { PositionType } from 'roosterjs-editor-types';
 
 const ListSelector = 'ol,ul';
@@ -62,7 +62,10 @@ export default function createVListFromRegion(
         });
 
         if (nodes.length == 0 && !region.rootNode.firstChild) {
-            const newNode = fromHtml('<div><br></div>', region.rootNode.ownerDocument)[0];
+            const newNode = createElement(
+                KnownCreateElementDataIndex.EmptyLine,
+                region.rootNode.ownerDocument
+            );
             region.rootNode.appendChild(newNode);
             nodes.push(newNode);
             region.fullSelectionStart = new Position(newNode, PositionType.Begin);

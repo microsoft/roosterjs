@@ -1,13 +1,12 @@
-import { fromHtml } from 'roosterjs-editor-dom';
+import { createElement } from 'roosterjs-editor-dom';
 import {
     ContentPosition,
     EditorPlugin,
     IEditor,
+    KnownCreateElementDataIndex,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-
-const CONTAINER_HTML = '<div style="position: fixed; width: 0; height: 0"></div>';
 
 export interface ContextMenuOptions<T> {
     render: (container: HTMLElement, items: (T | null)[], onDismiss: () => void) => void;
@@ -81,7 +80,10 @@ export default class ContextMenu<T> implements EditorPlugin {
 
     private initContainer(x: number, y: number) {
         if (!this.container) {
-            this.container = fromHtml(CONTAINER_HTML, this.editor.getDocument())[0] as HTMLElement;
+            this.container = createElement(
+                KnownCreateElementDataIndex.ContextMenuWrapper,
+                this.editor.getDocument()
+            ) as HTMLElement;
             this.editor.insertNode(this.container, {
                 position: ContentPosition.Outside,
             });
