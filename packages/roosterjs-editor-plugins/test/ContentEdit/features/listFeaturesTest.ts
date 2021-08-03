@@ -1,7 +1,7 @@
-import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
 import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
-import { IEditor } from 'roosterjs-editor-types/lib';
-import { PositionContentSearcher, Position } from 'roosterjs-editor-dom';
+import { IEditor } from 'roosterjs-editor-types';
+import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
+import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
 
 describe('listFeatures', () => {
     let editor: IEditor;
