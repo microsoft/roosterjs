@@ -25,7 +25,7 @@ import {
 /**
  * Adjust position for A tag don't be nested inside another A tag.
  */
-export function adjustInsertPositionForHyperLink(
+function adjustInsertPositionForHyperLink(
     root: HTMLElement,
     nodeToInsert: Node,
     position: Position,
@@ -84,7 +84,7 @@ export function adjustInsertPositionForHyperLink(
 /**
  * Adjust position for a node don't be nested inside tags like BR, LI, TD.
  */
-export function adjustInsertPositionForStructuredNode(
+function adjustInsertPositionForStructuredNode(
     root: HTMLElement,
     nodeToInsert: Node,
     position: Position,
@@ -160,7 +160,7 @@ export function adjustInsertPositionForStructuredNode(
  * Change P tag to DIV, when a new node when insert node.
  */
 
-export function adjustInsertPositionForParagraph(
+function adjustInsertPositionForParagraph(
     root: HTMLElement,
     nodeToInsert: Node,
     position: Position,
@@ -183,7 +183,7 @@ export function adjustInsertPositionForParagraph(
  * Adjust position for a node that can have children.
  */
 
-export function adjustInsertPositionForVoidElement(
+function adjustInsertPositionForVoidElement(
     root: HTMLElement,
     nodeToInsert: Node,
     position: Position,
@@ -202,7 +202,7 @@ export function adjustInsertPositionForVoidElement(
  * Adjust the position cursor out of link when a new node is inserted.
  */
 
-export function adjustInsertPositionForMoveCursorOutOfALink(
+function adjustInsertPositionForMoveCursorOutOfALink(
     root: HTMLElement,
     nodeToInsert: Node,
     position: Position,
@@ -221,7 +221,7 @@ export function adjustInsertPositionForMoveCursorOutOfALink(
     return position;
 }
 
-export function adjustInsertPositionBySteps(
+export default function adjustInsertPositionBySteps(
     root: HTMLElement,
     nodeToInsert: Node,
     position: Position,
