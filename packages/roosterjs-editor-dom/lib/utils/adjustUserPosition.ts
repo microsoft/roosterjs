@@ -1,4 +1,5 @@
 import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
+import { safeInstanceOf } from 'roosterjs/lib';
 import {
     changeElementTag,
     contains,
@@ -52,11 +53,7 @@ export function adjustInsertPositionForHyperLink(
 
         // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
         // otherwise we will have nested A tags which is a wrong HTML structure
-        if (
-            anchor &&
-            (<ParentNode>(nodeToInsert as HTMLElement))?.querySelector &&
-            (<ParentNode>(nodeToInsert as HTMLElement))?.querySelector('a[href]')
-        ) {
+        if (anchor && safeInstanceOf(nodeToInsert, 'HTMLElement')) {
             let normalizedPosition = position.normalize();
             let parentNode = normalizedPosition.node.parentNode;
             let nextNode =
