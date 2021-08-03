@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">26.32% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/20</span>
+                <span class='fraction'>5/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.14% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/14</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">26.32% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/20</span>
+                <span class='fraction'>5/19</span>
             </div>
         
             
@@ -145,18 +145,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,6 +172,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -221,22 +221,19 @@
     BuildInEditFeature,
     IEditor,
     Keys,
+    KnownCreateElementDataIndex,
     PluginKeyboardEvent,
     PositionType,
     StructuredNodeFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
-    Browser,
     cacheGetEventData,
-    fromHtml,
     isPositionAtBeginningOf,
     Position,
     getTagOfNode,
+    createElement,
 } from 'roosterjs-editor-dom';
 &nbsp;
-// Edge can sometimes lose current format when Enter to new line.
-// So here we add an extra SPAN for Edge to workaround this bug
-const NEWLINE_HTML = Browser.isEdge ? <span class="branch-0 cbranch-no" title="branch not covered" >'&lt;div&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;' </span>: '&lt;div&gt;&lt;br&gt;&lt;/div&gt;';
 const CHILD_PARENT_TAG_MAP: { [childTag: string]: string } = {
     TD: 'TABLE',
     TH: 'TABLE',
@@ -254,7 +251,10 @@ const InsertLineBeforeStructuredNodeFeature: BuildInEditFeature&lt;PluginKeyboar
     shouldHandleEvent: cacheGetStructuredElement,
     handleEvent: <span class="fstat-no" title="function not covered" >(e</span>vent, editor) =&gt; {
         let element = <span class="cstat-no" title="statement not covered" >cacheGetStructuredElement(event, editor);</span>
-        let div = <span class="cstat-no" title="statement not covered" >fromHtml(NEWLINE_HTML, editor.getDocument())[0] as HTMLElement;</span>
+        let div = <span class="cstat-no" title="statement not covered" >createElement(</span>
+            KnownCreateElementDataIndex.EmptyLine,
+            editor.getDocument()
+        ) as HTMLElement;
 <span class="cstat-no" title="statement not covered" >        editor.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >            element.parentNode.insertBefore(div, element);</span>
             // Select the new line when we are in table. This is the same behavior with Word
@@ -304,7 +304,7 @@ export const StructuredNodeFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 03 2021 16:50:30 GMT+0000 (Coordinated Universal Time)
+                at Tue Aug 03 2021 21:41:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
