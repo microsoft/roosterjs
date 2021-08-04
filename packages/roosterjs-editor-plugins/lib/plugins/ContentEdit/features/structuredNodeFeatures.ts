@@ -2,22 +2,19 @@ import {
     BuildInEditFeature,
     IEditor,
     Keys,
+    KnownCreateElementDataIndex,
     PluginKeyboardEvent,
     PositionType,
     StructuredNodeFeatureSettings,
 } from 'roosterjs-editor-types';
 import {
-    Browser,
     cacheGetEventData,
-    fromHtml,
     isPositionAtBeginningOf,
     Position,
     getTagOfNode,
+    createElement,
 } from 'roosterjs-editor-dom';
 
-// Edge can sometimes lose current format when Enter to new line.
-// So here we add an extra SPAN for Edge to workaround this bug
-const NEWLINE_HTML = Browser.isEdge ? '<div><span><br></span></div>' : '<div><br></div>';
 const CHILD_PARENT_TAG_MAP: { [childTag: string]: string } = {
     TD: 'TABLE',
     TH: 'TABLE',
@@ -35,7 +32,10 @@ const InsertLineBeforeStructuredNodeFeature: BuildInEditFeature<PluginKeyboardEv
     shouldHandleEvent: cacheGetStructuredElement,
     handleEvent: (event, editor) => {
         let element = cacheGetStructuredElement(event, editor);
-        let div = fromHtml(NEWLINE_HTML, editor.getDocument())[0] as HTMLElement;
+        let div = createElement(
+            KnownCreateElementDataIndex.EmptyLine,
+            editor.getDocument()
+        ) as HTMLElement;
         editor.addUndoSnapshot(() => {
             element.parentNode.insertBefore(div, element);
             // Select the new line when we are in table. This is the same behavior with Word

@@ -1,5 +1,5 @@
 import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
-import { IEditor } from 'roosterjs-editor-types/lib';
+import { IEditor } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 
 describe('TableResize plugin tests', () => {

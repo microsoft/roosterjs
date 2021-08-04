@@ -9,6 +9,7 @@ export default interface ImageHtmlOptions {
     borderColor: string;
 
     /**
+     * @deprecated
      * HTML string for rotate handle icon.
      * If not passed, a default SVG icon will be used
      */

@@ -1,4 +1,4 @@
-import { fromHtml, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import { createElement, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
@@ -8,6 +8,8 @@ import {
     ChangeSource,
     TableOperation,
     ContentPosition,
+    CreateElementData,
+    KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -19,14 +21,6 @@ const MIN_CELL_WIDTH = 30;
 const MIN_CELL_HEIGHT = 20;
 const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
-const HORIZONTAL_RESIZER_HTML =
-    '<div style="position: fixed; cursor: row-resize; user-select: none"></div>';
-const VERTICAL_RESIZER_HTML =
-    '<div style="position: fixed; cursor: col-resize; user-select: none"></div>';
-const TABLE_RESIZER_HTML_LTR =
-    '<div style="position: fixed; cursor: nw-resize; user-select: none; border: 1px solid #808080"></div>';
-const TABLE_RESIZER_HTML_RTL =
-    '<div style="position: fixed; cursor: ne-resize; user-select: none; border: 1px solid #808080""></div>';
 
 const enum ResizeState {
     None,
@@ -307,16 +301,34 @@ export default class TableResize implements EditorPlugin {
         const inserterBackgroundColor = editorBackgroundColor || 'white';
         const inserterColor = this.editor.isDarkMode() ? INSERTER_COLOR_DARK_MODE : INSERTER_COLOR;
         const leftOrRight = this.isRTL ? 'right' : 'left';
+        const outerDivStyle = `position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}`;
+        const HORIZONTAL_INSERTER: CreateElementData = {
+            tag: 'div',
+            style: outerDivStyle,
+            children: [
+                {
+                    tag: 'div',
+                    style: `position: absolute; ${leftOrRight}: 12px; top: 5px; height: 3px; border-top: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-left: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};`,
+                },
+                '+',
+            ],
+        };
+        const VERTICAL_INSERTER: CreateElementData = {
+            tag: 'div',
+            style: outerDivStyle,
+            children: [
+                {
+                    tag: 'div',
+                    style: `position: absolute; left: 5px; top: 12px; width: 3px; border-left: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-top: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor}`,
+                },
+                '+',
+            ],
+        };
 
-        const HORIZONTAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; ${leftOrRight}: 12px; top: 5px; height: 3px; border-top: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-left: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
-        const VERTICAL_INSERTER_HTML = `<div style="position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${inserterBackgroundColor}"><div style="position: absolute; left: 5px; top: 12px; width: 3px; border-left: 1px solid ${inserterColor}; border-right: 1px solid ${inserterColor}; border-bottom: 1px solid ${inserterColor}; border-top: 0px; box-sizing: border-box; background-color: ${inserterBackgroundColor};"></div>+</div>`;
-
-        const inserter = fromHtml(
-            this.insertingState == ResizeState.Horizontal
-                ? HORIZONTAL_INSERTER_HTML
-                : VERTICAL_INSERTER_HTML,
+        const inserter = createElement(
+            this.insertingState == ResizeState.Horizontal ? HORIZONTAL_INSERTER : VERTICAL_INSERTER,
             this.editor.getDocument()
-        )[0] as HTMLDivElement;
+        ) as HTMLDivElement;
 
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
@@ -444,10 +456,12 @@ export default class TableResize implements EditorPlugin {
     }
 
     private createTableResizer(rect: Rect): HTMLDivElement {
-        const div = fromHtml(
-            this.isRTL ? TABLE_RESIZER_HTML_RTL : TABLE_RESIZER_HTML_LTR,
+        const div = createElement(
+            this.isRTL
+                ? KnownCreateElementDataIndex.TableResizerRTL
+                : KnownCreateElementDataIndex.TableResizerLTR,
             this.editor.getDocument()
-        )[0] as HTMLDivElement;
+        ) as HTMLDivElement;
 
         div.style.top = `${rect.bottom}px`;
         div.style.left = this.isRTL
@@ -468,10 +482,12 @@ export default class TableResize implements EditorPlugin {
         width: number,
         height: number
     ): HTMLDivElement {
-        const div = fromHtml(
-            horizontal ? HORIZONTAL_RESIZER_HTML : VERTICAL_RESIZER_HTML,
+        const div = createElement(
+            horizontal
+                ? KnownCreateElementDataIndex.TableHorizontalResizer
+                : KnownCreateElementDataIndex.TableVerticalResizer,
             this.editor.getDocument()
-        )[0] as HTMLDivElement;
+        ) as HTMLDivElement;
         div.style.top = `${top}px`;
         div.style.left = `${left}px`;
         div.style.width = `${width}px`;

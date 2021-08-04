@@ -1,6 +1,7 @@
 import DragAndDropContext from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
+import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { RotateInfo } from '../types/ImageEditInfo';
 
@@ -56,26 +57,50 @@ export default Rotator;
  */
 export function getRotateHTML({
     borderColor,
-    rotateIconHTML: rotateHandleHTML,
     rotateHandleBackColor,
-}: ImageHtmlOptions): string {
+}: ImageHtmlOptions): CreateElementData[] {
     const handleLeft = ROTATE_SIZE / 2;
-    return `
-        <div class="${
-            ImageEditElementClass.RotateCenter
-        }" style="position:absolute;left:50%;width:1px;background-color:${borderColor}">
-            <div class="${
-                ImageEditElementClass.RotateHandle
-            }" style="position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move">
-                ${rotateHandleHTML || getRotateIconHTML(borderColor)}
-            </div>
-        </div>`;
+    return [
+        {
+            tag: 'div',
+            className: ImageEditElementClass.RotateCenter,
+            style: `position:absolute;left:50%;width:1px;background-color:${borderColor}`,
+            children: [
+                {
+                    tag: 'div',
+                    className: ImageEditElementClass.RotateHandle,
+                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move`,
+                    children: [getRotateIconHTML(borderColor)],
+                },
+            ],
+        },
+    ];
 }
 
-function getRotateIconHTML(borderColor: string): string {
-    return `
-        <svg style="width:16px;height:16px;margin: ${ROTATE_ICON_MARGIN}px ${ROTATE_ICON_MARGIN}px">
-            <path d="M 10.5,10.0 A 3.8,3.8 0 1 1 6.7,6.3" transform="matrix(1.1 1.1 -1.1 1.1 11.6 -10.8)" fill-opacity="0" stroke-width="1" stroke="${borderColor}" />
-            <path d="M12.0 3.648l.884-.884.53 2.298-2.298-.53z" stroke="${borderColor}" />
-        </svg>`;
+function getRotateIconHTML(borderColor: string): CreateElementData {
+    return {
+        tag: 'svg',
+        namespace: 'http://www.w3.org/2000/svg',
+        style: `width:16px;height:16px;margin: ${ROTATE_ICON_MARGIN}px ${ROTATE_ICON_MARGIN}px`,
+        children: [
+            {
+                tag: 'path',
+                namespace: 'http://www.w3.org/2000/svg',
+                attributes: {
+                    d: 'M 10.5,10.0 A 3.8,3.8 0 1 1 6.7,6.3',
+                    transform: 'matrix(1.1 1.1 -1.1 1.1 11.6 -10.8)',
+                    ['fill-opacity']: '0',
+                    stroke: borderColor,
+                },
+            },
+            {
+                tag: 'path',
+                namespace: 'http://www.w3.org/2000/svg',
+                attributes: {
+                    d: 'M12.0 3.648l.884-.884.53 2.298-2.298-.53z',
+                    stroke: borderColor,
+                },
+            },
+        ],
+    };
 }

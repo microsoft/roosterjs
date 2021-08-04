@@ -51,7 +51,7 @@ Rooster provides DOM level APIs (in `roosterjs-editor-dom`), core APIs (in `roos
 
 `roosterjs-editor-dom` provides several levels of DOM operations:
 
--   Perform basic DOM operations such as `fromHtml()`, `wrap()`, `unwrap()`, ...
+-   Perform basic DOM operations such as `wrap()`, `unwrap()`, ...
 -   Wrap a given DOM node with `InlineElement` or `BlockElement` and perform
     operations with DOM Walker API.
 -   Perform DOM operations on a given scope using scopers.

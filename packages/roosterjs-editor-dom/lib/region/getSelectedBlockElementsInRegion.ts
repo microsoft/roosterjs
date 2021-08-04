@@ -1,9 +1,9 @@
 import ContentTraverser from '../contentTraverser/ContentTraverser';
-import fromHtml from '../utils/fromHtml';
+import createElement from '../utils/createElement';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getSelectionRangeInRegion from './getSelectionRangeInRegion';
 import shouldSkipNode from '../utils/shouldSkipNode';
-import { BlockElement, RegionBase } from 'roosterjs-editor-types';
+import { BlockElement, KnownCreateElementDataIndex, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Get all block elements covered by the selection under this region
@@ -45,7 +45,10 @@ export default function getSelectedBlockElementsInRegion(
     }
 
     if (blocks.length == 0 && regionBase && !regionBase.rootNode.firstChild && createBlockIfEmpty) {
-        const newNode = fromHtml('<div><br></div>', regionBase.rootNode.ownerDocument)[0];
+        const newNode = createElement(
+            KnownCreateElementDataIndex.EmptyLine,
+            regionBase.rootNode.ownerDocument
+        );
         regionBase.rootNode.appendChild(newNode);
         blocks.push(getBlockElementAtNode(regionBase.rootNode, newNode));
     }
