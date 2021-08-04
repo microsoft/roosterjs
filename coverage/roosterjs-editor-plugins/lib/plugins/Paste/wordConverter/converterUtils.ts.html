@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">4.79% </span>
+                <span class="strong">4.86% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/188</span>
+                <span class='fraction'>9/185</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">4.89% </span>
+                <span class="strong">4.97% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/184</span>
+                <span class='fraction'>9/181</span>
             </div>
         
             
@@ -615,13 +615,7 @@
 <a name='L556'></a><a href='#L556'>556</a>
 <a name='L557'></a><a href='#L557'>557</a>
 <a name='L558'></a><a href='#L558'>558</a>
-<a name='L559'></a><a href='#L559'>559</a>
-<a name='L560'></a><a href='#L560'>560</a>
-<a name='L561'></a><a href='#L561'>561</a>
-<a name='L562'></a><a href='#L562'>562</a>
-<a name='L563'></a><a href='#L563'>563</a>
-<a name='L564'></a><a href='#L564'>564</a>
-<a name='L565'></a><a href='#L565'>565</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L559'></a><a href='#L559'>559</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -754,8 +748,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -794,8 +786,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -878,8 +868,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1191,7 +1179,7 @@ import WordConverter from './wordConverter';
 import WordConverterArguments from './WordConverterArguments';
 import { createLevelLists } from './LevelLists';
 import { getObject, setObject } from './WordCustomData';
-import { getStyles, getTagOfNode } from 'roosterjs-editor-dom';
+import { getStyles, getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 &nbsp;
 /** Word list metadata style name */
@@ -1317,9 +1305,7 @@ export function <span class="fstat-no" title="function not covered" >processNode
                 // Add 2 line breaks and move all the nodes to the last item
 <span class="cstat-no" title="statement not covered" >                last.appendChild(last.ownerDocument.createElement('br'));</span>
 <span class="cstat-no" title="statement not covered" >                last.appendChild(last.ownerDocument.createElement('br'));</span>
-<span class="cstat-no" title="statement not covered" >                while (node.firstChild != null) {</span>
-<span class="cstat-no" title="statement not covered" >                    last.appendChild(node.firstChild);</span>
-                }
+<span class="cstat-no" title="statement not covered" >                moveChildNodes(last, node, true /*keepExistingChildren*/);</span>
 &nbsp;
                 // Remove the item that we don't need anymore
 <span class="cstat-no" title="statement not covered" >                node.parentNode.removeChild(node);</span>
@@ -1357,9 +1343,7 @@ export function <span class="fstat-no" title="function not covered" >processNode
 &nbsp;
                 // Create a new list item and transfer the children
                 let li = <span class="cstat-no" title="statement not covered" >node.ownerDocument.createElement('LI');</span>
-<span class="cstat-no" title="statement not covered" >                while (node.firstChild) {</span>
-<span class="cstat-no" title="statement not covered" >                    li.appendChild(node.firstChild);</span>
-                }
+<span class="cstat-no" title="statement not covered" >                moveChildNodes(li, node);</span>
 &nbsp;
                 // Append the list item into the list
 <span class="cstat-no" title="statement not covered" >                list.appendChild(li);</span>
@@ -1441,9 +1425,7 @@ function <span class="fstat-no" title="function not covered" >convertListIfNeede
             UNIQUE_LIST_ID_CUSTOM_DATA,
             getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA)
         );
-<span class="cstat-no" title="statement not covered" >        while (list.firstChild) {</span>
-<span class="cstat-no" title="statement not covered" >            newList.appendChild(list.firstChild);</span>
-        }
+<span class="cstat-no" title="statement not covered" >        moveChildNodes(newList, list);</span>
 <span class="cstat-no" title="statement not covered" >        list.parentNode.insertBefore(newList, list);</span>
 <span class="cstat-no" title="statement not covered" >        list.parentNode.removeChild(list);</span>
 <span class="cstat-no" title="statement not covered" >        list = newList;</span>
@@ -1756,7 +1738,7 @@ function <span class="fstat-no" title="function not covered" >resetCurrentLists(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 03 2021 21:41:52 GMT+0000 (Coordinated Universal Time)
+                at Wed Aug 04 2021 19:21:03 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

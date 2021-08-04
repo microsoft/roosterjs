@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.64% </span>
+                <span class="strong">79.41% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>219/275</span>
+                <span class='fraction'>216/272</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.14% </span>
+                <span class="strong">80.92% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>142/175</span>
+                <span class='fraction'>140/173</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.18% </span>
+                <span class="strong">86.84% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>34/39</span>
+                <span class='fraction'>33/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.89% </span>
+                <span class="strong">81.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>208/254</span>
+                <span class='fraction'>205/251</span>
             </div>
         
             
@@ -596,13 +596,8 @@
 <a name='L537'></a><a href='#L537'>537</a>
 <a name='L538'></a><a href='#L538'>538</a>
 <a name='L539'></a><a href='#L539'>539</a>
-<a name='L540'></a><a href='#L540'>540</a>
-<a name='L541'></a><a href='#L541'>541</a>
-<a name='L542'></a><a href='#L542'>542</a>
-<a name='L543'></a><a href='#L543'>543</a>
-<a name='L544'></a><a href='#L544'>544</a>
-<a name='L545'></a><a href='#L545'>545</a>
-<a name='L546'></a><a href='#L546'>546</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L540'></a><a href='#L540'>540</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -819,6 +814,10 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -841,6 +840,10 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1132,22 +1135,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">339x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">93x</span>
-<span class="cline-any cline-yes">93x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">89x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import normalizeRect from '../utils/normalizeRect';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import moveChildNodes from '../utils/moveChildNodes';
+import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
@@ -1227,7 +1216,7 @@ export default class VTable {
      */
     writeBack() {
         if (this.cells) {
-            moveChildren(this.table);
+            moveChildNodes(this.table);
             this.cells.forEach((row, r) =&gt; {
                 let tr = cloneNode(this.trs[r % 2] || <span class="branch-1 cbranch-no" title="branch not covered" >this.trs[0])</span>;
                 this.table.appendChild(tr);
@@ -1363,7 +1352,11 @@ export default class VTable {
                         let aboveCell = rowIndex &lt; this.row ? cell : currentCell;
                         let belowCell = rowIndex &lt; this.row ? currentCell : cell;
                         if (aboveCell.td.colSpan == belowCell.td.colSpan) {
-                            moveChildren(belowCell.td, aboveCell.td);
+                            moveChildNodes(
+                                aboveCell.td,
+                                belowCell.td,
+                                true /*keepExistingChildren*/
+                            );
                             belowCell.td = null;
                             belowCell.spanAbove = true;
                         }
@@ -1385,7 +1378,11 @@ export default class VTable {
                         let leftCell = colIndex &lt; this.col ? cell : currentCell;
                         let rightCell = colIndex &lt; this.col ? currentCell : cell;
                         if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
-                            moveChildren(rightCell.td, leftCell.td);
+                            moveChildNodes(
+                                leftCell.td,
+                                rightCell.td,
+                                true /*keepExistingChildren*/
+                            );
                             rightCell.td = null;
                             rightCell.spanLeft = true;
                         }
@@ -1677,21 +1674,6 @@ function cloneNode&lt;T extends Node&gt;(node: T): T {
     }
     return newNode;
 }
-&nbsp;
-/**
- * Move all children from one node to another
- * @param fromNode The source node to move children from
- * @param toNode Target node. If not passed, children nodes of source node will be removed
- */
-function moveChildren(fromNode: Node, toNode?: Node) {
-    while (fromNode.firstChild) {
-        if (toNode) {
-            toNode.appendChild(fromNode.firstChild);
-        } else {
-            fromNode.removeChild(fromNode.firstChild);
-        }
-    }
-}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -1699,7 +1681,7 @@ function moveChildren(fromNode: Node, toNode?: Node) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 03 2021 21:41:52 GMT+0000 (Coordinated Universal Time)
+                at Wed Aug 04 2021 19:21:03 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
