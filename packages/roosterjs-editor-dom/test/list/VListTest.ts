@@ -1,5 +1,4 @@
 import * as DomTestHelper from '../DomTestHelper';
-import fromHtml from '../../lib/utils/fromHtml';
 import Position from '../../lib/selection/Position';
 import VList from '../../lib/list/VList';
 import VListItem from '../../lib/list/VListItem';
@@ -270,7 +269,9 @@ describe('VList.writeBack', () => {
         const items = (<any>vList).items as VListItem[];
 
         newItems.forEach(newItem =>
-            items.push(new VListItem(fromHtml(newItem.html, document)[0], ...newItem.listTypes))
+            items.push(
+                new VListItem(DomTestHelper.htmlToDom(newItem.html)[0], ...newItem.listTypes)
+            )
         );
 
         vList.writeBack();
@@ -995,7 +996,7 @@ describe('VList.appendItem', () => {
         }
 
         const vList = new VList(list);
-        const node = fromHtml(newNodeHtml, document)[0];
+        const node = DomTestHelper.htmlToDom(newNodeHtml)[0];
 
         // Act
         vList.appendItem(node, newNodeType);

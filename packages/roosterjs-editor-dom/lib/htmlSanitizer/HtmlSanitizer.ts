@@ -102,7 +102,7 @@ export default class HtmlSanitizer {
      */
     exec(html: string, convertCssOnly?: boolean, currentStyles?: StringMap): string {
         const parser = new DOMParser();
-        const doc = parser.parseFromString(html || '', 'text/html');
+        const doc = parser.parseFromString(unsafeConvertToTrustedHTML(html) || '', 'text/html');
 
         if (doc && doc.body && doc.body.firstChild) {
             this.convertGlobalCssToInlineCss(doc);
@@ -320,3 +320,14 @@ export default class HtmlSanitizer {
         return calculatedClasses.length > 0 ? calculatedClasses.join(' ') : null;
     }
 }
+
+const trustedTypes = (<any>window).trustedTypes;
+const policy = trustedTypes?.createPolicy('roosterjsUnsafeConvertHTML', {
+    // This is unsafe. However, we only use this function for HtmlSanitizer which we will
+    // sanitize HTML tree by our own code. So we just directly return the HTML string here.
+    createHTML: (html: string) => html,
+});
+
+const unsafeConvertToTrustedHTML = policy
+    ? (html: string) => policy.createHTML(html)
+    : (html: string) => html;
