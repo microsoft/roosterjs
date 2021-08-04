@@ -3,6 +3,7 @@ import {
     createElement,
     extractClipboardEvent,
     setHtmlWithSelectionPath,
+    moveChildNodes,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -159,6 +160,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         tempDiv.style.backgroundColor = '';
         tempDiv.style.color = '';
         tempDiv.style.display = 'none';
-        tempDiv.innerHTML = '';
+        moveChildNodes(tempDiv);
     }
 }

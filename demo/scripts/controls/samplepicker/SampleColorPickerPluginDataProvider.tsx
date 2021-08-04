@@ -120,7 +120,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
 
     private insertColor = (color: string) => {
         const span = this.editor.getDocument().createElement('span');
-        span.innerHTML = '⬤';
+        span.innerText = '⬤';
         span.style.color = color;
         this.insertNodeCallback(span);
     };

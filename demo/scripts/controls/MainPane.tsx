@@ -132,14 +132,7 @@ class MainPane extends MainPaneBase {
 
         let styles = document.getElementsByTagName('STYLE');
         for (let i = 0; i < styles.length; i++) {
-            let newStyle = win.document.createElement('STYLE') as HTMLStyleElement;
-            let sheet = (styles[i] as HTMLStyleElement).sheet as CSSStyleSheet;
-            let cssText = '';
-            for (let j = 0; j < sheet.cssRules.length; j++) {
-                cssText += sheet.cssRules[j].cssText;
-            }
-            newStyle.innerHTML = cssText;
-            win.document.head.appendChild(newStyle);
+            win.document.head.appendChild(styles[i].cloneNode(true));
         }
 
         this.setState({

@@ -1,4 +1,4 @@
-import { createRange, getSelectionPath } from 'roosterjs-editor-dom';
+import { createRange, getSelectionPath, moveChildNodes } from 'roosterjs-editor-dom';
 import { EditorCore, PluginEventType, SwitchShadowEdit } from 'roosterjs-editor-types';
 
 /**
@@ -15,10 +15,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
             shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
 
-            while (contentDiv.firstChild) {
-                shadowEditFragment.appendChild(contentDiv.firstChild);
-            }
-
+            moveChildNodes(shadowEditFragment, contentDiv);
             shadowEditFragment.normalize();
             core.api.triggerEvent(
                 core,
@@ -34,7 +31,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             lifecycle.shadowEditSelectionPath = shadowEditSelectionPath;
         }
 
-        contentDiv.innerHTML = '';
+        moveChildNodes(contentDiv);
         contentDiv.appendChild(lifecycle.shadowEditFragment.cloneNode(true /*deep*/));
     } else {
         lifecycle.shadowEditFragment = null;
@@ -49,7 +46,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 false /*broadcast*/
             );
 
-            contentDiv.innerHTML = '';
+            moveChildNodes(contentDiv);
             contentDiv.appendChild(shadowEditFragment);
             core.api.focus(core);
 
