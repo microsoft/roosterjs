@@ -1,8 +1,4 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
-import createCorePlugins, {
-    getPluginState,
-    PLACEHOLDER_PLUGIN_NAME,
-} from '../corePlugins/createCorePlugins';
 import {
     BlockElement,
     ChangeSource,
@@ -34,7 +30,12 @@ import {
     RegionType,
     SelectionPath,
     StyleBasedFormatState,
+    TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
+import createCorePlugins, {
+    getPluginState,
+    PLACEHOLDER_PLUGIN_NAME,
+} from '../corePlugins/createCorePlugins';
 import {
     cacheGetEventData,
     collapseNodes,
@@ -44,7 +45,6 @@ import {
     deleteSelectedContent,
     getRegionsFromRange,
     findClosestElementAncestor,
-    fromHtml,
     getBlockElementAtNode,
     getSelectionPath,
     getTagOfNode,
@@ -56,6 +56,7 @@ import {
     wrap,
     isPositionAtBeginningOf,
     arrayPush,
+    toArray,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -97,6 +98,7 @@ export default class Editor implements IEditor {
             },
             plugins: plugins.filter(x => !!x),
             ...getPluginState(corePlugins),
+            trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
         };
 
         // 3. Initialize plugins
@@ -268,7 +270,11 @@ export default class Editor implements IEditor {
     public insertContent(content: string, option?: InsertOption) {
         if (content) {
             const doc = this.getDocument();
-            let allNodes = fromHtml(content, doc);
+            const body = new DOMParser().parseFromString(
+                this.core.trustedHTMLHandler(content),
+                'text/html'
+            )?.body;
+            let allNodes = body?.childNodes ? toArray(body.childNodes) : [];
 
             // If it is to insert on new line, and there are more than one node in the collection, wrap all nodes with
             // a parent DIV before calling insertNode on each top level sub node. Otherwise, every sub node may get wrapped
@@ -807,6 +813,16 @@ export default class Editor implements IEditor {
      */
     public isFeatureEnabled(feature: ExperimentalFeatures): boolean {
         return this.core.lifecycle.experimentalFeatures.indexOf(feature) >= 0;
+    }
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler {
+        return this.core.trustedHTMLHandler;
     }
 
     //#endregion

@@ -9,6 +9,7 @@ import { InsertOption } from './InsertOption';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
 import { StyleBasedFormatState } from './FormatState';
+import { TrustedHTMLHandler } from '../type/trustedHTMLHandler';
 
 /**
  * Represents the core data structure of an editor
@@ -28,6 +29,13 @@ export default interface EditorCore extends PluginState {
      * Core API map of this editor
      */
     readonly api: CoreApiMap;
+
+    /**
+     * A handler to convert HTML string to a trust HTML string.
+     * By default it will just return the original HTML string directly.
+     * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     */
+    readonly trustedHTMLHandler: TrustedHTMLHandler;
 }
 
 /**

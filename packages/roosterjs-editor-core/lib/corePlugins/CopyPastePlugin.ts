@@ -78,7 +78,11 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         if (originalRange && !originalRange.collapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
-            const newRange = setHtmlWithSelectionPath(tempDiv, html);
+            const newRange = setHtmlWithSelectionPath(
+                tempDiv,
+                html,
+                this.editor.getTrustedHTMLHandler()
+            );
 
             if (newRange) {
                 addRangeToSelection(newRange);
