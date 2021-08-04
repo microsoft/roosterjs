@@ -9,7 +9,7 @@ import { InsertOption } from './InsertOption';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
 import { StyleBasedFormatState } from './FormatState';
-import { TrustedHTMLHandler } from '../type/trustedHTMLHandler';
+import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
  * Represents the core data structure of an editor

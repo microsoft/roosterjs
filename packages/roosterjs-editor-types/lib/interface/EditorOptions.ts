@@ -4,7 +4,7 @@ import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
-import { TrustedHTMLHandler } from '../type/trustedHtmlHandler';
+import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class

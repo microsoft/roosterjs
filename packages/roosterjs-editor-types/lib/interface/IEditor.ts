@@ -20,7 +20,7 @@ import { PluginEventType } from '../event/PluginEventType';
 import { PositionType } from '../enum/PositionType';
 import { QueryScope } from '../enum/QueryScope';
 import { RegionType } from '../enum/RegionType';
-import { TrustedHTMLHandler } from '../type/trustedHtmlHandler';
+import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
  * Interface of roosterjs editor object
