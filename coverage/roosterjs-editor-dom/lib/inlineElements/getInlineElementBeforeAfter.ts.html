@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.46% </span>
+                <span class="strong">92.31% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/26</span>
+                <span class='fraction'>24/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.67% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>26/30</span>
+                <span class='fraction'>28/30</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/24</span>
+                <span class='fraction'>22/24</span>
             </div>
         
             
@@ -157,43 +157,43 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">55x</span>
+<span class="cline-any cline-yes">63x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">59x</span>
+<span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
-<span class="cline-any cline-yes">59x</span>
-<span class="cline-any cline-yes">59x</span>
+<span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
+<span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">62x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
+<span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
+<span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getInlineElementAtNode from './getInlineElementAtNode';
 import PartialInlineElement from './PartialInlineElement';
@@ -241,7 +241,7 @@ export function getInlineElementBeforeAfter(root: Node, position: NodePosition, 
     let { node, offset, isAtEnd } = position;
     let isPartial = false;
 &nbsp;
-    if ((!isAfter &amp;&amp; offset == 0 &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >!isAtEnd)</span> || (isAfter &amp;&amp; isAtEnd)) {
+    if ((!isAfter &amp;&amp; offset == 0 &amp;&amp; !isAtEnd) || (isAfter &amp;&amp; isAtEnd)) {
         node = getLeafSibling(root, node, isAfter);
     } else if (
         node.nodeType == NodeType.Text &amp;&amp;
@@ -250,8 +250,8 @@ export function getInlineElementBeforeAfter(root: Node, position: NodePosition, 
         isPartial = true;
     }
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (node &amp;&amp; shouldSkipNode(node)) {
-<span class="cstat-no" title="statement not covered" >        node = getLeafSibling(root, node, isAfter);</span>
+    if (node &amp;&amp; shouldSkipNode(node)) {
+        node = getLeafSibling(root, node, isAfter);
     }
 &nbsp;
     let inlineElement = getInlineElementAtNode(root, node);
@@ -271,7 +271,7 @@ export function getInlineElementBeforeAfter(root: Node, position: NodePosition, 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Aug 04 2021 19:21:03 GMT+0000 (Coordinated Universal Time)
+                at Thu Aug 05 2021 18:00:55 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

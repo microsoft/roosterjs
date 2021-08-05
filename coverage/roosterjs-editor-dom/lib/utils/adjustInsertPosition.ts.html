@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-api/lib/format/clearFormat.ts</title>
+    <title>Code coverage report for roosterjs-editor-dom/lib/utils/adjustInsertPosition.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-api/lib/format</a> clearFormat.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-dom/lib/utils</a> adjustInsertPosition.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.91% </span>
+                <span class="strong">49.35% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>98/109</span>
+                <span class='fraction'>38/77</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.6% </span>
+                <span class="strong">29.03% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>47/63</span>
+                <span class='fraction'>27/93</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>8/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.42% </span>
+                <span class="strong">49.35% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>93/104</span>
+                <span class='fraction'>38/77</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -298,44 +298,29 @@
 <a name='L239'></a><a href='#L239'>239</a>
 <a name='L240'></a><a href='#L240'>240</a>
 <a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -343,75 +328,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">162x</span>
-<span class="cline-any cline-yes">162x</span>
-<span class="cline-any cline-yes">162x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">162x</span>
-<span class="cline-any cline-yes">162x</span>
-<span class="cline-any cline-yes">100x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">162x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -421,17 +337,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -440,79 +345,218 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -526,259 +570,281 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import blockFormat from '../utils/blockFormat';
-import execCommand from '../utils/execCommand';
-import PartialInlineElement from 'roosterjs-editor-dom/lib/inlineElements/PartialInlineElement';
-import setBackgroundColor from './setBackgroundColor';
-import setFontName from './setFontName';
-import setFontSize from './setFontSize';
-import setTextColor from './setTextColor';
-import toggleBold from './toggleBold';
-import toggleItalic from './toggleItalic';
-import toggleUnderline from './toggleUnderline';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import {
-    ChangeSource,
-    ClearFormatMode,
-    DocumentCommand,
-    IEditor,
-    QueryScope,
-} from 'roosterjs-editor-types';
-import {
-    collapseNodesInRegion,
-    getSelectedBlockElementsInRegion,
-    getStyles,
+    changeElementTag,
+    contains,
+    createRange,
+    findClosestElementAncestor,
+    getBlockElementAtNode,
     getTagOfNode,
-    isBlockElement,
-    isNodeInRegion,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
     isVoidHtmlElement,
-    safeInstanceOf,
-    setStyles,
+    LinkInlineElement,
+    Position,
+    PositionContentSearcher,
+    queryElements,
     splitBalancedNodeRange,
+    splitTextNode,
     toArray,
     unwrap,
+    VTable,
     wrap,
 } from 'roosterjs-editor-dom';
 &nbsp;
-const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
-const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
-    ','
-);
-const ATTRIBUTES_TO_PRESERVE = ['href', 'src'];
-const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
+const adjustSteps: ((
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+) =&gt; Position)[] = [
+    adjustInsertPositionForHyperLink,
+    adjustInsertPositionForStructuredNode,
+    adjustInsertPositionForParagraph,
+    adjustInsertPositionForVoidElement,
+    adjustInsertPositionForMoveCursorOutOfALink,
+];
 &nbsp;
 /**
- * @param editor The editor instance
- * @returns if the current selection is composed of two or more block elements
+ * Adjust position for A tag don't be nested inside another A tag.
  */
-function isMultiBlockSelection(editor: IEditor): boolean {
-    let transverser = editor.getSelectionTraverser();
-    let blockElement = transverser.currentBlockElement;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!blockElement) {
-<span class="cstat-no" title="statement not covered" >        return false;</span>
-    }
+function adjustInsertPositionForHyperLink(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+): Position {
+    let blockElement = getBlockElementAtNode(root, position.node);
 &nbsp;
-    let nextBlockElement = transverser.getNextBlockElement();
+    if (blockElement) {
+        // Find the first &lt;A&gt; tag within current block which covers current selection
+        // If there are more than one nested, let's handle the first one only since that is not a common scenario.
+        let anchor = queryElements(
+            root,
+            'a[href]',
+            null /*forEachCallback*/,
+            QueryScope.OnSelection,
+            createRange(position)
+        ).filter(<span class="fstat-no" title="function not covered" >(a</span>: HTMLElement) =&gt; <span class="cstat-no" title="statement not covered" >blockElement.contains(a))[</span>0];
 &nbsp;
-    //At least two blocks are selected
-    return !!nextBlockElement;
-}
+        // If this is about to insert node to an empty A tag, clear the A tag and reset position
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (anchor &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >isNodeEmpty(anchor))</span> {
+<span class="cstat-no" title="statement not covered" >            position = new Position(anchor, PositionType.Before);</span>
+<span class="cstat-no" title="statement not covered" >            safeRemove(anchor);</span>
+<span class="cstat-no" title="statement not covered" >            anchor = null;</span>
+        }
 &nbsp;
-function clearNodeFormat(node: Node): boolean {
-    // 1. Recursively clear format of all its child nodes
-    const areBlockElements = toArray(node.childNodes).map(clearNodeFormat);
-    let areAllChildrenBlock = areBlockElements.every(b =&gt; b);
-    let returnBlockElement = isBlockElement(node);
-&nbsp;
-    // 2. Unwrap the tag if necessary
-    const tag = getTagOfNode(node);
-    if (tag) {
-        if (
-            TAGS_TO_UNWRAP.indexOf(tag) &gt;= 0 ||
-            (areAllChildrenBlock &amp;&amp;
-                !isVoidHtmlElement(node) &amp;&amp;
-                TAGS_TO_STOP_UNWRAP.indexOf(tag) &lt; 0)
+        // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
+        // otherwise we will have nested A tags which is a wrong HTML structure
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (
+            anchor<span class="branch-1 cbranch-no" title="branch not covered" > &amp;&amp;</span>
+            (&lt;ParentNode&gt;(nodeToInsert as HTMLElement))?.querySelector<span class="branch-2 cbranch-no" title="branch not covered" > &amp;&amp;</span>
+            (&lt;ParentNode&gt;(nodeToInsert as HTMLElement))?.querySelector('a[href]')
         ) {
-            if (returnBlockElement &amp;&amp; !areAllChildrenBlock) {
-                wrap(node);
+            let normalizedPosition = <span class="cstat-no" title="statement not covered" >position.normalize();</span>
+            let parentNode = <span class="cstat-no" title="statement not covered" >normalizedPosition.node.parentNode;</span>
+            let nextNode =
+<span class="cstat-no" title="statement not covered" >                normalizedPosition.node.nodeType == NodeType.Text</span>
+                    ? splitTextNode(
+                          &lt;Text&gt;normalizedPosition.node,
+                          normalizedPosition.offset,
+                          false /*returnFirstPart*/
+                      )
+                    : normalizedPosition.isAtEnd
+                    ? normalizedPosition.node.nextSibling
+                    : normalizedPosition.node;
+            let splitter: Node = <span class="cstat-no" title="statement not covered" >root.ownerDocument.createTextNode('');</span>
+<span class="cstat-no" title="statement not covered" >            parentNode.insertBefore(splitter, nextNode);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            while (contains(anchor, splitter)) {</span>
+<span class="cstat-no" title="statement not covered" >                splitter = splitBalancedNodeRange(splitter);</span>
             }
-            unwrap(node);
-        } else {
-            // 3. Otherwise, remove all attributes
-            clearAttribute(node as HTMLElement);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            position = new Position(splitter, PositionType.Before);</span>
+<span class="cstat-no" title="statement not covered" >            safeRemove(splitter);</span>
         }
     }
 &nbsp;
-    return returnBlockElement;
-}
-&nbsp;
-function clearAttribute(element: HTMLElement) {
-    const isTableCell = safeInstanceOf(element, 'HTMLTableCellElement');
-&nbsp;
-    for (let attr of toArray(element.attributes)) {
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (isTableCell &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >attr.name == 'style')</span> {
-<span class="cstat-no" title="statement not covered" >            removeNonBorderStyles(element);</span>
-        } else if (
-            ATTRIBUTES_TO_PRESERVE.indexOf(attr.name.toLowerCase()) &lt; 0 &amp;&amp;
-            attr.name.indexOf('data-') != 0
-        ) {
-            element.removeAttribute(attr.name);
-        }
-    }
-}
-&nbsp;
-function removeNonBorderStyles(element: HTMLElement): Record&lt;string, string&gt; {
-    const styles = getStyles(element);
-    const result: Record&lt;string, string&gt; = {};
-&nbsp;
-    Object.keys(styles).forEach(name =&gt; {
-        if (name.indexOf('border') &lt; 0) {
-            result[name] = styles[name];
-            delete styles[name];
-        }
-    });
-&nbsp;
-    setStyles(element, styles);
-&nbsp;
-    return result;
+    return position;
 }
 &nbsp;
 /**
- * Clear the format of the selected text or list of blocks
- * If the current selection is compose of multiple block elements then remove the text and struture format for all the selected blocks
- * If the current selection is compose of a partial inline element then only the text format is removed from the current selection
- * @param editor The editor instance
+ * Adjust position for a node don't be nested inside tags like BR, LI, TD.
  */
-function clearAutoDetectFormat(editor: IEditor) {
-    const isMultiBlock = isMultiBlockSelection(editor);
-    if (!isMultiBlock) {
-        const transverser = editor.getSelectionTraverser();
-        const inlineElement = transverser.currentInlineElement;
-        const isPartial = inlineElement instanceof PartialInlineElement;
-        if (isPartial) {
-            clearFormat(editor);
-            return;
-        }
-    }
-    clearBlockFormat(editor);
-}
+function adjustInsertPositionForStructuredNode(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+): Position {
+    let rootNodeToInsert = nodeToInsert;
 &nbsp;
-/**
- * Clear all formats of selected blocks.
- * When selection is collapsed, only clear format of current block.
- * @param editor The editor instance
- */
-function clearBlockFormat(editor: IEditor) {
-    blockFormat(editor, region =&gt; {
-        const blocks = getSelectedBlockElementsInRegion(region);
-        let nodes = collapseNodesInRegion(region, blocks);
-&nbsp;
-        if (editor.contains(region.rootNode)) {
-            // If there are styles on table cell, wrap all its children and move down all non-border styles.
-            // So that we can preserve styles for unselected blocks as well as border styles for table
-            const nonborderStyles = removeNonBorderStyles(region.rootNode);
-            if (Object.keys(nonborderStyles).length &gt; 0) {
-                const wrapper = wrap(toArray(region.rootNode.childNodes));
-                setStyles(wrapper, nonborderStyles);
-            }
-        }
-&nbsp;
-        while (nodes.length &gt; 0 &amp;&amp; isNodeInRegion(region, nodes[0].parentNode)) {
-            nodes = [splitBalancedNodeRange(nodes)];
-        }
-&nbsp;
-        nodes.forEach(clearNodeFormat);
-    });
-}
-&nbsp;
-function clearInlineFormat(editor: IEditor) {
-    editor.focus();
-    editor.addUndoSnapshot(() =&gt; {
-        execCommand(editor, DocumentCommand.RemoveFormat);
-&nbsp;
-        editor.queryElements('[class]', QueryScope.OnSelection, <span class="fstat-no" title="function not covered" >node </span>=&gt;
-<span class="cstat-no" title="statement not covered" >            node.removeAttribute('class')</span>
+    if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
+        let rootNodes = toArray(rootNodeToInsert.childNodes).filter(
+            (n: ChildNode) =&gt; getTagOfNode(n) != 'BR'
         );
+        rootNodeToInsert = rootNodes.length == 1 ? rootNodes[0] : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+    }
 &nbsp;
-        const defaultFormat = editor.getDefaultFormat();
-        const isDefaultFormatEmpty = Object.keys(defaultFormat).length === 0;
-        editor.queryElements('[style]', QueryScope.InSelection, node =&gt; {
-            STYLES_TO_REMOVE.forEach(style =&gt; node.style.removeProperty(style));
+    let tag = getTagOfNode(rootNodeToInsert);
+    let hasBrNextToRoot = tag &amp;&amp; getTagOfNode(rootNodeToInsert.nextSibling) == 'BR';
+    let listItem = findClosestElementAncestor(position.node, root, 'LI');
+    let listNode = listItem &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >findClosestElementAncestor(listItem, root, 'OL,UL');</span>
+    let tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
+    let trNode = tdNode &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >findClosestElementAncestor(tdNode, root, 'TR');</span>
 &nbsp;
-            // when default format is empty, keep the HTML minimum by removing style attribute if there's no style
-            // (note: because default format is empty, we're not adding style back in)
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (isDefaultFormatEmpty &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >node.getAttribute('style') === '')</span> {
-<span class="cstat-no" title="statement not covered" >                node.removeAttribute('style');</span>
-            }
-        });
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tag == 'LI') {
+<span class="cstat-no" title="statement not covered" >        tag = listNode ? getTagOfNode(listNode) : 'UL';</span>
+<span class="cstat-no" title="statement not covered" >        rootNodeToInsert = wrap(rootNodeToInsert, tag);</span>
+    }
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (!isDefaultFormatEmpty) {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (defaultFormat.fontFamily) {
-                setFontName(editor, defaultFormat.fontFamily);
-            }
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (defaultFormat.fontSize) {
-                setFontSize(editor, defaultFormat.fontSize);
-            }
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (defaultFormat.textColor) {
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (defaultFormat.textColors) {
-<span class="cstat-no" title="statement not covered" >                    setTextColor(editor, defaultFormat.textColors);</span>
-                } else {
-                    setTextColor(editor, defaultFormat.textColor);
-                }
-            }
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (defaultFormat.backgroundColor) {
-<span class="cstat-no" title="statement not covered" >                if (defaultFormat.backgroundColors) {</span>
-<span class="cstat-no" title="statement not covered" >                    setBackgroundColor(editor, defaultFormat.backgroundColors);</span>
-                } else {
-<span class="cstat-no" title="statement not covered" >                    setBackgroundColor(editor, defaultFormat.backgroundColor);</span>
-                }
-            }
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (defaultFormat.bold) {
-<span class="cstat-no" title="statement not covered" >                toggleBold(editor);</span>
-            }
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (defaultFormat.italic) {
-<span class="cstat-no" title="statement not covered" >                toggleItalic(editor);</span>
-            }
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (defaultFormat.underline) {
-<span class="cstat-no" title="statement not covered" >                toggleUnderline(editor);</span>
-            }
+    <span class="missing-if-branch" title="if path not taken" >I</span>if ((tag == 'OL' || tag == 'UL') &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >getTagOfNode(rootNodeToInsert.firstChild) == 'LI')</span> {
+        let shouldInsertListAsText = <span class="cstat-no" title="statement not covered" >!rootNodeToInsert.firstChild.nextSibling &amp;&amp; !hasBrNextToRoot;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (hasBrNextToRoot &amp;&amp; rootNodeToInsert.parentNode) {</span>
+<span class="cstat-no" title="statement not covered" >            safeRemove(rootNodeToInsert.nextSibling);</span>
         }
-    }, ChangeSource.Format);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (shouldInsertListAsText) {</span>
+<span class="cstat-no" title="statement not covered" >            unwrap(rootNodeToInsert.firstChild);</span>
+<span class="cstat-no" title="statement not covered" >            unwrap(rootNodeToInsert);</span>
+        } else <span class="cstat-no" title="statement not covered" >if (getTagOfNode(listNode) == tag) {</span>
+<span class="cstat-no" title="statement not covered" >            unwrap(rootNodeToInsert);</span>
+<span class="cstat-no" title="statement not covered" >            position = new Position(</span>
+                listItem,
+                isPositionAtBeginningOf(position, listItem)
+                    ? PositionType.Before
+                    : PositionType.After
+            );
+        }
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (tag == 'TABLE' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >trNode)</span> {
+        // When inserting a table into a table, if these tables have the same column count, and
+        // current position is at beginning of a row, then merge these two tables
+        let newTable = <span class="cstat-no" title="statement not covered" >new VTable(&lt;HTMLTableElement&gt;rootNodeToInsert);</span>
+        let currentTable = <span class="cstat-no" title="statement not covered" >new VTable(&lt;HTMLTableCellElement&gt;tdNode);</span>
+<span class="cstat-no" title="statement not covered" >        if (</span>
+            currentTable.col == 0 &amp;&amp;
+            tdNode == currentTable.getCell(currentTable.row, 0).td &amp;&amp;
+            newTable.cells[0] &amp;&amp;
+            newTable.cells[0].length == currentTable.cells[0].length &amp;&amp;
+            isPositionAtBeginningOf(position, tdNode)
+        ) {
+<span class="cstat-no" title="statement not covered" >            if (</span>
+                getTagOfNode(rootNodeToInsert.firstChild) == 'TBODY' &amp;&amp;
+                !rootNodeToInsert.firstChild.nextSibling
+            ) {
+<span class="cstat-no" title="statement not covered" >                unwrap(rootNodeToInsert.firstChild);</span>
+            }
+<span class="cstat-no" title="statement not covered" >            unwrap(rootNodeToInsert);</span>
+<span class="cstat-no" title="statement not covered" >            position = new Position(trNode, PositionType.After);</span>
+        }
+    }
+&nbsp;
+    return position;
 }
 &nbsp;
 /**
- * Clear the format in current selection, after cleaning, the format will be
- * changed to default format. The format that get cleaned include B/I/U/font name/
- * font size/text color/background color/align left/align right/align center/superscript/subscript
- * @param editor The editor instance
- * @param formatType type of format to apply
+ * Change P tag to DIV, when a new node when insert node.
  */
-export default function clearFormat(
-    editor: IEditor,
-    formatType: ClearFormatMode = ClearFormatMode.Inline
-) {
-    switch (formatType) {
-        case ClearFormatMode.Inline:
-            clearInlineFormat(editor);
-            break;
-        case ClearFormatMode.Block:
-            clearBlockFormat(editor);
-            break;
-        default:
-            clearAutoDetectFormat(editor);
+&nbsp;
+function adjustInsertPositionForParagraph(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+): Position {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (getTagOfNode(position.node) == 'P') {
+        // Insert into a P tag may cause issues when the inserted content contains any block element.
+        // Change P tag to DIV to make sure it works well
+        let pos = <span class="cstat-no" title="statement not covered" >position.normalize();</span>
+        let div = <span class="cstat-no" title="statement not covered" >changeElementTag(&lt;HTMLElement&gt;position.node, 'div');</span>
+<span class="cstat-no" title="statement not covered" >        if (pos.node != div) {</span>
+<span class="cstat-no" title="statement not covered" >            position = pos;</span>
+        }
     }
+&nbsp;
+    return position;
+}
+&nbsp;
+/**
+ * Adjust position for a node that can have children.
+ */
+&nbsp;
+function adjustInsertPositionForVoidElement(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+): Position {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (isVoidHtmlElement(position.node)) {
+<span class="cstat-no" title="statement not covered" >        position = new Position(</span>
+            position.node,
+            position.isAtEnd ? PositionType.After : PositionType.Before
+        );
+    }
+    return position;
+}
+&nbsp;
+/**
+ * Adjust the position cursor out of link when a new node is inserted.
+ */
+&nbsp;
+function adjustInsertPositionForMoveCursorOutOfALink(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+): Position {
+    if (range &amp;&amp; range.collapsed) {
+        const searcher = new PositionContentSearcher(root, Position.getStart(range));
+        const inlineElementBefore = searcher.getInlineElementBefore();
+        const inlineElementAfter = searcher.getInlineElementAfter();
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (inlineElementBefore instanceof LinkInlineElement) {
+<span class="cstat-no" title="statement not covered" >            position = new Position(inlineElementBefore.getContainerNode(), PositionType.After);</span>
+        } else <span class="missing-if-branch" title="if path not taken" >I</span>if (inlineElementAfter instanceof LinkInlineElement) {
+<span class="cstat-no" title="statement not covered" >            position = new Position(inlineElementAfter.getContainerNode(), PositionType.Before);</span>
+        }
+    }
+    return position;
+}
+&nbsp;
+/**
+ *
+ * @param root the contentDiv of the ditor
+ * @param nodeToInsert the node to be inserted
+ * @param position the position of the node to be inserted
+ * @param range the range current or cached range of the editor
+ * @returns the adjusted position of the inserted node
+ */
+&nbsp;
+export default function adjustInsertPositionBySteps(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+): Position {
+    adjustSteps.forEach(handler =&gt; {
+        position = handler(root, nodeToInsert, position, range);
+    });
+    return position;
+}
+&nbsp;
+function <span class="fstat-no" title="function not covered" >safeRemove(</span>node: Node) {
+<span class="cstat-no" title="statement not covered" >    node?.parentNode?.removeChild(node);</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
