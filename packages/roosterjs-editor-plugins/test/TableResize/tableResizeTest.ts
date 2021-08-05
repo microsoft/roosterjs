@@ -1,5 +1,5 @@
 import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
-import { IEditor } from 'roosterjs-editor-types/lib';
+import { IEditor } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 
 describe('TableResize plugin tests', () => {
@@ -7,6 +7,7 @@ describe('TableResize plugin tests', () => {
     let plugin: TableResize;
     const insideTheOffset = 5;
 
+    const DELTA = 2;
     const TABLE =
         '<div style="margin: 50px"><table cellspacing="0" cellpadding="1" style="border-collapse: collapse;"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table><br></div>';
     const ADD_BUTTON = '</div>+</div>';
@@ -29,6 +30,25 @@ describe('TableResize plugin tests', () => {
         x: number;
         y: number;
     };
+
+    function getCellRect(i: number, j: number): DOMRect {
+        const tables = editor.getDocument().getElementsByTagName('table');
+        if (tables.length < 1) {
+            throw 'coult not find any table';
+        }
+
+        const table = tables[0];
+        if (table.rows.length - 1 < i) {
+            throw 'invalid row';
+        }
+        if (table.rows[i].cells.length - 1 < j) {
+            throw 'invalid col';
+        }
+
+        const cell = table.rows[i].cells[j];
+
+        return cell.getBoundingClientRect();
+    }
 
     function initialize(isRtl: boolean = false): DOMRect {
         if (isRtl) {
@@ -67,13 +87,17 @@ describe('TableResize plugin tests', () => {
 
     it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize();
-        runTest({ x: rect.right, y: rect.top }, { x: rect.right / 2, y: rect.bottom }, false);
+        runTest(
+            { x: rect.right, y: rect.top - DELTA },
+            { x: rect.right / 2, y: rect.bottom },
+            false
+        );
     });
 
     it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize();
         runTest(
-            { x: rect.right, y: rect.top },
+            { x: rect.right, y: rect.top - DELTA },
             { x: rect.right - insideTheOffset, y: rect.top },
             true
         );
@@ -97,24 +121,6 @@ describe('TableResize plugin tests', () => {
         );
     });
 
-    it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
-        const rect = initialize(true);
-        runTest(
-            { x: rect.left + insideTheOffset, y: rect.top },
-            { x: (rect.right - rect.left) / 2, y: rect.bottom },
-            false
-        );
-    });
-
-    it('keeps the vertical inserter when moving the cursor inside the safe zone with culture language RTL', () => {
-        const rect = initialize(true);
-        runTest(
-            { x: rect.left + insideTheOffset, y: rect.top },
-            { x: rect.left + insideTheOffset, y: rect.top + insideTheOffset },
-            true
-        );
-    });
-
     it('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(true);
         runTest(
@@ -128,8 +134,19 @@ describe('TableResize plugin tests', () => {
         const rect = initialize(true);
         runTest(
             { x: rect.right, y: rect.bottom },
-            { x: rect.right + insideTheOffset, y: rect.bottom },
+            { x: rect.right + insideTheOffset / 2, y: rect.bottom },
             true
+        );
+    });
+
+    xit('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
+        const rect = initialize(true);
+        const cellRect = getCellRect(0, 2);
+
+        runTest(
+            { x: cellRect.left, y: cellRect.top },
+            { x: (rect.right - rect.left) / 2, y: rect.bottom },
+            false
         );
     });
 });

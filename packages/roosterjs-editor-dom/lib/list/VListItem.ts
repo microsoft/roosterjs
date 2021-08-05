@@ -2,11 +2,12 @@ import contains from '../utils/contains';
 import getListTypeFromNode from './getListTypeFromNode';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
+import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
-import { ListType } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 
@@ -39,7 +40,7 @@ export default class VListItem {
 
         this.node = safeInstanceOf(node, 'HTMLLIElement')
             ? node
-            : (wrap(node, '<li style="display:block"></li>') as HTMLLIElement);
+            : (wrap(node, KnownCreateElementDataIndex.BlockListItem) as HTMLLIElement);
         const display = this.node.style.display;
 
         this.dummy = display != 'list-item' && display != '';
@@ -233,9 +234,7 @@ function createListElement(
             (<HTMLOListElement>result).removeAttribute('id');
         } else {
             // Remove all child nodes, they will be added back later when write back other items
-            while (originalRoot.firstChild) {
-                originalRoot.removeChild(originalRoot.firstChild);
-            }
+            moveChildNodes(originalRoot);
             result = originalRoot;
         }
     } else {

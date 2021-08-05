@@ -1,3 +1,4 @@
+import createElement from '../utils/createElement';
 import createRange from './createRange';
 import normalizeRect from '../utils/normalizeRect';
 import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
@@ -30,9 +31,10 @@ export default function getPositionRect(position: NodePosition): Rect {
 
     // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
     if (position.node.nodeType == NodeType.Text) {
-        const document = position.node.ownerDocument;
-        let span = document.createElement('SPAN');
-        span.innerHTML = '\u200b';
+        const span = createElement(
+            { tag: 'span', children: ['\u200b'] },
+            position.node.ownerDocument
+        );
         range = createRange(position);
         range.insertNode(span);
         rect = span.getBoundingClientRect && normalizeRect(span.getBoundingClientRect());

@@ -3,7 +3,7 @@ import MainPaneBase from '../MainPaneBase';
 import renderInsertLinkDialog from './renderInsertLinkDialog';
 import renderTableOptions from './renderTableOptions';
 import RibbonButtonType from './RibbonButtonType';
-import { Alignment, Direction, Indentation } from 'roosterjs-editor-types';
+import { Alignment, ClearFormatMode, Direction, Indentation } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
 import { getDarkColor } from 'roosterjs-color-utils';
 import {
@@ -23,7 +23,6 @@ import {
     toggleSubscript,
     toggleStrikethrough,
     setDirection,
-    clearBlockFormat,
     clearFormat,
     toggleHeader,
     toggleCodeBlock,
@@ -302,8 +301,16 @@ const buttons: { [key: string]: RibbonButtonType } = {
     clearFormat: {
         title: 'Remove formatting',
         image: require('../svg/removeformat.svg'),
-        onClick: (editor, key) => (key == 'block' ? clearBlockFormat(editor) : clearFormat(editor)),
+        onClick: (editor, key) => {
+            const handlers: Record<string, ClearFormatMode> = {
+                autodetect: ClearFormatMode.AutoDetect,
+                block: ClearFormatMode.Block,
+                selection: ClearFormatMode.Inline,
+            };
+            clearFormat(editor, handlers[key]);
+        },
         dropDownItems: {
+            autodetect: 'Remove format (Autodetect)',
             selection: 'Remove formatting of selected text',
             block: 'Remove formatting of selected paragraphs',
         },

@@ -7,6 +7,7 @@ import {
     HtmlSanitizer,
     toArray,
     wrap,
+    moveChildNodes,
 } from 'roosterjs-editor-dom';
 import {
     BeforePasteEvent,
@@ -98,9 +99,7 @@ export const createPasteFragment: CreatePasteFragment = (
             processStyles(doc.body, style => style.parentNode?.removeChild(style));
         }
 
-        while (doc.body.firstChild) {
-            fragment.appendChild(doc.body.firstChild);
-        }
+        moveChildNodes(fragment, doc.body);
 
         if (applyCurrentStyle && position) {
             const format = getCurrentFormat(core, position.node);

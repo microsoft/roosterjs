@@ -1,5 +1,5 @@
 import { BeforePasteEvent } from 'roosterjs-editor-types';
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
 import { createWordConverter } from './wordConverter';
 import { createWordConverterArguments } from './WordConverterArguments';
 import { processNodeConvert, processNodesDiscovery } from './converterUtils';
@@ -13,7 +13,8 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
 
     // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
     chainSanitizerCallback(sanitizingOption.elementCallbacks, 'O:P', element => {
-        element.innerHTML = '&nbsp;';
+        moveChildNodes(element);
+        element.appendChild(element.ownerDocument.createTextNode('\u00A0')); // &nbsp;
         return true;
     });
 

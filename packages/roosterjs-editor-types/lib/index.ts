@@ -27,6 +27,8 @@ export { QueryScope } from './enum/QueryScope';
 export { RegionType } from './enum/RegionType';
 export { TableOperation } from './enum/TableOperation';
 export { ImageEditOperation } from './enum/ImageEditOperation';
+export { ClearFormatMode } from './enum/ClearFormatMode';
+export { KnownCreateElementDataIndex } from './enum/KnownCreateElementDataIndex';
 
 // Event
 export { default as BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
@@ -160,6 +162,7 @@ export { default as PickerDataProvider } from './interface/PickerDataProvider';
 export { default as PickerPluginOptions } from './interface/PickerPluginOptions';
 export { default as VCell } from './interface/VCell';
 export { default as ImageEditOptions } from './interface/ImageEditOptions';
+export { default as CreateElementData } from './interface/CreateElementData';
 
 // Core Plugin State
 export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';
