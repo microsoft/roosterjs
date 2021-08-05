@@ -5,7 +5,6 @@ import EntityPlugin from './EntityPlugin';
 import LifecyclePlugin from './LifecyclePlugin';
 import MouseUpPlugin from './MouseUpPlugin';
 import PendingFormatStatePlugin from './PendingFormatStatePlugin';
-import TypeAfterLinkPlugin from './TypeAfterLinkPlugin';
 import TypeInContainerPlugin from './TypeInContainerPlugin';
 import UndoPlugin from './UndoPlugin';
 import { CorePlugins, EditorOptions, PluginState } from 'roosterjs-editor-types';
@@ -32,7 +31,7 @@ export default function createCorePlugins(
         typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
         edit: map.edit || new EditPlugin(),
         _placeholder: null,
-        typeAfterLink: map.typeAfterLink || new TypeAfterLinkPlugin(),
+        typeAfterLink: null, //deprecated after firefox update
         undo: map.undo || new UndoPlugin(options),
         domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
         pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
