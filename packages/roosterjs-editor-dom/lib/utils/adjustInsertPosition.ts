@@ -1,5 +1,4 @@
 import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
-import { safeInstanceOf } from 'roosterjs';
 import {
     changeElementTag,
     contains,
