@@ -75,13 +75,15 @@ describe('TableResize plugin tests', () => {
 
         const body = editor.getDocument().body;
 
-        expect(body.innerHTML.includes(ADD_BUTTON)).toBe(true);
-
         mouseEvent = new MouseEvent('mousemove', {
             clientX: mouseEnd.x,
             clientY: mouseEnd.y,
         });
+
+        //expect(body.innerHTML.includes(ADD_BUTTON)).toBe(true);
+
         editorDiv.dispatchEvent(mouseEvent);
+
         expect(body.innerHTML.includes(ADD_BUTTON)).toBe(expectedResult);
     }
 
