@@ -45,6 +45,7 @@ export default interface CorePlugins {
     readonly mouseUp: EditorPlugin;
 
     /**
+     * @deprecated after Firefox update
      * TypeAfterLinkPlugin plugin helps workaround a Firefox bug to allow type outside a hyperlink
      */
     readonly typeAfterLink: EditorPlugin;
