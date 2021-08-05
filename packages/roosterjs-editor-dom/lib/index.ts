@@ -49,7 +49,7 @@ export { default as readFile } from './utils/readFile';
 export { default as getInnerHTML } from './utils/getInnerHTML';
 export { default as setColor } from './utils/setColor';
 export { default as matchesSelector } from './utils/matchesSelector';
-export { default as adjustInsertPositionBySteps } from './utils/adjustUserPosition';
+export { default as adjustInsertPosition } from './utils/adjustInsertPosition';
 
 export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';

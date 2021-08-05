@@ -18,7 +18,7 @@ import {
     safeInstanceOf,
     toArray,
     wrap,
-    adjustInsertPositionBySteps,
+    adjustInsertPosition,
 } from 'roosterjs-editor-dom';
 
 function getInitialRange(
@@ -154,7 +154,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     ) {
                         pos = new Position(blockElement.getEndNode(), PositionType.After);
                     } else {
-                        pos = adjustInsertPositionBySteps(contentDiv, node, pos, range);
+                        pos = adjustInsertPosition(contentDiv, node, pos, range);
                     }
 
                     let nodeForCursor =

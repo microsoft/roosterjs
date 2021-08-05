@@ -22,6 +22,19 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 
+const adjustSteps: ((
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: Position,
+    range: Range
+) => Position)[] = [
+    adjustInsertPositionForHyperLink,
+    adjustInsertPositionForStructuredNode,
+    adjustInsertPositionForParagraph,
+    adjustInsertPositionForVoidElement,
+    adjustInsertPositionForMoveCursorOutOfALink,
+];
+
 /**
  * Adjust position for A tag don't be nested inside another A tag.
  */
@@ -53,7 +66,11 @@ function adjustInsertPositionForHyperLink(
 
         // If this is about to insert nodes which contains A tag into another A tag, need to break current A tag
         // otherwise we will have nested A tags which is a wrong HTML structure
-        if (anchor && safeInstanceOf(nodeToInsert, 'HTMLElement')) {
+        if (
+            anchor &&
+            (<ParentNode>(nodeToInsert as HTMLElement))?.querySelector &&
+            (<ParentNode>(nodeToInsert as HTMLElement))?.querySelector('a[href]')
+        ) {
             let normalizedPosition = position.normalize();
             let parentNode = normalizedPosition.node.parentNode;
             let nextNode =
@@ -221,25 +238,21 @@ function adjustInsertPositionForMoveCursorOutOfALink(
     return position;
 }
 
+/**
+ *
+ * @param root the contentDiv of the ditor
+ * @param nodeToInsert the node to be inserted
+ * @param position the position of the node to be inserted
+ * @param range the range current or cached range of the editor
+ * @returns the adjusted position of the inserted node
+ */
+
 export default function adjustInsertPositionBySteps(
     root: HTMLElement,
     nodeToInsert: Node,
     position: Position,
     range: Range
 ): Position {
-    const adjustSteps: ((
-        root: HTMLElement,
-        nodeToInsert: Node,
-        position: Position,
-        range: Range
-    ) => Position)[] = [
-        adjustInsertPositionForHyperLink,
-        adjustInsertPositionForStructuredNode,
-        adjustInsertPositionForParagraph,
-        adjustInsertPositionForVoidElement,
-        adjustInsertPositionForMoveCursorOutOfALink,
-    ];
-
     adjustSteps.forEach(handler => {
         position = handler(root, nodeToInsert, position, range);
     });
