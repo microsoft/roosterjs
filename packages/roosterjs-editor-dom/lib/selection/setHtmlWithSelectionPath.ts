@@ -1,5 +1,5 @@
 import createRange from './createRange';
-import { NodeType, SelectionPath } from 'roosterjs-editor-types';
+import { NodeType, SelectionPath, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 /**
  * Restore inner Html of a root element from given html string. If the string contains selection path,
@@ -8,8 +8,13 @@ import { NodeType, SelectionPath } from 'roosterjs-editor-types';
  * @param html The html to restore
  * @returns A selection range if the html contains a valid selection path, otherwise null
  */
-export default function setHtmlWithSelectionPath(rootNode: HTMLElement, html: string): Range {
-    rootNode.innerHTML = html || '';
+export default function setHtmlWithSelectionPath(
+    rootNode: HTMLElement,
+    html: string,
+    trustedHTMLHandler?: TrustedHTMLHandler
+): Range {
+    html = html || '';
+    rootNode.innerHTML = trustedHTMLHandler?.(html) || html;
     let path: SelectionPath = null;
     let pathComment = rootNode.lastChild;
 

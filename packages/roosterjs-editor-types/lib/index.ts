@@ -189,3 +189,4 @@ export {
     DOMEventHandlerObject,
     DOMEventHandler,
 } from './type/domEventHandler';
+export { TrustedHTMLHandler } from './type/TrustedHTMLHandler';

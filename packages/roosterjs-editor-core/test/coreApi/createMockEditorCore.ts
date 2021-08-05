@@ -14,5 +14,6 @@ export default function createMockEditorCore(
         },
         plugins: options.plugins || [],
         ...getPluginState(createCorePlugins(contentDiv, options)),
+        trustedHTMLHandler: (html: string) => html,
     };
 }

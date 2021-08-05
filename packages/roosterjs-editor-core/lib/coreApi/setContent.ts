@@ -22,7 +22,7 @@ export const setContent: SetContent = (
 ) => {
     let contentChanged = false;
     if (core.contentDiv.innerHTML != content) {
-        const range = setHtmlWithSelectionPath(core.contentDiv, content);
+        const range = setHtmlWithSelectionPath(core.contentDiv, content, core.trustedHTMLHandler);
         core.api.selectRange(core, range);
         contentChanged = true;
     }
