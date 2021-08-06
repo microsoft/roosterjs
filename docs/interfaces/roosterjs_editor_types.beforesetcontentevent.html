@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BeforeDisposeEvent | RoosterJs API Reference</title>
+	<title>BeforeSetContentEvent | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.beforedisposeevent.html">BeforeDisposeEvent</a>
+					<a href="roosterjs_editor_types.beforesetcontentevent.html">BeforeSetContentEvent</a>
 				</li>
 			</ul>
-			<h1>Interface BeforeDisposeEvent</h1>
+			<h1>Interface BeforeSetContentEvent</h1>
 		</div>
 	</div>
 </header>
@@ -68,7 +68,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Provides a chance for plugin to change the content before it is pasted into editor.</p>
+						<p>The event to be triggered before SetContent API is called.
+						Handle this event to cache anything you need from editor before it is gone.</p>
 					</div>
 				</div>
 			</section>
@@ -76,10 +77,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.plugineventtype.html#beforedispose" class="tsd-signature-type">BeforeDispose</a><span class="tsd-signature-symbol">&gt;</span>
+						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.plugineventtype.html#beforesetcontent" class="tsd-signature-type">BeforeSetContent</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">BeforeDisposeEvent</span>
+								<span class="target">BeforeSetContentEvent</span>
 							</li>
 						</ul>
 					</li>
@@ -89,17 +90,18 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-inherited">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforedisposeevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforedisposeevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforesetcontentevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.beforesetcontentevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.beforesetcontentevent.html#newcontent" class="tsd-kind-icon">new<wbr>Content</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventdatacache" class="tsd-anchor"></a>
@@ -130,7 +132,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="eventtype" class="tsd-anchor"></a>
 					<h3>event<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.plugineventtype.html#beforedispose" class="tsd-signature-type">BeforeDispose</a></div>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.plugineventtype.html#beforesetcontent" class="tsd-signature-type">BeforeSetContent</a></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventtype">eventType</a></p>
 						<ul>
@@ -140,6 +142,21 @@
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Type of this event</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="newcontent" class="tsd-anchor"></a>
+					<h3>new<wbr>Content</h3>
+					<div class="tsd-signature tsd-kind-icon">new<wbr>Content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/03e64e1/packages/roosterjs-editor-types/lib/event/BeforeSetContentEvent.ts#L13">roosterjs-editor-types/lib/event/BeforeSetContentEvent.ts:13</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>New content HTML that is about to set to editor</p>
 						</div>
 					</div>
 				</section>
@@ -179,13 +196,16 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_editor_types.beforedisposeevent.html" class="tsd-kind-icon">Before<wbr>Dispose<wbr>Event</a>
+						<a href="roosterjs_editor_types.beforesetcontentevent.html" class="tsd-kind-icon">Before<wbr>Set<wbr>Content<wbr>Event</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.beforedisposeevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
+								<a href="roosterjs_editor_types.beforesetcontentevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
-								<a href="roosterjs_editor_types.beforedisposeevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+								<a href="roosterjs_editor_types.beforesetcontentevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.beforesetcontentevent.html#newcontent" class="tsd-kind-icon">new<wbr>Content</a>
 							</li>
 						</ul>
 					</li>
@@ -211,6 +231,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
