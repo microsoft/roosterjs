@@ -16,6 +16,7 @@ import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
+import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
 
 const styles = require('./Editor.scss');
@@ -90,6 +91,7 @@ export default function Editor(props: EditorProps) {
             getDarkColor,
             experimentalFeatures: experimentalFeatures,
             undoSnapshotService: props.snapshotService,
+            trustedHTMLHandler: trustedHTMLHandler,
         };
         editor.current = new RoosterJsEditor(contentDiv.current, options);
         return () => {

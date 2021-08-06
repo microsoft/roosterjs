@@ -1,4 +1,4 @@
-import { BeforePasteEvent } from 'roosterjs-editor-types';
+import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
@@ -12,12 +12,15 @@ const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
  * Convert pasted content from Excel, add borders when source doc doesn't have a border
  * @param event The BeforePaste event
  */
-export default function convertPastedContentFromExcel(event: BeforePasteEvent) {
+export default function convertPastedContentFromExcel(
+    event: BeforePasteEvent,
+    trustedHTMLHandler: TrustedHTMLHandler
+) {
     const { fragment, sanitizingOption, htmlBefore, clipboardData } = event;
     const html = excelHandler(clipboardData.html, htmlBefore);
 
     if (clipboardData.html != html) {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');
         moveChildNodes(fragment, doc?.body);
     }
 
