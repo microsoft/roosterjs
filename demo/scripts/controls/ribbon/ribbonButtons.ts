@@ -6,6 +6,7 @@ import RibbonButtonType from './RibbonButtonType';
 import { Alignment, ClearFormatMode, Direction, Indentation } from 'roosterjs-editor-types';
 import { Browser } from 'roosterjs-editor-dom';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import {
     setFontName,
     setFontSize,
@@ -358,7 +359,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
         title: 'Export',
         onClick: editor => {
             let w = window.open();
-            w.document.write(editor.getContent());
+            w.document.write(trustedHTMLHandler(editor.getContent()));
         },
     },
     clear: {
