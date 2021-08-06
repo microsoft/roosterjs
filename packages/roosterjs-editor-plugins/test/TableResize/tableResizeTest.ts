@@ -2,7 +2,7 @@ import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
 import { IEditor } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 
-describe('TableResize plugin tests', () => {
+xdescribe('TableResize plugin tests', () => {
     let editor: IEditor;
     let plugin: TableResize;
     const insideTheOffset = 5;
