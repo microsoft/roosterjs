@@ -1,4 +1,4 @@
-import fromHtml from '../../lib/utils/fromHtml';
+import * as DomTestHelper from '../DomTestHelper';
 import moveChildNodes from '../../lib/utils/moveChildNodes';
 
 describe('moveChildNodes', () => {
@@ -8,8 +8,8 @@ describe('moveChildNodes', () => {
         keepExisting: boolean,
         expectedTargetHtml: string
     ) {
-        const source = sourceHtml ? (fromHtml(sourceHtml, document)[0] as HTMLElement) : null;
-        const target = targetHtml ? (fromHtml(targetHtml, document)[0] as HTMLElement) : null;
+        const source = sourceHtml ? (DomTestHelper.htmlToDom(sourceHtml)[0] as HTMLElement) : null;
+        const target = targetHtml ? (DomTestHelper.htmlToDom(targetHtml)[0] as HTMLElement) : null;
 
         moveChildNodes(target, source, keepExisting);
 

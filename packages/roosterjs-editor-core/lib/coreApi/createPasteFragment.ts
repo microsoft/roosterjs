@@ -61,7 +61,7 @@ export const createPasteFragment: CreatePasteFragment = (
     } else if (
         !pasteAsText &&
         rawHtml &&
-        (doc = new DOMParser().parseFromString(rawHtml, 'text/html'))?.body
+        (doc = new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html'))?.body
     ) {
         // Paste HTML
         const attributes = doc.querySelector('html')?.attributes;
@@ -87,10 +87,8 @@ export const createPasteFragment: CreatePasteFragment = (
         if (startIndex >= 0 && endIndex >= startIndex + START_FRAGMENT.length) {
             event.htmlBefore = rawHtml.substr(0, startIndex);
             event.htmlAfter = rawHtml.substr(endIndex + END_FRAGMENT.length);
-            doc.body.innerHTML = clipboardData.html = rawHtml.substring(
-                startIndex + START_FRAGMENT.length,
-                endIndex
-            );
+            clipboardData.html = rawHtml.substring(startIndex + START_FRAGMENT.length, endIndex);
+            doc.body.innerHTML = core.trustedHTMLHandler(clipboardData.html);
 
             // Remove style nodes just added by setting innerHTML of body since we already have all
             // style nodes in header.
