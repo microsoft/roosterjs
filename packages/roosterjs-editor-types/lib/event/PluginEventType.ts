@@ -104,4 +104,10 @@ export const enum PluginEventType {
      * Content of image is being changed from client side
      */
     EditImage = 19,
+
+    /**
+     * Content of editor is about to be cleared by SetContent API, handle this event to cache anything you need
+     * before it is gone
+     */
+    BeforeSetContent = 20,
 }
