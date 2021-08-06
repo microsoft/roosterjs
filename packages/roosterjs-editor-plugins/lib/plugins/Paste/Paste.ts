@@ -3,7 +3,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
-import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFY_SELECTOR } from './officeOnlineConverter/constants';
 import convertPastedContentFromWordOnline, {
@@ -26,6 +26,8 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * 3. Content copied from Word Online or OneNote Online
  */
 export default class Paste implements EditorPlugin {
+    private editor: IEditor;
+
     /**
      * Construct a new instance of Paste class
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
@@ -43,12 +45,16 @@ export default class Paste implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize() {}
+    initialize(editor: IEditor) {
+        this.editor = editor;
+    }
 
     /**
      * Dispose this plugin
      */
-    dispose() {}
+    dispose() {
+        this.editor = null;
+    }
 
     /**
      * Handle events triggered from editor
@@ -57,6 +63,7 @@ export default class Paste implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
             const { htmlAttributes, fragment, sanitizingOption } = event;
+            const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
 
             if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
@@ -67,9 +74,9 @@ export default class Paste implements EditorPlugin {
                 htmlAttributes[PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
             ) {
                 // Handle HTML copied from Excel
-                convertPastedContentFromExcel(event);
+                convertPastedContentFromExcel(event, trustedHTMLHandler);
             } else if (htmlAttributes[PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE) {
-                convertPastedContentFromPowerPoint(event);
+                convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
             } else if (
                 (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR))) &&
                 wacListElements.length > 0

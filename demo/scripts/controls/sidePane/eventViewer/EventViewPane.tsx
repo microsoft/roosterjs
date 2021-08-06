@@ -37,6 +37,7 @@ const EventTypeMap = {
     [PluginEventType.EnteredShadowEdit]: 'EnteredShadowEdit',
     [PluginEventType.LeavingShadowEdit]: 'LeavingShadowEdit',
     [PluginEventType.EditImage]: 'EditImage',
+    [PluginEventType.BeforeSetContent]: 'BeforeSetContent',
 };
 
 export default class EventViewPane extends React.Component<

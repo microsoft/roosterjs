@@ -95,3 +95,10 @@ export function createRangeFromChildNodes(node: Node): Range {
 export function createRangeWithDiv(testDiv: HTMLElement): Range {
     return createRange(testDiv);
 }
+
+export function htmlToDom(html: string): Node[] {
+    let element = document.createElement('DIV');
+    element.innerHTML = html;
+
+    return [].slice.call(element.childNodes);
+}
