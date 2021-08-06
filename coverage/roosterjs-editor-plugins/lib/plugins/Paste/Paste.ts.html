@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.19% </span>
+                <span class="strong">54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/47</span>
+                <span class='fraction'>27/50</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.55% </span>
+                <span class="strong">55.32% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>24/44</span>
+                <span class='fraction'>26/47</span>
             </div>
         
             
@@ -156,7 +156,14 @@
 <a name='L97'></a><a href='#L97'>97</a>
 <a name='L98'></a><a href='#L98'>98</a>
 <a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -184,6 +191,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,18 +211,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,7 +274,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
-import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFY_SELECTOR } from './officeOnlineConverter/constants';
 import convertPastedContentFromWordOnline, {
@@ -283,6 +297,8 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * 3. Content copied from Word Online or OneNote Online
  */
 export default class Paste implements EditorPlugin {
+    private editor: IEditor;
+&nbsp;
     /**
      * Construct a new instance of Paste class
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
@@ -300,12 +316,16 @@ export default class Paste implements EditorPlugin {
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize() {}
+    initialize(editor: IEditor) {
+        this.editor = editor;
+    }
 &nbsp;
     /**
      * Dispose this plugin
      */
-    dispose() {}
+    dispose() {
+        this.editor = null;
+    }
 &nbsp;
     /**
      * Handle events triggered from editor
@@ -314,6 +334,7 @@ export default class Paste implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (event.eventType == PluginEventType.BeforePaste) {
             const { <span class="cstat-no" title="statement not covered" >htmlAttributes,</span> <span class="cstat-no" title="statement not covered" >fragment,</span> <span class="cstat-no" title="statement not covered" >sanitizingOption </span>} = event;
+            const trustedHTMLHandler = <span class="cstat-no" title="statement not covered" >this.editor.getTrustedHTMLHandler();</span>
             let wacListElements<span class="cstat-no" title="statement not covered" >: Node[];</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {</span>
@@ -324,9 +345,9 @@ export default class Paste implements EditorPlugin {
                 htmlAttributes[PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
             ) {
                 // Handle HTML copied from Excel
-<span class="cstat-no" title="statement not covered" >                convertPastedContentFromExcel(event);</span>
+<span class="cstat-no" title="statement not covered" >                convertPastedContentFromExcel(event, trustedHTMLHandler);</span>
             } else <span class="cstat-no" title="statement not covered" >if (htmlAttributes[PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE) {</span>
-<span class="cstat-no" title="statement not covered" >                convertPastedContentFromPowerPoint(event);</span>
+<span class="cstat-no" title="statement not covered" >                convertPastedContentFromPowerPoint(event, trustedHTMLHandler);</span>
             } else <span class="cstat-no" title="statement not covered" >if (</span>
                 (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR))) &amp;&amp;
                 wacListElements.length &gt; 0
@@ -361,7 +382,7 @@ export default class Paste implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Aug 05 2021 18:53:57 GMT+0000 (Coordinated Universal Time)
+                at Fri Aug 06 2021 17:24:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
