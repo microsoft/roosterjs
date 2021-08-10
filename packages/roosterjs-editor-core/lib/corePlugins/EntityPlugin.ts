@@ -23,7 +23,7 @@ import {
     QueryScope,
 } from 'roosterjs-editor-types';
 
-const ENTITY_ID_REGEX = /_\d{1,8}$/;
+const ENTITY_ID_REGEX = /_(\d{1,8})$/;
 
 const ENTITY_CSS_REGEX = '^' + EntityClasses.ENTITY_INFO_NAME + '$';
 const ENTITY_ID_CSS_REGEX = '^' + EntityClasses.ENTITY_ID_PREFIX;

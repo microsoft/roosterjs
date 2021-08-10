@@ -8,6 +8,7 @@ import Ribbon from './ribbon/Ribbon';
 import SidePane from './sidePane/SidePane';
 import TitleBar from './titleBar/TitleBar';
 import { getAllPluginArray, getPlugins, getSidePanePluginArray } from './plugins';
+import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
@@ -120,7 +121,7 @@ class MainPane extends MainPaneBase {
 
     popout() {
         const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
-        win.document.write(POPOUT_HTML);
+        win.document.write(trustedHTMLHandler(POPOUT_HTML));
         win.addEventListener('unload', () => {
             if (this.popoutRoot) {
                 ReactDom.unmountComponentAtNode(this.popoutRoot);
