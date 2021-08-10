@@ -2,9 +2,7 @@ import * as DOMPurify from 'dompurify';
 
 const policy = !!window.trustedTypes
     ? window.trustedTypes.createPolicy('sanitizeHtml', {
-          createHTML: (input: string) => {
-              return DOMPurify.sanitize(input);
-          }, //
+          createHTML: (input: string) => DOMPurify.sanitize(input),
       })
     : null;
 
