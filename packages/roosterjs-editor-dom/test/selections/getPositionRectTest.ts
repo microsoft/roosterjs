@@ -1,7 +1,7 @@
 import getPositionRect from '../../lib/selection/getPositionRect';
 import Position from '../../lib/selection/Position';
 
-describe('getPositionRect()', () => {
+xdescribe('getPositionRect()', () => {
     function runTest(
         input: string,
         getNode: () => Node,
