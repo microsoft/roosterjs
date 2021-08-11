@@ -6,9 +6,9 @@ import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
+import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
-import { StyleBasedFormatState } from './FormatState';
 
 /**
  * Represents the core data structure of an editor
@@ -112,6 +112,16 @@ export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => 
  * @param node The node to get style from
  */
 export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
+
+/**
+ * Get the pending format state from the cache, if it does not exist, look at DOM tree
+ * @param range The selection Range
+ */
+export type GetPendingFormatState = (
+    range: Range,
+    pendableFormatState: PendableFormatState,
+    cachedPosition: NodePosition
+) => PendableFormatState;
 
 /**
  * Check if the editor has focus now
@@ -255,6 +265,13 @@ export interface CoreApiMap {
      * @param node The node to get style from
      */
     getStyleBasedFormatState: GetStyleBasedFormatState;
+
+    /**
+     * Get style based format state from current selection, including font name/size and colors
+     * @param core The EditorCore objects
+     * @param node The node to get style from
+     */
+    getPendingFormatState: GetPendingFormatState;
 
     /**
      * Check if the editor has focus now

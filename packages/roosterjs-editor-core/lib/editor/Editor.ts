@@ -24,6 +24,7 @@ import {
     InsertOption,
     IPositionContentSearcher,
     NodePosition,
+    PendableFormatState,
     PluginEvent,
     PluginEventData,
     PluginEventFromType,
@@ -735,6 +736,19 @@ export default class Editor implements IEditor {
             node = range && Position.getStart(range).normalize().node;
         }
         return this.core.api.getStyleBasedFormatState(this.core, node);
+    }
+
+    /**
+     * Get the cache format from plugin PendingFormatState
+     */
+    public getPendingFormatState(): PendableFormatState {
+        const cachedPosition = this.core.pendingFormatState.pendableFormatPosition;
+        const pendableFormatState = this.core.pendingFormatState.pendableFormatState;
+        return this.core.api.getPendingFormatState(
+            this.getSelectionRange(),
+            pendableFormatState,
+            cachedPosition
+        );
     }
 
     /**

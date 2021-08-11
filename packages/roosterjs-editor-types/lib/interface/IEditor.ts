@@ -9,7 +9,7 @@ import SelectionPath from './SelectionPath';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
-import { EditorUndoState, StyleBasedFormatState } from './FormatState';
+import { EditorUndoState, PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import { GenericContentEditFeature } from './ContentEditFeature';
 import { GetContentMode } from '../enum/GetContentMode';
@@ -497,6 +497,10 @@ export default interface IEditor {
      * Get style based format state from current selection, including font name/size and colors
      */
     getStyleBasedFormatState(node?: Node): StyleBasedFormatState;
+    /**
+     * Get the cache format from plugin PendingFormatState, if it does not exist get the format from the DOM tree
+     */
+    getPendingFormatState(): PendableFormatState;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly

@@ -1,10 +1,10 @@
 import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
 import {
     getPendableFormatState,
+    // getPendableFormatState,
     PendableFormatCommandMap,
     PendableFormatNames,
 } from 'roosterjs-editor-dom';
-
 let pendableFormatCommands: string[] = null;
 
 /**
@@ -25,7 +25,6 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
     if (range && range.collapsed) {
         editor.addUndoSnapshot();
         formatter();
-
         if (isPendableFormatCommand(command)) {
             // Trigger PendingFormatStateChanged event since we changed pending format state
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
