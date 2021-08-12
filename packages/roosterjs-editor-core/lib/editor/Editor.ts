@@ -739,14 +739,15 @@ export default class Editor implements IEditor {
     }
 
     /**
-     * Get the cache format from plugin PendingFormatState
+     * Get the cached format state from plugin PendingFormatStatePlugin, if it does not exist get the format from the DOM tree.
+     * @returns The pending format state
      */
     public getPendingFormatState(): PendableFormatState {
         const cachedPosition = this.core.pendingFormatState.pendableFormatPosition;
-        const pendableFormatState = this.core.pendingFormatState.pendableFormatState;
+        const cachedPendableFormatState = this.core.pendingFormatState.pendableFormatState;
         return this.core.api.getPendingFormatState(
             this.getSelectionRange(),
-            pendableFormatState,
+            cachedPendableFormatState,
             cachedPosition
         );
     }

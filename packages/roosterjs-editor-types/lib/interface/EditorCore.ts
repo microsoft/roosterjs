@@ -119,7 +119,7 @@ export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBa
  */
 export type GetPendingFormatState = (
     range: Range,
-    pendableFormatState: PendableFormatState,
+    cachedPendableFormatState: PendableFormatState,
     cachedPosition: NodePosition
 ) => PendableFormatState;
 

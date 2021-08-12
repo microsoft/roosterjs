@@ -1,13 +1,23 @@
 import { DocumentCommand, NodePosition, PendableFormatState } from 'roosterjs-editor-types';
-import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
+import { PendableFormatCommandMap, PendableFormatNames, Position } from 'roosterjs-editor-dom';
+
+/**
+ *
+ * @param range The range of the cursor.
+ * @param cachedPendableFormatState The format state cached by PendingFormatStatePlugin.
+ * @param cachedPosition The position cached by PendingFormatStatePlugin.
+ * @returns The cached format state if it exists. If the cached postion do not exist, search for    pendable elements in the DOM tree and return the pendable format state.
+ */
 
 export function getPendingFormatState(
     range: Range,
-    pendableFormatState: PendableFormatState,
+    cachedPendableFormatState: PendableFormatState,
     cachedPosition: NodePosition
 ): PendableFormatState {
-    if (range && pendableFormatState && range.collapsed) {
-        return pendableFormatState;
+    const currentPosition = range && Position.getStart(range).normalize();
+    const isSamePosition = range && currentPosition.equalTo(cachedPosition);
+    if (range && cachedPendableFormatState && range.collapsed && isSamePosition) {
+        return cachedPendableFormatState;
     } else {
         return getPendableFormatState();
     }
