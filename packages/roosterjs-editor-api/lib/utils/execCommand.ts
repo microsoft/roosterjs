@@ -1,6 +1,11 @@
-import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
 import {
-    getPendableFormatState,
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    PendableFormatState,
+    PluginEventType,
+} from 'roosterjs-editor-types';
+import {
     // getPendableFormatState,
     PendableFormatCommandMap,
     PendableFormatNames,
@@ -28,7 +33,7 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
         if (isPendableFormatCommand(command)) {
             // Trigger PendingFormatStateChanged event since we changed pending format state
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
-                formatState: getPendableFormatState(editor.getDocument()),
+                formatState: setPendableFormatState(editor, command),
             });
         }
     } else {
@@ -43,4 +48,21 @@ function isPendableFormatCommand(command: DocumentCommand): boolean {
         );
     }
     return pendableFormatCommands.indexOf(command) >= 0;
+}
+
+function setPendableFormatState(editor: IEditor, command: DocumentCommand) {
+    let keys = Object.keys(PendableFormatCommandMap) as PendableFormatNames[];
+    const pendableFormats = editor.getPendingFormatState();
+    return keys.reduce((state, key) => {
+        state[key] =
+            pendableFormatKeyToCommand(key) === command
+                ? !pendableFormats[key]
+                : pendableFormats[key];
+        return state;
+    }, <PendableFormatState>{});
+}
+
+function pendableFormatKeyToCommand(key: string) {
+    let newKey = key.replace('is', '');
+    return newKey.charAt(0).toLowerCase() + newKey.slice(1);
 }

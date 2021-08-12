@@ -51,6 +51,5 @@ export default function getFormatState(editor: IEditor, event?: PluginEvent): Fo
         ...getElementBasedFormatState(editor, event),
         ...editor.getStyleBasedFormatState(),
         ...editor.getUndoState(),
-        ...editor.getPendingFormatState(),
     };
 }
