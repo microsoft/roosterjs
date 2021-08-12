@@ -135,6 +135,7 @@ export {
     GetContent,
     GetSelectionRange,
     GetStyleBasedFormatState,
+    GetPendingFormatState,
     HasFocus,
     InsertNode,
     RestoreUndoSnapshot,

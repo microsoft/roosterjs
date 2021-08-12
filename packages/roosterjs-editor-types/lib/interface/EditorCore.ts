@@ -122,8 +122,11 @@ export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => 
 export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
 
 /**
- * Get the pending format state from the cache, if it does not exist, look at DOM tree
+ * Get the pending format state from the cache, if it does not exist, search the pendable formats in the dom tree and return the pendable format state.
  * @param range The selection Range
+ * @param cachedPendableFormatState The cached format state stored by PendableFormatStatePlugin
+ * @param cachedPosition The cached cached position stored by PendableFormatStatePlugin
+ * @return The pending format state of editor.
  */
 export type GetPendingFormatState = (
     range: Range,
