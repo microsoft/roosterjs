@@ -106,7 +106,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         // parse the html string off the dom and inline the resulting element.
         const document = this.editor.getDocument();
         const parsingSpan = document.createElement('span');
-        parsingSpan.innerHTML = replacement.replacementHTML;
+        parsingSpan.innerHTML = this.editor.getTrustedHTMLHandler()(replacement.replacementHTML);
         const nodeToInsert =
             parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : parsingSpan;
 

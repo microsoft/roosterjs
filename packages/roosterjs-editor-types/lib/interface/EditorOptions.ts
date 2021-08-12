@@ -4,6 +4,7 @@ import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
+import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -97,4 +98,11 @@ export default interface EditorOptions {
      * Only text types are supported, and do not add "text/" prefix to the type values
      */
     allowedCustomPasteType?: string[];
+
+    /**
+     * Customized trusted type handler used for sanitizing HTML string before assign to DOM tree
+     * This is required when trusted-type Content-Security-Policy (CSP) is enabled.
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    trustedHTMLHandler?: TrustedHTMLHandler;
 }

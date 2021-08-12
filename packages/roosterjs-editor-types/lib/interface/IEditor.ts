@@ -20,6 +20,7 @@ import { PluginEventType } from '../event/PluginEventType';
 import { PositionType } from '../enum/PositionType';
 import { QueryScope } from '../enum/QueryScope';
 import { RegionType } from '../enum/RegionType';
+import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
  * Interface of roosterjs editor object
@@ -550,6 +551,14 @@ export default interface IEditor {
      * @param feature The feature to check
      */
     isFeatureEnabled(feature: ExperimentalFeatures): boolean;
+
+    /**
+     * Get a function to convert HTML string to trusted HTML string.
+     * By default it will just return the input HTML directly. To override this behavior,
+     * pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
+     * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
+     */
+    getTrustedHTMLHandler(): TrustedHTMLHandler;
 
     //#endregion
 }

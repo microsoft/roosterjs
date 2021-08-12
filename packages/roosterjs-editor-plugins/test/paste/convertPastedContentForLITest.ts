@@ -1,9 +1,9 @@
+import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
 import convertPastedContentForLI from '../../lib/plugins/Paste/commonConverter/convertPastedContentForLI';
-import { fromHtml } from 'roosterjs-editor-dom';
 
 describe('convertPastedContentForLi', () => {
     function runTest(source: string, expected: string) {
-        const nodes = fromHtml(source, document);
+        const nodes = DomTestHelper.htmlToDom(source);
         const fragment = document.createDocumentFragment();
         nodes.forEach(node => fragment.appendChild(node));
 

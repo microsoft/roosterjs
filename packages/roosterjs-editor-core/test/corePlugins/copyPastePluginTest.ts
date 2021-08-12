@@ -119,6 +119,7 @@ describe('CopyPastePlugin copy', () => {
             select: () => {},
             addUndoSnapshot: (f: () => void) => f(),
             focus: () => {},
+            getTrustedHTMLHandler: (html: string) => html,
         });
 
         plugin.initialize(editor);

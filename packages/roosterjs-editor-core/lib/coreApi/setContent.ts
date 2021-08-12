@@ -22,7 +22,16 @@ export const setContent: SetContent = (
 ) => {
     let contentChanged = false;
     if (core.contentDiv.innerHTML != content) {
-        const range = setHtmlWithSelectionPath(core.contentDiv, content);
+        core.api.triggerEvent(
+            core,
+            {
+                eventType: PluginEventType.BeforeSetContent,
+                newContent: content,
+            },
+            true /*broadcast*/
+        );
+
+        const range = setHtmlWithSelectionPath(core.contentDiv, content, core.trustedHTMLHandler);
         core.api.selectRange(core, range);
         contentChanged = true;
     }

@@ -35,6 +35,7 @@ export { default as BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { default as BasePluginEvent } from './event/BasePluginEvent';
 export { default as BeforeDisposeEvent } from './event/BeforeDisposeEvent';
 export { default as BeforePasteEvent } from './event/BeforePasteEvent';
+export { default as BeforeSetContentEvent } from './event/BeforeSetContentEvent';
 export { default as ContentChangedEvent } from './event/ContentChangedEvent';
 export { default as EditImageEvent } from './event/EditImageEvent';
 export { default as EditorReadyEvent } from './event/EditorReadyEvent';
@@ -189,3 +190,4 @@ export {
     DOMEventHandlerObject,
     DOMEventHandler,
 } from './type/domEventHandler';
+export { TrustedHTMLHandler } from './type/TrustedHTMLHandler';
