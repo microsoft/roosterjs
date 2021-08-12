@@ -9,7 +9,6 @@ import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
-import { StyleBasedFormatState } from './FormatState';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
