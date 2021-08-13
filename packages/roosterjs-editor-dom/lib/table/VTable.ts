@@ -286,6 +286,16 @@ export default class VTable {
                     });
                 }
                 break;
+
+            case TableOperation.AlignCenter:
+                this.table.setAttribute('align', 'center');
+                break;
+            case TableOperation.AlignLeft:
+                this.table.setAttribute('align', 'left');
+                break;
+            case TableOperation.AlignRight:
+                this.table.setAttribute('align', 'right');
+                break;
         }
     }
 
