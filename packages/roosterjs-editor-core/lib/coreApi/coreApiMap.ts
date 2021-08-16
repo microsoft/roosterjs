@@ -5,7 +5,7 @@ import { createPasteFragment } from './createPasteFragment';
 import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
 import { getContent } from './getContent';
-import { getPendingFormatState } from './getPendingFormatState';
+import { getPendableFormatState } from './getPendableFormatState';
 import { getSelectionRange } from './getSelectionRange';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
 import { hasFocus } from './hasFocus';
@@ -29,7 +29,7 @@ export const coreApiMap: CoreApiMap = {
     getContent,
     getSelectionRange,
     getStyleBasedFormatState,
-    getPendingFormatState,
+    getPendableFormatState,
     hasFocus,
     insertNode,
     restoreUndoSnapshot,

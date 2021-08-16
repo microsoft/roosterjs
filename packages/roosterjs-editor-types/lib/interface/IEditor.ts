@@ -501,7 +501,7 @@ export default interface IEditor {
     /**
      * Get the cache format from plugin PendingFormatState, if it does not exist get the format from the DOM tree
      */
-    getPendingFormatState(): PendableFormatState;
+    getPendableFormatState(): PendableFormatState;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly

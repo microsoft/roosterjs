@@ -122,16 +122,14 @@ export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => 
 export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
 
 /**
- * Get the pending format state from the cache, if it does not exist, search the pendable formats in the dom tree and return the pendable format state.
- * @param range The selection Range
- * @param cachedPendableFormatState The cached format state stored by PendableFormatStatePlugin
- * @param cachedPosition The cached cached position stored by PendableFormatStatePlugin
+ * Get the pendable formar such as underline and bold
+ * @param core The EditorCore object
+ * @param readFromDommTree if set to true, reads the format from the dom tree
  * @return The pending format state of editor.
  */
-export type GetPendingFormatState = (
-    range: Range,
-    cachedPendableFormatState: PendableFormatState,
-    cachedPosition: NodePosition
+export type GetPendableFormatState = (
+    core: EditorCore,
+    readFromDommTree?: boolean
 ) => PendableFormatState;
 
 /**
@@ -282,7 +280,7 @@ export interface CoreApiMap {
      * @param core The EditorCore objects
      * @param node The node to get style from
      */
-    getPendingFormatState: GetPendingFormatState;
+    getPendableFormatState: GetPendableFormatState;
 
     /**
      * Check if the editor has focus now

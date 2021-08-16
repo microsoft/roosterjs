@@ -745,17 +745,11 @@ export default class Editor implements IEditor {
     }
 
     /**
-     * Get the cached format state from plugin PendingFormatStatePlugin, if it does not exist get the format from the DOM tree.
+     * Get the pendable formar such as underline and bold
      * @returns The pending format state
      */
-    public getPendingFormatState(): PendableFormatState {
-        const cachedPosition = this.core.pendingFormatState.pendableFormatPosition;
-        const cachedPendableFormatState = this.core.pendingFormatState.pendableFormatState;
-        return this.core.api.getPendingFormatState(
-            this.getSelectionRange(),
-            cachedPendableFormatState,
-            cachedPosition
-        );
+    public getPendableFormatState(): PendableFormatState {
+        return this.core.api.getPendableFormatState(this.core);
     }
 
     /**

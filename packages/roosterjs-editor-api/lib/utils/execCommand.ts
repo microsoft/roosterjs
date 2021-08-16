@@ -1,11 +1,5 @@
+import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
 import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    DocumentCommand,
-    IEditor,
-    PendableFormatState,
-    PluginEventType,
-} from 'roosterjs-editor-types';
 let pendableFormatCommands: string[] = null;
 
 /**
@@ -25,12 +19,22 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
     let range = editor.getSelectionRange();
     if (range && range.collapsed) {
         editor.addUndoSnapshot();
+        const formatState = editor.getPendableFormatState();
         formatter();
+
+        const formatName = Object.keys(PendableFormatCommandMap).filter(
+            (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
+        )[0] as PendableFormatNames;
+
+        if (formatName) {
+            formatState[formatName] = !formatState[formatName];
+            editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
+                formatState: formatState,
+            });
+        }
+
         if (isPendableFormatCommand(command)) {
             // Trigger PendingFormatStateChanged event since we changed pending format state
-            editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
-                formatState: setPendableFormatState(editor.getPendingFormatState(), command),
-            });
         }
     } else {
         editor.addUndoSnapshot(formatter, ChangeSource.Format);
@@ -44,20 +48,4 @@ function isPendableFormatCommand(command: DocumentCommand): boolean {
         );
     }
     return pendableFormatCommands.indexOf(command) >= 0;
-}
-
-function setPendableFormatState(pendableFormats: PendableFormatState, command: DocumentCommand) {
-    let keys = Object.keys(PendableFormatCommandMap) as PendableFormatNames[];
-    return keys.reduce((state, key) => {
-        state[key] =
-            pendableFormatKeyToCommand(key) === command
-                ? !pendableFormats[key]
-                : pendableFormats[key];
-        return state;
-    }, <PendableFormatState>{});
-}
-
-function pendableFormatKeyToCommand(key: string) {
-    let newKey = key.replace('is', '');
-    return newKey.charAt(0).toLowerCase() + newKey.slice(1);
 }
