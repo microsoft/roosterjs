@@ -44,10 +44,8 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
 
                                 try {
                                     let value = parseInt(prompt('Set Value to...', '1'));
-                                    console.log(value);
                                     setOrderedListNumbering(this.editor, list, value);
                                 } catch (error) {
-                                    console.error(error);
                                     setOrderedListNumbering(this.editor, list, 1);
                                 }
                             }, ChangeSource.Format);
