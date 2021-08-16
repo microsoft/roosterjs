@@ -19,6 +19,8 @@ import {
     NodeType,
 } from 'roosterjs-editor-types';
 
+const CHAIN_DATASET_NAME = 'listchain';
+
 /**
  * Represent a bullet or a numbering list
  *
@@ -210,6 +212,41 @@ export default class VList {
         this.rootList = null;
     }
 
+    /**
+     * Splits the VList in two, using the element provided in the parameter as separator
+     * Write the result back into DOM tree
+     * After that, this VList becomes unavailable because we set this.rootList to null
+     * @param separator The HTML element that indicates when to split the VList
+     */
+    splitWriteBack(separator: HTMLElement) {
+        if (!this.rootList) {
+            throw new Error('rootList must not be null');
+        }
+
+        const doc = this.rootList.ownerDocument;
+        const listStack: Node[] = [doc.createDocumentFragment()];
+        const placeholder = doc.createTextNode('');
+
+        // Use a placeholder to hold the position since the root list may be moved into document fragment later
+        this.rootList.parentNode.replaceChild(placeholder, this.rootList);
+
+        delete this.rootList.dataset[CHAIN_DATASET_NAME]; //remove the chain between the lists
+
+        this.items.forEach(item => {
+            if (item.getNode() === separator) {
+                listStack.splice(1);
+            }
+
+            item.writeBack(listStack, this.rootList);
+        });
+
+        // Restore the content to the position of placeholder
+        placeholder.parentNode.replaceChild(listStack[0], placeholder);
+
+        // Set rootList to null to avoid this to be called again for the same VList, because
+        // after change the rootList may not be available any more (e.g. outdent all items).
+        this.rootList = null;
+    }
     /**
      * Set indentation of the given range of this list
      * @param start Start position to operate from
