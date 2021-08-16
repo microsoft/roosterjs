@@ -217,8 +217,9 @@ export default class VList {
      * Write the result back into DOM tree
      * After that, this VList becomes unavailable because we set this.rootList to null
      * @param separator The HTML element that indicates when to split the VList
+     * @param startNumber The number that the new list is going to start
      */
-    splitWriteBack(separator: HTMLElement) {
+    splitWriteBack(separator: HTMLElement, startNumber: number) {
         if (!this.rootList) {
             throw new Error('rootList must not be null');
         }
@@ -239,6 +240,11 @@ export default class VList {
 
             item.writeBack(listStack, this.rootList);
         });
+
+        let list = listStack[1];
+        if (safeInstanceOf(list, 'HTMLOListElement')) {
+            list.start = startNumber ?? 1;
+        }
 
         // Restore the content to the position of placeholder
         placeholder.parentNode.replaceChild(listStack[0], placeholder);

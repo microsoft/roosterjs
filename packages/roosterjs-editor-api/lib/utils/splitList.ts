@@ -5,18 +5,18 @@ import { IEditor } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export default function splitList(editor: IEditor, list: HTMLOListElement): void;
+export default function splitList(
+    editor: IEditor,
+    list: HTMLOListElement,
+    startNumber?: number
+): void;
 
-export default function splitList(editor: IEditor, list: HTMLOListElement) {
-    blockFormat(editor, (region, start, end, chains) => {
+export default function splitList(editor: IEditor, list: HTMLOListElement, startNumber?: number) {
+    blockFormat(editor, (region, start) => {
         const vList = createVListFromRegion(region, false /*includeSiblingLists*/);
 
         if (vList) {
-            vList.splitWriteBack(start.element);
-
-            if (list.start > 1) {
-                list.start = 1;
-            }
+            vList.splitWriteBack(start.element, startNumber ?? 1);
         }
     });
 }
