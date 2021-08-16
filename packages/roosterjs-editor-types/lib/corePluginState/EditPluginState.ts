@@ -1,4 +1,4 @@
-import { GenericContentEditFeature } from '../interface/ContentEditFeature';
+import { GenericContentEditFeature } from '../interface/IEditor';
 import { PluginEvent } from '../event/PluginEvent';
 
 /**
