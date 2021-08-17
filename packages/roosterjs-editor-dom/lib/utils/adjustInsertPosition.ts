@@ -1,32 +1,30 @@
-import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
-import {
-    changeElementTag,
-    contains,
-    createRange,
-    findClosestElementAncestor,
-    getBlockElementAtNode,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-    isVoidHtmlElement,
-    LinkInlineElement,
-    Position,
-    PositionContentSearcher,
-    queryElements,
-    splitBalancedNodeRange,
-    splitTextNode,
-    toArray,
-    unwrap,
-    VTable,
-    wrap,
-} from 'roosterjs-editor-dom';
+import changeElementTag from './changeElementTag';
+import contains from './contains';
+import createRange from '../selection/createRange';
+import findClosestElementAncestor from './findClosestElementAncestor';
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
+import getTagOfNode from './getTagOfNode';
+import isNodeEmpty from './isNodeEmpty';
+import isPositionAtBeginningOf from '../selection/isPositionAtBeginningOf';
+import isVoidHtmlElement from './isVoidHtmlElement';
+import LinkInlineElement from '../inlineElements/LinkInlineElement';
+import Position from '../selection/Position';
+import PositionContentSearcher from '../contentTraverser/PositionContentSearcher';
+import queryElements from './queryElements';
+import splitTextNode from './splitTextNode';
+import toArray from './toArray';
+import unwrap from './unwrap';
+import VTable from '../table/VTable';
+import wrap from './wrap';
+import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
+import { splitBalancedNodeRange } from './splitParentNode';
 
 const adjustSteps: ((
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-) => Position)[] = [
+) => NodePosition)[] = [
     adjustInsertPositionForHyperLink,
     adjustInsertPositionForStructuredNode,
     adjustInsertPositionForParagraph,
@@ -40,9 +38,9 @@ const adjustSteps: ((
 function adjustInsertPositionForHyperLink(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     let blockElement = getBlockElementAtNode(root, position.node);
 
     if (blockElement) {
@@ -103,9 +101,9 @@ function adjustInsertPositionForHyperLink(
 function adjustInsertPositionForStructuredNode(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     let rootNodeToInsert = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
@@ -179,9 +177,9 @@ function adjustInsertPositionForStructuredNode(
 function adjustInsertPositionForParagraph(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     if (getTagOfNode(position.node) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
@@ -202,9 +200,9 @@ function adjustInsertPositionForParagraph(
 function adjustInsertPositionForVoidElement(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     if (isVoidHtmlElement(position.node)) {
         position = new Position(
             position.node,
@@ -221,9 +219,9 @@ function adjustInsertPositionForVoidElement(
 function adjustInsertPositionForMoveCursorOutOfALink(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     if (range && range.collapsed) {
         const searcher = new PositionContentSearcher(root, Position.getStart(range));
         const inlineElementBefore = searcher.getInlineElementBefore();
@@ -249,9 +247,9 @@ function adjustInsertPositionForMoveCursorOutOfALink(
 export default function adjustInsertPositionBySteps(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     adjustSteps.forEach(handler => {
         position = handler(root, nodeToInsert, position, range);
     });

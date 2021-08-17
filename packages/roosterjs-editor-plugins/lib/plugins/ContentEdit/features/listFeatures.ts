@@ -1,5 +1,5 @@
-import blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import {
+    blockFormat,
     experimentCommitListChains,
     setIndentation,
     toggleBullet,
