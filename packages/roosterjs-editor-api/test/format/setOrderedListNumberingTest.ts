@@ -71,8 +71,6 @@ describe('setOrderedListNumberingTest()', () => {
         if (safeInstanceOf(focusNode, 'HTMLLIElement')) {
             setOrderedListNumbering(editor, focusNode);
         }
-
-        console.log(editor.getContent());
         // Assert
         expect(editor.getContent()).toBe(
             '<div><ol id="OL"><li>1</li><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>1</li><li>2</li></ol></ol></ol><ol start="2"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;" start="1"><li id="focusNode">3</li><li>4</li></ol></ol></ol></div>'
