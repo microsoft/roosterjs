@@ -1,5 +1,5 @@
-import { ChangeSource, ContextMenuProvider, IEditor } from 'roosterjs-editor-types';
 import { ContextMenuItem } from './ContextMenuProvider';
+import { ContextMenuProvider, IEditor } from 'roosterjs-editor-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { setOrderedListNumbering } from 'roosterjs-editor-api';
 
@@ -29,26 +29,15 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                         key: 'resetList',
                         name: 'Reset list number',
                         onClick: () => {
-                            this.editor?.addUndoSnapshot(() => {
-                                this.editor.focus();
-                                setOrderedListNumbering(this.editor, node, 1);
-                            }, ChangeSource.Format);
+                            setOrderedListNumbering(this.editor, node);
                         },
                     },
                     {
                         key: 'setNumberingValue',
                         name: 'Set Numbering Value',
                         onClick: () => {
-                            this.editor?.addUndoSnapshot(() => {
-                                this.editor.focus();
-
-                                try {
-                                    let value = parseInt(prompt('Set Value to...', '1'));
-                                    setOrderedListNumbering(this.editor, node, value);
-                                } catch (error) {
-                                    setOrderedListNumbering(this.editor, node, 1);
-                                }
-                            }, ChangeSource.Format);
+                            let value = parseInt(prompt('Set Value to...', '1'));
+                            setOrderedListNumbering(this.editor, node, value);
                         },
                     }
                 );

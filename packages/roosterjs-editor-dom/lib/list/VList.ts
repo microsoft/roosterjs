@@ -213,47 +213,28 @@ export default class VList {
     }
 
     /**
-     * Splits the VList in two, using the element provided in the parameter as separator
-     * Write the result back into DOM tree
-     * After that, this VList becomes unavailable because we set this.rootList to null
+     * Adds a dummy Li Element that is going to be used to split the VList in the WriteBack function
      * @param separator The HTML element that indicates when to split the VList
-     * @param startNumber The number that the new list is going to start
      */
-    splitWriteBack(separator: HTMLElement, startNumber: number) {
+    split(separator: HTMLElement) {
         if (!this.rootList) {
             throw new Error('rootList must not be null');
         }
 
-        const doc = this.rootList.ownerDocument;
-        const listStack: Node[] = [doc.createDocumentFragment()];
-        const placeholder = doc.createTextNode('');
-        let nodeSeparated: HTMLLIElement;
-        // Use a placeholder to hold the position since the root list may be moved into document fragment later
-        this.rootList.parentNode.replaceChild(placeholder, this.rootList);
+        //Traverse the items of the VList, when the separator is found, add a dummy element
+        for (let index = 0; index < this.items.length; index++) {
+            if (this.items[index].getNode() == separator) {
+                let dummyElement = this.items[index].getNode().cloneNode(false);
 
-        this.items.forEach(item => {
-            if (item.getNode() === separator) {
-                listStack.splice(1);
-                nodeSeparated = item.getNode();
+                separator.parentElement.append(dummyElement);
+                separator.parentElement.insertBefore(dummyElement, separator);
+                this.items.splice(index, 0, new VListItem(dummyElement));
+
+                return;
             }
-
-            item.writeBack(listStack, this.rootList);
-
-            if (item.getNode() === separator) {
-                let parent = item.getNode().parentElement;
-                if (safeInstanceOf(parent, 'HTMLOListElement')) {
-                    parent.start = startNumber ?? 1;
-                }
-            }
-        });
-
-        // Restore the content to the position of placeholder
-        placeholder.parentNode.replaceChild(listStack[0], placeholder);
-
-        // Set rootList to null to avoid this to be called again for the same VList, because
-        // after change the rootList may not be available any more (e.g. outdent all items).
-        this.rootList = null;
+        }
     }
+
     /**
      * Set indentation of the given range of this list
      * @param start Start position to operate from
