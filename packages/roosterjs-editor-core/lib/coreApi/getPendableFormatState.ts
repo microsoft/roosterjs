@@ -4,16 +4,17 @@ import { EditorCore, NodePosition, NodeType, PendableFormatState } from 'rooster
 /**
  *
  * @param core The EditorCore object
- * @param readFromDommTree if set as true, it will always read the format from the dom tree.
+ * @param tryGetFromCache this function will try to  get the pendable form from cached.
  * @returns The cached format state if it exists. If the cached postion do not exist, search for pendable elements in the DOM tree and return the pendable format state.
  */
 export function getPendableFormatState(
     core: EditorCore,
-    readFromDommTree?: boolean
+    tryGetFromCache = true
 ): PendableFormatState {
     const range = core.api.getSelectionRange(core, true);
     const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
-    const cachedPosition = core.pendingFormatState.pendableFormatPosition;
+    const cachedPosition =
+        cachedPendableFormatState && core.pendingFormatState.pendableFormatPosition.normalize();
     const currentPosition = range && Position.getStart(range).normalize();
     const isSamePosition = range && currentPosition.equalTo(cachedPosition);
     if (
@@ -21,7 +22,7 @@ export function getPendableFormatState(
         cachedPendableFormatState &&
         range.collapsed &&
         isSamePosition &&
-        !readFromDommTree
+        tryGetFromCache
     ) {
         return cachedPendableFormatState;
     } else {

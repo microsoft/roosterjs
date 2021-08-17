@@ -745,11 +745,12 @@ export default class Editor implements IEditor {
     }
 
     /**
-     * Get the pendable formar such as underline and bold
+     * Get the pendable format such as underline and bold
+     * @param tryGetFromCache By the default it will try to the format from cache. If set to false, will always get format from tge DOM tree.
      * @returns The pending format state
      */
-    public getPendableFormatState(): PendableFormatState {
-        return this.core.api.getPendableFormatState(this.core);
+    public getPendableFormatState(tryGetFromCache?: boolean): PendableFormatState {
+        return this.core.api.getPendableFormatState(this.core, tryGetFromCache);
     }
 
     /**

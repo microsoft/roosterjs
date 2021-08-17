@@ -117,19 +117,18 @@ export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => 
 /**
  * Get style based format state from current selection, including font name/size and colors
  * @param core The EditorCore objects
- * @param node The node to get style from
  */
 export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
 
 /**
- * Get the pendable formar such as underline and bold
+ * Get the pendable format such as underline and bold
  * @param core The EditorCore object
- * @param readFromDommTree if set to true, reads the format from the dom tree
+ * @param tryGetFromCache By the default it will try to the format from cache. If set to false, will always get format from tge DOM tree.
  * @return The pending format state of editor.
  */
 export type GetPendableFormatState = (
     core: EditorCore,
-    readFromDommTree?: boolean
+    tryGetFromCache?: boolean
 ) => PendableFormatState;
 
 /**
@@ -276,9 +275,10 @@ export interface CoreApiMap {
     getStyleBasedFormatState: GetStyleBasedFormatState;
 
     /**
-     * Get style based format state from current selection, including font name/size and colors
-     * @param core The EditorCore objects
-     * @param node The node to get style from
+     * Get the pendable format such as underline and bold
+     * @param core The EditorCore object
+     * @param tryGetFromCache By the default it will try to the format from cache. If set to false, will always get format from tge DOM tree.
+     * @return The pending format state of editor.
      */
     getPendableFormatState: GetPendableFormatState;
 

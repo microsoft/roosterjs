@@ -1,6 +1,5 @@
 import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
 import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
-let pendableFormatCommands: string[] = null;
 
 /**
  * @internal
@@ -14,6 +13,7 @@ let pendableFormatCommands: string[] = null;
  */
 export default function execCommand(editor: IEditor, command: DocumentCommand) {
     editor.focus();
+
     let formatter = () => editor.getDocument().execCommand(command, false, null);
 
     let range = editor.getSelectionRange();
@@ -21,7 +21,6 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState();
         formatter();
-
         const formatName = Object.keys(PendableFormatCommandMap).filter(
             (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
         )[0] as PendableFormatNames;
@@ -32,20 +31,7 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
                 formatState: formatState,
             });
         }
-
-        if (isPendableFormatCommand(command)) {
-            // Trigger PendingFormatStateChanged event since we changed pending format state
-        }
     } else {
         editor.addUndoSnapshot(formatter, ChangeSource.Format);
     }
-}
-
-function isPendableFormatCommand(command: DocumentCommand): boolean {
-    if (!pendableFormatCommands) {
-        pendableFormatCommands = Object.keys(PendableFormatCommandMap).map(
-            key => PendableFormatCommandMap[key as PendableFormatNames]
-        );
-    }
-    return pendableFormatCommands.indexOf(command) >= 0;
 }

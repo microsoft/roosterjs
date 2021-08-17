@@ -498,10 +498,13 @@ export default interface IEditor {
      * Get style based format state from current selection, including font name/size and colors
      */
     getStyleBasedFormatState(node?: Node): StyleBasedFormatState;
+
     /**
-     * Get the cache format from plugin PendingFormatState, if it does not exist get the format from the DOM tree
+     * Get the pendable format such as underline and bold
+     * @param tryGetFromCache By the default it will try to the format from cache. If set to false, will always get format from tge DOM tree.
+     * @return The pending format state of editor.
      */
-    getPendableFormatState(): PendableFormatState;
+    getPendableFormatState(tryGetFromCache?: boolean): PendableFormatState;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly

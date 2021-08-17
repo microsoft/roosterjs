@@ -142,7 +142,7 @@ export const createPasteFragment: CreatePasteFragment = (
 };
 
 function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
-    const pendableFormat = core.api.getPendableFormatState(core, true /** readFromTheDom*/);
+    const pendableFormat = core.api.getPendableFormatState(core, false /** tryGetFromCache*/);
     const styleBasedFormat = core.api.getStyleBasedFormatState(core, node);
     return {
         fontFamily: styleBasedFormat.fontName,
