@@ -9,7 +9,7 @@ import { EditorCore, NodePosition, NodeType, PendableFormatState } from 'rooster
  */
 export function getPendableFormatState(
     core: EditorCore,
-    tryGetFromCache = true
+    tryGetFromCache: boolean = true
 ): PendableFormatState {
     const range = core.api.getSelectionRange(core, true);
     const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
