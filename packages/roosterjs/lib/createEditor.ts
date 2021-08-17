@@ -1,9 +1,7 @@
-import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
-import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
-import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
+import { ContentEdit, HyperLink, Paste } from 'roosterjs-editor-plugins';
 
 /**
  * Create an editor instance with most common options

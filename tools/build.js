@@ -108,32 +108,51 @@ async function clean() {
 }
 
 function checkDependency() {
-    function processFile(filename, files) {
-        if (!/\.ts.?$/.test(filename)) {
-            filename += '.ts';
+    function processFile(dir, filename, files, packageDependencies) {
+        if (packageDependencies.indexOf(filename) >= 0) {
+            return;
         }
-        var index = files.indexOf(filename);
+
+        var thisFilename = path.resolve(
+            dir,
+            !/\.ts.?$/.test(filename) ? filename + '.ts' : filename
+        );
+
+        var index = files.indexOf(thisFilename);
         if (index >= 0) {
             files = files.slice(index);
-            files.push(filename);
+            files.push(thisFilename);
             err(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
         }
 
-        files.push(filename);
-        var dir = path.dirname(filename);
-        var content = fs.readFileSync(filename).toString();
-        var reg = /from\s+'([^']+)'/g;
         var match;
-        while ((match = reg.exec(content))) {
-            var nextfile = match[1];
-            if (nextfile && nextfile[0] == '.') {
-                processFile(path.resolve(dir, nextfile), files.slice());
+        try {
+            files.push(thisFilename);
+            var dir = path.dirname(thisFilename);
+            var content = fs.readFileSync(thisFilename).toString();
+            var reg = /from\s+'([^']+)';$/gm;
+            while ((match = reg.exec(content))) {
+                var nextfile = match[1];
+                if (nextfile) {
+                    processFile(dir, nextfile, files.slice(), packageDependencies);
+                }
             }
+        } catch (e) {
+            err(
+                'Found dependency issue when processing file ' +
+                    thisFilename +
+                    ' with dependency "' +
+                    (match ? match[0] : '<Not found>') +
+                    '": ' +
+                    e
+            );
         }
     }
 
     packages.forEach(package => {
-        processFile(path.join(packagesPath, package, 'lib/index'), []);
+        var packageJson = readPackageJson(package, true /*readFromSourceFolder*/);
+        var dependencies = Object.keys(packageJson.dependencies);
+        processFile(packagesPath, path.join(package, 'lib/index'), [], dependencies);
     });
 }
 
