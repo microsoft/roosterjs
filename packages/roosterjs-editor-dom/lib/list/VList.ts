@@ -19,7 +19,7 @@ import {
     NodeType,
 } from 'roosterjs-editor-types';
 
-const CHAIN_DATASET_NAME = 'listchain';
+// const CHAIN_DATASET_NAME = 'listchain';
 
 /**
  * Represent a bullet or a numbering list
@@ -227,24 +227,25 @@ export default class VList {
         const doc = this.rootList.ownerDocument;
         const listStack: Node[] = [doc.createDocumentFragment()];
         const placeholder = doc.createTextNode('');
-
+        let nodeSeparated: HTMLLIElement;
         // Use a placeholder to hold the position since the root list may be moved into document fragment later
         this.rootList.parentNode.replaceChild(placeholder, this.rootList);
-
-        delete this.rootList.dataset[CHAIN_DATASET_NAME]; //remove the chain between the lists
 
         this.items.forEach(item => {
             if (item.getNode() === separator) {
                 listStack.splice(1);
+                nodeSeparated = item.getNode();
             }
 
             item.writeBack(listStack, this.rootList);
-        });
 
-        let list = listStack[1];
-        if (safeInstanceOf(list, 'HTMLOListElement')) {
-            list.start = startNumber ?? 1;
-        }
+            if (item.getNode() === separator) {
+                let parent = item.getNode().parentElement;
+                if (safeInstanceOf(parent, 'HTMLOListElement')) {
+                    parent.start = startNumber ?? 1;
+                }
+            }
+        });
 
         // Restore the content to the position of placeholder
         placeholder.parentNode.replaceChild(listStack[0], placeholder);

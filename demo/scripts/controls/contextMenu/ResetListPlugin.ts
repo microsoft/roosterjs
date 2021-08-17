@@ -31,7 +31,7 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                         onClick: () => {
                             this.editor?.addUndoSnapshot(() => {
                                 this.editor.focus();
-                                setOrderedListNumbering(this.editor, list, 1);
+                                setOrderedListNumbering(this.editor, node, 1);
                             }, ChangeSource.Format);
                         },
                     },
@@ -44,9 +44,9 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
 
                                 try {
                                     let value = parseInt(prompt('Set Value to...', '1'));
-                                    setOrderedListNumbering(this.editor, list, value);
+                                    setOrderedListNumbering(this.editor, node, value);
                                 } catch (error) {
-                                    setOrderedListNumbering(this.editor, list, 1);
+                                    setOrderedListNumbering(this.editor, node, 1);
                                 }
                             }, ChangeSource.Format);
                         },

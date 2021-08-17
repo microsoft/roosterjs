@@ -9,8 +9,8 @@ import { IEditor } from 'roosterjs-editor-types';
  */
 export default function setOrderedListNumbering(
     editor: IEditor,
-    list: HTMLOListElement,
+    separator: HTMLLIElement,
     startNumber?: number
 ) {
-    splitList(editor, list, startNumber);
+    splitList(editor, separator, startNumber);
 }
