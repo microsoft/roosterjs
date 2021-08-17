@@ -3,7 +3,6 @@ import { ChangeSource, IEditor, NodePosition, Region } from 'roosterjs-editor-ty
 import { VListChain } from 'roosterjs-editor-dom';
 
 /**
- * @internal
  * Split selection into regions, and perform a block-wise formatting action for each region.
  */
 export default function blockFormat(
