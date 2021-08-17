@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">49.35% </span>
+                <span class="strong">58.95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/77</span>
+                <span class='fraction'>56/95</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">49.35% </span>
+                <span class="strong">58.95% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>38/77</span>
+                <span class='fraction'>56/95</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -318,30 +318,26 @@
 <a name='L259'></a><a href='#L259'>259</a>
 <a name='L260'></a><a href='#L260'>260</a>
 <a name='L261'></a><a href='#L261'>261</a>
-<a name='L262'></a><a href='#L262'>262</a>
-<a name='L263'></a><a href='#L263'>263</a>
-<a name='L264'></a><a href='#L264'>264</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L262'></a><a href='#L262'>262</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -583,35 +579,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
-import {
-    changeElementTag,
-    contains,
-    createRange,
-    findClosestElementAncestor,
-    getBlockElementAtNode,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-    isVoidHtmlElement,
-    LinkInlineElement,
-    Position,
-    PositionContentSearcher,
-    queryElements,
-    splitBalancedNodeRange,
-    splitTextNode,
-    toArray,
-    unwrap,
-    VTable,
-    wrap,
-} from 'roosterjs-editor-dom';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import changeElementTag from './changeElementTag';
+import contains from './contains';
+import createRange from '../selection/createRange';
+import findClosestElementAncestor from './findClosestElementAncestor';
+import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
+import getTagOfNode from './getTagOfNode';
+import isNodeEmpty from './isNodeEmpty';
+import isPositionAtBeginningOf from '../selection/isPositionAtBeginningOf';
+import isVoidHtmlElement from './isVoidHtmlElement';
+import LinkInlineElement from '../inlineElements/LinkInlineElement';
+import Position from '../selection/Position';
+import PositionContentSearcher from '../contentTraverser/PositionContentSearcher';
+import queryElements from './queryElements';
+import splitTextNode from './splitTextNode';
+import toArray from './toArray';
+import unwrap from './unwrap';
+import VTable from '../table/VTable';
+import wrap from './wrap';
+import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
+import { splitBalancedNodeRange } from './splitParentNode';
 &nbsp;
 const adjustSteps: ((
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-) =&gt; Position)[] = [
+) =&gt; NodePosition)[] = [
     adjustInsertPositionForHyperLink,
     adjustInsertPositionForStructuredNode,
     adjustInsertPositionForParagraph,
@@ -625,9 +619,9 @@ const adjustSteps: ((
 function adjustInsertPositionForHyperLink(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     let blockElement = getBlockElementAtNode(root, position.node);
 &nbsp;
     if (blockElement) {
@@ -688,9 +682,9 @@ function adjustInsertPositionForHyperLink(
 function adjustInsertPositionForStructuredNode(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     let rootNodeToInsert = nodeToInsert;
 &nbsp;
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
@@ -764,9 +758,9 @@ function adjustInsertPositionForStructuredNode(
 function adjustInsertPositionForParagraph(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (getTagOfNode(position.node) == 'P') {
         // Insert into a P tag may cause issues when the inserted content contains any block element.
         // Change P tag to DIV to make sure it works well
@@ -787,9 +781,9 @@ function adjustInsertPositionForParagraph(
 function adjustInsertPositionForVoidElement(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (isVoidHtmlElement(position.node)) {
 <span class="cstat-no" title="statement not covered" >        position = new Position(</span>
             position.node,
@@ -806,9 +800,9 @@ function adjustInsertPositionForVoidElement(
 function adjustInsertPositionForMoveCursorOutOfALink(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     if (range &amp;&amp; range.collapsed) {
         const searcher = new PositionContentSearcher(root, Position.getStart(range));
         const inlineElementBefore = searcher.getInlineElementBefore();
@@ -834,9 +828,9 @@ function adjustInsertPositionForMoveCursorOutOfALink(
 export default function adjustInsertPositionBySteps(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: Position,
+    position: NodePosition,
     range: Range
-): Position {
+): NodePosition {
     adjustSteps.forEach(handler =&gt; {
         position = handler(root, nodeToInsert, position, range);
     });
@@ -853,7 +847,7 @@ function <span class="fstat-no" title="function not covered" >safeRemove(</span>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 17 2021 16:50:00 GMT+0000 (Coordinated Universal Time)
+                at Tue Aug 17 2021 18:32:20 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
