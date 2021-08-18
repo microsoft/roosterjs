@@ -23,7 +23,7 @@ export default function setOrderedListNumbering(
         regions.forEach(region => {
             const vList = createVListFromRegion(region, true, separator /*includeSiblingLists*/);
             if (vList) {
-                if (separator != vList.items[1].getNode()) {
+                if (separator != vList.items[0].getNode()) {
                     vList.split(separator);
                     vList.writeBack();
                 }
