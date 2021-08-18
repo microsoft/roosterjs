@@ -10,7 +10,7 @@ export function initEditor(id: string, plugins?: EditorPlugin[]) {
 
     let editor = new Editor(node as HTMLDivElement, {
         plugins: plugins || [],
-        defaultFormat: { textColor: 'black', fontFamily: 'arial' },
+        defaultFormat: { textColor: 'black', fontFamily: 'arial', fontSize: '12pt' },
     });
 
     return editor;
