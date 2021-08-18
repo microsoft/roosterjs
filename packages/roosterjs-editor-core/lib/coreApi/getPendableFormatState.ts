@@ -32,7 +32,7 @@ const PendableStyleCheckers: Record<
         tag == 'B' ||
         tag == 'STRONG' ||
         parseInt(style.fontWeight) >= 700 ||
-        style.fontWeight === 'bold',
+        ['bold', 'bolder'].includes(style.fontWeight),
     isUnderline: (tag, style) => tag == 'U' || style.textDecoration.indexOf('underline') >= 0,
     isItalic: (tag, style) => tag == 'I' || tag == 'EM' || style.fontStyle === 'italic',
     isSubscript: (tag, style) => tag == 'SUB' || style.verticalAlign === 'sub',
