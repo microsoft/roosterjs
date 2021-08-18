@@ -1,7 +1,7 @@
 import * as TestHelper from '../TestHelper';
 import { IEditor, PositionType } from 'roosterjs-editor-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom/lib';
-import { setOrderedListNumbering } from 'roosterjs-editor-api/lib';
+import { setOrderedListNumbering } from 'roosterjs-editor-api';
 
 describe('setOrderedListNumberingTest()', () => {
     const testID = 'processList';
@@ -28,7 +28,7 @@ describe('setOrderedListNumberingTest()', () => {
 
         // Act
         if (safeInstanceOf(focusNode, 'HTMLLIElement')) {
-            setOrderedListNumbering(editor, focusNode);
+            setOrderedListNumbering(editor, focusNode, 1);
         }
 
         // Assert
@@ -49,7 +49,7 @@ describe('setOrderedListNumberingTest()', () => {
 
         // Act
         if (safeInstanceOf(focusNode, 'HTMLLIElement')) {
-            setOrderedListNumbering(editor, focusNode);
+            setOrderedListNumbering(editor, focusNode, 1);
         }
         // Assert
         expect(editor.getContent()).toBe(
@@ -69,7 +69,7 @@ describe('setOrderedListNumberingTest()', () => {
 
         // Act
         if (safeInstanceOf(focusNode, 'HTMLLIElement')) {
-            setOrderedListNumbering(editor, focusNode);
+            setOrderedListNumbering(editor, focusNode, 1);
         }
         // Assert
         expect(editor.getContent()).toBe(

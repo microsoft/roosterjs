@@ -29,7 +29,7 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                         key: 'resetList',
                         name: 'Reset list number',
                         onClick: () => {
-                            setOrderedListNumbering(this.editor, node);
+                            setOrderedListNumbering(this.editor, node, 1);
                         },
                     },
                     {

@@ -1,5 +1,5 @@
 import { ChangeSource, IEditor } from 'roosterjs-editor-types';
-import { createVListFromRegion } from 'roosterjs-editor-dom/lib';
+import { createVListFromRegion } from 'roosterjs-editor-dom';
 
 /**
  * Resets Ordered List Numbering back to 1
@@ -7,6 +7,11 @@ import { createVListFromRegion } from 'roosterjs-editor-dom/lib';
  * @param separator The HTML element that indicates when to split the VList
  * @param startNumber The number of that the splitted list should start
  */
+export default function setOrderedListNumbering(
+    editor: IEditor,
+    separator: HTMLLIElement,
+    startNumber: number
+): void;
 export default function setOrderedListNumbering(
     editor: IEditor,
     separator: HTMLLIElement,
