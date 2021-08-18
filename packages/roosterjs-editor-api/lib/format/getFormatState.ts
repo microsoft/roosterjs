@@ -47,7 +47,7 @@ export function getElementBasedFormatState(
  */
 export default function getFormatState(editor: IEditor, event?: PluginEvent): FormatState {
     return {
-        ...editor.getPendableFormatState(),
+        ...editor.getPendableFormatState(false /** forceGetStateFromDom */),
         ...getElementBasedFormatState(editor, event),
         ...editor.getStyleBasedFormatState(),
         ...editor.getUndoState(),

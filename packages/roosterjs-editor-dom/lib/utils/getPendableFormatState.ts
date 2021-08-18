@@ -41,7 +41,6 @@ export const PendableFormatCommandMap: { [key in PendableFormatNames]: DocumentC
 };
 
 /**
- * @deprecated queryCommandState is deprecated
  * Get Pendable Format State at cursor.
  * @param document The HTML Document to get format state from
  * @returns A PendableFormatState object which contains the values of pendable format states

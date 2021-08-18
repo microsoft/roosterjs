@@ -501,10 +501,10 @@ export default interface IEditor {
 
     /**
      * Get the pendable format such as underline and bold
-     * @param tryGetFromCache By the default it will try to the format from cache. If set to false, will always get format from tge DOM tree.
+     * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
      * @return The pending format state of editor.
      */
-    getPendableFormatState(tryGetFromCache?: boolean): PendableFormatState;
+    getPendableFormatState(forceGetStateFromDOM: boolean): PendableFormatState;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly

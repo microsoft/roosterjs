@@ -19,7 +19,7 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
     let range = editor.getSelectionRange();
     if (range && range.collapsed) {
         editor.addUndoSnapshot();
-        const formatState = editor.getPendableFormatState();
+        const formatState = editor.getPendableFormatState(false /** forceGetStateFromDom */);
         formatter();
         const formatName = Object.keys(PendableFormatCommandMap).filter(
             (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
