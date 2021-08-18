@@ -21,9 +21,10 @@ export default function setOrderedListNumbering(
         editor.focus();
         const regions = editor.getSelectedRegions();
         regions.forEach(region => {
+            debugger;
             const vList = createVListFromRegion(region, true, separator /*includeSiblingLists*/);
             if (vList) {
-                if (separator != vList.items[1].getNode()) {
+                if (separator != vList.items[0].getNode()) {
                     vList.split(separator);
                     vList.writeBack();
                 }
