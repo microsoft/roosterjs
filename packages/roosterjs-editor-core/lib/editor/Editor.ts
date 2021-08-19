@@ -749,7 +749,7 @@ export default class Editor implements IEditor {
      * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
      * @returns The pending format state
      */
-    public getPendableFormatState(forceGetStateFromDOM: boolean): PendableFormatState {
+    public getPendableFormatState(forceGetStateFromDOM?: boolean): PendableFormatState {
         return this.core.api.getPendableFormatState(this.core, forceGetStateFromDOM);
     }
 

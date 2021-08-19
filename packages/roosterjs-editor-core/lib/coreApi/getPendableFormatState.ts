@@ -10,7 +10,7 @@ export function getPendableFormatState(
     core: EditorCore,
     forceGetStateFromDOM: boolean = false
 ): PendableFormatState {
-    const range = core.api.getSelectionRange(core, true /** tryGetFromCache*/);
+    const range = core.api.getSelectionRange(core, true /* tryGetFromCache*/);
     const isRangeCollapsed = range && range.collapsed;
     const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
     const cachedPosition = core.pendingFormatState.pendableFormatPosition?.normalize();
@@ -32,7 +32,7 @@ const PendableStyleCheckers: Record<
         tag == 'B' ||
         tag == 'STRONG' ||
         parseInt(style.fontWeight) >= 700 ||
-        ['bold', 'bolder'].includes(style.fontWeight),
+        ['bold', 'bolder'].indexOf(style.fontWeight) >= 0,
     isUnderline: (tag, style) => tag == 'U' || style.textDecoration.indexOf('underline') >= 0,
     isItalic: (tag, style) => tag == 'I' || tag == 'EM' || style.fontStyle === 'italic',
     isSubscript: (tag, style) => tag == 'SUB' || style.verticalAlign === 'sub',
@@ -41,17 +41,18 @@ const PendableStyleCheckers: Record<
         tag == 'S' || tag == 'STRIKE' || style.textDecoration.indexOf('line-through') >= 0,
 };
 
-const NonPendableStyleCheckers: Record<
-    PendableFormatNames,
-    (style: CSSStyleDeclaration) => boolean
-> = {
+/**
+ * CssFalsyCheckers checks for non pendable format that might overlay a pendable format, then it can prevent getPendableFormatState return falsy pendable format states.
+ */
+
+const CssFalsyCheckers: Record<PendableFormatNames, (style: CSSStyleDeclaration) => boolean> = {
     isBold: style =>
         (style.fontWeight !== '' && parseInt(style.fontWeight) < 700) ||
         style.fontWeight === 'normal',
     isUnderline: style =>
         style.textDecoration !== '' && style.textDecoration.indexOf('underline') < 0,
     isItalic: style => style.fontStyle !== '' && style.fontStyle !== 'italic',
-    isSubscript: style => style.verticalAlign !== '' && style.verticalAlign === 'sub',
+    isSubscript: style => style.verticalAlign !== '' && style.verticalAlign !== 'sub',
     isSuperscript: style => style.verticalAlign !== '' && style.verticalAlign !== 'super',
     isStrikeThrough: style =>
         style.textDecoration !== '' && style.textDecoration.indexOf('line-through') < 0,
@@ -70,9 +71,9 @@ function queryCommandStateFromDOM(
         const style = node.nodeType == NodeType.Element && (node as HTMLElement).style;
         if (tag && style) {
             Object.keys(PendableStyleCheckers).forEach((key: PendableFormatNames) => {
-                if (!pendablekeys.includes(key)) {
+                if (!(pendablekeys.indexOf(key) >= 0)) {
                     formatState[key] = formatState[key] || PendableStyleCheckers[key](tag, style);
-                    if (NonPendableStyleCheckers[key](style)) {
+                    if (CssFalsyCheckers[key](style)) {
                         pendablekeys.push(key);
                     }
                 }
