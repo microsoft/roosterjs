@@ -2,7 +2,7 @@ import { ChangeSource, IEditor } from 'roosterjs-editor-types';
 import { createVListFromRegion } from 'roosterjs-editor-dom';
 
 /**
- * Resets Ordered List Numbering back to 1
+ * Resets Ordered List Numbering back to the value of the parameter startNumber
  * @param editor The editor instance
  * @param separator The HTML element that indicates when to split the VList
  * @param startNumber The number of that the splitted list should start
@@ -20,16 +20,16 @@ export default function setOrderedListNumbering(
     editor.addUndoSnapshot(() => {
         editor.focus();
         const regions = editor.getSelectedRegions();
-        regions.forEach(region => {
-            const vList = createVListFromRegion(region, true, separator /*includeSiblingLists*/);
+        if (regions[0]) {
+            const vList = createVListFromRegion(
+                regions[0],
+                true /*includeSiblingLists*/,
+                separator
+            );
             if (vList) {
-                if (separator != vList.items[0].getNode()) {
-                    vList.split(separator);
-                    vList.writeBack();
-                }
-
-                separator.parentElement.setAttribute('start', startNumber.toString());
+                vList.split(separator, startNumber);
+                vList.writeBack();
             }
-        });
+        }
     }, ChangeSource.Format);
 }

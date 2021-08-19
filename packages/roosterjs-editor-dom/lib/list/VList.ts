@@ -19,8 +19,6 @@ import {
     NodeType,
 } from 'roosterjs-editor-types';
 
-// const CHAIN_DATASET_NAME = 'listchain';
-
 /**
  * Represent a bullet or a numbering list
  *
@@ -184,10 +182,18 @@ export default class VList {
         this.rootList.parentNode.replaceChild(placeholder, this.rootList);
 
         this.items.forEach(item => {
+            if (item.getNewListStart()) {
+                listStack.splice(1, listStack.length - 1);
+            }
             item.writeBack(listStack, this.rootList);
             const topList = listStack[1];
 
-            if (safeInstanceOf(topList, 'HTMLOListElement')) {
+            if (item.getNewListStart()) {
+                let parentList = item.getNode().parentNode;
+                if (safeInstanceOf(parentList, 'HTMLOListElement')) {
+                    parentList.start = item.getNewListStart();
+                }
+            } else if (safeInstanceOf(topList, 'HTMLOListElement')) {
                 if (lastList != topList) {
                     if (start == 1) {
                         topList.removeAttribute('start');
@@ -213,26 +219,22 @@ export default class VList {
     }
 
     /**
-     * Adds a dummy Li Element that is going to be used to split the VList in the WriteBack function
+     * Sets the New List Start Property, that is going to be used to create a new List in the WriteBack function
      * @param separator The HTML element that indicates when to split the VList
+     * @param startNumber The start number of the new List
      */
-    split(separator: HTMLElement) {
+    split(separator: HTMLElement, startNumber: number) {
         if (!this.rootList) {
             throw new Error('rootList must not be null');
         }
 
-        //Traverse the items of the VList, when the separator is found, add a dummy element
-        for (let index = 0; index < this.items.length; index++) {
-            if (this.items[index].getNode() == separator) {
-                let dummyElement = this.items[index].getNode().cloneNode(false);
-
-                separator.parentElement.append(dummyElement);
-                separator.parentElement.insertBefore(dummyElement, separator);
-                this.items.splice(index, 0, new VListItem(dummyElement));
-
+        //Traverse the items of the VList, when the separator is found, set the New List Start Property
+        this.items.forEach(element => {
+            if (element.getNode() == separator) {
+                element.setNewListStart(startNumber);
                 return;
             }
-        }
+        });
     }
 
     /**
