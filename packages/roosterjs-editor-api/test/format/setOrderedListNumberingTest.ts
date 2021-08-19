@@ -51,9 +51,10 @@ describe('setOrderedListNumberingTest()', () => {
         if (safeInstanceOf(focusNode, 'HTMLLIElement')) {
             setOrderedListNumbering(editor, focusNode, 1);
         }
+
         // Assert
         expect(editor.getContent()).toBe(
-            '<div><ol id="OL"><li>Item 1</li><ol style="list-style-type: lower-alpha;"><li>Upper Level Item 1</li><li>Upper Level Item 2</li></ol></ol><ol start="2"><ol style="list-style-type: lower-alpha;" start="1"><li id="focusNode">Upper Level Item 3</li><li>Upper Level Item 4</li></ol></ol><ol start="2"><li>Item 2&nbsp;</li></ol></div>'
+            '<div><ol id="OL"><li>Item 1</li><ol style="list-style-type: lower-alpha;"><li>Upper Level Item 1</li><li>Upper Level Item 2</li></ol></ol><ol><ol style="list-style-type: lower-alpha;" start="1"><li id="focusNode">Upper Level Item 3</li><li>Upper Level Item 4</li></ol></ol><ol start="2"><li>Item 2&nbsp;</li></ol></div>'
         );
     });
 
@@ -71,9 +72,10 @@ describe('setOrderedListNumberingTest()', () => {
         if (safeInstanceOf(focusNode, 'HTMLLIElement')) {
             setOrderedListNumbering(editor, focusNode, 1);
         }
+
         // Assert
         expect(editor.getContent()).toBe(
-            '<div><ol id="OL"><li>1</li><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>1</li><li>2</li></ol></ol></ol><ol start="2"><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;" start="1"><li id="focusNode">3</li><li>4</li></ol></ol></ol></div>'
+            '<div><ol id="OL"><li>1</li><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;"><li>1</li><li>2</li></ol></ol></ol><ol><ol style="list-style-type: lower-alpha;"><ol style="list-style-type: lower-roman;" start="1"><li id="focusNode">3</li><li>4</li></ol></ol></ol></div>'
         );
     });
 });
