@@ -1,6 +1,10 @@
-import { FONT_SIZES, getNewFontSize } from '../../lib/format/changeFontSize';
+import * as TestHelper from '../TestHelper';
+import changeFontSize, { FONT_SIZES, getNewFontSize } from '../../lib/format/changeFontSize';
+import { FontSizeChange, IEditor } from 'roosterjs-editor-types';
 
-describe('changeFontSize()', () => {
+const ZERO_WIDTH_SPACE = '\u200B';
+
+describe('getNewFontSize()', () => {
     function runTest(currentSize: number, isIncrease: boolean, expectedSize: number) {
         expect(getNewFontSize(currentSize, isIncrease ? 1 : -1, FONT_SIZES)).toBe(
             expectedSize,
@@ -65,5 +69,85 @@ describe('changeFontSize()', () => {
         testDecrease(80, 72);
         testDecrease(80.5, 80);
         testDecrease(90, 80);
+    });
+});
+
+describe('changeFontSize', () => {
+    let testID = 'changeFontSize';
+    let editor: IEditor;
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(testID);
+    });
+
+    afterEach(() => {
+        editor.dispose();
+        TestHelper.removeElement(testID);
+    });
+
+    function runTest(source: string, increaseResult: string, decreaseResult: string) {
+        editor.setContent(source);
+        changeFontSize(editor, FontSizeChange.Increase);
+        expect(editor.getContent()).toBe(increaseResult);
+
+        editor.setContent(source);
+        changeFontSize(editor, FontSizeChange.Decrease);
+        expect(editor.getContent()).toBe(decreaseResult);
+    }
+
+    it('empty editor', () => {
+        runTest(
+            '',
+            `<span style="font-size: 14pt;">${ZERO_WIDTH_SPACE}</span>`,
+            `<span style="font-size: 11pt;">${ZERO_WIDTH_SPACE}</span>`
+        );
+    });
+
+    it('Single text node', () => {
+        runTest(
+            'test<!--{"start":[0,0],"end":[0,4]}-->',
+            '<span style="font-size: 14pt;">test</span>',
+            '<span style="font-size: 11pt;">test</span>'
+        );
+    });
+
+    it('Single partial text node', () => {
+        runTest(
+            'test<!--{"start":[0,1],"end":[0,3]}-->',
+            't<span style="font-size: 14pt;">es</span>t',
+            't<span style="font-size: 11pt;">es</span>t'
+        );
+    });
+
+    it('Multiple nodes in single block', () => {
+        runTest(
+            'test1<span style="font-size:20pt">test2</span><!--{"start":[0,2],"end":[1,0,2]}-->',
+            'te<span style="font-size: 14pt;">st1</span><span style="font-size: 22pt;">te</span><span style="font-size:20pt">st2</span>',
+            'te<span style="font-size: 11pt;">st1</span><span style="font-size: 18pt;">te</span><span style="font-size:20pt">st2</span>'
+        );
+    });
+
+    it('Multiple nodes in multiple blocks', () => {
+        runTest(
+            'test1<span style="font-size:20pt">test2</span><div>test3</div><!--{"start":[0,2],"end":[2,0,2]}-->',
+            'te<span style="font-size: 14pt;">st1</span><span style="font-size: 22pt;">test2</span><div><span style="font-size: 14pt;">te</span>st3</div>',
+            'te<span style="font-size: 11pt;">st1</span><span style="font-size: 18pt;">test2</span><div><span style="font-size: 11pt;">te</span>st3</div>'
+        );
+    });
+
+    it('Nested nodes', () => {
+        runTest(
+            '<div style="font-size:15pt">test1<span style="font-size:20pt">test2<span style="font-size:26pt">test3</span>test4</span>test5</div><!--{"start":[0,1,1,0,2],"end":[0,2,2]}-->',
+            '<div style="font-size:15pt">test1<span style="font-size:20pt">test2<span style="font-size:26pt">te</span><span style="font-size: 28pt;">st3</span></span><span style="font-size: 22pt;">test4</span><span style="font-size: 16pt;">te</span>st5</div>',
+            '<div style="font-size:15pt">test1<span style="font-size:20pt">test2<span style="font-size:26pt">te</span><span style="font-size: 24pt;">st3</span></span><span style="font-size: 18pt;">test4</span><span style="font-size: 14pt;">te</span>st5</div>'
+        );
+    });
+
+    it('Process line height', () => {
+        runTest(
+            'test1<span style="line-height: 50px">test2</span>test3<!--{"start":[0,2],"end":[1,0,2]}-->',
+            'te<span style="font-size: 14pt;">st1</span><span style="line-height: normal; font-size: 14pt;">te</span><span style="line-height: 50px">st2</span>test3',
+            'te<span style="font-size: 11pt;">st1</span><span style="line-height: normal; font-size: 11pt;">te</span><span style="line-height: 50px">st2</span>test3'
+        );
     });
 });
