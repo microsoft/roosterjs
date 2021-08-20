@@ -182,18 +182,14 @@ export default class VList {
         this.rootList.parentNode.replaceChild(placeholder, this.rootList);
 
         this.items.forEach(item => {
-            if (item.getNewListStart()) {
+            if (item.getNewListStart() && item.getNewListStart() != start) {
                 listStack.splice(1, listStack.length - 1);
+                start = item.getNewListStart();
             }
             item.writeBack(listStack, this.rootList);
             const topList = listStack[1];
 
-            if (item.getNewListStart()) {
-                let parentList = item.getNode().parentNode;
-                if (safeInstanceOf(parentList, 'HTMLOListElement')) {
-                    parentList.start = item.getNewListStart();
-                }
-            } else if (safeInstanceOf(topList, 'HTMLOListElement')) {
+            if (safeInstanceOf(topList, 'HTMLOListElement')) {
                 if (lastList != topList) {
                     if (start == 1) {
                         topList.removeAttribute('start');
@@ -229,12 +225,12 @@ export default class VList {
         }
 
         //Traverse the items of the VList, when the separator is found, set the New List Start Property
-        this.items.forEach(element => {
-            if (element.getNode() == separator) {
-                element.setNewListStart(startNumber);
+        for (let index = 0; index < this.items.length; index++) {
+            if (this.items[index].getNode() == separator) {
+                this.items[index].setNewListStart(startNumber);
                 return;
             }
-        });
+        }
     }
 
     /**

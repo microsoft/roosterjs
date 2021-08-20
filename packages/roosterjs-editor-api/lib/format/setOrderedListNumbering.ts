@@ -10,11 +10,6 @@ import { createVListFromRegion } from 'roosterjs-editor-dom';
 export default function setOrderedListNumbering(
     editor: IEditor,
     separator: HTMLLIElement,
-    startNumber: number
-): void;
-export default function setOrderedListNumbering(
-    editor: IEditor,
-    separator: HTMLLIElement,
     startNumber: number = 1
 ) {
     editor.addUndoSnapshot(() => {
@@ -23,7 +18,7 @@ export default function setOrderedListNumbering(
         if (regions[0]) {
             const vList = createVListFromRegion(
                 regions[0],
-                true /*includeSiblingLists*/,
+                false /*includeSiblingLists*/,
                 separator
             );
             if (vList) {
