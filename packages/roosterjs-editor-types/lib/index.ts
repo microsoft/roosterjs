@@ -29,6 +29,7 @@ export { TableOperation } from './enum/TableOperation';
 export { ImageEditOperation } from './enum/ImageEditOperation';
 export { ClearFormatMode } from './enum/ClearFormatMode';
 export { KnownCreateElementDataIndex } from './enum/KnownCreateElementDataIndex';
+export { ClipboardSource } from './enum/ClipboardSource';
 
 // Event
 export { default as BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

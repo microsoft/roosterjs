@@ -3,6 +3,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
+import { ClipboardSource } from 'roosterjs-editor-types';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFY_SELECTOR } from './officeOnlineConverter/constants';
@@ -10,14 +11,14 @@ import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './officeOnlineConverter/convertPastedContentFromWordOnline';
 
-const WORD_ATTRIBUTE_NAME = 'xmlns:w';
-const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
-const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
-const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
-const PROG_ID_NAME = 'ProgId';
-const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
-const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
-const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
+const WORD_ATTRIBUTE_NAME = ClipboardSource.WORD_ATTRIBUTE_NAME;
+const WORD_ATTRIBUTE_VALUE = ClipboardSource.WORD_ATTRIBUTE_VALUE;
+const EXCEL_ATTRIBUTE_NAME = ClipboardSource.EXCEL_ATTRIBUTE_NAME;
+const EXCEL_ATTRIBUTE_VALUE = ClipboardSource.EXCEL_ATTRIBUTE_VALUE;
+const PROG_ID_NAME = ClipboardSource.PROG_ID_NAME;
+const EXCEL_ONLINE_ATTRIBUTE_VALUE = ClipboardSource.EXCEL_ONLINE_ATTRIBUTE_VALUE;
+const POWERPOINT_ATTRIBUTE_VALUE = ClipboardSource.POWERPOINT_ATTRIBUTE_VALUE;
+const GOOGLE_SHEET_NODE_NAME = ClipboardSource.GOOGLE_SHEET_NODE_NAME;
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:

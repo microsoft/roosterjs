@@ -17,6 +17,7 @@ import {
     PluginEventType,
     DefaultFormat,
     NodePosition,
+    ClipboardSource,
 } from 'roosterjs-editor-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
@@ -51,19 +52,12 @@ export const createPasteFragment: CreatePasteFragment = (
     const document = core.contentDiv.ownerDocument;
     let doc: HTMLDocument;
 
-    // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
-    if (!pasteAsText && !text && imageDataUri && !rawHtml) {
-        // Paste image
-        const img = document.createElement('img');
-        img.style.maxWidth = '100%';
-        img.src = imageDataUri;
-        fragment.appendChild(img);
-    } else if (
+    // Paste HTML
+    if (
         !pasteAsText &&
         rawHtml &&
         (doc = new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html'))?.body
     ) {
-        // Paste HTML
         const attributes = doc.querySelector('html')?.attributes;
         (attributes ? toArray(attributes) : []).reduce((attrs, attr) => {
             attrs[attr.name] = attr.value;
@@ -73,7 +67,16 @@ export const createPasteFragment: CreatePasteFragment = (
             attrs[meta.name] = meta.content;
             return attrs;
         }, event.htmlAttributes);
+    }
 
+    // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
+    if (validateClipboardImageSource(event, pasteAsText)) {
+        // Paste image
+        const img = document.createElement('img');
+        img.style.maxWidth = '100%';
+        img.src = imageDataUri;
+        fragment.appendChild(img);
+    } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
         processStyles(doc, style => {
@@ -172,4 +175,25 @@ function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData):
 
 function processStyles(node: ParentNode, callback: (style: HTMLStyleElement) => void) {
     toArray(node.querySelectorAll('style')).forEach(callback);
+}
+
+function validateClipboardImageSource(event: BeforePasteEvent, pasteAsText: boolean): boolean {
+    const { htmlAttributes, clipboardData } = event;
+    const { rawHtml, text, imageDataUri } = clipboardData;
+
+    // Check if the Source of the Clipboard Data is Power Point
+    // It is possible that PowerPoint copied both image and HTML but not plain text.
+    // We always prefer HTML if any.
+    if (
+        htmlAttributes &&
+        htmlAttributes[ClipboardSource.PROG_ID_NAME] === ClipboardSource.POWERPOINT_ATTRIBUTE_VALUE
+    ) {
+        return !pasteAsText && !text && imageDataUri && !rawHtml;
+    }
+
+    if (!pasteAsText && !text && imageDataUri) {
+        return true;
+    }
+
+    return false;
 }
