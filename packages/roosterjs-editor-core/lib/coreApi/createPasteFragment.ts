@@ -50,19 +50,11 @@ export const createPasteFragment: CreatePasteFragment = (
     const document = core.contentDiv.ownerDocument;
     let doc: HTMLDocument;
 
-    // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
-    if (!pasteAsText && !text && imageDataUri) {
-        // Paste image
-        const img = document.createElement('img');
-        img.style.maxWidth = '100%';
-        img.src = imageDataUri;
-        fragment.appendChild(img);
-    } else if (
-        !pasteAsText &&
+    // Step 2: Retrieve Metadata from Html and the Html that was copied.
+    if (
         rawHtml &&
         (doc = new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html'))?.body
     ) {
-        // Paste HTML
         const attributes = doc.querySelector('html')?.attributes;
         (attributes ? toArray(attributes) : []).reduce((attrs, attr) => {
             attrs[attr.name] = attr.value;
@@ -95,7 +87,16 @@ export const createPasteFragment: CreatePasteFragment = (
             // and the nodes under HEAD are still used when convert global CSS to inline
             processStyles(doc.body, style => style.parentNode?.removeChild(style));
         }
+    }
 
+    // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
+    if (!pasteAsText && !text && imageDataUri) {
+        // Paste image
+        const img = document.createElement('img');
+        img.style.maxWidth = '100%';
+        img.src = imageDataUri;
+        fragment.appendChild(img);
+    } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
         moveChildNodes(fragment, doc.body);
 
         if (applyCurrentStyle && position) {
@@ -129,10 +130,10 @@ export const createPasteFragment: CreatePasteFragment = (
         });
     }
 
-    // Step 3: Trigger BeforePasteEvent so that plugins can do proper change before paste
+    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste
     core.api.triggerEvent(core, event, true /*broadcast*/);
 
-    // Step 4. Sanitize the fragment before paste to make sure the content is safe
+    // Step 5. Sanitize the fragment before paste to make sure the content is safe
     const sanitizer = new HtmlSanitizer(event.sanitizingOption);
 
     sanitizer.convertGlobalCssToInlineCss(fragment);
