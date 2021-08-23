@@ -59,10 +59,7 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                             name: 'Number Position',
                             onClick: () => {
                                 let value = parseInt(prompt('Set Value to...', '1'));
-                                setListNumberPosition(this.editor, list, {
-                                    numberPosition: value,
-                                    unit: 'px',
-                                });
+                                setListNumberPosition(this.editor, list, value, 'px');
                             },
                         },
                         {

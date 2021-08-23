@@ -9,17 +9,13 @@ import { ChangeSource, IEditor } from 'roosterjs-editor-types';
 export default function setListNumberPosition(
     editor: IEditor,
     list: HTMLElement,
-    config: ListNumberPositionConfiguration
+    numberPosition: number,
+    unit: 'em' | 'px' | '%' | 'in'
 ) {
     editor.addUndoSnapshot((start, end) => {
         editor.focus();
-        list.style.marginLeft = config.numberPosition.toString() + config.unit;
+        list.style.marginLeft = numberPosition.toString() + unit;
 
         editor.select(start, end);
     }, ChangeSource.Format);
-}
-
-interface ListNumberPositionConfiguration {
-    numberPosition: number;
-    unit: 'em' | 'px' | '%' | 'in';
 }
