@@ -6,9 +6,9 @@ import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
+import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
-import { StyleBasedFormatState } from './FormatState';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
@@ -120,6 +120,17 @@ export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => 
  * @param node The node to get style from
  */
 export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
+
+/**
+ * Get the pendable format such as underline and bold
+ * @param core The EditorCore object
+ * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+ * @return The pending format state of editor.
+ */
+export type GetPendableFormatState = (
+    core: EditorCore,
+    forceGetStateFromDOM: boolean
+) => PendableFormatState;
 
 /**
  * Check if the editor has focus now
@@ -263,6 +274,14 @@ export interface CoreApiMap {
      * @param node The node to get style from
      */
     getStyleBasedFormatState: GetStyleBasedFormatState;
+
+    /**
+     * Get the pendable format such as underline and bold
+     * @param core The EditorCore object
+     *@param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+     * @return The pending format state of editor.
+     */
+    getPendableFormatState: GetPendableFormatState;
 
     /**
      * Check if the editor has focus now
