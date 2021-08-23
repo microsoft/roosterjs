@@ -43,31 +43,74 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                             let value = parseInt(prompt('Set Value to...', '1'));
                             setOrderedListNumbering(this.editor, node, value);
                         },
-                    },
-                    {
-                        key: 'adjustListIndents',
-                        name: 'Adjust List Indents',
-                        dropDownItems: [
-                            {
-                                key: 'numberPosition',
-                                name: 'Number Position',
-                                onClick: () => {
-                                    let value = parseInt(prompt('Set Value to...', '1'));
-                                    setListNumberPosition(this.editor, list, value);
-                                },
-                            },
-                            {
-                                key: 'textIndent',
-                                name: 'Text Indent',
-                                onClick: () => {
-                                    let value = parseInt(prompt('Set Value to...', '1'));
-                                    setListIndent(this.editor, list, value);
-                                },
-                            },
-                        ],
-                        onClick: () => {},
                     }
                 );
+            }
+            if (
+                safeInstanceOf(list, 'HTMLOListElement') ||
+                safeInstanceOf(list, 'HTMLUListElement')
+            ) {
+                items.push({
+                    key: 'adjustListIndents',
+                    name: 'Adjust List Indents',
+                    dropDownItems: [
+                        {
+                            key: 'numberPosition',
+                            name: 'Number Position',
+                            onClick: () => {
+                                let value = parseInt(prompt('Set Value to...', '1'));
+                                setListNumberPosition(this.editor, list, {
+                                    numberPosition: value,
+                                    unit: 'px',
+                                });
+                            },
+                        },
+                        {
+                            key: 'textIndent',
+                            name: 'Text Indent',
+                            onClick: () => {
+                                let value = parseInt(prompt('Set Value to...', '1'));
+                                setListIndent(this.editor, list, {
+                                    textIdent: value,
+                                    unit: 'px',
+                                });
+                            },
+                        },
+                        {
+                            key: 'textIndent',
+                            name: 'Text Indent With Global Property',
+                            onClick: () => {
+                                let input = prompt(
+                                    "Set Global Value to... ('inherit' | 'initial' | 'revert' | 'unset')",
+                                    '1'
+                                );
+
+                                let value: 'inherit' | 'initial' | 'revert' | 'unset';
+
+                                switch (input) {
+                                    case 'inherit':
+                                        value = 'inherit';
+                                        break;
+                                    case 'initial':
+                                        value = 'initial';
+                                        break;
+                                    case 'revert':
+                                        value = 'revert';
+                                        break;
+                                    case 'unset':
+                                        value = 'unset';
+                                        break;
+                                    default:
+                                        return;
+                                }
+                                setListIndent(this.editor, list, {
+                                    globalValue: value,
+                                });
+                            },
+                        },
+                    ],
+                    onClick: () => {},
+                });
             }
         }
 

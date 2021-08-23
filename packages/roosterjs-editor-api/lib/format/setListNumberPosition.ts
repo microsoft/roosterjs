@@ -1,30 +1,25 @@
 import { ChangeSource, IEditor } from 'roosterjs-editor-types';
-import { getComputedStyle, safeInstanceOf } from 'roosterjs-editor-dom';
 
 /**
- * Resets Ordered List Numbering back to the value of the parameter startNumber
+ * Set the List Number Position (Margin) of a List
  * @param editor The editor instance
- * @param separator The HTML element that indicates when to split the VList
- * @param startNumber The number of that the splitted list should start
+ * @param list The HTML element
+ * @param config Configuration Arguments to set to the List
  */
 export default function setListNumberPosition(
     editor: IEditor,
-    list: HTMLOListElement,
-    numberPosition: number
+    list: HTMLElement,
+    config: ListNumberPositionConfiguration
 ) {
-    editor.addUndoSnapshot(() => {
+    editor.addUndoSnapshot((start, end) => {
         editor.focus();
+        list.style.marginLeft = config.numberPosition.toString() + config.unit;
 
-        if (isRtl(list.parentNode)) {
-            list.style.marginRight = `${numberPosition.toString()}px`;
-        } else {
-            list.style.marginLeft = `${numberPosition.toString()}px`;
-        }
+        editor.select(start, end);
     }, ChangeSource.Format);
 }
 
-function isRtl(element: Node): boolean {
-    return safeInstanceOf(element, 'HTMLElement')
-        ? getComputedStyle(element, 'direction') == 'rtl'
-        : false;
+interface ListNumberPositionConfiguration {
+    numberPosition: number;
+    unit: 'em' | 'px' | '%' | 'in';
 }
