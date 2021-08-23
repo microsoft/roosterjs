@@ -1,4 +1,4 @@
-import { getPendableFormatState, getTagOfNode } from 'roosterjs-editor-dom';
+import { getTagOfNode } from 'roosterjs-editor-dom';
 import {
     ElementBasedFormatState,
     FormatState,
@@ -47,7 +47,7 @@ export function getElementBasedFormatState(
  */
 export default function getFormatState(editor: IEditor, event?: PluginEvent): FormatState {
     return {
-        ...getPendableFormatState(editor.getDocument()),
+        ...editor.getPendableFormatState(false /* forceGetStateFromDom */),
         ...getElementBasedFormatState(editor, event),
         ...editor.getStyleBasedFormatState(),
         ...editor.getUndoState(),
