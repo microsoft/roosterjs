@@ -9,5 +9,10 @@
         "roosterjs-editor-plugins": "",
         "roosterjs-color-utils": ""
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/roosterjs.git",
+        "directory": "packages/roosterjs"
+    },
     "main": "./lib/index.ts"
 }

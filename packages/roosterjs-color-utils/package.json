@@ -5,6 +5,11 @@
         "color": "^3.0.0",
         "roosterjs-editor-types": ""
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/roosterjs.git",
+        "directory": "packages/roosterjs-color-utils"
+    },
     "main": "./lib/index.ts",
     "version": "1.0.0"
 }

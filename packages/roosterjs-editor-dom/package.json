@@ -4,5 +4,10 @@
     "dependencies": {
         "roosterjs-editor-types": ""
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/roosterjs.git",
+        "directory": "packages/roosterjs-editor-dom"
+    },
     "main": "./lib/index.ts"
 }

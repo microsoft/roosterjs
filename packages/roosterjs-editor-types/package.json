@@ -4,5 +4,10 @@
     "dependencies": {
         "@types/dom-inputevent": "^1.0.3"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/roosterjs.git",
+        "directory": "packages/roosterjs-editor-types"
+    },
     "main": "./lib/index.ts"
 }

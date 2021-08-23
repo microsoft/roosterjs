@@ -5,5 +5,10 @@
         "roosterjs-editor-types": "",
         "roosterjs-editor-dom": ""
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/roosterjs.git",
+        "directory": "packages/roosterjs-editor-api"
+    },
     "main": "./lib/index.ts"
 }
