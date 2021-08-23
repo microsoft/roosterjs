@@ -66,4 +66,19 @@ export const enum TableOperation {
      * Split current table cell vertically
      */
     SplitVertically,
+
+    /**
+     * Align current table at the center
+     */
+    AlignCenter,
+
+    /**
+     * Align current table at the left
+     */
+    AlignLeft,
+
+    /**
+     * Align current table at the right
+     */
+    AlignRight,
 }

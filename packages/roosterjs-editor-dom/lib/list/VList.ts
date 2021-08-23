@@ -182,6 +182,10 @@ export default class VList {
         this.rootList.parentNode.replaceChild(placeholder, this.rootList);
 
         this.items.forEach(item => {
+            if (item.getNewListStart() && item.getNewListStart() != start) {
+                listStack.splice(1, listStack.length - 1);
+                start = item.getNewListStart();
+            }
             item.writeBack(listStack, this.rootList);
             const topList = listStack[1];
 
@@ -208,6 +212,25 @@ export default class VList {
         // Set rootList to null to avoid this to be called again for the same VList, because
         // after change the rootList may not be available any more (e.g. outdent all items).
         this.rootList = null;
+    }
+
+    /**
+     * Sets the New List Start Property, that is going to be used to create a new List in the WriteBack function
+     * @param separator The HTML element that indicates when to split the VList
+     * @param startNumber The start number of the new List
+     */
+    split(separator: HTMLElement, startNumber: number) {
+        if (!this.rootList) {
+            throw new Error('rootList must not be null');
+        }
+
+        //Traverse the items of the VList, when the separator is found, set the New List Start Property
+        for (let index = 0; index < this.items.length; index++) {
+            if (this.items[index].getNode() == separator) {
+                this.items[index].setNewListStart(startNumber);
+                return;
+            }
+        }
     }
 
     /**

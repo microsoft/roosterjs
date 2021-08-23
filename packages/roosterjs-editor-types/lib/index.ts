@@ -107,12 +107,12 @@ export { default as TableFormat } from './interface/TableFormat';
 export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
 export { default as TargetWindow } from './interface/TargetWindow';
-export { default as IEditor } from './interface/IEditor';
 export {
+    default as IEditor,
     ContentEditFeature,
     GenericContentEditFeature,
     BuildInEditFeature,
-} from './interface/ContentEditFeature';
+} from './interface/IEditor';
 export { default as EditorPlugin } from './interface/EditorPlugin';
 export { default as PluginWithState } from './interface/PluginWithState';
 export {

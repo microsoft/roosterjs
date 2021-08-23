@@ -1,6 +1,5 @@
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
-import PartialInlineElement from 'roosterjs-editor-dom/lib/inlineElements/PartialInlineElement';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
@@ -23,6 +22,7 @@ import {
     isBlockElement,
     isNodeInRegion,
     isVoidHtmlElement,
+    PartialInlineElement,
     safeInstanceOf,
     setStyles,
     splitBalancedNodeRange,

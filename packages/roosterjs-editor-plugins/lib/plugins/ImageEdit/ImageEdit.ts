@@ -12,6 +12,18 @@ import ImageHtmlOptions from './types/ImageHtmlOptions';
 import Rotator, { getRotateHTML, ROTATE_GAP, ROTATE_SIZE } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
+import {
+    arrayPush,
+    Browser,
+    createElement,
+    getComputedStyle,
+    getEntityFromElement,
+    getEntitySelector,
+    matchesSelector,
+    safeInstanceOf,
+    toArray,
+    wrap,
+} from 'roosterjs-editor-dom';
 import Resizer, {
     doubleCheckResize,
     getSideResizeHTML,
@@ -33,17 +45,6 @@ import {
     CreateElementData,
     KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
-import {
-    Browser,
-    getEntitySelector,
-    getEntityFromElement,
-    matchesSelector,
-    safeInstanceOf,
-    toArray,
-    wrap,
-    arrayPush,
-    createElement,
-} from 'roosterjs-editor-dom';
 
 const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
@@ -396,6 +397,7 @@ export default class ImageEdit implements EditorPlugin {
             img.style.position = '';
             img.style.maxWidth = '100%';
             img.style.margin = null;
+            img.style.textAlign = null;
 
             parent.insertBefore(img, wrapper);
             parent.removeChild(wrapper);
@@ -447,6 +449,10 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.height = getPx(visibleHeight);
             wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
             wrapper.style.transform = `rotate(${angleRad}rad)`;
+
+            // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
+            // or if the direction is Right To Left
+            wrapper.style.textAlign = isRtl(wrapper.parentNode) ? 'right' : 'left';
 
             // Update size of the image
             this.image.style.width = getPx(originalWidth);
@@ -578,4 +584,10 @@ function getPx(value: number): string {
 
 function getEditElements(wrapper: HTMLElement, elementClass: ImageEditElementClass): HTMLElement[] {
     return toArray(wrapper.querySelectorAll('.' + elementClass)) as HTMLElement[];
+}
+
+function isRtl(element: Node): boolean {
+    return safeInstanceOf(element, 'HTMLElement')
+        ? getComputedStyle(element, 'direction') == 'rtl'
+        : false;
 }

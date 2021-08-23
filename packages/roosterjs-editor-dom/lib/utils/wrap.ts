@@ -1,6 +1,6 @@
+import createElement from './createElement';
 import fromHtml from './fromHtml';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { createElement } from 'roosterjs-editor-dom';
 import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 
 /**
