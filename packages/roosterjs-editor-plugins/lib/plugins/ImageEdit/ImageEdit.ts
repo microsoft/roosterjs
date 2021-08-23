@@ -12,6 +12,7 @@ import ImageHtmlOptions from './types/ImageHtmlOptions';
 import Rotator, { getRotateHTML, ROTATE_GAP, ROTATE_SIZE } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
+import { resizeHandlesRotator } from './api/resizeHandlesRotator';
 import Resizer, {
     doubleCheckResize,
     getSideResizeHTML,
@@ -362,14 +363,12 @@ export default class ImageEdit implements EditorPlugin {
                 }
             }
         );
-
         htmlData.forEach(data => {
             const element = createElement(data, this.image.ownerDocument);
             if (element) {
                 wrapper.appendChild(element);
             }
         });
-
         return wrapper;
     }
 
@@ -414,6 +413,7 @@ export default class ImageEdit implements EditorPlugin {
             const cropOverlays = getEditElements(wrapper, ImageEditElementClass.CropOverlay);
             const rotateCenter = getEditElements(wrapper, ImageEditElementClass.RotateCenter)[0];
             const rotateHandle = getEditElements(wrapper, ImageEditElementClass.RotateHandle)[0];
+            const resizeHandles = getEditElements(wrapper, ImageEditElementClass.ResizeHandle);
 
             // Cropping and resizing will show different UI, so check if it is cropping here first
             const isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
@@ -499,6 +499,7 @@ export default class ImageEdit implements EditorPlugin {
                             ? Number.MAX_SAFE_INTEGER
                             : (distance[1] + heightPx / 2 + marginVertical) / cosAngle -
                               heightPx / 2;
+
                     const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
                     const rotateTop = Math.max(
                         Math.min(ROTATE_SIZE, adjustedDistance - rotateGap),
@@ -507,6 +508,7 @@ export default class ImageEdit implements EditorPlugin {
                     rotateCenter.style.top = getPx(-rotateGap);
                     rotateCenter.style.height = getPx(rotateGap);
                     rotateHandle.style.top = getPx(-rotateTop);
+                    resizeHandlesRotator(resizeHandles, angleRad);
                 }
             }
         }
@@ -528,7 +530,6 @@ export default class ImageEdit implements EditorPlugin {
             elementClass,
         };
         const wrapper = this.getImageWrapper(this.image);
-
         return wrapper
             ? getEditElements(wrapper, elementClass).map(
                   element =>
