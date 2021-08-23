@@ -50,7 +50,7 @@ export const createPasteFragment: CreatePasteFragment = (
     const document = core.contentDiv.ownerDocument;
     let doc: HTMLDocument;
 
-    // Retrieving Metadata from Html and the Html that was copied.
+    // Step 2: Retrieve Metadata from Html and the Html that was copied.
     if (
         rawHtml &&
         (doc = new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html'))?.body
@@ -89,7 +89,7 @@ export const createPasteFragment: CreatePasteFragment = (
         }
     }
 
-    // Step 2: Fill the BeforePasteEvent object, especially the fragment for paste
+    // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
     if (!pasteAsText && !text && imageDataUri) {
         // Paste image
         const img = document.createElement('img');
@@ -130,10 +130,10 @@ export const createPasteFragment: CreatePasteFragment = (
         });
     }
 
-    // Step 3: Trigger BeforePasteEvent so that plugins can do proper change before paste
+    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste
     core.api.triggerEvent(core, event, true /*broadcast*/);
 
-    // Step 4. Sanitize the fragment before paste to make sure the content is safe
+    // Step 5. Sanitize the fragment before paste to make sure the content is safe
     const sanitizer = new HtmlSanitizer(event.sanitizingOption);
 
     sanitizer.convertGlobalCssToInlineCss(fragment);
