@@ -1,7 +1,11 @@
 import { ContextMenuItem } from './ContextMenuProvider';
 import { ContextMenuProvider, IEditor } from 'roosterjs-editor-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
-import { setOrderedListNumbering } from 'roosterjs-editor-api';
+import {
+    setListIndent,
+    setListNumberPosition,
+    setOrderedListNumbering,
+} from 'roosterjs-editor-api';
 
 export default class ResetListPlugin implements ContextMenuProvider<ContextMenuItem> {
     private editor: IEditor;
@@ -39,6 +43,29 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                             let value = parseInt(prompt('Set Value to...', '1'));
                             setOrderedListNumbering(this.editor, node, value);
                         },
+                    },
+                    {
+                        key: 'adjustListIndents',
+                        name: 'Adjust List Indents',
+                        dropDownItems: [
+                            {
+                                key: 'numberPosition',
+                                name: 'Number Position',
+                                onClick: () => {
+                                    let value = parseInt(prompt('Set Value to...', '1'));
+                                    setListNumberPosition(this.editor, list, value);
+                                },
+                            },
+                            {
+                                key: 'textIndent',
+                                name: 'Text Indent',
+                                onClick: () => {
+                                    let value = parseInt(prompt('Set Value to...', '1'));
+                                    setListIndent(this.editor, list, value);
+                                },
+                            },
+                        ],
+                        onClick: () => {},
                     }
                 );
             }

@@ -15,3 +15,15 @@
         color: white;
     }
 }
+
+.deepMenuItem {
+    padding: 2px;
+    cursor: pointer;
+    margin-top: -15%;
+    margin-left: 100%;
+    position: absolute;
+    &:hover {
+        background-color: #3344ff;
+        color: white;
+    }
+}
