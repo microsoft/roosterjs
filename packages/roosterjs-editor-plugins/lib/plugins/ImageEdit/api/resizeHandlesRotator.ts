@@ -1,4 +1,4 @@
-const Rotation30to60DegreesHandlesSequence = [
+const Rotation22to67DegreesHandlesSequence = [
     'w-resize',
     'n-resize',
     's-resize',
@@ -9,7 +9,7 @@ const Rotation30to60DegreesHandlesSequence = [
     'se-resize',
 ];
 
-const Rotation60to120DegreesHandlesSequence = [
+const Rotation67to112DegreesHandlesSequence = [
     'nw-resize',
     'ne-resize',
     'sw-resize',
@@ -20,7 +20,7 @@ const Rotation60to120DegreesHandlesSequence = [
     's-resize',
 ];
 
-const Rotation120to150DegreesHandlesSequence = [
+const Rotation112to157DegreesHandlesSequence = [
     'n-resize',
     'e-resize',
     'w-resize',
@@ -31,7 +31,7 @@ const Rotation120to150DegreesHandlesSequence = [
     'sw-resize',
 ];
 
-const Rotation150to210DegreesHandlesSequence = [
+const Rotation157to202DegreesHandlesSequence = [
     'ne-resize',
     'se-resize',
     'nw-resize',
@@ -42,7 +42,7 @@ const Rotation150to210DegreesHandlesSequence = [
     'w-resize',
 ];
 
-const Rotation210to240DegreesHandlesSequence = [
+const Rotation202to248DegreesHandlesSequence = [
     'e-resize',
     's-resize',
     'n-resize',
@@ -53,7 +53,7 @@ const Rotation210to240DegreesHandlesSequence = [
     'nw-resize',
 ];
 
-const Rotation240to300DegreeshandlesSequence = [
+const Rotation248to292DegreeshandlesSequence = [
     'se-resize',
     'sw-resize',
     'ne-resize',
@@ -64,7 +64,7 @@ const Rotation240to300DegreeshandlesSequence = [
     'n-resize',
 ];
 
-const Rotation300to330DegreesHandlesSequence = [
+const Rotation292to338DegreesHandlesSequence = [
     's-resize',
     'w-resize',
     'e-resize',
@@ -75,7 +75,7 @@ const Rotation300to330DegreesHandlesSequence = [
     'ne-resize',
 ];
 
-const Rotation330to30DegreesHandlesSequence = [
+const Rotation338to22DegreesHandlesSequence = [
     'sw-resize',
     'nw-resize',
     'se-resize',
@@ -86,31 +86,31 @@ const Rotation330to30DegreesHandlesSequence = [
     'e-resize',
 ];
 
-const PI = Math.PI;
+const part = Math.PI / 8;
 
 function rotateResizeHandles(angleRad: number, index: number): string {
     switch (true) {
-        case angleRad >= PI / 6 && angleRad <= PI / 3:
-            return Rotation30to60DegreesHandlesSequence[index];
-        case angleRad > PI / 3 && angleRad <= (2 * PI) / 3:
-            return Rotation60to120DegreesHandlesSequence[index];
-        case angleRad > (2 * PI) / 3 && angleRad <= (5 * PI) / 6:
-            return Rotation120to150DegreesHandlesSequence[index];
-        case angleRad > (5 * PI) / 6 && angleRad <= (7 * PI) / 6:
-            return Rotation150to210DegreesHandlesSequence[index];
-        case angleRad < -(2 * PI) / 3 && angleRad >= -(5 * PI) / 6:
-            return Rotation210to240DegreesHandlesSequence[index];
-        case angleRad < -PI / 3 && angleRad >= -(2 * PI) / 3:
-            return Rotation240to300DegreeshandlesSequence[index];
-        case angleRad <= -PI / 6 && angleRad >= -PI / 3:
-            return Rotation300to330DegreesHandlesSequence[index];
+        case angleRad >= part && angleRad < 3 * part:
+            return Rotation22to67DegreesHandlesSequence[index];
+        case angleRad >= 3 * part && angleRad < 5 * part:
+            return Rotation67to112DegreesHandlesSequence[index];
+        case angleRad >= 5 * part && angleRad < 7 * part:
+            return Rotation112to157DegreesHandlesSequence[index];
+        case angleRad >= 7 * part && angleRad < 9 * part:
+            return Rotation157to202DegreesHandlesSequence[index];
+        case angleRad <= -5 * part && angleRad > -7 * part:
+            return Rotation202to248DegreesHandlesSequence[index];
+        case angleRad <= -3 * part && angleRad > -5 * part:
+            return Rotation248to292DegreeshandlesSequence[index];
+        case angleRad <= -part && angleRad > -3 * part:
+            return Rotation292to338DegreesHandlesSequence[index];
         default:
-            return Rotation330to30DegreesHandlesSequence[index];
+            return Rotation338to22DegreesHandlesSequence[index];
     }
 }
 
 /**
- * Rotation the resizer handles according to the image position.
+ * Rotate the resizer handles according to the image position.
  * @param resizeHandles The resizer handles.
  * @param angleRad The angle that the image was rotated.
  */
