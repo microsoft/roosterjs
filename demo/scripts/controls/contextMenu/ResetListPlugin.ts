@@ -59,7 +59,27 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                             name: 'Number Position',
                             onClick: () => {
                                 let value = parseInt(prompt('Set Value to...', '1'));
-                                setListNumberPosition(this.editor, list, value, 'px');
+                                let unitValue = prompt(
+                                    "Set Value to... ('em' | 'px' | '%' | 'in')",
+                                    'em'
+                                );
+
+                                switch (unitValue) {
+                                    case 'em':
+                                        setListNumberPosition(this.editor, list, value, 'em');
+                                        break;
+                                    case 'px':
+                                        setListNumberPosition(this.editor, list, value, 'px');
+                                        break;
+                                    case '%':
+                                        setListNumberPosition(this.editor, list, value, '%');
+                                        break;
+                                    case 'in':
+                                        setListNumberPosition(this.editor, list, value, 'in');
+                                        break;
+                                    default:
+                                        break;
+                                }
                             },
                         },
                         {
@@ -67,42 +87,28 @@ export default class ResetListPlugin implements ContextMenuProvider<ContextMenuI
                             name: 'Text Indent',
                             onClick: () => {
                                 let value = parseInt(prompt('Set Value to...', '1'));
-                                setListIndent(this.editor, list, {
-                                    textIdent: value,
-                                    unit: 'px',
-                                });
-                            },
-                        },
-                        {
-                            key: 'textIndent',
-                            name: 'Text Indent With Global Property',
-                            onClick: () => {
-                                let input = prompt(
-                                    "Set Global Value to... ('inherit' | 'initial' | 'revert' | 'unset')",
-                                    '1'
+
+                                let unitValue = prompt(
+                                    "Set Value to... ('em' | 'px' | '%' | 'in')",
+                                    'em'
                                 );
 
-                                let value: 'inherit' | 'initial' | 'revert' | 'unset';
-
-                                switch (input) {
-                                    case 'inherit':
-                                        value = 'inherit';
+                                switch (unitValue) {
+                                    case 'em':
+                                        setListIndent(this.editor, list, value, 'em');
                                         break;
-                                    case 'initial':
-                                        value = 'initial';
+                                    case 'px':
+                                        setListIndent(this.editor, list, value, 'px');
                                         break;
-                                    case 'revert':
-                                        value = 'revert';
+                                    case '%':
+                                        setListIndent(this.editor, list, value, '%');
                                         break;
-                                    case 'unset':
-                                        value = 'unset';
+                                    case 'in':
+                                        setListIndent(this.editor, list, value, 'in');
                                         break;
                                     default:
-                                        return;
+                                        break;
                                 }
-                                setListIndent(this.editor, list, {
-                                    globalValue: value,
-                                });
                             },
                         },
                     ],
