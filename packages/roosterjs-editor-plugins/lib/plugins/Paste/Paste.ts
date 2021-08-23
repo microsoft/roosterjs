@@ -11,15 +11,6 @@ import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './officeOnlineConverter/convertPastedContentFromWordOnline';
 
-const WORD_ATTRIBUTE_NAME = ClipboardSource.WORD_ATTRIBUTE_NAME;
-const WORD_ATTRIBUTE_VALUE = ClipboardSource.WORD_ATTRIBUTE_VALUE;
-const EXCEL_ATTRIBUTE_NAME = ClipboardSource.EXCEL_ATTRIBUTE_NAME;
-const EXCEL_ATTRIBUTE_VALUE = ClipboardSource.EXCEL_ATTRIBUTE_VALUE;
-const PROG_ID_NAME = ClipboardSource.PROG_ID_NAME;
-const EXCEL_ONLINE_ATTRIBUTE_VALUE = ClipboardSource.EXCEL_ONLINE_ATTRIBUTE_VALUE;
-const POWERPOINT_ATTRIBUTE_VALUE = ClipboardSource.POWERPOINT_ATTRIBUTE_VALUE;
-const GOOGLE_SHEET_NODE_NAME = ClipboardSource.GOOGLE_SHEET_NODE_NAME;
-
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
  * 1. Content copied from Word
@@ -67,16 +58,24 @@ export default class Paste implements EditorPlugin {
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
 
-            if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
+            if (
+                htmlAttributes[ClipboardSource.WORD_ATTRIBUTE_NAME] ==
+                ClipboardSource.WORD_ATTRIBUTE_VALUE
+            ) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
             } else if (
-                htmlAttributes[EXCEL_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE ||
-                htmlAttributes[PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
+                htmlAttributes[ClipboardSource.EXCEL_ATTRIBUTE_NAME] ==
+                    ClipboardSource.EXCEL_ATTRIBUTE_VALUE ||
+                htmlAttributes[ClipboardSource.PROG_ID_NAME] ==
+                    ClipboardSource.EXCEL_ONLINE_ATTRIBUTE_VALUE
             ) {
                 // Handle HTML copied from Excel
                 convertPastedContentFromExcel(event, trustedHTMLHandler);
-            } else if (htmlAttributes[PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE) {
+            } else if (
+                htmlAttributes[ClipboardSource.PROG_ID_NAME] ==
+                ClipboardSource.POWERPOINT_ATTRIBUTE_VALUE
+            ) {
                 convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
             } else if (
                 (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR))) &&
@@ -93,8 +92,9 @@ export default class Paste implements EditorPlugin {
                 if (isWordOnlineWithList(fragment)) {
                     convertPastedContentFromWordOnline(fragment);
                 }
-            } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
-                sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+            } else if (fragment.querySelector(ClipboardSource.GOOGLE_SHEET_NODE_NAME)) {
+                sanitizingOption.additionalTagReplacements[ClipboardSource.GOOGLE_SHEET_NODE_NAME] =
+                    '*';
             } else {
                 convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);

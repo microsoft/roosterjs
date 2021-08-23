@@ -52,9 +52,8 @@ export const createPasteFragment: CreatePasteFragment = (
     const document = core.contentDiv.ownerDocument;
     let doc: HTMLDocument;
 
-    // Paste HTML
+    // Retrieving Metadata from Html
     if (
-        !pasteAsText &&
         rawHtml &&
         (doc = new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html'))?.body
     ) {
