@@ -1,3 +1,4 @@
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
 
 export default function setColor(
@@ -6,6 +7,9 @@ export default function setColor(
     isBackgroundColor: boolean,
     isDarkMode?: boolean
 ) {
+    if (safeInstanceOf(element.parentNode, 'HTMLAnchorElement')) {
+        return;
+    }
     const colorString = typeof color === 'string' ? color.trim() : '';
     const modeIndependentColor = typeof color === 'string' ? null : color;
 
