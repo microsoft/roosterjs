@@ -3,7 +3,7 @@ import { getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
 
 /**
  * @internal
- * Convert pasted content is a image
+ * Convert pasted content if there are HTML and Image data in the Clipboard
  * @param event The BeforePaste event
  */
 export default function convertPastedImage(
