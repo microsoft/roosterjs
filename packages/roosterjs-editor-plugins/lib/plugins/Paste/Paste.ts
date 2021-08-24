@@ -2,6 +2,7 @@ import convertPastedContentForLI from './commonConverter/convertPastedContentFor
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import convertPastedImage from './imageConverter/convertPastedImage';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { toArray } from 'roosterjs-editor-dom';
@@ -62,7 +63,7 @@ export default class Paste implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
-            const { htmlAttributes, fragment, sanitizingOption } = event;
+            const { htmlAttributes, fragment, sanitizingOption, clipboardData } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
 
@@ -94,6 +95,8 @@ export default class Paste implements EditorPlugin {
                 }
             } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
                 sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+            } else if (clipboardData.html && clipboardData.image) {
+                convertPastedImage(event, trustedHTMLHandler);
             } else {
                 convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);
