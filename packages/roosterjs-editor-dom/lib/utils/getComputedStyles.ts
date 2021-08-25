@@ -17,10 +17,12 @@ export default function getComputedStyles(
     if (element) {
         let win = element.ownerDocument.defaultView || window;
         let styles = win.getComputedStyle(element);
-
         if (styles) {
             for (let style of styleNames) {
-                let value = (styles.getPropertyValue(style) || '').toLowerCase();
+                let value =
+                    style == 'font-family'
+                        ? styles.getPropertyValue(style) || ''
+                        : (styles.getPropertyValue(style) || '').toLowerCase();
                 value = style == 'font-size' ? px2Pt(value) : value;
                 result.push(value);
             }
