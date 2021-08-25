@@ -6,7 +6,7 @@ import { moveChildNodes } from 'roosterjs-editor-dom';
  * Convert pasted content if there are HTML and Image data in the Clipboard
  * @param event The BeforePaste event
  */
-export default function convertPastedImage(
+export default function convertPasteContentForSingleImage(
     event: BeforePasteEvent,
     trustedHTMLHandler: TrustedHTMLHandler
 ) {

@@ -13,7 +13,7 @@ const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
     [ExperimentalFeatures.ImageRotate]: 'Rotate an inline image',
     [ExperimentalFeatures.ImageCrop]: 'Crop an inline image',
     [ExperimentalFeatures.AlwaysApplyDefaultFormat]: 'Apply the default format to all elements',
-    [ExperimentalFeatures.ConvertPastedImage]:
+    [ExperimentalFeatures.ConvertSingleImageBody]:
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
 };
 

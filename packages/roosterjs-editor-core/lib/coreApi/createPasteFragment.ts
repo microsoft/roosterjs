@@ -66,6 +66,11 @@ export const createPasteFragment: CreatePasteFragment = (
             return attrs;
         }, event.htmlAttributes);
 
+        clipboardData.htmlFirstLevelChildTags = [];
+        doc?.body.childNodes.forEach(node =>
+            clipboardData.htmlFirstLevelChildTags.push(getTagOfNode(node))
+        );
+
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
         processStyles(doc, style => {
@@ -92,14 +97,6 @@ export const createPasteFragment: CreatePasteFragment = (
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
     if (!pasteAsText && !text && imageDataUri) {
-        if (
-            doc?.body &&
-            doc.body.children.length === 1 &&
-            getTagOfNode(doc.body.firstChild) === 'IMG'
-        ) {
-            clipboardData.shouldConvertPastedImage = true;
-        }
-
         // Paste image
         const img = document.createElement('img');
         img.style.maxWidth = '100%';

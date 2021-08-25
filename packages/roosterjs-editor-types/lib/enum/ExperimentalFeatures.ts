@@ -54,5 +54,5 @@ export const enum ExperimentalFeatures {
     /**
      * Paste the Html instead of the Img when the Html Body only have one IMG Child node
      */
-    ConvertPastedImage = 'ConvertPastedImage',
+    ConvertSingleImageBody = 'ConvertSingleImageBody',
 }

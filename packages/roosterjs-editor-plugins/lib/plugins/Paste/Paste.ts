@@ -1,8 +1,8 @@
+import convertPasteContentForSingleImage from './imageConverter/convertPasteContentForSingleImage';
 import convertPastedContentForLI from './commonConverter/convertPastedContentForLI';
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import convertPastedImage from './imageConverter/convertPastedImage';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import { toArray } from 'roosterjs-editor-dom';
 import { WAC_IDENTIFY_SELECTOR } from './officeOnlineConverter/constants';
@@ -102,10 +102,11 @@ export default class Paste implements EditorPlugin {
             } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
                 sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
             } else if (
-                this.editor.isFeatureEnabled(ExperimentalFeatures.ConvertPastedImage) &&
-                clipboardData.shouldConvertPastedImage
+                this.editor.isFeatureEnabled(ExperimentalFeatures.ConvertSingleImageBody) &&
+                clipboardData.htmlFirstLevelChildTags?.length == 1 &&
+                clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
             ) {
-                convertPastedImage(event, trustedHTMLHandler);
+                convertPasteContentForSingleImage(event, trustedHTMLHandler);
             } else {
                 convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);
