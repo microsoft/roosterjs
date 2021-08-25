@@ -3,10 +3,11 @@ import {
     applyTextStyle,
     createDefaultHtmlSanitizerOptions,
     getInheritableStyles,
+    getTagOfNode,
     HtmlSanitizer,
+    moveChildNodes,
     toArray,
     wrap,
-    moveChildNodes,
 } from 'roosterjs-editor-dom';
 import {
     BeforePasteEvent,
@@ -91,6 +92,14 @@ export const createPasteFragment: CreatePasteFragment = (
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
     if (!pasteAsText && !text && imageDataUri) {
+        if (
+            doc?.body &&
+            doc.body.children.length === 1 &&
+            getTagOfNode(doc.body.firstChild) === 'IMG'
+        ) {
+            clipboardData.shouldConvertPastedImage = true;
+        }
+
         // Paste image
         const img = document.createElement('img');
         img.style.maxWidth = '100%';

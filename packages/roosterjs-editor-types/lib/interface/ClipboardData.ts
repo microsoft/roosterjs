@@ -47,6 +47,12 @@ export default interface ClipboardData {
     imageDataUri?: string;
 
     /**
+     * Flags whether we need to Convert the pasted Image.
+     * When set true: it will paste the Html in Paste Plugin Event instead of using the image with the ImageDataUri
+     */
+    shouldConvertPastedImage?: boolean;
+
+    /**
      * Value of custom paste type. By default it is always empty.
      * To allow custom paste type, pass the allowed types to EditorOptions.allowedCustomPasteType
      */
