@@ -26,6 +26,7 @@ export default class VListItem {
     private listTypes: ListType[];
     private node: HTMLLIElement;
     private dummy: boolean;
+    private newListStart: number = undefined;
 
     /**
      * Construct a new instance of VListItem class
@@ -68,6 +69,13 @@ export default class VListItem {
      */
     getNode(): HTMLLIElement {
         return this.node;
+    }
+
+    /**
+     * Get the Start Number of the new List
+     */
+    getNewListStart(): number | undefined {
+        return this.newListStart;
     }
 
     /**
@@ -158,6 +166,14 @@ export default class VListItem {
      */
     setIsDummy(isDummy: boolean) {
         this.dummy = isDummy;
+    }
+
+    /**
+     * Set the start Number of the new list
+     * @param isDummy Whether the item is a dummy item
+     */
+    setNewListStart(startNumber: number) {
+        this.newListStart = startNumber;
     }
 
     /**
