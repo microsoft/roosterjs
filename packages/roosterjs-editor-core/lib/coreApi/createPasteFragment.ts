@@ -3,10 +3,11 @@ import {
     applyTextStyle,
     createDefaultHtmlSanitizerOptions,
     getInheritableStyles,
+    getTagOfNode,
     HtmlSanitizer,
+    moveChildNodes,
     toArray,
     wrap,
-    moveChildNodes,
 } from 'roosterjs-editor-dom';
 import {
     BeforePasteEvent,
@@ -64,6 +65,11 @@ export const createPasteFragment: CreatePasteFragment = (
             attrs[meta.name] = meta.content;
             return attrs;
         }, event.htmlAttributes);
+
+        clipboardData.htmlFirstLevelChildTags = [];
+        doc?.body.childNodes.forEach(node =>
+            clipboardData.htmlFirstLevelChildTags.push(getTagOfNode(node))
+        );
 
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.

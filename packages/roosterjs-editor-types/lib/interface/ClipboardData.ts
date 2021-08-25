@@ -47,6 +47,11 @@ export default interface ClipboardData {
     imageDataUri?: string;
 
     /**
+     * Array of tag names of the first level child nodes
+     */
+    htmlFirstLevelChildTags?: string[];
+
+    /**
      * Value of custom paste type. By default it is always empty.
      * To allow custom paste type, pass the allowed types to EditorOptions.allowedCustomPasteType
      */
