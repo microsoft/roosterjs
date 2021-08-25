@@ -10,9 +10,9 @@ import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import Rotator, { getRotateHTML, ROTATE_GAP, ROTATE_SIZE } from './imageEditors/Rotator';
+import { handlesRotator } from './api/handlesRotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
-import { resizeHandlesRotator } from './api/resizeHandlesRotator';
 import Resizer, {
     doubleCheckResize,
     getSideResizeHTML,
@@ -414,6 +414,7 @@ export default class ImageEdit implements EditorPlugin {
             const rotateCenter = getEditElements(wrapper, ImageEditElementClass.RotateCenter)[0];
             const rotateHandle = getEditElements(wrapper, ImageEditElementClass.RotateHandle)[0];
             const resizeHandles = getEditElements(wrapper, ImageEditElementClass.ResizeHandle);
+            const cropHandles = getEditElements(wrapper, ImageEditElementClass.CropHandle);
 
             // Cropping and resizing will show different UI, so check if it is cropping here first
             const isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
@@ -467,6 +468,7 @@ export default class ImageEdit implements EditorPlugin {
                 setSize(cropOverlays[1], undefined, 0, 0, cropBottomPx, cropRightPx, undefined);
                 setSize(cropOverlays[2], cropLeftPx, undefined, 0, 0, undefined, cropBottomPx);
                 setSize(cropOverlays[3], 0, cropTopPx, undefined, 0, cropLeftPx, undefined);
+                handlesRotator(cropHandles, angleRad);
             } else {
                 // For rotate/resize, set the margin of the image so that cropped part won't be visible
                 this.image.style.margin = `${-cropTopPx}px 0 0 ${-cropLeftPx}px`;
@@ -508,7 +510,7 @@ export default class ImageEdit implements EditorPlugin {
                     rotateCenter.style.top = getPx(-rotateGap);
                     rotateCenter.style.height = getPx(rotateGap);
                     rotateHandle.style.top = getPx(-rotateTop);
-                    resizeHandlesRotator(resizeHandles, angleRad);
+                    handlesRotator(resizeHandles, angleRad);
                 }
             }
         }
