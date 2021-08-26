@@ -50,6 +50,10 @@ const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
 const ALT_KEYCODE = 18;
 
+const DIRECTIONS = 8;
+const DirectionRad = (Math.PI * 2) / DIRECTIONS;
+const DirectionOrder = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+
 /**
  * Map the experimental features to image edit operations to help determine which operation is allowed
  */
@@ -370,7 +374,6 @@ export default class ImageEdit implements EditorPlugin {
                 wrapper.appendChild(element);
             }
         });
-
         return wrapper;
     }
 
@@ -416,6 +419,8 @@ export default class ImageEdit implements EditorPlugin {
             const cropOverlays = getEditElements(wrapper, ImageEditElementClass.CropOverlay);
             const rotateCenter = getEditElements(wrapper, ImageEditElementClass.RotateCenter)[0];
             const rotateHandle = getEditElements(wrapper, ImageEditElementClass.RotateHandle)[0];
+            const resizeHandles = getEditElements(wrapper, ImageEditElementClass.ResizeHandle);
+            const cropHandles = getEditElements(wrapper, ImageEditElementClass.CropHandle);
 
             // Cropping and resizing will show different UI, so check if it is cropping here first
             const isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
@@ -473,6 +478,7 @@ export default class ImageEdit implements EditorPlugin {
                 setSize(cropOverlays[1], undefined, 0, 0, cropBottomPx, cropRightPx, undefined);
                 setSize(cropOverlays[2], cropLeftPx, undefined, 0, 0, undefined, cropBottomPx);
                 setSize(cropOverlays[3], 0, cropTopPx, undefined, 0, cropLeftPx, undefined);
+                updateHandleCursor(cropHandles, angleRad);
             } else {
                 // For rotate/resize, set the margin of the image so that cropped part won't be visible
                 this.image.style.margin = `${-cropTopPx}px 0 0 ${-cropLeftPx}px`;
@@ -505,6 +511,7 @@ export default class ImageEdit implements EditorPlugin {
                             ? Number.MAX_SAFE_INTEGER
                             : (distance[1] + heightPx / 2 + marginVertical) / cosAngle -
                               heightPx / 2;
+
                     const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
                     const rotateTop = Math.max(
                         Math.min(ROTATE_SIZE, adjustedDistance - rotateGap),
@@ -513,6 +520,7 @@ export default class ImageEdit implements EditorPlugin {
                     rotateCenter.style.top = getPx(-rotateGap);
                     rotateCenter.style.height = getPx(rotateGap);
                     rotateHandle.style.top = getPx(-rotateTop);
+                    updateHandleCursor(resizeHandles, angleRad);
                 }
             }
         }
@@ -534,7 +542,6 @@ export default class ImageEdit implements EditorPlugin {
             elementClass,
         };
         const wrapper = this.getImageWrapper(this.image);
-
         return wrapper
             ? getEditElements(wrapper, elementClass).map(
                   element =>
@@ -590,4 +597,28 @@ function isRtl(element: Node): boolean {
     return safeInstanceOf(element, 'HTMLElement')
         ? getComputedStyle(element, 'direction') == 'rtl'
         : false;
+}
+
+function handleRadIndexCalculator(angleRad: number): number {
+    let idx = Math.round(angleRad / DirectionRad) % DIRECTIONS;
+    return idx < 0 ? idx + DIRECTIONS : idx;
+}
+
+function rotateHandles(element: HTMLElement, angleRad: number): string {
+    const radIndex = handleRadIndexCalculator(angleRad);
+    const originalDirection = element.dataset.y + element.dataset.x;
+    const originalIndex = DirectionOrder.indexOf(originalDirection);
+    const rotatedIndex = originalIndex >= 0 && originalIndex + radIndex;
+    return DirectionOrder[rotatedIndex % DIRECTIONS];
+}
+
+/**
+ * Rotate the resizer and cropper handles according to the image position.
+ * @param handles The resizer handles.
+ * @param angleRad The angle that the image was rotated.
+ */
+function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
+    handles.map(handle => {
+        handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
+    });
 }
