@@ -166,7 +166,6 @@ function clearInlineFormat(editor: IEditor) {
     editor.focus();
     editor.addUndoSnapshot(() => {
         execCommand(editor, DocumentCommand.RemoveFormat);
-
         editor.queryElements('[class]', QueryScope.OnSelection, node =>
             node.removeAttribute('class')
         );
@@ -214,6 +213,14 @@ function clearInlineFormat(editor: IEditor) {
                 toggleUnderline(editor);
             }
         }
+
+        editor.queryElements('a', QueryScope.InSelection, node => {
+            node.childNodes.forEach(children => {
+                if (safeInstanceOf(children, 'HTMLElement')) {
+                    children.style.removeProperty('color');
+                }
+            });
+        });
     }, ChangeSource.Format);
 }
 
