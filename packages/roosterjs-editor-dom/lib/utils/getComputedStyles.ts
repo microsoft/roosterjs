@@ -20,11 +20,10 @@ export default function getComputedStyles(
 
         if (styles) {
             for (let style of styleNames) {
-                let value =
-                    style == 'font-family'
-                        ? styles.getPropertyValue(style) || ''
-                        : (styles.getPropertyValue(style) || '').toLowerCase();
+                let value = styles.getPropertyValue(style) || '';
+                value = style != 'font-family' ? value.toLowerCase() : value;
                 value = style == 'font-size' ? px2Pt(value) : value;
+                console.log(value);
                 result.push(value);
             }
         }
