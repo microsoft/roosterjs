@@ -1214,3 +1214,59 @@ describe('VList.mergeVList', () => {
         );
     });
 });
+
+describe('VList.split', () => {
+    const testId = 'VList_split';
+    const separatorElementId = 'separatorId';
+    const listId = 'listId';
+
+    afterEach(() => {
+        DomTestHelper.removeElement(testId);
+    });
+
+    function runTest(originalRoot: string, expectedHtml: string, startNumber: number = 1) {
+        const div = DomTestHelper.createElementFromContent(testId, '');
+        div.innerHTML = originalRoot;
+        const separatorElement = document.getElementById(separatorElementId);
+        const list = document.getElementById(listId) as HTMLOListElement;
+        const vList = new VList(list);
+
+        vList.split(separatorElement, startNumber);
+        vList.writeBack();
+        expect(div.innerHTML).toBe(expectedHtml);
+
+        // Write again on the same VList should throw
+        expect(() => vList.writeBack()).toThrow();
+    }
+
+    it('split List', () => {
+        runTest(
+            `<ol id=${listId}><li>item1</li><li id="${separatorElementId}">bullet</li><li>item2</li></ol>`,
+            '<ol id="listId"><li>item1</li></ol><ol><li id="separatorId">bullet</li><li>item2</li></ol>'
+        );
+    });
+
+    it('split List 2', () => {
+        runTest(
+            `<ol id=${listId}><li>item1</li><li id="${separatorElementId}">bullet</li><li>item2</li></ol>`,
+            '<ol id="listId"><li>item1</li></ol><ol start="5"><li id="separatorId">bullet</li><li>item2</li></ol>',
+            5
+        );
+    });
+
+    it('split List 3', () => {
+        runTest(
+            `<ol id=${listId}><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li id='${separatorElementId}'>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
+            '<ol id="listId"><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li></ol></ol><ol><ol style="list-style-type: lower-alpha;"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            1
+        );
+    });
+
+    it('split List 4', () => {
+        runTest(
+            `<ol id=${listId}><li id='${separatorElementId}'>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
+            '<ol id="listId" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            9
+        );
+    });
+});

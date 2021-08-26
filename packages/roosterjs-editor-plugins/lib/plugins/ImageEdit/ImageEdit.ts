@@ -10,9 +10,20 @@ import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import Rotator, { getRotateHTML, ROTATE_GAP, ROTATE_SIZE } from './imageEditors/Rotator';
-import { handlesRotator } from './api/handlesRotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
+import {
+    arrayPush,
+    Browser,
+    createElement,
+    getComputedStyle,
+    getEntityFromElement,
+    getEntitySelector,
+    matchesSelector,
+    safeInstanceOf,
+    toArray,
+    wrap,
+} from 'roosterjs-editor-dom';
 import Resizer, {
     doubleCheckResize,
     getSideResizeHTML,
@@ -34,21 +45,14 @@ import {
     CreateElementData,
     KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
-import {
-    Browser,
-    getEntitySelector,
-    getEntityFromElement,
-    matchesSelector,
-    safeInstanceOf,
-    toArray,
-    wrap,
-    arrayPush,
-    createElement,
-} from 'roosterjs-editor-dom';
 
 const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
 const ALT_KEYCODE = 18;
+
+const DIRECTIONS = 8;
+const DirectionRad = (Math.PI * 2) / DIRECTIONS;
+const DirectionOrder = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 
 /**
  * Map the experimental features to image edit operations to help determine which operation is allowed
@@ -363,6 +367,7 @@ export default class ImageEdit implements EditorPlugin {
                 }
             }
         );
+
         htmlData.forEach(data => {
             const element = createElement(data, this.image.ownerDocument);
             if (element) {
@@ -395,6 +400,7 @@ export default class ImageEdit implements EditorPlugin {
             img.style.position = '';
             img.style.maxWidth = '100%';
             img.style.margin = null;
+            img.style.textAlign = null;
 
             parent.insertBefore(img, wrapper);
             parent.removeChild(wrapper);
@@ -449,6 +455,10 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
             wrapper.style.transform = `rotate(${angleRad}rad)`;
 
+            // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
+            // or if the direction is Right To Left
+            wrapper.style.textAlign = isRtl(wrapper.parentNode) ? 'right' : 'left';
+
             // Update size of the image
             this.image.style.width = getPx(originalWidth);
             this.image.style.height = getPx(originalHeight);
@@ -468,7 +478,7 @@ export default class ImageEdit implements EditorPlugin {
                 setSize(cropOverlays[1], undefined, 0, 0, cropBottomPx, cropRightPx, undefined);
                 setSize(cropOverlays[2], cropLeftPx, undefined, 0, 0, undefined, cropBottomPx);
                 setSize(cropOverlays[3], 0, cropTopPx, undefined, 0, cropLeftPx, undefined);
-                handlesRotator(cropHandles, angleRad);
+                updateHandleCursor(cropHandles, angleRad);
             } else {
                 // For rotate/resize, set the margin of the image so that cropped part won't be visible
                 this.image.style.margin = `${-cropTopPx}px 0 0 ${-cropLeftPx}px`;
@@ -510,7 +520,7 @@ export default class ImageEdit implements EditorPlugin {
                     rotateCenter.style.top = getPx(-rotateGap);
                     rotateCenter.style.height = getPx(rotateGap);
                     rotateHandle.style.top = getPx(-rotateTop);
-                    handlesRotator(resizeHandles, angleRad);
+                    updateHandleCursor(resizeHandles, angleRad);
                 }
             }
         }
@@ -581,4 +591,34 @@ function getPx(value: number): string {
 
 function getEditElements(wrapper: HTMLElement, elementClass: ImageEditElementClass): HTMLElement[] {
     return toArray(wrapper.querySelectorAll('.' + elementClass)) as HTMLElement[];
+}
+
+function isRtl(element: Node): boolean {
+    return safeInstanceOf(element, 'HTMLElement')
+        ? getComputedStyle(element, 'direction') == 'rtl'
+        : false;
+}
+
+function handleRadIndexCalculator(angleRad: number): number {
+    let idx = Math.round(angleRad / DirectionRad) % DIRECTIONS;
+    return idx < 0 ? idx + DIRECTIONS : idx;
+}
+
+function rotateHandles(element: HTMLElement, angleRad: number): string {
+    const radIndex = handleRadIndexCalculator(angleRad);
+    const originalDirection = element.dataset.y + element.dataset.x;
+    const originalIndex = DirectionOrder.indexOf(originalDirection);
+    const rotatedIndex = originalIndex >= 0 && originalIndex + radIndex;
+    return DirectionOrder[rotatedIndex % DIRECTIONS];
+}
+
+/**
+ * Rotate the resizer and cropper handles according to the image position.
+ * @param handles The resizer handles.
+ * @param angleRad The angle that the image was rotated.
+ */
+function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
+    handles.map(handle => {
+        handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
+    });
 }
