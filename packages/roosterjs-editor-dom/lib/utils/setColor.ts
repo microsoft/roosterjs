@@ -1,3 +1,4 @@
+import getTagOfNode from '../utils/getTagOfNode';
 import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
 
 export default function setColor(
@@ -6,7 +7,7 @@ export default function setColor(
     isBackgroundColor: boolean,
     isDarkMode?: boolean
 ) {
-    if (safeInstanceOf(element.parentNode, 'HTMLAnchorElement')) {
+    if (getTagOfNode(element.parentNode) == 'A') {
         return;
     }
     const colorString = typeof color === 'string' ? color.trim() : '';
