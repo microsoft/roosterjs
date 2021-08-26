@@ -23,7 +23,6 @@ export default function getComputedStyles(
                 let value = styles.getPropertyValue(style) || '';
                 value = style != 'font-family' ? value.toLowerCase() : value;
                 value = style == 'font-size' ? px2Pt(value) : value;
-                console.log(value);
                 result.push(value);
             }
         }
