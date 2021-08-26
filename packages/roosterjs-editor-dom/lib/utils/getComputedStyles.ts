@@ -17,6 +17,7 @@ export default function getComputedStyles(
     if (element) {
         let win = element.ownerDocument.defaultView || window;
         let styles = win.getComputedStyle(element);
+
         if (styles) {
             for (let style of styleNames) {
                 let value =
