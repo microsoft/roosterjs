@@ -1,4 +1,3 @@
-import safeInstanceOf from '../utils/safeInstanceOf';
 import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
 
 export default function setColor(
