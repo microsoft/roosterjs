@@ -50,4 +50,9 @@ export const enum ExperimentalFeatures {
      * Check if the element has a style attribute, if not, apply the default format
      */
     AlwaysApplyDefaultFormat = 'AlwaysApplyDefaultFormat',
+
+    /**
+     * Paste the Html instead of the Img when the Html Body only have one IMG Child node
+     */
+    ConvertSingleImageBody = 'ConvertSingleImageBody',
 }

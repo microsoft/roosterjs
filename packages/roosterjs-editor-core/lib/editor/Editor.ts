@@ -20,6 +20,7 @@ import {
     InsertOption,
     IPositionContentSearcher,
     NodePosition,
+    PendableFormatState,
     PluginEvent,
     PluginEventData,
     PluginEventFromType,
@@ -741,6 +742,15 @@ export default class Editor implements IEditor {
             node = range && Position.getStart(range).normalize().node;
         }
         return this.core.api.getStyleBasedFormatState(this.core, node);
+    }
+
+    /**
+     * Get the pendable format such as underline and bold
+     * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+     * @returns The pending format state
+     */
+    public getPendableFormatState(forceGetStateFromDOM?: boolean): PendableFormatState {
+        return this.core.api.getPendableFormatState(this.core, forceGetStateFromDOM);
     }
 
     /**

@@ -9,7 +9,7 @@ import SelectionPath from './SelectionPath';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
-import { EditorUndoState, StyleBasedFormatState } from './FormatState';
+import { EditorUndoState, PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
@@ -498,6 +498,13 @@ export default interface IEditor {
      * Get style based format state from current selection, including font name/size and colors
      */
     getStyleBasedFormatState(node?: Node): StyleBasedFormatState;
+
+    /**
+     * Get the pendable format state from the current selection, incluing formats as underline, bold, italics
+     * @param forceGetStateFromDOM If set to true, will not consider the cached format and will get the format state directly from DOM tree
+     * @return The pending format state of editor.
+     */
+    getPendableFormatState(forceGetStateFromDOM?: boolean): PendableFormatState;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly
