@@ -191,9 +191,23 @@ function clearInlineFormat(editor: IEditor) {
             }
             if (defaultFormat.textColor) {
                 if (defaultFormat.textColors) {
-                    setTextColor(editor, defaultFormat.textColors);
+                    setTextColor(
+                        editor,
+                        defaultFormat.textColor,
+                        (element: HTMLElement) =>
+                            editor
+                                .queryElements<HTMLElement>('a span', QueryScope.OnSelection)
+                                .indexOf(element) == -1
+                    );
                 } else {
-                    setTextColor(editor, defaultFormat.textColor);
+                    setTextColor(
+                        editor,
+                        defaultFormat.textColor,
+                        (element: HTMLElement) =>
+                            editor
+                                .queryElements<HTMLElement>('a span', QueryScope.OnSelection)
+                                .indexOf(element) == -1
+                    );
                 }
             }
             if (defaultFormat.backgroundColor) {
@@ -213,14 +227,6 @@ function clearInlineFormat(editor: IEditor) {
                 toggleUnderline(editor);
             }
         }
-
-        editor.queryElements('a', QueryScope.InSelection, node => {
-            node.childNodes.forEach(children => {
-                if (safeInstanceOf(children, 'HTMLElement')) {
-                    children.style.removeProperty('color');
-                }
-            });
-        });
     }, ChangeSource.Format);
 }
 

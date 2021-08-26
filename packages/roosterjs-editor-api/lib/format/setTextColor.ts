@@ -12,8 +12,19 @@ import { setColor } from 'roosterjs-editor-dom';
  * Alternatively, you can pass a @typedef ModeIndependentColor. If in light mode, the lightModeColor property will be used.
  * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
  */
-export default function setTextColor(editor: IEditor, color: string | ModeIndependentColor) {
+export default function setTextColor(
+    editor: IEditor,
+    color: string | ModeIndependentColor,
+    shouldApplyInlineStyle?: (element: HTMLElement) => boolean
+) {
     applyInlineStyle(editor, (element, isInnerNode) => {
-        setColor(element, isInnerNode ? '' : color, false /*isBackground*/, editor.isDarkMode());
+        if (!shouldApplyInlineStyle || shouldApplyInlineStyle(element)) {
+            setColor(
+                element,
+                isInnerNode ? '' : color,
+                false /*isBackground*/,
+                editor.isDarkMode()
+            );
+        }
     });
 }
