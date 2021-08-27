@@ -167,6 +167,32 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                 </td>
                             </tr>
                             <tr>
+                                <td>Align Cell</td>
+                                <td>
+                                    {this.renderEditTableButton(
+                                        'Left',
+                                        TableOperation.AlignCellLeft
+                                    )}
+                                    {this.renderEditTableButton(
+                                        'Center',
+                                        TableOperation.AlignCellCenter
+                                    )}
+                                    {this.renderEditTableButton(
+                                        'Right',
+                                        TableOperation.AlignCellRight
+                                    )}
+                                    {this.renderEditTableButton('Top', TableOperation.AlignCellTop)}
+                                    {this.renderEditTableButton(
+                                        'Middle',
+                                        TableOperation.AlignCellMiddle
+                                    )}
+                                    {this.renderEditTableButton(
+                                        'Bottom',
+                                        TableOperation.AlignCellBottom
+                                    )}
+                                </td>
+                            </tr>
+                            <tr>
                                 <th colSpan={2}>Format Table</th>
                             </tr>
                             <tr>

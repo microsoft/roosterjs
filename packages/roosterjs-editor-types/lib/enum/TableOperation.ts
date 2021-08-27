@@ -81,4 +81,34 @@ export const enum TableOperation {
      * Align current table at the right
      */
     AlignRight,
+
+    /**
+     * Align current content table cell at the left
+     */
+    AlignCellLeft,
+
+    /**
+     * Align current content table cell at the center
+     */
+    AlignCellCenter,
+
+    /**
+     * Align current content table cell at the right
+     */
+    AlignCellRight,
+
+    /**
+     * Align current content table cell at the top
+     */
+    AlignCellTop,
+
+    /**
+     * Align current table cell at the middle
+     */
+    AlignCellMiddle,
+
+    /**
+     * Align current table cell at the bottom
+     */
+    AlignCellBottom,
 }
