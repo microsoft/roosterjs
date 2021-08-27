@@ -1,3 +1,4 @@
+import safeInstanceOf from './safeInstanceOf';
 import { Browser } from './Browser';
 import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 
@@ -73,7 +74,7 @@ export default function createElement(
         result.className = className;
     }
 
-    if (dataset && result instanceof HTMLElement) {
+    if (dataset && safeInstanceOf(result, 'HTMLElement')) {
         Object.keys(dataset).forEach(datasetName => {
             result.dataset[datasetName] = dataset[datasetName];
         });

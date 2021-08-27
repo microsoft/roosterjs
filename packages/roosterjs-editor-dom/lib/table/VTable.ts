@@ -131,6 +131,7 @@ export default class VTable {
 
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
+        let { style } = currentCell.td;
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -295,6 +296,24 @@ export default class VTable {
                 break;
             case TableOperation.AlignRight:
                 this.table.setAttribute('align', 'right');
+                break;
+            case TableOperation.AlignCellCenter:
+                style.textAlign = 'center';
+                break;
+            case TableOperation.AlignCellLeft:
+                style.textAlign = 'left';
+                break;
+            case TableOperation.AlignCellRight:
+                style.textAlign = 'right';
+                break;
+            case TableOperation.AlignCellTop:
+                style.verticalAlign = 'top';
+                break;
+            case TableOperation.AlignCellMiddle:
+                style.verticalAlign = 'middle';
+                break;
+            case TableOperation.AlignCellBottom:
+                style.verticalAlign = 'bottom';
                 break;
         }
     }
