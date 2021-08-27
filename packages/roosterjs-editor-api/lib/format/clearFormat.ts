@@ -190,24 +190,17 @@ function clearInlineFormat(editor: IEditor) {
                 setFontSize(editor, defaultFormat.fontSize);
             }
             if (defaultFormat.textColor) {
+                const setColorIgnoredElements = editor.queryElements<HTMLElement>(
+                    'a *, a',
+                    QueryScope.OnSelection
+                );
+                const shouldApplyInlineStyle = (element: HTMLElement) =>
+                    setColorIgnoredElements.indexOf(element) == -1;
+
                 if (defaultFormat.textColors) {
-                    setTextColor(
-                        editor,
-                        defaultFormat.textColor,
-                        (element: HTMLElement) =>
-                            editor
-                                .queryElements<HTMLElement>('a *, a', QueryScope.OnSelection)
-                                .indexOf(element) == -1
-                    );
+                    setTextColor(editor, defaultFormat.textColors, shouldApplyInlineStyle);
                 } else {
-                    setTextColor(
-                        editor,
-                        defaultFormat.textColor,
-                        (element: HTMLElement) =>
-                            editor
-                                .queryElements<HTMLElement>('a *, a', QueryScope.OnSelection)
-                                .indexOf(element) == -1
-                    );
+                    setTextColor(editor, defaultFormat.textColor, shouldApplyInlineStyle);
                 }
             }
             if (defaultFormat.backgroundColor) {
