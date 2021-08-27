@@ -196,7 +196,7 @@ function clearInlineFormat(editor: IEditor) {
                         defaultFormat.textColor,
                         (element: HTMLElement) =>
                             editor
-                                .queryElements<HTMLElement>('a span', QueryScope.OnSelection)
+                                .queryElements<HTMLElement>('a *, a', QueryScope.OnSelection)
                                 .indexOf(element) == -1
                     );
                 } else {
@@ -205,7 +205,7 @@ function clearInlineFormat(editor: IEditor) {
                         defaultFormat.textColor,
                         (element: HTMLElement) =>
                             editor
-                                .queryElements<HTMLElement>('a span', QueryScope.OnSelection)
+                                .queryElements<HTMLElement>('a *, a', QueryScope.OnSelection)
                                 .indexOf(element) == -1
                     );
                 }
