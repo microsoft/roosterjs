@@ -16,4 +16,9 @@ export default interface CustomReplacement {
      * Whether the matching should be case sensitive
      */
     matchSourceCaseSensitive: boolean;
+
+    /**
+     * Whether the matching should be case sensitive
+     */
+    shouldReplace?: (content?: string, sourceString?: string) => boolean;
 }

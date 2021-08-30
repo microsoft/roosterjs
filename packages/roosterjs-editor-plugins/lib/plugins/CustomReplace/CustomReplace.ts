@@ -10,8 +10,14 @@ import {
 const makeReplacement = (
     sourceString: string,
     replacementHTML: string,
-    matchSourceCaseSensitive: boolean
-): CustomReplacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
+    matchSourceCaseSensitive: boolean,
+    shouldReplace?: (content?: string, sourceString?: string) => boolean
+): CustomReplacement => ({
+    sourceString,
+    replacementHTML,
+    matchSourceCaseSensitive,
+    shouldReplace,
+});
 
 const defaultReplacements: CustomReplacement[] = [
     makeReplacement(':)', '🙂', true),
@@ -90,11 +96,18 @@ export default class CustomReplacePlugin implements EditorPlugin {
         if (range == null) {
             return;
         }
+
         const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
-
         const replacement = this.getMatchingReplacement(stringToSearch);
         if (replacement == null) {
+            return;
+        }
+
+        if (
+            replacement.shouldReplace &&
+            replacement.shouldReplace(searcher.getWordBefore(), replacement.sourceString)
+        ) {
             return;
         }
 
