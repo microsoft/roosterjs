@@ -194,8 +194,11 @@ function clearInlineFormat(editor: IEditor) {
                     'a *, a',
                     QueryScope.OnSelection
                 );
-                const shouldApplyInlineStyle = (element: HTMLElement) =>
-                    setColorIgnoredElements.indexOf(element) == -1;
+
+                let shouldApplyInlineStyle =
+                    setColorIgnoredElements.length > 0
+                        ? (element: HTMLElement) => setColorIgnoredElements.indexOf(element) == -1
+                        : null;
 
                 if (defaultFormat.textColors) {
                     setTextColor(editor, defaultFormat.textColors, shouldApplyInlineStyle);
