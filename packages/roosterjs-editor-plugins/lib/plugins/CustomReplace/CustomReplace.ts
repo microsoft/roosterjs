@@ -98,7 +98,9 @@ export default class CustomReplacePlugin implements EditorPlugin {
         }
 
         const searcher = this.editor.getContentSearcherOfCursor(event);
-        const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
+        const stringToSearch = searcher
+            .getSubStringBefore(this.longestReplacementLength)
+            .replace(/\s/g, ' ');
         const replacement = this.getMatchingReplacement(stringToSearch);
         if (replacement == null) {
             return;
@@ -142,7 +144,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         const lowerCaseStringToSearch = stringToSearch.toLocaleLowerCase();
         for (const replacement of this.replacements) {
             const [sourceMatch, replacementMatch] = replacement.matchSourceCaseSensitive
-                ? [stringToSearch.replace(/\s/g, ' '), replacement.sourceString]
+                ? [stringToSearch, replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
             if (
                 sourceMatch.substring(sourceMatch.length - replacementMatch.length) ===
