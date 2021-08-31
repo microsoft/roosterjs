@@ -50,6 +50,70 @@ describe('clearFormat()', () => {
         clearFormat(editor, ClearFormatMode.Block);
         expect(spy).toHaveBeenCalledTimes(1);
     });
+
+    it('removes the existing inline formats, text with hyperlink', () => {
+        // Arrange
+        let contentWithHyperlink =
+            '<div id="text"><span style="font-size: 20pt; color: rgb(237, 92, 87); font-family: &quot;Courier New&quot;;">This is a </span><a href="http://microsoft.com"><span style="font-size: 20pt; color: rgb(237, 92, 87); font-family: &quot;Courier New&quot;;">link</span></a><span style="font-size: 20pt; color: rgb(237, 92, 87); font-family: &quot;Courier New&quot;;">.</span></div>';
+        editor.setContent(contentWithHyperlink);
+        TestHelper.selectNode(document.getElementById('text'));
+
+        // Act
+        clearFormat(editor);
+
+        // Assert
+        expect(editor.getContent()).toBe(
+            '<div id="text"><span style="font-family: arial; font-size: 12pt; color: black;">This is a </span><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">link</span></a><span style="font-family: arial; font-size: 12pt; color: black;">.</span></div>'
+        );
+    });
+
+    it('removes the existing inline formats, hyperlink', () => {
+        // Arrange
+        let contentWithHyperlink =
+            '<div id="text"><a href="http://microsoft.com"><span style="font-family: arial; font-size: 72pt; color: rgb(179, 106, 226);">link</span></a></div>';
+        editor.setContent(contentWithHyperlink);
+        TestHelper.selectNode(document.getElementById('text'));
+
+        // Act
+        clearFormat(editor);
+
+        // Assert
+        expect(editor.getContent()).toBe(
+            '<div id="text"><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">link</span></a></div>'
+        );
+    });
+
+    it('removes the existing inline formats, text starting with a Hyperlink', () => {
+        // Arrange
+        let contentWithHyperlink =
+            '<div id="text" style="font-family: &quot;Times New Roman&quot;; font-size: 12pt; color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);"><a href="http://microsoft.com"><span style="font-size: 36pt; color: rgb(12, 100, 192); background-color: rgb(255, 0, 0); font-family: Tahoma;">hello</span></a><span style="font-size: 36pt; color: rgb(12, 100, 192); background-color: rgb(255, 0, 0); font-family: Tahoma;"> World!</span></div>';
+        editor.setContent(contentWithHyperlink);
+        TestHelper.selectNode(document.getElementById('text'));
+
+        // Act
+        clearFormat(editor);
+
+        // Assert
+        expect(editor.getContent()).toBe(
+            '<div id="text" style=""><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">hello</span></a><span style="font-family: arial; font-size: 12pt; color: black;"> World!</span></div>'
+        );
+    });
+
+    it('removes the existing inline formats, text with a Hyperlink at the end', () => {
+        // Arrange
+        let contentWithHyperlink =
+            '<span  id="text" style="font-size: 48px; background-color: rgb(255, 0, 0);">This is a test text with <a href="http://microsoft.com">Hyperlink.</a></span>';
+        editor.setContent(contentWithHyperlink);
+        TestHelper.selectNode(document.getElementById('text'));
+
+        // Act
+        clearFormat(editor);
+
+        // Assert
+        expect(editor.getContent()).toBe(
+            '<span style="font-family: arial; font-size: 12pt; color: black;">This is a test text with </span><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">Hyperlink.</span></a>'
+        );
+    });
 });
 
 describe('clearAutodetectFormat tests', () => {
