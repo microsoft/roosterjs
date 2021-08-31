@@ -11,8 +11,19 @@ export default function toggleListType(
     listType: ListType.Ordered,
     startNumber: number
 ): void;
+export default function toggleListType(
+    editor: IEditor,
+    listType: ListType.Ordered,
+    startNumber: number,
+    includeSiblingList: boolean
+): void;
 
-export default function toggleListType(editor: IEditor, listType: ListType, startNumber?: number) {
+export default function toggleListType(
+    editor: IEditor,
+    listType: ListType,
+    startNumber?: number,
+    includeSiblingList: boolean = true
+) {
     blockFormat(editor, (region, start, end, chains) => {
         const chain =
             startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];
@@ -22,7 +33,7 @@ export default function toggleListType(editor: IEditor, listType: ListType, star
                       getBlockElementAtNode(region.rootNode, start.node)?.collapseToSingleElement(),
                       startNumber
                   )
-                : createVListFromRegion(region, true /*includeSiblingLists*/);
+                : createVListFromRegion(region, includeSiblingList /*includeSiblingLists*/);
 
         if (vList) {
             vList.changeListType(start, end, listType);

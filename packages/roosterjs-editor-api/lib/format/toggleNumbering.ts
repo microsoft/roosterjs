@@ -10,6 +10,10 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
  * @param editor The editor instance
  * @param startNumber (Optional) Start number of the list
  */
-export default function toggleNumbering(editor: IEditor, startNumber?: number) {
-    toggleListType(editor, ListType.Ordered, startNumber);
+export default function toggleNumbering(
+    editor: IEditor,
+    startNumber?: number,
+    includeSiblingList: boolean = true
+) {
+    toggleListType(editor, ListType.Ordered, startNumber, includeSiblingList);
 }

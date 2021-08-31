@@ -127,7 +127,7 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     },
     handleEvent: (event, editor) => {
         editor.addUndoSnapshot(
-            () => toggleListAndPreventDefault(event, editor),
+            () => toggleListAndPreventDefault(event, editor, false /* includeSiblingLists */),
             null /*changeSource*/,
             true /*canUndoByBackspace*/
         );
@@ -248,7 +248,11 @@ function prepareAutoBullet(editor: IEditor, range: Range) {
     }
 }
 
-function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor) {
+function toggleListAndPreventDefault(
+    event: PluginKeyboardEvent,
+    editor: IEditor,
+    includeSiblingList: boolean = true
+) {
     let listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
         let listElement = listInfo[0];
@@ -256,7 +260,7 @@ function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor
         if (tag == 'UL') {
             toggleBullet(editor);
         } else if (tag == 'OL') {
-            toggleNumbering(editor);
+            toggleNumbering(editor, null, includeSiblingList);
         }
         editor.focus();
         event.rawEvent.preventDefault();
