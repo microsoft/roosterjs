@@ -23,5 +23,5 @@ export default interface CustomReplacement {
      * @param sourceString string to be replaced
      * @return true, if the string should be replaced, else return false
      */
-    shouldReplace?: (content: string, sourceString: string) => boolean;
+    shouldReplace?: (replacement: CustomReplacement, content: string) => boolean;
 }

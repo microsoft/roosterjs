@@ -11,7 +11,7 @@ const makeReplacement = (
     sourceString: string,
     replacementHTML: string,
     matchSourceCaseSensitive: boolean,
-    shouldReplace?: (content: string, sourceString: string) => boolean
+    shouldReplace?: (replacement: CustomReplacement, content: string) => boolean
 ): CustomReplacement => ({
     sourceString,
     replacementHTML,
@@ -98,9 +98,8 @@ export default class CustomReplacePlugin implements EditorPlugin {
         }
 
         const searcher = this.editor.getContentSearcherOfCursor(event);
-        const stringToSearch = searcher
-            .getSubStringBefore(this.longestReplacementLength)
-            .replace(/\s/g, ' ');
+        const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
+
         const replacement = this.getMatchingReplacement(stringToSearch);
         if (replacement == null) {
             return;
@@ -108,7 +107,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
         if (
             replacement.shouldReplace &&
-            !replacement.shouldReplace(searcher.getWordBefore(), replacement.sourceString)
+            !replacement.shouldReplace(replacement, searcher.getWordBefore())
         ) {
             return;
         }
@@ -144,7 +143,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
         const lowerCaseStringToSearch = stringToSearch.toLocaleLowerCase();
         for (const replacement of this.replacements) {
             const [sourceMatch, replacementMatch] = replacement.matchSourceCaseSensitive
-                ? [stringToSearch, replacement.sourceString]
+                ? [stringToSearch.replace(/\s/g, ' '), replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
             if (
                 sourceMatch.substring(sourceMatch.length - replacementMatch.length) ===
