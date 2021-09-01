@@ -1,3 +1,4 @@
+import { clearFormat } from 'roosterjs-editor-api';
 import {
     BuildInEditFeature,
     IEditor,
@@ -10,6 +11,7 @@ import {
     cacheGetEventData,
     getTagOfNode,
     isNodeEmpty,
+    safeInstanceOf,
     splitBalancedNodeRange,
     toArray,
     unwrap,
@@ -74,15 +76,35 @@ function splitQuote(event: PluginKeyboardEvent, editor: IEditor) {
     editor.addUndoSnapshot(() => {
         let childOfQuote = cacheGetQuoteChild(event, editor);
         let parent: Node;
+        let shouldClearFormat: boolean;
         if (getTagOfNode(childOfQuote) == QUOTE_TAG) {
             childOfQuote = wrap(toArray(childOfQuote.childNodes));
         }
         parent = splitBalancedNodeRange(childOfQuote);
+        shouldClearFormat = isStyledBlockquote(parent);
         unwrap(parent);
         editor.select(childOfQuote, PositionType.Begin);
+
+        if (shouldClearFormat) {
+            clearFormat(editor);
+        }
     });
     event.rawEvent.preventDefault();
 }
+
+const isStyledBlockquote = (element: Node) => {
+    if (
+        element &&
+        safeInstanceOf(element, 'HTMLQuoteElement') &&
+        element.style.borderLeft &&
+        element.style.borderColor &&
+        element.style.paddingLeft &&
+        element.style.color
+    ) {
+        return true;
+    }
+    return false;
+};
 
 /**
  * @internal
