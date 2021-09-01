@@ -4,6 +4,7 @@ import {
     setIndentation,
     toggleBullet,
     toggleNumbering,
+    toggleListType,
 } from 'roosterjs-editor-api';
 import {
     Browser,
@@ -25,6 +26,7 @@ import {
     PluginKeyboardEvent,
     QueryScope,
     RegionBase,
+    ListType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -251,17 +253,21 @@ function prepareAutoBullet(editor: IEditor, range: Range) {
 function toggleListAndPreventDefault(
     event: PluginKeyboardEvent,
     editor: IEditor,
-    includeSiblingList: boolean = true
+    includeSiblingLists: boolean = true
 ) {
     let listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
         let listElement = listInfo[0];
         let tag = getTagOfNode(listElement);
+        let handler = (listType: ListType) =>
+            toggleListType(editor, listType, null, includeSiblingLists);
+
         if (tag == 'UL') {
-            toggleBullet(editor);
+            handler(ListType.Unordered);
         } else if (tag == 'OL') {
-            toggleNumbering(editor, null, includeSiblingList);
+            handler(ListType.Ordered);
         }
+
         editor.focus();
         event.rawEvent.preventDefault();
     }

@@ -5,24 +5,23 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export default function toggleListType(editor: IEditor, listType: ListType): void;
 export default function toggleListType(
     editor: IEditor,
-    listType: ListType.Ordered,
-    startNumber: number
+    listType: ListType,
+    startNumber?: number,
+    includeSiblingLists?: boolean
 ): void;
 export default function toggleListType(
     editor: IEditor,
     listType: ListType.Ordered,
-    startNumber: number,
-    includeSiblingList: boolean
+    startNumber: number
 ): void;
 
 export default function toggleListType(
     editor: IEditor,
     listType: ListType,
     startNumber?: number,
-    includeSiblingList: boolean = true
+    includeSiblingLists: boolean = true
 ) {
     blockFormat(editor, (region, start, end, chains) => {
         const chain =
@@ -33,7 +32,7 @@ export default function toggleListType(
                       getBlockElementAtNode(region.rootNode, start.node)?.collapseToSingleElement(),
                       startNumber
                   )
-                : createVListFromRegion(region, includeSiblingList /*includeSiblingLists*/);
+                : createVListFromRegion(region, includeSiblingLists);
 
         if (vList) {
             vList.changeListType(start, end, listType);

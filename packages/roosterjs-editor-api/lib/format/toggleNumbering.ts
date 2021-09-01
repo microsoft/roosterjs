@@ -9,12 +9,7 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
  * realization of browser execCommand API
  * @param editor The editor instance
  * @param startNumber (Optional) Start number of the list
- * @param includeSiblingList Sets whether the operation should include the sibling lists, by default is true
  */
-export default function toggleNumbering(
-    editor: IEditor,
-    startNumber?: number,
-    includeSiblingList: boolean = true
-) {
-    toggleListType(editor, ListType.Ordered, startNumber, includeSiblingList);
+export default function toggleNumbering(editor: IEditor, startNumber?: number) {
+    toggleListType(editor, ListType.Ordered, startNumber);
 }
