@@ -146,7 +146,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
                 ? [stringToSearch.replace(/\s/g, ' '), replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
             if (
-                sourceMatch.substring(sourceMatch.length - replacementMatch.length) ===
+                sourceMatch.substring(sourceMatch.length - replacementMatch.length) ==
                 replacementMatch
             ) {
                 return replacement;
