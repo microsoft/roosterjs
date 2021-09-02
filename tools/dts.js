@@ -117,7 +117,9 @@ function appendText(elements, name, text) {
 
 function checkComment(matches, elementType, fileName) {
     if (!matches[1]) {
-        err(`Exported ${elementType} must have comment. File: ${fileName} Code: ${matches[0]}`);
+        err(
+            `Public exported ${elementType} must have comment. File: ${fileName} Code: ${matches[0]}`
+        );
     }
 }
 
@@ -330,7 +332,7 @@ function output(targetDir, library, isAmd, queue) {
             elements[name].forEach(({ published, text }) => {
                 if (!published && text.indexOf('@internal') < 0) {
                     err(
-                        `Unpubished member must be marked as "@internal". File: ${filename} Exported code: ${text.replace(
+                        `Local exported member must be marked as "@internal". File: ${filename} Exported code: ${text.replace(
                             namePlaceholder,
                             name
                         )}`
