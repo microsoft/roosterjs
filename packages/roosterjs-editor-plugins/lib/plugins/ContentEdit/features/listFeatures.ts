@@ -259,13 +259,14 @@ function toggleListAndPreventDefault(
     if (listInfo) {
         let listElement = listInfo[0];
         let tag = getTagOfNode(listElement);
-        let handler = (listType: ListType) =>
-            toggleListType(editor, listType, null, includeSiblingLists);
 
-        if (tag == 'UL') {
-            handler(ListType.Unordered);
-        } else if (tag == 'OL') {
-            handler(ListType.Ordered);
+        if (tag == 'UL' || tag == 'OL') {
+            toggleListType(
+                editor,
+                tag == 'UL' ? ListType.Unordered : ListType.Ordered,
+                null /* startNumber */,
+                includeSiblingLists
+            );
         }
 
         editor.focus();
