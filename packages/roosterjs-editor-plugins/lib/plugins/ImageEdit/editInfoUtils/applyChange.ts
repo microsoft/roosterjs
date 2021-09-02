@@ -1,10 +1,8 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
-import deleteEditInfo from './deleteEditInfo';
 import generateDataURL from './generateDataURL';
-import getEditInfoFromImage from './getEditInfoFromImage';
 import getGeneratedImageSize from './getGeneratedImageSize';
 import ImageEditInfo from '../types/ImageEditInfo';
-import saveEditInfo from './saveEditInfo';
+import { deleteEditInfo, getEditInfoFromImage, saveEditInfo } from './editInfo';
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 /**

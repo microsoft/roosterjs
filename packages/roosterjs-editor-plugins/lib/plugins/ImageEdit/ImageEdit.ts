@@ -1,15 +1,14 @@
 import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
-import Cropper, { getCropHTML } from './imageEditors/Cropper';
-import deleteEditInfo from './editInfoUtils/deleteEditInfo';
 import DragAndDropContext, { X, Y } from './types/DragAndDropContext';
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
-import getEditInfoFromImage from './editInfoUtils/getEditInfoFromImage';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
-import Rotator, { getRotateHTML, ROTATE_GAP, ROTATE_SIZE } from './imageEditors/Rotator';
+import { Cropper, getCropHTML } from './imageEditors/Cropper';
+import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
+import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
@@ -24,7 +23,8 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import Resizer, {
+import {
+    Resizer,
     doubleCheckResize,
     getSideResizeHTML,
     getCornerResizeHTML,
@@ -426,7 +426,6 @@ export default class ImageEdit implements EditorPlugin {
             const isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
             const {
                 angleRad,
-                heightPx,
                 bottomPercent,
                 leftPercent,
                 rightPercent,
@@ -497,31 +496,15 @@ export default class ImageEdit implements EditorPlugin {
                     this.updateWrapper();
                 }
 
-                // Move rotate handle. When image is very close to the border of editor, rotate handle may not be visible.
-                // Fix it by reduce the distance from image to rotate handle
-                const distance = this.editor.getRelativeDistanceToEditor(
-                    wrapper,
-                    true /*addScroll*/
+                updateRotateHandlePosition(
+                    this.editInfo,
+                    this.editor.getRelativeDistanceToEditor(wrapper, true /*addScroll*/),
+                    marginVertical,
+                    rotateCenter,
+                    rotateHandle
                 );
 
-                if (rotateCenter && rotateHandle && distance) {
-                    const cosAngle = Math.cos(angleRad);
-                    const adjustedDistance =
-                        cosAngle <= 0
-                            ? Number.MAX_SAFE_INTEGER
-                            : (distance[1] + heightPx / 2 + marginVertical) / cosAngle -
-                              heightPx / 2;
-
-                    const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
-                    const rotateTop = Math.max(
-                        Math.min(ROTATE_SIZE, adjustedDistance - rotateGap),
-                        0
-                    );
-                    rotateCenter.style.top = getPx(-rotateGap);
-                    rotateCenter.style.height = getPx(rotateGap);
-                    rotateHandle.style.top = getPx(-rotateTop);
-                    updateHandleCursor(resizeHandles, angleRad);
-                }
+                updateHandleCursor(resizeHandles, angleRad);
             }
         }
     };

@@ -3,6 +3,7 @@ import getTagOfNode from './getTagOfNode';
 import shouldSkipNode from './shouldSkipNode';
 
 /**
+ * @internal
  * This walks forwards/backwards DOM tree to get next meaningful node
  * @param rootNode Root node to scope the leaf sibling node
  * @param startNode current node to get sibling node from

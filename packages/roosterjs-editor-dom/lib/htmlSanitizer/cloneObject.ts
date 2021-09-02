@@ -18,7 +18,14 @@ function customClone<T>(
     return result;
 }
 
+const cloneObjectImpl = Object.assign ? nativeClone : customClone;
+
 /**
  * @internal
  */
-export const cloneObject = Object.assign ? nativeClone : customClone;
+export function cloneObject<T>(
+    source: Record<string, T>,
+    existingObj?: Record<string, T>
+): Record<string, T> {
+    return cloneObjectImpl(source, existingObj);
+}

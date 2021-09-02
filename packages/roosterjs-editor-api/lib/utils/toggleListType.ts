@@ -6,6 +6,10 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
  * @internal
  */
 export default function toggleListType(editor: IEditor, listType: ListType): void;
+
+/**
+ * @internal
+ */
 export default function toggleListType(
     editor: IEditor,
     listType: ListType.Ordered,

@@ -17,9 +17,10 @@ const ROTATION: Record<string, number> = {
 };
 
 /**
+ * @internal
  * Crop handle for DragAndDropHelper
  */
-const Cropper: DragAndDropHandler<DragAndDropContext, CropInfo> = {
+export const Cropper: DragAndDropHandler<DragAndDropContext, CropInfo> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ editInfo, x, y, options }, e, base, dx, dy) => {
         [dx, dy] = rotateCoordinate(dx, dy, editInfo.angleRad);
@@ -82,11 +83,6 @@ function crop(
     const validValue = Math.max(Math.min(newValue, maxValue), 0);
     return validValue / fullValue;
 }
-
-/**
- * @internal
- */
-export default Cropper;
 
 /**
  * @internal

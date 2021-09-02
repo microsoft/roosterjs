@@ -1,5 +1,5 @@
-import getEditInfoFromImage from '../editInfoUtils/getEditInfoFromImage';
 import getTargetSizeByPercentage from '../editInfoUtils/getTargetSizeByPercentage';
+import { getEditInfoFromImage } from '../editInfoUtils/editInfo';
 
 /**
  * Check if the image is already resized to the given percentage
