@@ -22,7 +22,6 @@ import {
     isBlockElement,
     isNodeInRegion,
     isVoidHtmlElement,
-    PartialInlineElement,
     safeInstanceOf,
     setStyles,
     splitBalancedNodeRange,
@@ -51,7 +50,7 @@ function isMultiBlockSelection(editor: IEditor): boolean {
 
     let nextBlockElement = transverser.getNextBlockElement();
 
-    //At least two blocks are selected
+    // At least two blocks are selected
     return !!nextBlockElement;
 }
 
@@ -112,26 +111,6 @@ function removeNonBorderStyles(element: HTMLElement): Record<string, string> {
     setStyles(element, styles);
 
     return result;
-}
-
-/**
- * Clear the format of the selected text or list of blocks
- * If the current selection is compose of multiple block elements then remove the text and struture format for all the selected blocks
- * If the current selection is compose of a partial inline element then only the text format is removed from the current selection
- * @param editor The editor instance
- */
-function clearAutoDetectFormat(editor: IEditor) {
-    const isMultiBlock = isMultiBlockSelection(editor);
-    if (!isMultiBlock) {
-        const transverser = editor.getSelectionTraverser();
-        const inlineElement = transverser.currentInlineElement;
-        const isPartial = inlineElement instanceof PartialInlineElement;
-        if (isPartial) {
-            clearFormat(editor);
-            return;
-        }
-    }
-    clearBlockFormat(editor);
 }
 
 /**
@@ -237,14 +216,13 @@ export default function clearFormat(
     editor: IEditor,
     formatType: ClearFormatMode = ClearFormatMode.Inline
 ) {
-    switch (formatType) {
-        case ClearFormatMode.Inline:
-            clearInlineFormat(editor);
-            break;
-        case ClearFormatMode.Block:
-            clearBlockFormat(editor);
-            break;
-        default:
-            clearAutoDetectFormat(editor);
+    if (formatType == ClearFormatMode.AutoDetect) {
+        formatType = isMultiBlockSelection(editor) ? ClearFormatMode.Block : ClearFormatMode.Inline;
+    }
+
+    if (formatType == ClearFormatMode.Inline) {
+        clearInlineFormat(editor);
+    } else {
+        clearBlockFormat(editor);
     }
 }
