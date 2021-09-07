@@ -49,7 +49,7 @@ module.exports = function (config) {
         customLaunchers: {
             ChromeCustomize: {
                 base: 'Chrome',
-                flags: ['--disable-gpu'],
+                flags: ['--disable-gpu', '--disable-dev-shm-usage'],
             },
         },
         files: ['karma.tests.js'],
