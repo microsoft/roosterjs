@@ -17,7 +17,7 @@ module.exports = function (config) {
     }
 
     const browser = runChrome ? 'Chrome' : 'Firefox';
-    const launcher = runChrome ? ['ChromeCustomize'] : ['Firefox'];
+    const launcher = runChrome ? ['Chrome'] : ['Firefox'];
 
     const rules = runCoverage
         ? [
