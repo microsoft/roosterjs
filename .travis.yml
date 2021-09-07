@@ -1,7 +1,8 @@
 language: node_js
 sudo: required
 addons:
-    firefox: latest
+    - firefox: latest
+    - chrome: latest
 node_js:
     - 10
 before_install:
@@ -11,11 +12,6 @@ install:
 script:
     - xvfb-run npm run test:coverage
     - xvfb-run npm run test:chrome
-    # puppeteer-firefox does not run in travis because it depends on a
-    # libstdc++6  that is not available in travis.
-    # See https://github.com/GoogleChrome/puppeteer/pull/3657
-    # Temporarily disable instrumentation test since it is not stable
-    # - xvfb-run npm run instrumentation:chrome
 cache:
     yarn: true
 deploy:
