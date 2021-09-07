@@ -46,17 +46,6 @@ module.exports = function (config) {
             browser: browser,
         },
         browsers: launcher,
-        customLaunchers: {
-            ChromeCustomize: {
-                base: 'Chrome',
-                flags: [
-                    '--disable-gpu',
-                    '--disable-dev-shm-usage',
-                    '--no-sandbox',
-                    '--disable-seccomp-filter-sandbox',
-                ],
-            },
-        },
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {
