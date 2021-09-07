@@ -1,6 +1,7 @@
 import getBlockElementAtNode from '../../lib/blockElements/getBlockElementAtNode';
 import VListChain from '../../lib/list/VListChain';
 import VListItem from '../../lib/list/VListItem';
+import { itFirefoxOnly } from '../DomTestHelper';
 import { ListType, PositionType } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
 
@@ -67,42 +68,42 @@ describe('createListChains', () => {
         );
     });
 
-    it('Two continuously lists', () => {
+    itFirefoxOnly('Two continuously lists', () => {
         runTest(
             '<ol><li>item1</li><li>item2</li></ol><div>test</div><ol start="3"><li>item3</li></ol>',
             `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="3"><li>item3</li></ol>`
         );
     });
 
-    it('Two list chains', () => {
+    itFirefoxOnly('Two list chains', () => {
         runTest(
             '<ol><li>item1</li><li>item2</li><li>item3</li></ol><div>test</div><ol><li>itemA</li><li>itemB</li></ol><ol start="4"><li>item4</li></ol><div>test</div><ol start="3"><li>itemC</li></ol>',
             `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li><li>item3</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1"><li>itemA</li><li>itemB</li></ol><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="4"><li>item4</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1" start="3"><li>itemC</li></ol>`
         );
     });
 
-    it('Unordered list in a chain', () => {
+    itFirefoxOnly('Unordered list in a chain', () => {
         runTest(
             '<ol><li>item1</li><li>item2</li></ol><div>test</div><ul><li>test</li></ul><div>test</div><ol start="3"><li>item3</li></ol>',
             `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ul><li>test</li></ul><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="3"><li>item3</li></ol>`
         );
     });
 
-    it('Nested list', () => {
+    itFirefoxOnly('Nested list', () => {
         runTest(
             '<ol><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol start="2"><li>item2</li></ol>',
             `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="2"><li>item2</li></ol>`
         );
     });
 
-    it('Nested list for separated lists', () => {
+    itFirefoxOnly('Nested list for separated lists', () => {
         runTest(
             '<ol><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol start="3"><li>item2</li></ol>',
             `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1" start="3"><li>item2</li></ol>`
         );
     });
 
-    it('Current node', () => {
+    itFirefoxOnly('Current node', () => {
         runTest(
             `<ol><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div id="${CurrentNode}">test</div><ol start="2"><li>item2</li></ol>`,
             `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div id="${CurrentNode}">test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" data-listchainafter="true" start="2"><li>item2</li></ol>`
@@ -252,7 +253,7 @@ describe('VListChain.createVListAtNode', () => {
         );
     });
 
-    it('Single list', () => {
+    itFirefoxOnly('Single list', () => {
         runTest(
             `<ol><li>item</li></ol><div id="${CurrentNode}">test</div>`,
             2,

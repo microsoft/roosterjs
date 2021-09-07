@@ -26,59 +26,71 @@ describe('toggleItalic()', () => {
         expect(document.execCommand).toHaveBeenCalledWith('italic', false, null);
     });
 
-    it('if select an unItalic string and then toggle italic, the string will wrap with <i></i>', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectNode(document.getElementById('text'));
+    TestHelper.itFirefoxOnly(
+        'if select an unItalic string and then toggle italic, the string will wrap with <i></i>',
+        () => {
+            // Arrange
+            editor.setContent(originalContent);
+            TestHelper.selectNode(document.getElementById('text'));
 
-        // Act
-        toggleItalic(editor);
+            // Act
+            toggleItalic(editor);
 
-        // Assert
-        expect(editor.getContent()).toBe(
-            '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><i>text</i></div>'
-        );
-    });
+            // Assert
+            expect(editor.getContent()).toBe(
+                '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><i>text</i></div>'
+            );
+        }
+    );
 
-    it('if select an unItalic string and then toggle italic, only the selected string will wrap with <i></i>', () => {
-        // Arrange
-        editor.setContent(originalContent);
-        TestHelper.selectText(document.getElementById('text').firstChild, 0, 3);
+    TestHelper.itFirefoxOnly(
+        'if select an unItalic string and then toggle italic, only the selected string will wrap with <i></i>',
+        () => {
+            // Arrange
+            editor.setContent(originalContent);
+            TestHelper.selectText(document.getElementById('text').firstChild, 0, 3);
 
-        // Act
-        toggleItalic(editor);
+            // Act
+            toggleItalic(editor);
 
-        // Assert
-        expect(editor.getContent()).toBe(
-            '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><i>tex</i>t</div>'
-        );
-    });
+            // Assert
+            expect(editor.getContent()).toBe(
+                '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><i>tex</i>t</div>'
+            );
+        }
+    );
 
-    it('if select an italic string and then toggle italic, the string will be unItalic', () => {
-        // Arrange
-        editor.setContent(
-            '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><i>text</i></div>'
-        );
-        TestHelper.selectNode(document.getElementById('text'));
+    TestHelper.itFirefoxOnly(
+        'if select an italic string and then toggle italic, the string will be unItalic',
+        () => {
+            // Arrange
+            editor.setContent(
+                '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><i>text</i></div>'
+            );
+            TestHelper.selectNode(document.getElementById('text'));
 
-        // Act
-        toggleItalic(editor);
+            // Act
+            toggleItalic(editor);
 
-        // Assert
-        expect(editor.getContent()).toBe(originalContent);
-    });
+            // Assert
+            expect(editor.getContent()).toBe(originalContent);
+        }
+    );
 
-    it('if select a string with font-style set as italic and then toggle italic, the font-style style will be removed', () => {
-        // Arrange
-        editor.setContent(
-            '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);font-style: italic;">text</div>'
-        );
-        TestHelper.selectNode(document.getElementById('text'));
+    TestHelper.itFirefoxOnly(
+        'if select a string with font-style set as italic and then toggle italic, the font-style style will be removed',
+        () => {
+            // Arrange
+            editor.setContent(
+                '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);font-style: italic;">text</div>'
+            );
+            TestHelper.selectNode(document.getElementById('text'));
 
-        // Act
-        toggleItalic(editor);
+            // Act
+            toggleItalic(editor);
 
-        // Assert
-        expect(editor.getContent()).toBe(originalContent);
-    });
+            // Assert
+            expect(editor.getContent()).toBe(originalContent);
+        }
+    );
 });

@@ -102,3 +102,14 @@ export function htmlToDom(html: string): Node[] {
 
     return [].slice.call(element.childNodes);
 }
+
+declare var __karma__: any;
+
+export function itFirefoxOnly(
+    expectation: string,
+    assertion?: jasmine.ImplementationCallback,
+    timeout?: number
+) {
+    const func = __karma__.config.browser == 'Chrome' ? xit : it;
+    return func(expectation, assertion, timeout);
+}

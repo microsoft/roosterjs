@@ -1,11 +1,12 @@
 const argv = require('minimist')(process.argv.slice(2));
 const components = argv.components !== true && argv.components;
 const runCoverage = typeof argv.coverage !== 'undefined';
+const runChrome = typeof argv.chrome !== 'undefined';
 
 module.exports = function (config) {
     const plugins = [
         'karma-webpack',
-        'karma-firefox-launcher',
+        runChrome ? 'karma-chrome-launcher' : 'karma-firefox-launcher',
         'karma-phantomjs-launcher',
         'karma-jasmine',
         'karma-sourcemap-loader',
@@ -14,6 +15,8 @@ module.exports = function (config) {
     if (runCoverage) {
         plugins.push('karma-coverage-istanbul-reporter');
     }
+
+    const browser = runChrome ? 'Chrome' : 'Firefox';
 
     const rules = runCoverage
         ? [
@@ -39,8 +42,9 @@ module.exports = function (config) {
         client: {
             components: components,
             clearContext: false,
+            browser: browser,
         },
-        browsers: ['Firefox'],
+        browsers: [browser],
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {

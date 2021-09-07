@@ -21,6 +21,7 @@
         "build:ci": "node tools/build.js clean checkdep normalize tslint buildcommonjs buildamd dts pack packprod builddemo builddoc",
         "start": "node tools/start.js",
         "test": "karma start",
+        "test:chrome": "karma start --chrome",
         "test:debug": "karma start --no-single-run",
         "test:coverage": "karma start --coverage",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod builddemo publish"
@@ -40,6 +41,7 @@
         "karma": "5.0.4",
         "karma-coverage-istanbul-reporter": "3.0.3",
         "karma-firefox-launcher": "1.3.0",
+        "karma-chrome-launcher": "3.1.0",
         "karma-jasmine": "3.1.1",
         "karma-phantomjs-launcher": "1.0.4",
         "karma-sourcemap-loader": "0.3.7",
