@@ -1,8 +1,8 @@
 language: node_js
 sudo: required
 addons:
-    - firefox: latest
     - chrome: latest
+    - firefox: latest
 node_js:
     - 10
 before_install:
