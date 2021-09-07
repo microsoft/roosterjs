@@ -10,6 +10,7 @@ module.exports = function (config) {
         'karma-phantomjs-launcher',
         'karma-jasmine',
         'karma-sourcemap-loader',
+        'karma-verbose-reporter',
     ];
 
     if (runCoverage) {
@@ -45,11 +46,12 @@ module.exports = function (config) {
             browser: browser,
         },
         browsers: [browser],
-        customLaunchers: {
-            Chrome: {
-                flags: ['--disable-gpu'],
-            },
-        },
+        // customLaunchers: {
+        //     Chrome: {
+
+        //         flags: ['--disable-gpu'],
+        //     },
+        // },
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {
@@ -91,6 +93,8 @@ module.exports = function (config) {
             reports: ['html', 'lcovonly', 'text-summary'],
             dir: './dist/deploy/coverage',
         };
+    } else {
+        settings.reporters = ['verbose'];
     }
 
     config.set(settings);
