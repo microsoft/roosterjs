@@ -1,16 +1,16 @@
 language: node_js
 sudo: required
 addons:
-    - chrome: latest
-    - firefox: latest
+    chrome: stable
+    #firefox: latest
 node_js:
     - 10
 before_install:
     - yarn
-install:
-    - npm run build:ci
+#install:
+#    - npm run build:ci
 script:
-    - xvfb-run npm run test:coverage
+    #    - xvfb-run npm run test:coverage
     - xvfb-run npm run test:chrome
 cache:
     yarn: true
