@@ -45,6 +45,11 @@ module.exports = function (config) {
             browser: browser,
         },
         browsers: [browser],
+        customLaunchers: {
+            Chrome: {
+                flags: ['--disable-gpu'],
+            },
+        },
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {
