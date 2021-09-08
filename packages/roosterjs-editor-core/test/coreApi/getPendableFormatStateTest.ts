@@ -597,24 +597,6 @@ describe('getPendableFormatState', () => {
         });
     });
 
-    it('bug test case', () => {
-        const core = createEditorCore(div, {});
-        core.api.setContent(
-            core,
-            '<div id="text1"><strong>Content</strong></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
-            true
-        );
-        const format = getPendableFormatState(core);
-        expect(format).toEqual({
-            isBold: true,
-            isItalic: false,
-            isUnderline: false,
-            isStrikeThrough: false,
-            isSubscript: false,
-            isSuperscript: false,
-        });
-    });
-
     it('check focus out of format range', () => {
         const core = createEditorCore(div, {});
         core.api.setContent(
