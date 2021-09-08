@@ -1,6 +1,5 @@
 import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
-import Cropper, { getCropHTML } from './imageEditors/Cropper';
 import deleteEditInfo from './editInfoUtils/deleteEditInfo';
 import DragAndDropContext, { X, Y } from './types/DragAndDropContext';
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
@@ -9,7 +8,8 @@ import getEditInfoFromImage from './editInfoUtils/getEditInfoFromImage';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
-import Rotator, { getRotateHTML, ROTATE_GAP, ROTATE_SIZE } from './imageEditors/Rotator';
+import { Cropper, getCropHTML } from './imageEditors/Cropper';
+import { getRotateHTML, ROTATE_GAP, ROTATE_SIZE, Rotator } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
 import {
@@ -24,7 +24,8 @@ import {
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
-import Resizer, {
+import {
+    Resizer,
     doubleCheckResize,
     getSideResizeHTML,
     getCornerResizeHTML,

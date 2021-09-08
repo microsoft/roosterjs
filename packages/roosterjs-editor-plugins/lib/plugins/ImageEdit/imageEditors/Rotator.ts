@@ -20,9 +20,10 @@ const DEFAULT_ROTATE_HANDLE_HEIGHT = ROTATE_SIZE / 2 + ROTATE_GAP;
 const ROTATE_ICON_MARGIN = 8;
 
 /**
+ * @internal
  * The rotate drag and drop handler
  */
-const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
+export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ editInfo, options }, e, base, deltaX, deltaY) => {
         const distance = editInfo.heightPx / 2 + DEFAULT_ROTATE_HANDLE_HEIGHT;
@@ -45,11 +46,6 @@ const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
         }
     },
 };
-
-/**
- * @internal
- */
-export default Rotator;
 
 /**
  * @internal
