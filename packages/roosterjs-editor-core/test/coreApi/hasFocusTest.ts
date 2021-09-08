@@ -43,6 +43,7 @@ describe('hasFocus', () => {
 
         let span = core.contentDiv.querySelector('span');
         core.api.selectRange(core, createRange(span.firstChild, 1));
+        core.api.focus(core);
         expect(hasFocus(core)).toBe(true);
     });
 });
