@@ -1,5 +1,5 @@
-import getEditInfoFromImage from '../../lib/plugins/ImageEdit/editInfoUtils/getEditInfoFromImage';
 import ImageEditInfo from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
+import { getEditInfoFromImage } from '../../lib/plugins/ImageEdit/editInfoUtils/editInfo';
 
 const IMG_SRC =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAALUlEQVQ4EWNgYGD4T2U8lAz8TyZACzKEl8k0Dz0OhpKBaGGB7hVi+QgvD0oDATe/bqDDw39VAAAAAElFTkSuQmCC';

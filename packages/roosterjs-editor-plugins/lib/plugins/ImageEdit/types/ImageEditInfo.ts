@@ -1,5 +1,3 @@
-export const IMAGE_EDIT_INFO_NAME = 'roosterEditInfo';
-
 /**
  * @internal
  * Edit info for inline image resize

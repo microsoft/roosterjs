@@ -1,5 +1,5 @@
 import applyChange from '../../lib/plugins/ImageEdit/editInfoUtils/applyChange';
-import getEditInfoFromImage from '../../lib/plugins/ImageEdit/editInfoUtils/getEditInfoFromImage';
+import { getEditInfoFromImage } from '../../lib/plugins/ImageEdit/editInfoUtils/editInfo';
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 const IMG_SRC =

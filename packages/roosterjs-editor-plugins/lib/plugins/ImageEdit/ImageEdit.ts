@@ -1,14 +1,13 @@
 import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
-import deleteEditInfo from './editInfoUtils/deleteEditInfo';
 import DragAndDropContext, { X, Y } from './types/DragAndDropContext';
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
-import getEditInfoFromImage from './editInfoUtils/getEditInfoFromImage';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
+import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
