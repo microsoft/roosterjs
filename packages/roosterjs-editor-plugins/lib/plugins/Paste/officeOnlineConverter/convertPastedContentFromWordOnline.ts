@@ -1,12 +1,4 @@
 import ListItemBlock, { createListItemBlock } from './ListItemBlock';
-import {
-    WORD_ORDERED_LIST_SELECTOR,
-    WORD_UNORDERED_LIST_SELECTOR,
-    WORD_ONLINE_IDENTIFYING_SELECTOR,
-    LIST_CONTAINER_ELEMENT_CLASS_NAME,
-    ORDERED_LIST_TAG_NAME,
-    UNORDERED_LIST_TAG_NAME,
-} from './constants';
 
 import {
     splitParentNode,
@@ -17,6 +9,10 @@ import {
     unwrap,
     toArray,
 } from 'roosterjs-editor-dom';
+
+const WORD_ONLINE_IDENTIFYING_SELECTOR =
+    'div.ListContainerWrapper>ul[class^="BulletListStyle"],div.ListContainerWrapper>ol[class^="NumberListStyle"]';
+const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 
 /**
  * @internal
@@ -146,7 +142,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
  */
 function sanitizeListItemContainer(fragment: DocumentFragment) {
     const listItemContainerListEl = toArray(
-        fragment.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`)
+        fragment.querySelectorAll(WORD_ONLINE_IDENTIFYING_SELECTOR)
     );
     listItemContainerListEl.forEach(el => {
         const replaceRegex = new RegExp(`\\b${LIST_CONTAINER_ELEMENT_CLASS_NAME}\\b`, 'g');
@@ -224,7 +220,7 @@ function flattenListBlock(fragment: DocumentFragment, listItemBlock: ListItemBlo
  */
 function getContainerListType(listItemContainer: Element): 'OL' | 'UL' | null {
     const tag = getTagOfNode(listItemContainer.firstChild);
-    return tag == UNORDERED_LIST_TAG_NAME || tag == ORDERED_LIST_TAG_NAME ? tag : null;
+    return tag == 'UL' || tag == 'OL' ? tag : null;
 }
 
 /**
@@ -257,7 +253,7 @@ function insertListItem(
             // and the level iterator should move to the UL/OL at the last position.
             let lastChild = curListLevel.lastElementChild;
             let lastChildTag = getTagOfNode(lastChild);
-            if (lastChildTag == UNORDERED_LIST_TAG_NAME || lastChildTag == ORDERED_LIST_TAG_NAME) {
+            if (lastChildTag == 'UL' || lastChildTag == 'OL') {
                 // If the last child is a list(UL/OL), then move the level iterator to last child.
                 curListLevel = lastChild;
             } else {

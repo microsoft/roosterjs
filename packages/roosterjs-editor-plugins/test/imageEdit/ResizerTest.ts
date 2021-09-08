@@ -1,7 +1,7 @@
 import DragAndDropContext, { X, Y } from '../../lib/plugins/ImageEdit/types/DragAndDropContext';
 import ImageEditInfo, { ResizeInfo } from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
-import Resizer from '../../lib/plugins/ImageEdit/imageEditors/Resizer';
 import { ImageEditOptions } from 'roosterjs-editor-types';
+import { Resizer } from '../../lib/plugins/ImageEdit/imageEditors/Resizer';
 
 describe('Resizer: resize only', () => {
     const options: ImageEditOptions = {

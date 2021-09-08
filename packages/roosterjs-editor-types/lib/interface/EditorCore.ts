@@ -207,6 +207,10 @@ export type TransformColor = (
  */
 export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
+/**
+ * The interface for the map of core API.
+ * Editor can call call API from this map under EditorCore object
+ */
 export interface CoreApiMap {
     /**
      * Call an editing callback with adding undo snapshots around, and trigger a ContentChanged event if change source is specified.

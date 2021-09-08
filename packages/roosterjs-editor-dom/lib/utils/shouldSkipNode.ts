@@ -6,6 +6,7 @@ const CRLF = /^[\r\n]+$/gm;
 const CRLF_SPACE = /[\t\r\n\u0020\u200B]/gm; // We should only find new line, real space or ZeroWidthSpace (TAB, %20, but not &nbsp;)
 
 /**
+ * @internal
  * Skip a node when any of following conditions are true
  * - it is neither Element nor Text
  * - it is a text node but is empty

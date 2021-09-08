@@ -1,11 +1,14 @@
 import { coreApiMap } from '../coreApi/coreApiMap';
+import createCorePlugins, {
+    getPluginState,
+    CreateCorePluginResponse,
+} from '../corePlugins/createCorePlugins';
 import {
     BlockElement,
     ChangeSource,
     ClipboardData,
     ColorTransformDirection,
     ContentPosition,
-    CorePlugins,
     DefaultFormat,
     DOMEventHandler,
     EditorCore,
@@ -33,10 +36,6 @@ import {
     StyleBasedFormatState,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
-import createCorePlugins, {
-    getPluginState,
-    PLACEHOLDER_PLUGIN_NAME,
-} from '../corePlugins/createCorePlugins';
 import {
     cacheGetEventData,
     collapseNodes,
@@ -82,15 +81,13 @@ export default class Editor implements IEditor {
         // 2. Store options values to local variables
         const corePlugins = createCorePlugins(contentDiv, options);
         const plugins: EditorPlugin[] = [];
-        Object.keys(corePlugins).forEach(
-            (name: typeof PLACEHOLDER_PLUGIN_NAME | keyof CorePlugins) => {
-                if (name == PLACEHOLDER_PLUGIN_NAME) {
-                    arrayPush(plugins, options.plugins);
-                } else {
-                    plugins.push(corePlugins[name]);
-                }
+        Object.keys(corePlugins).forEach((name: keyof CreateCorePluginResponse) => {
+            if (name == '_placeholder') {
+                arrayPush(plugins, options.plugins);
+            } else {
+                plugins.push(corePlugins[name]);
             }
-        );
+        });
         this.core = {
             contentDiv,
             api: {
