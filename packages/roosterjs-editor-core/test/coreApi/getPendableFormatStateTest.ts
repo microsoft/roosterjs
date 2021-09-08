@@ -18,7 +18,7 @@ describe('getPendableFormatState', () => {
         div.innerHTML =
             '<div style="font-family: arial; font-size: 12pt; color: black; background-color: white"><u>test</u></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -33,7 +33,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div style="text-decoration: underline"><div style="">test</div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -48,7 +48,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><b>test</b></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: false,
@@ -63,7 +63,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><strong>test</strong></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: false,
@@ -79,7 +79,7 @@ describe('getPendableFormatState', () => {
         div.innerHTML =
             '<div><div style="font-weight: bold">test</div style="font-weight: bold"></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: false,
@@ -95,7 +95,7 @@ describe('getPendableFormatState', () => {
         div.innerHTML =
             '<div><div style="font-weight: bolder">test</div style="font-weight: bolder"></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: false,
@@ -111,7 +111,7 @@ describe('getPendableFormatState', () => {
         div.innerHTML =
             '<div><div style="font-weight: bolder">test</div style="font-weight: 700"></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: false,
@@ -126,7 +126,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><i>test</i></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: true,
@@ -141,7 +141,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><em>test</em></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: true,
@@ -156,7 +156,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><div style="font-style:italic">test</div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: true,
@@ -171,7 +171,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><div style="vertical-align:sub">test</div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -186,7 +186,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><sub>test</sub></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -201,7 +201,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><sup>test</sup></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -216,7 +216,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><div style="vertical-align: super">test</div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -231,7 +231,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><div style="text-decoration: line-through">test</div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -246,7 +246,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><strike>test</strike></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -261,7 +261,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><s>test</s></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -276,7 +276,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div><s><u><i><b><sup><sub>test</sub></sup></b></i></u></s></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: true,
@@ -292,7 +292,7 @@ describe('getPendableFormatState', () => {
         div.innerHTML =
             '<div><div style="text-decoration: underline line-through; font-weight: bold; vertical-align:super; font-style: italic" >test</div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: true,
@@ -308,7 +308,7 @@ describe('getPendableFormatState', () => {
         div.innerHTML =
             '<div><div style="text-decoration: underline; font-weight: bold; vertical-align:sub"><s><i>test</i></s></div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: true,
             isItalic: true,
@@ -323,7 +323,7 @@ describe('getPendableFormatState', () => {
         const core = createEditorCore(div, {});
         div.innerHTML = '<div ><b><div style="font-weight: normal;">test</div><b></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -339,7 +339,7 @@ describe('getPendableFormatState', () => {
         div.innerHTML =
             '<div><div style="text-decoration: underline; font-weight:bold;"><div style="font-weight: normal;">test</div></div></div>';
         core.api.focus(core);
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,

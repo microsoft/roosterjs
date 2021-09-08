@@ -329,5 +329,5 @@ const policy = trustedTypes?.createPolicy('roosterjsUnsafeConvertHTML', {
 });
 
 const unsafeConvertToTrustedHTML = policy
-    ? (html: string) => policy.createHTML(html)
+    ? (html: string) => policy.createHTML(html || '')
     : (html: string) => html;

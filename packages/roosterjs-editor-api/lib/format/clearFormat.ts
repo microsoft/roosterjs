@@ -166,7 +166,6 @@ function clearInlineFormat(editor: IEditor) {
     editor.focus();
     editor.addUndoSnapshot(() => {
         execCommand(editor, DocumentCommand.RemoveFormat);
-
         editor.queryElements('[class]', QueryScope.OnSelection, node =>
             node.removeAttribute('class')
         );
@@ -191,10 +190,20 @@ function clearInlineFormat(editor: IEditor) {
                 setFontSize(editor, defaultFormat.fontSize);
             }
             if (defaultFormat.textColor) {
+                const setColorIgnoredElements = editor.queryElements<HTMLElement>(
+                    'a *, a',
+                    QueryScope.OnSelection
+                );
+
+                let shouldApplyInlineStyle =
+                    setColorIgnoredElements.length > 0
+                        ? (element: HTMLElement) => setColorIgnoredElements.indexOf(element) == -1
+                        : null;
+
                 if (defaultFormat.textColors) {
-                    setTextColor(editor, defaultFormat.textColors);
+                    setTextColor(editor, defaultFormat.textColors, shouldApplyInlineStyle);
                 } else {
-                    setTextColor(editor, defaultFormat.textColor);
+                    setTextColor(editor, defaultFormat.textColor, shouldApplyInlineStyle);
                 }
             }
             if (defaultFormat.backgroundColor) {

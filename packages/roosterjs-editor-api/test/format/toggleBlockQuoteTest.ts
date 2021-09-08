@@ -26,7 +26,7 @@ describe('toggleBlockQuote', () => {
         runTest('<!--{"start":[0],"end":[0]}-->', '<blockquote><div><br></div></blockquote>');
     });
 
-    it('Empty DIV', () => {
+    TestHelper.itFirefoxOnly('Empty DIV', () => {
         runTest(
             '<div></div><!--{"start":[0],"end":[0]}-->',
             '<blockquote><div><br></div></blockquote>'

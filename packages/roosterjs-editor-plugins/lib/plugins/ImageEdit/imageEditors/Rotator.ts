@@ -1,28 +1,21 @@
 import DragAndDropContext from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import ImageEditInfo, { RotateInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { RotateInfo } from '../types/ImageEditInfo';
 
-/**
- * @internal Size of rotate icon
- */
-export const ROTATE_SIZE = 32;
-
-/**
- * @internal Gap between image and the rotate handle
- */
-export const ROTATE_GAP = 15;
-
+const ROTATE_SIZE = 32;
+const ROTATE_GAP = 15;
 const DEG_PER_RAD = 180 / Math.PI;
 const DEFAULT_ROTATE_HANDLE_HEIGHT = ROTATE_SIZE / 2 + ROTATE_GAP;
 const ROTATE_ICON_MARGIN = 8;
 
 /**
+ * @internal
  * The rotate drag and drop handler
  */
-const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
+export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ editInfo, options }, e, base, deltaX, deltaY) => {
         const distance = editInfo.heightPx / 2 + DEFAULT_ROTATE_HANDLE_HEIGHT;
@@ -48,8 +41,31 @@ const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
 
 /**
  * @internal
+ * Move rotate handle. When image is very close to the border of editor, rotate handle may not be visible.
+ * Fix it by reduce the distance from image to rotate handle
  */
-export default Rotator;
+export function updateRotateHandlePosition(
+    editInfo: ImageEditInfo,
+    distance: number[],
+    marginVertical: number,
+    rotateCenter: HTMLElement,
+    rotateHandle: HTMLElement
+) {
+    if (rotateCenter && rotateHandle && distance) {
+        const { angleRad, heightPx } = editInfo;
+        const cosAngle = Math.cos(angleRad);
+        const adjustedDistance =
+            cosAngle <= 0
+                ? Number.MAX_SAFE_INTEGER
+                : (distance[1] + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
+
+        const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
+        const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
+        rotateCenter.style.top = -rotateGap + 'px';
+        rotateCenter.style.height = rotateGap + 'px';
+        rotateHandle.style.top = -rotateTop + 'px';
+    }
+}
 
 /**
  * @internal
