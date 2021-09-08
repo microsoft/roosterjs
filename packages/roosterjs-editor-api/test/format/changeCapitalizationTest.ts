@@ -30,7 +30,7 @@ describe('changeCapitalization()', () => {
     }
 
     // Basic functionality tests
-    it('UPPERCASE', () => {
+    TestHelper.itFirefoxOnly('UPPERCASE', () => {
         runTest(
             '<div id="divToTest">text</div>',
             '<div id="divToTest"><span>TEXT</span></div>',
@@ -38,7 +38,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('lowercase', () => {
+    TestHelper.itFirefoxOnly('lowercase', () => {
         runTest(
             '<div id="divToTest">TEXT</div>',
             '<div id="divToTest"><span>text</span></div>',
@@ -46,7 +46,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Capitalize Each Word', () => {
+    TestHelper.itFirefoxOnly('Capitalize Each Word', () => {
         runTest(
             '<div id="divToTest">text</div>',
             '<div id="divToTest"><span>Text</span></div>',
@@ -54,7 +54,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Capitalize Each Word from lowercase', () => {
+    TestHelper.itFirefoxOnly('Capitalize Each Word from lowercase', () => {
         runTest(
             '<div id="divToTest">first second third</div>',
             '<div id="divToTest"><span>First Second Third</span></div>',
@@ -62,7 +62,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Capitalize Each Word from UPPERCASE', () => {
+    TestHelper.itFirefoxOnly('Capitalize Each Word from UPPERCASE', () => {
         runTest(
             '<div id="divToTest">FIRST SECOND THIRD</div>',
             '<div id="divToTest"><span>First Second Third</span></div>',
@@ -70,7 +70,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Sentence case from UPPERCASE', () => {
+    TestHelper.itFirefoxOnly('Sentence case from UPPERCASE', () => {
         runTest(
             '<div id="divToTest">WHAT IS IT? PLEASE. I NEED TO KNOW! ANOTHER SENTENCE.</div>',
             '<div id="divToTest"><span>What is it? Please. I need to know! Another sentence.</span></div>',
@@ -78,7 +78,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Sentence case does not capitalize URLS', () => {
+    TestHelper.itFirefoxOnly('Sentence case does not capitalize URLS', () => {
         runTest(
             '<div id="divToTest">example: www.contoso.com is not capitalized but. aww is.</div>',
             '<div id="divToTest"><span>Example: www.contoso.com is not capitalized but. Aww is.</span></div>',
@@ -87,15 +87,18 @@ describe('changeCapitalization()', () => {
     });
 
     // Style and markup tests
-    it('styled content will retain styling after changing capitalization', () => {
-        runTest(
-            '<div id="divToTest" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><b>Text</b></div>',
-            '<div id="divToTest" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><span><b>TEXT</b></span></div>',
-            Capitalization.Uppercase
-        );
-    });
+    TestHelper.itFirefoxOnly(
+        'styled content will retain styling after changing capitalization',
+        () => {
+            runTest(
+                '<div id="divToTest" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><b>Text</b></div>',
+                '<div id="divToTest" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><span><b>TEXT</b></span></div>',
+                Capitalization.Uppercase
+            );
+        }
+    );
 
-    it('will retain list format when changing capitalization', () => {
+    TestHelper.itFirefoxOnly('will retain list format when changing capitalization', () => {
         runTest(
             '<div id="divToTest"><ul><li><span>coffee</span></li><li><span>tea<span></li></ul></div>',
             '<div id="divToTest"><ul><li><span>COFFEE</span></li><li><span>TEA</span><span><span></span></span></li></ul></div>',
@@ -103,7 +106,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Multi line is respected', () => {
+    TestHelper.itFirefoxOnly('Multi line is respected', () => {
         runTest(
             '<div id="divToTest">This is<br>a test</div>',
             '<div id="divToTest"><span>THIS IS</span><br><span>A TEST</span></div>',
@@ -111,7 +114,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Hyperlink is not affected', () => {
+    TestHelper.itFirefoxOnly('Hyperlink is not affected', () => {
         runTest(
             '<div id="divToTest">This is a <a href="http://contoso.com" title="http://contoso.com">test</a></div>',
             '<div id="divToTest"><span>THIS IS A </span><a href="http://contoso.com" title="http://contoso.com"><span>TEST</span></a></div>',
@@ -119,7 +122,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('<IMG> is not affected', () => {
+    TestHelper.itFirefoxOnly('<IMG> is not affected', () => {
         runTest(
             '<div id="divToTest"><img src="test" width="100%">see the image above</div>',
             '<div id="divToTest"><img src="test" width="100%"><span>See The Image Above</span></div>',
@@ -128,15 +131,18 @@ describe('changeCapitalization()', () => {
     });
 
     // Internationalization tests
-    it('works without a language passed when the character mapping is clear', () => {
-        runTest(
-            '<div id="divToTest">ılık ısırgan ışık</div>',
-            '<div id="divToTest"><span>ILIK ISIRGAN IŞIK</span></div>',
-            Capitalization.Uppercase
-        );
-    });
+    TestHelper.itFirefoxOnly(
+        'works without a language passed when the character mapping is clear',
+        () => {
+            runTest(
+                '<div id="divToTest">ılık ısırgan ışık</div>',
+                '<div id="divToTest"><span>ILIK ISIRGAN IŞIK</span></div>',
+                Capitalization.Uppercase
+            );
+        }
+    );
 
-    it('works with an invalid string passed for language', () => {
+    TestHelper.itFirefoxOnly('works with an invalid string passed for language', () => {
         runTest(
             '<div id="divToTest">first second third</div>',
             '<div id="divToTest"><span>First Second Third</span></div>',
@@ -145,16 +151,19 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('does not affect uncased languages even when a cased language is passed', () => {
-        runTest(
-            '<div id="divToTest">לשון הקודש</div>',
-            '<div id="divToTest"><span>לשון הקודש</span></div>',
-            Capitalization.Uppercase,
-            'es'
-        );
-    });
+    TestHelper.itFirefoxOnly(
+        'does not affect uncased languages even when a cased language is passed',
+        () => {
+            runTest(
+                '<div id="divToTest">לשון הקודש</div>',
+                '<div id="divToTest"><span>לשון הקודש</span></div>',
+                Capitalization.Uppercase,
+                'es'
+            );
+        }
+    );
 
-    it('Turkish undotted lowercase undotted to uppercase I', () => {
+    TestHelper.itFirefoxOnly('Turkish undotted lowercase undotted to uppercase I', () => {
         runTest(
             '<div id="divToTest">ılık ısırgan ışık</div>',
             '<div id="divToTest"><span>ILIK ISIRGAN IŞIK</span></div>',
@@ -163,7 +172,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Turkish undotted uppercase dotted to lowercase ı', () => {
+    TestHelper.itFirefoxOnly('Turkish undotted uppercase dotted to lowercase ı', () => {
         runTest(
             '<div id="divToTest">ILIK ISIRGAN IŞIK</div>',
             '<div id="divToTest"><span>ılık ısırgan ışık</span></div>',
@@ -172,7 +181,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Greek Σ to lowercase: σ OR ς if terminating a word', () => {
+    TestHelper.itFirefoxOnly('Greek Σ to lowercase: σ OR ς if terminating a word', () => {
         runTest(
             '<div id="divToTest">Σ IS A GREEK LETTER AND APPEARS IN ΟΔΥΣΣΕΥΣ.</div>',
             '<div id="divToTest"><span>σ is a greek letter and appears in οδυσσευς.</span></div>',
@@ -181,7 +190,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('German ß to uppercase', () => {
+    TestHelper.itFirefoxOnly('German ß to uppercase', () => {
         runTest(
             '<div id="divToTest">grüßen</div>',
             '<div id="divToTest"><span>GRÜSSEN</span></div>',
@@ -190,7 +199,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Spanish special characters', () => {
+    TestHelper.itFirefoxOnly('Spanish special characters', () => {
         runTest(
             '<div id="divToTest">A sus órdenes señora</div>',
             '<div id="divToTest"><span>A SUS ÓRDENES SEÑORA</span></div>',
