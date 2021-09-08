@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">19.8% </span>
+                <span class="strong">20% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/101</span>
+                <span class='fraction'>20/100</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.33% </span>
+                <span class="strong">8.86% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/75</span>
+                <span class='fraction'>7/79</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20.2% </span>
+                <span class="strong">20.41% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/99</span>
+                <span class='fraction'>20/98</span>
             </div>
         
             
@@ -344,7 +344,19 @@
 <a name='L285'></a><a href='#L285'>285</a>
 <a name='L286'></a><a href='#L286'>286</a>
 <a name='L287'></a><a href='#L287'>287</a>
-<a name='L288'></a><a href='#L288'>288</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -352,6 +364,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -595,14 +608,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -637,6 +659,7 @@
     setIndentation,
     toggleBullet,
     toggleNumbering,
+    toggleListType,
 } from 'roosterjs-editor-api';
 import {
     Browser,
@@ -658,6 +681,7 @@ import {
     PluginKeyboardEvent,
     QueryScope,
     RegionBase,
+    ListType,
 } from 'roosterjs-editor-types';
 &nbsp;
 /**
@@ -760,7 +784,7 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature&lt;PluginKeyboardEvent&gt;
     },
     handleEvent: <span class="fstat-no" title="function not covered" >(e</span>vent, editor) =&gt; {
 <span class="cstat-no" title="statement not covered" >        editor.addUndoSnapshot(</span>
-<span class="fstat-no" title="function not covered" >            () =&gt; <span class="cstat-no" title="statement not covered" >t</span>oggleListAndPreventDefault(event, editor),</span>
+<span class="fstat-no" title="function not covered" >            () =&gt; <span class="cstat-no" title="statement not covered" >t</span>oggleListAndPreventDefault(event, editor, false /* includeSiblingLists */),</span>
             null /*changeSource*/,
             true /*canUndoByBackspace*/
         );
@@ -881,16 +905,25 @@ function <span class="fstat-no" title="function not covered" >prepareAutoBullet(
     }
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >toggleListAndPreventDefault(</span>event: PluginKeyboardEvent, editor: IEditor) {
+function <span class="fstat-no" title="function not covered" >toggleListAndPreventDefault(</span>
+    event: PluginKeyboardEvent,
+    editor: IEditor,
+<span class="cstat-no" title="statement not covered" >    includeSiblingLists: boolean = true</span>
+) {
     let listInfo = <span class="cstat-no" title="statement not covered" >cacheGetListElement(event, editor);</span>
 <span class="cstat-no" title="statement not covered" >    if (listInfo) {</span>
         let listElement = <span class="cstat-no" title="statement not covered" >listInfo[0];</span>
         let tag = <span class="cstat-no" title="statement not covered" >getTagOfNode(listElement);</span>
-<span class="cstat-no" title="statement not covered" >        if (tag == 'UL') {</span>
-<span class="cstat-no" title="statement not covered" >            toggleBullet(editor);</span>
-        } else <span class="cstat-no" title="statement not covered" >if (tag == 'OL') {</span>
-<span class="cstat-no" title="statement not covered" >            toggleNumbering(editor);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (tag == 'UL' || tag == 'OL') {</span>
+<span class="cstat-no" title="statement not covered" >            toggleListType(</span>
+                editor,
+                tag == 'UL' ? ListType.Unordered : ListType.Ordered,
+                null /* startNumber */,
+                includeSiblingLists
+            );
         }
+&nbsp;
 <span class="cstat-no" title="statement not covered" >        editor.focus();</span>
 <span class="cstat-no" title="statement not covered" >        event.rawEvent.preventDefault();</span>
     }
@@ -925,7 +958,7 @@ export const ListFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Sep 08 2021 00:05:26 GMT+0000 (Coordinated Universal Time)
+                at Wed Sep 08 2021 18:10:20 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
