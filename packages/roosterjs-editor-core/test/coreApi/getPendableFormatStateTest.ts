@@ -21,7 +21,7 @@ describe('getPendableFormatState', () => {
             '<div style="font-family: arial; font-size: 12pt; color: black; background-color: white"><u>test</u></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -39,7 +39,7 @@ describe('getPendableFormatState', () => {
             '<div style="font-family: arial; font-size: 12pt; color: black; background-color: white"><u>test</u></div><!--{"start":[0,0,0,4],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -58,7 +58,7 @@ describe('getPendableFormatState', () => {
             '<div style="text-decoration: underline"><div style="">test</div></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -71,13 +71,12 @@ describe('getPendableFormatState', () => {
 
     it('bold with b tag', () => {
         const core = createEditorCore(div, {});
-
         core.api.setContent(
             core,
             '<div><b>test</b></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -97,7 +96,7 @@ describe('getPendableFormatState', () => {
             '<div><strong>test</strong></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: true,
             isItalic: false,
@@ -115,7 +114,7 @@ describe('getPendableFormatState', () => {
             '<div><strong>test</strong></div><!--{"start":[0,0,0,4],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -135,7 +134,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="font-weight: bold">test</div style="font-weight: bold"></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -155,7 +154,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="font-weight: bolder">test</div style="font-weight: bolder"></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -175,7 +174,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="font-weight: bolder">test</div style="font-weight: 700"></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -195,7 +194,7 @@ describe('getPendableFormatState', () => {
             '<div><i>test</i></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: true,
@@ -213,7 +212,7 @@ describe('getPendableFormatState', () => {
             '<div><i>test</i></div><!--{"start":[0,0,0,4],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -233,7 +232,7 @@ describe('getPendableFormatState', () => {
             '<div><em>test</em></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -253,7 +252,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="font-style:italic">test</div></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -273,7 +272,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="vertical-align:sub">test</div></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -293,7 +292,7 @@ describe('getPendableFormatState', () => {
             '<div><sub>test</sub></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -311,7 +310,7 @@ describe('getPendableFormatState', () => {
             '<div><sub>test</sub></div><!--{"start":[0,0,0,4],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -332,7 +331,7 @@ describe('getPendableFormatState', () => {
             true
         );
 
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -351,7 +350,7 @@ describe('getPendableFormatState', () => {
             true
         );
 
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -371,7 +370,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="vertical-align: super">test</div></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -392,7 +391,7 @@ describe('getPendableFormatState', () => {
             true
         );
 
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -412,7 +411,7 @@ describe('getPendableFormatState', () => {
             true
         );
 
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -431,7 +430,7 @@ describe('getPendableFormatState', () => {
             true
         );
 
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -451,7 +450,7 @@ describe('getPendableFormatState', () => {
             '<div><s>test</s></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -471,7 +470,7 @@ describe('getPendableFormatState', () => {
             '<div><s><u><i><b><sup><sub>test</sub></sup></b></i></u></s></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: true,
             isItalic: true,
@@ -489,7 +488,7 @@ describe('getPendableFormatState', () => {
             '<div><s><u><i><b><sup><sub>test</sub></sup></b></i></u></s></div><!--{"start":[0,0,0,4],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -510,7 +509,7 @@ describe('getPendableFormatState', () => {
             true
         );
 
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -530,7 +529,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="text-decoration: underline; font-weight: bold; vertical-align:sub"><s><i>test</i></s></div></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: true,
             isItalic: true,
@@ -548,7 +547,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="text-decoration: underline; font-weight: bold; vertical-align:sub"><s><i>test</i></s></div></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: true,
@@ -567,7 +566,7 @@ describe('getPendableFormatState', () => {
             '<div ><b><div style="font-weight: normal;">test</div><b></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -585,7 +584,7 @@ describe('getPendableFormatState', () => {
             '<div ><b><div style="font-weight: normal;">test</div><b></div><!--{"start":[0,0,0,4],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -605,7 +604,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="text-decoration: underline; font-weight:bold;"><div style="font-weight: normal;">test</div></div></div><!--{"start":[0,0,0,0],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
 
         expect(format).toEqual({
             isBold: false,
@@ -624,7 +623,7 @@ describe('getPendableFormatState', () => {
             '<div><div style="text-decoration: underline; font-weight:bold;"><div style="font-weight: normal;">test</div></div></div><!--{"start":[0,0,0,4],"end":[0,0,0,4]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -642,7 +641,7 @@ describe('getPendableFormatState', () => {
             '<div>abcd<strong>sasa<strong></div><!--{"start":[0,0,1],"end":[0,0,3]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: false,
             isItalic: false,
@@ -660,7 +659,7 @@ describe('getPendableFormatState', () => {
             '<div>gdfgfdgdf<b>gdfgfdgdfgdf</b></div><!--{"start":[0,1,0,11],"end":[0,1,0,11]}-->',
             true
         );
-        const format = getPendableFormatState(core);
+        const format = getPendableFormatState(core, false /*forceGetStateFromDom*/);
         expect(format).toEqual({
             isBold: true,
             isItalic: false,

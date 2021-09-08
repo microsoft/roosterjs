@@ -15,7 +15,7 @@ import {
  */
 export const getPendableFormatState: GetPendableFormatState = (
     core: EditorCore,
-    forceGetStateFromDOM: boolean
+    forceGetStateFromDOM: boolean = false
 ): PendableFormatState => {
     const range = core.api.getSelectionRange(core, true /* tryGetFromCache*/);
     const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
