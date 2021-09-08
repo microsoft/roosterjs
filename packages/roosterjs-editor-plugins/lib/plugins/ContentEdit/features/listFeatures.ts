@@ -4,6 +4,7 @@ import {
     setIndentation,
     toggleBullet,
     toggleNumbering,
+    toggleListType,
 } from 'roosterjs-editor-api';
 import {
     Browser,
@@ -25,6 +26,7 @@ import {
     PluginKeyboardEvent,
     QueryScope,
     RegionBase,
+    ListType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -127,7 +129,7 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     },
     handleEvent: (event, editor) => {
         editor.addUndoSnapshot(
-            () => toggleListAndPreventDefault(event, editor),
+            () => toggleListAndPreventDefault(event, editor, false /* includeSiblingLists */),
             null /*changeSource*/,
             true /*canUndoByBackspace*/
         );
@@ -248,16 +250,25 @@ function prepareAutoBullet(editor: IEditor, range: Range) {
     }
 }
 
-function toggleListAndPreventDefault(event: PluginKeyboardEvent, editor: IEditor) {
+function toggleListAndPreventDefault(
+    event: PluginKeyboardEvent,
+    editor: IEditor,
+    includeSiblingLists: boolean = true
+) {
     let listInfo = cacheGetListElement(event, editor);
     if (listInfo) {
         let listElement = listInfo[0];
         let tag = getTagOfNode(listElement);
-        if (tag == 'UL') {
-            toggleBullet(editor);
-        } else if (tag == 'OL') {
-            toggleNumbering(editor);
+
+        if (tag == 'UL' || tag == 'OL') {
+            toggleListType(
+                editor,
+                tag == 'UL' ? ListType.Unordered : ListType.Ordered,
+                null /* startNumber */,
+                includeSiblingLists
+            );
         }
+
         editor.focus();
         event.rawEvent.preventDefault();
     }
