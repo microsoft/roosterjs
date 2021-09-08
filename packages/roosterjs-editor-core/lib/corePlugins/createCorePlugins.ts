@@ -12,7 +12,9 @@ import { CorePlugins, EditorOptions, PluginState } from 'roosterjs-editor-types'
 /**
  * @internal
  */
-export const PLACEHOLDER_PLUGIN_NAME = '_placeholder';
+export interface CreateCorePluginResponse extends CorePlugins {
+    _placeholder: null;
+}
 
 /**
  * @internal
@@ -23,7 +25,7 @@ export const PLACEHOLDER_PLUGIN_NAME = '_placeholder';
 export default function createCorePlugins(
     contentDiv: HTMLDivElement,
     options: EditorOptions
-): CorePlugins & { [PLACEHOLDER_PLUGIN_NAME]: null } {
+): CreateCorePluginResponse {
     const map = options.corePluginOverride || {};
     // The order matters, some plugin needs to be put before/after others to make sure event
     // can be handled in right order
