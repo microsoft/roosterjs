@@ -12,7 +12,6 @@ import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 
 /**
- * @internal
  * !!! Never directly create instance of this class. It should be created within VList class !!!
  *
  * Represent a list item.
@@ -20,7 +19,6 @@ const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
  * A list item is normally wrapped using a LI tag. But this class is only a logical item,
  * it can be a LI tag, or another other type of node which means it is actually not a list item.
  * That can happen after we do "outdent" on a 1-level list item, then it becomes not a list item.
- * @internal
  */
 export default class VListItem {
     private listTypes: ListType[];

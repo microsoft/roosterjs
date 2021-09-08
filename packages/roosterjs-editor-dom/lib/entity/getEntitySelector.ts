@@ -1,7 +1,7 @@
 import { EntityClasses } from 'roosterjs-editor-types';
 
 /**
- * @internal Get a selector string for specified entity type and id
+ * Get a selector string for specified entity type and id
  * @param type (Optional) Type of entity
  * @param id (Optional) Id of entity
  */

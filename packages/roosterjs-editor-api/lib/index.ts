@@ -33,5 +33,6 @@ export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
 export { default as toggleHeader } from './format/toggleHeader';
 
+export { default as toggleListType } from './utils/toggleListType';
 export { default as blockFormat } from './utils/blockFormat';
 export { default as experimentCommitListChains } from './experiment/experimentCommitListChains';

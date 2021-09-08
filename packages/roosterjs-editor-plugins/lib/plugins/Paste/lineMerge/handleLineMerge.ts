@@ -8,6 +8,7 @@ import {
 } from 'roosterjs-editor-dom';
 
 /**
+ * @internal
  * Process pasted content, if there are multiple blocks that are not wrapped by a shared ancestor node,
  * change the tag of first and last node to be SPAN so that it will be merged into current block
  * @param root Root node of content to process

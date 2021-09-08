@@ -11,9 +11,10 @@ const Xs: X[] = ['w', '', 'e'];
 const Ys: Y[] = ['s', '', 'n'];
 
 /**
+ * @internal
  * The resize drag and drop handler
  */
-const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
+export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
     onDragging: ({ x, y, editInfo, options }, e, base, deltaX, deltaY) => {
         const ratio =
@@ -49,11 +50,6 @@ const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
         return true;
     },
 };
-
-/**
- * @internal
- */
-export default Resizer;
 
 /**
  * @internal Calculate the rotated x and y distance for mouse moving
