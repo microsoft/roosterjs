@@ -1,5 +1,30 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
-import ImageEditInfo, { IMAGE_EDIT_INFO_NAME } from '../types/ImageEditInfo';
+import ImageEditInfo from '../types/ImageEditInfo';
+
+const IMAGE_EDIT_INFO_NAME = 'roosterEditInfo';
+
+/**
+ * @internal
+ * Save edit info to image
+ * @param image The image to save edit info to
+ * @param editInfo The edit info to save
+ */
+export function saveEditInfo(image: HTMLImageElement, editInfo: ImageEditInfo) {
+    if (image) {
+        image.dataset[IMAGE_EDIT_INFO_NAME] = JSON.stringify(editInfo);
+    }
+}
+
+/**
+ * @internal
+ * Delete edit info of an image if any
+ * @param image The image to delete edit info from
+ */
+export function deleteEditInfo(image: HTMLImageElement) {
+    if (image) {
+        delete image.dataset[IMAGE_EDIT_INFO_NAME];
+    }
+}
 
 /**
  * @internal
@@ -9,7 +34,7 @@ import ImageEditInfo, { IMAGE_EDIT_INFO_NAME } from '../types/ImageEditInfo';
  * other fields set to 0.
  * @param image The image to get edit info from
  */
-export default function getEditInfoFromImage(image: HTMLImageElement): ImageEditInfo {
+export function getEditInfoFromImage(image: HTMLImageElement): ImageEditInfo {
     const obj = safeParseJSON(image?.dataset[IMAGE_EDIT_INFO_NAME]) as ImageEditInfo;
     return checkEditInfoState(obj) == ImageEditInfoState.Invalid ? getInitialEditInfo(image) : obj;
 }
