@@ -14,12 +14,13 @@ export function getPendableFormatState(
     const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
     const cachedPosition = core.pendingFormatState.pendableFormatPosition?.normalize();
     const currentPosition = range && Position.getStart(range).normalize();
-    const isSamePosition = currentPosition && currentPosition.equalTo(cachedPosition);
+    const isSamePosition =
+        currentPosition && range.collapsed && currentPosition.equalTo(cachedPosition);
 
     if (range && cachedPendableFormatState && isSamePosition && !forceGetStateFromDOM) {
         return cachedPendableFormatState;
     } else {
-        return queryCommandStateFromDOM(core, currentPosition);
+        return currentPosition ? queryCommandStateFromDOM(core, currentPosition) : {};
     }
 }
 
@@ -61,7 +62,7 @@ function queryCommandStateFromDOM(
     core: EditorCore,
     currentPosition: NodePosition
 ): PendableFormatState {
-    let node = currentPosition?.node;
+    let node = currentPosition.node;
     let formatState: PendableFormatState = {};
     let pendablekeys: PendableFormatNames[] = [];
     while (contains(core.contentDiv, node)) {
