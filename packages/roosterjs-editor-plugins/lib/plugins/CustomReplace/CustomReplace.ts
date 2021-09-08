@@ -140,14 +140,15 @@ export default class CustomReplacePlugin implements EditorPlugin {
         if (stringToSearch.length == 0) {
             return null;
         }
-        const lowerCaseStringToSearch = stringToSearch.toLocaleLowerCase();
+        const originalStringToSearch = stringToSearch.replace(/\s/g, ' ');
+        const lowerCaseStringToSearch = originalStringToSearch.toLocaleLowerCase();
         for (const replacement of this.replacements) {
             const [sourceMatch, replacementMatch] = replacement.matchSourceCaseSensitive
-                ? [stringToSearch, replacement.sourceString]
+                ? [originalStringToSearch, replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
-            const cleanSourceMatch = sourceMatch.replace(/\s/g, ' ');
+
             if (
-                cleanSourceMatch.substring(cleanSourceMatch.length - replacementMatch.length) ==
+                sourceMatch.substring(sourceMatch.length - replacementMatch.length) ==
                 replacementMatch
             ) {
                 return replacement;
