@@ -1,4 +1,7 @@
-interface ModeIndependentColor {
+/**
+ * A color object contains both light mode and dark mode color
+ */
+export default interface ModeIndependentColor {
     /**
      * The color to be used in dark mode, if enabled.
      */
@@ -9,5 +12,3 @@ interface ModeIndependentColor {
      */
     lightModeColor: string;
 }
-
-export default ModeIndependentColor;

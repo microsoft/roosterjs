@@ -1,5 +1,12 @@
 import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
 
+/**
+ * Set text color or background color to the given element
+ * @param element The element to set color to
+ * @param color The color to set, it can be a string of color name/value or a ModeIndependentColor object
+ * @param isBackgroundColor Whether set background color or text color
+ * @param isDarkMode Whether current mode is dark mode. @default false
+ */
 export default function setColor(
     element: HTMLElement,
     color: string | ModeIndependentColor,

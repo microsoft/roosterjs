@@ -16,7 +16,6 @@ import { PositionType } from 'roosterjs-editor-types';
 const ListSelector = 'ol,ul';
 
 /**
- * @internal
  * @param region The region to get VList from
  * @param includeSiblingLists True to also try get lists before and after the selection and merge them together,
  * false to only include the list for the selected blocks
