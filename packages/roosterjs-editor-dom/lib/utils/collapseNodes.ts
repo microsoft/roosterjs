@@ -42,6 +42,7 @@ export default function collapseNodes(
 }
 
 /**
+ * @internal
  * Collapse a node by traversing its parent nodes until we get the common ancestor node of node and ref node
  * @param root Root node, traversing will be limited under this scope
  * @param node The node to collapse

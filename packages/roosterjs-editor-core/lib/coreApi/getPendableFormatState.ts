@@ -2,6 +2,7 @@ import { contains, getTagOfNode, PendableFormatNames, Position } from 'roosterjs
 import { EditorCore, NodePosition, NodeType, PendableFormatState } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * @param core The EditorCore object
  * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
  * @returns The cached format state if it exists. If the cached postion do not exist, search for pendable elements in the DOM tree and return the pendable format state.
