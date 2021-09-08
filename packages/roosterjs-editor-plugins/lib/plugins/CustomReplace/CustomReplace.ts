@@ -143,10 +143,11 @@ export default class CustomReplacePlugin implements EditorPlugin {
         const lowerCaseStringToSearch = stringToSearch.toLocaleLowerCase();
         for (const replacement of this.replacements) {
             const [sourceMatch, replacementMatch] = replacement.matchSourceCaseSensitive
-                ? [stringToSearch.replace(/\s/g, ' '), replacement.sourceString]
+                ? [stringToSearch, replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
+            const cleanSourceMatch = sourceMatch.replace(/\s/g, ' ');
             if (
-                sourceMatch.substring(sourceMatch.length - replacementMatch.length) ==
+                cleanSourceMatch.substring(cleanSourceMatch.length - replacementMatch.length) ==
                 replacementMatch
             ) {
                 return replacement;
