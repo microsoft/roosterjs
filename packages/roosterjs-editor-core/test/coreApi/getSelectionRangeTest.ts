@@ -61,6 +61,7 @@ describe('getSelectionRange', () => {
         const core = createEditorCore(div, {});
         div.contentEditable = 'true';
         div.innerHTML = '<div>test</div>';
+        div.focus();
         selectNode(div.firstChild);
 
         const range = getSelectionRange(core, true);

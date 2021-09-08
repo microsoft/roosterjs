@@ -16,7 +16,7 @@ export default function wrap<T extends keyof HTMLElementTagNameMap>(
 
 /**
  * @deprecated
- * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+ * Wrap all the nodes with html and return the wrapped node, and put the wrapper node under the parent of the first node
  * @param nodes The node or node array to wrap
  * @param wrapper The wrapper HTML string, default value is DIV
  * @returns The wrapper element
@@ -24,13 +24,18 @@ export default function wrap<T extends keyof HTMLElementTagNameMap>(
 export default function wrap(nodes: Node | Node[], wrapper?: string): HTMLElement;
 
 /**
- * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
+ * Wrap all the nodes with html and return the wrapped node, and put the wrapper node under the parent of the first node
  * @param nodes The node or node array to wrap
  * @param wrapper The wrapper HTML element, default value is a new DIV element
  * @returns The wrapper element
  */
 export default function wrap(nodes: Node | Node[], wrapper?: HTMLElement): HTMLElement;
 
+/**
+ * Wrapp all the nodes with CreateElementData or an index of a known CreateElementData
+ * @param nodes The nodes to wrap
+ * @param wrapper The CreateElementData or an index of a known CreateElementData
+ */
 export default function wrap(
     nodes: Node | Node[],
     wrapper?: CreateElementData | KnownCreateElementDataIndex

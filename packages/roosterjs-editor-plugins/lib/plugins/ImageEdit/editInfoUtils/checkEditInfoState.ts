@@ -12,6 +12,7 @@ const ROTATE_CROP_KEYS: (keyof RotateInfo | keyof CropInfo)[] = [...ROTATE_KEYS,
 const ALL_KEYS = [...ROTATE_CROP_KEYS, ...RESIZE_KEYS];
 
 /**
+ * @internal
  * State of an edit info object for image editing.
  * It is returned by checkEditInfoState() function
  */

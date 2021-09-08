@@ -33,6 +33,7 @@ export default function changeFontSize(
 }
 
 /**
+ * @internal
  * Get new font size after increase/decrease. This is exported for test only
  * @param pt Original font size, in Point
  * @param changeBase Changed value, 1 means increase, -1 means decrease
