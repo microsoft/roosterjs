@@ -65,6 +65,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Context Menu options for ContextMenu plugin</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
@@ -104,9 +111,14 @@
 					<div class="tsd-signature tsd-kind-icon">allow<wbr>Default<wbr>Menu<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/36e791f/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L16">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e1d3e2a/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L34">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:34</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the default context menu is allowed. @default false</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="dismiss" class="tsd-anchor"></a>
@@ -114,9 +126,20 @@
 					<div class="tsd-signature tsd-kind-icon">dismiss<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/36e791f/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L14">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e1d3e2a/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L29">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:29</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Dismiss function for the context menu, it will be called when user wants to dismiss this context menu
+							e.g. user click away so the menu should be dismissed</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>The container HTML element</p>
+							</dd>
+						</dl>
+					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
@@ -145,9 +168,24 @@
 					<div class="tsd-signature tsd-kind-icon">render<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, items<span class="tsd-signature-symbol">: </span>, onDismiss<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/36e791f/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L12">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e1d3e2a/packages/roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts#L22">roosterjs-editor-plugins/lib/plugins/ContextMenu/ContextMenu.ts:22</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Render function for the context menu</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>The container HTML element, it will be located at the mouse click position,
+								so the callback just need to render menu content into this container</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>The onDismiss callback, some menu render need to know this callback so that
+								it can handle the dismiss event</p>
+							</dd>
+						</dl>
+					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
