@@ -10,8 +10,14 @@ import {
 const makeReplacement = (
     sourceString: string,
     replacementHTML: string,
-    matchSourceCaseSensitive: boolean
-): CustomReplacement => ({ sourceString, replacementHTML, matchSourceCaseSensitive });
+    matchSourceCaseSensitive: boolean,
+    shouldReplace?: (replacement: CustomReplacement, content: string) => boolean
+): CustomReplacement => ({
+    sourceString,
+    replacementHTML,
+    matchSourceCaseSensitive,
+    shouldReplace,
+});
 
 const defaultReplacements: CustomReplacement[] = [
     makeReplacement(':)', '🙂', true),
@@ -90,11 +96,19 @@ export default class CustomReplacePlugin implements EditorPlugin {
         if (range == null) {
             return;
         }
+
         const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
 
         const replacement = this.getMatchingReplacement(stringToSearch);
         if (replacement == null) {
+            return;
+        }
+
+        if (
+            replacement.shouldReplace &&
+            !replacement.shouldReplace(replacement, searcher.getWordBefore())
+        ) {
             return;
         }
 
@@ -126,10 +140,11 @@ export default class CustomReplacePlugin implements EditorPlugin {
         if (stringToSearch.length == 0) {
             return null;
         }
-        const lowerCaseStringToSearch = stringToSearch.toLocaleLowerCase();
+        const originalStringToSearch = stringToSearch.replace(/\s/g, ' ');
+        const lowerCaseStringToSearch = originalStringToSearch.toLocaleLowerCase();
         for (const replacement of this.replacements) {
             const [sourceMatch, replacementMatch] = replacement.matchSourceCaseSensitive
-                ? [stringToSearch, replacement.sourceString]
+                ? [originalStringToSearch, replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
 
             if (
