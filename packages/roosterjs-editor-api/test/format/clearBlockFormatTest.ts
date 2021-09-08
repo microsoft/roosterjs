@@ -26,7 +26,7 @@ describe('clearBlockFormat()', () => {
         runTest('', '');
     });
 
-    it('Empty DIV', () => {
+    TestHelper.itFirefoxOnly('Empty DIV', () => {
         runTest('<div></div><!--{"start":[0],"end":[0]}-->', '');
     });
 
