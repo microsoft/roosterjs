@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.05% </span>
+                <span class="strong">92.13% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>81/88</span>
+                <span class='fraction'>82/89</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.95% </span>
+                <span class="strong">92.05% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>80/87</span>
+                <span class='fraction'>81/88</span>
             </div>
         
             
@@ -359,19 +359,7 @@
 <a name='L300'></a><a href='#L300'>300</a>
 <a name='L301'></a><a href='#L301'>301</a>
 <a name='L302'></a><a href='#L302'>302</a>
-<a name='L303'></a><a href='#L303'>303</a>
-<a name='L304'></a><a href='#L304'>304</a>
-<a name='L305'></a><a href='#L305'>305</a>
-<a name='L306'></a><a href='#L306'>306</a>
-<a name='L307'></a><a href='#L307'>307</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L303'></a><a href='#L303'>303</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -382,6 +370,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -670,14 +662,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import ListItemBlock, { createListItemBlock } from './ListItemBlock';
-import {
-    WORD_ORDERED_LIST_SELECTOR,
-    WORD_UNORDERED_LIST_SELECTOR,
-    WORD_ONLINE_IDENTIFYING_SELECTOR,
-    LIST_CONTAINER_ELEMENT_CLASS_NAME,
-    ORDERED_LIST_TAG_NAME,
-    UNORDERED_LIST_TAG_NAME,
-} from './constants';
 &nbsp;
 import {
     splitParentNode,
@@ -688,6 +672,10 @@ import {
     unwrap,
     toArray,
 } from 'roosterjs-editor-dom';
+&nbsp;
+const WORD_ONLINE_IDENTIFYING_SELECTOR =
+    'div.ListContainerWrapper&gt;ul[class^="BulletListStyle"],div.ListContainerWrapper&gt;ol[class^="NumberListStyle"]';
+const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 &nbsp;
 /**
  * @internal
@@ -817,7 +805,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
  */
 function sanitizeListItemContainer(fragment: DocumentFragment) {
     const listItemContainerListEl = toArray(
-        fragment.querySelectorAll(`${WORD_ORDERED_LIST_SELECTOR}, ${WORD_UNORDERED_LIST_SELECTOR}`)
+        fragment.querySelectorAll(WORD_ONLINE_IDENTIFYING_SELECTOR)
     );
     listItemContainerListEl.forEach(el =&gt; {
         const replaceRegex = new RegExp(`\\b${LIST_CONTAINER_ELEMENT_CLASS_NAME}\\b`, 'g');
@@ -895,7 +883,7 @@ function flattenListBlock(fragment: DocumentFragment, listItemBlock: ListItemBlo
  */
 function getContainerListType(listItemContainer: Element): 'OL' | 'UL' | null {
     const tag = getTagOfNode(listItemContainer.firstChild);
-    return tag == UNORDERED_LIST_TAG_NAME || tag == ORDERED_LIST_TAG_NAME ? tag : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+    return tag == 'UL' || tag == 'OL' ? tag : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
 }
 &nbsp;
 /**
@@ -928,7 +916,7 @@ function insertListItem(
             // and the level iterator should move to the UL/OL at the last position.
             let lastChild = curListLevel.lastElementChild;
             let lastChildTag = getTagOfNode(lastChild);
-            if (lastChildTag == UNORDERED_LIST_TAG_NAME || lastChildTag == ORDERED_LIST_TAG_NAME) {
+            if (lastChildTag == 'UL' || lastChildTag == 'OL') {
                 // If the last child is a list(UL/OL), then move the level iterator to last child.
                 curListLevel = lastChild;
             } else {
@@ -982,7 +970,7 @@ function insertConvertedListToDoc(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Sep 08 2021 19:11:01 GMT+0000 (Coordinated Universal Time)
+                at Wed Sep 08 2021 19:22:25 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
