@@ -224,20 +224,20 @@ function process(baseDir, queue, index, projDir) {
     var file = fs.readFileSync(currentFileName);
     var content = file.toString();
 
-    // 1. Remove single line comments
-    content = content.replace(singleLineComment, '');
-
-    // 2. Process 'export ... from ...;'
+    // 1. Process 'export ... from ...;'
     content = parseExportFrom(content, currentFileName, queue, baseDir, projDir);
 
-    // 3. Remove imports
+    // 2. Remove imports
     content = parseImportFrom(content, currentFileName, queue, baseDir, projDir);
 
-    // 4. Parse all the public elements
+    // 3. Parse all the public elements
     content = [parseClasses, parseFunctions, parseEnum, parseType, parseConst, parseExport].reduce(
         (c, func) => func(c, item.elements),
         content
     );
+
+    // 4. Remove single line comments
+    content = content.replace(singleLineComment, '');
 
     if (content.trim() != '') {
         err('File ' + currentFileName + ' contains unrecognized content:\r\n' + content);
