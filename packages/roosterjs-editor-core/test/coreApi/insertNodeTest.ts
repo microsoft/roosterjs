@@ -2,7 +2,7 @@ import createEditorCore from './createMockEditorCore';
 import { ContentPosition } from 'roosterjs-editor-types';
 import { getSelectionRange } from '../../lib/coreApi/getSelectionRange';
 import { insertNode } from '../../lib/coreApi/insertNode';
-import { selectNode } from '../TestHelper';
+import { itFirefoxOnly, selectNode } from '../TestHelper';
 
 describe('insertNode', () => {
     let div: HTMLDivElement;
@@ -190,26 +190,29 @@ describe('insertNode', () => {
         expect(div.innerHTML).toBe('<div id="div2"></div><div id="div3"></div>');
     });
 
-    it('insert at selection with focus, no replace, no new line, no update cursor', () => {
-        const core = createEditorCore(div, {});
-        const node = document.createElement('span');
-        node.id = 'span1';
-        div.contentEditable = 'true';
-        div.innerHTML = '<div id="div2"></div><div id="div3"></div>';
-        selectNode(document.getElementById('div2'));
-        insertNode(core, node, {
-            position: ContentPosition.SelectionStart,
-            insertOnNewLine: false,
-            updateCursor: false,
-            replaceSelection: false,
-        });
+    itFirefoxOnly(
+        'insert at selection with focus, no replace, no new line, no update cursor',
+        () => {
+            const core = createEditorCore(div, {});
+            const node = document.createElement('span');
+            node.id = 'span1';
+            div.contentEditable = 'true';
+            div.innerHTML = '<div id="div2"></div><div id="div3"></div>';
+            selectNode(document.getElementById('div2'));
+            insertNode(core, node, {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: false,
+                updateCursor: false,
+                replaceSelection: false,
+            });
 
-        expect(div.innerHTML).toBe(
-            '<span id="span1"></span><div id="div2"></div><div id="div3"></div>'
-        );
-    });
+            expect(div.innerHTML).toBe(
+                '<span id="span1"></span><div id="div2"></div><div id="div3"></div>'
+            );
+        }
+    );
 
-    it('insert at selection with focus, replace, no new line, no update cursor', () => {
+    itFirefoxOnly('insert at selection with focus, replace, no new line, no update cursor', () => {
         const core = createEditorCore(div, {});
         const node = document.createElement('span');
         node.id = 'span1';
@@ -226,45 +229,51 @@ describe('insertNode', () => {
         expect(div.innerHTML).toBe('<span id="span1"></span><div id="div3"></div>');
     });
 
-    it('insert at selection with focus, no replace, new line and no element block, no update cursor', () => {
-        const core = createEditorCore(div, {});
-        const node = document.createElement('span');
-        node.id = 'span1';
-        div.contentEditable = 'true';
-        div.innerHTML = '<span id="span2"></span><br><span id="span3"></span>';
-        selectNode(document.getElementById('span2'));
-        insertNode(core, node, {
-            position: ContentPosition.SelectionStart,
-            insertOnNewLine: true,
-            updateCursor: false,
-            replaceSelection: false,
-        });
+    itFirefoxOnly(
+        'insert at selection with focus, no replace, new line and no element block, no update cursor',
+        () => {
+            const core = createEditorCore(div, {});
+            const node = document.createElement('span');
+            node.id = 'span1';
+            div.contentEditable = 'true';
+            div.innerHTML = '<span id="span2"></span><br><span id="span3"></span>';
+            selectNode(document.getElementById('span2'));
+            insertNode(core, node, {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: true,
+                updateCursor: false,
+                replaceSelection: false,
+            });
 
-        expect(div.innerHTML).toBe(
-            '<span id="span2"></span><br><span id="span1"></span><span id="span3"></span>'
-        );
-    });
+            expect(div.innerHTML).toBe(
+                '<span id="span2"></span><br><span id="span1"></span><span id="span3"></span>'
+            );
+        }
+    );
 
-    it('insert at selection with focus, no replace, new line with parent block, no update cursor', () => {
-        const core = createEditorCore(div, {});
-        const node = document.createElement('span');
-        node.id = 'span1';
-        div.contentEditable = 'true';
-        div.innerHTML = '<div><span id="span2"></span><span id="span3"></span></div>';
-        selectNode(document.getElementById('span2'));
-        insertNode(core, node, {
-            position: ContentPosition.SelectionStart,
-            insertOnNewLine: true,
-            updateCursor: false,
-            replaceSelection: false,
-        });
+    itFirefoxOnly(
+        'insert at selection with focus, no replace, new line with parent block, no update cursor',
+        () => {
+            const core = createEditorCore(div, {});
+            const node = document.createElement('span');
+            node.id = 'span1';
+            div.contentEditable = 'true';
+            div.innerHTML = '<div><span id="span2"></span><span id="span3"></span></div>';
+            selectNode(document.getElementById('span2'));
+            insertNode(core, node, {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: true,
+                updateCursor: false,
+                replaceSelection: false,
+            });
 
-        expect(div.innerHTML).toBe(
-            '<div><span id="span2"></span><span id="span3"></span></div><span id="span1"></span>'
-        );
-    });
+            expect(div.innerHTML).toBe(
+                '<div><span id="span2"></span><span id="span3"></span></div><span id="span1"></span>'
+            );
+        }
+    );
 
-    it('insert at selection with focus, no replace, no new line, update cursor', () => {
+    itFirefoxOnly('insert at selection with focus, no replace, no new line, update cursor', () => {
         const core = createEditorCore(div, {});
         const node = document.createElement('span');
         node.id = 'span1';

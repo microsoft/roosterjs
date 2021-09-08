@@ -1,6 +1,7 @@
 import createEditorCore from './createMockEditorCore';
 import { ColorTransformDirection } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { itFirefoxOnly } from '../TestHelper';
 import { transformColor } from '../../lib/coreApi/transformColor';
 
 describe('transformColor Dark to light', () => {
@@ -181,7 +182,7 @@ describe('transformColor Light to dark', () => {
         );
     });
 
-    it('single element with color and background color, has transform function', () => {
+    itFirefoxOnly('single element with color and background color, has transform function', () => {
         const core = createEditorCore(div, {
             inDarkMode: true,
             onExternalContentTransform: element => {

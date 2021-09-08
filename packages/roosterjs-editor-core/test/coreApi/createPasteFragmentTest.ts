@@ -2,6 +2,7 @@ import * as dom from 'roosterjs-editor-dom';
 import createEditorCore from './createMockEditorCore';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
+import { itFirefoxOnly } from '../TestHelper';
 
 describe('createPasteFragment', () => {
     let div: HTMLDivElement;
@@ -210,7 +211,7 @@ describe('createPasteFragment', () => {
         expect(html).toBe('This is a test<div>this is line 2</div>this is line 3');
     });
 
-    it('image input, html output', () => {
+    itFirefoxOnly('image input, html output', () => {
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
             coreApiOverride: {

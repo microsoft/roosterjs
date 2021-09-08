@@ -117,7 +117,7 @@ describe('Editor insertContent()', () => {
         expect(editor.getContent()).toBe('<div id="text">texthello</div>');
     });
 
-    it('insert selection, replace selection', () => {
+    TestHelper.itFirefoxOnly('insert selection, replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 
@@ -133,7 +133,7 @@ describe('Editor insertContent()', () => {
         expect(editor.getContent()).toBe('hello');
     });
 
-    it('insert selection, not replace selection', () => {
+    TestHelper.itFirefoxOnly('insert selection, not replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 
@@ -241,7 +241,7 @@ describe('Editor insertNode()', () => {
         expect(editor.getContent()).toBe('<div id="text">text<div id="testNode">abc</div></div>');
     });
 
-    it('insert selection, replace selection', () => {
+    TestHelper.itFirefoxOnly('insert selection, replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 
@@ -257,7 +257,7 @@ describe('Editor insertNode()', () => {
         expect(editor.getContent()).toBe('<div id="testNode">abc</div>');
     });
 
-    it('insert selection, not replace selection', () => {
+    TestHelper.itFirefoxOnly('insert selection, not replace selection', () => {
         // Arrange
         TestHelper.selectNode(document.getElementById('text'));
 
