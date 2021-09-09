@@ -29,7 +29,8 @@ const enum ResizeState {
     Both, // when resizing the whole table
 }
 
-function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
+// export only for testing purpose
+export function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
     return toLeft ? pos - rect.left : rect.right - pos;
 }
 
@@ -293,7 +294,7 @@ export default class TableResize implements EditorPlugin {
 
     private createInserter(tableRect: Rect) {
         if (this.insertingState == ResizeState.None) {
-            return;
+            return undefined;
         }
 
         const rect = normalizeRect(this.currentInsertTd.getBoundingClientRect());
@@ -330,6 +331,7 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         ) as HTMLDivElement;
 
+        // set inserter position
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
                 if (this.isRTL) {
