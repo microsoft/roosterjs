@@ -286,23 +286,19 @@ async function pack(isProduction, isAmd) {
     });
 }
 
-var dtsQueue = [];
-var dtsFileName;
-
-function prepareDts() {
-    dtsQueue = dts.prepareDts(rootPath, distPath, ['roosterjs/lib/index.d.ts']);
-}
-
 function buildDts(isAmd) {
+    var tsFiles = glob
+        .sync(path.relative(rootPath, path.join(distPath, '**', 'lib', '**', '*.d.ts')), {
+            nocase: true,
+        })
+        .map(x => path.relative(distPath, x));
+    var dtsQueue = dts.prepareDts(rootPath, distPath, 'roosterjs/lib/index.d.ts', tsFiles);
+
     mkdirp.sync(roosterJsDistPath);
     let filename = dts.output(roosterJsDistPath, 'roosterjs', isAmd, dtsQueue);
     if (!isAmd) {
-        dtsFileName = filename;
+        runNode(typescriptPath + ' ' + filename + ' --noEmit', rootPath);
     }
-}
-
-function verifyDts() {
-    runNode(typescriptPath + ' ' + dtsFileName + ' --noEmit', rootPath);
 }
 
 function buildDoc() {
@@ -575,18 +571,13 @@ function buildAll(options) {
             enabled: options.packprod || (!isAmd && options.builddemo),
         })),
         {
-            message: 'Collecting information for type definition file...',
-            callback: prepareDts,
+            message: `Generating type definition file for CommonJs'}...`,
+            callback: () => buildDts(false /*isAmd*/),
             enabled: options.dts,
         },
-        ...[false, true].map(isAmd => ({
-            message: `Generating type definition file for ${isAmd ? 'AMD' : 'CommonJs'}...`,
-            callback: () => buildDts(isAmd),
-            enabled: options.dts,
-        })),
         {
-            message: 'Verifying type definition file...',
-            callback: verifyDts,
+            message: `Generating type definition file for AMD'}...`,
+            callback: () => buildDts(true /*isAmd*/),
             enabled: options.dts,
         },
         {
