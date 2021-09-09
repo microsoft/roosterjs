@@ -18,16 +18,16 @@ export const getPendableFormatState: GetPendableFormatState = (
     forceGetStateFromDOM: boolean
 ): PendableFormatState => {
     const range = core.api.getSelectionRange(core, true /* tryGetFromCache*/);
-    const isRangeCollapsed = range && range.collapsed;
     const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
     const cachedPosition = core.pendingFormatState.pendableFormatPosition?.normalize();
-    const currentPosition = isRangeCollapsed && Position.getStart(range).normalize();
-    const isSamePosition = currentPosition && currentPosition.equalTo(cachedPosition);
+    const currentPosition = range && Position.getStart(range).normalize();
+    const isSamePosition =
+        currentPosition && range.collapsed && currentPosition.equalTo(cachedPosition);
 
     if (range && cachedPendableFormatState && isSamePosition && !forceGetStateFromDOM) {
         return cachedPendableFormatState;
     } else {
-        return queryCommandStateFromDOM(core, isRangeCollapsed, currentPosition);
+        return currentPosition ? queryCommandStateFromDOM(core, currentPosition) : {};
     }
 };
 
@@ -67,10 +67,9 @@ const CssFalsyCheckers: Record<PendableFormatNames, (style: CSSStyleDeclaration)
 
 function queryCommandStateFromDOM(
     core: EditorCore,
-    isCollapsed: boolean,
     currentPosition: NodePosition
 ): PendableFormatState {
-    let node = isCollapsed ? currentPosition?.node : document.getSelection().focusNode;
+    let node = currentPosition.node;
     let formatState: PendableFormatState = {};
     let pendablekeys: PendableFormatNames[] = [];
     while (contains(core.contentDiv, node)) {
