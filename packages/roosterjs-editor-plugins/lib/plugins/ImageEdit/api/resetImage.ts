@@ -1,5 +1,5 @@
-import deleteEditInfo from '../editInfoUtils/deleteEditInfo';
 import { ChangeSource, IEditor } from 'roosterjs-editor-types';
+import { deleteEditInfo } from '../editInfoUtils/editInfo';
 
 /**
  * Remove explicit width & height attributes on the image element.

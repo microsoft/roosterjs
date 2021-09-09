@@ -11,6 +11,7 @@ export default function getListTypeFromNode(
 ): ListType.Ordered | ListType.Unordered;
 
 /**
+ * @internal
  * Get list type from a DOM node. It is possible to return ListType.None
  * @param node the node to get list type from
  */

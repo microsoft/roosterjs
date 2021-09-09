@@ -2,9 +2,33 @@ import contains from '../utils/contains';
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
-import regionTypeData from './regionTypeData';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
 import { QueryScope, Region, RegionType } from 'roosterjs-editor-types';
+
+interface RegionTypeData {
+    /**
+     * Tags that child elements will be skipped
+     */
+    skipTags: string[];
+
+    /**
+     * Selector of outer node of a region
+     */
+    outerSelector: string;
+
+    /**
+     * Selector of inner node of a region
+     */
+    innerSelector: string;
+}
+
+const regionTypeData: Record<RegionType, RegionTypeData> = {
+    [RegionType.Table]: {
+        skipTags: ['TABLE'],
+        outerSelector: 'table',
+        innerSelector: 'td,th',
+    },
+};
 
 /**
  * Get regions impacted by the given range under the root node
