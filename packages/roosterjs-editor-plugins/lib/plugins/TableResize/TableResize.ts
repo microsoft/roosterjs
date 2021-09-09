@@ -29,7 +29,7 @@ const enum ResizeState {
     Both, // when resizing the whole table
 }
 
-function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
+export function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
     return toLeft ? pos - rect.left : rect.right - pos;
 }
 
