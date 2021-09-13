@@ -13,6 +13,7 @@ import {
  */
 export default class TypeInContainerPlugin implements EditorPlugin {
     private editor: IEditor;
+    private shouldAlwaysApplyDefaultFormat: boolean;
 
     /**
      * Get a friendly name of  this plugin
@@ -27,6 +28,9 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.shouldAlwaysApplyDefaultFormat = this.editor.isFeatureEnabled(
+            ExperimentalFeatures.AlwaysApplyDefaultFormat
+        );
     }
 
     /**
@@ -50,9 +54,6 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             //
             // Only schedule when the range is not collapsed to catch this edge case.
             let range = this.editor.getSelectionRange();
-            let shouldAlwaysApplyDefaultFormat = this.editor.isFeatureEnabled(
-                ExperimentalFeatures.AlwaysApplyDefaultFormat
-            );
 
             if (
                 !range ||
@@ -60,7 +61,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                     findClosestElementAncestor(
                         range.startContainer,
                         null /* root */,
-                        shouldAlwaysApplyDefaultFormat ? '[style]' : null /*selector*/
+                        this.shouldAlwaysApplyDefaultFormat ? '[style]' : null /*selector*/
                     )
                 )
             ) {
