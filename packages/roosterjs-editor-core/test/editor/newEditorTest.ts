@@ -65,7 +65,6 @@ describe('Editor', () => {
             features: {},
         });
         expect(core.entity).toEqual({
-            clickingPoint: null,
             knownEntityElements: [],
         });
         expect(core.lifecycle.customData).toEqual({});
@@ -168,7 +167,6 @@ describe('Editor', () => {
             features: {},
         });
         expect(core.entity).toEqual({
-            clickingPoint: null,
             knownEntityElements: [],
         });
         expect(core.lifecycle.customData).toEqual({});

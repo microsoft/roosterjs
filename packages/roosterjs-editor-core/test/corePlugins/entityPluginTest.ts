@@ -36,7 +36,6 @@ describe('EntityPlugin', () => {
 
     it('init', () => {
         expect(state).toEqual({
-            clickingPoint: null,
             knownEntityElements: [],
         });
     });
@@ -114,30 +113,17 @@ describe('EntityPlugin', () => {
         const target = <any>{
             isContentEditable: false,
         };
-        const preventDefault = jasmine.createSpy();
         const rawEvent = <any>{
             target,
-            pageX: 1,
-            pageY: 2,
-            preventDefault,
         };
 
-        expect(state.clickingPoint).toBeNull();
-        plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
-            rawEvent,
-        });
         editor.getElementAtCursor = () => target;
-        expect(preventDefault).toHaveBeenCalled();
-        expect(state.clickingPoint).toEqual({
-            pageX: 1,
-            pageY: 2,
-        });
 
         spyOn(dom, 'getEntityFromElement').and.callFake(node => <any>node);
 
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseUp,
+            isClicking: true,
             rawEvent,
         });
 
@@ -146,48 +132,26 @@ describe('EntityPlugin', () => {
             rawEvent,
             entity: <any>target,
         });
-        expect(state.clickingPoint).toBeNull();
     });
 
     it('mouse down/up event into different point', () => {
         const target = <any>{
             isContentEditable: false,
         };
-        const preventDefault = jasmine.createSpy();
-
-        expect(state.clickingPoint).toBeNull();
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
-            rawEvent: <any>{
-                target,
-                pageX: 1,
-                pageY: 2,
-                preventDefault,
-            },
-        });
 
         editor.getElementAtCursor = () => target;
-        expect(preventDefault).toHaveBeenCalled();
-        expect(state.clickingPoint).toEqual({
-            pageX: 1,
-            pageY: 2,
-        });
 
         spyOn(dom, 'getEntityFromElement').and.callFake(node => <any>node);
 
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseUp,
+            isClicking: false,
             rawEvent: <any>{
                 target,
-                pageX: 2,
-                pageY: 2,
-                preventDefault,
             },
         });
 
         expect(triggerPluginEvent).not.toHaveBeenCalled();
-        expect(state.clickingPoint).toBeNull();
     });
 
     it('key down event for a range', () => {
@@ -375,6 +339,13 @@ describe('EntityPlugin', () => {
             });
 
             plugin.onPluginEvent({
+                eventType: PluginEventType.BeforeSetContent,
+                newContent: '',
+            });
+
+            expect(state.knownEntityElements).toEqual([]);
+
+            plugin.onPluginEvent({
                 eventType: PluginEventType.ContentChanged,
                 source: ChangeSource.SetContent,
             });
@@ -387,6 +358,11 @@ describe('EntityPlugin', () => {
             containedNodes = [node2, node3];
 
             plugin.onPluginEvent({
+                eventType: PluginEventType.BeforeSetContent,
+                newContent: '',
+            });
+
+            plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
             });
 
@@ -397,6 +373,11 @@ describe('EntityPlugin', () => {
             node3.id = node2.id;
             state.knownEntityElements = [node1, node2];
             containedNodes = [node2, node3];
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.BeforeSetContent,
+                newContent: '',
+            });
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,

@@ -3,9 +3,10 @@
  */
 export default interface EntityPluginState {
     /**
+     * @deprecated
      * Last clicking point when mouse down event happens
      */
-    clickingPoint: { pageX: number; pageY: number };
+    clickingPoint?: { pageX: number; pageY: number };
 
     /**
      * All known entity elements
