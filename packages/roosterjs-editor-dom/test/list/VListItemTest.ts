@@ -380,4 +380,30 @@ describe('VListItem.writeBack', () => {
             ol
         );
     });
+
+    it('Styled VListItem', () => {
+        // Arrange
+        const listStack = [document.createElement('div')];
+        for (let i = 1; i < listStack.length; i++) {
+            listStack[i - 1].appendChild(listStack[i]);
+        }
+
+        const li = document.createElement('li');
+        const styledSpan = document.createElement('span');
+        styledSpan.style.fontSize = '14px';
+        styledSpan.style.fontFamily = 'Courier New';
+        styledSpan.style.color = 'Blue';
+        styledSpan.textContent = 'test';
+
+        li.appendChild(styledSpan);
+        const thisItem = new VListItem(li, ListType.Ordered);
+
+        // Act
+        thisItem.writeBack(listStack);
+
+        // Assert
+        expect(listStack[0].innerHTML).toBe(
+            '<ol><li style="font-size:14px;font-family:Courier New;color:blue"><span style="font-size: 14px; font-family: Courier New; color: blue;">test</span></li></ol>'
+        );
+    });
 });
