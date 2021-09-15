@@ -1,4 +1,5 @@
 import { createElement, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
+//import { KeyObject } from 'crypto';
 import {
     EditorPlugin,
     IEditor,
@@ -17,20 +18,19 @@ const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
-const MIN_CELL_WIDTH = 30;
+export const MIN_CELL_WIDTH = 30; // export only for test purpose
 const MIN_CELL_HEIGHT = 20;
-const CELL_RESIZER_WIDTH = 4;
+export const CELL_RESIZER_WIDTH = 4; // export only for test purpose
 const TABLE_RESIZER_LENGTH = 12;
 
-const enum ResizeState {
+export const enum ResizeState {
     None,
     Horizontal,
     Vertical,
     Both, // when resizing the whole table
 }
 
-// export only for testing purpose
-export function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
+function getHorizontalDistance(rect: Rect, pos: number, toLeft: boolean): number {
     return toLeft ? pos - rect.left : rect.right - pos;
 }
 
@@ -465,6 +465,7 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         ) as HTMLDivElement;
 
+        div.id = 'tableResizer';
         div.style.top = `${rect.bottom}px`;
         div.style.left = this.isRTL
             ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
@@ -490,6 +491,7 @@ export default class TableResize implements EditorPlugin {
                 : KnownCreateElementDataIndex.TableVerticalResizer,
             this.editor.getDocument()
         ) as HTMLDivElement;
+        div.id = horizontal ? 'horizontalResizer' : 'verticalResizer';
         div.style.top = `${top}px`;
         div.style.left = `${left}px`;
         div.style.width = `${width}px`;
@@ -565,7 +567,8 @@ export default class TableResize implements EditorPlugin {
     }
 
     private frameAnimateResizeCells = (e: MouseEvent) => {
-        this.editor.runAsync(() => this.resizeCells(e));
+        this.editor?.runAsync(() => this.resizeCells(e));
+        //this.resizeCells(e);
     };
 
     private resizeTable = (mouseX: number, mouseY: number) => {
@@ -630,6 +633,12 @@ export default class TableResize implements EditorPlugin {
         });
     };
 
+    /**
+     *
+     * @param newPos The position to where we want to move the vertical border
+     * @returns if the move is allowed, if any of the cells on either side of the vertical border is smaller than
+     * the minimum width, such move is not allowed
+     */
     private canResizeColumns = (newPos: number): boolean => {
         for (let i = 0; i < this.currentCellsToResize.length; i++) {
             const td = this.currentCellsToResize[i];
@@ -669,12 +678,18 @@ export default class TableResize implements EditorPlugin {
             this.resizingVtable.table.style.width = null;
         }
 
+        const newWidthList: Map<HTMLTableCellElement, number> = new Map();
         this.currentCellsToResize.forEach(td => {
             const rect = normalizeRect(td.getBoundingClientRect());
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
-            td.style.width = `${getHorizontalDistance(rect, newPos, !this.isRTL)}px`;
+            const newWidth = getHorizontalDistance(rect, newPos, !this.isRTL);
+            newWidthList.set(td, newWidth);
+        });
+
+        newWidthList.forEach((newWidth, td) => {
+            td.style.width = `${newWidth}px`;
         });
 
         this.nextCellsToResize.forEach(td => {
@@ -687,7 +702,7 @@ export default class TableResize implements EditorPlugin {
         });
     };
 
-    private resizeCells = (e: MouseEvent) => {
+    public resizeCells = (e: MouseEvent) => {
         this.setTableResizer(null);
         if (this.resizingState === ResizeState.None) {
             return;
@@ -709,16 +724,18 @@ export default class TableResize implements EditorPlugin {
     };
 
     private endResizeCells = (e: MouseEvent) => {
-        const doc = this.editor.getDocument();
-        doc.removeEventListener('mousemove', this.frameAnimateResizeCells, true);
-        doc.removeEventListener('mouseup', this.endResizeCells, true);
-        this.currentCellsToResize = [];
-        this.nextCellsToResize = [];
+        if (!!this.editor) {
+            const doc = this.editor.getDocument();
+            doc.removeEventListener('mousemove', this.frameAnimateResizeCells, true);
+            doc.removeEventListener('mouseup', this.endResizeCells, true);
+            this.currentCellsToResize = [];
+            this.nextCellsToResize = [];
 
-        this.editor.addUndoSnapshot((start, end) => {
-            this.frameAnimateResizeCells(e);
-            this.editor.select(start, end);
-        }, ChangeSource.Format);
+            this.editor.addUndoSnapshot((start, end) => {
+                this.frameAnimateResizeCells(e);
+                this.editor.select(start, end);
+            }, ChangeSource.Format);
+        }
 
         this.setCurrentTd(null);
         this.setTableResizer(null);
