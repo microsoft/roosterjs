@@ -404,6 +404,8 @@ export default class ImageEdit implements EditorPlugin {
 
             parent.insertBefore(img, wrapper);
             parent.removeChild(wrapper);
+
+            setImageResponsive(img);
         }
     };
 
@@ -504,6 +506,7 @@ export default class ImageEdit implements EditorPlugin {
                     rotateHandle
                 );
 
+                checkIftheImageWasResized(this.image, context);
                 updateHandleCursor(resizeHandles, angleRad);
             }
         }
@@ -604,4 +607,35 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
     handles.map(handle => {
         handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
     });
+}
+
+/**
+ * Check if the image must be responsive
+ * @param img The current image.
+ */
+function setImageResponsive(img: HTMLImageElement) {
+    const wasReset = img.getAttribute('wasReset');
+    const wasResized = img.getAttribute('wasResized');
+    if (!wasResized || (wasResized && wasReset === 'true')) {
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        if (wasResized === 'true') {
+            img.setAttribute('wasResized', 'false');
+            img.setAttribute('wasReset', 'false');
+        }
+    } else {
+        img.style.maxWidth = '';
+    }
+}
+
+/**
+ * Check if the image was resized by the user
+ * @param context The context operation the user did.
+ * @param img The current image.
+ */
+function checkIftheImageWasResized(img: HTMLImageElement, context: DragAndDropContext) {
+    const wasResized = img.getAttribute('wasResized');
+    if (!wasResized && context?.elementClass === ImageEditElementClass.ResizeHandle) {
+        img.setAttribute('wasResized', 'true');
+    }
 }
