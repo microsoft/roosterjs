@@ -1,5 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
 import { IEditor } from 'roosterjs-editor-types';
+import { safeInstanceOf, setListItemStyle } from 'roosterjs-editor-dom';
 
 /**
  * Set font name at selection
@@ -14,5 +15,9 @@ export default function setFontName(editor: IEditor, fontName: string) {
     // for here, we use CSS font-family style
     applyInlineStyle(editor, (element, isInnerNode) => {
         element.style.fontFamily = isInnerNode ? '' : fontName;
+
+        if (safeInstanceOf(element.parentElement, 'HTMLLIElement')) {
+            setListItemStyle(element.parentElement, ['font-family']);
+        }
     });
 }

@@ -1,6 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
-import { setColor } from 'roosterjs-editor-dom';
+import { safeInstanceOf, setColor, setListItemStyle } from 'roosterjs-editor-dom';
 
 /**
  * Set text color at selection
@@ -26,6 +26,10 @@ export default function setTextColor(
                 false /*isBackground*/,
                 editor.isDarkMode()
             );
+
+            if (safeInstanceOf(element.parentElement, 'HTMLLIElement')) {
+                setListItemStyle(element.parentElement, ['color']);
+            }
         }
     });
 }

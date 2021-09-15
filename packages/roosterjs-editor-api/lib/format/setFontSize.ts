@@ -1,6 +1,7 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { getComputedStyle } from 'roosterjs-editor-dom';
+import { getComputedStyle, safeInstanceOf } from 'roosterjs-editor-dom';
 import { IEditor } from 'roosterjs-editor-types';
+import { setListItemStyle } from 'roosterjs-editor-dom';
 
 /**
  * Set font size at selection
@@ -18,6 +19,10 @@ export default function setFontSize(editor: IEditor, fontSize: string) {
         let lineHeight = getComputedStyle(element, 'line-height');
         if (lineHeight != 'normal') {
             element.style.lineHeight = 'normal';
+        }
+
+        if (safeInstanceOf(element.parentElement, 'HTMLLIElement')) {
+            setListItemStyle(element.parentElement, ['font-size']);
         }
     });
 }
