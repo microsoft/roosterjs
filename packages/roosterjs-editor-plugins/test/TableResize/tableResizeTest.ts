@@ -25,6 +25,7 @@ interface TestTable {
 
 /*******************************************************************
                               Test Table 1
+                (default table inserted from table control)
 
                    8.5____131.5____254.5____377.5/8.5
                     | (0, 0) | (0, 1) | (0, 2) |
@@ -38,6 +39,7 @@ interface TestTable {
         table width: 370, table height: 67 (getBoudingClientRect)
 
                             Test Table 2
+                            (Excel table)
 
                    8.5_____76.2____143.8____211.5/8.5
                     | (0, 0) | (0, 1) | (0, 2) |

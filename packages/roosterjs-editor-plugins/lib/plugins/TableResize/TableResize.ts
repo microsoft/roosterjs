@@ -1,16 +1,15 @@
 import { createElement, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
-//import { KeyObject } from 'crypto';
 import {
+    ChangeSource,
+    ContentPosition,
+    CreateElementData,
     EditorPlugin,
     IEditor,
+    KnownCreateElementDataIndex,
     PluginEvent,
     PluginEventType,
     Rect,
-    ChangeSource,
     TableOperation,
-    ContentPosition,
-    CreateElementData,
-    KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -23,6 +22,7 @@ const MIN_CELL_HEIGHT = 20;
 export const CELL_RESIZER_WIDTH = 4; // export only for test purpose
 const TABLE_RESIZER_LENGTH = 12;
 
+// export only for test purpose
 export const enum ResizeState {
     None,
     Horizontal,
@@ -568,7 +568,6 @@ export default class TableResize implements EditorPlugin {
 
     private frameAnimateResizeCells = (e: MouseEvent) => {
         this.editor?.runAsync(() => this.resizeCells(e));
-        //this.resizeCells(e);
     };
 
     private resizeTable = (mouseX: number, mouseY: number) => {
@@ -636,7 +635,7 @@ export default class TableResize implements EditorPlugin {
     /**
      *
      * @param newPos The position to where we want to move the vertical border
-     * @returns if the move is allowed, if any of the cells on either side of the vertical border is smaller than
+     * @returns if the move is allowed, or, if any of the cells on either side of the vertical border is smaller than
      * the minimum width, such move is not allowed
      */
     private canResizeColumns = (newPos: number): boolean => {
