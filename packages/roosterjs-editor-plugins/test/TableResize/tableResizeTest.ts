@@ -1,8 +1,8 @@
 import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
 import { CELL_RESIZER_WIDTH, ResizeState } from '../../lib/plugins/TableResize/TableResize';
 import { DEFAULT_TABLE, EXCEL_TABLE } from './tableData';
+import { IEditor } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
-import { IEditor /*PluginEventType*/ } from 'roosterjs-editor-types';
 
 const RESIZING_DIFF = 2;
 const TABLE_RESIZING_DIFF = 3;
@@ -23,12 +23,61 @@ interface TestTable {
     cellHeight: number;
 }
 
+/*******************************************************************
+                              Test Table 1
+
+                   8.5____131.5____254.5____377.5/8.5
+                    | (0, 0) | (0, 1) | (0, 2) |
+                    |________|________|________|30.5
+                    | (1, 0) | (1, 1) | (1, 2) |
+                    |________|________|________|52.5
+                    | (2, 0) | (2, 1) | (2, 2) |
+                    |________|________|________|74.5
+
+        cell width: 123, cell height: 22 (getBoudingClientRect)
+        table width: 370, table height: 67 (getBoudingClientRect)
+
+                            Test Table 2
+
+                   8.5_____76.2____143.8____211.5/8.5
+                    | (0, 0) | (0, 1) | (0, 2) |
+                    |________|________|________|30.5
+                    | (1, 0) | (1, 1) | (1, 2) |
+                    |________|________|________|52.5
+                    | (2, 0) | (2, 1) | (2, 2) |
+                    |________|________|________|74.5
+
+        cell width: 67.7, cell height: 22 (getBoudingClientRect)
+        table width: 204, table height: 67 (getBoudingClientRect)
+
+*********************************************************************/
+
+const defaultTable: TestTable = {
+    htmlData: DEFAULT_TABLE,
+    rows: [8.5, 30.5, 52.5, 74.5],
+    columns: [8.5, 131.5, 254.5, 377.5],
+    width: 370,
+    height: 67,
+    cellWidth: 123,
+    cellHeight: 22,
+};
+
+const excelTable: TestTable = {
+    htmlData: EXCEL_TABLE,
+    rows: [8.5, 30.5, 52.5, 74.5],
+    columns: [8.5, 76.2, 143.8, 211.5],
+    width: 204,
+    height: 67,
+    cellWidth: 67.7,
+    cellHeight: 22,
+};
+
+const testTables = [defaultTable, excelTable];
+
 describe('Table Inserter tests', () => {
     let editor: IEditor;
     let plugin: TableResize;
     const insideTheOffset = 5;
-    //const MIN_CELL_WIDTH = 30;
-    //const CELL_RESIZER_WIDTH = 4;
     const OFFSET_X = 5;
     const OFFSET_Y = 2;
     const TEST_TABLE_WIDTH = 3;
@@ -81,8 +130,7 @@ describe('Table Inserter tests', () => {
         mouseStart: Position,
         mouseEnd: Position,
         expectedResultBeforeMove: boolean,
-        expectedResultAfterMove: boolean,
-        rect?: DOMRect // expect inserter to show in rect when specified
+        expectedResultAfterMove: boolean
     ) {
         const editorDiv = editor.getDocument().getElementById(TEST_ID);
 
@@ -171,17 +219,17 @@ describe('Table Inserter tests', () => {
 
     it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(0, true);
-        const cellRect = getCellRect(0, 2);
+        const cellRect = getCellRect(0, 0);
 
         runInserterTest(
             { x: cellRect.left, y: cellRect.top },
-            { x: (rect.right - rect.left) / 2, y: rect.bottom },
+            { x: rect.left + rect.width / 2, y: rect.bottom },
             true,
             false
         );
     });
 
-    it('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell in LTR', () => {
+    it('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(0, 0);
 
@@ -199,10 +247,9 @@ describe('Table Inserter tests', () => {
         );
     });
 
-    it('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell in LTR', () => {
+    it('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(0, 1);
-        const expectedRect = getCellRect(0, 0);
 
         runInserterTest(
             {
@@ -214,57 +261,11 @@ describe('Table Inserter tests', () => {
                 y: cellRect.top - OFFSET_Y,
             },
             true,
-            true,
-            expectedRect
+            true
         );
     });
 
-    xit('sets the vertical inserter at the current td for non-first cells if the X coordinate of the cursor position is greater than the half distance of the cell in LTR', () => {});
-
-    xit('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell in RTL', () => {});
-    xit('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is greater than the half distance of the cell in RTL', () => {});
-    xit('sets the vertical inserter at the current td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell in RTL', () => {});
-
-    // insert Td correctly vertical/horizonal    RTL/LTR
-
-    it('adds the horizontal resizer when mouse lands on each horizontal border', () => {});
-
     /************************ Resizer related tests ************************/
-
-    /*function getTableCell(table: HTMLTableElement, x: number, y: number): HTMLTableCellElement {
-        return table.rows[x].cells[y];
-    }
-
-    function getTableRowCells(
-        table: HTMLTableElement,
-        row: number
-    ): Map<HTMLTableCellElement, DOMRect> {
-        const cells: Map<HTMLTableCellElement, DOMRect> = new Map();
-        if (row >= table.rows.length) {
-            return cells;
-        }
-        for (let i = 0; i < table.rows[row].cells.length; i++) {
-            cells.set(table.rows[row].cells[i], table.rows[row].cells[i].getBoundingClientRect());
-        }
-        return cells;
-    }
-
-    function getTableColumnCells(
-        table: HTMLTableElement,
-        column: number
-    ): Map<HTMLTableCellElement, DOMRect> {
-        const cells: Map<HTMLTableCellElement, DOMRect> = new Map();
-        if (table.rows.length == 0 || column >= table.rows[0].cells.length) {
-            return cells;
-        }
-        for (let i = 0; i < table.rows.length; i++) {
-            cells.set(
-                table.rows[i].cells[column],
-                table.rows[i].cells[column].getBoundingClientRect()
-            );
-        }
-        return cells;
-    }*/
 
     function runShowResizerTest(resizerId: string, mousePos: Position, expectedPos: Position) {
         const editorDiv = editor.getDocument().getElementById(TEST_ID);
@@ -315,8 +316,6 @@ describe('Table Inserter tests', () => {
             clientY: mouseStart.y,
         });
         resizer.dispatchEvent(mouseClickEvent);
-
-        // trigger mousemove again (this would trigger resizeCells => plugin.resizeColumns(90, true)), and then verify if currentCellsToResize, nextCellsToResize width and table width
 
         const mouseMoveResize = new MouseEvent('mousemove', {
             clientX: mouseEnd.x,
@@ -410,7 +409,7 @@ describe('Table Inserter tests', () => {
 
     /************************** Resizier showing tests **************************/
 
-    it('adds the vertical resizer when mouse lands inside each cell with LTR', () => {
+    it('adds the vertical resizer when mouse lands inside each cell', () => {
         const tableRect = initialize(0);
 
         for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
@@ -428,7 +427,7 @@ describe('Table Inserter tests', () => {
         }
     });
 
-    it('adds the horizontal resizer when mouse lands inside each cell with LTR', () => {
+    it('adds the horizontal resizer when mouse lands inside each cell', () => {
         const tableRect = initialize(0);
         for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
             for (let j = 0; j < TEST_TABLE_HEIGHT; j++) {
@@ -444,55 +443,6 @@ describe('Table Inserter tests', () => {
             }
         }
     });
-
-    /**** The x (horizontal) and y (vertical) coordinates of the default table *****
-
-                   8.5____131.5____254.5____377.5/8.5
-                    | (0, 0) | (0, 1) | (0, 2) |
-                    |________|________|________|30.5
-                    | (1, 0) | (1, 1) | (1, 2) |
-                    |________|________|________|52.5
-                    | (2, 0) | (2, 1) | (2, 2) |
-                    |________|________|________|74.5
-
-        cell width: 123, cell height: 22 (getBoudingClientRect)
-        table width: 370, table height: 67 (getBoudingClientRect)
-
-    The x (horizontal) and y (vertical) coordinates of the Excel table
-
-                   8.5_____76.2____143.8____211.5/8.5
-                    | (0, 0) | (0, 1) | (0, 2) |
-                    |________|________|________|30.5
-                    | (1, 0) | (1, 1) | (1, 2) |
-                    |________|________|________|52.5
-                    | (2, 0) | (2, 1) | (2, 2) |
-                    |________|________|________|74.5
-
-        cell width: 67.7, cell height: 22 (getBoudingClientRect)
-        table width: 204, table height: 67 (getBoudingClientRect)
-*/
-
-    const defaultTable: TestTable = {
-        htmlData: DEFAULT_TABLE,
-        rows: [8.5, 30.5, 52.5, 74.5],
-        columns: [8.5, 131.5, 254.5, 377.5],
-        width: 370,
-        height: 67,
-        cellWidth: 123,
-        cellHeight: 22,
-    };
-
-    const excelTable: TestTable = {
-        htmlData: EXCEL_TABLE,
-        rows: [8.5, 30.5, 52.5, 74.5],
-        columns: [8.5, 76.2, 143.8, 211.5],
-        width: 204,
-        height: 67,
-        cellWidth: 67.7,
-        cellHeight: 22,
-    };
-
-    const testTables = [defaultTable, excelTable];
 
     /************************ Resizing row related tests ************************/
 
