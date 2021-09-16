@@ -1,6 +1,7 @@
 import Editor from '../../lib/editor/Editor';
 import { addUndoSnapshot } from '../../lib/coreApi/addUndoSnapshot';
 import { attachDomEvent } from '../../lib/coreApi/attachDomEvent';
+import { Browser } from 'roosterjs-editor-dom/lib';
 import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
 import { EditorCore } from 'roosterjs-editor-types';
 import { ensureTypeInContainer } from '../../lib/coreApi/ensureTypeInContainer';
@@ -61,11 +62,14 @@ describe('Editor', () => {
             stopPrintableKeyboardEventPropagation: true,
             contextMenuProviders: [],
         });
-        expect(core.edit).toEqual({
-            features: {},
-        });
+        if (!Browser.isChrome) {
+            expect(core.edit).toEqual({
+                features: {},
+            });
+        }
         expect(core.entity).toEqual({
             knownEntityElements: [],
+            shadowEntityCache: {},
         });
         expect(core.lifecycle.customData).toEqual({});
         expect(core.lifecycle.isDarkMode).toBeFalse();
@@ -163,11 +167,14 @@ describe('Editor', () => {
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
         });
-        expect(core.edit).toEqual({
-            features: {},
-        });
+        if (!Browser.isChrome) {
+            expect(core.edit).toEqual({
+                features: {},
+            });
+        }
         expect(core.entity).toEqual({
             knownEntityElements: [],
+            shadowEntityCache: {},
         });
         expect(core.lifecycle.customData).toEqual({});
         expect(core.lifecycle.isDarkMode).toBeTrue();

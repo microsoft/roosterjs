@@ -1,9 +1,15 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
-import { Entity } from 'roosterjs-editor-types';
-import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
+import { ApiPlaygroundReactComponent } from '../apiEntries';
+import { Entity, EntityOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { insertEntity } from 'roosterjs-editor-api';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
+import {
+    getEntityFromElement,
+    getEntitySelector,
+    moveChildNodes,
+    safeInstanceOf,
+} from 'roosterjs-editor-dom';
 
 const styles = require('./InsertEntityPane.scss');
 
@@ -11,9 +17,11 @@ interface InsertEntityPaneState {
     entities: Entity[];
 }
 
-export default class InsertEntityPane extends React.Component<ApiPaneProps, InsertEntityPaneState> {
+export default class InsertEntityPane extends React.Component<ApiPaneProps, InsertEntityPaneState>
+    implements ApiPlaygroundReactComponent {
     private entityType = React.createRef<HTMLInputElement>();
     private html = React.createRef<HTMLTextAreaElement>();
+    private hydratedHtml = React.createRef<HTMLTextAreaElement>();
     private styleInline = React.createRef<HTMLInputElement>();
     private styleBlock = React.createRef<HTMLInputElement>();
     private isReadonly = React.createRef<HTMLInputElement>();
@@ -33,6 +41,10 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                 </div>
                 <div>
                     HTML: <textarea className={styles.textarea} ref={this.html}></textarea>
+                </div>
+                <div>
+                    Hydrated HTML:
+                    <textarea className={styles.textarea} ref={this.hydratedHtml}></textarea>
                 </div>
                 <div>
                     Style:
@@ -65,10 +77,29 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
         );
     }
 
+    onPluginEvent(event: PluginEvent) {
+        if (
+            event.eventType == PluginEventType.EntityOperation &&
+            event.operation == EntityOperation.NewEntity &&
+            event.contentForShadowEntity &&
+            !event.contentForShadowEntity.firstChild
+        ) {
+            const child = event.entity.wrapper.firstChild;
+            const hydratedHtml = safeInstanceOf(child, 'HTMLElement') && child.dataset.hydratedHtml;
+
+            if (hydratedHtml) {
+                const div = this.props.getEditor().getDocument().createElement('div');
+                div.innerHTML = trustedHTMLHandler(hydratedHtml);
+                moveChildNodes(event.contentForShadowEntity, div);
+            }
+        }
+    }
+
     private insertEntity = () => {
         const entityType = this.entityType.current.value;
         const node = document.createElement('span');
         node.innerHTML = trustedHTMLHandler(this.html.current.value);
+        node.dataset.hydratedHtml = this.hydratedHtml.current.value.trim();
         const isBlock = this.styleBlock.current.checked;
         const isReadonly = this.isReadonly.current.checked;
 
@@ -106,6 +137,8 @@ function EntityButton({ entity }: { entity: Entity }) {
             Id: {entity.id}
             <br />
             Readonly: {entity.isReadonly ? 'True' : 'False'}
+            <br />
+            IsShadowEntity: {!!entity.wrapper.shadowRoot}
             <br />
             <br />
         </div>
