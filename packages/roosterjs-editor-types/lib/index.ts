@@ -169,10 +169,7 @@ export { default as CreateElementData } from './interface/CreateElementData';
 // Core Plugin State
 export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';
 export { default as EditPluginState } from './corePluginState/EditPluginState';
-export {
-    default as EntityPluginState,
-    ShadowEntityCache,
-} from './corePluginState/EntityPluginState';
+export { default as EntityPluginState } from './corePluginState/EntityPluginState';
 export { default as LifecyclePluginState } from './corePluginState/LifecyclePluginState';
 export { default as PendingFormatStatePluginState } from './corePluginState/PendingFormatStatePluginState';
 export { default as UndoPluginState } from './corePluginState/UndoPluginState';

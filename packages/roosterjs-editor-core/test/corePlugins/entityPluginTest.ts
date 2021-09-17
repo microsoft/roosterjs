@@ -452,8 +452,8 @@ describe('Shadow DOM Entity', () => {
             queryElements: () => [entity1, entity2],
             addContentEditFeature: () => {},
         };
-        const textNode = document.createTextNode('text');
         const state = plugin.getState();
+        const textNode = document.createTextNode('text');
 
         dom.commitEntity(entity1, 'ENTITY1', false, 'TEST1');
         dom.commitEntity(entity2, 'ENTITY2', false, 'TEST2');
@@ -471,8 +471,8 @@ describe('Shadow DOM Entity', () => {
         });
 
         expect(Object.keys(state.shadowEntityCache)).toEqual(['TEST2']);
-        expect(state.shadowEntityCache.TEST2.shadowDOM.firstChild).toBe(textNode);
-        expect(entity2.shadowRoot.firstChild).toBeNull();
+        expect(state.shadowEntityCache.TEST2).toBe(entity2);
+        expect(entity2.shadowRoot.firstChild).toBe(textNode);
     });
 
     it('ContentChange - Check removed shadow entity', () => {
@@ -527,6 +527,7 @@ describe('Shadow DOM Entity', () => {
             queryElements: () => [entity1],
             contains: (node: Node) => node == entity1,
             addContentEditFeature: () => {},
+            getDocument: () => document,
         };
 
         plugin.initialize(editor);
@@ -573,6 +574,7 @@ describe('Shadow DOM Entity', () => {
             triggerPluginEvent,
             contains: (node: Node) => node == entity1,
             addContentEditFeature: () => {},
+            getDocument: () => document,
         };
 
         plugin.initialize(editor);
@@ -615,6 +617,7 @@ describe('Shadow DOM Entity', () => {
                 newEntity = newNode;
             },
             addContentEditFeature: () => {},
+            getDocument: () => document,
         };
 
         plugin.initialize(editor);
@@ -750,6 +753,7 @@ describe('Shadow DOM Entity', () => {
             contains: (node: Node) =>
                 node == entity1 || node == entity2 || node == entity3 || node == entity4,
             addContentEditFeature: () => {},
+            getDocument: () => document,
         };
 
         dom.commitEntity(entity1, 'TEST', false, 'Test');
