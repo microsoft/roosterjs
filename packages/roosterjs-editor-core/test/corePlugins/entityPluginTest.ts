@@ -428,6 +428,7 @@ describe('Shadow DOM Entity', () => {
                 return [wrapper];
             },
             runAsync,
+            triggerPluginEvent: () => {},
         };
 
         plugin.initialize(editor);
