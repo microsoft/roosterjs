@@ -52,7 +52,7 @@ interface TestTable {
         table width: 204, table height: 67 (getBoudingClientRect)
 
                             Test Table 3
-                    (Word table with thick borders)
+                            (Word table)
 
                     8.5_____98.9____189.3___279.7/8.5
                     | (0, 0) | (0, 1) | (0, 2) |
