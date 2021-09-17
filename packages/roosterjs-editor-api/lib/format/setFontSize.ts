@@ -1,7 +1,7 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { getComputedStyle, safeInstanceOf } from 'roosterjs-editor-dom';
+import { applyStyleToListItems } from '../utils/applyStyleToListItems';
+import { getComputedStyle } from 'roosterjs-editor-dom';
 import { IEditor } from 'roosterjs-editor-types';
-import { setListItemStyle } from 'roosterjs-editor-dom';
 
 /**
  * Set font size at selection
@@ -10,6 +10,7 @@ import { setListItemStyle } from 'roosterjs-editor-dom';
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
 export default function setFontSize(editor: IEditor, fontSize: string) {
+    const parentNodes: Node[] = [];
     fontSize = fontSize.trim();
     // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
     // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
@@ -21,8 +22,10 @@ export default function setFontSize(editor: IEditor, fontSize: string) {
             element.style.lineHeight = 'normal';
         }
 
-        if (safeInstanceOf(element.parentElement, 'HTMLLIElement')) {
-            setListItemStyle(element.parentElement, ['font-size']);
+        if (parentNodes.indexOf(element.parentNode) === -1) {
+            parentNodes.push(element.parentNode);
         }
     });
+
+    applyStyleToListItems(parentNodes, ['font-size']);
 }

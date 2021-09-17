@@ -2,6 +2,7 @@ import ContentTraverser from '../contentTraverser/ContentTraverser';
 import getStyles from '../style/getStyles';
 import safeInstanceOf from './safeInstanceOf';
 import setStyles from '../style/setStyles';
+import { default as findClosestElementAncestor } from './findClosestElementAncestor';
 import { InlineElement } from 'roosterjs-editor-types';
 
 /**
@@ -10,7 +11,7 @@ import { InlineElement } from 'roosterjs-editor-types';
  * @param element the LI Element to set the styles
  * @param styles The styles that should be applied to the element.
  */
-export function setListItemStyle(element: HTMLLIElement, styles: string[]) {
+export default function setListItemStyle(element: HTMLLIElement, styles: string[]) {
     const elementsStyles = getInlineChildElementsStyle(element);
     let stylesToApply: Record<string, string> = getStyles(element);
 
@@ -29,6 +30,7 @@ export function setListItemStyle(element: HTMLLIElement, styles: string[]) {
     });
     setStyles(element, stylesToApply);
 }
+
 function getInlineChildElementsStyle(element: HTMLElement) {
     const result: Record<string, string>[] = [];
     const contentTraverser = ContentTraverser.createBodyTraverser(element);
@@ -40,7 +42,7 @@ function getInlineChildElementsStyle(element: HTMLElement) {
 
         if (currentNode.nodeName != 'BR') {
             if (currentNode.nodeName == '#text') {
-                currentNode = currentNode.parentNode;
+                currentNode = findClosestElementAncestor(currentNode);
             }
             if (safeInstanceOf(currentNode, 'HTMLElement')) {
                 let childStyle = getStyles(currentNode);

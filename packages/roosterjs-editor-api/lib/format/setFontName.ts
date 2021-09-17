@@ -1,6 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
+import { applyStyleToListItems } from '../utils/applyStyleToListItems';
 import { IEditor } from 'roosterjs-editor-types';
-import { safeInstanceOf, setListItemStyle } from 'roosterjs-editor-dom';
 
 /**
  * Set font name at selection
@@ -9,6 +9,7 @@ import { safeInstanceOf, setListItemStyle } from 'roosterjs-editor-dom';
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
 export default function setFontName(editor: IEditor, fontName: string) {
+    const parentNodes: Node[] = [];
     fontName = fontName.trim();
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
     // (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
@@ -16,8 +17,10 @@ export default function setFontName(editor: IEditor, fontName: string) {
     applyInlineStyle(editor, (element, isInnerNode) => {
         element.style.fontFamily = isInnerNode ? '' : fontName;
 
-        if (safeInstanceOf(element.parentElement, 'HTMLLIElement')) {
-            setListItemStyle(element.parentElement, ['font-family']);
+        if (parentNodes.indexOf(element.parentNode) === -1) {
+            parentNodes.push(element.parentNode);
         }
     });
+
+    applyStyleToListItems(parentNodes, ['font-family']);
 }

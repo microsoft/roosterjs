@@ -7,8 +7,8 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
+import { default as setListItemStyle } from '../utils/setListItemStyle';
 import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
-import { setListItemStyle } from '../utils/setListItemStyle';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 
