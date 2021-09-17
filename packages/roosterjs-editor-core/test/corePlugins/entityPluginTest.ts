@@ -441,7 +441,7 @@ describe('Shadow DOM Entity', () => {
 
         expect(runAsync).toHaveBeenCalled();
         expect(wrapper.innerHTML).toBe('test');
-        expect(wrapper.shadowRoot).toBeFalsy();
+        expect(wrapper.shadowRoot).toBeTruthy();
     });
 
     it('Cache shadow entity before set content', () => {
