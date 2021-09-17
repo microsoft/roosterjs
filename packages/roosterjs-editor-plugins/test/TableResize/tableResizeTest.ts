@@ -1,11 +1,10 @@
 import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
 import { CELL_RESIZER_WIDTH, ResizeState } from '../../lib/plugins/TableResize/TableResize';
-import { DEFAULT_TABLE, EXCEL_TABLE } from './tableData';
+import { DEFAULT_TABLE, EXCEL_TABLE, WORD_TABLE } from './tableData';
 import { IEditor } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 
-const RESIZING_DIFF = 2;
-const TABLE_RESIZING_DIFF = 3;
+const RESIZING_DIVIATION = 4;
 
 /* Used to specify mouse coordinates or cell locations in a table in this test set */
 type Position = {
@@ -52,6 +51,20 @@ interface TestTable {
         cell width: 67.7, cell height: 22 (getBoudingClientRect)
         table width: 204, table height: 67 (getBoudingClientRect)
 
+                            Test Table 3
+                    (Word table with thick borders)
+
+                    8.5_____98.9____189.3___279.7/8.5
+                    | (0, 0) | (0, 1) | (0, 2) |
+                    |________|________|________|50.4
+                    | (1, 0) | (1, 1) | (1, 2) |
+                    |________|________|________|92.4
+                    | (2, 0) | (2, 1) | (2, 2) |
+                    |________|________|________|135.5
+
+        cell width: 90.4, cell height: 41.9 (getBoudingClientRect)
+        table width: 272.2, table height: 128 (getBoudingClientRect)
+
 *********************************************************************/
 
 const defaultTable: TestTable = {
@@ -74,9 +87,19 @@ const excelTable: TestTable = {
     cellHeight: 22,
 };
 
-const testTables = [defaultTable, excelTable];
+const wordTable: TestTable = {
+    htmlData: WORD_TABLE,
+    rows: [8.5, 50.4, 92.4, 135.5],
+    columns: [8.5, 98.9, 189.3, 279.7],
+    width: 272.2,
+    height: 128,
+    cellWidth: 90.4,
+    cellHeight: 41.9,
+};
 
-describe('Table Inserter tests', () => {
+const testTables = [defaultTable, excelTable, wordTable];
+
+describe('Table Resizer/Inserter tests', () => {
     let editor: IEditor;
     let plugin: TableResize;
     const insideTheOffset = 5;
@@ -281,8 +304,8 @@ describe('Table Inserter tests', () => {
         if (!!resizer) {
             const resizerX = resizer.getBoundingClientRect().x;
             const resizerY = resizer.getBoundingClientRect().y;
-            expect(Math.abs(resizerX - expectedPos.x)).toBeLessThanOrEqual(RESIZING_DIFF);
-            expect(Math.abs(resizerY - expectedPos.y)).toBeLessThanOrEqual(RESIZING_DIFF);
+            expect(Math.abs(resizerX - expectedPos.x)).toBeLessThanOrEqual(RESIZING_DIVIATION);
+            expect(Math.abs(resizerY - expectedPos.y)).toBeLessThanOrEqual(RESIZING_DIVIATION);
         }
     }
 
@@ -348,10 +371,10 @@ describe('Table Inserter tests', () => {
             .getElementsByTagName('table')[0]
             .getBoundingClientRect();
         expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
-            TABLE_RESIZING_DIFF
+            RESIZING_DIVIATION
         );
         expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(
-            TABLE_RESIZING_DIFF
+            RESIZING_DIVIATION
         );
     }
 
@@ -367,14 +390,20 @@ describe('Table Inserter tests', () => {
         expectedRow.forEach((tRect, pos) => {
             const cellRect = getCellRect(pos.x, pos.y);
             expect(!!cellRect).toBe(true);
-            expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(RESIZING_DIFF);
-            expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(RESIZING_DIFF);
+            expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(RESIZING_DIVIATION);
+            expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(
+                RESIZING_DIVIATION
+            );
         });
 
         const table = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
         const tableRect = table.getBoundingClientRect();
-        expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(RESIZING_DIFF);
-        expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(RESIZING_DIFF);
+        expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
+            RESIZING_DIVIATION
+        );
+        expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(
+            RESIZING_DIVIATION
+        );
     }
 
     function runResizeColumnTest(
@@ -390,23 +419,33 @@ describe('Table Inserter tests', () => {
         expectedLeftColumn.forEach((tRect, pos) => {
             const cellRect = getCellRect(pos.x, pos.y);
             expect(!!cellRect).toBe(true);
-            expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(RESIZING_DIFF);
-            expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(RESIZING_DIFF);
+            expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(RESIZING_DIVIATION);
+            expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(
+                RESIZING_DIVIATION
+            );
         });
 
         if (!!expectedRightColumn) {
             expectedRightColumn.forEach((tRect, pos) => {
                 const cellRect = getCellRect(pos.x, pos.y);
                 expect(!!cellRect).toBe(true);
-                expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(RESIZING_DIFF);
-                expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(RESIZING_DIFF);
+                expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(
+                    RESIZING_DIVIATION
+                );
+                expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(
+                    RESIZING_DIVIATION
+                );
             });
         }
 
         const table = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
         const tableRect = table.getBoundingClientRect();
-        expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(RESIZING_DIFF);
-        expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(RESIZING_DIFF);
+        expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
+            RESIZING_DIVIATION
+        );
+        expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(
+            RESIZING_DIVIATION
+        );
     }
 
     /************************** Resizier showing tests **************************/
@@ -504,12 +543,20 @@ describe('Table Inserter tests', () => {
         resizeFirstRowTest(1);
     });
 
+    it('resizes the first row correctly with Word table', () => {
+        resizeFirstRowTest(2);
+    });
+
     it('resizes the last row correctly with default table', () => {
         resizeLastRowTest(0);
     });
 
     it('resizes the last row correctly with Excel table', () => {
         resizeLastRowTest(1);
+    });
+
+    it('resizes the last row correctly with Word table', () => {
+        resizeLastRowTest(2);
     });
 
     /************************ Resizing column related tests ************************/
@@ -666,12 +713,20 @@ describe('Table Inserter tests', () => {
         resizeColumnToLeftTest(1);
     });
 
+    it('resizes the column to the left correctly with Word table', () => {
+        resizeColumnToLeftTest(2);
+    });
+
     it('does not resize the column to the left because it is too narrow with default table', () => {
         resizeColumnToLeftTooNarrowTest(0);
     });
 
     it('does not resize the column to the left because it is too narrow with Excel table', () => {
         resizeColumnToLeftTooNarrowTest(1);
+    });
+
+    it('does not resize the column to the left because it is too narrow with Word table', () => {
+        resizeColumnToLeftTooNarrowTest(2);
     });
 
     it('resizes the column to the right correctly with default table', () => {
@@ -682,6 +737,10 @@ describe('Table Inserter tests', () => {
         resizeColumnToRightTest(1);
     });
 
+    it('resizes the column to the right correctly with Word table', () => {
+        resizeColumnToRightTest(2);
+    });
+
     it('does not resize the column to the right because it is too narrow with default table', () => {
         resizeColumnToRightTestTooNarrowTest(0);
     });
@@ -690,12 +749,20 @@ describe('Table Inserter tests', () => {
         resizeColumnToRightTestTooNarrowTest(1);
     });
 
+    it('does not resize the column to the right because it is too narrow with Word table', () => {
+        resizeColumnToRightTestTooNarrowTest(2);
+    });
+
     it('resizes the last column to the right correctly with default table', () => {
         resizeLastColumnToRightTest(0);
     });
 
     it('resizes the last column to the right correctly with Excel table', () => {
         resizeLastColumnToRightTest(1);
+    });
+
+    it('resizes the last column to the right correctly with Word table', () => {
+        resizeLastColumnToRightTest(2);
     });
 
     /************************ Resizing table related tests ************************/
@@ -710,7 +777,7 @@ describe('Table Inserter tests', () => {
         runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
     }
 
-    function resizeTAbleNarrowerTest(i: number) {
+    function resizeTableNarrowerTest(i: number) {
         const tableRect = initialize(i);
         const testTable = testTables[i];
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
@@ -723,30 +790,35 @@ describe('Table Inserter tests', () => {
     function resizeTableTallerTest(i: number) {
         const tableRect = initialize(i);
         const testTable = testTables[i];
+        const newBorderY = tableRect.bottom + 100;
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
-        const mouseEnd = { x: tableRect.right, y: 250 };
+        const mouseEnd = { x: tableRect.right, y: newBorderY };
         const expectedTableWidth = testTable.width;
-        const expectedTableHeight = 250 - testTable.rows[0];
+        const expectedTableHeight = newBorderY - testTable.rows[0];
         runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
     }
 
     function resizeTableNarrowerTallerTest(i: number) {
         const tableRect = initialize(i);
         const testTable = testTables[i];
+        const newBorderX = tableRect.left + tableRect.width * 0.7;
+        const newBorderY = tableRect.bottom + 100;
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
-        const mouseEnd = { x: 250, y: 300 };
-        const expectedTableWidth = 250 - testTable.columns[0];
-        const expectedTableHeight = 300 - testTable.rows[0];
+        const mouseEnd = { x: newBorderX, y: newBorderY };
+        const expectedTableWidth = newBorderX - testTable.columns[0];
+        const expectedTableHeight = newBorderY - testTable.rows[0];
         runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
     }
 
     function resizeTableWiderTallerTest(i: number) {
         const tableRect = initialize(i);
         const testTable = testTables[i];
+        const newBorderX = tableRect.left + tableRect.width * 2.0;
+        const newBorderY = tableRect.bottom + 250;
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
-        const mouseEnd = { x: 600, y: 200 };
-        const expectedTableWidth = 600 - testTable.columns[0];
-        const expectedTableHeight = 200 - testTable.rows[0];
+        const mouseEnd = { x: newBorderX, y: newBorderY };
+        const expectedTableWidth = newBorderX - testTable.columns[0];
+        const expectedTableHeight = newBorderY - testTable.rows[0];
         runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
     }
 
@@ -758,12 +830,20 @@ describe('Table Inserter tests', () => {
         resizeTAbleWiderTest(1);
     });
 
+    it('resizes the table to be wider correctly with Word table', () => {
+        resizeTAbleWiderTest(2);
+    });
+
     it('resizes the table to be narrower correctly with default table', () => {
-        resizeTAbleNarrowerTest(0);
+        resizeTableNarrowerTest(0);
     });
 
     it('resizes the table to be narrower correctly with Excel table', () => {
-        resizeTAbleNarrowerTest(1);
+        resizeTableNarrowerTest(1);
+    });
+
+    it('resizes the table to be narrower correctly with Word table', () => {
+        resizeTableNarrowerTest(2);
     });
 
     it('resizes the table to be taller correctly with default table', () => {
@@ -774,6 +854,10 @@ describe('Table Inserter tests', () => {
         resizeTableTallerTest(1);
     });
 
+    it('resizes the table to be taller correctly with Word table', () => {
+        resizeTableTallerTest(2);
+    });
+
     it('resizes the table to be narrower and taller correctly with default table', () => {
         resizeTableNarrowerTallerTest(0);
     });
@@ -782,12 +866,20 @@ describe('Table Inserter tests', () => {
         resizeTableNarrowerTallerTest(1);
     });
 
+    it('resizes the table to be narrower and taller correctly with Word table', () => {
+        resizeTableNarrowerTallerTest(2);
+    });
+
     it('resizes the table to be wider and taller correctly with default table', () => {
         resizeTableWiderTallerTest(0);
     });
 
     it('resizes the table to be wider and taller correctly with Excel table', () => {
         resizeTableWiderTallerTest(1);
+    });
+
+    it('resizes the table to be wider and taller correctly with Word table', () => {
+        resizeTableWiderTallerTest(2);
     });
 
     /************************ Other utilities ************************/
