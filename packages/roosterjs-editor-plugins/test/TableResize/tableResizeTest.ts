@@ -1,10 +1,11 @@
 import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
 import { CELL_RESIZER_WIDTH, ResizeState } from '../../lib/plugins/TableResize/TableResize';
 import { DEFAULT_TABLE, EXCEL_TABLE, WORD_TABLE } from './tableData';
-import { IEditor } from 'roosterjs-editor-types';
+import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 
 const RESIZING_DIVIATION = 4;
+const INSERTING_DIVIATION = 3;
 
 /* Used to specify mouse coordinates or cell locations in a table in this test set */
 type Position = {
@@ -107,7 +108,6 @@ describe('Table Resizer/Inserter tests', () => {
     const OFFSET_Y = 2;
     const TEST_TABLE_WIDTH = 3;
     const TEST_TABLE_HEIGHT = 3;
-    const ADD_BUTTON = '</div>+</div>';
     const TEST_ID = 'inserterTest';
 
     beforeEach(() => {
@@ -151,40 +151,70 @@ describe('Table Resizer/Inserter tests', () => {
         return tableRect;
     }
 
+    function getTableRows(table: HTMLTableElement): number {
+        return table.rows.length;
+    }
+
+    function getTableColumns(table: HTMLTableElement): number {
+        return table.rows[0].cells.length;
+    }
+
     function runInserterTest(
+        inserterType: string,
         mouseStart: Position,
         mouseEnd: Position,
         expectedResultBeforeMove: boolean,
-        expectedResultAfterMove: boolean
+        expectedResultAfterMove: boolean,
+        expectedPosition?: DOMRect
     ) {
         const editorDiv = editor.getDocument().getElementById(TEST_ID);
-
-        let mouseEvent = new MouseEvent('mousemove', {
-            clientX: mouseStart.x,
-            clientY: mouseStart.y,
-        });
-
-        editorDiv.dispatchEvent(mouseEvent);
-
-        const body = editor.getDocument().body;
-
-        mouseEvent = new MouseEvent('mousemove', {
-            clientX: mouseEnd.x,
-            clientY: mouseEnd.y,
-        });
+        editorDiv.dispatchEvent(
+            new MouseEvent('mousemove', {
+                clientX: mouseStart.x,
+                clientY: mouseStart.y,
+            })
+        );
 
         // test
-        expect(body.innerHTML.includes(ADD_BUTTON)).toBe(expectedResultBeforeMove);
+        expect(!!editor.getDocument().getElementById(inserterType)).toBe(expectedResultBeforeMove);
+        editorDiv.dispatchEvent(
+            new MouseEvent('mousemove', {
+                clientX: mouseEnd.x,
+                clientY: mouseEnd.y,
+            })
+        );
 
-        editorDiv.dispatchEvent(mouseEvent);
+        expect(!!editor.getDocument().getElementById(inserterType)).toBe(expectedResultAfterMove);
 
-        expect(body.innerHTML.includes(ADD_BUTTON)).toBe(expectedResultAfterMove);
+        if (expectedResultAfterMove) {
+            const inserter = editor.getDocument().getElementById(inserterType);
+            const inserterRect = inserter.getBoundingClientRect();
+            if (!!expectedPosition) {
+                const diff =
+                    inserterType == 'verticalInserter'
+                        ? inserterRect.left + inserterRect.width / 2 - expectedPosition.x
+                        : inserterRect.top + inserterRect.height / 2 - expectedPosition.y;
+                expect(Math.abs(diff)).toBeLessThanOrEqual(INSERTING_DIVIATION);
+            }
+
+            const table = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
+            const rows = getTableRows(table);
+            const cols = getTableColumns(table);
+            inserter.dispatchEvent(new MouseEvent('click'));
+            const newRows = getTableRows(table);
+            const newCols = getTableColumns(table);
+            expect(newRows).toBe(inserterType == 'verticalInserter' ? rows : rows + 1);
+            expect(newCols).toBe(inserterType == 'horizontalInserter' ? cols : cols + 1);
+
+            expect();
+        }
     }
 
     // inserter tests
     it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
+            'verticalInserter',
             { x: rect.right, y: rect.top - OFFSET_Y },
             { x: rect.right / 2, y: rect.bottom },
             true,
@@ -195,6 +225,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
+            'verticalInserter',
             { x: rect.right, y: rect.top - OFFSET_Y },
             { x: rect.right - insideTheOffset, y: rect.top },
             true,
@@ -205,6 +236,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
+            'horizontalInserter',
             { x: rect.left, y: rect.bottom },
             { x: (rect.right - rect.left) / 2, y: (rect.bottom - rect.top) / 2 },
             true,
@@ -215,6 +247,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('keeps the horizontal inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
+            'horizontalInserter',
             { x: rect.left, y: rect.bottom },
             { x: rect.left, y: rect.bottom - insideTheOffset },
             true,
@@ -225,6 +258,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
+            'horizontalInserter',
             { x: rect.right, y: rect.bottom },
             { x: (rect.right - rect.left) / 2, y: (rect.bottom - rect.top) / 2 },
             true,
@@ -235,6 +269,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
+            'horizontalInserter',
             { x: rect.right, y: rect.bottom },
             { x: rect.right + insideTheOffset / 2, y: rect.bottom },
             true,
@@ -247,6 +282,7 @@ describe('Table Resizer/Inserter tests', () => {
         const cellRect = getCellRect(0, 0);
 
         runInserterTest(
+            'verticalInserter',
             { x: cellRect.left, y: cellRect.top },
             { x: rect.left + rect.width / 2, y: rect.bottom },
             true,
@@ -259,6 +295,7 @@ describe('Table Resizer/Inserter tests', () => {
         const cellRect = getCellRect(0, 0);
 
         runInserterTest(
+            'verticalInserter',
             {
                 x: cellRect.left + (cellRect.right - cellRect.left) / 2 + OFFSET_X,
                 y: cellRect.top - OFFSET_Y,
@@ -277,22 +314,44 @@ describe('Table Resizer/Inserter tests', () => {
         const cellRect = getCellRect(0, 1);
 
         runInserterTest(
+            'verticalInserter',
             {
-                x: cellRect.left + (cellRect.right - cellRect.left) / 2 + OFFSET_X,
+                x: cellRect.left + cellRect.width / 2 + OFFSET_X,
                 y: cellRect.top - OFFSET_Y,
             },
             {
-                x: cellRect.left + (cellRect.right - cellRect.left) / 2 - OFFSET_X,
+                x: cellRect.left + cellRect.width / 2 - OFFSET_X,
                 y: cellRect.top - OFFSET_Y,
             },
             true,
-            true
+            true,
+            new DOMRect(cellRect.left, cellRect.top)
+        );
+    });
+
+    it('sets the horizontal inserter at the previous td for non-first cells if the Y coordinate of the cursor position is less than the half distance of the cell', () => {
+        initialize(0);
+        const cellRect = getCellRect(1, 0);
+
+        runInserterTest(
+            'horizontalInserter',
+            {
+                x: cellRect.left + OFFSET_X,
+                y: cellRect.top + cellRect.height / 2 + OFFSET_Y,
+            },
+            {
+                x: cellRect.left + OFFSET_X,
+                y: cellRect.top + cellRect.height / 2 - OFFSET_Y,
+            },
+            true,
+            true,
+            new DOMRect(cellRect.left, cellRect.top)
         );
     });
 
     /************************ Resizer related tests ************************/
 
-    function runShowResizerTest(resizerId: string, mousePos: Position, expectedPos: Position) {
+    function runShowResizerTest(resizerId: string, mousePos: Position, expectedPos?: Position) {
         const editorDiv = editor.getDocument().getElementById(TEST_ID);
         const mouseEvent = new MouseEvent('mousemove', {
             clientX: mousePos.x,
@@ -301,7 +360,7 @@ describe('Table Resizer/Inserter tests', () => {
         editorDiv.dispatchEvent(mouseEvent);
         const resizer = editor.getDocument().getElementById(resizerId);
         expect(!!resizer).toBe(true);
-        if (!!resizer) {
+        if (!!resizer && !!expectedPos) {
             const resizerX = resizer.getBoundingClientRect().x;
             const resizerY = resizer.getBoundingClientRect().y;
             expect(Math.abs(resizerX - expectedPos.x)).toBeLessThanOrEqual(RESIZING_DIVIATION);
@@ -883,6 +942,25 @@ describe('Table Resizer/Inserter tests', () => {
     });
 
     /************************ Other utilities ************************/
+
+    it('removes resisizer when scrolling', () => {
+        const tableRect = initialize(0);
+        runShowResizerTest('tableResizer', {
+            x: tableRect.right,
+            y: tableRect.bottom,
+        });
+        let resizer = editor.getDocument().getElementById('tableResizer');
+        expect(!!resizer).toBe(true);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.Scroll,
+            scrollContainer: editor.getDocument().body as HTMLElement,
+            rawEvent: null,
+        });
+
+        resizer = editor.getDocument().getElementById('tableResizer');
+        expect(!!resizer).toBe(false);
+    });
 
     it('returns the actual plugin name', () => {
         const expectedName = 'TableResize';

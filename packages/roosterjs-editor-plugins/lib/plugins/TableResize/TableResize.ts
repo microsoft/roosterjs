@@ -331,6 +331,10 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         ) as HTMLDivElement;
 
+        inserter.id =
+            this.insertingState == ResizeState.Horizontal
+                ? 'horizontalInserter'
+                : 'verticalInserter';
         // set inserter position
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
