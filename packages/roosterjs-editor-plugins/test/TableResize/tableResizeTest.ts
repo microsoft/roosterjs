@@ -1,7 +1,7 @@
 import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
 import { CELL_RESIZER_WIDTH, ResizeState } from '../../lib/plugins/TableResize/TableResize';
-import { DEFAULT_TABLE, EXCEL_TABLE, WORD_TABLE } from './tableData';
-import { IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { DEFAULT_TABLE, DEFAULT_TABLE_MERGED, EXCEL_TABLE, WORD_TABLE } from './tableData';
+import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 
 const RESIZING_DIVIATION = 4;
@@ -19,8 +19,8 @@ interface TestTable {
     columns: number[];
     width: number;
     height: number;
-    cellWidth: number;
-    cellHeight: number;
+    cellWidth?: number;
+    cellHeight?: number;
 }
 
 /*******************************************************************
@@ -66,6 +66,22 @@ interface TestTable {
         cell width: 90.4, cell height: 41.9 (getBoudingClientRect)
         table width: 272.2, table height: 128 (getBoudingClientRect)
 
+
+                            Test Table 4
+                        (Default table merged)
+
+                    8.5_____131.5____254.5___377.5___500.5/8.5
+                    | (0, 0) | (0, 1) | (0, 2) | (0, 3) |
+                    |________|________|________|________|30.5
+                    | (1, 0) |      (1, 1)     | (1, 2) |
+                    |        |_________________|________|71.5
+                    |        | (2, 0) | (2, 1) | (2, 2) |
+                    |________|________|________|________|93.5
+                    | (3, 0) | (3, 1) | (3, 2) | (3, 3) |
+                    |________|________|________|________|115.5
+
+        table width: 493, table height: 108 (getBoudingClientRect)
+
 *********************************************************************/
 
 const defaultTable: TestTable = {
@@ -76,6 +92,14 @@ const defaultTable: TestTable = {
     height: 67,
     cellWidth: 123,
     cellHeight: 22,
+};
+
+const defaultTableMerged: TestTable = {
+    htmlData: DEFAULT_TABLE_MERGED,
+    rows: [8.5, 30.5, 71.5, 93.5, 115.5],
+    columns: [8.5, 131.5, 254.5, 377.5, 500.5],
+    width: 493,
+    height: 108,
 };
 
 const excelTable: TestTable = {
@@ -98,7 +122,7 @@ const wordTable: TestTable = {
     cellHeight: 41.9,
 };
 
-const testTables = [defaultTable, excelTable, wordTable];
+const testTables = [defaultTable, excelTable, wordTable, defaultTableMerged];
 
 describe('Table Resizer/Inserter tests', () => {
     let editor: IEditor;
@@ -544,6 +568,46 @@ describe('Table Resizer/Inserter tests', () => {
         }
     });
 
+    /************************** Resizier removing tests **************************/
+
+    function removeResizerTest(pluginEvent: PluginEvent) {
+        const tableRect = initialize(0);
+        runShowResizerTest('tableResizer', {
+            x: tableRect.right,
+            y: tableRect.bottom,
+        });
+
+        plugin.onPluginEvent(pluginEvent);
+
+        const resizer = editor.getDocument().getElementById('tableResizer');
+        expect(!!resizer).toBe(false);
+    }
+
+    it('removes resisizer on input', () => {
+        const pluginEvent: PluginEvent = {
+            eventType: PluginEventType.Input,
+            rawEvent: null,
+        };
+        removeResizerTest(pluginEvent);
+    });
+
+    it('removes resisizer on content change', () => {
+        const pluginEvent: PluginEvent = {
+            eventType: PluginEventType.ContentChanged,
+            source: null,
+        };
+        removeResizerTest(pluginEvent);
+    });
+
+    it('removes resisizer on scrolling', () => {
+        const pluginEvent: PluginEvent = {
+            eventType: PluginEventType.Scroll,
+            scrollContainer: editor.getDocument().body as HTMLElement,
+            rawEvent: null,
+        };
+        removeResizerTest(pluginEvent);
+    });
+
     /************************ Resizing row related tests ************************/
 
     function resizeFirstRowTest(i: number) {
@@ -618,6 +682,36 @@ describe('Table Resizer/Inserter tests', () => {
         resizeLastRowTest(2);
     });
 
+    it('resizes the row correctly with merged cells', () => {
+        initialize(3);
+        const delta = 35;
+        const testTable = testTables[3];
+        const cellRect = getCellRect(1, 1);
+        const targetPos: number = testTable.rows[2] + delta;
+        const expectedTableWidth = testTable.width;
+        const expectedTableHeight = testTable.height + delta;
+
+        runResizeRowTest(
+            { x: cellRect.left + cellRect.width / 2, y: cellRect.bottom },
+            { x: cellRect.left + cellRect.width / 2, y: targetPos },
+            new Map([
+                [
+                    { x: 1, y: 0 },
+                    new DOMRect(0, 0, getCellRect(1, 0).width, getCellRect(1, 0).height + delta),
+                ],
+                [
+                    { x: 1, y: 1 },
+                    new DOMRect(0, 0, getCellRect(1, 1).width, getCellRect(1, 1).height + delta),
+                ],
+                [
+                    { x: 1, y: 2 },
+                    new DOMRect(0, 0, getCellRect(1, 2).width, getCellRect(1, 2).height + delta),
+                ],
+            ]),
+            expectedTableWidth,
+            expectedTableHeight
+        );
+    });
     /************************ Resizing column related tests ************************/
 
     function resizeColumnToLeftTest(i: number) {
@@ -774,6 +868,111 @@ describe('Table Resizer/Inserter tests', () => {
 
     it('resizes the column to the left correctly with Word table', () => {
         resizeColumnToLeftTest(2);
+    });
+
+    it('resizes the column to the left correctly with merged cells', () => {
+        initialize(3);
+        const delta = 20;
+        const testTable = testTables[3];
+        const cellRect = getCellRect(1, 1);
+        const targetPos: number = testTable.columns[3] - delta;
+        const expectedTableWidth = testTable.width;
+        const expectedTableHeight = testTable.height;
+
+        runResizeColumnTest(
+            { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
+            { x: targetPos, y: cellRect.top + cellRect.height / 2 + 50 },
+            new Map([
+                [
+                    { x: 0, y: 2 },
+                    new DOMRect(0, 0, targetPos - testTable.columns[2], getCellRect(0, 2).height),
+                ],
+                [
+                    { x: 1, y: 1 },
+                    new DOMRect(0, 0, targetPos - testTable.columns[1], getCellRect(1, 1).height),
+                ],
+                [
+                    { x: 2, y: 1 },
+                    new DOMRect(0, 0, targetPos - testTable.columns[2], getCellRect(2, 1).height),
+                ],
+                [
+                    { x: 3, y: 2 },
+                    new DOMRect(0, 0, targetPos - testTable.columns[2], getCellRect(3, 2).height),
+                ],
+            ]),
+            new Map([
+                [
+                    { x: 0, y: 3 },
+                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(0, 3).height),
+                ],
+                [
+                    { x: 1, y: 2 },
+                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(1, 2).height),
+                ],
+                [
+                    { x: 2, y: 2 },
+                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(2, 2).height),
+                ],
+                [
+                    { x: 3, y: 3 },
+                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(3, 3).height),
+                ],
+            ]),
+            expectedTableWidth,
+            expectedTableHeight
+        );
+    });
+
+    it('does not resize the column to the left correctly with merged cells since too narrow', () => {
+        initialize(3);
+        const testTable = testTables[3];
+        const cellRect = getCellRect(1, 1);
+        const targetPos: number = testTable.columns[2];
+        const expectedTableWidth = testTable.width;
+        const expectedTableHeight = testTable.height;
+
+        runResizeColumnTest(
+            { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
+            { x: targetPos, y: cellRect.top + cellRect.height / 2 + 50 },
+            new Map([
+                [
+                    { x: 0, y: 2 },
+                    new DOMRect(0, 0, getCellRect(0, 2).width, getCellRect(0, 2).height),
+                ],
+                [
+                    { x: 1, y: 1 },
+                    new DOMRect(0, 0, getCellRect(1, 1).width, getCellRect(1, 1).height),
+                ],
+                [
+                    { x: 2, y: 1 },
+                    new DOMRect(0, 0, getCellRect(2, 1).width, getCellRect(2, 1).height),
+                ],
+                [
+                    { x: 3, y: 2 },
+                    new DOMRect(0, 0, getCellRect(3, 2).width, getCellRect(3, 2).height),
+                ],
+            ]),
+            new Map([
+                [
+                    { x: 0, y: 3 },
+                    new DOMRect(0, 0, getCellRect(0, 3).width, getCellRect(0, 3).height),
+                ],
+                [
+                    { x: 1, y: 2 },
+                    new DOMRect(0, 0, getCellRect(1, 2).width, getCellRect(1, 2).height),
+                ],
+                [
+                    { x: 2, y: 2 },
+                    new DOMRect(0, 0, getCellRect(2, 2).width, getCellRect(2, 2).height),
+                ],
+                [
+                    { x: 3, y: 3 },
+                    new DOMRect(0, 0, getCellRect(3, 3).width, getCellRect(3, 3).height),
+                ],
+            ]),
+            expectedTableWidth,
+            expectedTableHeight
+        );
     });
 
     it('does not resize the column to the left because it is too narrow with default table', () => {
@@ -942,25 +1141,6 @@ describe('Table Resizer/Inserter tests', () => {
     });
 
     /************************ Other utilities ************************/
-
-    it('removes resisizer when scrolling', () => {
-        const tableRect = initialize(0);
-        runShowResizerTest('tableResizer', {
-            x: tableRect.right,
-            y: tableRect.bottom,
-        });
-        let resizer = editor.getDocument().getElementById('tableResizer');
-        expect(!!resizer).toBe(true);
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.Scroll,
-            scrollContainer: editor.getDocument().body as HTMLElement,
-            rawEvent: null,
-        });
-
-        resizer = editor.getDocument().getElementById('tableResizer');
-        expect(!!resizer).toBe(false);
-    });
 
     it('returns the actual plugin name', () => {
         const expectedName = 'TableResize';
