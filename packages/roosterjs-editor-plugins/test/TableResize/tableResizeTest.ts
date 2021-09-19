@@ -23,35 +23,6 @@ interface TestTable {
     cellHeight?: number;
 }
 
-function isSameTableSize(table1: HTMLTableElement, table2: HTMLTableElement): boolean {
-    const isSameRect = (rect1: DOMRect, rect2: DOMRect): boolean => {
-        return (
-            rect1.left == rect2.left &&
-            rect1.right == rect2.right &&
-            rect1.top == rect2.top &&
-            rect1.bottom == rect2.bottom
-        );
-    };
-
-    if (!isSameRect(table1.getBoundingClientRect(), table2.getBoundingClientRect())) {
-        return false;
-    }
-
-    for (let i = 0; i < table1.rows.length; i++) {
-        for (let j = 0; j < table1.rows[i].cells.length; j++) {
-            const cell1 = table1.rows[i].cells[j];
-            const cell2 = table2.rows[i]?.cells[j];
-            if (
-                !cell2 ||
-                !isSameRect(cell1.getBoundingClientRect(), cell2.getBoundingClientRect())
-            ) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 /*******************************************************************
                               Test Table 1
                 (default table inserted from table control)
@@ -421,6 +392,32 @@ describe('Table Resizer/Inserter tests', () => {
         }
     }
 
+    function runTableShapeTest(table1: HTMLTableElement, table2: HTMLTableElement) {
+        const isSameRect = (rect1: DOMRect, rect2: DOMRect): boolean => {
+            return (
+                rect1.left == rect2.left &&
+                rect1.right == rect2.right &&
+                rect1.top == rect2.top &&
+                rect1.bottom == rect2.bottom
+            );
+        };
+
+        expect(isSameRect(table1.getBoundingClientRect(), table2.getBoundingClientRect())).toBe(
+            true
+        );
+
+        for (let i = 0; i < table1.rows.length; i++) {
+            for (let j = 0; j < table1.rows[i].cells.length; j++) {
+                const cell1 = table1.rows[i].cells[j];
+                const cell2 = table2.rows[i]?.cells[j];
+                expect(!!cell2).toBe(true);
+                expect(
+                    isSameRect(cell1.getBoundingClientRect(), cell2.getBoundingClientRect())
+                ).toBe(true);
+            }
+        }
+    }
+
     function moveAndResize(mouseStart: Position, mouseEnd: Position, resizeState: ResizeState) {
         const editorDiv = editor.getDocument().getElementById(TEST_ID);
         let resizerId: string;
@@ -447,9 +444,8 @@ describe('Table Resizer/Inserter tests', () => {
         const resizer = editor.getDocument().getElementById(resizerId);
         expect(!!resizer).toBe(true);
 
-        const tableBeforeClick = editor
-            .getDocument()
-            .getElementsByTagName('table')[0] as HTMLTableElement;
+        const temp = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
+        const tableBeforeClick = temp.cloneNode(true) as HTMLTableElement;
         // mouse down and start resizing (this will initiate currentCellsToResize and nextCellsToResize)
         const mouseClickEvent = new MouseEvent('mousedown', {
             clientX: mouseStart.x,
@@ -460,7 +456,9 @@ describe('Table Resizer/Inserter tests', () => {
             .getDocument()
             .getElementsByTagName('table')[0] as HTMLTableElement;
         // validate the table doesn't shift after clicking on the resizer
-        expect(isSameTableSize(tableBeforeClick, tableAfterClick)).toBe(true);
+        //expect(isSameTableSize(tableBeforeClick, tableAfterClick)).toBe(true);
+
+        runTableShapeTest(tableBeforeClick, tableAfterClick);
 
         const mouseMoveResize = new MouseEvent('mousemove', {
             clientX: mouseEnd.x,
@@ -899,7 +897,7 @@ describe('Table Resizer/Inserter tests', () => {
         resizeColumnToLeftTest(0);
     });
 
-    it('resizes the column to the left correctly with Excel table', () => {
+    fit('resizes the column to the left correctly with Excel table', () => {
         resizeColumnToLeftTest(1);
     });
 
