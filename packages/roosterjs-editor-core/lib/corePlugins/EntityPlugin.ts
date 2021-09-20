@@ -83,33 +83,11 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         this.editor = editor;
 
         // Workaround an issue for Chrome that when Delete or Backsapce, shadow DOM may be lost in editor
-        if (Browser.isChrome) {
+        if (Browser.isChrome || Browser.isSafari) {
             this.editor.addContentEditFeature({
                 keys: [Keys.BACKSPACE, Keys.DELETE],
                 shouldHandleEvent: () => true,
-                handleEvent: () => {
-                    const cache: Record<string, HTMLElement> = {};
-                    this.cacheShadowEntities(cache);
-                    this.editor.runAsync(() => {
-                        Object.keys(cache).forEach(id => {
-                            const entity = getEntityFromElement(cache[id]);
-                            const newWrapper = this.editor.queryElements(
-                                getEntitySelector(entity.type, entity.id)
-                            )[0];
-
-                            if (newWrapper != entity.wrapper) {
-                                this.triggerEvent(entity.wrapper, EntityOperation.RemoveShadowRoot);
-                                this.setIsEntityKnown(entity.wrapper, false /*isKnown*/);
-
-                                if (newWrapper) {
-                                    moveChildNodes(newWrapper, entity.wrapper);
-                                    this.createShadowRoot(newWrapper, entity.wrapper.shadowRoot);
-                                    this.setIsEntityKnown(newWrapper, true /*isKnown*/);
-                                }
-                            }
-                        });
-                    });
-                },
+                handleEvent: this.workaroundShadowDOMIssueForChrome,
             });
         }
     }
@@ -388,17 +366,19 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             .filter(x => !!x && (!shadowEntityOnly || !!x.wrapper.shadowRoot));
     }
 
-    private createShadowRoot(wrapper: HTMLElement, shadowContentContainer?: Node): ShadowRoot {
-        const shadowRoot = wrapper.attachShadow({
-            mode: 'open',
-            delegatesFocus: true,
-        });
+    private createShadowRoot(wrapper: HTMLElement, shadowContentContainer?: Node) {
+        if (wrapper.attachShadow) {
+            const shadowRoot = wrapper.attachShadow({
+                mode: 'open',
+                delegatesFocus: true,
+            });
 
-        wrapper.contentEditable = 'false';
-        this.triggerEvent(wrapper, EntityOperation.AddShadowRoot);
-        moveChildNodes(shadowRoot, shadowContentContainer);
+            wrapper.contentEditable = 'false';
+            this.triggerEvent(wrapper, EntityOperation.AddShadowRoot);
+            moveChildNodes(shadowRoot, shadowContentContainer);
 
-        return shadowRoot;
+            return shadowRoot;
+        }
     }
 
     private cacheShadowEntities(cache: Record<string, HTMLElement>) {
@@ -438,6 +418,30 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     private isEntityKnown(wrapper: HTMLElement) {
         return this.state.knownEntityElements.indexOf(wrapper) >= 0;
     }
+
+    private workaroundShadowDOMIssueForChrome = () => {
+        const cache: Record<string, HTMLElement> = {};
+        this.cacheShadowEntities(cache);
+        this.editor.runAsync(() => {
+            Object.keys(cache).forEach(id => {
+                const entity = getEntityFromElement(cache[id]);
+                const newWrapper = this.editor.queryElements(
+                    getEntitySelector(entity.type, entity.id)
+                )[0];
+
+                if (newWrapper != entity.wrapper) {
+                    this.triggerEvent(entity.wrapper, EntityOperation.RemoveShadowRoot);
+                    this.setIsEntityKnown(entity.wrapper, false /*isKnown*/);
+
+                    if (newWrapper) {
+                        moveChildNodes(newWrapper, entity.wrapper);
+                        this.createShadowRoot(newWrapper, entity.wrapper.shadowRoot);
+                        this.setIsEntityKnown(newWrapper, true /*isKnown*/);
+                    }
+                }
+            });
+        });
+    };
 }
 
 /**
