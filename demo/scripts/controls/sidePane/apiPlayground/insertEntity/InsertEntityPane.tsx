@@ -1,15 +1,9 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
-import { ApiPlaygroundReactComponent } from '../apiEntries';
-import { Entity, EntityOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { Entity } from 'roosterjs-editor-types';
+import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
 import { insertEntity } from 'roosterjs-editor-api';
 import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
-import {
-    getEntityFromElement,
-    getEntitySelector,
-    moveChildNodes,
-    safeInstanceOf,
-} from 'roosterjs-editor-dom';
 
 const styles = require('./InsertEntityPane.scss');
 
@@ -17,8 +11,7 @@ interface InsertEntityPaneState {
     entities: Entity[];
 }
 
-export default class InsertEntityPane extends React.Component<ApiPaneProps, InsertEntityPaneState>
-    implements ApiPlaygroundReactComponent {
+export default class InsertEntityPane extends React.Component<ApiPaneProps, InsertEntityPaneState> {
     private entityType = React.createRef<HTMLInputElement>();
     private html = React.createRef<HTMLTextAreaElement>();
     private hydratedHtml = React.createRef<HTMLTextAreaElement>();
@@ -75,24 +68,6 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                 </div>
             </>
         );
-    }
-
-    onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.EntityOperation &&
-            event.operation == EntityOperation.NewEntity &&
-            event.contentForShadowEntity &&
-            !event.contentForShadowEntity.firstChild
-        ) {
-            const child = event.entity.wrapper.firstChild;
-            const hydratedHtml = safeInstanceOf(child, 'HTMLElement') && child.dataset.hydratedHtml;
-
-            if (hydratedHtml) {
-                const div = this.props.getEditor().getDocument().createElement('div');
-                div.innerHTML = trustedHTMLHandler(hydratedHtml);
-                moveChildNodes(event.contentForShadowEntity, div);
-            }
-        }
     }
 
     private insertEntity = () => {
