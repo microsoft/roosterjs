@@ -13,7 +13,6 @@ export default function resetImage(editor: IEditor, image: HTMLImageElement) {
         image.style.maxWidth = '100%';
         image.removeAttribute('width');
         image.removeAttribute('height');
-        image.setAttribute('wasReset', 'true');
         deleteEditInfo(image);
     }, ChangeSource.ImageResize);
 }

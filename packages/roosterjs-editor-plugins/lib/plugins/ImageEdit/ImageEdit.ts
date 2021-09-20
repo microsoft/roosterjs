@@ -280,6 +280,9 @@ export default class ImageEdit implements EditorPlugin {
                 this.removeWrapper(wrapper);
             }
 
+            // Keep Image responsive, if not resized
+            setImageResponsive(this.image, this.editInfo);
+
             if (selectImage) {
                 this.editor.select(this.image);
             }
@@ -395,17 +398,13 @@ export default class ImageEdit implements EditorPlugin {
     private removeWrapper = (wrapper: HTMLElement) => {
         const parent = wrapper?.parentNode;
         const img = wrapper?.querySelector('img');
-
         if (img && parent) {
             img.style.position = '';
-            img.style.maxWidth = '100%';
             img.style.margin = null;
             img.style.textAlign = null;
 
             parent.insertBefore(img, wrapper);
             parent.removeChild(wrapper);
-
-            setImageResponsive(img);
         }
     };
 
@@ -488,7 +487,7 @@ export default class ImageEdit implements EditorPlugin {
                 if (context?.elementClass == ImageEditElementClass.ResizeHandle) {
                     const clientWidth = wrapper.clientWidth;
                     const clientHeight = wrapper.clientHeight;
-                    const wasResized = this.image.getAttribute('wasResized');
+                    const wasResized = this.editInfo.wasResized;
                     doubleCheckResize(
                         this.editInfo,
                         this.options.preserveRatio,
@@ -497,7 +496,7 @@ export default class ImageEdit implements EditorPlugin {
                     );
 
                     if (!wasResized) {
-                        this.image.setAttribute('wasResized', 'true');
+                        this.editInfo.wasResized = true;
                     }
 
                     this.updateWrapper();
@@ -616,17 +615,13 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
 /**
  * Check if the image must be responsive
  * @param img The current image.
+ * @param imgInfo the current edit state of the image
  */
-function setImageResponsive(img: HTMLImageElement) {
-    const wasReset = img.getAttribute('wasReset');
-    const wasResized = img.getAttribute('wasResized');
-    if (!wasResized || (wasResized && wasReset === 'true')) {
+function setImageResponsive(img: HTMLImageElement, imgInfo: ImageEditInfo) {
+    const wasResized = imgInfo.wasResized;
+    if (!wasResized) {
         img.style.maxWidth = '100%';
         img.style.height = 'auto';
-        if (wasResized === 'true') {
-            img.setAttribute('wasResized', 'false');
-            img.setAttribute('wasReset', 'false');
-        }
     } else {
         img.style.maxWidth = '';
     }
