@@ -175,6 +175,10 @@ describe('Table Resizer/Inserter tests', () => {
         return tableRect;
     }
 
+    function getCurrentTable(): HTMLTableElement {
+        return editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
+    }
+
     function getTableRows(table: HTMLTableElement): number {
         return table.rows.length;
     }
@@ -221,7 +225,7 @@ describe('Table Resizer/Inserter tests', () => {
                 expect(Math.abs(diff)).toBeLessThanOrEqual(INSERTING_DIVIATION);
             }
 
-            const table = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
+            const table = getCurrentTable();
             const rows = getTableRows(table);
             const cols = getTableColumns(table);
             inserter.dispatchEvent(new MouseEvent('click'));
@@ -392,7 +396,21 @@ describe('Table Resizer/Inserter tests', () => {
         }
     }
 
-    function runTableShapeTest(table1: HTMLTableElement, table2: HTMLTableElement) {
+    function getTableRectSet(table: HTMLTableElement): DOMRect[] {
+        const rectSet: DOMRect[] = [];
+        if (!!table) {
+            rectSet.push(table.getBoundingClientRect());
+        }
+        for (let i = 0; i < table.rows.length; i++) {
+            for (let j = 0; j < table.rows[i].cells.length; j++) {
+                rectSet.push(table.rows[i].cells[j].getBoundingClientRect());
+            }
+        }
+        return rectSet;
+    }
+
+    function runTableShapeTest(tableRectSet1: DOMRect[], tableRectSet2: DOMRect[]) {
+        expect(tableRectSet1.length).toBe(tableRectSet2.length);
         const isSameRect = (rect1: DOMRect, rect2: DOMRect): boolean => {
             return (
                 rect1.left == rect2.left &&
@@ -401,21 +419,9 @@ describe('Table Resizer/Inserter tests', () => {
                 rect1.bottom == rect2.bottom
             );
         };
-
-        expect(isSameRect(table1.getBoundingClientRect(), table2.getBoundingClientRect())).toBe(
-            true
-        );
-
-        for (let i = 0; i < table1.rows.length; i++) {
-            for (let j = 0; j < table1.rows[i].cells.length; j++) {
-                const cell1 = table1.rows[i].cells[j];
-                const cell2 = table2.rows[i]?.cells[j];
-                expect(!!cell2).toBe(true);
-                expect(
-                    isSameRect(cell1.getBoundingClientRect(), cell2.getBoundingClientRect())
-                ).toBe(true);
-            }
-        }
+        tableRectSet1.forEach((rect, i) => {
+            expect(isSameRect(rect, tableRectSet2[i])).toBe(true);
+        });
     }
 
     function moveAndResize(mouseStart: Position, mouseEnd: Position, resizeState: ResizeState) {
@@ -444,20 +450,16 @@ describe('Table Resizer/Inserter tests', () => {
         const resizer = editor.getDocument().getElementById(resizerId);
         expect(!!resizer).toBe(true);
 
-        const temp = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
-        const tableBeforeClick = temp.cloneNode(true) as HTMLTableElement;
+        const tableBeforeClick = getTableRectSet(getCurrentTable());
         // mouse down and start resizing (this will initiate currentCellsToResize and nextCellsToResize)
         const mouseClickEvent = new MouseEvent('mousedown', {
             clientX: mouseStart.x,
             clientY: mouseStart.y,
         });
         resizer.dispatchEvent(mouseClickEvent);
-        const tableAfterClick = editor
-            .getDocument()
-            .getElementsByTagName('table')[0] as HTMLTableElement;
-        // validate the table doesn't shift after clicking on the resizer
-        //expect(isSameTableSize(tableBeforeClick, tableAfterClick)).toBe(true);
 
+        const tableAfterClick = getTableRectSet(getCurrentTable());
+        // validate the table doesn't shift after clicking on the resizer
         runTableShapeTest(tableBeforeClick, tableAfterClick);
 
         const mouseMoveResize = new MouseEvent('mousemove', {
@@ -514,7 +516,7 @@ describe('Table Resizer/Inserter tests', () => {
             );
         });
 
-        const table = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
+        const table = getCurrentTable();
         const tableRect = table.getBoundingClientRect();
         expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
             RESIZING_DIVIATION
@@ -556,7 +558,7 @@ describe('Table Resizer/Inserter tests', () => {
             });
         }
 
-        const table = editor.getDocument().getElementsByTagName('table')[0] as HTMLTableElement;
+        const table = getCurrentTable();
         const tableRect = table.getBoundingClientRect();
         expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
             RESIZING_DIVIATION
@@ -897,7 +899,7 @@ describe('Table Resizer/Inserter tests', () => {
         resizeColumnToLeftTest(0);
     });
 
-    fit('resizes the column to the left correctly with Excel table', () => {
+    it('resizes the column to the left correctly with Excel table', () => {
         resizeColumnToLeftTest(1);
     });
 
