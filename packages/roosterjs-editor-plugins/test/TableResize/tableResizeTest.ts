@@ -1,11 +1,11 @@
 import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
-import { CELL_RESIZER_WIDTH, ResizeState } from '../../lib/plugins/TableResize/TableResize';
 import { DEFAULT_TABLE, DEFAULT_TABLE_MERGED, EXCEL_TABLE, WORD_TABLE } from './tableData';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 
 const RESIZING_DIVIATION = 4;
 const INSERTING_DIVIATION = 3;
+const CELL_RESIZER_WIDTH = 4;
 
 /* Used to specify mouse coordinates or cell locations in a table in this test set */
 type Position = {
@@ -13,6 +13,12 @@ type Position = {
     y: number;
 };
 
+const enum ResizeState {
+    None,
+    Horizontal,
+    Vertical,
+    Both, // when resizing the whole table
+}
 interface TestTable {
     htmlData: string;
     rows: number[];
