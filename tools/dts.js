@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var namePlaceholder = '__NAME__';
 var regExportFrom = /export([^;]+)from\s+'([^']+)';/gm;
-var regImportFrom = /import[^;]+from[^;]+;/gm;
+var regImportFrom = /import[^;]+from\s+'([^']+)';/gm;
 var singleLineComment = /\/\/[^\n]*\n/g;
 var multiLineComment = /(^\/\*(\*(?!\/)|[^*])*\*\/\s*)/m;
 
@@ -21,18 +21,18 @@ var regConst = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+
 var regExport = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)(default\s+([0-9a-zA-Z_]+)\s*,?)?(\s*{([^}]+)})?\s*;/g;
 
 function enqueue(queue, filename, exports) {
-    if (
-        queue.find(function (v) {
-            return v.filename == filename;
-        })
-    ) {
-        return;
+    var existingItem = queue.find(v => v.filename == filename);
+    if (existingItem) {
+        if (exports && !existingItem.exports) {
+            existingItem.exports = exports;
+        }
+    } else {
+        queue.push({
+            filename,
+            exports,
+            elements: {},
+        });
     }
-    queue.push({
-        filename,
-        exports,
-        elements: {},
-    });
 }
 
 function parseExports(exports) {
@@ -104,12 +104,16 @@ function getName(matches, nameIndex) {
     }
 }
 
-function appendText(elements, name, text) {
+function appendText(elements, name, text, comment) {
     if (!elements[name]) {
         elements[name] = [];
     }
 
-    elements[name].push(text);
+    elements[name].push({
+        published: false,
+        text,
+        comment,
+    });
 }
 
 function parseClasses(content, elements) {
@@ -126,7 +130,7 @@ function parseClasses(content, elements) {
             ' {' +
             result[0];
         var name = getName(matches, 6);
-        appendText(elements, name, classText);
+        appendText(elements, name, classText, matches[1]);
         content = result[1];
     }
     return content.replace(regClassInterface, '');
@@ -138,7 +142,7 @@ function parseFunctions(content, elements) {
         var functionText =
             (matches[1] || '') + 'function ' + namePlaceholder + (matches[6] || '') + matches[7];
         var name = getName(matches, 5);
-        appendText(elements, name, functionText);
+        appendText(elements, name, functionText, matches[1]);
     }
     return content.replace(regFunction, '');
 }
@@ -150,7 +154,7 @@ function parseEnum(content, elements) {
         var enumText =
             (matches[1] || '') + (matches[5] || '') + 'enum ' + namePlaceholder + ' {' + result[0];
         var name = getName(matches, 6);
-        appendText(elements, name, enumText);
+        appendText(elements, name, enumText, matches[1]);
         content = result[1];
     }
     return content.replace(regEnum, '');
@@ -163,7 +167,7 @@ function parseType(content, elements) {
         var typeText =
             (matches[1] || '') + 'type ' + namePlaceholder + (matches[6] || '') + ' = ' + result[0];
         var name = getName(matches, 5);
-        appendText(elements, name, typeText);
+        appendText(elements, name, typeText, matches[1]);
         content = result[1];
     }
 
@@ -176,7 +180,7 @@ function parseConst(content, elements) {
         var result = parsePair(content, matches.index + matches[0].length, '{', '}', 0, ';');
         var constText = (matches[1] || '') + 'const ' + namePlaceholder + ': ' + result[0];
         var name = getName(matches, 5);
-        appendText(elements, name, constText);
+        appendText(elements, name, constText, matches[1]);
         content = result[1];
     }
 
@@ -188,7 +192,7 @@ function parseExport(content, elements) {
     while ((matches = regExport.exec(content))) {
         var defaultExport = matches[5];
         if (defaultExport) {
-            elements['default'] = elements[defaultExport];
+            elements['default'] = { ...elements[defaultExport] };
         }
     }
 
@@ -205,42 +209,46 @@ function parseExportFrom(content, currentFileName, queue, baseDir, projDir) {
     return content.replace(regExportFrom, '');
 }
 
+function parseImportFrom(content, currentFileName, queue, baseDir, projDir) {
+    var matches;
+    while ((matches = regImportFrom.exec(content))) {
+        var fromFileName = parseFrom(matches[1].trim(), currentFileName, baseDir, projDir);
+        enqueue(queue, fromFileName);
+    }
+    return content.replace(regImportFrom, '');
+}
+
 function process(baseDir, queue, index, projDir) {
     var item = queue[index];
     var currentFileName = item.filename;
     var file = fs.readFileSync(currentFileName);
     var content = file.toString();
 
-    // 1. Remove single line comments
-    content = content.replace(singleLineComment, '');
-
-    // 2. Process 'export ... from ...;'
+    // 1. Process 'export ... from ...;'
     content = parseExportFrom(content, currentFileName, queue, baseDir, projDir);
 
-    // 3. Remove imports
-    content = content.replace(regImportFrom, '');
+    // 2. Remove imports
+    content = parseImportFrom(content, currentFileName, queue, baseDir, projDir);
 
-    // 4. Parse classes and interfaces
-    content = parseClasses(content, item.elements);
+    // 3. Parse all the public elements
+    content = [parseClasses, parseFunctions, parseEnum, parseType, parseConst, parseExport].reduce(
+        (c, func) => func(c, item.elements),
+        content
+    );
 
-    // 5. Parse functions
-    content = parseFunctions(content, item.elements);
-
-    // 6. Parse enum
-    content = parseEnum(content, item.elements);
-
-    // 7. Parse type
-    content = parseType(content, item.elements);
-
-    // 8. Parse const
-    content = parseConst(content, item.elements);
-
-    // 9. Parse Export
-    content = parseExport(content, item.elements);
+    // 4. Remove single line comments
+    content = content.replace(singleLineComment, '');
 
     if (content.trim() != '') {
         err('File ' + currentFileName + ' contains unrecognized content:\r\n' + content);
     }
+}
+
+function publicElement(element) {
+    return element.map(x => {
+        x.published = true;
+        return x.text;
+    });
 }
 
 function output(targetDir, library, isAmd, queue) {
@@ -258,23 +266,22 @@ function output(targetDir, library, isAmd, queue) {
     }
 
     for (var i = 0; i < queue.length; i++) {
-        var exports = queue[i].exports;
-        var elements = queue[i].elements;
+        var { exports, elements, filename } = queue[i];
         if (exports) {
             for (var name in exports) {
                 var alias = exports[name];
                 var texts = null;
                 if (elements[name]) {
-                    texts = elements[name];
+                    texts = publicElement(elements[name]);
                 } else {
                     for (var n in elements) {
                         if (n.indexOf(alias + '<') == 0) {
-                            texts = elements[n];
+                            texts = publicElement(elements[n]);
                             break;
                         }
                     }
                     if (!texts) {
-                        err('Name not found: ' + name + '; alias: ' + alias);
+                        err(`Name not found: ${name}; alias: ${alias}; file: ${filename}`);
                     }
                 }
 
@@ -298,6 +305,30 @@ function output(targetDir, library, isAmd, queue) {
         content += '}';
     }
 
+    // Check comments
+    for (var i = 0; i < queue.length; i++) {
+        var { filename, elements } = queue[i];
+
+        for (var name in elements) {
+            elements[name].forEach(({ published, text, comment }) => {
+                var code = text.replace(namePlaceholder, name);
+                if (!comment) {
+                    err(`Exported element must have comment. File: ${filename} Code: ${code}`);
+                } else if (published) {
+                    if (comment.indexOf('@internal') >= 0) {
+                        err(
+                            `Public exported element must not mark as "@internal". File: ${filename} Code: ${code}`
+                        );
+                    }
+                } else if (comment.indexOf('@internal') < 0) {
+                    err(
+                        `Local exported member must be marked as "@internal". File: ${filename} Code: ${code}`
+                    );
+                }
+            });
+        }
+    }
+
     var filename = `${path.resolve(targetDir, 'rooster')}${isAmd ? '-amd' : ''}.d.ts`;
     fs.writeFileSync(filename, content);
     return filename;
@@ -309,11 +340,19 @@ function err(message) {
     throw ex;
 }
 
-module.exports.prepareDts = (rootPath, baseDir, includes) => {
+module.exports.prepareDts = (rootPath, baseDir, root, additionalFiles) => {
     var queue = [];
-    includes.forEach(include => enqueue(queue, path.join(baseDir, include)));
+    var i = 0;
 
-    for (var i = 0; i < queue.length; i++) {
+    // First part, process exported members
+    enqueue(queue, path.join(baseDir, root));
+    for (; i < queue.length; i++) {
+        process(baseDir, queue, i, rootPath);
+    }
+
+    // Second part, process "local exported" members (exported from a file, but not exported from index)
+    (additionalFiles || []).forEach(f => enqueue(queue, path.join(baseDir, f)));
+    for (; i < queue.length; i++) {
         process(baseDir, queue, i, rootPath);
     }
 
