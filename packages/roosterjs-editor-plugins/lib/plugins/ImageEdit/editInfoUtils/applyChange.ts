@@ -18,7 +18,8 @@ export default function applyChange(
     editor: IEditor,
     image: HTMLImageElement,
     editInfo: ImageEditInfo,
-    previousSrc: string
+    previousSrc: string,
+    wasResized?: boolean
 ): boolean {
     let newSrc = '';
 
@@ -73,9 +74,28 @@ export default function applyChange(
     image.width = targetWidth;
     image.height = targetHeight;
 
+    // Keep Image responsive, if not resized
+    setImageResponsive(image, wasResized);
+
     return (
         srcChanged ||
         editInfo.widthPx != initEditInfo.widthPx ||
         editInfo.heightPx != initEditInfo.heightPx
     );
+}
+
+/**
+ * Check if the image must be responsive
+ * @param img The current image.
+ * @param wasResized the current resize state of the image
+ */
+function setImageResponsive(img: HTMLImageElement, wasResized: boolean) {
+    if (wasResized) {
+        img.style.maxWidth = 'initial';
+        img.removeAttribute('height');
+        img.removeAttribute('width');
+    } else {
+        img.style.maxWidth = '100%';
+        img.style.height = 'initial';
+    }
 }

@@ -275,7 +275,9 @@ export default class ImageEdit implements EditorPlugin {
             this.clearDndHelpers();
 
             // Apply the changes, and add undo snapshot if necessary
-            if (applyChange(this.editor, this.image, this.editInfo, this.lastSrc)) {
+            if (
+                applyChange(this.editor, this.image, this.editInfo, this.lastSrc, this.wasResized)
+            ) {
                 this.editor.addUndoSnapshot(() => this.image, ChangeSource.ImageResize);
             }
 
@@ -284,9 +286,6 @@ export default class ImageEdit implements EditorPlugin {
             if (wrapper) {
                 this.removeWrapper(wrapper);
             }
-
-            // Keep Image responsive, if not resized
-            setImageResponsive(this.image, this.wasResized);
 
             if (selectImage) {
                 this.editor.select(this.image);
@@ -303,14 +302,11 @@ export default class ImageEdit implements EditorPlugin {
             this.image = image;
 
             // Get initial edit info
-            if (this.editInfo) {
-                this.wasResized = true;
-            } else if (!this.editInfo && this.image.style.maxWidth === 'initial') {
-                this.wasResized = true;
-                this.editInfo = getEditInfoFromImage(image);
-            } else {
+            this.editInfo = getEditInfoFromImage(image);
+            if (this.image.height && this.image.width && this.image.style.maxWidth === '100%') {
                 this.wasResized = false;
-                this.editInfo = getEditInfoFromImage(image);
+            } else {
+                this.wasResized = true;
             }
 
             operation =
@@ -621,18 +617,4 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
     handles.map(handle => {
         handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
     });
-}
-
-/**
- * Check if the image must be responsive
- * @param img The current image.
- * @param imgInfo the current edit state of the image
- */
-function setImageResponsive(img: HTMLImageElement, wasResized: boolean) {
-    if (!wasResized) {
-        img.style.maxWidth = '100%';
-        img.style.height = 'initial';
-    } else {
-        img.style.maxWidth = 'initial';
-    }
 }
