@@ -19,10 +19,11 @@ const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
 const MIN_CELL_WIDTH = 30;
 const MIN_CELL_HEIGHT = 20;
-const CELL_RESIZER_WIDTH = 4;
+// @internal export only for test purpose
+export const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
 
-// export only for test purpose
+// @internal export only for test purpose
 export const enum ResizeState {
     None,
     Horizontal,
