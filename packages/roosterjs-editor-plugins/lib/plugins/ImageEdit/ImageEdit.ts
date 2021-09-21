@@ -124,6 +124,11 @@ export default class ImageEdit implements EditorPlugin {
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[];
 
     /**
+     * Identify if the image was resized by the user.
+     */
+    private wasResized: boolean;
+
+    /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
      */
@@ -281,7 +286,7 @@ export default class ImageEdit implements EditorPlugin {
             }
 
             // Keep Image responsive, if not resized
-            setImageResponsive(this.image, this.editInfo);
+            setImageResponsive(this.image, this.wasResized);
 
             if (selectImage) {
                 this.editor.select(this.image);
@@ -298,7 +303,16 @@ export default class ImageEdit implements EditorPlugin {
             this.image = image;
 
             // Get initial edit info
-            this.editInfo = getEditInfoFromImage(image);
+            if (this.editInfo) {
+                this.wasResized = true;
+            } else if (!this.editInfo && this.image.style.maxWidth === 'initial') {
+                this.wasResized = true;
+                this.editInfo = getEditInfoFromImage(image);
+            } else {
+                this.wasResized = false;
+                this.editInfo = getEditInfoFromImage(image);
+            }
+
             operation =
                 (canRegenerateImage(image) ? operation : ImageEditOperation.Resize) &
                 this.allowedOperations;
@@ -398,6 +412,7 @@ export default class ImageEdit implements EditorPlugin {
     private removeWrapper = (wrapper: HTMLElement) => {
         const parent = wrapper?.parentNode;
         const img = wrapper?.querySelector('img');
+
         if (img && parent) {
             img.style.position = '';
             img.style.margin = null;
@@ -487,17 +502,13 @@ export default class ImageEdit implements EditorPlugin {
                 if (context?.elementClass == ImageEditElementClass.ResizeHandle) {
                     const clientWidth = wrapper.clientWidth;
                     const clientHeight = wrapper.clientHeight;
-                    const wasResized = this.editInfo.wasResized;
+                    this.wasResized = true;
                     doubleCheckResize(
                         this.editInfo,
                         this.options.preserveRatio,
                         clientWidth,
                         clientHeight
                     );
-
-                    if (!wasResized) {
-                        this.editInfo.wasResized = true;
-                    }
 
                     this.updateWrapper();
                 }
@@ -617,12 +628,11 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
  * @param img The current image.
  * @param imgInfo the current edit state of the image
  */
-function setImageResponsive(img: HTMLImageElement, imgInfo: ImageEditInfo) {
-    const wasResized = imgInfo.wasResized;
+function setImageResponsive(img: HTMLImageElement, wasResized: boolean) {
     if (!wasResized) {
         img.style.maxWidth = '100%';
-        img.style.height = 'auto';
+        img.style.height = 'initial';
     } else {
-        img.style.maxWidth = '';
+        img.style.maxWidth = 'initial';
     }
 }

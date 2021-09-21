@@ -20,7 +20,6 @@ describe('Resizer: resize only', () => {
             src: '',
             naturalWidth: 100,
             naturalHeight: 200,
-            wasResized: false,
             leftPercent: 0,
             topPercent: 0,
             rightPercent: 0,

@@ -55,8 +55,8 @@ export default function applyChange(
         newSrc = event.newSrc;
     }
 
-    if (newSrc == editInfo.src && !editInfo.wasResized) {
-        // If newSrc is the same with original one and the user did not resized, it means no changes was made, the user just select and deselect the image
+    if (newSrc == editInfo.src) {
+        // If newSrc is the same with original one, it means there is only size change, but no rotation, no cropping,
         // so we don't need to keep edit info, we can delete it
         deleteEditInfo(image);
     } else {

@@ -82,9 +82,4 @@ export default interface ImageEditInfo extends ResizeInfo, CropInfo, RotateInfo 
      * Natural height of the original image (specified by the src field, may not be the current edited image)
      */
     readonly naturalHeight: number;
-
-    /**
-     * Identify if the image was resized by the user.
-     */
-    wasResized: boolean;
 }

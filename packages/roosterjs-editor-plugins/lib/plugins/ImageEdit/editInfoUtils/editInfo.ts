@@ -46,7 +46,6 @@ function getInitialEditInfo(image: HTMLImageElement): ImageEditInfo {
         heightPx: image.clientHeight,
         naturalWidth: image.naturalWidth,
         naturalHeight: image.naturalHeight,
-        wasResized: false,
         leftPercent: 0,
         rightPercent: 0,
         topPercent: 0,
