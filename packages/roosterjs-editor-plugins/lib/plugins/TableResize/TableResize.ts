@@ -17,9 +17,9 @@ const INSERTER_COLOR_DARK_MODE = 'white';
 const INSERTER_SIDE_LENGTH = 12;
 const INSERTER_BORDER_SIZE = 1;
 const INSERTER_HOVER_OFFSET = 5;
-export const MIN_CELL_WIDTH = 30; // export only for test purpose
+const MIN_CELL_WIDTH = 30;
 const MIN_CELL_HEIGHT = 20;
-export const CELL_RESIZER_WIDTH = 4; // export only for test purpose
+const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
 
 // export only for test purpose
