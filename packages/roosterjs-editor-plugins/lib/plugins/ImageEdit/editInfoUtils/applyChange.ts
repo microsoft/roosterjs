@@ -69,9 +69,13 @@ export default function applyChange(
     // Write back the change to image, and set its new size
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     image.src = newSrc;
+    image.width = targetWidth;
+    image.height = targetHeight;
+    image.style.width = targetWidth + 'px';
+    image.style.height = targetHeight + 'px';
 
     // Keep Image responsive, if not resized
-    setImageResponsive(image, wasResized, targetHeight, targetWidth);
+    setImageResponsive(image, wasResized);
 
     return (
         srcChanged ||
@@ -85,23 +89,11 @@ export default function applyChange(
  * @param img The current image.
  * @param wasResized the current resize state of the image
  */
-function setImageResponsive(
-    img: HTMLImageElement,
-    wasResized: boolean,
-    targetHeight: number,
-    targetWidth: number
-) {
+function setImageResponsive(img: HTMLImageElement, wasResized: boolean) {
     if (wasResized) {
         img.style.maxWidth = 'initial';
-        img.width = targetWidth;
-        img.height = targetHeight;
-        img.style.width = targetWidth + 'px';
-        img.style.height = targetHeight + 'px';
     } else {
         img.style.maxWidth = '100%';
         img.style.height = 'initial';
-        img.style.width = '';
-        img.removeAttribute('height');
-        img.removeAttribute('width');
     }
 }

@@ -303,13 +303,7 @@ export default class ImageEdit implements EditorPlugin {
 
             // Get initial edit info
             this.editInfo = getEditInfoFromImage(image);
-            if (
-                this.image.height &&
-                this.image.width &&
-                this.image.style.maxWidth === 'initial' &&
-                this.image.style.width &&
-                this.image.style.height !== 'initial'
-            ) {
+            if (this.image.style.maxWidth === 'initial' && this.image.style.height !== 'initial') {
                 this.wasResized = true;
             } else {
                 this.wasResized = false;
