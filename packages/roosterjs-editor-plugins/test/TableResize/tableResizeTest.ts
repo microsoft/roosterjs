@@ -1179,7 +1179,7 @@ describe('Table Resizer/Inserter tests', () => {
         resizeTableWiderTallerTest(1);
     });
 
-    it('resizes the table to be wider and taller correctly with Word table', () => {
+    xit('resizes the table to be wider and taller correctly with Word table', () => {
         resizeTableWiderTallerTest(2);
     });
 
