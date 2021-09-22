@@ -303,17 +303,9 @@ export default class ImageEdit implements EditorPlugin {
 
             // Get initial edit info
             this.editInfo = getEditInfoFromImage(image);
-            if (
-                this.image.style.maxWidth === 'initial' &&
-                this.image.style.height !== 'initial' &&
-                this.image.width &&
-                this.image.height &&
-                this.image.style.width
-            ) {
-                this.wasResized = true;
-            } else {
-                this.wasResized = false;
-            }
+
+            //Check if the image was resized by the user
+            this.wasResized = checkIfImageWasResized(this.image);
 
             operation =
                 (canRegenerateImage(image) ? operation : ImageEditOperation.Resize) &
@@ -623,4 +615,28 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
     handles.map(handle => {
         handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
     });
+}
+
+/**
+ * Check if the current image was resized by the user
+ * @param image the current image
+ * @returns if the user resized the image, returns true, otherwise, returns false
+ */
+function checkIfImageWasResized(image: HTMLImageElement): boolean {
+    const { width, height, style } = image;
+    if (
+        style.maxWidth === 'initial' &&
+        isFixedNumberValue(style.height) &&
+        isFixedNumberValue(style.width) &&
+        width &&
+        height
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isFixedNumberValue(v: string) {
+    return !isNaN(parseInt(v));
 }
