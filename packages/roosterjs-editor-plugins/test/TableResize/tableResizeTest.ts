@@ -1123,7 +1123,7 @@ describe('Table Resizer/Inserter tests', () => {
         runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
     }
 
-    it('resizes the table to be wider correctly with default table', () => {
+    xit('resizes the table to be wider correctly with default table', () => {
         resizeTAbleWiderTest(0);
     });
 
