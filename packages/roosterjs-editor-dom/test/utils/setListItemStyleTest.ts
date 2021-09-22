@@ -279,6 +279,32 @@ describe('setListItemStyle', () => {
         );
     });
 
+    it('List Item element, with <ol><li><div><span>aaa</span></div></li><ol>', () => {
+        // Arrange;
+        let listItemElement = document.createElement('li');
+        let divElement = document.createElement('div');
+
+        let spanElement = createElement({
+            elementTag: 'span',
+            styles: 'font-size: 72pt;font-family: Tahoma;color:blue',
+            textContent: 'test',
+        });
+
+        divElement.appendChild(spanElement);
+        listItemElement.appendChild(divElement);
+        listItemElement.appendChild(spanElement);
+
+        divElement.appendChild(document.createElement('BR'));
+
+        // Act;
+        setListItemStyle(listItemElement, stylesToInherit);
+
+        // Assert;
+        expect(listItemElement.getAttribute('style')).toBe(
+            'font-size:72pt;font-family:Tahoma;color:blue'
+        );
+    });
+
     function runTest(childElement: TestChildElement[], result: string) {
         // Arrange
         let listItemElement = document.createElement('li');

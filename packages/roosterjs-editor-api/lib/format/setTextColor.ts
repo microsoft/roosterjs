@@ -1,7 +1,7 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
 import { applyStyleToListItems } from '../utils/applyStyleToListItems';
+import { findClosestElementTypeAncestor, setColor } from 'roosterjs-editor-dom';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
-import { setColor } from 'roosterjs-editor-dom';
 
 /**
  * Set text color at selection
@@ -20,6 +20,8 @@ export default function setTextColor(
     shouldApplyInlineStyle?: (element: HTMLElement) => boolean
 ) {
     const parentNodes: Node[] = [];
+    const contentDiv = editor.getSelectedRegions()[0]?.rootNode;
+
     applyInlineStyle(editor, (element, isInnerNode) => {
         if (!shouldApplyInlineStyle || shouldApplyInlineStyle(element)) {
             setColor(
@@ -30,7 +32,10 @@ export default function setTextColor(
             );
 
             if (parentNodes.indexOf(element.parentNode) === -1) {
-                parentNodes.push(element.parentNode);
+                let parentListItem = findClosestElementTypeAncestor(element, contentDiv, 'LI');
+                if (parentListItem) {
+                    parentNodes.push(parentListItem);
+                }
             }
         }
     });

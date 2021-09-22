@@ -1,8 +1,8 @@
 import ContentTraverser from '../contentTraverser/ContentTraverser';
+import findClosestElementAncestor from './findClosestElementAncestor';
 import getStyles from '../style/getStyles';
 import safeInstanceOf from './safeInstanceOf';
 import setStyles from '../style/setStyles';
-import { default as findClosestElementAncestor } from './findClosestElementAncestor';
 import { InlineElement } from 'roosterjs-editor-types';
 
 /**

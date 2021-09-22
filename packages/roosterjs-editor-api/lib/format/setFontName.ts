@@ -1,5 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
 import { applyStyleToListItems } from '../utils/applyStyleToListItems';
+import { findClosestElementTypeAncestor } from 'roosterjs-editor-dom';
 import { IEditor } from 'roosterjs-editor-types';
 
 /**
@@ -11,6 +12,7 @@ import { IEditor } from 'roosterjs-editor-types';
 export default function setFontName(editor: IEditor, fontName: string) {
     const parentNodes: Node[] = [];
     fontName = fontName.trim();
+    const contentDiv = editor.getSelectedRegions()[0]?.rootNode;
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
     // (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
     // for here, we use CSS font-family style
@@ -18,7 +20,10 @@ export default function setFontName(editor: IEditor, fontName: string) {
         element.style.fontFamily = isInnerNode ? '' : fontName;
 
         if (parentNodes.indexOf(element.parentNode) === -1) {
-            parentNodes.push(element.parentNode);
+            let parentListItem = findClosestElementTypeAncestor(element, contentDiv, 'LI');
+            if (parentListItem) {
+                parentNodes.push(parentListItem);
+            }
         }
     });
 

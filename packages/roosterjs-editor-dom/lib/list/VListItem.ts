@@ -4,10 +4,10 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setListItemStyle from '../utils/setListItemStyle';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
-import { default as setListItemStyle } from '../utils/setListItemStyle';
 import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
