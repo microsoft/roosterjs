@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">8.86% </span>
+                <span class="strong">8.43% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/79</span>
+                <span class='fraction'>7/83</span>
             </div>
         
             
@@ -351,11 +351,7 @@
 <a name='L292'></a><a href='#L292'>292</a>
 <a name='L293'></a><a href='#L293'>293</a>
 <a name='L294'></a><a href='#L294'>294</a>
-<a name='L295'></a><a href='#L295'>295</a>
-<a name='L296'></a><a href='#L296'>296</a>
-<a name='L297'></a><a href='#L297'>297</a>
-<a name='L298'></a><a href='#L298'>298</a>
-<a name='L299'></a><a href='#L299'>299</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L295'></a><a href='#L295'>295</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -523,9 +519,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -542,6 +535,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -591,8 +585,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -819,27 +811,25 @@ const AutoBullet: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
                 let regions: RegionBase[];
                 let searcher = <span class="cstat-no" title="statement not covered" >editor.getContentSearcherOfCursor();</span>
                 let textBeforeCursor = <span class="cstat-no" title="statement not covered" >searcher.getSubStringBefore(4);</span>
-                let rangeToDelete = <span class="cstat-no" title="statement not covered" >searcher.getRangeFromText(</span>
-                    textBeforeCursor,
-                    true /*exactMatch*/
-                );
+                let textRange = <span class="cstat-no" title="statement not covered" >searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                if (!rangeToDelete) {</span>
+<span class="cstat-no" title="statement not covered" >                if (!textRange) {</span>
                     // no op if the range can't be found
                 } else <span class="cstat-no" title="statement not covered" >if (</span>
                     textBeforeCursor.indexOf('*') == 0 ||
                     textBeforeCursor.indexOf('-') == 0
                 ) {
-<span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, rangeToDelete);</span>
+<span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, textRange);</span>
 <span class="cstat-no" title="statement not covered" >                    toggleBullet(editor);</span>
                 } else <span class="cstat-no" title="statement not covered" >if (isAListPattern(textBeforeCursor)) {</span>
-<span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, rangeToDelete);</span>
+<span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, textRange);</span>
 <span class="cstat-no" title="statement not covered" >                    toggleNumbering(editor);</span>
                 } else <span class="cstat-no" title="statement not covered" >if ((regions = editor.getSelectedRegions()) &amp;&amp; regions.length == 1) {</span>
                     const num = <span class="cstat-no" title="statement not covered" >parseInt(textBeforeCursor);</span>
-<span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, rangeToDelete);</span>
+<span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, textRange);</span>
 <span class="cstat-no" title="statement not covered" >                    toggleNumbering(editor, num);</span>
                 }
+<span class="cstat-no" title="statement not covered" >                searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();</span>
             },
             null /*changeSource*/,
             true /*canUndoByBackspace*/
@@ -890,8 +880,6 @@ function <span class="fstat-no" title="function not covered" >getCacheNextSibili
 }
 &nbsp;
 function <span class="fstat-no" title="function not covered" >prepareAutoBullet(</span>editor: IEditor, range: Range) {
-<span class="cstat-no" title="statement not covered" >    range.deleteContents();</span>
-&nbsp;
     const block = <span class="cstat-no" title="statement not covered" >editor.getBlockElementAtNode(range.startContainer);</span>
     const endNode = <span class="cstat-no" title="statement not covered" >block?.getEndNode();</span>
 <span class="cstat-no" title="statement not covered" >    if (endNode &amp;&amp; getTagOfNode(endNode) != 'BR' &amp;&amp; block?.getTextContent().trim() === '') {</span>
@@ -958,7 +946,7 @@ export const ListFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 23 2021 21:51:09 GMT+0000 (Coordinated Universal Time)
+                at Thu Sep 23 2021 22:22:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
