@@ -626,10 +626,10 @@ function checkIfImageWasResized(image: HTMLImageElement): boolean {
     const { width, height, style } = image;
     if (
         style.maxWidth === 'initial' &&
-        isFixedNumberValue(style.height) &&
-        isFixedNumberValue(style.width) &&
-        width &&
-        height
+        (isFixedNumberValue(style.height) ||
+            isFixedNumberValue(style.width) ||
+            isFixedNumberValue(width) ||
+            isFixedNumberValue(height))
     ) {
         return true;
     } else {
@@ -637,6 +637,7 @@ function checkIfImageWasResized(image: HTMLImageElement): boolean {
     }
 }
 
-function isFixedNumberValue(v: string) {
-    return !isNaN(parseInt(v));
+function isFixedNumberValue(value: string | number) {
+    const numberValue = typeof value === 'string' ? parseInt(value) : value;
+    return !isNaN(numberValue);
 }
