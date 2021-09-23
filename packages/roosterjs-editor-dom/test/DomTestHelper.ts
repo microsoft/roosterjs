@@ -113,3 +113,12 @@ export function itFirefoxOnly(
     const func = __karma__.config.browser == 'Chrome' ? xit : it;
     return func(expectation, assertion, timeout);
 }
+
+export function itChromeOnly(
+    expectation: string,
+    assertion?: jasmine.ImplementationCallback,
+    timeout?: number
+) {
+    const func = __karma__.config.browser == 'Chrome' ? it : xit;
+    return func(expectation, assertion, timeout);
+}
