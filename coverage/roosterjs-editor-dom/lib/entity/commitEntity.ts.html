@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>5/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/8</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -105,16 +105,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -130,22 +130,22 @@ const CONTENT_EDITABLE = 'contenteditable';
  * @param isReadonly Whether this is a readonly entity
  * @param id Optional Id of the entity
  */
-export default function <span class="fstat-no" title="function not covered" >commitEntity(</span>
+export default function commitEntity(
     wrapper: HTMLElement,
     type: string,
     isReadonly: boolean,
     id?: string
 ) {
-<span class="cstat-no" title="statement not covered" >    if (wrapper) {</span>
-<span class="cstat-no" title="statement not covered" >        wrapper.className = `${EntityClasses.ENTITY_INFO_NAME} ${</span>
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (wrapper) {
+        wrapper.className = `${EntityClasses.ENTITY_INFO_NAME} ${
             EntityClasses.ENTITY_TYPE_PREFIX
-        }${type} ${id ? `${EntityClasses.ENTITY_ID_PREFIX}${id} ` : ''}${
+        }${type} ${id ? `${EntityClasses.ENTITY_ID_PREFIX}${id} ` : <span class="branch-1 cbranch-no" title="branch not covered" >''}</span>${
             EntityClasses.ENTITY_READONLY_PREFIX
-        }${isReadonly ? '1' : '0'}`;
+        }${isReadonly ? <span class="branch-0 cbranch-no" title="branch not covered" >'1' </span>: '0'}`;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (isReadonly) {</span>
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (isReadonly) {
 <span class="cstat-no" title="statement not covered" >            wrapper.contentEditable = 'false';</span>
-        } else <span class="cstat-no" title="statement not covered" >if (wrapper.getAttribute(CONTENT_EDITABLE)) {</span>
+        } else <span class="missing-if-branch" title="if path not taken" >I</span>if (wrapper.getAttribute(CONTENT_EDITABLE)) {
 <span class="cstat-no" title="statement not covered" >            wrapper.removeAttribute(CONTENT_EDITABLE);</span>
         }
     }
@@ -157,7 +157,7 @@ export default function <span class="fstat-no" title="function not covered" >com
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Sep 10 2021 03:07:32 GMT+0000 (Coordinated Universal Time)
+                at Thu Sep 23 2021 02:49:05 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

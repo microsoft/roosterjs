@@ -89,6 +89,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entitypluginstate.html#clickingpoint" class="tsd-kind-icon">clicking<wbr>Point</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entitypluginstate.html#knownentityelements" class="tsd-kind-icon">known<wbr>Entity<wbr>Elements</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entitypluginstate.html#shadowentitycache" class="tsd-kind-icon">shadow<wbr>Entity<wbr>Cache</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,17 +99,19 @@
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="clickingpoint" class="tsd-anchor"></a>
-					<h3>clicking<wbr>Point</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> clicking<wbr>Point</h3>
 					<div class="tsd-signature tsd-kind-icon">clicking<wbr>Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>pageX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>pageY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/77fc593/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L8">roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9a7e1a1/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L9">roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Last clicking point when mouse down event happens</p>
-						</div>
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>Last clicking point when mouse down event happens</p>
+							</dd>
+						</dl>
 					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
@@ -128,12 +131,29 @@
 					<div class="tsd-signature tsd-kind-icon">known<wbr>Entity<wbr>Elements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/77fc593/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L13">roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9a7e1a1/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L14">roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>All known entity elements</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="shadowentitycache" class="tsd-anchor"></a>
+					<h3>shadow<wbr>Entity<wbr>Cache</h3>
+					<div class="tsd-signature tsd-kind-icon">shadow<wbr>Entity<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/9a7e1a1/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L21">roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:21</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Cache for the hydrated content of shadow DOM entity.
+								When set content to replace the whole editor, we will cache the hydrated content
+							before it is gone, then after that we can use the cached content to rehydrate entity</p>
 						</div>
 					</div>
 				</section>
@@ -180,6 +200,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.entitypluginstate.html#knownentityelements" class="tsd-kind-icon">known<wbr>Entity<wbr>Elements</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.entitypluginstate.html#shadowentitycache" class="tsd-kind-icon">shadow<wbr>Entity<wbr>Cache</a>
 							</li>
 						</ul>
 					</li>
