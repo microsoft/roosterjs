@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { getTagOfNode, HtmlSanitizer, readFile, safeInstanceOf } from 'roosterjs-editor-dom';
-import { PendableFormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
+import {
+    EntityOperation,
+    PendableFormatState,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 const styles = require('./EventViewPane.scss');
 
@@ -16,7 +21,7 @@ export interface EventViewPaneState {
     currentIndex: number;
 }
 
-const EventTypeMap = {
+const EventTypeMap: { [key in PluginEventType]: string } = {
     [PluginEventType.BeforeDispose]: 'BeforeDispose',
     [PluginEventType.BeforePaste]: 'BeforePaste',
     [PluginEventType.CompositionEnd]: 'CompositionEnd',
@@ -38,6 +43,20 @@ const EventTypeMap = {
     [PluginEventType.LeavingShadowEdit]: 'LeavingShadowEdit',
     [PluginEventType.EditImage]: 'EditImage',
     [PluginEventType.BeforeSetContent]: 'BeforeSetContent',
+};
+
+const EntityOperationMap: { [key in EntityOperation]: string } = {
+    [EntityOperation.AddShadowRoot]: 'AddShadowRoot',
+    [EntityOperation.RemoveShadowRoot]: 'RemoveShadowRoot',
+    [EntityOperation.Click]: 'Click',
+    [EntityOperation.ContextMenu]: 'ContextMenu',
+    [EntityOperation.Escape]: 'Escape',
+    [EntityOperation.NewEntity]: 'NewEntity',
+    [EntityOperation.Overwrite]: 'Overwrite',
+    [EntityOperation.PartialOverwrite]: 'PartialOverwrite',
+    [EntityOperation.RemoveFromEnd]: 'RemoveFromEnd',
+    [EntityOperation.RemoveFromStart]: 'RemoveFromStart',
+    [EntityOperation.ReplaceTemporaryContent]: 'ReplaceTemporaryContent',
 };
 
 export default class EventViewPane extends React.Component<
@@ -198,7 +217,7 @@ export default class EventViewPane extends React.Component<
                 } = event;
                 return (
                     <span>
-                        Operation={operation} Type={type}; Id={id}
+                        Operation={EntityOperationMap[operation]} Type={type}; Id={id}
                     </span>
                 );
 
