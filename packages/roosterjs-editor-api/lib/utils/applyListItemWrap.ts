@@ -1,6 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { applyStyleToListItems } from '../utils/applyStyleToListItems';
 import { IEditor } from 'roosterjs-editor-types';
+import { safeInstanceOf, setListItemStyle } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -25,4 +25,18 @@ export default function applyListItemStyleWrap(
     });
 
     applyStyleToListItems(parentNodes, [styleName]);
+}
+
+/**
+ * @internal
+ * Checks if the parent element is a List Item, if it is, apply the style elements to the list item
+ * @param parentNodes parentNodes to apply the style
+ * @param styles styles to apply to the List Item Element
+ */
+function applyStyleToListItems(parentNodes: Node[], styles: string[]) {
+    parentNodes.forEach(node => {
+        if (safeInstanceOf(node, 'HTMLLIElement')) {
+            setListItemStyle(node, styles);
+        }
+    });
 }
