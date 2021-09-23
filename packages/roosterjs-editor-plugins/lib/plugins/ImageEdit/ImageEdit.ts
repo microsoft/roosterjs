@@ -124,6 +124,11 @@ export default class ImageEdit implements EditorPlugin {
     private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[];
 
     /**
+     * Identify if the image was resized by the user.
+     */
+    private wasResized: boolean;
+
+    /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
      */
@@ -270,7 +275,9 @@ export default class ImageEdit implements EditorPlugin {
             this.clearDndHelpers();
 
             // Apply the changes, and add undo snapshot if necessary
-            if (applyChange(this.editor, this.image, this.editInfo, this.lastSrc)) {
+            if (
+                applyChange(this.editor, this.image, this.editInfo, this.lastSrc, this.wasResized)
+            ) {
                 this.editor.addUndoSnapshot(() => this.image, ChangeSource.ImageResize);
             }
 
@@ -296,6 +303,10 @@ export default class ImageEdit implements EditorPlugin {
 
             // Get initial edit info
             this.editInfo = getEditInfoFromImage(image);
+
+            //Check if the image was resized by the user
+            this.wasResized = checkIfImageWasResized(this.image);
+
             operation =
                 (canRegenerateImage(image) ? operation : ImageEditOperation.Resize) &
                 this.allowedOperations;
@@ -398,7 +409,6 @@ export default class ImageEdit implements EditorPlugin {
 
         if (img && parent) {
             img.style.position = '';
-            img.style.maxWidth = '100%';
             img.style.margin = null;
             img.style.textAlign = null;
 
@@ -486,6 +496,7 @@ export default class ImageEdit implements EditorPlugin {
                 if (context?.elementClass == ImageEditElementClass.ResizeHandle) {
                     const clientWidth = wrapper.clientWidth;
                     const clientHeight = wrapper.clientHeight;
+                    this.wasResized = true;
                     doubleCheckResize(
                         this.editInfo,
                         this.options.preserveRatio,
@@ -604,4 +615,29 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
     handles.map(handle => {
         handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
     });
+}
+
+/**
+ * Check if the current image was resized by the user
+ * @param image the current image
+ * @returns if the user resized the image, returns true, otherwise, returns false
+ */
+function checkIfImageWasResized(image: HTMLImageElement): boolean {
+    const { width, height, style } = image;
+    if (
+        style.maxWidth === 'initial' &&
+        (isFixedNumberValue(style.height) ||
+            isFixedNumberValue(style.width) ||
+            isFixedNumberValue(width) ||
+            isFixedNumberValue(height))
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isFixedNumberValue(value: string | number) {
+    const numberValue = typeof value === 'string' ? parseInt(value) : value;
+    return !isNaN(numberValue);
 }

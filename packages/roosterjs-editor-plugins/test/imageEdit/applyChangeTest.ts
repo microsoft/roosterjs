@@ -35,19 +35,19 @@ xdescribe('applyChange', () => {
 
     it('Write back with no change', async () => {
         const editInfo = getEditInfoFromImage(img);
-        const result = applyChange(editor, img, editInfo, IMG_SRC);
+        const result = applyChange(editor, img, editInfo, IMG_SRC, false);
 
         expect(result).toBeFalse();
         expect(triggerPluginEvent).not.toHaveBeenCalled();
         expect(img.outerHTML).toBe(
-            `<img src="${IMG_SRC}" style="width: ${WIDTH}px; height: ${HEIGHT}px;" width="${WIDTH}" height="${HEIGHT}">`
+            `<img src="${IMG_SRC}" style="height:initial; max-width:100% ">`
         );
     });
 
     it('Write back with resize only', async () => {
         const editInfo = getEditInfoFromImage(img);
         editInfo.widthPx = 100;
-        const result = applyChange(editor, img, editInfo, IMG_SRC);
+        const result = applyChange(editor, img, editInfo, IMG_SRC, true);
 
         expect(result).toBeTrue();
         expect(triggerPluginEvent).not.toHaveBeenCalled();
@@ -59,7 +59,7 @@ xdescribe('applyChange', () => {
     it('Write back with rotate only', async () => {
         const editInfo = getEditInfoFromImage(img);
         editInfo.angleRad = Math.PI / 2;
-        const result = applyChange(editor, img, editInfo, IMG_SRC);
+        const result = applyChange(editor, img, editInfo, IMG_SRC, false);
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAUCAYAAAC07qxWAAAAHklEQVQokWNgYGD4TySmpUJ0MKpwVCHxCqmfHvFhAGECbqCLnXlEAAAAAElFTkSuQmCC';
 
@@ -88,7 +88,7 @@ xdescribe('applyChange', () => {
         editInfo.rightPercent = 0.2;
         editInfo.topPercent = 0.3;
         editInfo.bottomPercent = 0.4;
-        const result = applyChange(editor, img, editInfo, IMG_SRC);
+        const result = applyChange(editor, img, editInfo, IMG_SRC, false);
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAAM0lEQVQoke3MMQ0AQAzDQPMMnm6lUYIlkOfwylhLtxrAkjwzEQCuKu9uBIC726lueMOPHt2420Esv/tNAAAAAElFTkSuQmCC';
 
@@ -118,7 +118,7 @@ xdescribe('applyChange', () => {
         editInfo.topPercent = 0.3;
         editInfo.bottomPercent = 0.4;
         editInfo.angleRad = Math.PI / 4;
-        const result = applyChange(editor, img, editInfo, IMG_SRC);
+        const result = applyChange(editor, img, editInfo, IMG_SRC, false);
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAlElEQVQ4je3MsQ3DIBBG4eszH5MgOiqgxAPReRcGAN0CfyqncAQckMJFXvukj6idJqLY+dNpIoJSCtban8CaiGCMQc4ZKSV477fgD8jMAIBSyhb8BV6twk3wqtY6BQ/BFThKwDvsnDu6KjNHkTgLA3gWHEL4w3L4WIDPLroAnwBeQ3QCloNCeB4cwOtgA94Hb3ATfAMzcgdiCyJ6YgAAAABJRU5ErkJggg==';
 
@@ -150,7 +150,7 @@ xdescribe('applyChange', () => {
         editor.triggerPluginEvent = <any>(() => {
             return { newSrc };
         });
-        const result = applyChange(editor, img, editInfo, IMG_SRC);
+        const result = applyChange(editor, img, editInfo, IMG_SRC, false);
 
         expect(result).toBeTrue();
         expect(JSON.parse(img.dataset[IMAGE_EDIT_EDITINFO_NAME])).toEqual({
@@ -173,14 +173,14 @@ xdescribe('applyChange', () => {
     it('Resize then rotate', async () => {
         let editInfo = getEditInfoFromImage(img);
         editInfo.widthPx = editInfo.widthPx * 2;
-        applyChange(editor, img, editInfo, IMG_SRC);
+        applyChange(editor, img, editInfo, IMG_SRC, true);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.angleRad = Math.PI / 4;
-        const result = applyChange(editor, img, editInfo, src2);
+        const result = applyChange(editor, img, editInfo, src2, true);
 
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAr0lEQVRYhe3WsQ3EMAhAUYbwKO6PCVzTMkPWsOfwau5vANKcpeji49IEUvAlKpon0QDwuw0AqrI3awMA+Ywr6AhxBa0gLiANYgq6AjEBqZBSiiCiGahqkN67iIgwsx/oCJm5gRBRVrmBmDlAAQpQgAIUoAAF6AkgInoGaIwhrTVJKfmCJiTnvPy3zUBE9A8iAPC+C3MCLU7zDXndiTmBPCFXQKYQDeQCWYFcIbOqQXa9oOLAmolKrgAAAABJRU5ErkJggg==';
@@ -206,14 +206,14 @@ xdescribe('applyChange', () => {
     it('Rotate then resize', async () => {
         let editInfo = getEditInfoFromImage(img);
         editInfo.angleRad = Math.PI / 4;
-        applyChange(editor, img, editInfo, IMG_SRC);
+        applyChange(editor, img, editInfo, IMG_SRC, true);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.widthPx = editInfo.widthPx * 2;
-        const result = applyChange(editor, img, editInfo, src2);
+        const result = applyChange(editor, img, editInfo, src2, true);
 
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAr0lEQVRYhe3WsQ3EMAhAUYbwKO6PCVzTMkPWsOfwau5vANKcpeji49IEUvAlKpon0QDwuw0AqrI3awMA+Ywr6AhxBa0gLiANYgq6AjEBqZBSiiCiGahqkN67iIgwsx/oCJm5gRBRVrmBmDlAAQpQgAIUoAAF6AkgInoGaIwhrTVJKfmCJiTnvPy3zUBE9A8iAPC+C3MCLU7zDXndiTmBPCFXQKYQDeQCWYFcIbOqQXa9oOLAmolKrgAAAABJRU5ErkJggg==';
@@ -239,14 +239,14 @@ xdescribe('applyChange', () => {
     it('Resize then crop', async () => {
         let editInfo = getEditInfoFromImage(img);
         editInfo.widthPx *= 2;
-        applyChange(editor, img, editInfo, IMG_SRC);
+        applyChange(editor, img, editInfo, IMG_SRC, true);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.leftPercent = 0.5;
-        const result = applyChange(editor, img, editInfo, src2);
+        const result = applyChange(editor, img, editInfo, src2, true);
 
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAKCAYAAADGmhxQAAAANklEQVQ4jWNgYGD4P8jxgDtgiDvwP53A/fv3/8+fP/9/QkLCfwUFhVEHjjpw6GSSQeCAoe1AAHLr3T/ZgBiqAAAAAElFTkSuQmCC';
@@ -272,14 +272,14 @@ xdescribe('applyChange', () => {
     it('Crop then resize', async () => {
         let editInfo = getEditInfoFromImage(img);
         editInfo.leftPercent = 0.5;
-        applyChange(editor, img, editInfo, IMG_SRC);
+        applyChange(editor, img, editInfo, IMG_SRC, false);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.widthPx *= 2;
-        const result = applyChange(editor, img, editInfo, src2);
+        const result = applyChange(editor, img, editInfo, src2, true);
 
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAAJElEQVQokWNgYGD4T2U82A38TwbYv3//fwcHh1EDh0wsU9tAAARXbqAwJ+7KAAAAAElFTkSuQmCC';
@@ -305,14 +305,14 @@ xdescribe('applyChange', () => {
     it('Rotate then crop', async () => {
         let editInfo = getEditInfoFromImage(img);
         editInfo.angleRad = Math.PI / 4;
-        applyChange(editor, img, editInfo, IMG_SRC);
+        applyChange(editor, img, editInfo, IMG_SRC, false);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.leftPercent = 0.5;
-        const result = applyChange(editor, img, editInfo, src2);
+        const result = applyChange(editor, img, editInfo, src2, false);
 
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAjklEQVQ4je3Ruw2AMAwE0KvDBhnKO3gGZwzYiQmy0tEAisIvEJec5Mq6J1kGrmMAxpv96xgArtMPkzRV3cB+mKRxjQtcgl6wqWptdsH7UzzhsSy8gKcf9oVFxBfOOTOlxBCCD7yBMcYabIansiAiTyABzE/oAT45uQaHFvQAe4At8CfwDu4Cz2AXsIQvwQVKZ3Xg8vYu8QAAAABJRU5ErkJggg==';
@@ -338,14 +338,14 @@ xdescribe('applyChange', () => {
     it('Crop then rotate', async () => {
         let editInfo = getEditInfoFromImage(img);
         editInfo.leftPercent = 0.5;
-        applyChange(editor, img, editInfo, IMG_SRC);
+        applyChange(editor, img, editInfo, IMG_SRC, false);
 
         const src2 = img.src;
         await reloadImage(img, IMG_SRC);
 
         editInfo = getEditInfoFromImage(img);
         editInfo.angleRad = Math.PI / 4;
-        const result = applyChange(editor, img, editInfo, src2);
+        const result = applyChange(editor, img, editInfo, src2, false);
 
         const newSrc =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAjklEQVQ4je3Ruw2AMAwE0KvDBhnKO3gGZwzYiQmy0tEAisIvEJec5Mq6J1kGrmMAxpv96xgArtMPkzRV3cB+mKRxjQtcgl6wqWptdsH7UzzhsSy8gKcf9oVFxBfOOTOlxBCCD7yBMcYabIansiAiTyABzE/oAT45uQaHFvQAe4At8CfwDu4Cz2AXsIQvwQVKZ3Xg8vYu8QAAAABJRU5ErkJggg==';
