@@ -1,6 +1,4 @@
-import applyInlineStyle from '../utils/applyInlineStyle';
-import setElementsToVerifyStyle from '../utils/setElementsToVerifyStyle';
-import { applyStyleToListItems } from '../utils/applyStyleToListItems';
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 import { setColor } from 'roosterjs-editor-dom';
 
@@ -20,10 +18,7 @@ export default function setTextColor(
     color: string | ModeIndependentColor,
     shouldApplyInlineStyle?: (element: HTMLElement) => boolean
 ) {
-    const parentNodes: Node[] = [];
-    const contentDiv = editor.getSelectedRegions()[0]?.rootNode;
-
-    applyInlineStyle(editor, (element, isInnerNode) => {
+    applyListItemStyleWrap(editor, 'color', (element, isInnerNode) => {
         if (!shouldApplyInlineStyle || shouldApplyInlineStyle(element)) {
             setColor(
                 element,
@@ -31,10 +26,6 @@ export default function setTextColor(
                 false /*isBackground*/,
                 editor.isDarkMode()
             );
-
-            setElementsToVerifyStyle(parentNodes, element, contentDiv, 'LI');
         }
     });
-
-    applyStyleToListItems(parentNodes, ['color']);
 }
