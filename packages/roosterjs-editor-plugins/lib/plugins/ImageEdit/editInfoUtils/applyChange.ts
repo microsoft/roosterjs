@@ -97,8 +97,8 @@ function setImageSize(
     } else {
         image.style.maxWidth = '100%';
         image.style.height = 'initial';
+        image.style.width = 'initial';
         image.removeAttribute('height');
         image.removeAttribute('width');
-        image.style.width = '';
     }
 }
