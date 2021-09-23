@@ -1,6 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
+import setElementsToVerifyStyle from '../utils/setElementsToVerifyStyle';
 import { applyStyleToListItems } from '../utils/applyStyleToListItems';
-import { findClosestElementTypeAncestor } from 'roosterjs-editor-dom';
 import { getComputedStyle } from 'roosterjs-editor-dom';
 import { IEditor } from 'roosterjs-editor-types';
 
@@ -25,12 +25,7 @@ export default function setFontSize(editor: IEditor, fontSize: string) {
             element.style.lineHeight = 'normal';
         }
 
-        if (parentNodes.indexOf(element.parentNode) === -1) {
-            let parentListItem = findClosestElementTypeAncestor(element, contentDiv, 'LI');
-            if (parentListItem) {
-                parentNodes.push(parentListItem);
-            }
-        }
+        setElementsToVerifyStyle(parentNodes, element, contentDiv, 'LI');
     });
 
     applyStyleToListItems(parentNodes, ['font-size']);

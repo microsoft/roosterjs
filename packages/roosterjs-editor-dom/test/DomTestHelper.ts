@@ -114,7 +114,7 @@ export function itFirefoxOnly(
     return func(expectation, assertion, timeout);
 }
 
-export function itChromeOnly(
+export function itChrome(
     expectation: string,
     assertion?: jasmine.ImplementationCallback,
     timeout?: number

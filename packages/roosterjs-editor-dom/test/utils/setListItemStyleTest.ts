@@ -268,8 +268,6 @@ describe('setListItemStyle', () => {
         listItemElement.appendChild(divElement);
         listItemElement.appendChild(spanElement);
 
-        divElement.appendChild(document.createElement('BR'));
-
         // Act
         setListItemStyle(listItemElement, stylesToInherit);
 
@@ -293,8 +291,6 @@ describe('setListItemStyle', () => {
         divElement.appendChild(spanElement);
         listItemElement.appendChild(divElement);
         listItemElement.appendChild(spanElement);
-
-        divElement.appendChild(document.createElement('BR'));
 
         // Act;
         setListItemStyle(listItemElement, stylesToInherit);

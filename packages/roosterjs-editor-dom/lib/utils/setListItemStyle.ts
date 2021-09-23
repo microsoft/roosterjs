@@ -40,15 +40,11 @@ function getInlineChildElementsStyle(element: HTMLElement) {
         currentInlineElement = contentTraverser.currentInlineElement;
         let currentNode = currentInlineElement.getContainerNode();
 
-        if (currentNode.nodeName != 'BR') {
-            if (currentNode.nodeName == '#text') {
-                currentNode = findClosestElementAncestor(currentNode);
-            }
-            if (safeInstanceOf(currentNode, 'HTMLElement')) {
-                let childStyle = getStyles(currentNode);
-                if (childStyle) {
-                    result.push(childStyle);
-                }
+        currentNode = findClosestElementAncestor(currentNode);
+        if (safeInstanceOf(currentNode, 'HTMLElement')) {
+            let childStyle = getStyles(currentNode);
+            if (childStyle) {
+                result.push(childStyle);
             }
         }
         contentTraverser.getNextInlineElement();

@@ -1,5 +1,5 @@
 import VListItem from '../../lib/list/VListItem';
-import { itChromeOnly, itFirefoxOnly } from 'roosterjs-editor-api/test/TestHelper';
+import { itChrome, itFirefoxOnly } from 'roosterjs-editor-api/test/TestHelper';
 import { ListType } from 'roosterjs-editor-types';
 
 describe('VListItem.getListType', () => {
@@ -408,7 +408,7 @@ describe('VListItem.writeBack', () => {
         );
     });
 
-    itChromeOnly('Styled VListItem Chrome', () => {
+    itChrome('Styled VListItem Chrome', () => {
         // Arrange
         const listStack = [document.createElement('div')];
         for (let i = 1; i < listStack.length; i++) {
