@@ -4,6 +4,7 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setListItemStyle from '../utils/setListItemStyle';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
@@ -215,7 +216,17 @@ export default class VListItem {
         listStack[listStack.length - 1].appendChild(this.node);
         this.node.style.display = this.dummy ? 'block' : null;
 
-        // 4. If this is not a list item now, need to unwrap the LI node and do proper handling
+        // 4. Inherit styles of the childelement to the li, so we are able to apply the styles to the ::marker
+        if (this.listTypes.length > 1) {
+            if (
+                !(this.node.style.fontSize || this.node.style.color || this.node.style.fontFamily)
+            ) {
+                const stylesToInherit = ['font-size', 'font-family', 'color'];
+                setListItemStyle(this.node, stylesToInherit);
+            }
+        }
+
+        // 5. If this is not a list item now, need to unwrap the LI node and do proper handling
         if (this.listTypes.length <= 1) {
             wrapIfNotBlockNode(
                 getTagOfNode(this.node) == 'LI' ? getChildrenAndUnwrap(this.node) : [this.node],

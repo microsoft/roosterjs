@@ -52,6 +52,7 @@ export { default as matchesSelector } from './utils/matchesSelector';
 export { default as adjustInsertPosition } from './utils/adjustInsertPosition';
 export { default as createElement, KnownCreateElementData } from './utils/createElement';
 export { default as moveChildNodes } from './utils/moveChildNodes';
+export { default as setListItemStyle } from './utils/setListItemStyle';
 
 export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';
