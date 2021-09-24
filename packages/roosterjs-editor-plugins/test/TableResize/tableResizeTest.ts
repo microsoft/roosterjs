@@ -1,4 +1,4 @@
-import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import { DEFAULT_TABLE, DEFAULT_TABLE_MERGED, EXCEL_TABLE, WORD_TABLE } from './tableData';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
