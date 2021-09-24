@@ -570,7 +570,7 @@ export default class TableResize implements EditorPlugin {
     }
 
     private frameAnimateResizeCells = (e: MouseEvent) => {
-        this.editor?.runAsync(() => this.resizeCells(e));
+        this.editor.runAsync(() => this.resizeCells(e));
     };
 
     private resizeTable = (mouseX: number, mouseY: number) => {

@@ -7,6 +7,10 @@ const RESIZING_DIVIATION = 4;
 const INSERTING_DIVIATION = 3;
 const CELL_RESIZER_WIDTH = 4;
 
+const VERTICAL_INSERTER = 'verticalInserter';
+const HORIZONTAL_INSERTER = 'horizontalInserter';
+const TABLE_RESIZER = 'tableResizer';
+
 /* Used to specify mouse coordinates or cell locations in a table in this test set */
 type Position = {
     x: number;
@@ -225,7 +229,7 @@ describe('Table Resizer/Inserter tests', () => {
             const inserterRect = inserter.getBoundingClientRect();
             if (!!expectedPosition) {
                 const diff =
-                    inserterType == 'verticalInserter'
+                    inserterType == VERTICAL_INSERTER
                         ? inserterRect.left + inserterRect.width / 2 - expectedPosition.x
                         : inserterRect.top + inserterRect.height / 2 - expectedPosition.y;
                 expect(Math.abs(diff)).toBeLessThanOrEqual(INSERTING_DIVIATION);
@@ -237,8 +241,8 @@ describe('Table Resizer/Inserter tests', () => {
             inserter.dispatchEvent(new MouseEvent('click'));
             const newRows = getTableRows(table);
             const newCols = getTableColumns(table);
-            expect(newRows).toBe(inserterType == 'verticalInserter' ? rows : rows + 1);
-            expect(newCols).toBe(inserterType == 'horizontalInserter' ? cols : cols + 1);
+            expect(newRows).toBe(inserterType == VERTICAL_INSERTER ? rows : rows + 1);
+            expect(newCols).toBe(inserterType == HORIZONTAL_INSERTER ? cols : cols + 1);
 
             expect();
         }
@@ -248,7 +252,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
-            'verticalInserter',
+            VERTICAL_INSERTER,
             { x: rect.right, y: rect.top - OFFSET_Y },
             { x: rect.right / 2, y: rect.bottom },
             true,
@@ -259,7 +263,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
-            'verticalInserter',
+            VERTICAL_INSERTER,
             { x: rect.right, y: rect.top - OFFSET_Y },
             { x: rect.right - insideTheOffset, y: rect.top },
             true,
@@ -270,7 +274,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
-            'horizontalInserter',
+            HORIZONTAL_INSERTER,
             { x: rect.left, y: rect.bottom },
             { x: (rect.right - rect.left) / 2, y: (rect.bottom - rect.top) / 2 },
             true,
@@ -281,7 +285,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('keeps the horizontal inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
-            'horizontalInserter',
+            HORIZONTAL_INSERTER,
             { x: rect.left, y: rect.bottom },
             { x: rect.left, y: rect.bottom - insideTheOffset },
             true,
@@ -292,7 +296,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
-            'horizontalInserter',
+            HORIZONTAL_INSERTER,
             { x: rect.right, y: rect.bottom },
             { x: (rect.right - rect.left) / 2, y: (rect.bottom - rect.top) / 2 },
             true,
@@ -303,7 +307,7 @@ describe('Table Resizer/Inserter tests', () => {
     it('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
-            'horizontalInserter',
+            HORIZONTAL_INSERTER,
             { x: rect.right, y: rect.bottom },
             { x: rect.right + insideTheOffset / 2, y: rect.bottom },
             true,
@@ -316,7 +320,7 @@ describe('Table Resizer/Inserter tests', () => {
         const cellRect = getCellRect(0, 0);
 
         runInserterTest(
-            'verticalInserter',
+            VERTICAL_INSERTER,
             { x: cellRect.left, y: cellRect.top },
             { x: rect.left + rect.width / 2, y: rect.bottom },
             true,
@@ -329,7 +333,7 @@ describe('Table Resizer/Inserter tests', () => {
         const cellRect = getCellRect(0, 0);
 
         runInserterTest(
-            'verticalInserter',
+            VERTICAL_INSERTER,
             {
                 x: cellRect.left + (cellRect.right - cellRect.left) / 2 + OFFSET_X,
                 y: cellRect.top - OFFSET_Y,
@@ -348,7 +352,7 @@ describe('Table Resizer/Inserter tests', () => {
         const cellRect = getCellRect(0, 1);
 
         runInserterTest(
-            'verticalInserter',
+            VERTICAL_INSERTER,
             {
                 x: cellRect.left + cellRect.width / 2 + OFFSET_X,
                 y: cellRect.top - OFFSET_Y,
@@ -368,7 +372,7 @@ describe('Table Resizer/Inserter tests', () => {
         const cellRect = getCellRect(1, 0);
 
         runInserterTest(
-            'horizontalInserter',
+            HORIZONTAL_INSERTER,
             {
                 x: cellRect.left + OFFSET_X,
                 y: cellRect.top + cellRect.height / 2 + OFFSET_Y,
@@ -435,7 +439,7 @@ describe('Table Resizer/Inserter tests', () => {
         let resizerId: string;
         switch (resizeState) {
             case ResizeState.Both:
-                resizerId = 'tableResizer';
+                resizerId = TABLE_RESIZER;
                 break;
             case ResizeState.Horizontal:
                 resizerId = 'horizontalResizer';
@@ -615,14 +619,14 @@ describe('Table Resizer/Inserter tests', () => {
 
     function removeResizerTest(pluginEvent: PluginEvent) {
         const tableRect = initialize(0);
-        runShowResizerTest('tableResizer', {
+        runShowResizerTest(TABLE_RESIZER, {
             x: tableRect.right,
             y: tableRect.bottom,
         });
 
         plugin.onPluginEvent(pluginEvent);
 
-        const resizer = editor.getDocument().getElementById('tableResizer');
+        const resizer = editor.getDocument().getElementById(TABLE_RESIZER);
         expect(!!resizer).toBe(false);
     }
 
