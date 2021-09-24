@@ -22,6 +22,10 @@ const MIN_CELL_HEIGHT = 20;
 const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
 
+const HORIZONTAL_INSERTER_ID = 'horizontalInserter';
+const VERTICAL_INSERTER_ID = 'verticalInserter';
+const TABLE_RESIZER_ID = 'tableResizer';
+
 const enum ResizeState {
     None,
     Horizontal,
@@ -332,8 +336,8 @@ export default class TableResize implements EditorPlugin {
 
         inserter.id =
             this.insertingState == ResizeState.Horizontal
-                ? 'horizontalInserter'
-                : 'verticalInserter';
+                ? HORIZONTAL_INSERTER_ID
+                : VERTICAL_INSERTER_ID;
         // set inserter position
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
@@ -468,7 +472,7 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         ) as HTMLDivElement;
 
-        div.id = 'tableResizer';
+        div.id = TABLE_RESIZER_ID;
         div.style.top = `${rect.bottom}px`;
         div.style.left = this.isRTL
             ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
