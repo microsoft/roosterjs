@@ -472,13 +472,15 @@ describe('Table Resizer/Inserter tests', () => {
         // validate the table doesn't shift after clicking on the resizer
         runTableShapeTest(tableBeforeClick, tableAfterClick);
 
+        editor.runAsync = callback => callback(editor);
+        jasmine.createSpy('addUndoSnapshot').and.callFake((callback: () => any) => callback());
         const mouseMoveResize = new MouseEvent('mousemove', {
             clientX: mouseEnd.x,
             clientY: mouseEnd.y,
         });
         const doc = editor.getDocument();
         doc.dispatchEvent(mouseMoveResize);
-        plugin.resizeCells(mouseMoveResize);
+        //plugin.resizeCells(mouseMoveResize);
 
         // release mouse and stop resizing
         const mouseMoveEndEvent = new MouseEvent('mouseup', {
@@ -1034,7 +1036,7 @@ describe('Table Resizer/Inserter tests', () => {
         resizeColumnToLeftTooNarrowTest(2);
     });
 
-    it('resizes the column to the right correctly with default table', () => {
+    fit('resizes the column to the right correctly with default table', () => {
         resizeColumnToRightTest(0);
     });
 

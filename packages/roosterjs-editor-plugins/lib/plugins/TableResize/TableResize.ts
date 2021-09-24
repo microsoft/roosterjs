@@ -708,7 +708,7 @@ export default class TableResize implements EditorPlugin {
         });
     };
 
-    public resizeCells = (e: MouseEvent) => {
+    private resizeCells = (e: MouseEvent) => {
         this.setTableResizer(null);
         if (this.resizingState === ResizeState.None) {
             return;
