@@ -24,6 +24,8 @@ const TABLE_RESIZER_LENGTH = 12;
 
 const HORIZONTAL_INSERTER_ID = 'horizontalInserter';
 const VERTICAL_INSERTER_ID = 'verticalInserter';
+const HORIZONTAL_RESIZER_ID = 'horizontalResizer';
+const VERTICAL_RESIZER_ID = 'verticalResizer';
 const TABLE_RESIZER_ID = 'tableResizer';
 
 const enum ResizeState {
@@ -498,7 +500,7 @@ export default class TableResize implements EditorPlugin {
                 : KnownCreateElementDataIndex.TableVerticalResizer,
             this.editor.getDocument()
         ) as HTMLDivElement;
-        div.id = horizontal ? 'horizontalResizer' : 'verticalResizer';
+        div.id = horizontal ? HORIZONTAL_RESIZER_ID : VERTICAL_RESIZER_ID;
         div.style.top = `${top}px`;
         div.style.left = `${left}px`;
         div.style.width = `${width}px`;
