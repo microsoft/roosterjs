@@ -472,7 +472,7 @@ describe('Table Resizer/Inserter tests', () => {
         // validate the table doesn't shift after clicking on the resizer
         runTableShapeTest(tableBeforeClick, tableAfterClick);
 
-        editor.runAsync = callback => callback(editor);
+        editor.runAsync = (callback: any) => callback(editor);
         spyOn(editor, 'addUndoSnapshot').and.callFake((event, callback) => {});
 
         const mouseMoveResize = new MouseEvent('mousemove', {
