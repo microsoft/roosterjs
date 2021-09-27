@@ -732,18 +732,16 @@ export default class TableResize implements EditorPlugin {
     };
 
     private endResizeCells = (e: MouseEvent) => {
-        if (!!this.editor) {
-            const doc = this.editor.getDocument();
-            doc.removeEventListener('mousemove', this.frameAnimateResizeCells, true);
-            doc.removeEventListener('mouseup', this.endResizeCells, true);
-            this.currentCellsToResize = [];
-            this.nextCellsToResize = [];
+        const doc = this.editor.getDocument();
+        doc.removeEventListener('mousemove', this.frameAnimateResizeCells, true);
+        doc.removeEventListener('mouseup', this.endResizeCells, true);
+        this.currentCellsToResize = [];
+        this.nextCellsToResize = [];
 
-            this.editor.addUndoSnapshot((start, end) => {
-                this.frameAnimateResizeCells(e);
-                this.editor.select(start, end);
-            }, ChangeSource.Format);
-        }
+        this.editor.addUndoSnapshot((start, end) => {
+            this.frameAnimateResizeCells(e);
+            this.editor.select(start, end);
+        }, ChangeSource.Format);
 
         this.setCurrentTd(null);
         this.setTableResizer(null);
