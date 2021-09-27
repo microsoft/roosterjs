@@ -1,15 +1,15 @@
 import { createElement, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
+    ChangeSource,
+    ContentPosition,
+    CreateElementData,
     EditorPlugin,
     IEditor,
+    KnownCreateElementDataIndex,
     PluginEvent,
     PluginEventType,
     Rect,
-    ChangeSource,
     TableOperation,
-    ContentPosition,
-    CreateElementData,
-    KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -21,6 +21,12 @@ const MIN_CELL_WIDTH = 30;
 const MIN_CELL_HEIGHT = 20;
 const CELL_RESIZER_WIDTH = 4;
 const TABLE_RESIZER_LENGTH = 12;
+
+const HORIZONTAL_INSERTER_ID = 'horizontalInserter';
+const VERTICAL_INSERTER_ID = 'verticalInserter';
+const HORIZONTAL_RESIZER_ID = 'horizontalResizer';
+const VERTICAL_RESIZER_ID = 'verticalResizer';
+const TABLE_RESIZER_ID = 'tableResizer';
 
 const enum ResizeState {
     None,
@@ -293,7 +299,7 @@ export default class TableResize implements EditorPlugin {
 
     private createInserter(tableRect: Rect) {
         if (this.insertingState == ResizeState.None) {
-            return;
+            return undefined;
         }
 
         const rect = normalizeRect(this.currentInsertTd.getBoundingClientRect());
@@ -330,6 +336,11 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         ) as HTMLDivElement;
 
+        inserter.id =
+            this.insertingState == ResizeState.Horizontal
+                ? HORIZONTAL_INSERTER_ID
+                : VERTICAL_INSERTER_ID;
+        // set inserter position
         if (rect) {
             if (this.insertingState == ResizeState.Horizontal) {
                 if (this.isRTL) {
@@ -463,6 +474,7 @@ export default class TableResize implements EditorPlugin {
             this.editor.getDocument()
         ) as HTMLDivElement;
 
+        div.id = TABLE_RESIZER_ID;
         div.style.top = `${rect.bottom}px`;
         div.style.left = this.isRTL
             ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
@@ -488,6 +500,7 @@ export default class TableResize implements EditorPlugin {
                 : KnownCreateElementDataIndex.TableVerticalResizer,
             this.editor.getDocument()
         ) as HTMLDivElement;
+        div.id = horizontal ? HORIZONTAL_RESIZER_ID : VERTICAL_RESIZER_ID;
         div.style.top = `${top}px`;
         div.style.left = `${left}px`;
         div.style.width = `${width}px`;
@@ -628,6 +641,12 @@ export default class TableResize implements EditorPlugin {
         });
     };
 
+    /**
+     *
+     * @param newPos The position to where we want to move the vertical border
+     * @returns if the move is allowed, or, if any of the cells on either side of the vertical border is smaller than
+     * the minimum width, such move is not allowed
+     */
     private canResizeColumns = (newPos: number): boolean => {
         for (let i = 0; i < this.currentCellsToResize.length; i++) {
             const td = this.currentCellsToResize[i];
@@ -667,12 +686,18 @@ export default class TableResize implements EditorPlugin {
             this.resizingVtable.table.style.width = null;
         }
 
+        const newWidthList: Map<HTMLTableCellElement, number> = new Map();
         this.currentCellsToResize.forEach(td => {
             const rect = normalizeRect(td.getBoundingClientRect());
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
-            td.style.width = `${getHorizontalDistance(rect, newPos, !this.isRTL)}px`;
+            const newWidth = getHorizontalDistance(rect, newPos, !this.isRTL);
+            newWidthList.set(td, newWidth);
+        });
+
+        newWidthList.forEach((newWidth, td) => {
+            td.style.width = `${newWidth}px`;
         });
 
         this.nextCellsToResize.forEach(td => {
