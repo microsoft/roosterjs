@@ -481,7 +481,6 @@ describe('Table Resizer/Inserter tests', () => {
         });
         const doc = editor.getDocument();
         doc.dispatchEvent(mouseMoveResize);
-        //plugin.resizeCells(mouseMoveResize);
 
         // release mouse and stop resizing
         const mouseMoveEndEvent = new MouseEvent('mouseup', {
