@@ -31,7 +31,7 @@ export default function resizeByPercentage(
                 editInfo.heightPx = Math.max(height, minHeight);
 
                 editor.addUndoSnapshot(() => {
-                    applyChange(editor, image, editInfo, lastSrc);
+                    applyChange(editor, image, editInfo, lastSrc, true /*wasResized*/);
                 }, ChangeSource.ImageResize);
             }
         });

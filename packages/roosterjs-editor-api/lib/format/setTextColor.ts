@@ -1,4 +1,4 @@
-import applyInlineStyle from '../utils/applyInlineStyle';
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 import { setColor } from 'roosterjs-editor-dom';
 
@@ -18,7 +18,7 @@ export default function setTextColor(
     color: string | ModeIndependentColor,
     shouldApplyInlineStyle?: (element: HTMLElement) => boolean
 ) {
-    applyInlineStyle(editor, (element, isInnerNode) => {
+    applyListItemStyleWrap(editor, 'color', (element, isInnerNode) => {
         if (!shouldApplyInlineStyle || shouldApplyInlineStyle(element)) {
             setColor(
                 element,

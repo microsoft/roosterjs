@@ -1,4 +1,5 @@
 import VListItem from '../../lib/list/VListItem';
+import { itChromeOnly, itFirefoxOnly } from 'roosterjs-editor-api/test/TestHelper';
 import { ListType } from 'roosterjs-editor-types';
 
 describe('VListItem.getListType', () => {
@@ -378,6 +379,58 @@ describe('VListItem.writeBack', () => {
             [ListType.Ordered, ListType.Unordered],
             '<ol id="id1" data-test="test"><ul><li><div></div></li></ul></ol>',
             ol
+        );
+    });
+
+    itFirefoxOnly('Styled VListItem FireFox', () => {
+        // Arrange
+        const listStack = [document.createElement('div')];
+        for (let i = 1; i < listStack.length; i++) {
+            listStack[i - 1].appendChild(listStack[i]);
+        }
+
+        const li = document.createElement('li');
+        const styledSpan = document.createElement('span');
+        styledSpan.style.fontSize = '14px';
+        styledSpan.style.fontFamily = 'Courier New';
+        styledSpan.style.color = 'Blue';
+        styledSpan.textContent = 'test';
+
+        li.appendChild(styledSpan);
+        const thisItem = new VListItem(li, ListType.Ordered);
+
+        // Act
+        thisItem.writeBack(listStack);
+
+        // Assert
+        expect(listStack[0].innerHTML).toBe(
+            '<ol><li style="font-size:14px;font-family:Courier New;color:blue"><span style="font-size: 14px; font-family: Courier New; color: blue;">test</span></li></ol>'
+        );
+    });
+
+    itChromeOnly('Styled VListItem Chrome', () => {
+        // Arrange
+        const listStack = [document.createElement('div')];
+        for (let i = 1; i < listStack.length; i++) {
+            listStack[i - 1].appendChild(listStack[i]);
+        }
+
+        const li = document.createElement('li');
+        const styledSpan = document.createElement('span');
+        styledSpan.style.fontSize = '14px';
+        styledSpan.style.fontFamily = 'Courier New';
+        styledSpan.style.color = 'Blue';
+        styledSpan.textContent = 'test';
+
+        li.appendChild(styledSpan);
+        const thisItem = new VListItem(li, ListType.Ordered);
+
+        // Act
+        thisItem.writeBack(listStack);
+
+        // Assert
+        expect(listStack[0].innerHTML).toBe(
+            '<ol><li style="font-size:14px;font-family:&quot;Courier New&quot;;color:blue"><span style="font-size: 14px; font-family: &quot;Courier New&quot;; color: blue;">test</span></li></ol>'
         );
     });
 });
