@@ -1,4 +1,4 @@
-import applyInlineStyle from '../utils/applyInlineStyle';
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import { IEditor } from 'roosterjs-editor-types';
 
 /**
@@ -8,11 +8,9 @@ import { IEditor } from 'roosterjs-editor-types';
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
 export default function setFontName(editor: IEditor, fontName: string) {
-    fontName = fontName.trim();
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
-    // (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
-    // for here, we use CSS font-family style
-    applyInlineStyle(editor, (element, isInnerNode) => {
+    // (http://www.w3schools.com/tags/tag_font.asp).
+    applyListItemStyleWrap(editor, 'font-family', (element, isInnerNode) => {
         element.style.fontFamily = isInnerNode ? '' : fontName;
     });
 }

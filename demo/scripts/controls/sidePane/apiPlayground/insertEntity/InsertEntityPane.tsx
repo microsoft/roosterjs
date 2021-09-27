@@ -14,6 +14,7 @@ interface InsertEntityPaneState {
 export default class InsertEntityPane extends React.Component<ApiPaneProps, InsertEntityPaneState> {
     private entityType = React.createRef<HTMLInputElement>();
     private html = React.createRef<HTMLTextAreaElement>();
+    private hydratedHtml = React.createRef<HTMLTextAreaElement>();
     private styleInline = React.createRef<HTMLInputElement>();
     private styleBlock = React.createRef<HTMLInputElement>();
     private isReadonly = React.createRef<HTMLInputElement>();
@@ -33,6 +34,10 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                 </div>
                 <div>
                     HTML: <textarea className={styles.textarea} ref={this.html}></textarea>
+                </div>
+                <div>
+                    Hydrated HTML:
+                    <textarea className={styles.textarea} ref={this.hydratedHtml}></textarea>
                 </div>
                 <div>
                     Style:
@@ -69,6 +74,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
         const entityType = this.entityType.current.value;
         const node = document.createElement('span');
         node.innerHTML = trustedHTMLHandler(this.html.current.value);
+        node.dataset.hydratedHtml = this.hydratedHtml.current.value.trim();
         const isBlock = this.styleBlock.current.checked;
         const isReadonly = this.isReadonly.current.checked;
 
@@ -106,6 +112,8 @@ function EntityButton({ entity }: { entity: Entity }) {
             Id: {entity.id}
             <br />
             Readonly: {entity.isReadonly ? 'True' : 'False'}
+            <br />
+            IsShadowEntity: {!!entity.wrapper.shadowRoot}
             <br />
             <br />
         </div>

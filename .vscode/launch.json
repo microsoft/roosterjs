@@ -12,9 +12,25 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Test all files (Chrome)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--chrome"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Test current file",
             "program": "${workspaceFolder}/node_modules/karma/bin/karma",
             "args": ["start", "--components", "${fileBasenameNoExtension}"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test current file (Chrome)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--chrome", "--components", "${fileBasenameNoExtension}"],
             "console": "integratedTerminal"
         },
         {

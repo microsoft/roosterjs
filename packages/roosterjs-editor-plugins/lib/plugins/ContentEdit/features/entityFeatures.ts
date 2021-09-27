@@ -150,6 +150,7 @@ function cacheGetNeighborEntityElement(
                 return null;
             }
 
+            range.commonAncestorContainer.normalize();
             const pos = Position.getEnd(range).normalize();
             const isAtBeginOrEnd = pos.offset == 0 || pos.isAtEnd;
             let entityNode: HTMLElement = null;

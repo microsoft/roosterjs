@@ -6,19 +6,26 @@ import {
     isCharacterValue,
     toArray,
     arrayPush,
+    createElement,
+    addRangeToSelection,
+    createRange,
+    moveChildNodes,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
+    ContentChangedEvent,
     ContentPosition,
     Entity,
     EntityClasses,
     EntityOperation,
+    EntityOperationEvent,
     EntityPluginState,
     HtmlSanitizerOptions,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
+    PluginMouseUpEvent,
     PluginWithState,
     QueryScope,
 } from 'roosterjs-editor-types';
@@ -35,6 +42,12 @@ const ALLOWED_CSS_CLASSES = [
     ENTITY_TYPE_CSS_REGEX,
     ENTITY_READONLY_CSS_REGEX,
 ];
+const REMOVE_ENTITY_OPERATIONS = [
+    EntityOperation.Overwrite,
+    EntityOperation.PartialOverwrite,
+    EntityOperation.RemoveFromStart,
+    EntityOperation.RemoveFromEnd,
+];
 
 /**
  * @internal
@@ -43,14 +56,15 @@ const ALLOWED_CSS_CLASSES = [
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {
     private editor: IEditor;
     private state: EntityPluginState;
+    private cancelAsyncRun: () => void;
 
     /**
      * Construct a new instance of EntityPlugin
      */
     constructor() {
         this.state = {
-            clickingPoint: null,
             knownEntityElements: [],
+            shadowEntityCache: {},
         };
     }
 
@@ -67,6 +81,30 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+
+        // Workaround an issue for Chrome that when Delete or Backsapce, shadow DOM may be lost in editor
+        if (Browser.isChrome || Browser.isSafari) {
+            this.editor.addContentEditFeature({
+                keys: [Keys.BACKSPACE, Keys.DELETE],
+                shouldHandleEvent: () => true,
+                handleEvent: this.workaroundShadowDOMIssueForChrome,
+            });
+        }
+    }
+
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check
+     */
+    willHandleEventExclusively(event: PluginEvent) {
+        return (
+            event.eventType == PluginEventType.KeyPress &&
+            !!(event.rawEvent.target as HTMLElement)?.shadowRoot
+        );
     }
 
     /**
@@ -75,7 +113,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     dispose() {
         this.editor = null;
         this.state.knownEntityElements = [];
-        this.state.clickingPoint = null;
     }
 
     /**
@@ -91,11 +128,8 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
-            case PluginEventType.MouseDown:
-                this.handleMouseDownEvent(event.rawEvent);
-                break;
             case PluginEventType.MouseUp:
-                this.handleMouseUpEvent(event.rawEvent);
+                this.handleMouseUpEvent(event);
                 break;
             case PluginEventType.KeyDown:
                 this.handleKeyDownEvent(event.rawEvent);
@@ -106,19 +140,25 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                 }
                 break;
             case PluginEventType.BeforePaste:
-                this.handleBeforePasteEvent(event.fragment, event.sanitizingOption);
+                this.handleBeforePasteEvent(event.sanitizingOption);
                 break;
             case PluginEventType.ContentChanged:
-                this.handleContentChangedEvent(event.source == ChangeSource.SetContent);
+                this.handleContentChangedEvent(event);
                 break;
             case PluginEventType.EditorReady:
-                this.handleContentChangedEvent(true /*resetAll*/);
+                this.handleContentChangedEvent();
                 break;
             case PluginEventType.ExtractContentWithDom:
                 this.handleExtractContentWithDomEvent(event.clonedRoot);
                 break;
             case PluginEventType.ContextMenu:
                 this.handleContextMenuEvent(event.rawEvent);
+                break;
+            case PluginEventType.BeforeSetContent:
+                this.handleBeforeSetContentEvent();
+                break;
+            case PluginEventType.EntityOperation:
+                this.handleEntityOperationEvent(event);
                 break;
         }
     }
@@ -140,42 +180,28 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
     };
 
-    private handleMouseDownEvent(event: MouseEvent) {
-        const { target, pageX, pageY } = event;
-        const node = target as Node;
-        const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
-        if (entityElement && !entityElement.isContentEditable) {
-            event.preventDefault();
-            this.state.clickingPoint = { pageX, pageY };
-        }
-    }
-
-    private handleMouseUpEvent(event: MouseEvent) {
-        const { target, pageX, pageY } = event;
-        const node = target as Node;
+    private handleMouseUpEvent(event: PluginMouseUpEvent) {
+        const { rawEvent, isClicking } = event;
+        const node = rawEvent.target as Node;
         let entityElement: HTMLElement;
 
         if (
-            this.state.clickingPoint &&
-            this.state.clickingPoint.pageX == pageX &&
-            this.state.clickingPoint.pageY == pageY &&
+            isClicking &&
             node &&
             !!(entityElement = this.editor.getElementAtCursor(getEntitySelector(), node))
         ) {
-            event.preventDefault();
-            this.triggerEvent(entityElement, EntityOperation.Click, event);
+            this.triggerEvent(entityElement, EntityOperation.Click, rawEvent);
 
             workaroundSelectionIssueForIE(this.editor);
         }
-
-        this.state.clickingPoint = null;
     }
 
     private handleKeyDownEvent(event: KeyboardEvent) {
         if (
             isCharacterValue(event) ||
             event.which == Keys.BACKSPACE ||
-            event.which == Keys.DELETE
+            event.which == Keys.DELETE ||
+            event.which == Keys.ENTER
         ) {
             const range = this.editor.getSelectionRange();
             if (range && !range.collapsed) {
@@ -184,10 +210,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
     }
 
-    private handleBeforePasteEvent(
-        fragment: DocumentFragment,
-        sanitizingOption: HtmlSanitizerOptions
-    ) {
+    private handleBeforePasteEvent(sanitizingOption: HtmlSanitizerOptions) {
         const range = this.editor.getSelectionRange();
 
         if (!range.collapsed) {
@@ -197,23 +220,55 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         arrayPush(sanitizingOption.additionalAllowedCssClasses, ALLOWED_CSS_CLASSES);
     }
 
-    private handleContentChangedEvent(resetAll: boolean) {
-        this.state.knownEntityElements = resetAll
-            ? []
-            : this.state.knownEntityElements.filter(node => this.editor.contains(node));
-        const allId = this.state.knownEntityElements
+    private handleBeforeSetContentEvent() {
+        this.cacheShadowEntities(this.state.shadowEntityCache);
+    }
+
+    private handleContentChangedEvent(event?: ContentChangedEvent) {
+        // 1. find removed entities
+        for (let i = this.state.knownEntityElements.length - 1; i >= 0; i--) {
+            const element = this.state.knownEntityElements[i];
+            if (!this.editor.contains(element)) {
+                this.setIsEntityKnown(element, false /*isKnown*/);
+
+                if (element.shadowRoot) {
+                    this.triggerEvent(element, EntityOperation.RemoveShadowRoot);
+                }
+            }
+        }
+
+        // 2. collect all new entities
+        const knownIds = this.state.knownEntityElements
             .map(e => getEntityFromElement(e)?.id)
             .filter(x => !!x);
+        const newEntities =
+            event?.source == ChangeSource.InsertEntity && event.data
+                ? [event.data as Entity]
+                : this.getExistingEntities().filter(({ wrapper }) => !this.isEntityKnown(wrapper));
 
-        this.editor.queryElements(getEntitySelector(), element => {
-            if (this.state.knownEntityElements.indexOf(element) < 0) {
-                this.state.knownEntityElements.push(element);
+        // 3. Add new entities to known entity list, and hydrate
+        newEntities.forEach(entity => {
+            const { wrapper, type, id, isReadonly } = entity;
 
-                const entity = getEntityFromElement(element);
-
-                this.hydrateEntity(entity, allId);
-            }
+            entity.id = this.ensureUniqueId(type, id, knownIds);
+            commitEntity(wrapper, type, isReadonly, entity.id); // Use entity.id here because it is newly updated
+            this.handleNewEntity(entity);
         });
+
+        Object.keys(this.state.shadowEntityCache).forEach(id => {
+            this.triggerEvent(this.state.shadowEntityCache[id], EntityOperation.Overwrite);
+            delete this.state.shadowEntityCache[id];
+        });
+    }
+
+    private handleEntityOperationEvent(event: EntityOperationEvent) {
+        if (REMOVE_ENTITY_OPERATIONS.indexOf(event.operation) >= 0) {
+            this.cancelAsyncRun?.();
+            this.cancelAsyncRun = this.editor.runAsync(() => {
+                this.cancelAsyncRun = null;
+                this.handleContentChangedEvent();
+            });
+        }
     }
 
     private handleExtractContentWithDomEvent(root: HTMLElement) {
@@ -253,8 +308,86 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
     }
 
-    private hydrateEntity(entity: Entity, knownIds: string[]) {
-        const { id, type, wrapper, isReadonly } = entity;
+    private triggerEvent(
+        element: HTMLElement,
+        operation: EntityOperation,
+        rawEvent?: Event,
+        contentForShadowEntity?: DocumentFragment
+    ) {
+        const entity = element && getEntityFromElement(element);
+
+        if (entity) {
+            this.editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                operation,
+                rawEvent,
+                entity,
+                contentForShadowEntity,
+            });
+        }
+    }
+
+    private handleNewEntity(entity: Entity) {
+        const { wrapper } = entity;
+        const fragment = this.editor.getDocument().createDocumentFragment();
+        const cache = this.state.shadowEntityCache[entity.id];
+        delete this.state.shadowEntityCache[entity.id];
+
+        if (cache?.shadowRoot) {
+            moveChildNodes(fragment, cache.shadowRoot);
+        }
+
+        this.triggerEvent(wrapper, EntityOperation.NewEntity, undefined /*rawEvent*/, fragment);
+
+        // If there is element to hydrate for shadow entity, craete shadow root and mount these elements to shadow root
+        // Then trigger AddShadowRoot so that plugins can do further actions
+        if (fragment.firstChild) {
+            if (wrapper.shadowRoot) {
+                moveChildNodes(wrapper.shadowRoot, fragment);
+            } else {
+                this.createShadowRoot(wrapper, fragment);
+            }
+        } else if (wrapper.shadowRoot) {
+            // If no elements to hydrate, remove existing shadow root by cloning a new node
+            this.triggerEvent(wrapper, EntityOperation.RemoveShadowRoot);
+
+            const newWrapper = wrapper.cloneNode() as HTMLElement;
+            moveChildNodes(newWrapper, wrapper);
+            this.editor.replaceNode(wrapper, newWrapper);
+            entity.wrapper = newWrapper;
+        }
+
+        this.setIsEntityKnown(entity.wrapper, true /*isKnown*/);
+    }
+
+    private getExistingEntities(shadowEntityOnly?: boolean): Entity[] {
+        return this.editor
+            .queryElements(getEntitySelector())
+            .map(getEntityFromElement)
+            .filter(x => !!x && (!shadowEntityOnly || !!x.wrapper.shadowRoot));
+    }
+
+    private createShadowRoot(wrapper: HTMLElement, shadowContentContainer?: Node) {
+        if (wrapper.attachShadow) {
+            const shadowRoot = wrapper.attachShadow({
+                mode: 'open',
+                delegatesFocus: true,
+            });
+
+            wrapper.contentEditable = 'false';
+            this.triggerEvent(wrapper, EntityOperation.AddShadowRoot);
+            moveChildNodes(shadowRoot, shadowContentContainer);
+
+            return shadowRoot;
+        }
+    }
+
+    private cacheShadowEntities(cache: Record<string, HTMLElement>) {
+        this.getExistingEntities(true /*shadowEntityOnly*/).forEach(({ wrapper, id }) => {
+            cache[id] = wrapper;
+        });
+    }
+
+    private ensureUniqueId(type: string, id: string, knownIds: string[]) {
         const match = ENTITY_ID_REGEX.exec(id);
         const baseId = (match ? id.substr(0, id.length - match[0].length) : id) || type;
 
@@ -270,22 +403,45 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             }
         }
 
-        commitEntity(wrapper, type, isReadonly, newId);
-
-        this.triggerEvent(wrapper, EntityOperation.NewEntity);
+        return newId;
     }
 
-    private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: Event) {
-        const entity = element && getEntityFromElement(element);
-
-        if (entity) {
-            this.editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent,
-                entity,
-            });
+    private setIsEntityKnown(wrapper: HTMLElement, isKnown: boolean) {
+        const index = this.state.knownEntityElements.indexOf(wrapper);
+        if (isKnown && index < 0) {
+            this.state.knownEntityElements.push(wrapper);
+        } else if (!isKnown && index >= 0) {
+            this.state.knownEntityElements.splice(index, 1);
         }
     }
+
+    private isEntityKnown(wrapper: HTMLElement) {
+        return this.state.knownEntityElements.indexOf(wrapper) >= 0;
+    }
+
+    private workaroundShadowDOMIssueForChrome = () => {
+        const cache: Record<string, HTMLElement> = {};
+        this.cacheShadowEntities(cache);
+        this.editor.runAsync(() => {
+            Object.keys(cache).forEach(id => {
+                const entity = getEntityFromElement(cache[id]);
+                const newWrapper = this.editor.queryElements(
+                    getEntitySelector(entity.type, entity.id)
+                )[0];
+
+                if (newWrapper != entity.wrapper) {
+                    this.triggerEvent(entity.wrapper, EntityOperation.RemoveShadowRoot);
+                    this.setIsEntityKnown(entity.wrapper, false /*isKnown*/);
+
+                    if (newWrapper) {
+                        moveChildNodes(newWrapper, entity.wrapper);
+                        this.createShadowRoot(newWrapper, entity.wrapper.shadowRoot);
+                        this.setIsEntityKnown(newWrapper, true /*isKnown*/);
+                    }
+                }
+            });
+        });
+    };
 }
 
 /**
@@ -296,13 +452,13 @@ const workaroundSelectionIssueForIE = Browser.isIE
     ? (editor: IEditor) => {
           editor.runAsync(editor => {
               const workaroundButton = editor.getCustomData('ENTITY_IE_FOCUS_BUTTON', () => {
-                  const button = editor.getDocument().createElement('button');
-                  button.style.overflow = 'hidden';
-                  button.style.position = 'fixed';
-                  button.style.width = '0';
-                  button.style.height = '0';
-                  button.style.left = '0';
-                  button.style.top = '-1000px';
+                  const button = createElement(
+                      {
+                          tag: 'button',
+                          style: 'overflow:hidden;position:fixed;width:0;height:0;top:-1000px',
+                      },
+                      editor.getDocument()
+                  ) as HTMLElement;
                   button.onblur = () => {
                       button.style.display = 'none';
                   };
@@ -315,12 +471,7 @@ const workaroundSelectionIssueForIE = Browser.isIE
               });
 
               workaroundButton.style.display = '';
-              const range = editor.getDocument().createRange();
-              range.setStart(workaroundButton, 0);
-              try {
-                  window.getSelection().removeAllRanges();
-                  window.getSelection().addRange(range);
-              } catch {}
+              addRangeToSelection(createRange(workaroundButton, 0));
           });
       }
     : () => {};

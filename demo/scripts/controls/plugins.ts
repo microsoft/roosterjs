@@ -1,5 +1,6 @@
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
+import EntityHydratingPlugin from './editor/EntityHydratingPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import MainPaneBase from './MainPaneBase';
@@ -16,6 +17,7 @@ export default interface Plugins {
     eventView: EventViewPlugin;
     api: ApiPlaygroundPlugin;
     bridge: Bridge;
+    entityHydrating: EntityHydratingPlugin;
 }
 
 let plugins: Plugins = null;
@@ -30,6 +32,7 @@ export function getPlugins(): Plugins {
             eventView: new EventViewPlugin(),
             api: new ApiPlaygroundPlugin(),
             bridge: new Bridge(),
+            entityHydrating: new EntityHydratingPlugin(),
         };
     }
     return plugins;
@@ -44,6 +47,7 @@ export function getAllPluginArray(includeSidePanePlugins: boolean): EditorPlugin
         includeSidePanePlugins && allPlugins.eventView,
         includeSidePanePlugins && allPlugins.api,
         includeSidePanePlugins && allPlugins.snapshot,
+        allPlugins.entityHydrating,
         allPlugins.bridge,
     ];
 }
