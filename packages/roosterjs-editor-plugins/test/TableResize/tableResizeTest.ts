@@ -151,8 +151,8 @@ describe('Table Resizer/Inserter tests', () => {
     });
 
     afterEach(() => {
-        editor?.dispose();
-        plugin?.dispose();
+        editor.dispose();
+        plugin.dispose();
         TestHelper.removeElement(TEST_ID);
         document.body = document.createElement('body');
     });
@@ -473,7 +473,8 @@ describe('Table Resizer/Inserter tests', () => {
         runTableShapeTest(tableBeforeClick, tableAfterClick);
 
         editor.runAsync = callback => callback(editor);
-        jasmine.createSpy('addUndoSnapshot').and.callFake((callback: () => any) => callback());
+        spyOn(editor, 'addUndoSnapshot').and.callFake((event, callback) => {});
+
         const mouseMoveResize = new MouseEvent('mousemove', {
             clientX: mouseEnd.x,
             clientY: mouseEnd.y,
@@ -1036,7 +1037,7 @@ describe('Table Resizer/Inserter tests', () => {
         resizeColumnToLeftTooNarrowTest(2);
     });
 
-    fit('resizes the column to the right correctly with default table', () => {
+    it('resizes the column to the right correctly with default table', () => {
         resizeColumnToRightTest(0);
     });
 
