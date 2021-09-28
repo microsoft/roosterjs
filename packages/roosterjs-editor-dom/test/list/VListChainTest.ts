@@ -138,7 +138,7 @@ describe('VListChain.canAppendAtCursor', () => {
     });
 
     it('Current node is before list', () => {
-        runTest(`<div id="${CurrentNode}">test</div><ol><li>item1</li></ol>`, 1, true);
+        runTest(`<div id="${CurrentNode}">test</div><ol><li>item1</li></ol>`, 1, false);
         runTest(`<div id="${CurrentNode}">test</div><ol><li>item1</li></ol>`, 2, false);
         runTest(`<div id="${CurrentNode}">test</div><ol><li>item1</li></ol>`, 3, false);
     });
