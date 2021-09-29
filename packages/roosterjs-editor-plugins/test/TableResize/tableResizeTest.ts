@@ -1141,7 +1141,7 @@ describe('Table Resizer/Inserter tests', () => {
         resizeTAbleWiderTest(2);
     });
 
-    it('resizes the table to be narrower correctly with default table', () => {
+    xit('resizes the table to be narrower correctly with default table', () => {
         resizeTableNarrowerTest(0);
     });
 

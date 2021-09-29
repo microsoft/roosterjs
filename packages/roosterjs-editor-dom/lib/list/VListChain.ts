@@ -75,7 +75,7 @@ export default class VListChain {
      * @param startNumber The start number of the new list
      */
     canAppendAtCursor(startNumber: number): boolean {
-        return this.lastNumberBeforeCursor + 1 == startNumber;
+        return startNumber > 1 && this.lastNumberBeforeCursor + 1 == startNumber;
     }
 
     /**
