@@ -1,0 +1,21 @@
+name: Run Test on Chrome
+on: push
+jobs:
+    run-test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2.3.1
+              with:
+                  persist-credentials: false
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Install Chrome
+              uses: browser-actions/setup-chrome@latest
+
+            - name: Test with Chrome
+              uses: GabrielBB/xvfb-action@v1
+              with:
+                  run: npm run-script test:chrome
