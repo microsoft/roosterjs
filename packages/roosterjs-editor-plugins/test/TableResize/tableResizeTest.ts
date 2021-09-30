@@ -304,7 +304,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
+    xit('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
             HORIZONTAL_INSERTER,
