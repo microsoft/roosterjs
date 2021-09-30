@@ -33,6 +33,7 @@ function insertImageWithSrc(editor: IEditor, src: string) {
         const image = editor.getDocument().createElement('img');
         image.src = src;
         image.style.maxWidth = '100%';
+        image.setAttribute('insertedImage', 'true');
         editor.insertNode(image);
     }, ChangeSource.Format);
 }
