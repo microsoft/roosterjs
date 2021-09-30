@@ -600,7 +600,7 @@ describe('Table Resizer/Inserter tests', () => {
         }
     });
 
-    it('adds the horizontal resizer when mouse lands inside each cell', () => {
+    xit('adds the horizontal resizer when mouse lands inside each cell', () => {
         const tableRect = initialize(0);
         for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
             for (let j = 0; j < TEST_TABLE_HEIGHT; j++) {
