@@ -67,9 +67,12 @@ export const createPasteFragment: CreatePasteFragment = (
         }, event.htmlAttributes);
 
         clipboardData.htmlFirstLevelChildTags = [];
-        doc?.body.childNodes.forEach(node =>
-            clipboardData.htmlFirstLevelChildTags.push(getTagOfNode(node))
-        );
+        doc?.body.childNodes.forEach(node => {
+            const nodeTag = getTagOfNode(node);
+            if (nodeTag) {
+                clipboardData.htmlFirstLevelChildTags.push(nodeTag);
+            }
+        });
 
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
