@@ -17,12 +17,16 @@ jobs:
                   npm install
                   npm run-script build:ci
 
-            - name: Test with Chrome
+            - name: Install Chrome
               uses: browser-actions/setup-chrome@latest
+
+            - name: Test with Chrome
               run: npm run-script test:chrome
 
-            - name: Test with Firefox
+            - name: Install Firefox
               uses: browser-actions/setup-firefox@latest
+
+            - name: Test with Firefox
               run: npm run-script test:coverage
 
             - name: Deploy
