@@ -8,7 +8,7 @@ export const enum QueryScope {
     Body,
 
     /**
-     * Query elements on a given selction (intersect)
+     * Query elements on a given selection (intersect)
      * The result element can contain the selection, contain part of selection, or inside selection
      */
     OnSelection,

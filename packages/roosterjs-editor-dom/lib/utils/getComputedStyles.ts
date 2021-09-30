@@ -13,14 +13,15 @@ export default function getComputedStyles(
 ): string[] {
     let element = findClosestElementAncestor(node);
     let result: string[] = [];
-    styleNames = styleNames instanceof Array ? styleNames : [styleNames];
+    styleNames = Array.isArray(styleNames) ? styleNames : [styleNames];
     if (element) {
         let win = element.ownerDocument.defaultView || window;
         let styles = win.getComputedStyle(element);
 
         if (styles) {
             for (let style of styleNames) {
-                let value = (styles.getPropertyValue(style) || '').toLowerCase();
+                let value = styles.getPropertyValue(style) || '';
+                value = style != 'font-family' ? value.toLowerCase() : value;
                 value = style == 'font-size' ? px2Pt(value) : value;
                 result.push(value);
             }

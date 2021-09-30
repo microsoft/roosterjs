@@ -1,6 +1,5 @@
-import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
-import { matchLink } from 'roosterjs-editor-dom';
+import { ChangeSource, DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
+import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -48,13 +47,13 @@ function applyLinkPrefix(url: string): string {
  * If not specified and there wasn't a link, the link url will be used as display text.
  */
 export default function createLink(
-    editor: Editor,
+    editor: IEditor,
     link: string,
     altText?: string,
     displayText?: string
 ) {
     editor.focus();
-    let url = link ? link.trim() : '';
+    let url = (checkXss(link) || '').trim();
     if (url) {
         let linkData = matchLink(url);
         // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
@@ -100,7 +99,7 @@ export default function createLink(
     }
 }
 
-function getAnchorNodeAtCursor(editor: Editor): HTMLAnchorElement {
+function getAnchorNodeAtCursor(editor: IEditor): HTMLAnchorElement {
     return editor.queryElements('a[href]', QueryScope.OnSelection)[0] as HTMLAnchorElement;
 }
 
@@ -108,4 +107,15 @@ function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string)
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
     }
+}
+
+function checkXss(link: string): string {
+    const sanitizer = new HtmlSanitizer();
+    const a = document.createElement('a');
+
+    a.href = link || '';
+    sanitizer.sanitize(a);
+    // We use getAttribute because some browsers will try to make the href property a valid link.
+    // This has unintended side effects when the link lacks a protocol.
+    return a.getAttribute('href');
 }

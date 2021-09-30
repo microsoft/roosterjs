@@ -1,5 +1,4 @@
-import { ChangeSource, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { ChangeSource, IEditor, QueryScope } from 'roosterjs-editor-types';
 import { unwrap } from 'roosterjs-editor-dom';
 
 /**
@@ -8,7 +7,7 @@ import { unwrap } from 'roosterjs-editor-dom';
  * If only part of a link is selected, the whole link style will be removed.
  * @param editor The editor instance
  */
-export default function removeLink(editor: Editor) {
+export default function removeLink(editor: IEditor) {
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
         editor.queryElements('a[href]', QueryScope.OnSelection, unwrap);

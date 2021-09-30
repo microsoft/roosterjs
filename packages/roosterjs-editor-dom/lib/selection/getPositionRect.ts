@@ -1,9 +1,11 @@
+import createElement from '../utils/createElement';
 import createRange from './createRange';
+import normalizeRect from '../utils/normalizeRect';
 import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
 
 /**
  * Get bounding rect of this position
- * @param position The positioin to get rect from
+ * @param position The position to get rect from
  */
 export default function getPositionRect(position: NodePosition): Rect {
     if (!position) {
@@ -29,8 +31,10 @@ export default function getPositionRect(position: NodePosition): Rect {
 
     // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
     if (position.node.nodeType == NodeType.Text) {
-        let span = document.createElement('SPAN');
-        span.innerHTML = '\u200b';
+        const span = createElement(
+            { tag: 'span', children: ['\u200b'] },
+            position.node.ownerDocument
+        );
         range = createRange(position);
         range.insertNode(span);
         rect = span.getBoundingClientRect && normalizeRect(span.getBoundingClientRect());
@@ -50,18 +54,4 @@ export default function getPositionRect(position: NodePosition): Rect {
     }
 
     return null;
-}
-
-function normalizeRect(clientRect: ClientRect): Rect {
-    // A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p
-    // We validate that and only return a rect when the passed in ClientRect is valid
-    let { left, right, top, bottom } = clientRect || <ClientRect>{};
-    return left + right + top + bottom > 0
-        ? {
-              left: Math.round(left),
-              right: Math.round(right),
-              top: Math.round(top),
-              bottom: Math.round(bottom),
-          }
-        : null;
 }

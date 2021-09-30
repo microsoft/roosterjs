@@ -1,6 +1,5 @@
 import execCommand from '../utils/execCommand';
-import { DocumentCommand } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Toggle underline at selection
@@ -10,6 +9,6 @@ import { Editor } from 'roosterjs-editor-core';
  * If selection contains both underlined and normal text, the underline style will be added to the whole selected text
  * @param editor The editor instance
  */
-export default function toggleUnderline(editor: Editor) {
+export default function toggleUnderline(editor: IEditor) {
     execCommand(editor, DocumentCommand.Underline);
 }

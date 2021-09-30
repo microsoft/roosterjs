@@ -2,7 +2,7 @@ Welcome to RoosterJs API References!
 
 ## Content
 
-Rooster contains 9 packages.
+Rooster contains 6 packages.
 
 1. [roosterjs](modules/roosterjs.html):
    A facade of all Rooster code for those who want a quick start. Use the
@@ -27,15 +27,6 @@ Rooster contains 9 packages.
 
 6. [roosterjs-editor-types](modules/roosterjs_editor_types.html):
    Defines public interfaces and enumerations.
-
-7. [roosterjs-html-sanitizer](modules/roosterjs_html_sanitizer.html)
-   A common library to help sanitize HTML.
-
-8. [roosterjs-plugin-image-resize](modules/roosterjs_plugin_image_resize.html)
-   A plugin to help do inline image resize within the editor
-
-9. [roosterjs-plugin-picker](modules/roosterjs_plugin_picker.html)
-   A plugin to help build picker-like plugins
 
 ## See also
 

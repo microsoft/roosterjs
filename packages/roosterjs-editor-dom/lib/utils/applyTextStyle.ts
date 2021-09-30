@@ -1,11 +1,12 @@
 import getTagOfNode from './getTagOfNode';
 import Position from '../selection/Position';
+import splitTextNode from './splitTextNode';
 import wrap from './wrap';
 import { getNextLeafSibling } from './getLeafSibling';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from './splitParentNode';
 
-const STYLETAGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
+const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
 
 /**
  * Apply style using a styler function to the given container node in the given range
@@ -31,11 +32,15 @@ export default function applyTextStyle(
 
         if (formatNode.nodeType == NodeType.Text && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
             if (formatNode == to.node && !to.isAtEnd) {
-                formatNode = splitTextNode(formatNode, to.offset, true /*returnFirstPart*/);
+                formatNode = splitTextNode(<Text>formatNode, to.offset, true /*returnFirstPart*/);
             }
 
             if (from.offset > 0) {
-                formatNode = splitTextNode(formatNode, from.offset, false /*returnFirstPart*/);
+                formatNode = splitTextNode(
+                    <Text>formatNode,
+                    from.offset,
+                    false /*returnFirstPart*/
+                );
             }
 
             formatNodes.push(formatNode);
@@ -59,7 +64,7 @@ export default function applyTextStyle(
             // So that the inner style tag such as U, STRIKE can inherit the style we added
             while (
                 getTagOfNode(node) != 'SPAN' &&
-                STYLETAGS.indexOf(getTagOfNode(node.parentNode)) >= 0
+                STYLET_AGS.indexOf(getTagOfNode(node.parentNode)) >= 0
             ) {
                 callStylerWithInnerNode(node, styler);
                 node = splitBalancedNodeRange(node);
@@ -81,13 +86,4 @@ function callStylerWithInnerNode(
     if (node && node.nodeType == NodeType.Element) {
         styler(node as HTMLElement, true /*isInnerNode*/);
     }
-}
-
-function splitTextNode(textNode: Node, offset: number, returnFirstPart: boolean) {
-    let firstPart = textNode.nodeValue.substr(0, offset);
-    let secondPart = textNode.nodeValue.substr(offset);
-    let newNode = textNode.ownerDocument.createTextNode(returnFirstPart ? firstPart : secondPart);
-    textNode.nodeValue = returnFirstPart ? secondPart : firstPart;
-    textNode.parentNode.insertBefore(newNode, returnFirstPart ? textNode : textNode.nextSibling);
-    return newNode;
 }
