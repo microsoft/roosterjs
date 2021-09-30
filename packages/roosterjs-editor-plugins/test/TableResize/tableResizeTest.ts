@@ -249,7 +249,7 @@ describe('Table Resizer/Inserter tests', () => {
     }
 
     // inserter tests
-    it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
+    xit('removes the vertical inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
             VERTICAL_INSERTER,
@@ -260,7 +260,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
+    xit('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
             VERTICAL_INSERTER,
@@ -271,7 +271,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
+    xit('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
             HORIZONTAL_INSERTER,
@@ -282,7 +282,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('keeps the horizontal inserter when moving the cursor inside the safe zone', () => {
+    xit('keeps the horizontal inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
             HORIZONTAL_INSERTER,
@@ -315,7 +315,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
+    xit('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(0, true);
         const cellRect = getCellRect(0, 0);
 
@@ -328,7 +328,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell', () => {
+    xit('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(0, 0);
 
@@ -347,7 +347,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell', () => {
+    xit('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(0, 1);
 
@@ -367,7 +367,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('sets the horizontal inserter at the previous td for non-first cells if the Y coordinate of the cursor position is less than the half distance of the cell', () => {
+    xit('sets the horizontal inserter at the previous td for non-first cells if the Y coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(1, 0);
 
@@ -582,7 +582,7 @@ describe('Table Resizer/Inserter tests', () => {
 
     /************************** Resizier showing tests **************************/
 
-    it('adds the vertical resizer when mouse lands inside each cell', () => {
+    xit('adds the vertical resizer when mouse lands inside each cell', () => {
         const tableRect = initialize(0);
 
         for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
