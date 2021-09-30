@@ -27,7 +27,7 @@ export { default as getComputedStyles, getComputedStyle } from './utils/getCompu
 export {
     default as getPendableFormatState,
     PendableFormatCommandMap,
-    PendableFormatNames,
+    PendableFormatNamesa,
 } from './utils/getPendableFormatState';
 export { default as getTagOfNode } from './utils/getTagOfNode';
 export { default as isBlockElement } from './utils/isBlockElement';
