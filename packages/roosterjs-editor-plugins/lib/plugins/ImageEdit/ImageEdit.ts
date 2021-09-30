@@ -624,8 +624,10 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
  */
 function checkIfImageWasResized(image: HTMLImageElement): boolean {
     const { width, height, style } = image;
+    const isMaxWidthInitial =
+        style.maxWidth === '' || style.maxWidth === 'initial' || style.maxWidth === 'auto';
     if (
-        style.maxWidth !== '100%' &&
+        isMaxWidthInitial &&
         (isFixedNumberValue(style.height) ||
             isFixedNumberValue(style.width) ||
             isFixedNumberValue(width) ||
