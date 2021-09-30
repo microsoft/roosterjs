@@ -17,6 +17,9 @@ jobs:
                   npm install
                   npm run-script build:ci
 
+            - name: Test
+              run: npm run-script test:coverage
+
             - name: Deploy
               uses: JamesIves/github-pages-deploy-action@3.6.2
               with:
