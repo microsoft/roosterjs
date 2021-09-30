@@ -293,7 +293,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
+    xit('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
             HORIZONTAL_INSERTER,
