@@ -619,22 +619,17 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
 
 /**
  * Check if the current image was resized by the user
- * If the image was inserted, it will be treated as not resized
- * If the image was copied into the editor, it will be treated as resized
  * @param image the current image
  * @returns if the user resized the image, returns true, otherwise, returns false
  */
 function checkIfImageWasResized(image: HTMLImageElement): boolean {
     const { width, height, style } = image;
-    const isImageInserted = image.getAttribute('insertedImage') === 'true';
-    const isCopied = isImageInserted ? false : true;
     if (
-        (style.maxWidth === 'initial' &&
-            (isFixedNumberValue(style.height) ||
-                isFixedNumberValue(style.width) ||
-                isFixedNumberValue(width) ||
-                isFixedNumberValue(height))) ||
-        isCopied
+        style.maxWidth !== '100%' &&
+        (isFixedNumberValue(style.height) ||
+            isFixedNumberValue(style.width) ||
+            isFixedNumberValue(width) ||
+            isFixedNumberValue(height))
     ) {
         return true;
     } else {
