@@ -707,31 +707,31 @@ describe('Table Resizer/Inserter tests', () => {
         );
     }
 
-    it('resizes the first row correctly with default table', () => {
+    xit('resizes the first row correctly with default table', () => {
         resizeFirstRowTest(0);
     });
 
-    it('resizes the first row correctly with Excel table', () => {
+    xit('resizes the first row correctly with Excel table', () => {
         resizeFirstRowTest(1);
     });
 
-    it('resizes the first row correctly with Word table', () => {
+    xit('resizes the first row correctly with Word table', () => {
         resizeFirstRowTest(2);
     });
 
-    it('resizes the last row correctly with default table', () => {
+    xit('resizes the last row correctly with default table', () => {
         resizeLastRowTest(0);
     });
 
-    it('resizes the last row correctly with Excel table', () => {
+    xit('resizes the last row correctly with Excel table', () => {
         resizeLastRowTest(1);
     });
 
-    it('resizes the last row correctly with Word table', () => {
+    xit('resizes the last row correctly with Word table', () => {
         resizeLastRowTest(2);
     });
 
-    it('resizes the row correctly with merged cells', () => {
+    xit('resizes the row correctly with merged cells', () => {
         initialize(3);
         const delta = 35;
         const testTable = testTables[3];
@@ -907,19 +907,19 @@ describe('Table Resizer/Inserter tests', () => {
         );
     }
 
-    it('resizes the column to the left correctly with default table', () => {
+    xit('resizes the column to the left correctly with default table', () => {
         resizeColumnToLeftTest(0);
     });
 
-    it('resizes the column to the left correctly with Excel table', () => {
+    xit('resizes the column to the left correctly with Excel table', () => {
         resizeColumnToLeftTest(1);
     });
 
-    it('resizes the column to the left correctly with Word table', () => {
+    xit('resizes the column to the left correctly with Word table', () => {
         resizeColumnToLeftTest(2);
     });
 
-    it('resizes the column to the left correctly with merged cells', () => {
+    xit('resizes the column to the left correctly with merged cells', () => {
         initialize(3);
         const delta = 20;
         const testTable = testTables[3];
@@ -1024,39 +1024,39 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('does not resize the column to the left because it is too narrow with default table', () => {
+    xit('does not resize the column to the left because it is too narrow with default table', () => {
         resizeColumnToLeftTooNarrowTest(0);
     });
 
-    it('does not resize the column to the left because it is too narrow with Excel table', () => {
+    xit('does not resize the column to the left because it is too narrow with Excel table', () => {
         resizeColumnToLeftTooNarrowTest(1);
     });
 
-    it('does not resize the column to the left because it is too narrow with Word table', () => {
+    xit('does not resize the column to the left because it is too narrow with Word table', () => {
         resizeColumnToLeftTooNarrowTest(2);
     });
 
-    it('resizes the column to the right correctly with default table', () => {
+    xit('resizes the column to the right correctly with default table', () => {
         resizeColumnToRightTest(0);
     });
 
-    it('resizes the column to the right correctly with Excel table', () => {
+    xit('resizes the column to the right correctly with Excel table', () => {
         resizeColumnToRightTest(1);
     });
 
-    it('resizes the column to the right correctly with Word table', () => {
+    xit('resizes the column to the right correctly with Word table', () => {
         resizeColumnToRightTest(2);
     });
 
-    it('does not resize the column to the right because it is too narrow with default table', () => {
+    xit('does not resize the column to the right because it is too narrow with default table', () => {
         resizeColumnToRightTestTooNarrowTest(0);
     });
 
-    it('does not resize the column to the right because it is too narrow with Excel table', () => {
+    xit('does not resize the column to the right because it is too narrow with Excel table', () => {
         resizeColumnToRightTestTooNarrowTest(1);
     });
 
-    it('does not resize the column to the right because it is too narrow with Word table', () => {
+    xit('does not resize the column to the right because it is too narrow with Word table', () => {
         resizeColumnToRightTestTooNarrowTest(2);
     });
 
@@ -1145,35 +1145,35 @@ describe('Table Resizer/Inserter tests', () => {
         resizeTableNarrowerTest(0);
     });
 
-    it('resizes the table to be narrower correctly with Excel table', () => {
+    xit('resizes the table to be narrower correctly with Excel table', () => {
         resizeTableNarrowerTest(1);
     });
 
-    it('resizes the table to be narrower correctly with Word table', () => {
+    xit('resizes the table to be narrower correctly with Word table', () => {
         resizeTableNarrowerTest(2);
     });
 
-    it('resizes the table to be taller correctly with default table', () => {
+    xit('resizes the table to be taller correctly with default table', () => {
         resizeTableTallerTest(0);
     });
 
-    it('resizes the table to be taller correctly with Excel table', () => {
+    xit('resizes the table to be taller correctly with Excel table', () => {
         resizeTableTallerTest(1);
     });
 
-    it('resizes the table to be taller correctly with Word table', () => {
+    xit('resizes the table to be taller correctly with Word table', () => {
         resizeTableTallerTest(2);
     });
 
-    it('resizes the table to be narrower and taller correctly with default table', () => {
+    xit('resizes the table to be narrower and taller correctly with default table', () => {
         resizeTableNarrowerTallerTest(0);
     });
 
-    it('resizes the table to be narrower and taller correctly with Excel table', () => {
+    xit('resizes the table to be narrower and taller correctly with Excel table', () => {
         resizeTableNarrowerTallerTest(1);
     });
 
-    it('resizes the table to be narrower and taller correctly with Word table', () => {
+    xit('resizes the table to be narrower and taller correctly with Word table', () => {
         resizeTableNarrowerTallerTest(2);
     });
 
@@ -1181,7 +1181,7 @@ describe('Table Resizer/Inserter tests', () => {
         resizeTableWiderTallerTest(0);
     });
 
-    it('resizes the table to be wider and taller correctly with Excel table', () => {
+    xit('resizes the table to be wider and taller correctly with Excel table', () => {
         resizeTableWiderTallerTest(1);
     });
 
