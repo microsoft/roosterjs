@@ -1,12 +1,10 @@
-import { cacheGetElementAtCursor, Editor } from 'roosterjs-editor-core';
-import { getComputedStyles, getTagOfNode, Position } from 'roosterjs-editor-dom';
-import { getPendableFormatState } from 'roosterjs-editor-dom';
+import { getTagOfNode } from 'roosterjs-editor-dom';
 import {
     ElementBasedFormatState,
     FormatState,
+    IEditor,
     PluginEvent,
     QueryScope,
-    StyleBasedFormatState,
 } from 'roosterjs-editor-types';
 
 /**
@@ -18,11 +16,13 @@ import {
  * @returns An ElementBasedFormatState object
  */
 export function getElementBasedFormatState(
-    editor: Editor,
+    editor: IEditor,
     event?: PluginEvent
 ): ElementBasedFormatState {
-    let listTag = getTagOfNode(cacheGetElementAtCursor(editor, event, 'OL,UL'));
-    let headerTag = getTagOfNode(cacheGetElementAtCursor(editor, event, 'H1,H2,H3,H4,H5,H6'));
+    let listTag = getTagOfNode(editor.getElementAtCursor('OL,UL', null /*startFrom*/, event));
+    let headerTag = getTagOfNode(
+        editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', null /*startFrom*/, event)
+    );
 
     return {
         isBullet: listTag == 'UL',
@@ -36,23 +36,6 @@ export function getElementBasedFormatState(
 }
 
 /**
- * Get style based Format State at cursor
- * @param editor The editor instance
- * @returns A StyleBasedFormatState object
- */
-export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState {
-    let range = editor.getSelectionRange();
-    let node = range && Position.getStart(range).normalize().node;
-    let styles = node ? getComputedStyles(node) : [];
-    return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        textColor: styles[2],
-        backgroundColor: styles[3],
-    };
-}
-
-/**
  * Get format state at cursor
  * A format state is a collection of all format related states, e.g.,
  * bold, italic, underline, font name, font size, etc.
@@ -62,12 +45,11 @@ export function getStyleBasedFormatState(editor: Editor): StyleBasedFormatState 
  * it will query the node within selection to get the info
  * @returns The format state at cursor
  */
-export default function getFormatState(editor: Editor, event?: PluginEvent): FormatState {
+export default function getFormatState(editor: IEditor, event?: PluginEvent): FormatState {
     return {
-        ...getPendableFormatState(editor.getDocument()),
+        ...editor.getPendableFormatState(false /* forceGetStateFromDom */),
         ...getElementBasedFormatState(editor, event),
-        ...getStyleBasedFormatState(editor),
-        canUndo: editor.canUndo(),
-        canRedo: editor.canRedo(),
+        ...editor.getStyleBasedFormatState(),
+        ...editor.getUndoState(),
     };
 }

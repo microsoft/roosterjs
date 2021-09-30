@@ -1,3 +1,5 @@
+import ModeIndependentColor from './ModeIndependentColor';
+
 /**
  * Format states that can have pending state.
  *
@@ -92,9 +94,34 @@ export interface StyleBasedFormatState {
     backgroundColor?: string;
 
     /**
+     * Mode independent background color for dark mode
+     */
+    backgroundColors?: ModeIndependentColor;
+
+    /**
      * Text color
      */
     textColor?: string;
+
+    /**
+     * Mode independent background color for dark mode
+     */
+    textColors?: ModeIndependentColor;
+}
+
+/**
+ * Specify if editor can undo/redo an editing operation
+ */
+export interface EditorUndoState {
+    /**
+     * Whether the content can be undone
+     */
+    canUndo?: boolean;
+
+    /**
+     * Whether the content ca nbe redone
+     */
+    canRedo?: boolean;
 }
 
 /**
@@ -103,16 +130,5 @@ export interface StyleBasedFormatState {
 export default interface FormatState
     extends PendableFormatState,
         ElementBasedFormatState,
-        StyleBasedFormatState {
-    /**
-     * @deprecated Use editor.canUndo() instead
-     * Whether the content can be undone
-     */
-    canUndo?: boolean;
-
-    /**
-     * @deprecated Use editor.canRedo() instead
-     * Whether the content ca nbe redone
-     */
-    canRedo?: boolean;
-}
+        StyleBasedFormatState,
+        EditorUndoState {}

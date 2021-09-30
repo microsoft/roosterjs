@@ -1,6 +1,23 @@
-import processList from '../utils/processList';
-import { ChangeSource, DocumentCommand, Indentation, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
+import blockFormat from '../utils/blockFormat';
+import {
+    BlockElement,
+    IEditor,
+    Indentation,
+    KnownCreateElementDataIndex,
+    RegionBase,
+} from 'roosterjs-editor-types';
+import {
+    collapseNodesInRegion,
+    createVListFromRegion,
+    findClosestElementAncestor,
+    getSelectedBlockElementsInRegion,
+    getTagOfNode,
+    isNodeInRegion,
+    splitBalancedNodeRange,
+    toArray,
+    unwrap,
+    wrap,
+} from 'roosterjs-editor-dom';
 
 /**
  * Set indentation at selection
@@ -10,29 +27,54 @@ import { Editor } from 'roosterjs-editor-core';
  * @param indentation The indentation option:
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
  */
-export default function setIndentation(editor: Editor, indentation: Indentation) {
-    let command: DocumentCommand.Indent | DocumentCommand.Outdent =
-        indentation == Indentation.Increase ? DocumentCommand.Indent : DocumentCommand.Outdent;
-    editor.addUndoSnapshot(() => {
-        editor.focus();
-        let listNode = editor.getElementAtCursor('OL,UL');
-        let newNode: Node;
+export default function setIndentation(editor: IEditor, indentation: Indentation) {
+    const handler = indentation == Indentation.Increase ? indent : outdent;
 
-        if (listNode) {
-            // There is already list node, setIndentation() will increase/decrease the list level,
-            // so we need to process the list when change indentation
-            newNode = processList(editor, command);
-        } else {
-            // No existing list node, browser will create <Blockquote> node for indentation.
-            // We need to set top and bottom margin to 0 to avoid unnecessary spaces
-            editor.getDocument().execCommand(command, false, null);
-            editor.queryElements('BLOCKQUOTE', QueryScope.OnSelection, node => {
-                newNode = newNode || node;
-                node.style.marginTop = '0px';
-                node.style.marginBottom = '0px';
-            });
+    blockFormat(editor, (region, start, end) => {
+        const blocks = getSelectedBlockElementsInRegion(region, true /*createBlockIfEmpty*/);
+        const blockGroups: BlockElement[][] = [[]];
+
+        for (let i = 0; i < blocks.length; i++) {
+            const startNode = blocks[i].getStartNode();
+            const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
+
+            if (vList) {
+                blockGroups.push([]);
+                while (blocks[i + 1] && vList.contains(blocks[i + 1].getStartNode())) {
+                    i++;
+                }
+                vList.setIndentation(start, end, indentation);
+                vList.writeBack();
+            } else {
+                blockGroups[blockGroups.length - 1].push(blocks[i]);
+            }
         }
 
-        return newNode;
-    }, ChangeSource.Format);
+        blockGroups.forEach(group => handler(region, group));
+    });
+}
+
+function indent(region: RegionBase, blocks: BlockElement[]) {
+    const nodes = collapseNodesInRegion(region, blocks);
+    wrap(nodes, KnownCreateElementDataIndex.BlockquoteWrapper);
+}
+
+function outdent(region: RegionBase, blocks: BlockElement[]) {
+    blocks.forEach(blockElement => {
+        let node = blockElement.collapseToSingleElement();
+        const quote = findClosestElementAncestor(node, region.rootNode, 'blockquote');
+        if (quote) {
+            if (node == quote) {
+                node = wrap(toArray(node.childNodes));
+            }
+
+            while (isNodeInRegion(region, node) && getTagOfNode(node) != 'BLOCKQUOTE') {
+                node = splitBalancedNodeRange(node);
+            }
+
+            if (isNodeInRegion(region, node)) {
+                unwrap(node);
+            }
+        }
+    });
 }

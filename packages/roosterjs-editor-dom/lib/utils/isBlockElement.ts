@@ -10,7 +10,7 @@ const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
  * @param node The node to check
  * @returns True if the node is a block element, otherwise false
  */
-export default function isBlockElement(node: Node): boolean {
+export default function isBlockElement(node: Node): node is HTMLElement {
     let tag = getTagOfNode(node);
     return !!(
         tag &&

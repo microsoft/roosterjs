@@ -1,24 +1,8 @@
-import { TableFormat, TableOperation } from 'roosterjs-editor-types';
-
-/**
- * Represent a virtual cell of a virtual table
- */
-export interface VCell {
-    /**
-     * The table cell object. The value will be null if this is an expanded virtual cell
-     */
-    td?: HTMLTableCellElement;
-
-    /**
-     * Whether this cell is spanned from left
-     */
-    spanLeft?: boolean;
-
-    /**
-     * Whether this cell is spanned from above
-     */
-    spanAbove?: boolean;
-}
+import moveChildNodes from '../utils/moveChildNodes';
+import normalizeRect from '../utils/normalizeRect';
+import safeInstanceOf from '../utils/safeInstanceOf';
+import toArray from '../utils/toArray';
+import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -50,11 +34,11 @@ export default class VTable {
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      */
-    constructor(node: HTMLTableElement | HTMLTableCellElement) {
-        this.table = node instanceof HTMLTableElement ? node : getTableFromTd(node);
+    constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
+        this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
-            let currentTd = node instanceof HTMLTableElement ? null : node;
-            let trs = <HTMLTableRowElement[]>[].slice.call(this.table.rows);
+            let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
+            let trs = toArray(this.table.rows);
             this.cells = trs.map(row => []);
             trs.forEach((tr, rowIndex) => {
                 this.trs[rowIndex % 2] = tr;
@@ -70,15 +54,23 @@ export default class VTable {
 
                     for (let colSpan = 0; colSpan < td.colSpan; colSpan++, targetCol++) {
                         for (let rowSpan = 0; rowSpan < td.rowSpan; rowSpan++) {
+                            const hasTd: boolean = colSpan + rowSpan == 0;
+                            const rect = td.getBoundingClientRect();
                             this.cells[rowIndex + rowSpan][targetCol] = {
-                                td: colSpan + rowSpan == 0 ? td : null,
+                                td: hasTd ? td : null,
                                 spanLeft: colSpan > 0,
                                 spanAbove: rowSpan > 0,
+                                width: hasTd ? rect.width : undefined,
+                                height: hasTd ? rect.height : undefined,
                             };
                         }
                     }
                 }
             });
+
+            if (normalizeSize) {
+                this.normalizeSize();
+            }
         }
     }
 
@@ -87,13 +79,13 @@ export default class VTable {
      */
     writeBack() {
         if (this.cells) {
-            moveChildren(this.table);
+            moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
                 let tr = cloneNode(this.trs[r % 2] || this.trs[0]);
                 this.table.appendChild(tr);
                 row.forEach((cell, c) => {
                     if (cell.td) {
-                        this.recalcSpans(r, c);
+                        this.recalculateSpans(r, c);
                         tr.appendChild(cell.td);
                     }
                 });
@@ -139,6 +131,7 @@ export default class VTable {
 
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
+        let { style } = currentCell.td;
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -223,7 +216,11 @@ export default class VTable {
                         let aboveCell = rowIndex < this.row ? cell : currentCell;
                         let belowCell = rowIndex < this.row ? currentCell : cell;
                         if (aboveCell.td.colSpan == belowCell.td.colSpan) {
-                            moveChildren(belowCell.td, aboveCell.td);
+                            moveChildNodes(
+                                aboveCell.td,
+                                belowCell.td,
+                                true /*keepExistingChildren*/
+                            );
                             belowCell.td = null;
                             belowCell.spanAbove = true;
                         }
@@ -245,7 +242,11 @@ export default class VTable {
                         let leftCell = colIndex < this.col ? cell : currentCell;
                         let rightCell = colIndex < this.col ? currentCell : cell;
                         if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
-                            moveChildren(rightCell.td, leftCell.td);
+                            moveChildNodes(
+                                leftCell.td,
+                                rightCell.td,
+                                true /*keepExistingChildren*/
+                            );
                             rightCell.td = null;
                             rightCell.spanLeft = true;
                         }
@@ -286,6 +287,34 @@ export default class VTable {
                     });
                 }
                 break;
+
+            case TableOperation.AlignCenter:
+                this.table.setAttribute('align', 'center');
+                break;
+            case TableOperation.AlignLeft:
+                this.table.setAttribute('align', 'left');
+                break;
+            case TableOperation.AlignRight:
+                this.table.setAttribute('align', 'right');
+                break;
+            case TableOperation.AlignCellCenter:
+                style.textAlign = 'center';
+                break;
+            case TableOperation.AlignCellLeft:
+                style.textAlign = 'left';
+                break;
+            case TableOperation.AlignCellRight:
+                style.textAlign = 'right';
+                break;
+            case TableOperation.AlignCellTop:
+                style.verticalAlign = 'top';
+                break;
+            case TableOperation.AlignCellMiddle:
+                style.verticalAlign = 'middle';
+                break;
+            case TableOperation.AlignCellBottom:
+                style.verticalAlign = 'bottom';
+                break;
         }
     }
 
@@ -295,6 +324,59 @@ export default class VTable {
      */
     forEachCellOfCurrentColumn(callback: (cell: VCell, row: VCell[], i: number) => any) {
         this.forEachCellOfColumn(this.col, callback);
+    }
+
+    /**
+     * Loop each table cell and get all the cells that share the same border from one side
+     * The result is an array of table cell elements
+     * @param borderPos The position of the border
+     * @param getLeftCells Get left-hand-side or right-hand-side cells of the border
+     *
+     * Example, consider having a 3 by 4 table as below with merged and split cells
+     *
+     *     | 1 | 4 | 7 | 8 |
+     *     |   5   |   9   |
+     *     |   3   |   10  |
+     *
+     *  input => borderPos: the 3rd border, getLeftCells: true
+     *  output => [4, 5, 3]
+     *
+     *  input => borderPos: the 3rd border, getLeftCells: false
+     *  output => [7, 9, 10]
+     *
+     *  input => borderPos: the 2nd border, getLeftCells: true
+     *  output => [1]
+     *
+     *  input => borderPos: the 2nd border, getLeftCells: false
+     *  output => [4]
+     */
+    getCellsWithBorder(borderPos: number, getLeftCells: boolean): HTMLTableCellElement[] {
+        const cells: HTMLTableCellElement[] = [];
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let j = 0; j < this.cells[i].length; j++) {
+                const cell = this.getCell(i, j);
+                if (cell.td) {
+                    const cellRect = normalizeRect(cell.td.getBoundingClientRect());
+                    let found: boolean = false;
+                    if (getLeftCells) {
+                        if (cellRect.right == borderPos) {
+                            found = true;
+                            cells.push(cell.td);
+                        } else if (found) {
+                            break;
+                        }
+                    } else {
+                        if (cellRect.left == borderPos) {
+                            found = true;
+                            cells.push(cell.td);
+                        } else if (found) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return cells;
     }
 
     /**
@@ -325,17 +407,19 @@ export default class VTable {
     private getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
-            col = Math.min(this.cells[row].length - 1, col);
-            while (row >= 0 && col >= 0) {
-                let cell = this.getCell(row, col);
-                if (cell.td) {
-                    return cell.td;
-                } else if (cell.spanLeft) {
-                    col--;
-                } else if (cell.spanAbove) {
-                    row--;
-                } else {
-                    break;
+            col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
+            if (!isNaN(row) && !isNaN(col)) {
+                while (row >= 0 && col >= 0) {
+                    let cell = this.getCell(row, col);
+                    if (cell.td) {
+                        return cell.td;
+                    } else if (cell.spanLeft) {
+                        col--;
+                    } else if (cell.spanAbove) {
+                        row--;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
@@ -357,7 +441,7 @@ export default class VTable {
         }
     }
 
-    private recalcSpans(row: number, col: number) {
+    private recalculateSpans(row: number, col: number) {
         let td = this.getCell(row, col).td;
         if (td) {
             td.colSpan = this.countSpanLeft(row, col);
@@ -394,6 +478,56 @@ export default class VTable {
         }
         return result;
     }
+
+    private normalizeEmptyTableCells() {
+        for (let i = 0, row; (row = this.table.rows[i]); i++) {
+            for (let j = 0, cell; (cell = row.cells[j]); j++) {
+                if (cell) {
+                    if (!cell.innerHTML || !cell.innerHTML.trim()) {
+                        cell.appendChild(document.createElement('br'));
+                    }
+                }
+            }
+        }
+    }
+
+    /* normalize width/height for each cell in the table */
+    public normalizeTableCellSize() {
+        // remove width/height for each row
+        for (let i = 0, row; (row = this.table.rows[i]); i++) {
+            row.removeAttribute('width');
+            row.style.width = null;
+            row.removeAttribute('height');
+            row.style.height = null;
+        }
+
+        // set width/height for each cell
+        for (let i = 0; i < this.cells.length; i++) {
+            for (let j = 0; j < this.cells[i].length; j++) {
+                const cell = this.cells[i][j];
+                if (cell) {
+                    setHTMLElementSizeInPx(cell.td, cell.width, cell.height);
+                }
+            }
+        }
+    }
+
+    private normalizeSize() {
+        this.normalizeEmptyTableCells();
+        this.normalizeTableCellSize();
+        setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
+    }
+}
+
+function setHTMLElementSizeInPx(element: HTMLElement, newWidth?: number, newHeight?: number) {
+    if (!!element) {
+        element.removeAttribute('width');
+        element.removeAttribute('height');
+        element.style.boxSizing = 'border-box';
+        const rect = element.getBoundingClientRect();
+        element.style.width = `${newWidth !== undefined ? newWidth : rect.width}px`;
+        element.style.height = `${newHeight !== undefined ? newHeight : rect.height}px`;
+    }
 }
 
 function getTableFromTd(td: HTMLTableCellElement) {
@@ -424,26 +558,11 @@ function cloneCell(cell: VCell): VCell {
  */
 function cloneNode<T extends Node>(node: T): T {
     let newNode = node ? <T>node.cloneNode(false /*deep*/) : null;
-    if (newNode && newNode instanceof HTMLTableCellElement) {
+    if (safeInstanceOf(newNode, 'HTMLTableCellElement')) {
         newNode.removeAttribute('id');
         if (!newNode.firstChild) {
             newNode.appendChild(node.ownerDocument.createElement('br'));
         }
     }
     return newNode;
-}
-
-/**
- * Move all children from one node to another
- * @param fromNode The source node to move children from
- * @param toNode Target node. If not passed, children nodes of source node will be removed
- */
-function moveChildren(fromNode: Node, toNode?: Node) {
-    while (fromNode.firstChild) {
-        if (toNode) {
-            toNode.appendChild(fromNode.firstChild);
-        } else {
-            fromNode.removeChild(fromNode.firstChild);
-        }
-    }
 }

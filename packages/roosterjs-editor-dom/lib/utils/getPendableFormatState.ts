@@ -48,11 +48,8 @@ export const PendableFormatCommandMap: { [key in PendableFormatNames]: DocumentC
 export default function getPendableFormatState(document: Document): PendableFormatState {
     let keys = Object.keys(PendableFormatCommandMap) as PendableFormatNames[];
 
-    return keys.reduce(
-        (state, key) => {
-            state[key] = document.queryCommandState(PendableFormatCommandMap[key]);
-            return state;
-        },
-        <PendableFormatState>{}
-    );
+    return keys.reduce((state, key) => {
+        state[key] = document.queryCommandState(PendableFormatCommandMap[key]);
+        return state;
+    }, <PendableFormatState>{});
 }

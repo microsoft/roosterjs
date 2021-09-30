@@ -13,7 +13,7 @@ export default interface BrowserInfo {
     readonly isWin?: boolean;
 
     /**
-     * Whether current browser is using webkit kernal
+     * Whether current browser is using webkit kernel
      */
     readonly isWebKit?: boolean;
 
@@ -38,7 +38,7 @@ export default interface BrowserInfo {
     readonly isChrome?: boolean;
 
     /**
-     * Whether current browser is Firfox
+     * Whether current browser is Firefox
      */
     readonly isFirefox?: boolean;
 

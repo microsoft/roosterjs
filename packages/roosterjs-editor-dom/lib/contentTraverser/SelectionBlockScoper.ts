@@ -3,6 +3,7 @@ import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 import NodeBlockElement from '../blockElements/NodeBlockElement';
 import Position from '../selection/Position';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import TraversingScoper from './TraversingScoper';
 import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
@@ -12,6 +13,7 @@ import {
 } from '../inlineElements/getFirstLastInlineElement';
 
 /**
+ * @internal
  * This provides traversing content in a selection start block
  * This is commonly used for those cursor context sensitive plugin,
  * they want to know text being typed at cursor
@@ -32,7 +34,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
         position: NodePosition | Range,
         private startFrom: ContentPosition
     ) {
-        position = position instanceof Range ? Position.getStart(position) : position;
+        position = safeInstanceOf(position, 'Range') ? Position.getStart(position) : position;
         this.position = position.normalize();
         this.block = getBlockElementAtNode(this.rootNode, this.position.node);
     }
@@ -47,14 +49,15 @@ export default class SelectionBlockScoper implements TraversingScoper {
     /**
      * Get the start inline element
      * The start inline refers to inline before the selection start
-     *  The reason why we choose the one before rather after is, when cursor is at the end of a paragragh,
-     * the one after likely will point to inline in next paragragh which may be null if the cursor is at bottom of editor
+     *  The reason why we choose the one before rather after is, when cursor is at the end of a paragraph,
+     * the one after likely will point to inline in next paragraph which may be null if the cursor is at bottom of editor
      */
     public getStartInlineElement(): InlineElement {
         if (this.block) {
             switch (this.startFrom) {
                 case ContentPosition.Begin:
                 case ContentPosition.End:
+                case ContentPosition.DomEnd:
                     return getFirstLastInlineElementFromBlockElement(
                         this.block,
                         this.startFrom == ContentPosition.Begin

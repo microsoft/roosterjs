@@ -1,6 +1,11 @@
 import ContentTraverser from './ContentTraverser';
 import createRange from '../selection/createRange';
-import { InlineElement, NodePosition } from 'roosterjs-editor-types';
+import {
+    IContentTraverser,
+    InlineElement,
+    IPositionContentSearcher,
+    NodePosition,
+} from 'roosterjs-editor-types';
 
 // White space matching regex. It matches following chars:
 // \s: white space
@@ -12,7 +17,7 @@ const WHITESPACE_REGEX = /[\s\u00A0\u200B\u3000]+([^\s\u00A0\u200B\u3000]*)$/i;
 /**
  * The class that helps search content around a position
  */
-export default class PositionContentSearcher {
+export default class PositionContentSearcher implements IPositionContentSearcher {
     // The cached text before position that has been read so far
     private text = '';
 
@@ -26,7 +31,7 @@ export default class PositionContentSearcher {
     private inlineAfter: InlineElement;
 
     // The content traverser used to traverse backwards
-    private traverser: ContentTraverser;
+    private traverser: IContentTraverser;
 
     // Backward parsing has completed
     private traversingComplete: boolean;
@@ -88,7 +93,7 @@ export default class PositionContentSearcher {
      * Get X number of chars before position
      * The actual returned chars may be less than what is requested.
      * @param length The length of string user want to get, the string always ends at the position,
-     * so this length determins the start position of the string
+     * so this length determines the start position of the string
      * @returns The actual string we get as a sub string, or the whole string before position when
      * there is not enough chars in the string
      */
@@ -163,7 +168,7 @@ export default class PositionContentSearcher {
 
     /**
      * Get first non textual inline element before position
-     * @returns First non textutal inline element before position or null if no such element exists
+     * @returns First non textual inline element before position or null if no such element exists
      */
     public getNearestNonTextInlineElement(): InlineElement {
         if (!this.nearestNonTextInlineElement) {

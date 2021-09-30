@@ -1,6 +1,5 @@
-import { ChangeSource, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
-import { findClosestElementAncestor } from 'roosterjs-editor-dom';
+import { ChangeSource, DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
+import { HtmlSanitizer, moveChildNodes } from 'roosterjs-editor-dom';
 
 /**
  * Toggle header at selection
@@ -9,7 +8,7 @@ import { findClosestElementAncestor } from 'roosterjs-editor-dom';
  * the HTML header element &lt;H1&gt; to &lt;H6&gt;, 0 means no header
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
-export default function toggleHeader(editor: Editor, level: number) {
+export default function toggleHeader(editor: IEditor, level: number) {
     level = Math.min(Math.max(Math.round(level), 0), 6);
 
     editor.addUndoSnapshot(() => {
@@ -22,22 +21,23 @@ export default function toggleHeader(editor: Editor, level: number) {
                 wrapped = true;
             }
 
-            let div = editor.getDocument().createElement('div');
-            while (header.firstChild) {
-                div.appendChild(header.firstChild);
-            }
+            const div = editor.getDocument().createElement('div');
+            moveChildNodes(div, header);
             editor.replaceNode(header, div);
         });
 
         if (level > 0) {
             let traverser = editor.getSelectionTraverser();
-            let inlineElement = traverser ? traverser.currentInlineElement : null;
-            while (inlineElement) {
-                let element = findClosestElementAncestor(inlineElement.getContainerNode());
-                if (element) {
-                    element.style.fontSize = '';
-                }
-                inlineElement = traverser.getNextInlineElement();
+            let blockElement = traverser ? traverser.currentBlockElement : null;
+            let sanitizer = new HtmlSanitizer({
+                cssStyleCallbacks: {
+                    'font-size': () => false,
+                },
+            });
+            while (blockElement) {
+                let element = blockElement.collapseToSingleElement();
+                sanitizer.sanitize(element);
+                blockElement = traverser.getNextBlockElement();
             }
             editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
         }

@@ -1,14 +1,8 @@
-import { ChangeSource, DocumentCommand, PluginEventType } from 'roosterjs-editor-types';
-import { Editor } from 'roosterjs-editor-core';
-import {
-    getPendableFormatState,
-    PendableFormatCommandMap,
-    PendableFormatNames,
-} from 'roosterjs-editor-dom';
-
-let pendableFormatCommands: string[] = null;
+import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
 
 /**
+ * @internal
  * Execute a document command
  * @param editor The editor instance
  * @param command The command to execute
@@ -17,31 +11,27 @@ let pendableFormatCommands: string[] = null;
  * @param doWorkaroundForList Optional, set to true to do workaround for list in order to keep current format.
  * Default value is false.
  */
-export default function execCommand(editor: Editor, command: DocumentCommand) {
+export default function execCommand(editor: IEditor, command: DocumentCommand) {
     editor.focus();
+
     let formatter = () => editor.getDocument().execCommand(command, false, null);
 
     let range = editor.getSelectionRange();
     if (range && range.collapsed) {
         editor.addUndoSnapshot();
+        const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
         formatter();
+        const formatName = Object.keys(PendableFormatCommandMap).filter(
+            (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
+        )[0] as PendableFormatNames;
 
-        if (isPendableFormatCommand(command)) {
-            // Trigger PendingFormatStateChanged event since we changed pending format state
+        if (formatName) {
+            formatState[formatName] = !formatState[formatName];
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
-                formatState: getPendableFormatState(editor.getDocument()),
+                formatState: formatState,
             });
         }
     } else {
         editor.addUndoSnapshot(formatter, ChangeSource.Format);
     }
-}
-
-function isPendableFormatCommand(command: DocumentCommand): boolean {
-    if (!pendableFormatCommands) {
-        pendableFormatCommands = Object.keys(PendableFormatCommandMap).map(
-            key => PendableFormatCommandMap[key as PendableFormatNames]
-        );
-    }
-    return pendableFormatCommands.indexOf(command) >= 0;
 }

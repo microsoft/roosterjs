@@ -2,19 +2,16 @@ language: node_js
 sudo: required
 addons:
     chrome: stable
+    firefox: latest
 node_js:
     - 10
 before_install:
     - yarn
-    - cd publish/samplesite/instrumentation-tests && yarn && cd ../../..
 install:
     - npm run build:ci
 script:
-    - xvfb-run npm run test
-    # puppeteer-firefox does not run in travis because it depends on a
-    # libstdc++6  that is not available in travis.
-    # See https://github.com/GoogleChrome/puppeteer/pull/3657
-    - xvfb-run npm run instrumentation:chrome
+    - xvfb-run npm run test:coverage
+    - xvfb-run npm run test:chrome
 cache:
     yarn: true
 deploy:
@@ -25,10 +22,11 @@ deploy:
       keep-history: true
       on:
           branch: master
-      local-dir: ./dist/roosterjs
+      local-dir: ./dist/deploy
     # Auto publish if version is changed
     - provider: script
       script: node tools/build.js publish --token $NPM_TOKEN
       skip-cleanup: true
       on:
-          branch: master
+          branch:
+              - master

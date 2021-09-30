@@ -1,17 +1,18 @@
 import collapseNodes from '../utils/collapseNodes';
 import contains from '../utils/contains';
+import createRange from '../selection/createRange';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import isNodeAfter from '../utils/isNodeAfter';
 import wrap from '../utils/wrap';
 import { BlockElement } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
-import createRange from '../selection/createRange';
 
 const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 
 /**
- * This reprents a block that is identified by a start and end node
+ * @internal
+ * This represents a block that is identified by a start and end node
  * This is for cases like &lt;root&gt;Hello&lt;BR&gt;World&lt;/root&gt;
  * in that case, Hello&lt;BR&gt; is a block, World is another block
  * Such block cannot be represented by a NodeBlockElement since they don't chained up
@@ -19,7 +20,7 @@ const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
  * This start and end must be in same sibling level and have same parent in DOM tree
  */
 export default class StartEndBlockElement implements BlockElement {
-    constructor(private rootNode: Node, private startNode: Node, private endNode: Node) { }
+    constructor(private rootNode: Node, private startNode: Node, private endNode: Node) {}
 
     static getBlockContext(node: Node): HTMLElement {
         while (node && !isBlockElement(node)) {
@@ -100,6 +101,7 @@ export default class StartEndBlockElement implements BlockElement {
      * Get the text content of this block element
      */
     public getTextContent(): string {
-        return createRange(this.getStartNode(), this.getEndNode()).toString();
+        const range = createRange(this.getStartNode(), this.getEndNode());
+        return range ? range.toString() : '';
     }
 }

@@ -3,6 +3,7 @@ import { getFirstLeafNode, getLastLeafNode } from '../utils/getLeafNode';
 import { InlineElement } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Get the first inline element inside the given node
  */
 export function getFirstInlineElement(rootNode: Node): InlineElement {
@@ -13,6 +14,7 @@ export function getFirstInlineElement(rootNode: Node): InlineElement {
 }
 
 /**
+ * @internal
  * Get the last inline element inside the given node
  */
 export function getLastInlineElement(rootNode: Node): InlineElement {

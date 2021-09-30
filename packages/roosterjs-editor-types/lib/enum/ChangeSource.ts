@@ -42,4 +42,24 @@ export const enum ChangeSource {
      * Content changed by drag & drop operation
      */
     Drop = 'Drop',
+
+    /**
+     * Insert a new entity into editor
+     */
+    InsertEntity = 'InsertEntity',
+
+    /**
+     * Editor is switched to dark mode, content color is changed
+     */
+    SwitchToDarkMode = 'SwitchToDarkMode',
+
+    /**
+     * Editor is switched to light mode, content color is changed
+     */
+    SwitchToLightMode = 'SwitchToLightMode',
+
+    /**
+     * List chain reorganized numbers of lists
+     */
+    ListChain = 'ListChain',
 }

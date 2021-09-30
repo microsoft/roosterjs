@@ -16,6 +16,7 @@ var nodeModulesPath = path.join(rootPath, 'node_modules');
 var typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 var distPath = path.join(rootPath, 'dist');
 var roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
+var deployPath = path.join(distPath, 'deploy');
 
 // Packages
 var packages = collectPackages(packagesPath);
@@ -29,7 +30,6 @@ var token = null;
 var commands = [
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
-    'copysample', // Copy sample code to target folder
     'dts', // Generate type definitioin files (.d.ts)
     'tslint', // Run tslint to check code style
     'normalize', // Normalize package.json files
@@ -41,6 +41,9 @@ var commands = [
     'publish', // Publish roosterjs packages to npm
     'builddoc', // Build documents
 ];
+
+var VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
+var NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
 
 function readPackageJson(package, readFromSourceFolder) {
     var packageJsonFilePath = path.join(
@@ -105,32 +108,51 @@ async function clean() {
 }
 
 function checkDependency() {
-    function processFile(filename, files) {
-        if (!/\.ts.?$/.test(filename)) {
-            filename += '.ts';
+    function processFile(dir, filename, files, packageDependencies) {
+        if (packageDependencies.indexOf(filename) >= 0) {
+            return;
         }
-        var index = files.indexOf(filename);
+
+        var thisFilename = path.resolve(
+            dir,
+            !/\.ts.?$/.test(filename) ? filename + '.ts' : filename
+        );
+
+        var index = files.indexOf(thisFilename);
         if (index >= 0) {
             files = files.slice(index);
-            files.push(filename);
+            files.push(thisFilename);
             err(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
         }
 
-        files.push(filename);
-        var dir = path.dirname(filename);
-        var content = fs.readFileSync(filename).toString();
-        var reg = /from\s+'([^']+)'/g;
         var match;
-        while ((match = reg.exec(content))) {
-            var nextfile = match[1];
-            if (nextfile && nextfile[0] == '.') {
-                processFile(path.resolve(dir, nextfile), files.slice());
+        try {
+            files.push(thisFilename);
+            var dir = path.dirname(thisFilename);
+            var content = fs.readFileSync(thisFilename).toString();
+            var reg = /from\s+'([^']+)';$/gm;
+            while ((match = reg.exec(content))) {
+                var nextfile = match[1];
+                if (nextfile) {
+                    processFile(dir, nextfile, files.slice(), packageDependencies);
+                }
             }
+        } catch (e) {
+            err(
+                'Found dependency issue when processing file ' +
+                    thisFilename +
+                    ' with dependency "' +
+                    (match ? match[0] : '<Not found>') +
+                    '": ' +
+                    e
+            );
         }
     }
 
     packages.forEach(package => {
-        processFile(path.join(packagesPath, package, 'lib/index'), []);
+        var packageJson = readPackageJson(package, true /*readFromSourceFolder*/);
+        var dependencies = Object.keys(packageJson.dependencies);
+        processFile(packagesPath, path.join(package, 'lib/index'), [], dependencies);
     });
 }
 
@@ -141,7 +163,9 @@ function normalize() {
         var packageJson = readPackageJson(package, true /*readFromSourceFolder*/);
 
         Object.keys(packageJson.dependencies).forEach(dep => {
-            if (knownCustomizedPackages[dep]) {
+            if (packageJson.dependencies[dep]) {
+                // No op, keep the specified value
+            } else if (knownCustomizedPackages[dep]) {
                 packageJson.dependencies[dep] = knownCustomizedPackages[dep];
             } else if (packages.indexOf(dep) > -1) {
                 packageJson.dependencies[dep] = mainPackageJson.version;
@@ -200,12 +224,12 @@ function tsc(isAmd) {
     } else {
         packages.forEach(package => {
             var copy = fileName => {
-                var source = path.join(packagesPath, package, fileName);
+                var source = path.join(rootPath, fileName);
                 var target = path.join(distPath, package, fileName);
                 fs.copyFileSync(source, target);
             };
-            glob.sync('@(README|readme)*.*').forEach(copy);
-            glob.sync('@(license|LICENSE)*').forEach(copy);
+            copy('README.md');
+            copy('LICENSE');
         });
     }
 }
@@ -226,8 +250,8 @@ async function pack(isProduction, isAmd) {
             library: isAmd ? undefined : 'roosterjs',
         },
         resolve: {
-            extensions: ['.ts'],
-            modules: [packagesPath],
+            extensions: ['.ts', '.js'],
+            modules: [packagesPath, nodeModulesPath],
         },
         module: {
             rules: [
@@ -256,66 +280,31 @@ async function pack(isProduction, isAmd) {
                 reject(err);
             } else {
                 var targetFile = path.join(roosterJsDistPath, filename);
-                if (isProduction && !isAmd) {
-                    countWord(targetFile);
-                    exploreSourceMap(targetFile);
-                }
                 resolve();
             }
         });
     });
 }
 
-function countWord(inputFile) {
-    var outputFile = path.join(roosterJsDistPath, 'wordstat.txt');
-    var file = fs.readFileSync(inputFile).toString();
-    var reg = /[a-zA-Z0-9_]+/g;
-    var match;
-    var map = {};
-
-    while ((match = reg.exec(file))) {
-        map[match] = (map[match] || 0) + 1;
-    }
-
-    var array = Object.keys(map).map(key => ({
-        key,
-        len: key.length * map[key],
-    }));
-
-    array.sort((a, b) => b.len - a.len);
-    var result = array.reduce((result, item) => result + `${item.key},${item.len}\r\n`, '');
-    fs.writeFileSync(outputFile, result);
-}
-
-function exploreSourceMap(inputFile) {
-    var commandPath = path.join(nodeModulesPath, 'source-map-explorer/dist/cli.js');
-    var targetFile = path.join(roosterJsDistPath, 'sourceMap.html');
-    runNode(`${commandPath} ${inputFile} -m --html > ${targetFile}`, rootPath);
-}
-
-var dtsQueue = [];
-var dtsFileName;
-
-function prepareDts() {
-    dtsQueue = dts.prepareDts(rootPath, distPath, ['roosterjs/lib/index.d.ts']);
-}
-
 function buildDts(isAmd) {
+    var tsFiles = glob
+        .sync(path.relative(rootPath, path.join(distPath, '**', 'lib', '**', '*.d.ts')), {
+            nocase: true,
+        })
+        .map(x => path.relative(distPath, x));
+    var dtsQueue = dts.prepareDts(rootPath, distPath, 'roosterjs/lib/index.d.ts', tsFiles);
+
     mkdirp.sync(roosterJsDistPath);
     let filename = dts.output(roosterJsDistPath, 'roosterjs', isAmd, dtsQueue);
     if (!isAmd) {
-        dtsFileName = filename;
+        runNode(typescriptPath + ' ' + filename + ' --noEmit', rootPath);
     }
-}
-
-function verifyDts() {
-    runNode(typescriptPath + ' ' + dtsFileName + ' --noEmit', rootPath);
 }
 
 function buildDoc() {
     let config = {
         tsconfig: path.join(packagesPath, 'tsconfig.json'),
-        out: path.join(roosterJsDistPath, '..', 'docs'),
+        out: path.join(deployPath, 'docs'),
         readme: path.join(rootPath, 'reference.md'),
         name: '"RoosterJs API Reference"',
         mode: 'modules',
@@ -331,7 +320,10 @@ function buildDoc() {
         'external-modulemap': '".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"',
     };
 
-    let cmd = path.join(nodeModulesPath, 'typedoc/bin/typedoc');
+    let cmd = path.join(
+        nodeModulesPath,
+        'typedoc/bin/typedoc --plugin typedoc-plugin-exclude-references --plugin typedoc-plugin-external-module-map'
+    );
     for (let key of Object.keys(config)) {
         let value = config[key];
         cmd += ` --${key} ${value}`;
@@ -340,25 +332,12 @@ function buildDoc() {
     runNode(cmd, rootPath, 'pipe');
 }
 
-function copySample() {
-    var ncp = require('ncp');
-
-    var target = path.join(distPath, 'roosterjs/samplecode');
-    var source = path.join(rootPath, 'publish/samplecode');
-
-    ncp.ncp(source, target, error => {
-        if (error) {
-            err(error);
-        }
-    });
-}
-
 async function buildDemoSite() {
-    var sourcePathRoot = path.join(rootPath, 'publish/samplesite');
+    var sourcePathRoot = path.join(rootPath, 'demo');
     var sourcePath = path.join(sourcePathRoot, 'scripts');
     runNode(typescriptPath + ' --noEmit ', sourcePath);
 
-    var distPathRoot = path.join(distPath, 'roosterjs');
+    var distPathRoot = path.join(deployPath);
     var filename = 'demo.js';
     var webpackConfig = {
         entry: path.join(sourcePath, 'index.ts'),
@@ -382,6 +361,7 @@ async function buildDemoSite() {
                     loader: 'url-loader',
                     options: {
                         mimetype: 'image/svg+xml',
+                        esModule: false,
                     },
                 },
                 {
@@ -422,6 +402,14 @@ async function buildDemoSite() {
                 reject(err);
             } else {
                 fs.copyFileSync(
+                    path.resolve(roosterJsDistPath, 'rooster-min.js'),
+                    path.resolve(distPathRoot, 'rooster-min.js')
+                );
+                fs.copyFileSync(
+                    path.resolve(roosterJsDistPath, 'rooster-min.js.map'),
+                    path.resolve(distPathRoot, 'rooster-min.js.map')
+                );
+                fs.copyFileSync(
                     path.resolve(sourcePathRoot, 'index.html'),
                     path.resolve(distPathRoot, 'index.html')
                 );
@@ -447,26 +435,30 @@ function publish() {
     packages.forEach(package => {
         var json = readPackageJson(package, false /*readFromSourceFolder*/);
         var localVersion = json.version;
-        var versionMatch = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/.exec(localVersion);
+        var versionMatch = VersionRegex.exec(localVersion);
         var tagname = (versionMatch && versionMatch[2]) || 'latest';
-        var npmVersion = exec(`npm view ${package}@${tagname} version`)
-            .toString()
-            .trim();
+        var npmVersion = '';
+        try {
+            npmVersion = exec(`npm view ${package}@${tagname} version`).toString().trim();
+        } catch (e) {}
 
         if (localVersion != npmVersion) {
             let npmrcName = path.join(distPath, package, '.npmrc');
             if (token) {
-                var npmrc = `registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=${token}\n`;
+                var npmrc = `${NpmrcContent}${token}\n`;
                 fs.writeFileSync(npmrcName, npmrc);
             }
 
             try {
                 const basePublishString = `npm publish`;
-                const publishString = basePublishString + ` --tag ${tagname}` + ' --dry-run';
+                const publishString = basePublishString + ` --tag ${tagname}`;
                 exec(publishString, {
                     stdio: 'inherit',
                     cwd: path.join(distPath, package),
                 });
+            } catch (e) {
+                // Do not treat publish failure as build failure
+                console.log(e);
             } finally {
                 if (token) {
                     fs.unlinkSync(npmrcName);
@@ -498,7 +490,7 @@ class Runner {
         (async () => {
             console.log(`Start building roosterjs version ${version}\n`);
 
-            var bar = new ProgressBar('[:bar] (:current/:total finished) :message', {
+            var bar = new ProgressBar('[:bar] (:current/:total finished) :message  ', {
                 total: this.tasks.length,
                 width: 40,
                 complete: '#',
@@ -579,24 +571,14 @@ function buildAll(options) {
             enabled: options.packprod || (!isAmd && options.builddemo),
         })),
         {
-            message: 'Collecting information for type definition file...',
-            callback: prepareDts,
-            enabled: options.dts,
-        },
-        ...[false, true].map(isAmd => ({
-            message: `Generating type definition file for ${isAmd ? 'AMD' : 'CommonJs'}...`,
-            callback: () => buildDts(isAmd),
-            enabled: options.dts,
-        })),
-        {
-            message: 'Verifying type definition file...',
-            callback: verifyDts,
+            message: `Generating type definition file for CommonJs'}...`,
+            callback: () => buildDts(false /*isAmd*/),
             enabled: options.dts,
         },
         {
-            message: 'Copying sample code...',
-            callback: copySample,
-            enabled: options.copysample,
+            message: `Generating type definition file for AMD'}...`,
+            callback: () => buildDts(true /*isAmd*/),
+            enabled: options.dts,
         },
         {
             message: 'Building demo site...',

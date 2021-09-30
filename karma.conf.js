@@ -1,14 +1,51 @@
-module.exports = function(config) {
-    config.set({
+const argv = require('minimist')(process.argv.slice(2));
+const components = argv.components !== true && argv.components;
+const runCoverage = typeof argv.coverage !== 'undefined';
+const runChrome = typeof argv.chrome !== 'undefined';
+
+module.exports = function (config) {
+    const plugins = [
+        'karma-webpack',
+        runChrome ? 'karma-chrome-launcher' : 'karma-firefox-launcher',
+        'karma-phantomjs-launcher',
+        'karma-jasmine',
+        'karma-sourcemap-loader',
+    ];
+
+    if (runCoverage) {
+        plugins.push('karma-coverage-istanbul-reporter');
+    }
+
+    const browser = runChrome ? 'Chrome' : 'Firefox';
+    const launcher = runChrome ? ['Chrome'] : ['Firefox'];
+
+    const rules = runCoverage
+        ? [
+              {
+                  test: /lib(\\|\/).*\.ts$/,
+                  loader: ['@jsdevtools/coverage-istanbul-loader', 'ts-loader'],
+              },
+              {
+                  test: /test(\\|\/).*\.ts$/,
+                  loader: 'ts-loader',
+              },
+          ]
+        : [
+              {
+                  test: /\.ts$/,
+                  loader: 'ts-loader',
+              },
+          ];
+
+    const settings = {
         basePath: '.',
-        plugins: [
-            'karma-webpack',
-            'karma-chrome-launcher',
-            'karma-phantomjs-launcher',
-            'karma-jasmine',
-            'karma-sourcemap-loader',
-        ],
-        browsers: ['Chrome'],
+        plugins,
+        client: {
+            components: components,
+            clearContext: false,
+            browser: browser,
+        },
+        browsers: launcher,
         files: ['karma.tests.js'],
         frameworks: ['jasmine'],
         preprocessors: {
@@ -31,26 +68,26 @@ module.exports = function(config) {
             devtool: 'inline-source-map',
             mode: 'development',
             module: {
-                rules: [
-                    {
-                        test: /\.ts$/,
-                        loader: 'ts-loader',
-                        options: {
-                            compilerOptions: {
-                                rootDir: __dirname,
-                            },
-                        },
-                    },
-                ],
+                rules,
             },
             resolve: {
                 extensions: ['.ts', '.js'],
-                modules: ['./packages'],
+                modules: ['./packages', './node_modules'],
             },
         },
 
         // Concurrency level
         // how many browser should be started simultaneous
         concurrency: Infinity,
-    });
+    };
+
+    if (runCoverage) {
+        settings.reporters = ['coverage-istanbul'];
+        settings.coverageIstanbulReporter = {
+            reports: ['html', 'lcovonly', 'text-summary'],
+            dir: './dist/deploy/coverage',
+        };
+    }
+
+    config.set(settings);
 };

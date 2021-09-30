@@ -1,5 +1,6 @@
 import getComputedStyles from './getComputedStyles';
 import getTagOfNode from './getTagOfNode';
+import moveChildNodes from './moveChildNodes';
 
 /**
  * Change tag of an HTML Element to a new one, and replace it from DOM tree
@@ -32,9 +33,7 @@ export default function changeElementTag(element: HTMLElement, newTag: string): 
         newElement.setAttribute(attr.name, attr.value);
     }
 
-    while (element.firstChild) {
-        newElement.appendChild(element.firstChild);
-    }
+    moveChildNodes(newElement, element);
 
     if (getTagOfNode(element) == 'P' || getTagOfNode(newElement) == 'P') {
         [newElement.style.marginTop, newElement.style.marginBottom] = getComputedStyles(element, [

@@ -1,6 +1,5 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { Editor } from 'roosterjs-editor-core';
-import { FontSizeChange } from 'roosterjs-editor-types';
+import { FontSizeChange, IEditor } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
 
 /**
@@ -18,7 +17,7 @@ const MAX_FONT_SIZE = 1000;
  * @param fontSizes A sorted font size array, in pt. Default value is FONT_SIZES
  */
 export default function changeFontSize(
-    editor: Editor,
+    editor: IEditor,
     change: FontSizeChange,
     fontSizes: number[] = FONT_SIZES
 ) {
@@ -33,6 +32,13 @@ export default function changeFontSize(
     });
 }
 
+/**
+ * @internal
+ * Get new font size after increase/decrease. This is exported for test only
+ * @param pt Original font size, in Point
+ * @param changeBase Changed value, 1 means increase, -1 means decrease
+ * @param fontSizes Known font size array
+ */
 export function getNewFontSize(pt: number, changeBase: 1 | -1, fontSizes: number[]): number {
     pt = changeBase == 1 ? Math.floor(pt) : Math.ceil(pt);
     let last = fontSizes[fontSizes.length - 1];

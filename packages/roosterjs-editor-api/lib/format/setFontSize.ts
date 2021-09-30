@@ -1,6 +1,6 @@
-import applyInlineStyle from '../utils/applyInlineStyle';
-import { Editor } from 'roosterjs-editor-core';
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import { getComputedStyle } from 'roosterjs-editor-dom';
+import { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set font size at selection
@@ -8,12 +8,10 @@ import { getComputedStyle } from 'roosterjs-editor-dom';
  * @param fontSize The fontSize string, should be a valid CSS font-size style.
  * Currently there's no validation to the string, if the passed string is invalid, it won't take affect
  */
-export default function setFontSize(editor: Editor, fontSize: string) {
-    fontSize = fontSize.trim();
+export default function setFontSize(editor: IEditor, fontSize: string) {
     // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
-    // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp). Use applyInlineStyle which gives flexibility on applying inline style
-    // for here, we use CSS font-size style
-    applyInlineStyle(editor, (element, isInnerNode) => {
+    // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp).
+    applyListItemStyleWrap(editor, 'font-size', (element, isInnerNode) => {
         element.style.fontSize = isInnerNode ? '' : fontSize;
         let lineHeight = getComputedStyle(element, 'line-height');
         if (lineHeight != 'normal') {
