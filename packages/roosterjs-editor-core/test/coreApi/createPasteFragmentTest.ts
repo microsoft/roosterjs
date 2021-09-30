@@ -399,6 +399,7 @@ describe('createPasteFragment', () => {
                 triggerEvent,
             },
         });
+
         const clipboardData: ClipboardData = {
             types: ['image/png', 'text/html'],
             text: '',
@@ -409,6 +410,7 @@ describe('createPasteFragment', () => {
             snapshotBeforePaste: '<div><br></div><!--{"start":[0,0],"end":[0,0]}-->',
             html: '<img />',
         };
+
         const fragment = createPasteFragment(core, clipboardData, null, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('<img>');
