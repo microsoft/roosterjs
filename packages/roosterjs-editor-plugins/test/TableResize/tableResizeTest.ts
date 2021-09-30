@@ -972,7 +972,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    it('does not resize the column to the left correctly with merged cells since too narrow', () => {
+    xit('does not resize the column to the left correctly with merged cells since too narrow', () => {
         initialize(3);
         const testTable = testTables[3];
         const cellRect = getCellRect(1, 1);
