@@ -17,21 +17,11 @@ jobs:
                   npm install
                   npm run-script build:ci
 
-            - name: Install Chrome
-              uses: browser-actions/setup-chrome@latest
-
             - name: Test with Chrome
-              uses: GabrielBB/xvfb-action@v1
-              with:
-                  run: npm run-script test:chrome
-
-            - name: Install Firefox
-              uses: browser-actions/setup-firefox@latest
+              run: xvfb npm run-script test:chrome
 
             - name: Test with Firefox
-              uses: GabrielBB/xvfb-action@v1
-              with:
-                  run: npm run-script test:coverage
+              run: xvfb npm run-script test:coverage
 
             - name: Deploy
               uses: JamesIves/github-pages-deploy-action@3.6.2
