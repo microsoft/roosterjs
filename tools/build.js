@@ -26,6 +26,9 @@ var version = mainPackageJson.version;
 // Token
 var token = null;
 
+// Misc
+var showProgressBar = true;
+
 // Commands
 var commands = [
     'checkdep', // Check circular dependency among files
@@ -486,15 +489,31 @@ class Runner {
         });
     }
 
+    getUI() {
+        var index = 0;
+        return showProgressBar
+            ? new ProgressBar('[:bar] (:current/:total finished) :message  ', {
+                  total: this.tasks.length,
+                  width: 40,
+                  complete: '#',
+              })
+            : {
+                  tick: (p1, p2) => {
+                      index++;
+                      var msg = (p1 || p2).message;
+
+                      if (msg) {
+                          console.log(`[Step ${index} of ${this.tasks.length}]: ${msg}`);
+                      }
+                  },
+              };
+    }
+
     run() {
         (async () => {
             console.log(`Start building roosterjs version ${version}\n`);
 
-            var bar = new ProgressBar('[:bar] (:current/:total finished) :message  ', {
-                total: this.tasks.length,
-                width: 40,
-                complete: '#',
-            });
+            var bar = this.getUI();
 
             for (var i = 0; i < this.tasks.length; i++) {
                 var task = this.tasks[i];
@@ -608,13 +627,14 @@ function parseOptions(additionalParams) {
     for (var i = 0; i < params.length; i++) {
         if (params[i] == '--token') {
             token = params[++i];
-            continue;
-        }
+        } else if (params[i] == '--noProgressBar') {
+            showProgressBar = false;
+        } else {
+            var index = commands.indexOf(params[i]);
 
-        var index = commands.indexOf(params[i]);
-
-        if (index >= 0) {
-            options[commands[index]] = true;
+            if (index >= 0) {
+                options[commands[index]] = true;
+            }
         }
     }
     return options;
