@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/microsoft/roosterjs.svg?branch=master)](https://www.travis-ci.org/microsoft/roosterjs)
+[![Build Status](https://github.com/microsoft/roosterjs/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/microsoft/roosterjs/actions/workflows/build-and-deploy.yml)
 
 # Rooster
 
