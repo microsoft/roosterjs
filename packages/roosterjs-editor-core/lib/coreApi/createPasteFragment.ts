@@ -67,7 +67,6 @@ export const createPasteFragment: CreatePasteFragment = (
         }, event.htmlAttributes);
 
         clipboardData.htmlFirstLevelChildTags = [];
-
         doc?.body.normalize();
         doc?.body.childNodes.forEach(node => {
             if (node.nodeType == Node.TEXT_NODE) {
