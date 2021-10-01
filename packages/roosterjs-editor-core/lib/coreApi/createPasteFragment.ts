@@ -67,11 +67,18 @@ export const createPasteFragment: CreatePasteFragment = (
         }, event.htmlAttributes);
 
         clipboardData.htmlFirstLevelChildTags = [];
+
+        doc?.body.normalize();
         doc?.body.childNodes.forEach(node => {
-            const nodeTag = getTagOfNode(node);
-            if (nodeTag) {
-                clipboardData.htmlFirstLevelChildTags.push(nodeTag);
+            if (node.nodeType == Node.TEXT_NODE) {
+                const trimmedString = node.nodeValue.replace(/(\r\n|\r|\n)/gm, '').trim();
+                if (!trimmedString) {
+                    return;
+                }
             }
+
+            const nodeTag = getTagOfNode(node);
+            clipboardData.htmlFirstLevelChildTags.push(nodeTag);
         });
 
         // Move all STYLE nodes into header, and save them into sanitizing options.
