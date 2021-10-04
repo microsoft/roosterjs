@@ -1,9 +1,7 @@
 import * as dom from 'roosterjs-editor-dom';
 import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
     ChangeSource,
-    ContentEditFeature,
     EntityClasses,
     EntityOperation,
     EntityOperationEvent,
@@ -405,43 +403,6 @@ describe('Shadow DOM Entity', () => {
             },
         };
         expect(plugin.willHandleEventExclusively(event)).toBeTrue();
-    });
-
-    itChromeOnly('Workaround Chrome issue', () => {
-        let feature: ContentEditFeature;
-        let wrapper = document.createElement('span');
-        const plugin = new EntityPlugin();
-        const runAsync = jasmine.createSpy('runAsync').and.callFake((callback: Function) => {
-            wrapper = wrapper.cloneNode(true) as HTMLElement;
-            callback();
-        });
-
-        wrapper.innerHTML = 'test';
-        dom.commitEntity(wrapper, 'TEST', false, 'TEST');
-        wrapper.attachShadow({ mode: 'open' });
-        const editor: IEditor = <any>{
-            getDocument: () => document,
-            addContentEditFeature: (f: ContentEditFeature) => {
-                feature = f;
-            },
-            queryElements: () => {
-                return [wrapper];
-            },
-            runAsync,
-            triggerPluginEvent: () => {},
-        };
-
-        plugin.initialize(editor);
-
-        expect(feature).toBeDefined();
-        expect(feature.keys).toEqual([Keys.BACKSPACE, Keys.DELETE]);
-        expect(feature.shouldHandleEvent(<any>{}, editor, false /*ctrlOrMeta*/)).toBeTrue();
-
-        feature.handleEvent(<any>{}, editor);
-
-        expect(runAsync).toHaveBeenCalled();
-        expect(wrapper.innerHTML).toBe('test');
-        expect(wrapper.shadowRoot).toBeTruthy();
     });
 
     it('Cache shadow entity before set content', () => {

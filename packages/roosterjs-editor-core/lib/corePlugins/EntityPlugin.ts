@@ -188,14 +188,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private handleKeyDownEvent(event: KeyboardEvent) {
-        // Workaround an issue for Chrome that when Delete or Backsapce, shadow DOM may be lost in editor
-        if (
-            (Browser.isChrome || Browser.isSafari) &&
-            (event.which == Keys.BACKSPACE || event.which == Keys.DELETE)
-        ) {
-            this.workaroundShadowDOMIssueForChrome();
-        }
-
         if (
             isCharacterValue(event) ||
             event.which == Keys.BACKSPACE ||
@@ -417,30 +409,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     private isEntityKnown(wrapper: HTMLElement) {
         return this.state.knownEntityElements.indexOf(wrapper) >= 0;
     }
-
-    private workaroundShadowDOMIssueForChrome = () => {
-        const cache: Record<string, HTMLElement> = {};
-        this.cacheShadowEntities(cache);
-        this.editor.runAsync(() => {
-            Object.keys(cache).forEach(id => {
-                const entity = getEntityFromElement(cache[id]);
-                const newWrapper = this.editor.queryElements(
-                    getEntitySelector(entity.type, entity.id)
-                )[0];
-
-                if (newWrapper != entity.wrapper) {
-                    this.triggerEvent(entity.wrapper, EntityOperation.RemoveShadowRoot);
-                    this.setIsEntityKnown(entity.wrapper, false /*isKnown*/);
-
-                    if (newWrapper) {
-                        moveChildNodes(newWrapper, entity.wrapper);
-                        this.createShadowRoot(newWrapper, entity.wrapper.shadowRoot);
-                        this.setIsEntityKnown(newWrapper, true /*isKnown*/);
-                    }
-                }
-            });
-        });
-    };
 }
 
 /**
