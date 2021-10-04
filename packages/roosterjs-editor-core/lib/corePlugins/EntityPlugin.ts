@@ -81,15 +81,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-
-        // Workaround an issue for Chrome that when Delete or Backsapce, shadow DOM may be lost in editor
-        if (Browser.isChrome || Browser.isSafari) {
-            this.editor.addContentEditFeature({
-                keys: [Keys.BACKSPACE, Keys.DELETE],
-                shouldHandleEvent: () => true,
-                handleEvent: this.workaroundShadowDOMIssueForChrome,
-            });
-        }
     }
 
     /**
@@ -197,6 +188,14 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private handleKeyDownEvent(event: KeyboardEvent) {
+        // Workaround an issue for Chrome that when Delete or Backsapce, shadow DOM may be lost in editor
+        if (
+            (Browser.isChrome || Browser.isSafari) &&
+            (event.which == Keys.BACKSPACE || event.which == Keys.DELETE)
+        ) {
+            this.workaroundShadowDOMIssueForChrome();
+        }
+
         if (
             isCharacterValue(event) ||
             event.which == Keys.BACKSPACE ||
