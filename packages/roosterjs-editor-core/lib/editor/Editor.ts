@@ -647,7 +647,7 @@ export default class Editor implements IEditor {
      * If it is not cached before, query from DOM and cache the result into the event object
      */
     public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher {
-        return cacheGetEventData(event, 'CONTENTSEARCHER', () => {
+        return cacheGetEventData(event, 'ContentSearcher', () => {
             let range = this.getSelectionRange();
             return (
                 range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range))

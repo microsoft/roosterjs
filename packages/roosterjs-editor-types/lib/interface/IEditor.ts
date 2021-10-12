@@ -501,7 +501,7 @@ export default interface IEditor {
     getStyleBasedFormatState(node?: Node): StyleBasedFormatState;
 
     /**
-     * Get the pendable format state from the current selection, incluing formats as underline, bold, italics
+     * Get the pendable format state from the current selection, including formats as underline, bold, italics
      * @param forceGetStateFromDOM If set to true, will not consider the cached format and will get the format state directly from DOM tree
      * @return The pending format state of editor.
      */
@@ -568,7 +568,7 @@ export default interface IEditor {
 }
 
 // Temporarily put these interfaces here to workaround circular dependency issue
-// Need to revisite these interfaces later.
+// Need to revisit these interfaces later.
 
 /**
  * Generic ContentEditFeature interface

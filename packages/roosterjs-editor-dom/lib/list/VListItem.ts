@@ -216,7 +216,7 @@ export default class VListItem {
         listStack[listStack.length - 1].appendChild(this.node);
         this.node.style.display = this.dummy ? 'block' : null;
 
-        // 4. Inherit styles of the childelement to the li, so we are able to apply the styles to the ::marker
+        // 4. Inherit styles of the child element to the li, so we are able to apply the styles to the ::marker
         if (this.listTypes.length > 1) {
             if (
                 !(this.node.style.fontSize || this.node.style.color || this.node.style.fontFamily)
