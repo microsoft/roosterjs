@@ -1,5 +1,7 @@
-import * as dom from 'roosterjs-editor-dom';
+import * as addRangeToSelection from 'roosterjs-editor-dom/lib/selection/addRangeToSelection';
+import * as extractClipboardEvent from 'roosterjs-editor-dom/lib/clipboard/extractClipboardEvent';
 import CopyPastePlugin from '../../lib/corePlugins/CopyPastePlugin';
+import { Position } from 'roosterjs-editor-dom';
 import {
     ClipboardData,
     DOMEventHandlerFunction,
@@ -72,7 +74,7 @@ describe('CopyPastePlugin paste', () => {
             types: [],
             customValues: {},
         };
-        spyOn(dom, 'extractClipboardEvent').and.callFake((event, callback) => {
+        spyOn(extractClipboardEvent, 'default').and.callFake((event, callback) => {
             callback(items);
         });
 
@@ -103,7 +105,7 @@ describe('CopyPastePlugin copy', () => {
                 };
             });
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        spyOn(dom, 'addRangeToSelection');
+        spyOn(addRangeToSelection, 'default');
 
         editor = <IEditor>(<any>{
             addDomEventHandler,
@@ -143,7 +145,7 @@ describe('CopyPastePlugin copy', () => {
         expect(triggerPluginEvent.calls.argsFor(0)[0]).toBe(PluginEventType.BeforeCutCopy);
         expect(tempNode.innerHTML).toBe('<div>test</div>');
 
-        const range = <Range>(<jasmine.Spy>dom.addRangeToSelection).calls.argsFor(0)[0];
+        const range = <Range>(<jasmine.Spy>addRangeToSelection.default).calls.argsFor(0)[0];
         expect(range.startContainer).toBe(tempNode.firstChild);
         expect(range.endContainer).toBe(tempNode.firstChild);
         expect(range.startOffset).toBe(0);
@@ -177,8 +179,8 @@ describe('CopyPastePlugin copy', () => {
                 nodeBefore: null,
                 nodeAfter: null,
                 skipTags: [],
-                fullSelectionStart: new dom.Position(contentDiv.firstChild, 3),
-                fullSelectionEnd: new dom.Position(contentDiv.firstChild, 10),
+                fullSelectionStart: new Position(contentDiv.firstChild, 3),
+                fullSelectionEnd: new Position(contentDiv.firstChild, 10),
             },
         ];
 
@@ -212,11 +214,11 @@ describe('CopyPastePlugin copy', () => {
                 nodeBefore: null,
                 nodeAfter: null,
                 skipTags: [],
-                fullSelectionStart: new dom.Position(
+                fullSelectionStart: new Position(
                     contentDiv.childNodes[0].childNodes[1].childNodes[1].childNodes[0],
                     3
                 ),
-                fullSelectionEnd: new dom.Position(contentDiv.childNodes[1].childNodes[0], 2),
+                fullSelectionEnd: new Position(contentDiv.childNodes[1].childNodes[0], 2),
             },
         ];
 
