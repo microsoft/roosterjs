@@ -307,26 +307,9 @@ function buildDts(isAmd) {
 function buildDoc() {
     let config = {
         tsconfig: path.join(packagesPath, 'tsconfig.json'),
-        out: path.join(deployPath, 'docs'),
-        readme: path.join(rootPath, 'reference.md'),
-        name: '"RoosterJs API Reference"',
-        mode: 'modules',
-        ignoreCompilerErrors: '',
-        preserveConstEnums: '',
-        stripInternal: '',
-        target: 'ES5',
-        excludeExternals: '',
-        logger: 'none',
-        exclude: '**/test/**/*.ts',
-        excludePrivate: '',
-        excludeNotExported: '',
-        'external-modulemap': '".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"',
     };
 
-    let cmd = path.join(
-        nodeModulesPath,
-        'typedoc/bin/typedoc --plugin typedoc-plugin-exclude-references --plugin typedoc-plugin-external-module-map'
-    );
+    let cmd = path.join(nodeModulesPath, 'typedoc/bin/typedoc');
     for (let key of Object.keys(config)) {
         let value = config[key];
         cmd += ` --${key} ${value}`;
