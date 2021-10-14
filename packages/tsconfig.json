@@ -14,9 +14,34 @@
             "*": ["*"]
         },
         "rootDir": ".",
+        "composite": true,
         "lib": ["es6", "dom"]
     },
-    "include": ["**/*.ts"],
+
+    "references": [
+        {
+            "path": "roosterjs-editor-types/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-dom/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-core/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-api/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-plugins/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-color-utils/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs/tsconfig.child.json"
+        }
+    ],
+    "include": [],
     "typedocOptions": {
         "entryPoints": [
             "roosterjs-editor-types/lib/index.ts",
