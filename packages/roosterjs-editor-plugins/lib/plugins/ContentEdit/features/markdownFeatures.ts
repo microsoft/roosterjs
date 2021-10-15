@@ -126,7 +126,7 @@ function handleMarkdownEvent(
  * Markdown bold feature. Make bold text with markdown shortcuts.
  */
 const MarkdownBold: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkdownFeature(
-    Keys.EIGHT_ASTIRISK,
+    Keys.EIGHT_ASTERISK,
     '*',
     'b',
     true

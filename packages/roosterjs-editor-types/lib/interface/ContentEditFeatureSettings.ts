@@ -69,7 +69,7 @@ export interface EntityFeatureSettings {
  */
 export interface ListFeatureSettings {
     /**
-     * When press space after an astirisk or number in an empty line, toggle bullet/numbering
+     * When press space after an asterisk or number in an empty line, toggle bullet/numbering
      * @default true
      */
     autoBullet: boolean;

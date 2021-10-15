@@ -67,7 +67,7 @@ export default function Editor(props: EditorProps) {
             tableResize: pluginList.tableResize ? new TableResize() : null,
             pickerPlugin: pluginList.pickerPlugin
                 ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {
-                      elementIdPrefix: 'samplepicker-',
+                      elementIdPrefix: 'samplePicker-',
                       changeSource: 'SAMPLE_COLOR_PICKER',
                       triggerCharacter: ':',
                       isHorizontal: true,

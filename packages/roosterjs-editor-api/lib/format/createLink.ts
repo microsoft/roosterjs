@@ -7,7 +7,6 @@ const URI_REGEX = /^[a-zA-Z]+:/i;
 const MAILTO_REGEX = /^[\w.%+-]+@/i;
 // Regex matching begin of ftp, i.e. ftp.microsoft.com
 const FTP_REGEX = /^ftp\./i;
-const TEMP_TITLE = 'istemptitle';
 
 function applyLinkPrefix(url: string): string {
     if (!url) {
@@ -88,10 +87,6 @@ export default function createLink(
                 updateAnchorDisplayText(anchor, displayText);
             }
             if (altText && anchor) {
-                // Hack: Ideally this should be done by HyperLink plugin.
-                // We make a hack here since we don't have an event to notify HyperLink plugin
-                // before we apply the link.
-                anchor.removeAttribute(TEMP_TITLE);
                 anchor.title = altText;
             }
             return anchor;

@@ -329,7 +329,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
         this.triggerEvent(wrapper, EntityOperation.NewEntity, undefined /*rawEvent*/, fragment);
 
-        // If there is element to hydrate for shadow entity, craete shadow root and mount these elements to shadow root
+        // If there is element to hydrate for shadow entity, create shadow root and mount these elements to shadow root
         // Then trigger AddShadowRoot so that plugins can do further actions
         if (fragment.firstChild) {
             if (wrapper.shadowRoot) {

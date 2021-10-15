@@ -11,7 +11,7 @@ import {
  * @internal
  * @param core The EditorCore object
  * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
- * @returns The cached format state if it exists. If the cached postion do not exist, search for pendable elements in the DOM tree and return the pendable format state.
+ * @returns The cached format state if it exists. If the cached position do not exist, search for pendable elements in the DOM tree and return the pendable format state.
  */
 export const getPendableFormatState: GetPendableFormatState = (
     core: EditorCore,
@@ -71,16 +71,16 @@ function queryCommandStateFromDOM(
 ): PendableFormatState {
     let node = currentPosition.node;
     let formatState: PendableFormatState = {};
-    let pendablekeys: PendableFormatNames[] = [];
+    let pendableKeys: PendableFormatNames[] = [];
     while (contains(core.contentDiv, node)) {
         const tag = getTagOfNode(node);
         const style = node.nodeType == NodeType.Element && (node as HTMLElement).style;
         if (tag && style) {
             Object.keys(PendableStyleCheckers).forEach((key: PendableFormatNames) => {
-                if (!(pendablekeys.indexOf(key) >= 0)) {
+                if (!(pendableKeys.indexOf(key) >= 0)) {
                     formatState[key] = formatState[key] || PendableStyleCheckers[key](tag, style);
                     if (CssFalsyCheckers[key](style)) {
-                        pendablekeys.push(key);
+                        pendableKeys.push(key);
                     }
                 }
             });

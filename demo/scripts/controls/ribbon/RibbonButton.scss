@@ -5,7 +5,7 @@
     border-radius: 4px;
     margin: 2px;
     padding: 0;
-    background-color: $prmaryBackgroundColor;
+    background-color: $primaryBackgroundColor;
     cursor: pointer;
     &:hover {
         background-color: $primaryLighter2;
@@ -38,7 +38,7 @@
     z-index: 1;
     border: solid 1px $primaryBorder;
     display: inline-block;
-    background-color: $prmaryBackgroundColor;
+    background-color: $primaryBackgroundColor;
     padding: 4px;
     box-shadow: 2px 2px 4px gray;
     position: absolute;

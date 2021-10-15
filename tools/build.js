@@ -33,7 +33,7 @@ var showProgressBar = true;
 var commands = [
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
-    'dts', // Generate type definitioin files (.d.ts)
+    'dts', // Generate type definition files (.d.ts)
     'tslint', // Run tslint to check code style
     'normalize', // Normalize package.json files
     'pack', // Run webpack to generate standalone .js files
@@ -135,9 +135,9 @@ function checkDependency() {
             var content = fs.readFileSync(thisFilename).toString();
             var reg = /from\s+'([^']+)';$/gm;
             while ((match = reg.exec(content))) {
-                var nextfile = match[1];
-                if (nextfile) {
-                    processFile(dir, nextfile, files.slice(), packageDependencies);
+                var nextFile = match[1];
+                if (nextFile) {
+                    processFile(dir, nextFile, files.slice(), packageDependencies);
                 }
             }
         } catch (e) {
@@ -537,7 +537,7 @@ function buildAll(options) {
             enabled: options.tslint,
         },
         {
-            message: 'Checking cicular dependency...',
+            message: 'Checking circular dependency...',
             callback: checkDependency,
             enabled: options.checkdep,
         },
@@ -572,12 +572,12 @@ function buildAll(options) {
             enabled: options.packprod || (!isAmd && options.builddemo),
         })),
         {
-            message: `Generating type definition file for CommonJs'}...`,
+            message: `Generating type definition file for CommonJs}...`,
             callback: () => buildDts(false /*isAmd*/),
             enabled: options.dts,
         },
         {
-            message: `Generating type definition file for AMD'}...`,
+            message: `Generating type definition file for AMD}...`,
             callback: () => buildDts(true /*isAmd*/),
             enabled: options.dts,
         },

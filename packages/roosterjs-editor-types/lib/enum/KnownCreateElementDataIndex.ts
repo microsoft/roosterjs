@@ -3,7 +3,7 @@
  */
 export const enum KnownCreateElementDataIndex {
     /**
-     * Set a none value to help createElement funciton ignore falsy value
+     * Set a none value to help createElement function ignore falsy value
      */
     None = 0,
 
@@ -38,7 +38,7 @@ export const enum KnownCreateElementDataIndex {
     ImageEditWrapper = 6,
 
     /**
-     * Table resizers
+     * Table resizer elements
      */
     TableHorizontalResizer = 7,
     TableVerticalResizer = 8,

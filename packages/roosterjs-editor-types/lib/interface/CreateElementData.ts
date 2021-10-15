@@ -1,5 +1,5 @@
 /**
- * An interface represents the data for creating element used by createElemnet()
+ * An interface represents the data for creating element used by createElement()
  */
 export default interface CreateElementData {
     /**
