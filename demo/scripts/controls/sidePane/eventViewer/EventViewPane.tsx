@@ -65,7 +65,7 @@ export default class EventViewPane extends React.Component<
 > {
     private events: EventEntry[] = [];
     private displayCount = React.createRef<HTMLSelectElement>();
-    private lasteIndex = 0;
+    private lastIndex = 0;
 
     constructor(props: SidePaneElementProps) {
         super(props);
@@ -127,14 +127,14 @@ export default class EventViewPane extends React.Component<
             this.events.push({
                 time: new Date(),
                 event: event,
-                index: this.lasteIndex++,
+                index: this.lastIndex++,
             });
 
             while (this.events.length > 100) {
                 this.events.shift();
             }
             this.setState({
-                currentIndex: this.lasteIndex,
+                currentIndex: this.lastIndex,
             });
         }
     }
@@ -179,7 +179,7 @@ export default class EventViewPane extends React.Component<
                     <span>
                         Types=
                         {event.clipboardData.types.join()}
-                        {this.renderPasteContent('Palin text', event.clipboardData.text)}
+                        {this.renderPasteContent('Plain text', event.clipboardData.text)}
                         {this.renderPasteContent(
                             'Sanitized HTML',
                             (event.clipboardData as any).html

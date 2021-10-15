@@ -38,7 +38,7 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.Z, Keys.Meta | Keys.Z, editor => editor.undo()),
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
-    createCommand(Keys.Ctrl | Keys.FORWARDSLASH, Keys.Meta | Keys.FORWARDSLASH, toggleNumbering),
+    createCommand(Keys.Ctrl | Keys.FORWARD_SLASH, Keys.Meta | Keys.FORWARD_SLASH, toggleNumbering),
     createCommand(
         Keys.Ctrl | Keys.Shift | Keys.PERIOD,
         Keys.Meta | Keys.Shift | Keys.PERIOD,
@@ -65,7 +65,7 @@ const commands: ShortcutCommand[] = [
  */
 const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     allowFunctionKeys: true,
-    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARDSLASH],
+    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARD_SLASH],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);

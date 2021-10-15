@@ -13,7 +13,7 @@ type Color = {
     names: string[];
 };
 
-const pickableColors: Color[] = [
+const pickerColors: Color[] = [
     {
         htmlColor: '#F8b195',
         names: ['pink', 'orange', 'peach'],
@@ -48,9 +48,9 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
     private mountPoint: HTMLElement;
     private editor: IEditor;
 
-    // Function called when the plugin is intialized to register two callbacks with the data provider and a reference to the Editor.
+    // Function called when the plugin is initialized to register two callbacks with the data provider and a reference to the Editor.
     // The first is called in order to "commit" a new element to the editor body that isn't handled automatically by the editor plugin.
-    // The second sets the isSuggesting value for situations wherethe UX needs to manipulate the suggesting state that's otherwise plugin managed.
+    // The second sets the isSuggesting value for situations where the UX needs to manipulate the suggesting state that's otherwise plugin managed.
     onInitalize(
         insertNodeCallback: InsertNodeCallback,
         setIsSuggestingCallback: (isSuggesting: boolean) => void,
@@ -86,7 +86,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
         const lowerCaseQuery = queryString.toLowerCase();
         const currentSelectedColor =
             (this.componentState && this.componentState.colors[index]) || null;
-        const colors = pickableColors
+        const colors = pickerColors
             .filter(color =>
                 color.names.some(colorName => colorName.indexOf(lowerCaseQuery) !== -1)
             )

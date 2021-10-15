@@ -1,3 +1,8 @@
 {
-    "recommendations": ["esbenp.prettier-vscode", "ms-vscode.vscode-typescript-tslint-plugin", "miclo.sort-typescript-imports"]
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "miclo.sort-typescript-imports",
+        "streetsidesoftware.code-spell-checker"
+    ]
 }

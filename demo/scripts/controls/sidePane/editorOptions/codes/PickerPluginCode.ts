@@ -14,7 +14,7 @@ export default class PickerPluginCode extends CodeElement {
             '    queryStringUpdated: (queryString) => {},\n' +
             '    onRemove: (nodeRemoved, isBackwards) => null,\n' +
             '    }, {\n' +
-            "    elementIdPrefix: 'samplepicker-',\n" +
+            "    elementIdPrefix: 'samplePicker-',\n" +
             "    changeSource: 'SAMPLE_COLOR_PICKER',\n" +
             "    triggerCharacter: ':',\n" +
             '    isHorizontal: true,\n' +
