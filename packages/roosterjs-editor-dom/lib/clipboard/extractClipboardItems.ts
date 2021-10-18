@@ -66,7 +66,7 @@ export default function extractClipboardItems(
             if (type.indexOf(ContentTypePrefix.Image) == 0 && !data.image) {
                 data.types.push(type);
                 data.image = item.getAsFile();
-                return new Promise(resolve => {
+                return new Promise<void>(resolve => {
                     readFile(data.image, dataUrl => {
                         data.imageDataUri = dataUrl;
                         resolve();
@@ -76,7 +76,7 @@ export default function extractClipboardItems(
                 const customType = getAllowedCustomType(type, options?.allowedCustomPasteType);
                 const handler =
                     contentHandlers[type] || (customType ? contentHandlers[OTHER_TEXT_TYPE] : null);
-                return new Promise(resolve =>
+                return new Promise<void>(resolve =>
                     handler
                         ? item.getAsString(value => {
                               data.types.push(type);

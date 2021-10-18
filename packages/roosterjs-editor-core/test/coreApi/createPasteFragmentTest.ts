@@ -1,4 +1,4 @@
-import * as dom from 'roosterjs-editor-dom';
+import * as createDefaultHtmlSanitizerOptions from 'roosterjs-editor-dom/lib/htmlSanitizer/createDefaultHtmlSanitizerOptions';
 import createEditorCore from './createMockEditorCore';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
@@ -318,7 +318,7 @@ describe('createPasteFragment', () => {
 
     it('html input with html attributes and meta', () => {
         const sanitizingOption: any = {};
-        spyOn(dom, 'createDefaultHtmlSanitizerOptions').and.returnValue(sanitizingOption);
+        spyOn(createDefaultHtmlSanitizerOptions, 'default').and.returnValue(sanitizingOption);
 
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
@@ -362,7 +362,7 @@ describe('createPasteFragment', () => {
 
     it('html input, make sure STYLE tags are properly handled', () => {
         const sanitizingOption: any = { additionalGlobalStyleNodes: [] };
-        spyOn(dom, 'createDefaultHtmlSanitizerOptions').and.returnValue(sanitizingOption);
+        spyOn(createDefaultHtmlSanitizerOptions, 'default').and.returnValue(sanitizingOption);
 
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {

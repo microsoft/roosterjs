@@ -1,4 +1,4 @@
-import * as dom from 'roosterjs-editor-dom';
+import * as isCharacterValue from 'roosterjs-editor-dom/lib/event/isCharacterValue';
 import DOMEventPlugin from '../../lib/corePlugins/DOMEventPlugin';
 import {
     ChangeSource,
@@ -227,7 +227,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     });
 
     it('verify keydown event for non-charactor value', () => {
-        spyOn(dom, 'isCharacterValue').and.returnValue(false);
+        spyOn(isCharacterValue, 'default').and.returnValue(false);
         const stopPropagation = jasmine.createSpy();
         eventMap.keydown.beforeDispatch(<Event>(<any>{
             stopPropagation,
@@ -236,7 +236,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     });
 
     it('verify keydown event for charactor value', () => {
-        spyOn(dom, 'isCharacterValue').and.returnValue(true);
+        spyOn(isCharacterValue, 'default').and.returnValue(true);
         const stopPropagation = jasmine.createSpy();
         eventMap.keydown.beforeDispatch(<Event>(<any>{
             stopPropagation,
@@ -245,7 +245,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     });
 
     it('verify input event for non-charactor value', () => {
-        spyOn(dom, 'isCharacterValue').and.returnValue(false);
+        spyOn(isCharacterValue, 'default').and.returnValue(false);
         const stopPropagation = jasmine.createSpy();
         eventMap.input.beforeDispatch(<Event>(<any>{
             stopPropagation,
@@ -254,7 +254,7 @@ describe('DOMEventPlugin verify event handlers while disallow keyboard event pro
     });
 
     it('verify input event for charactor value', () => {
-        spyOn(dom, 'isCharacterValue').and.returnValue(true);
+        spyOn(isCharacterValue, 'default').and.returnValue(true);
         const stopPropagation = jasmine.createSpy();
         eventMap.input.beforeDispatch(<Event>(<any>{
             stopPropagation,
