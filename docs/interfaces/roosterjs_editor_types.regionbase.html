@@ -3,10 +3,11 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RegionBase | RoosterJs API Reference</title>
-	<meta name="description" content="Documentation for RoosterJs API Reference">
+	<title>RegionBase | RoosterJs API Reference - v8.10.1</title>
+	<meta name="description" content="Documentation for RoosterJs API Reference - v8.10.1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -22,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">RoosterJs API Reference</a>
+					<a href="../index.html" class="title">RoosterJs API Reference - v8.10.1</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -49,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../globals.html">Globals</a>
+					<a href="../modules.html">RoosterJs API Reference - v8.10.1</a>
 				</li>
 				<li>
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
@@ -71,12 +72,13 @@
 						<p>Represents a DOM region.
 							A region is a range under a given node, and possibly after one child and before another child
 						e.g.</p>
-						<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></code></pre>
+						<pre><code class="language-html"><span style="color: #800000">&lt;div&gt;</span>
+<span style="color: #000000">  </span><span style="color: #800000">&lt;table&gt;</span><span style="color: #000000">...</span><span style="color: #800000">&lt;/table&gt;</span>
+<span style="color: #000000">  </span><span style="color: #800000">&lt;span&gt;</span><span style="color: #000000">...</span><span style="color: #800000">&lt;/span&gt;</span>
+<span style="color: #000000">  </span><span style="color: #800000">&lt;span&gt;</span><span style="color: #000000">...</span><span style="color: #800000">&lt;/span&gt;</span>
+<span style="color: #000000">  </span><span style="color: #800000">&lt;table&gt;</span><span style="color: #000000">...</span><span style="color: #800000">&lt;/table&gt;</span>
+<span style="color: #800000">&lt;div&gt;</span>
+</code></pre>
 						<p>We can define a region under DIV before the second TABLE and after the first TABLE</p>
 					</div>
 					<p>This is used when user&#39;s selection go across different TD elements or start from TD and end after
@@ -91,7 +93,7 @@
 						<span class="target">RegionBase</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="roosterjs_editor_types.region.html" class="tsd-signature-type">Region</a>
+								<a href="roosterjs_editor_types.region.html" class="tsd-signature-type" data-tsd-kind="Interface">Region</a>
 							</li>
 						</ul>
 					</li>
@@ -121,7 +123,7 @@
 					<div class="tsd-signature tsd-kind-icon">node<wbr>After<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Node</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a9a5b16/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L35">roosterjs-editor-types/lib/interface/RegionBase.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/186d010/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L35">packages/roosterjs-editor-types/lib/interface/RegionBase.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -137,7 +139,7 @@
 					<div class="tsd-signature tsd-kind-icon">node<wbr>Before<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Node</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a9a5b16/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L29">roosterjs-editor-types/lib/interface/RegionBase.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/186d010/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L29">packages/roosterjs-editor-types/lib/interface/RegionBase.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -153,7 +155,7 @@
 					<div class="tsd-signature tsd-kind-icon">root<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a9a5b16/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L23">roosterjs-editor-types/lib/interface/RegionBase.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/186d010/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L23">packages/roosterjs-editor-types/lib/interface/RegionBase.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -168,7 +170,7 @@
 					<div class="tsd-signature tsd-kind-icon">skip<wbr>Tags<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a9a5b16/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L40">roosterjs-editor-types/lib/interface/RegionBase.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/186d010/packages/roosterjs-editor-types/lib/interface/RegionBase.ts#L40">packages/roosterjs-editor-types/lib/interface/RegionBase.ts:40</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -182,8 +184,8 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="../modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/roosterjs.html">roosterjs</a>
@@ -241,7 +243,6 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>

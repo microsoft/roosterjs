@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.93% </span>
+                <span class="strong">15.07% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/221</span>
+                <span class='fraction'>33/219</span>
             </div>
         
             
@@ -1138,6 +1138,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1154,7 +1155,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1689,7 +1689,7 @@ export default class ImageEdit implements EditorPlugin {
      */
 <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    private c</span></span>reateWrapper(operation: ImageEditOperation) {
         // Wrap the image with an entity so that we can easily retrieve it later
-        const { <span class="cstat-no" title="statement not covered" >wrapper </span>} = insertEntity(
+        const { wrapper } = <span class="cstat-no" title="statement not covered" >insertEntity(</span>
             this.editor,
             IMAGE_EDIT_WRAPPER_ENTITY_TYPE,
             wrap(this.image, KnownCreateElementDataIndex.ImageEditWrapper),
@@ -1783,23 +1783,23 @@ export default class ImageEdit implements EditorPlugin {
 &nbsp;
             // Cropping and resizing will show different UI, so check if it is cropping here first
             const isCropping = <span class="cstat-no" title="statement not covered" >cropContainers.length == 1 &amp;&amp; cropOverlays.length == 4;</span>
-            const <span class="cstat-no" title="statement not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >                angleRad,</span>
-<span class="cstat-no" title="statement not covered" >                bottomPercent,</span>
-<span class="cstat-no" title="statement not covered" >                leftPercent,</span>
-<span class="cstat-no" title="statement not covered" >                rightPercent,</span>
-<span class="cstat-no" title="statement not covered" >                topPercent,</span>
-            } = this.editInfo;
+            const {
+                angleRad<span class="cstat-no" title="statement not covered" >,</span>
+                bottomPercent<span class="cstat-no" title="statement not covered" >,</span>
+                leftPercent<span class="cstat-no" title="statement not covered" >,</span>
+                rightPercent<span class="cstat-no" title="statement not covered" >,</span>
+                topPercent<span class="cstat-no" title="statement not covered" >,</span>
+            } = <span class="cstat-no" title="statement not covered" >this.editInfo;</span>
 &nbsp;
             // Width/height of the image
-            const <span class="cstat-no" title="statement not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >                targetWidth,</span>
-<span class="cstat-no" title="statement not covered" >                targetHeight,</span>
-<span class="cstat-no" title="statement not covered" >                originalWidth,</span>
-<span class="cstat-no" title="statement not covered" >                originalHeight,</span>
-<span class="cstat-no" title="statement not covered" >                visibleWidth,</span>
-<span class="cstat-no" title="statement not covered" >                visibleHeight,</span>
-            } = getGeneratedImageSize(this.editInfo, isCropping);
+            const {
+                targetWidth<span class="cstat-no" title="statement not covered" >,</span>
+                targetHeight<span class="cstat-no" title="statement not covered" >,</span>
+                originalWidth<span class="cstat-no" title="statement not covered" >,</span>
+                originalHeight<span class="cstat-no" title="statement not covered" >,</span>
+                visibleWidth<span class="cstat-no" title="statement not covered" >,</span>
+                visibleHeight<span class="cstat-no" title="statement not covered" >,</span>
+            } = <span class="cstat-no" title="statement not covered" >getGeneratedImageSize(this.editInfo, isCropping);</span>
             const marginHorizontal = <span class="cstat-no" title="statement not covered" >(targetWidth - visibleWidth) / 2;</span>
             const marginVertical = <span class="cstat-no" title="statement not covered" >(targetHeight - visibleHeight) / 2;</span>
             const cropLeftPx = <span class="cstat-no" title="statement not covered" >originalWidth * leftPercent;</span>
@@ -1972,7 +1972,7 @@ function <span class="fstat-no" title="function not covered" >updateHandleCursor
  * @returns if the user resized the image, returns true, otherwise, returns false
  */
 function <span class="fstat-no" title="function not covered" >checkIfImageWasResized(</span>image: HTMLImageElement): boolean {
-    const { <span class="cstat-no" title="statement not covered" >width,</span> <span class="cstat-no" title="statement not covered" >height,</span> <span class="cstat-no" title="statement not covered" >style </span>} = image;
+    const { width, height, style } = <span class="cstat-no" title="statement not covered" >image;</span>
     const isMaxWidthInitial =
 <span class="cstat-no" title="statement not covered" >        style.maxWidth === '' || style.maxWidth === 'initial' || style.maxWidth === 'auto';</span>
 <span class="cstat-no" title="statement not covered" >    if (</span>
@@ -1999,7 +1999,7 @@ function <span class="fstat-no" title="function not covered" >isFixedNumberValue
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Oct 15 2021 18:03:51 GMT+0000 (Coordinated Universal Time)
+                at Mon Oct 18 2021 18:34:27 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
