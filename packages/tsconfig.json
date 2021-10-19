@@ -57,6 +57,7 @@
         "readme": "../reference.md",
         "name": "RoosterJs API Reference",
         "excludeExternals": true,
+        "exclude": "**/*.d.ts",
         "excludePrivate": true,
         "includeVersion": true,
         "external-modulemap": ".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"
