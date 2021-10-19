@@ -213,28 +213,30 @@ function tslint() {
     runNode(tslintPath + ' --project ' + projectPath, rootPath);
 }
 
-function tsc(isAmd) {
+function buildAmd() {
+    const tsconfigPath = path.join(packagesPath, 'tsconfig.build.json');
     runNode(
-        typescriptPath + ` -t es5 --moduleResolution node -m ${isAmd ? 'amd' : 'commonjs'}`,
+        typescriptPath + ` -p ${tsconfigPath} -t es5 --moduleResolution node -m amd`,
         packagesPath
     );
 
-    if (isAmd) {
-        packages.forEach(package => {
-            var packagePath = path.join(distPath, package);
-            fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
-        });
-    } else {
-        packages.forEach(package => {
-            var copy = fileName => {
-                var source = path.join(rootPath, fileName);
-                var target = path.join(distPath, package, fileName);
-                fs.copyFileSync(source, target);
-            };
-            copy('README.md');
-            copy('LICENSE');
-        });
-    }
+    packages.forEach(package => {
+        var packagePath = path.join(distPath, package);
+        fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
+    });
+}
+
+function buildCommonJs() {
+    runNode(typescriptPath + ` --build`, packagesPath);
+    packages.forEach(package => {
+        var copy = fileName => {
+            var source = path.join(rootPath, fileName);
+            var target = path.join(distPath, package, fileName);
+            fs.copyFileSync(source, target);
+        };
+        copy('README.md');
+        copy('LICENSE');
+    });
 }
 
 function getPackedFileName(isProduction, isAmd) {
@@ -262,10 +264,7 @@ async function pack(isProduction, isAmd) {
                     test: /\.ts$/,
                     loader: 'ts-loader',
                     options: {
-                        compilerOptions: {
-                            declaration: false,
-                            preserveConstEnums: false,
-                        },
+                        configFile: 'tsconfig.build.json',
                     },
                 },
             ],
@@ -307,26 +306,9 @@ function buildDts(isAmd) {
 function buildDoc() {
     let config = {
         tsconfig: path.join(packagesPath, 'tsconfig.json'),
-        out: path.join(deployPath, 'docs'),
-        readme: path.join(rootPath, 'reference.md'),
-        name: '"RoosterJs API Reference"',
-        mode: 'modules',
-        ignoreCompilerErrors: '',
-        preserveConstEnums: '',
-        stripInternal: '',
-        target: 'ES5',
-        excludeExternals: '',
-        logger: 'none',
-        exclude: '**/test/**/*.ts',
-        excludePrivate: '',
-        excludeNotExported: '',
-        'external-modulemap': '".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"',
     };
 
-    let cmd = path.join(
-        nodeModulesPath,
-        'typedoc/bin/typedoc --plugin typedoc-plugin-exclude-references --plugin typedoc-plugin-external-module-map'
-    );
+    let cmd = path.join(nodeModulesPath, 'typedoc/bin/typedoc');
     for (let key of Object.keys(config)) {
         let value = config[key];
         cmd += ` --${key} ${value}`;
@@ -571,12 +553,12 @@ function buildAll(options) {
         },
         {
             message: 'Building packages in AMD mode...',
-            callback: () => tsc(true),
+            callback: () => buildAmd(),
             enabled: options.buildamd,
         },
         {
             message: 'Building packages in CommonJs mode...',
-            callback: () => tsc(false),
+            callback: () => buildCommonJs(),
             enabled: options.buildcommonjs,
         },
         ...[false, true].map(isAmd => ({

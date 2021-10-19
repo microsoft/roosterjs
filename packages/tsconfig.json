@@ -14,7 +14,51 @@
             "*": ["*"]
         },
         "rootDir": ".",
+        "composite": true,
         "lib": ["es6", "dom"]
     },
-    "include": ["**/*.ts"]
+
+    "references": [
+        {
+            "path": "roosterjs-editor-types/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-dom/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-core/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-api/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-editor-plugins/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-color-utils/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs/tsconfig.child.json"
+        }
+    ],
+    "include": [],
+    "typedocOptions": {
+        "entryPoints": [
+            "roosterjs-editor-types/lib/index.ts",
+            "roosterjs-editor-dom/lib/index.ts",
+            "roosterjs-editor-core/lib/index.ts",
+            "roosterjs-editor-api/lib/index.ts",
+            "roosterjs-editor-plugins/lib/index.ts",
+            "roosterjs-color-utils/lib/index.ts",
+            "roosterjs/lib/index.ts"
+        ],
+        "plugin": ["typedoc-plugin-remove-references", "typedoc-plugin-external-module-map"],
+        "out": "../dist/deploy/docs",
+        "readme": "../reference.md",
+        "name": "RoosterJs API Reference",
+        "excludeExternals": true,
+        "excludePrivate": true,
+        "includeVersion": true,
+        "external-modulemap": ".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"
+    }
 }
