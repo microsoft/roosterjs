@@ -52,11 +52,12 @@
             "roosterjs-color-utils/lib/index.ts",
             "roosterjs/lib/index.ts"
         ],
-        "plugin": ["typedoc-plugin-remove-references", "typedoc-plugin-external-module-map"],
+        "plugin": ["typedoc-plugin-external-module-map"],
         "out": "../dist/deploy/docs",
         "readme": "../reference.md",
         "name": "RoosterJs API Reference",
         "excludeExternals": true,
+        "exclude": "**/*.d.ts",
         "excludePrivate": true,
         "includeVersion": true,
         "external-modulemap": ".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"
