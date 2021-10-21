@@ -357,66 +357,58 @@ describe('UnlinkFeature HandleEvent Tests:  ', () => {
         AutoLinkFeatures.unlinkWhenBackspaceAfterLink.handleEvent(keyboardEvent, editor);
     }
 
-    function runWrap(expected: string, content: string, doneCallback: () => void) {
+    function runWrap(expected: string, content: string) {
         runAutoLinkhandleEventTest(content);
         editorContent = editor.getContent();
         expect(editorContent).toBe(expected);
-        doneCallback();
     }
 
-    it('Unlink | Handle Event 1', done => {
+    it('Unlink | Handle Event 1', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">www.site.com</div>`,
-            `<div id="${TEST_ELEMENT_ID}"><a href="http://www.site.com">www.site.com</a></div>`,
-            () => done()
+            `<div id="${TEST_ELEMENT_ID}"><a href="http://www.site.com">www.site.com</a></div>`
         );
     });
 
-    it('Unlink | Handle Event 2', done => {
+    it('Unlink | Handle Event 2', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">www.site</div>`,
-            '<div id="test"><a href="http://www.site">www.site</a></div>',
-            () => done()
+            '<div id="test"><a href="http://www.site">www.site</a></div>'
         );
     });
 
-    it('Unlink | Handle Event 3', done => {
+    it('Unlink | Handle Event 3', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">https://www.site.com</div>`,
-            '<div id="test"><a href="https://www.site.com">https://www.site.com</a></div>',
-            () => done()
+            '<div id="test"><a href="https://www.site.com">https://www.site.com</a></div>'
         );
     });
 
-    it('Unlink | Handle Event 4', done => {
+    it('Unlink | Handle Event 4', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">www.site</div>`,
-            '<div id="test"><a href="http://www.site">www.site</a></div>',
-            () => done()
+            '<div id="test"><a href="http://www.site">www.site</a></div>'
         );
     });
 
-    it('Unlink | Handle Event 5', done => {
+    it('Unlink | Handle Event 5', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">https://site.com</div>`,
-            '<div id="test"><a href="https://site.com">https://site.com</a></div>',
-            () => done()
+            '<div id="test"><a href="https://site.com">https://site.com</a></div>'
         );
     });
 
-    it('Unlink | Handle Event 6', done => {
+    it('Unlink | Handle Event 6', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">https://www.site</div>`,
-            '<div id="test"><a href="https://www.site">https://www.site</a></div>',
-            () => done()
+            '<div id="test"><a href="https://www.site">https://www.site</a></div>'
         );
     });
 
-    it('Unlink | Handle Event 7', done => {
+    it('Unlink | Handle Event 7', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">telnet://192.168.0.0</div>`,
-            '<div id="test"><a href="telnet://192.168.0.0">telnet://192.168.0.0</a></div>',
-            () => done()
+            '<div id="test"><a href="telnet://192.168.0.0">telnet://192.168.0.0</a></div>'
         );
     });
 });
