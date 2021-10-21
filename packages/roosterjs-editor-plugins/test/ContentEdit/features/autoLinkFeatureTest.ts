@@ -16,7 +16,6 @@ import {
     InlineElement,
     PositionType,
 } from 'roosterjs-editor-types/lib';
-
 describe('AutoLinkFeature ShouldHandle Tests:  ', () => {
     let editor: IEditor;
     const TEST_ID = 'AutoLinkFeatureShouldHandleTests';
