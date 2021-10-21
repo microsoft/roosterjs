@@ -33,7 +33,9 @@ describe('AutoLinkFeature ShouldHandle Tests:  ', () => {
 
     afterEach(() => {
         let element = document.getElementById(TEST_ID);
-        element && element.parentElement.removeChild(element);
+        if (element) {
+            element.parentElement.removeChild(element);
+        }
         editor.dispose();
     });
 
@@ -86,7 +88,9 @@ describe('UnlinkFeature ShouldHandle Tests:  ', () => {
 
     beforeEach(() => {
         let element = document.getElementById(TEST_ID);
-        element && element.parentElement.removeChild(element);
+        if (element) {
+            element.parentElement.removeChild(element);
+        }
         editor = TestHelper.initEditor(TEST_ID);
         contentSearcherOfCursorSpy = spyOn(editor, 'getContentSearcherOfCursor');
     });
@@ -133,7 +137,9 @@ describe('Auto Link ShouldHandle On Paste', () => {
 
     beforeEach(() => {
         let element = document.getElementById(TEST_ID);
-        element && element.parentElement.removeChild(element);
+        if (element) {
+            element.parentElement.removeChild(element);
+        }
         editor = TestHelper.initEditor(TEST_ID);
         editorSearchCursorSpy = spyOn(editor, 'getContentSearcherOfCursor');
     });
@@ -258,7 +264,6 @@ describe('AutoLinkFeature HandleEvent Tests:  ', () => {
     }
 
     it('AutoLink | Handle Event 1', done => {
-        debugger;
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">www.site.com</div>`,
             `<div id="${TEST_ELEMENT_ID}"><a href="http://www.site.com">www.site.com</a></div>`,
