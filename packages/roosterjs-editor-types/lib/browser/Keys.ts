@@ -14,7 +14,11 @@ export const enum Keys {
     RIGHT = 39,
     DOWN = 40,
     DELETE = 46,
+    /**
+     * @deprecated Just for backward compatibility
+     */
     EIGHT_ASTIRISK = 56,
+    EIGHT_ASTERISK = 56,
     B = 66,
     I = 73,
     U = 85,
@@ -23,7 +27,11 @@ export const enum Keys {
     COMMA = 188,
     DASH_UNDERSCORE = 189,
     PERIOD = 190,
+    /**
+     * @deprecated Just for backward compatibility
+     */
     FORWARDSLASH = 191,
+    FORWARD_SLASH = 191,
     GRAVE_TILDE = 192,
 
     // Keys below are non-standard, and should be used in ContentEditFeatures only

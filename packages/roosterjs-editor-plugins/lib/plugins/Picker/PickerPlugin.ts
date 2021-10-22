@@ -469,8 +469,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private calcInputLength(event: PluginEvent) {
-        const wordBeforCursor = this.getInlineElementBeforeCursor(event);
-        return wordBeforCursor ? wordBeforCursor.length : 0;
+        const wordBeforeCursor = this.getInlineElementBeforeCursor(event);
+        return wordBeforeCursor ? wordBeforeCursor.length : 0;
     }
 
     private tryRemoveNode(event: PluginDomEvent): boolean {

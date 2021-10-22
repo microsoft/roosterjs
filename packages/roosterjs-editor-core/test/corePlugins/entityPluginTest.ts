@@ -1,9 +1,13 @@
-import * as dom from 'roosterjs-editor-dom';
+import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
+import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
 import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import {
+    createDefaultHtmlSanitizerOptions,
+    moveChildNodes,
+    createElement,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
-    ContentEditFeature,
     EntityClasses,
     EntityOperation,
     EntityOperationEvent,
@@ -85,7 +89,7 @@ describe('EntityPlugin', () => {
 
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         editor.triggerPluginEvent = triggerPluginEvent;
-        spyOn(dom, 'getEntityFromElement').and.callFake(node => <any>node);
+        spyOn(getEntityFromElement, 'default').and.callFake(node => <any>node);
 
         action();
 
@@ -130,7 +134,7 @@ describe('EntityPlugin', () => {
 
         editor.getElementAtCursor = () => target;
 
-        spyOn(dom, 'getEntityFromElement').and.callFake(node => <any>node);
+        spyOn(getEntityFromElement, 'default').and.callFake(node => <any>node);
 
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseUp,
@@ -153,7 +157,7 @@ describe('EntityPlugin', () => {
 
         editor.getElementAtCursor = () => target;
 
-        spyOn(dom, 'getEntityFromElement').and.callFake(node => <any>node);
+        spyOn(getEntityFromElement, 'default').and.callFake(node => <any>node);
 
         plugin.onPluginEvent({
             eventType: PluginEventType.MouseUp,
@@ -202,7 +206,7 @@ describe('EntityPlugin', () => {
     });
 
     it('before paste event', () => {
-        const sanitizingOption = dom.createDefaultHtmlSanitizerOptions();
+        const sanitizingOption = createDefaultHtmlSanitizerOptions();
         verifyRemoveEntities(null, () =>
             plugin.onPluginEvent({
                 eventType: PluginEventType.BeforePaste,
@@ -281,7 +285,7 @@ describe('EntityPlugin', () => {
             node2.id = 'node2';
             node3.id = 'node3';
 
-            spyOn(dom, 'getEntityFromElement').and.callFake((e: HTMLElement) => {
+            spyOn(getEntityFromElement, 'default').and.callFake((e: HTMLElement) => {
                 return {
                     wrapper: e,
                     id: e.id,
@@ -299,15 +303,15 @@ describe('EntityPlugin', () => {
                 return containedNodes;
             });
 
-            spyOn(dom, 'commitEntity');
+            spyOn(commitEntity, 'default');
             spyOn(document, 'createDocumentFragment').and.returnValue(fragment);
         });
 
         function verify(inStateNodes: HTMLElement[], commitedNodes: HTMLElement[]) {
             expect(state.knownEntityElements).toEqual(inStateNodes);
-            expect(dom.commitEntity).toHaveBeenCalledTimes(commitedNodes.length);
+            expect(commitEntity.default).toHaveBeenCalledTimes(commitedNodes.length);
             commitedNodes.forEach(node => {
-                expect(dom.commitEntity).toHaveBeenCalledWith(node, entityType, false, node.id);
+                expect(commitEntity.default).toHaveBeenCalledWith(node, entityType, false, node.id);
                 expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                     operation: EntityOperation.NewEntity,
                     entity: {
@@ -387,8 +391,8 @@ describe('EntityPlugin', () => {
             node3.id = 'node2_1';
             verify([node2, node3], [node3]);
 
-            expect(dom.commitEntity).toHaveBeenCalledTimes(1);
-            expect(dom.commitEntity).toHaveBeenCalledWith(node2, entityType, false, 'node2_1');
+            expect(commitEntity.default).toHaveBeenCalledTimes(1);
+            expect(commitEntity.default).toHaveBeenCalledWith(node2, entityType, false, 'node2_1');
         });
     });
 });
@@ -407,43 +411,6 @@ describe('Shadow DOM Entity', () => {
         expect(plugin.willHandleEventExclusively(event)).toBeTrue();
     });
 
-    itChromeOnly('Workaround Chrome issue', () => {
-        let feature: ContentEditFeature;
-        let wrapper = document.createElement('span');
-        const plugin = new EntityPlugin();
-        const runAsync = jasmine.createSpy('runAsync').and.callFake((callback: Function) => {
-            wrapper = wrapper.cloneNode(true) as HTMLElement;
-            callback();
-        });
-
-        wrapper.innerHTML = 'test';
-        dom.commitEntity(wrapper, 'TEST', false, 'TEST');
-        wrapper.attachShadow({ mode: 'open' });
-        const editor: IEditor = <any>{
-            getDocument: () => document,
-            addContentEditFeature: (f: ContentEditFeature) => {
-                feature = f;
-            },
-            queryElements: () => {
-                return [wrapper];
-            },
-            runAsync,
-            triggerPluginEvent: () => {},
-        };
-
-        plugin.initialize(editor);
-
-        expect(feature).toBeDefined();
-        expect(feature.keys).toEqual([Keys.BACKSPACE, Keys.DELETE]);
-        expect(feature.shouldHandleEvent(<any>{}, editor, false /*ctrlOrMeta*/)).toBeTrue();
-
-        feature.handleEvent(<any>{}, editor);
-
-        expect(runAsync).toHaveBeenCalled();
-        expect(wrapper.innerHTML).toBe('test');
-        expect(wrapper.shadowRoot).toBeTruthy();
-    });
-
     it('Cache shadow entity before set content', () => {
         const plugin = new EntityPlugin();
         const entity1 = document.createElement('span');
@@ -456,8 +423,8 @@ describe('Shadow DOM Entity', () => {
         const state = plugin.getState();
         const textNode = document.createTextNode('text');
 
-        dom.commitEntity(entity1, 'ENTITY1', false, 'TEST1');
-        dom.commitEntity(entity2, 'ENTITY2', false, 'TEST2');
+        commitEntity.default(entity1, 'ENTITY1', false, 'TEST1');
+        commitEntity.default(entity2, 'ENTITY2', false, 'TEST2');
         entity2.attachShadow({ mode: 'open' }).appendChild(textNode);
 
         expect(state).toEqual({
@@ -490,7 +457,7 @@ describe('Shadow DOM Entity', () => {
 
         state.knownEntityElements.push(entity1);
         plugin.initialize(editor);
-        dom.commitEntity(entity1, 'TEST', false, 'TEST1');
+        commitEntity.default(entity1, 'TEST', false, 'TEST1');
         entity1.attachShadow({ mode: 'open' });
 
         plugin.onPluginEvent({
@@ -503,7 +470,7 @@ describe('Shadow DOM Entity', () => {
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.RemoveShadowRoot,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             contentForShadowEntity: undefined,
         });
     });
@@ -532,7 +499,7 @@ describe('Shadow DOM Entity', () => {
         };
 
         plugin.initialize(editor);
-        dom.commitEntity(entity1, 'TEST', false, 'TEST1');
+        commitEntity.default(entity1, 'TEST', false, 'TEST1');
 
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,
@@ -544,14 +511,14 @@ describe('Shadow DOM Entity', () => {
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             contentForShadowEntity: document.createDocumentFragment(),
         });
         expect(entity1.shadowRoot.firstChild).toBe(textNode);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.AddShadowRoot,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             contentForShadowEntity: undefined,
         });
     });
@@ -579,12 +546,12 @@ describe('Shadow DOM Entity', () => {
         };
 
         plugin.initialize(editor);
-        dom.commitEntity(entity1, 'TEST', false, 'TEST1');
+        commitEntity.default(entity1, 'TEST', false, 'TEST1');
 
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,
             source: ChangeSource.InsertEntity,
-            data: dom.getEntityFromElement(entity1),
+            data: getEntityFromElement.default(entity1),
         });
 
         expect(state.knownEntityElements).toEqual([entity1]);
@@ -592,14 +559,14 @@ describe('Shadow DOM Entity', () => {
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             contentForShadowEntity: document.createDocumentFragment(),
         });
         expect(entity1.shadowRoot.firstChild).toBe(textNode);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.AddShadowRoot,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             contentForShadowEntity: undefined,
         });
     });
@@ -622,7 +589,7 @@ describe('Shadow DOM Entity', () => {
         };
 
         plugin.initialize(editor);
-        dom.commitEntity(entity1, 'TEST', false, 'TEST1');
+        commitEntity.default(entity1, 'TEST', false, 'TEST1');
         entity1.attachShadow({ mode: 'open' });
 
         plugin.onPluginEvent({
@@ -637,7 +604,7 @@ describe('Shadow DOM Entity', () => {
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             contentForShadowEntity: document.createDocumentFragment(),
         });
         expect(newEntity.shadowRoot).toBe(null);
@@ -655,9 +622,9 @@ describe('Shadow DOM Entity', () => {
                     type == PluginEventType.EntityOperation &&
                     param.operation == EntityOperation.NewEntity
                 ) {
-                    dom.moveChildNodes(
+                    moveChildNodes(
                         param.contentForShadowEntity,
-                        dom.createElement(
+                        createElement(
                             {
                                 tag: 'span',
                                 children: ['test2'],
@@ -676,8 +643,8 @@ describe('Shadow DOM Entity', () => {
         };
 
         plugin.initialize(editor);
-        dom.commitEntity(entity1, 'TEST', false, 'TEST1');
-        dom.commitEntity(entity2, 'TEST', false, 'TEST1');
+        commitEntity.default(entity1, 'TEST', false, 'TEST1');
+        commitEntity.default(entity2, 'TEST', false, 'TEST1');
         entity1.attachShadow({ mode: 'open' }).appendChild(document.createTextNode('test'));
         state.knownEntityElements.push(entity1);
 
@@ -698,13 +665,13 @@ describe('Shadow DOM Entity', () => {
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity2),
+            entity: getEntityFromElement.default(entity2),
             contentForShadowEntity: document.createDocumentFragment(),
         });
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.RemoveShadowRoot,
             rawEvent: undefined,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             contentForShadowEntity: undefined,
         });
     });
@@ -723,19 +690,19 @@ describe('Shadow DOM Entity', () => {
         };
 
         state.knownEntityElements.push(entity1);
-        dom.commitEntity(entity1, 'TEST', false, 'TEST1');
+        commitEntity.default(entity1, 'TEST', false, 'TEST1');
         entity1.attachShadow({ mode: 'open' });
         plugin.initialize(editor);
         plugin.onPluginEvent({
             eventType: PluginEventType.EntityOperation,
             operation: EntityOperation.Overwrite,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
         });
 
         expect(state.knownEntityElements).toEqual([]);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.RemoveShadowRoot,
-            entity: dom.getEntityFromElement(entity1),
+            entity: getEntityFromElement.default(entity1),
             rawEvent: undefined,
             contentForShadowEntity: undefined,
         });
@@ -757,10 +724,10 @@ describe('Shadow DOM Entity', () => {
             getDocument: () => document,
         };
 
-        dom.commitEntity(entity1, 'TEST', false, 'Test');
-        dom.commitEntity(entity2, 'TEST', false, 'Test_2');
-        dom.commitEntity(entity3, 'TEST', false, 'Test');
-        dom.commitEntity(entity4, 'TEST', false, 'Test_2');
+        commitEntity.default(entity1, 'TEST', false, 'Test');
+        commitEntity.default(entity2, 'TEST', false, 'Test_2');
+        commitEntity.default(entity3, 'TEST', false, 'Test');
+        commitEntity.default(entity4, 'TEST', false, 'Test_2');
         state.knownEntityElements.push(entity1);
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -768,9 +735,9 @@ describe('Shadow DOM Entity', () => {
             source: '',
         });
 
-        expect(dom.getEntityFromElement(entity1).id).toBe('Test');
-        expect(dom.getEntityFromElement(entity2).id).toBe('Test_2');
-        expect(dom.getEntityFromElement(entity3).id).toBe('Test_1');
-        expect(dom.getEntityFromElement(entity4).id).toBe('Test_3');
+        expect(getEntityFromElement.default(entity1).id).toBe('Test');
+        expect(getEntityFromElement.default(entity2).id).toBe('Test_2');
+        expect(getEntityFromElement.default(entity3).id).toBe('Test_1');
+        expect(getEntityFromElement.default(entity4).id).toBe('Test_3');
     });
 });

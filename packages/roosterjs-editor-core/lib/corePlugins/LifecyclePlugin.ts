@@ -73,10 +73,10 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         if (contentDiv.getAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME) === null) {
             this.initializer = () => {
                 contentDiv.contentEditable = 'true';
-                this.setSelectStyle(contentDiv, 'text');
+                contentDiv.style.userSelect = 'text';
             };
             this.disposer = () => {
-                this.setSelectStyle(contentDiv, '');
+                contentDiv.style.userSelect = '';
                 contentDiv.removeAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME);
             };
         }
@@ -189,12 +189,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                 this.editor.getDocument().execCommand(command, false, COMMANDS[command]);
             } catch {}
         });
-    }
-
-    private setSelectStyle(node: HTMLElement, value: string) {
-        node.style.userSelect = value;
-        node.style.msUserSelect = value;
-        node.style.webkitUserSelect = value;
     }
 
     private recalculateDefaultFormat() {

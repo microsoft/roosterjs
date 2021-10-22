@@ -39,7 +39,7 @@ const PREDEFINED_CSS_FOR_ELEMENT: PredefinedCssMap = {
 
 /**
  * @internal
- * Get a map for browser built-in CSS definations of elements
+ * Get a map for browser built-in CSS definitions of elements
  */
 export default function getPredefinedCssForElement(
     element: HTMLElement,

@@ -32,7 +32,7 @@ export default function wrap(nodes: Node | Node[], wrapper?: string): HTMLElemen
 export default function wrap(nodes: Node | Node[], wrapper?: HTMLElement): HTMLElement;
 
 /**
- * Wrapp all the nodes with CreateElementData or an index of a known CreateElementData
+ * Wraps all the nodes with CreateElementData or an index of a known CreateElementData
  * @param nodes The nodes to wrap
  * @param wrapper The CreateElementData or an index of a known CreateElementData
  */

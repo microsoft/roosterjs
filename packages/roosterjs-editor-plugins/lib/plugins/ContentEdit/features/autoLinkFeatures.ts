@@ -29,7 +29,7 @@ const MINIMUM_LENGTH = 5;
  * AutoLink edit feature, provides the ability to automatically convert text user typed or pasted
  * in hyperlink format into a real hyperlink
  */
-const AutoLink: BuildInEditFeature<PluginKeyboardEvent> = {
+const AutoLink: BuildInEditFeature<PluginEvent> = {
     keys: [Keys.ENTER, Keys.SPACE, Keys.CONTENTCHANGED],
     shouldHandleEvent: cacheGetLinkData,
     handleEvent: autoLink,
@@ -104,7 +104,6 @@ function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: IEditor): boole
 function autoLink(event: PluginEvent, editor: IEditor) {
     let anchor = editor.getDocument().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
-
     // Need to get searcher before we enter the async callback since the callback can happen when cursor is moved to next line
     // and at that time a new searcher won't be able to find the link text to replace
     let searcher = editor.getContentSearcherOfCursor();
@@ -137,7 +136,7 @@ function autoLink(event: PluginEvent, editor: IEditor) {
  */
 export const AutoLinkFeatures: Record<
     keyof AutoLinkFeatureSettings,
-    BuildInEditFeature<PluginKeyboardEvent>
+    BuildInEditFeature<PluginEvent>
 > = {
     autoLink: AutoLink,
     unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,

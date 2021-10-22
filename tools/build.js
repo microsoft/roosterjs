@@ -26,11 +26,14 @@ var version = mainPackageJson.version;
 // Token
 var token = null;
 
+// Misc
+var showProgressBar = true;
+
 // Commands
 var commands = [
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
-    'dts', // Generate type definitioin files (.d.ts)
+    'dts', // Generate type definition files (.d.ts)
     'tslint', // Run tslint to check code style
     'normalize', // Normalize package.json files
     'pack', // Run webpack to generate standalone .js files
@@ -132,9 +135,9 @@ function checkDependency() {
             var content = fs.readFileSync(thisFilename).toString();
             var reg = /from\s+'([^']+)';$/gm;
             while ((match = reg.exec(content))) {
-                var nextfile = match[1];
-                if (nextfile) {
-                    processFile(dir, nextfile, files.slice(), packageDependencies);
+                var nextFile = match[1];
+                if (nextFile) {
+                    processFile(dir, nextFile, files.slice(), packageDependencies);
                 }
             }
         } catch (e) {
@@ -210,28 +213,30 @@ function tslint() {
     runNode(tslintPath + ' --project ' + projectPath, rootPath);
 }
 
-function tsc(isAmd) {
+function buildAmd() {
+    const tsconfigPath = path.join(packagesPath, 'tsconfig.build.json');
     runNode(
-        typescriptPath + ` -t es5 --moduleResolution node -m ${isAmd ? 'amd' : 'commonjs'}`,
+        typescriptPath + ` -p ${tsconfigPath} -t es5 --moduleResolution node -m amd`,
         packagesPath
     );
 
-    if (isAmd) {
-        packages.forEach(package => {
-            var packagePath = path.join(distPath, package);
-            fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
-        });
-    } else {
-        packages.forEach(package => {
-            var copy = fileName => {
-                var source = path.join(rootPath, fileName);
-                var target = path.join(distPath, package, fileName);
-                fs.copyFileSync(source, target);
-            };
-            copy('README.md');
-            copy('LICENSE');
-        });
-    }
+    packages.forEach(package => {
+        var packagePath = path.join(distPath, package);
+        fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
+    });
+}
+
+function buildCommonJs() {
+    runNode(typescriptPath + ` --build`, packagesPath);
+    packages.forEach(package => {
+        var copy = fileName => {
+            var source = path.join(rootPath, fileName);
+            var target = path.join(distPath, package, fileName);
+            fs.copyFileSync(source, target);
+        };
+        copy('README.md');
+        copy('LICENSE');
+    });
 }
 
 function getPackedFileName(isProduction, isAmd) {
@@ -259,10 +264,7 @@ async function pack(isProduction, isAmd) {
                     test: /\.ts$/,
                     loader: 'ts-loader',
                     options: {
-                        compilerOptions: {
-                            declaration: false,
-                            preserveConstEnums: false,
-                        },
+                        configFile: 'tsconfig.build.json',
                     },
                 },
             ],
@@ -304,26 +306,9 @@ function buildDts(isAmd) {
 function buildDoc() {
     let config = {
         tsconfig: path.join(packagesPath, 'tsconfig.json'),
-        out: path.join(deployPath, 'docs'),
-        readme: path.join(rootPath, 'reference.md'),
-        name: '"RoosterJs API Reference"',
-        mode: 'modules',
-        ignoreCompilerErrors: '',
-        preserveConstEnums: '',
-        stripInternal: '',
-        target: 'ES5',
-        excludeExternals: '',
-        logger: 'none',
-        exclude: '**/test/**/*.ts',
-        excludePrivate: '',
-        excludeNotExported: '',
-        'external-modulemap': '".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"',
     };
 
-    let cmd = path.join(
-        nodeModulesPath,
-        'typedoc/bin/typedoc --plugin typedoc-plugin-exclude-references --plugin typedoc-plugin-external-module-map'
-    );
+    let cmd = path.join(nodeModulesPath, 'typedoc/bin/typedoc');
     for (let key of Object.keys(config)) {
         let value = config[key];
         cmd += ` --${key} ${value}`;
@@ -486,15 +471,31 @@ class Runner {
         });
     }
 
+    getUI() {
+        var index = 0;
+        return showProgressBar
+            ? new ProgressBar('[:bar] (:current/:total finished) :message  ', {
+                  total: this.tasks.length,
+                  width: 40,
+                  complete: '#',
+              })
+            : {
+                  tick: (p1, p2) => {
+                      index++;
+                      var msg = (p1 || p2).message;
+
+                      if (msg) {
+                          console.log(`[Step ${index} of ${this.tasks.length}]: ${msg}`);
+                      }
+                  },
+              };
+    }
+
     run() {
         (async () => {
             console.log(`Start building roosterjs version ${version}\n`);
 
-            var bar = new ProgressBar('[:bar] (:current/:total finished) :message  ', {
-                total: this.tasks.length,
-                width: 40,
-                complete: '#',
-            });
+            var bar = this.getUI();
 
             for (var i = 0; i < this.tasks.length; i++) {
                 var task = this.tasks[i];
@@ -536,7 +537,7 @@ function buildAll(options) {
             enabled: options.tslint,
         },
         {
-            message: 'Checking cicular dependency...',
+            message: 'Checking circular dependency...',
             callback: checkDependency,
             enabled: options.checkdep,
         },
@@ -552,12 +553,12 @@ function buildAll(options) {
         },
         {
             message: 'Building packages in AMD mode...',
-            callback: () => tsc(true),
+            callback: () => buildAmd(),
             enabled: options.buildamd,
         },
         {
             message: 'Building packages in CommonJs mode...',
-            callback: () => tsc(false),
+            callback: () => buildCommonJs(),
             enabled: options.buildcommonjs,
         },
         ...[false, true].map(isAmd => ({
@@ -571,12 +572,12 @@ function buildAll(options) {
             enabled: options.packprod || (!isAmd && options.builddemo),
         })),
         {
-            message: `Generating type definition file for CommonJs'}...`,
+            message: `Generating type definition file for CommonJs}...`,
             callback: () => buildDts(false /*isAmd*/),
             enabled: options.dts,
         },
         {
-            message: `Generating type definition file for AMD'}...`,
+            message: `Generating type definition file for AMD}...`,
             callback: () => buildDts(true /*isAmd*/),
             enabled: options.dts,
         },
@@ -608,13 +609,14 @@ function parseOptions(additionalParams) {
     for (var i = 0; i < params.length; i++) {
         if (params[i] == '--token') {
             token = params[++i];
-            continue;
-        }
+        } else if (params[i] == '--noProgressBar') {
+            showProgressBar = false;
+        } else {
+            var index = commands.indexOf(params[i]);
 
-        var index = commands.indexOf(params[i]);
-
-        if (index >= 0) {
-            options[commands[index]] = true;
+            if (index >= 0) {
+                options[commands[index]] = true;
+            }
         }
     }
     return options;

@@ -38,10 +38,12 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                         Test
                     </a>
                     {' | '}
-                    <a href="https://www.travis-ci.org/microsoft/roosterjs" target="_blank">
+                    <a
+                        href="https://github.com/microsoft/roosterjs/actions/workflows/build-and-deploy.yml"
+                        target="_blank">
                         <img
                             className={styles.externalLink}
-                            src="https://api.travis-ci.org/microsoft/roosterjs.svg?branch=master"
+                            src="https://github.com/microsoft/roosterjs/actions/workflows/build-and-deploy.yml/badge.svg"
                             alt="Build Status"
                         />
                     </a>{' '}

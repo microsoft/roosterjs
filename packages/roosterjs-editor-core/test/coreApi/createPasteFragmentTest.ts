@@ -1,4 +1,4 @@
-import * as dom from 'roosterjs-editor-dom';
+import * as createDefaultHtmlSanitizerOptions from 'roosterjs-editor-dom/lib/htmlSanitizer/createDefaultHtmlSanitizerOptions';
 import createEditorCore from './createMockEditorCore';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
@@ -318,7 +318,7 @@ describe('createPasteFragment', () => {
 
     it('html input with html attributes and meta', () => {
         const sanitizingOption: any = {};
-        spyOn(dom, 'createDefaultHtmlSanitizerOptions').and.returnValue(sanitizingOption);
+        spyOn(createDefaultHtmlSanitizerOptions, 'default').and.returnValue(sanitizingOption);
 
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
@@ -362,7 +362,7 @@ describe('createPasteFragment', () => {
 
     it('html input, make sure STYLE tags are properly handled', () => {
         const sanitizingOption: any = { additionalGlobalStyleNodes: [] };
-        spyOn(dom, 'createDefaultHtmlSanitizerOptions').and.returnValue(sanitizingOption);
+        spyOn(createDefaultHtmlSanitizerOptions, 'default').and.returnValue(sanitizingOption);
 
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
@@ -390,6 +390,50 @@ describe('createPasteFragment', () => {
         expect(sanitizingOption.additionalGlobalStyleNodes[1].outerHTML).toBe(
             '<style>.class1{}</style>'
         );
+    });
+
+    it('html input, with one img tag', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+
+        const clipboardData: ClipboardData = {
+            types: ['image/png', 'text/html'],
+            text: '',
+            image: null,
+            rawHtml: '<html>\r\n<body>\r\n<img src="" />\r\n</body>\r\n</html>',
+            customValues: {},
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html).toBe('<img src="">');
+        expect(clipboardData.htmlFirstLevelChildTags).toEqual(['IMG']);
+    });
+
+    it('html input, with one img tag and text nodes with value', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+
+        const clipboardData: ClipboardData = {
+            types: ['image/png', 'text/html'],
+            text: '',
+            image: null,
+            rawHtml: '<html>\r\n<body>teststring<img src="" />teststring</body>\r\n</html>',
+            customValues: {},
+            imageDataUri: null,
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const html = getHTML(fragment);
+        expect(html.trim()).toBe('teststring<img src="">teststring');
+        expect(clipboardData.htmlFirstLevelChildTags).toEqual(['', 'IMG', '']);
     });
 });
 

@@ -107,8 +107,8 @@ const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
             return false;
         }
         const isAtEnd = Position.getEnd(editor.getSelectionRange()).isAtEnd;
-        const nextSibiling = isAtEnd ? getCacheNextSibiling(event, editor) : null;
-        const isAtEndAndBeforeLI = editor.getElementAtCursor('LI', nextSibiling, event);
+        const nextSibling = isAtEnd ? getCacheNextSibling(event, editor) : null;
+        const isAtEndAndBeforeLI = editor.getElementAtCursor('LI', nextSibling, event);
         return isAtEndAndBeforeLI;
     },
     handleEvent: (event, editor) => {
@@ -222,8 +222,8 @@ function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
 }
 
-function getCacheNextSibiling(event: PluginKeyboardEvent, editor: IEditor): Node | undefined {
-    const element = cacheGetEventData(event, 'nextSibiling', () => {
+function getCacheNextSibling(event: PluginKeyboardEvent, editor: IEditor): Node | undefined {
+    const element = cacheGetEventData(event, 'nextSibling', () => {
         const range = editor.getSelectionRange();
         const pos = Position.getEnd(range).normalize();
         const traverser = editor.getBodyTraverser(pos.node);

@@ -13,7 +13,7 @@ export const enum ClearFormatMode {
     Block,
 
     /**
-     * Detect Inline or Block format based on the current editor selectior.
+     * Detect Inline or Block format based on the current editor selector.
      */
     AutoDetect,
 }
