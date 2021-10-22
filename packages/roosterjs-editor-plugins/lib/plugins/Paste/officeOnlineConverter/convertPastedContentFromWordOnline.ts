@@ -138,6 +138,15 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
 
     const imageNodes = getImageNodes(fragment);
     imageNodes.forEach(node => {
+        //   Structure when pasting Word Wac Image as of 10/22/2021
+        //   <span class='WACImageContainer'>
+        //        <img class="WACImage" >
+        //        <span style="display:block">
+        //        </span>
+        //   </span>
+        //
+        //   Since the second span inside of WACImageContainer have style display block it displays an additional space at the bottom of the image.
+        //   Removing the nodes that are not img will resolve the additional space
         if (safeInstanceOf(node, 'HTMLSpanElement')) {
             node.childNodes.forEach(childNode => {
                 if (getTagOfNode(childNode) != 'IMG') {
