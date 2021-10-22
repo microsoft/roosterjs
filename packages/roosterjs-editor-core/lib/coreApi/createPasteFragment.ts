@@ -75,11 +75,11 @@ export const createPasteFragment: CreatePasteFragment = (
                     return;
                 }
             }
-
             const nodeTag = getTagOfNode(node);
-            clipboardData.htmlFirstLevelChildTags.push(nodeTag);
+            if (node.nodeType != Node.COMMENT_NODE) {
+                clipboardData.htmlFirstLevelChildTags.push(nodeTag);
+            }
         });
-
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
         processStyles(doc, style => {
@@ -153,7 +153,6 @@ export const createPasteFragment: CreatePasteFragment = (
 
     sanitizer.convertGlobalCssToInlineCss(fragment);
     sanitizer.sanitize(fragment, position && getInheritableStyles(position.element));
-
     return fragment;
 };
 
