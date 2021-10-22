@@ -14,9 +14,6 @@ describe('wordOnlineHandler', () => {
             doc.body.appendChild(fragment.firstChild);
         }
 
-        if (doc.body.innerHTML != expectedInnerHtml) {
-            console.log(doc.body.innerHTML);
-        }
         expect(doc.body.innerHTML).toBe(expectedInnerHtml);
     }
 
