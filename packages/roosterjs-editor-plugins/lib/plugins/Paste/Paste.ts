@@ -25,7 +25,7 @@ const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 const WAC_IDENTIFY_SELECTOR =
-    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement';
+    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
