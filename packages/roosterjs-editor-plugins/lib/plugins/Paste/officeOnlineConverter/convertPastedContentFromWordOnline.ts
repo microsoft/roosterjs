@@ -8,11 +8,13 @@ import {
     collapseNodes,
     unwrap,
     toArray,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 
 const WORD_ONLINE_IDENTIFYING_SELECTOR =
-    'div.ListContainerWrapper>ul[class^="BulletListStyle"],div.ListContainerWrapper>ol[class^="NumberListStyle"]';
+    'div.ListContainerWrapper>ul[class^="BulletListStyle"],div.ListContainerWrapper>ol[class^="NumberListStyle"],span.WACImageContainer > img';
 const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
+const IMAGE_CONTAINER_ELEMENT_CLASS_NAME = 'WACImageContainer';
 
 /**
  * @internal
@@ -130,6 +132,17 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
         if (parentContainer) {
             itemBlock.listItemContainers.forEach(listItemContainer => {
                 parentContainer.removeChild(listItemContainer);
+            });
+        }
+    });
+
+    const imageNodes = getImageNodes(fragment);
+    imageNodes.forEach(node => {
+        if (safeInstanceOf(node, 'HTMLSpanElement')) {
+            node.childNodes.forEach(childNode => {
+                if (getTagOfNode(childNode) != 'IMG') {
+                    childNode.parentElement.removeChild(childNode);
+                }
             });
         }
     });
@@ -299,4 +312,8 @@ function insertConvertedListToDoc(
             fragment.appendChild(convertedListElement);
         }
     }
+}
+
+function getImageNodes(fragment: DocumentFragment) {
+    return fragment.querySelectorAll('.' + IMAGE_CONTAINER_ELEMENT_CLASS_NAME);
 }
