@@ -1,7 +1,12 @@
 import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import { DEFAULT_TABLE, DEFAULT_TABLE_MERGED, EXCEL_TABLE, WORD_TABLE } from './tableData';
-import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
+import {
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    DOMEventHandlerFunction,
+} from 'roosterjs-editor-types';
 
 const RESIZING_DIVIATION = 4;
 const INSERTING_DIVIATION = 3;
@@ -144,10 +149,47 @@ describe('Table Resizer/Inserter tests', () => {
     const TEST_TABLE_HEIGHT = 3;
     const TEST_ID = 'inserterTest';
 
+    let tempNode: HTMLElement = null;
+    let handler: Record<string, DOMEventHandlerFunction>;
+    let addDomEventHandler: jasmine.Spy;
+
     beforeEach(() => {
         editor = TestHelper.initEditor(TEST_ID);
         plugin = new TableResize();
-        plugin.initialize(editor);
+
+        handler = null;
+        addDomEventHandler = jasmine
+            .createSpy('addDomEventHandler')
+            .and.callFake((handlerParam: Record<string, DOMEventHandlerFunction>) => {
+                handler = handlerParam;
+                return () => {
+                    handler = null;
+                };
+            });
+
+        plugin.initialize(<IEditor>(<any>{
+            ...editor,
+            addDomEventHandler,
+            addUndoSnapshot: (f: () => void) => f(),
+            insertNode: (node: HTMLElement) => {
+                tempNode = node;
+                document.body.appendChild(node);
+            },
+            runAsync: (callback: () => void) => {
+                if (tempNode) {
+                    tempNode.innerHTML = 'test html';
+                }
+                callback();
+            },
+            getDocument: () => document,
+            select: () => {},
+            getDefaultFormat: () => {
+                return {
+                    backgroundColor: 'black',
+                };
+            },
+            isDarkMode: () => false,
+        }));
     });
 
     afterEach(() => {
@@ -177,12 +219,8 @@ describe('Table Resizer/Inserter tests', () => {
             editor.getDocument().body.style.direction = 'rtl';
         }
         editor.setContent(testTables[tableIndex].htmlData);
-        let tableRect: DOMRect = null;
-        editor.queryElements('table', table => {
-            const rect = table.getBoundingClientRect();
-            tableRect = rect;
-        });
-        return tableRect;
+        const table = document.getElementsByTagName('table')[0];
+        return table.getBoundingClientRect();
     }
 
     function getCurrentTable(): HTMLTableElement {
@@ -205,8 +243,7 @@ describe('Table Resizer/Inserter tests', () => {
         expectedResultAfterMove: boolean,
         expectedPosition?: DOMRect
     ) {
-        const editorDiv = editor.getDocument().getElementById(TEST_ID);
-        editorDiv.dispatchEvent(
+        handler.mousemove(
             new MouseEvent('mousemove', {
                 clientX: mouseStart.x,
                 clientY: mouseStart.y,
@@ -215,7 +252,7 @@ describe('Table Resizer/Inserter tests', () => {
 
         // test
         expect(!!editor.getDocument().getElementById(inserterType)).toBe(expectedResultBeforeMove);
-        editorDiv.dispatchEvent(
+        handler.mousemove(
             new MouseEvent('mousemove', {
                 clientX: mouseEnd.x,
                 clientY: mouseEnd.y,
@@ -243,13 +280,11 @@ describe('Table Resizer/Inserter tests', () => {
             const newCols = getTableColumns(table);
             expect(newRows).toBe(inserterType == VERTICAL_INSERTER ? rows : rows + 1);
             expect(newCols).toBe(inserterType == HORIZONTAL_INSERTER ? cols : cols + 1);
-
-            expect();
         }
     }
 
     // inserter tests
-    xit('removes the vertical inserter when moving the cursor out of the offset zone', () => {
+    it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
             VERTICAL_INSERTER,
@@ -260,7 +295,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
+    it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
             VERTICAL_INSERTER,
@@ -271,7 +306,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
+    it('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
         const rect = initialize(0);
         runInserterTest(
             HORIZONTAL_INSERTER,
@@ -282,7 +317,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('keeps the horizontal inserter when moving the cursor inside the safe zone', () => {
+    it('keeps the horizontal inserter when moving the cursor inside the safe zone', () => {
         const rect = initialize(0);
         runInserterTest(
             HORIZONTAL_INSERTER,
@@ -293,7 +328,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
+    it('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
             HORIZONTAL_INSERTER,
@@ -304,7 +339,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
+    it('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
         const rect = initialize(0, true);
         runInserterTest(
             HORIZONTAL_INSERTER,
@@ -315,7 +350,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
+    it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
         const rect = initialize(0, true);
         const cellRect = getCellRect(0, 0);
 
@@ -328,7 +363,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell', () => {
+    it('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(0, 0);
 
@@ -347,7 +382,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell', () => {
+    it('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(0, 1);
 
@@ -367,7 +402,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('sets the horizontal inserter at the previous td for non-first cells if the Y coordinate of the cursor position is less than the half distance of the cell', () => {
+    it('sets the horizontal inserter at the previous td for non-first cells if the Y coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(1, 0);
 
@@ -390,12 +425,13 @@ describe('Table Resizer/Inserter tests', () => {
     /************************ Resizer related tests ************************/
 
     function runShowResizerTest(resizerId: string, mousePos: Position, expectedPos?: Position) {
-        const editorDiv = editor.getDocument().getElementById(TEST_ID);
         const mouseEvent = new MouseEvent('mousemove', {
             clientX: mousePos.x,
             clientY: mousePos.y,
         });
-        editorDiv.dispatchEvent(mouseEvent);
+
+        handler.mousemove(mouseEvent);
+
         const resizer = editor.getDocument().getElementById(resizerId);
         expect(!!resizer).toBe(true);
         if (!!resizer && !!expectedPos) {
