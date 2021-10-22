@@ -153,6 +153,7 @@ export const createPasteFragment: CreatePasteFragment = (
 
     sanitizer.convertGlobalCssToInlineCss(fragment);
     sanitizer.sanitize(fragment, position && getInheritableStyles(position.element));
+
     return fragment;
 };
 
