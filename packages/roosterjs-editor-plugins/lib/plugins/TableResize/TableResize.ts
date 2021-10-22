@@ -80,7 +80,7 @@ export default class TableResize implements EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.setupResizerContainer();
-        this.onMouseMoveDisposer = this.editor.addDomEventHandler('mousemove', this.onMouseMove);
+        this.onMouseMoveDisposer = this.editor.addDomEventHandler({ mousemove: this.onMouseMove });
     }
 
     /**
@@ -752,7 +752,9 @@ export default class TableResize implements EditorPlugin {
 
     private cacheRects() {
         this.tableRectMap = [];
-        this.editor.queryElements('table', table => {
+        const tables = this.editor.getDocument().getElementsByTagName('table');
+        const tableList = Array.from(tables);
+        tableList.forEach(table => {
             if (table.isContentEditable) {
                 const rect = normalizeRect(table.getBoundingClientRect());
                 if (rect) {
