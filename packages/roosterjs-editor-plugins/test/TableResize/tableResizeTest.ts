@@ -8,7 +8,7 @@ import {
     DOMEventHandlerFunction,
 } from 'roosterjs-editor-types';
 
-const RESIZING_DIVIATION = 4;
+const RESIZING_DIVIATION = 5;
 const INSERTING_DIVIATION = 3;
 const CELL_RESIZER_WIDTH = 4;
 
