@@ -149,7 +149,6 @@ describe('Table Resizer/Inserter tests', () => {
     const TEST_TABLE_HEIGHT = 3;
     const TEST_ID = 'inserterTest';
 
-    let tempNode: HTMLElement = null;
     let handler: Record<string, DOMEventHandlerFunction>;
     let addDomEventHandler: jasmine.Spy;
 
@@ -167,19 +166,15 @@ describe('Table Resizer/Inserter tests', () => {
                 };
             });
 
-        plugin.initialize(<IEditor>(<any>{
+        editor = <IEditor>(<any>{
             ...editor,
             addDomEventHandler,
             addUndoSnapshot: (f: () => void) => f(),
             insertNode: (node: HTMLElement) => {
-                tempNode = node;
                 document.body.appendChild(node);
             },
             runAsync: (callback: () => void) => {
-                if (tempNode) {
-                    tempNode.innerHTML = 'test html';
-                }
-                callback();
+                handler.resizeCells = callback;
             },
             getDocument: () => document,
             select: () => {},
@@ -189,7 +184,17 @@ describe('Table Resizer/Inserter tests', () => {
                 };
             },
             isDarkMode: () => false,
-        }));
+            queryElements: (table: string, callback: (table: HTMLTableElement) => void) => {
+                const tables = document.getElementsByTagName(table);
+                const tableList = Array.from(tables);
+                tableList.forEach(table => {
+                    callback(table as HTMLTableElement);
+                });
+            },
+            dispose: () => {},
+        });
+
+        plugin.initialize(editor);
     });
 
     afterEach(() => {
@@ -218,7 +223,8 @@ describe('Table Resizer/Inserter tests', () => {
         if (isRtl) {
             editor.getDocument().body.style.direction = 'rtl';
         }
-        editor.setContent(testTables[tableIndex].htmlData);
+        const editorDiv = editor.getDocument().getElementById(TEST_ID);
+        editorDiv.innerHTML = testTables[tableIndex].htmlData;
         const table = document.getElementsByTagName('table')[0];
         return table.getBoundingClientRect();
     }
@@ -491,38 +497,31 @@ describe('Table Resizer/Inserter tests', () => {
             clientX: mouseStart.x,
             clientY: mouseStart.y,
         });
-        editorDiv.dispatchEvent(mouseMoveEvent);
+        handler.mousemove(mouseMoveEvent);
 
         const resizer = editor.getDocument().getElementById(resizerId);
         expect(!!resizer).toBe(true);
 
         const tableBeforeClick = getTableRectSet(getCurrentTable());
         // mouse down and start resizing (this will initiate currentCellsToResize and nextCellsToResize)
-        const mouseClickEvent = new MouseEvent('mousedown', {
-            clientX: mouseStart.x,
-            clientY: mouseStart.y,
-        });
+        const mouseClickEvent = new MouseEvent('mousedown');
         resizer.dispatchEvent(mouseClickEvent);
 
         const tableAfterClick = getTableRectSet(getCurrentTable());
         // validate the table doesn't shift after clicking on the resizer
         runTableShapeTest(tableBeforeClick, tableAfterClick);
 
-        editor.runAsync = (callback: any) => callback(editor);
-        spyOn(editor, 'addUndoSnapshot').and.callFake((event, callback) => {});
-
         const mouseMoveResize = new MouseEvent('mousemove', {
             clientX: mouseEnd.x,
             clientY: mouseEnd.y,
         });
         const doc = editor.getDocument();
+        // this will assign handler.resizeCells with the actual handler
         doc.dispatchEvent(mouseMoveResize);
+        handler.resizeCells(mouseMoveResize);
 
         // release mouse and stop resizing
-        const mouseMoveEndEvent = new MouseEvent('mouseup', {
-            clientX: mouseEnd.x,
-            clientY: mouseEnd.y,
-        });
+        const mouseMoveEndEvent = new MouseEvent('mouseup');
         editorDiv.dispatchEvent(mouseMoveEndEvent);
     }
 
@@ -619,7 +618,7 @@ describe('Table Resizer/Inserter tests', () => {
 
     /************************** Resizier showing tests **************************/
 
-    xit('adds the vertical resizer when mouse lands inside each cell', () => {
+    it('adds the vertical resizer when mouse lands inside each cell', () => {
         const tableRect = initialize(0);
 
         for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
@@ -637,7 +636,7 @@ describe('Table Resizer/Inserter tests', () => {
         }
     });
 
-    xit('adds the horizontal resizer when mouse lands inside each cell', () => {
+    it('adds the horizontal resizer when mouse lands inside each cell', () => {
         const tableRect = initialize(0);
         for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
             for (let j = 0; j < TEST_TABLE_HEIGHT; j++) {
@@ -669,7 +668,7 @@ describe('Table Resizer/Inserter tests', () => {
         expect(!!resizer).toBe(false);
     }
 
-    xit('removes resisizer on input', () => {
+    it('removes resisizer on input', () => {
         const pluginEvent: PluginEvent = {
             eventType: PluginEventType.Input,
             rawEvent: null,
@@ -677,7 +676,7 @@ describe('Table Resizer/Inserter tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    xit('removes resisizer on content change', () => {
+    it('removes resisizer on content change', () => {
         const pluginEvent: PluginEvent = {
             eventType: PluginEventType.ContentChanged,
             source: null,
@@ -685,7 +684,7 @@ describe('Table Resizer/Inserter tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    xit('removes resisizer on scrolling', () => {
+    it('removes resisizer on scrolling', () => {
         const pluginEvent: PluginEvent = {
             eventType: PluginEventType.Scroll,
             scrollContainer: editor.getDocument().body as HTMLElement,
@@ -744,31 +743,31 @@ describe('Table Resizer/Inserter tests', () => {
         );
     }
 
-    xit('resizes the first row correctly with default table', () => {
+    it('resizes the first row correctly with default table', () => {
         resizeFirstRowTest(0);
     });
 
-    xit('resizes the first row correctly with Excel table', () => {
+    it('resizes the first row correctly with Excel table', () => {
         resizeFirstRowTest(1);
     });
 
-    xit('resizes the first row correctly with Word table', () => {
+    it('resizes the first row correctly with Word table', () => {
         resizeFirstRowTest(2);
     });
 
-    xit('resizes the last row correctly with default table', () => {
+    it('resizes the last row correctly with default table', () => {
         resizeLastRowTest(0);
     });
 
-    xit('resizes the last row correctly with Excel table', () => {
+    it('resizes the last row correctly with Excel table', () => {
         resizeLastRowTest(1);
     });
 
-    xit('resizes the last row correctly with Word table', () => {
+    it('resizes the last row correctly with Word table', () => {
         resizeLastRowTest(2);
     });
 
-    xit('resizes the row correctly with merged cells', () => {
+    it('resizes the row correctly with merged cells', () => {
         initialize(3);
         const delta = 35;
         const testTable = testTables[3];
@@ -944,19 +943,19 @@ describe('Table Resizer/Inserter tests', () => {
         );
     }
 
-    xit('resizes the column to the left correctly with default table', () => {
+    it('resizes the column to the left correctly with default table', () => {
         resizeColumnToLeftTest(0);
     });
 
-    xit('resizes the column to the left correctly with Excel table', () => {
+    it('resizes the column to the left correctly with Excel table', () => {
         resizeColumnToLeftTest(1);
     });
 
-    xit('resizes the column to the left correctly with Word table', () => {
+    it('resizes the column to the left correctly with Word table', () => {
         resizeColumnToLeftTest(2);
     });
 
-    xit('resizes the column to the left correctly with merged cells', () => {
+    it('resizes the column to the left correctly with merged cells', () => {
         initialize(3);
         const delta = 20;
         const testTable = testTables[3];
@@ -1009,7 +1008,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('does not resize the column to the left correctly with merged cells since too narrow', () => {
+    it('does not resize the column to the left correctly with merged cells since too narrow', () => {
         initialize(3);
         const testTable = testTables[3];
         const cellRect = getCellRect(1, 1);
@@ -1061,57 +1060,57 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
-    xit('does not resize the column to the left because it is too narrow with default table', () => {
+    it('does not resize the column to the left because it is too narrow with default table', () => {
         resizeColumnToLeftTooNarrowTest(0);
     });
 
-    xit('does not resize the column to the left because it is too narrow with Excel table', () => {
+    it('does not resize the column to the left because it is too narrow with Excel table', () => {
         resizeColumnToLeftTooNarrowTest(1);
     });
 
-    xit('does not resize the column to the left because it is too narrow with Word table', () => {
+    it('does not resize the column to the left because it is too narrow with Word table', () => {
         resizeColumnToLeftTooNarrowTest(2);
     });
 
-    xit('resizes the column to the right correctly with default table', () => {
+    it('resizes the column to the right correctly with default table', () => {
         resizeColumnToRightTest(0);
     });
 
-    xit('resizes the column to the right correctly with Excel table', () => {
+    it('resizes the column to the right correctly with Excel table', () => {
         resizeColumnToRightTest(1);
     });
 
-    xit('resizes the column to the right correctly with Word table', () => {
+    it('resizes the column to the right correctly with Word table', () => {
         resizeColumnToRightTest(2);
     });
 
-    xit('does not resize the column to the right because it is too narrow with default table', () => {
+    it('does not resize the column to the right because it is too narrow with default table', () => {
         resizeColumnToRightTestTooNarrowTest(0);
     });
 
-    xit('does not resize the column to the right because it is too narrow with Excel table', () => {
+    it('does not resize the column to the right because it is too narrow with Excel table', () => {
         resizeColumnToRightTestTooNarrowTest(1);
     });
 
-    xit('does not resize the column to the right because it is too narrow with Word table', () => {
+    it('does not resize the column to the right because it is too narrow with Word table', () => {
         resizeColumnToRightTestTooNarrowTest(2);
     });
 
-    xit('resizes the last column to the right correctly with default table', () => {
+    it('resizes the last column to the right correctly with default table', () => {
         resizeLastColumnToRightTest(0);
     });
 
-    xit('resizes the last column to the right correctly with Excel table', () => {
+    it('resizes the last column to the right correctly with Excel table', () => {
         resizeLastColumnToRightTest(1);
     });
 
-    xit('resizes the last column to the right correctly with Word table', () => {
+    it('resizes the last column to the right correctly with Word table', () => {
         resizeLastColumnToRightTest(2);
     });
 
     /************************ Resizing table related tests ************************/
 
-    function resizeTAbleWiderTest(i: number) {
+    function resizeTableWiderTest(i: number) {
         const tableRect = initialize(i);
         const testTable = testTables[i];
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
@@ -1166,63 +1165,63 @@ describe('Table Resizer/Inserter tests', () => {
         runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
     }
 
-    xit('resizes the table to be wider correctly with default table', () => {
-        resizeTAbleWiderTest(0);
+    it('resizes the table to be wider correctly with default table', () => {
+        resizeTableWiderTest(0);
     });
 
-    xit('resizes the table to be wider correctly with Excel table', () => {
-        resizeTAbleWiderTest(1);
+    it('resizes the table to be wider correctly with Excel table', () => {
+        resizeTableWiderTest(1);
     });
 
-    xit('resizes the table to be wider correctly with Word table', () => {
-        resizeTAbleWiderTest(2);
+    it('resizes the table to be wider correctly with Word table', () => {
+        resizeTableWiderTest(2);
     });
 
-    xit('resizes the table to be narrower correctly with default table', () => {
+    it('resizes the table to be narrower correctly with default table', () => {
         resizeTableNarrowerTest(0);
     });
 
-    xit('resizes the table to be narrower correctly with Excel table', () => {
+    it('resizes the table to be narrower correctly with Excel table', () => {
         resizeTableNarrowerTest(1);
     });
 
-    xit('resizes the table to be narrower correctly with Word table', () => {
+    it('resizes the table to be narrower correctly with Word table', () => {
         resizeTableNarrowerTest(2);
     });
 
-    xit('resizes the table to be taller correctly with default table', () => {
+    it('resizes the table to be taller correctly with default table', () => {
         resizeTableTallerTest(0);
     });
 
-    xit('resizes the table to be taller correctly with Excel table', () => {
+    it('resizes the table to be taller correctly with Excel table', () => {
         resizeTableTallerTest(1);
     });
 
-    xit('resizes the table to be taller correctly with Word table', () => {
+    it('resizes the table to be taller correctly with Word table', () => {
         resizeTableTallerTest(2);
     });
 
-    xit('resizes the table to be narrower and taller correctly with default table', () => {
+    it('resizes the table to be narrower and taller correctly with default table', () => {
         resizeTableNarrowerTallerTest(0);
     });
 
-    xit('resizes the table to be narrower and taller correctly with Excel table', () => {
+    it('resizes the table to be narrower and taller correctly with Excel table', () => {
         resizeTableNarrowerTallerTest(1);
     });
 
-    xit('resizes the table to be narrower and taller correctly with Word table', () => {
+    it('resizes the table to be narrower and taller correctly with Word table', () => {
         resizeTableNarrowerTallerTest(2);
     });
 
-    xit('resizes the table to be wider and taller correctly with default table', () => {
+    it('resizes the table to be wider and taller correctly with default table', () => {
         resizeTableWiderTallerTest(0);
     });
 
-    xit('resizes the table to be wider and taller correctly with Excel table', () => {
+    it('resizes the table to be wider and taller correctly with Excel table', () => {
         resizeTableWiderTallerTest(1);
     });
 
-    xit('resizes the table to be wider and taller correctly with Word table', () => {
+    it('resizes the table to be wider and taller correctly with Word table', () => {
         resizeTableWiderTallerTest(2);
     });
 
