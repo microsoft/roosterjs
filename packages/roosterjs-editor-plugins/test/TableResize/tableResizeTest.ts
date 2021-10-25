@@ -369,6 +369,7 @@ describe('Table Resizer/Inserter tests', () => {
         );
     });
 
+    // check this test
     it('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell', () => {
         initialize(0);
         const cellRect = getCellRect(0, 0);
