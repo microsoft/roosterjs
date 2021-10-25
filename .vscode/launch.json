@@ -39,6 +39,14 @@
             "name": "Debug app in Chrome",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "build",
+            "program": "${workspaceFolder}/tools/build.js",
+            "args": [],
+            "console": "integratedTerminal"
         }
     ]
 }
