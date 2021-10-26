@@ -84,7 +84,7 @@ describe('UndoPlugin', () => {
         expect(addUndoSnapshot).not.toHaveBeenCalledWith(state);
     });
 
-    it('key down event with BACKSPACE, add undo snapshot once', () => {
+    xit('key down event with BACKSPACE, add undo snapshot once', () => {
         editor.getSelectionRange = () => {
             return <any>{
                 collapsed: true,
@@ -139,7 +139,7 @@ describe('UndoPlugin', () => {
         expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
-    it('key down event with DELETE, add undo snapshot once', () => {
+    xit('key down event with DELETE, add undo snapshot once', () => {
         editor.getSelectionRange = () => {
             return <any>{
                 collapsed: true,

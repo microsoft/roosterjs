@@ -452,33 +452,33 @@ describe('VTable.edit', () => {
     it('Simple table, AlignCenter', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCenter,
-            '<table align="center"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId2(
             TableOperation.AlignCenter,
-            '<table align="center"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
     });
 
     it('Simple table, AlignRight', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignRight,
-            '<table align="right"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table style="margin-left: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId2(
             TableOperation.AlignRight,
-            '<table align="right"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table style="margin-left: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
     });
 
     it('Simple table, AlignLeft', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignLeft,
-            '<table align="left"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table style="margin-right: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId2(
             TableOperation.AlignLeft,
-            '<table align="left"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table style="margin-right: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
     });
 
@@ -607,29 +607,29 @@ describe('VTable.edit', () => {
     });
     it('Complex table, AlignCenter', () => {
         runComplexTableTest(TableOperation.AlignCenter, [
-            '<table align="center"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="center"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="center"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="center"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="center"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
         ]);
     });
     it('Complex table, AlignRight', () => {
         runComplexTableTest(TableOperation.AlignRight, [
-            '<table align="right"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="right"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="right"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="right"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="right"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
         ]);
     });
     it('Complex table, AlignLeft', () => {
         runComplexTableTest(TableOperation.AlignLeft, [
-            '<table align="left"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="left"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="left"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="left"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            '<table align="left"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
         ]);
     });
 });
