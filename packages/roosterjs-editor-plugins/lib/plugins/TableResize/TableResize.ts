@@ -752,9 +752,7 @@ export default class TableResize implements EditorPlugin {
 
     private cacheRects() {
         this.tableRectMap = [];
-        const tables = this.editor.getDocument().getElementsByTagName('table');
-        const tableList = Array.from(tables);
-        tableList.forEach(table => {
+        this.editor.queryElements('table', table => {
             if (table.isContentEditable) {
                 const rect = normalizeRect(table.getBoundingClientRect());
                 if (rect) {
