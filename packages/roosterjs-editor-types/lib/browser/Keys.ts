@@ -3,6 +3,9 @@
  */
 export const enum Keys {
     NULL = 0,
+    LEFT_CLICK = 1,
+    SCROLL_WHEEL_CLICK = 2,
+    RIGHT_CLICK = 3,
     BACKSPACE = 8,
     TAB = 9,
     ENTER = 13,

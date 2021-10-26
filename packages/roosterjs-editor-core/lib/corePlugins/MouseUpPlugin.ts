@@ -1,4 +1,10 @@
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    clearSelectedTableCells,
+    findClosestElementAncestor,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -43,15 +49,25 @@ export default class MouseUpPlugin implements EditorPlugin {
             this.editor
                 .getDocument()
                 .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+            this.editor
+                .getDocument()
+                .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
+
+            console.log({ asd: event.rawEvent });
+
+            clearSelectedTableCells(this.editor);
             this.mouseUpEventListerAdded = true;
             this.mouseDownX = event.rawEvent.pageX;
             this.mouseDownY = event.rawEvent.pageY;
+            this.firstTDSelected = null;
         }
     }
+
     private removeMouseUpEventListener() {
         if (this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
+            this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, true);
         }
     }
 
@@ -62,6 +78,32 @@ export default class MouseUpPlugin implements EditorPlugin {
                 rawEvent,
                 isClicking: this.mouseDownX == rawEvent.pageX && this.mouseDownY == rawEvent.pageY,
             });
+        }
+    };
+
+    private firstTDSelected: HTMLTableCellElement;
+    private lastTDSelected: HTMLTableCellElement;
+    private onMouseMove = (rawEvent: MouseEvent) => {
+        if (this.editor) {
+            const target = rawEvent.target;
+
+            if (
+                target &&
+                safeInstanceOf(target, 'HTMLTableCellElement') &&
+                target != this.lastTDSelected
+            ) {
+                if (!this.firstTDSelected) {
+                    this.firstTDSelected = target;
+                }
+                const table = findClosestElementAncestor(
+                    this.firstTDSelected,
+                    null,
+                    'Table'
+                ) as HTMLTableElement;
+
+                let vTable = new VTable(table);
+                vTable.getSelectedElements(this.firstTDSelected, target);
+            }
         }
     };
 }

@@ -4,6 +4,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
+export const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -402,6 +403,47 @@ export default class VTable {
      */
     getCurrentTd(): HTMLTableCellElement {
         return this.getTd(this.row, this.col);
+    }
+
+    getSelectedElements(start: HTMLTableCellElement, end: HTMLTableCellElement) {
+        let startX: number = null,
+            startY: number = null,
+            endX: number = null,
+            endY: number = null;
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                if (this.cells[indexY][indexX].td == start) {
+                    startX = indexX;
+                    startY = indexY;
+                }
+
+                if (this.cells[indexY][indexX].td == end) {
+                    endX = indexX;
+                    endY = indexY;
+                }
+            }
+
+            if (startX && startY && endX && endY) {
+                break;
+            }
+        }
+
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                let element = this.cells[indexY][indexX].td as HTMLElement;
+                if (
+                    ((indexY >= startY && indexY <= endY) ||
+                        (indexY <= startY && indexY >= endY)) &&
+                    ((indexX >= startX && indexX <= endX) || (indexX <= startX && indexX >= endX))
+                ) {
+                    element.style.backgroundColor = 'rgb(9, 109, 202)';
+                    element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                } else {
+                    element.classList.remove(TABLE_CELL_SELECTED_CLASS);
+                    element.style.backgroundColor = '';
+                }
+            }
+        }
     }
 
     private getTd(row: number, col: number) {
