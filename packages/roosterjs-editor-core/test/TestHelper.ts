@@ -36,15 +36,3 @@ function addRange(range: Range) {
     sel.removeAllRanges();
     sel.addRange(range);
 }
-
-declare var __karma__: any;
-
-export function itFirefoxOrChromeOnly(
-    browser: string,
-    expectation: string,
-    assertion?: jasmine.ImplementationCallback,
-    timeout?: number
-) {
-    const func = __karma__.config.browser == browser ? it : xit;
-    return func(expectation, assertion, timeout);
-}
