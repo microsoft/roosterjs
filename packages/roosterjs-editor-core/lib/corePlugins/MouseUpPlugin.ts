@@ -81,8 +81,6 @@ export default class MouseUpPlugin implements EditorPlugin {
         }
     };
 
-    private firstTDSelected: HTMLTableCellElement;
-    private lastTDSelected: HTMLTableCellElement;
     private onMouseMove = (rawEvent: MouseEvent) => {
         if (this.editor) {
             const target = rawEvent.target;
