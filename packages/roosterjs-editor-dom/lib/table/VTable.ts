@@ -289,13 +289,16 @@ export default class VTable {
                 break;
 
             case TableOperation.AlignCenter:
-                this.table.setAttribute('align', 'center');
+                this.table.style.marginLeft = 'auto';
+                this.table.style.marginRight = 'auto';
                 break;
             case TableOperation.AlignLeft:
-                this.table.setAttribute('align', 'left');
+                this.table.style.marginLeft = '';
+                this.table.style.marginRight = 'auto';
                 break;
             case TableOperation.AlignRight:
-                this.table.setAttribute('align', 'right');
+                this.table.style.marginLeft = 'auto';
+                this.table.style.marginRight = '';
                 break;
             case TableOperation.AlignCellCenter:
                 style.textAlign = 'center';

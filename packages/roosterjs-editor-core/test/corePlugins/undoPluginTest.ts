@@ -1,6 +1,7 @@
 import UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { IEditor, Keys, PluginEventType, UndoPluginState } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
+import { itChromeOnly } from '../TestHelper';
 
 describe('UndoPlugin', () => {
     let plugin: UndoPlugin;
@@ -84,7 +85,7 @@ describe('UndoPlugin', () => {
         expect(addUndoSnapshot).not.toHaveBeenCalledWith(state);
     });
 
-    it('key down event with BACKSPACE, add undo snapshot once', () => {
+    itChromeOnly('key down event with BACKSPACE, add undo snapshot once', () => {
         editor.getSelectionRange = () => {
             return <any>{
                 collapsed: true,
@@ -139,7 +140,7 @@ describe('UndoPlugin', () => {
         expect(addUndoSnapshot).toHaveBeenCalled();
     });
 
-    it('key down event with DELETE, add undo snapshot once', () => {
+    itChromeOnly('key down event with DELETE, add undo snapshot once', () => {
         editor.getSelectionRange = () => {
             return <any>{
                 collapsed: true,
