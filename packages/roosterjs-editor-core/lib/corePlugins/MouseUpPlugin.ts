@@ -58,6 +58,11 @@ export default class MouseUpPlugin implements EditorPlugin {
             this.mouseDownX = event.rawEvent.pageX;
             this.mouseDownY = event.rawEvent.pageY;
             this.firstTDSelected = null;
+        } else if (
+            event.eventType != PluginEventType.MouseDown &&
+            event.eventType != PluginEventType.MouseUp
+        ) {
+            clearSelectedTableCells(this.editor);
         }
     }
 
@@ -100,7 +105,7 @@ export default class MouseUpPlugin implements EditorPlugin {
                 ) as HTMLTableElement;
 
                 let vTable = new VTable(table);
-                vTable.getSelectedElements(this.firstTDSelected, target);
+                vTable.highlightSelection(this.firstTDSelected, target);
             }
         }
     };

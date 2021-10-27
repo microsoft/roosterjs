@@ -405,7 +405,7 @@ export default class VTable {
         return this.getTd(this.row, this.col);
     }
 
-    getSelectedElements(start: HTMLTableCellElement, end: HTMLTableCellElement) {
+    highlightSelection(start: HTMLTableCellElement, end: HTMLTableCellElement) {
         let startX: number = null,
             startY: number = null,
             endX: number = null,
