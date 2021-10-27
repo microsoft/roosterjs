@@ -431,16 +431,20 @@ export default class VTable {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
-                if (
-                    ((indexY >= startY && indexY <= endY) ||
-                        (indexY <= startY && indexY >= endY)) &&
-                    ((indexX >= startX && indexX <= endX) || (indexX <= startX && indexX >= endX))
-                ) {
-                    element.style.backgroundColor = 'rgb(9, 109, 202)';
-                    element.classList.add(TABLE_CELL_SELECTED_CLASS);
-                } else {
-                    element.classList.remove(TABLE_CELL_SELECTED_CLASS);
-                    element.style.backgroundColor = '';
+
+                if (element) {
+                    if (
+                        ((indexY >= startY && indexY <= endY) ||
+                            (indexY <= startY && indexY >= endY)) &&
+                        ((indexX >= startX && indexX <= endX) ||
+                            (indexX <= startX && indexX >= endX))
+                    ) {
+                        element.style.backgroundColor = 'rgb(9, 109, 202)';
+                        element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                    } else {
+                        element.classList.remove(TABLE_CELL_SELECTED_CLASS);
+                        element.style.backgroundColor = '';
+                    }
                 }
             }
         }

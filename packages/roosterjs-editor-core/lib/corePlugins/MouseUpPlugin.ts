@@ -53,8 +53,6 @@ export default class MouseUpPlugin implements EditorPlugin {
                 .getDocument()
                 .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
 
-            console.log({ asd: event.rawEvent });
-
             clearSelectedTableCells(this.editor);
             this.mouseUpEventListerAdded = true;
             this.mouseDownX = event.rawEvent.pageX;
@@ -81,6 +79,8 @@ export default class MouseUpPlugin implements EditorPlugin {
         }
     };
 
+    private firstTDSelected: HTMLTableCellElement;
+    private lastTDSelected: HTMLTableCellElement;
     private onMouseMove = (rawEvent: MouseEvent) => {
         if (this.editor) {
             const target = rawEvent.target;
