@@ -74,9 +74,11 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             this.initializer = () => {
                 contentDiv.contentEditable = 'true';
                 contentDiv.style.userSelect = 'text';
+                contentDiv.style.webkitUserSelect = 'text';
             };
             this.disposer = () => {
                 contentDiv.style.userSelect = '';
+                contentDiv.style.webkitUserSelect = '';
                 contentDiv.removeAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME);
             };
         }
