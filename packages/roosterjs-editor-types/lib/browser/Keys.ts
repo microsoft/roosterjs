@@ -9,6 +9,7 @@ export const enum Keys {
     BACKSPACE = 8,
     TAB = 9,
     ENTER = 13,
+    SHIFT = 16,
     ESCAPE = 27,
     SPACE = 32,
     PAGEUP = 33,

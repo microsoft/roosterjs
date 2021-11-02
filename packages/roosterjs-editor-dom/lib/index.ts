@@ -54,6 +54,7 @@ export { default as createElement, KnownCreateElementData } from './utils/create
 export { default as moveChildNodes } from './utils/moveChildNodes';
 export { default as setListItemStyle } from './utils/setListItemStyle';
 export { default as clearSelectedTableCells } from './utils/clearSelectedTableCells';
+export { getSelectedTableCells } from './utils/clearSelectedTableCells';
 
 export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';

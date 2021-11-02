@@ -450,6 +450,19 @@ export default class VTable {
         }
     }
 
+    selectAll() {
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                let element = this.cells[indexY][indexX].td as HTMLElement;
+
+                if (element) {
+                    element.style.backgroundColor = 'rgb(9, 109, 202)';
+                    element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                }
+            }
+        }
+    }
+
     private getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
