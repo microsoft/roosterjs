@@ -26,4 +26,9 @@ export default interface VCell {
      * The height in pixel of the actual td (including border and padding)
      */
     height?: number;
+
+    /**
+     * Selected
+     */
+    selected?: boolean;
 }

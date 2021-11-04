@@ -27,6 +27,7 @@ export default class MouseUpPlugin implements EditorPlugin {
 
     private firstTDSelected: HTMLTableCellElement;
     private lastTDSelected: HTMLTableCellElement;
+    // private firstOnMouseMove: boolean = true;
 
     /**
      * Get a friendly name of  this plugin
@@ -57,6 +58,7 @@ export default class MouseUpPlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
+            // this.firstOnMouseMove = true;
             this.editor
                 .getDocument()
                 .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
@@ -91,7 +93,6 @@ export default class MouseUpPlugin implements EditorPlugin {
                 null,
                 'Table'
             ) as HTMLTableElement;
-
             if (event.eventType == PluginEventType.KeyDown) {
                 if (event.rawEvent.shiftKey && table) {
                     if (event.rawEvent.which == Keys.SHIFT) {
@@ -117,9 +118,6 @@ export default class MouseUpPlugin implements EditorPlugin {
                             )
                         ) {
                             this.lastTDSelected = this.firstTDSelected.previousSibling;
-                        } else {
-                            this.lastTDSelected = this.lastTDSelected.parentElement.previousSibling
-                                .lastChild as HTMLTableCellElement;
                         }
                     }
 
@@ -131,9 +129,6 @@ export default class MouseUpPlugin implements EditorPlugin {
                             this.lastTDSelected = this.lastTDSelected.nextSibling;
                         } else if (!this.lastTDSelected && this.firstTDSelected) {
                             this.lastTDSelected = this.firstTDSelected;
-                        } else {
-                            this.lastTDSelected = this.lastTDSelected.parentElement.nextSibling
-                                .lastChild as HTMLTableCellElement;
                         }
                     }
 
@@ -174,8 +169,6 @@ export default class MouseUpPlugin implements EditorPlugin {
                                     }
                                 }
                             }
-                        } else {
-                            // this.clearTableCellSelection();
                         }
                     }
 
@@ -216,15 +209,20 @@ export default class MouseUpPlugin implements EditorPlugin {
                                     }
                                 }
                             }
-                        } else {
-                            // this.clearTableCellSelection();
                         }
+                    }
+
+                    if (
+                        event.rawEvent.which == Keys.PAGEUP ||
+                        event.rawEvent.which == Keys.PAGEDOWN
+                    ) {
+                        this.v2();
+                        return;
                     }
 
                     this.setTableSelectedRange(table);
                     return;
                 }
-                return;
             }
             this.clearTableCellSelection();
         }
@@ -258,28 +256,94 @@ export default class MouseUpPlugin implements EditorPlugin {
             });
         }
     };
-
     private onMouseMove = (rawEvent: MouseEvent) => {
-        if (this.editor) {
-            const target = rawEvent.target;
+        // if (this.editor && this.firstOnMouseMove) {
+        //     const target = findClosestElementAncestor(rawEvent.target as Node, null, 'td');
+        //     if (target && safeInstanceOf(target, 'HTMLTableCellElement')) {
+        //         const table = findClosestElementAncestor(target, null, 'Table') as HTMLTableElement;
+        //         const vTable = new VTable(table);
+        //         vTable.highlightSelection(target, target);
+        //         this.firstTDSelected = target;
+        //         this.firstOnMouseMove = false;
+        //     }
+        //     return;
+        // }
+        // if (this.editor) {
+        //     const endContainer = findClosestElementAncestor(
+        //         this.editor.getSelectionRange()?.endContainer,
+        //         null,
+        //         'td'
+        //     );
+        //     let target =
+        //         endContainer != this.firstTDSelected
+        //             ? endContainer
+        //             : findClosestElementAncestor(
+        //                   this.editor.getSelectionRange()?.startContainer,
+        //                   null,
+        //                   'td'
+        //               );
+        //     const table = findClosestElementAncestor(target, null, 'Table') as HTMLTableElement;
+        //     if (rawEvent.y > table?.getBoundingClientRect().bottom) {
+        //         let vTable = new VTable(table);
+        //         vTable.selectRows();
+        //     } else if (
+        //         target &&
+        //         safeInstanceOf(target, 'HTMLTableCellElement') &&
+        //         target != this.lastTDSelected
+        //     ) {
+        //         this.lastTDSelected = target;
+        //         console.clear();
+        //         console.log(this.firstTDSelected);
+        //         console.log(this.lastTDSelected);
+        //         this.setTableSelectedRange(table);
+        //     }
+        // }
+        if (event.target != this.lastTarget) {
+            this.lastTarget = event.target;
+            this.v2();
+        }
+    };
+    private lastTarget: EventTarget;
+    v2 = () => {
+        clearSelectedTableCells(this.editor);
+        const range = this.editor.getSelectionTraverser();
 
-            if (
-                target &&
-                safeInstanceOf(target, 'HTMLTableCellElement') &&
-                target != this.lastTDSelected
-            ) {
-                if (!this.firstTDSelected) {
-                    this.firstTDSelected = target;
-                } else {
-                    this.lastTDSelected = target;
-                }
-                const table = findClosestElementAncestor(
-                    this.firstTDSelected,
+        let currentElement = range.currentBlockElement;
+        let table: HTMLTableElement;
+        while (range.currentBlockElement) {
+            currentElement = range.currentBlockElement;
+            range.getNextBlockElement();
+
+            let element = currentElement.collapseToSingleElement();
+            if (safeInstanceOf(element, 'HTMLTableCellElement')) {
+                let tempTable = findClosestElementAncestor(
+                    element,
                     null,
-                    'Table'
+                    'table'
                 ) as HTMLTableElement;
 
-                this.setTableSelectedRange(table);
+                if (tempTable && tempTable != table) {
+                    if (table) {
+                        this.setTableSelectedRange(table);
+                    }
+                    table = tempTable;
+                    this.firstTDSelected = element;
+                } else {
+                    this.lastTDSelected = element;
+                }
+
+                if (range.currentBlockElement == currentElement) {
+                    this.setTableSelectedRange(table);
+                    break;
+                }
+            } else {
+                if (table) {
+                    this.setTableSelectedRange(table);
+                }
+            }
+
+            if (range.currentBlockElement == currentElement) {
+                break;
             }
         }
     };
@@ -287,8 +351,5 @@ export default class MouseUpPlugin implements EditorPlugin {
     setTableSelectedRange = (table: HTMLTableElement) => {
         let vTable = new VTable(table);
         vTable.highlightSelection(this.firstTDSelected, this.lastTDSelected);
-        // if (this.firstTDSelected) {
-        //     this.editor?.select(new Position(this.firstTDSelected, PositionType.Begin), new Position(this.lastTDSelected, PositionType.End));
-        // }
     };
 }

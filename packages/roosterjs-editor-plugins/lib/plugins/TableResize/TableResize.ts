@@ -3,6 +3,7 @@ import {
     createElement,
     getComputedStyle,
     normalizeRect,
+    Position,
     VTable,
 } from 'roosterjs-editor-dom';
 import {
@@ -14,6 +15,7 @@ import {
     KnownCreateElementDataIndex,
     PluginEvent,
     PluginEventType,
+    PositionType,
     Rect,
     TableOperation,
 } from 'roosterjs-editor-types';
@@ -802,5 +804,20 @@ export default class TableResize implements EditorPlugin {
         clearSelectedTableCells(this.editor);
         let vTable = new VTable(table);
         vTable.selectAll();
+
+        let tbody = table.querySelector('tbody');
+
+        this.editor.runAsync(editor =>
+            editor.select(
+                new Position(
+                    tbody.querySelector('tr:first-child > td:first-child'),
+                    PositionType.Before
+                ).normalize(),
+                new Position(
+                    tbody.querySelector('tr:last-child > td:last-child'),
+                    PositionType.After
+                ).normalize()
+            )
+        );
     }
 }

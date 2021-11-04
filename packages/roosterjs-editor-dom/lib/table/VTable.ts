@@ -4,7 +4,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
-export const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
+const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -63,6 +63,7 @@ export default class VTable {
                                 spanAbove: rowSpan > 0,
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
+                                selected: !!td.classList.contains(TABLE_CELL_SELECTED_CLASS),
                             };
                         }
                     }
@@ -406,44 +407,46 @@ export default class VTable {
     }
 
     highlightSelection(start: HTMLTableCellElement, end: HTMLTableCellElement) {
-        let startX: number = null,
-            startY: number = null,
-            endX: number = null,
-            endY: number = null;
-        for (let indexY = 0; indexY < this.cells.length; indexY++) {
-            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                if (this.cells[indexY][indexX].td == start) {
-                    startX = indexX;
-                    startY = indexY;
+        let startX: number = null;
+        let startY: number = null;
+        let endX: number = null;
+        let endY: number = null;
+        if (this.cells) {
+            for (let indexY = 0; indexY < this.cells.length; indexY++) {
+                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                    if (this.cells[indexY][indexX].td == start) {
+                        startX = indexX;
+                        startY = indexY;
+                    }
+
+                    if (this.cells[indexY][indexX].td == end) {
+                        endX = indexX;
+                        endY = indexY;
+                    }
                 }
 
-                if (this.cells[indexY][indexX].td == end) {
-                    endX = indexX;
-                    endY = indexY;
+                if (startX && startY && endX && endY) {
+                    break;
                 }
             }
 
-            if (startX && startY && endX && endY) {
-                break;
-            }
-        }
+            for (let indexY = 0; indexY < this.cells.length; indexY++) {
+                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                    let element = this.cells[indexY][indexX].td as HTMLElement;
 
-        for (let indexY = 0; indexY < this.cells.length; indexY++) {
-            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                let element = this.cells[indexY][indexX].td as HTMLElement;
-
-                if (element) {
-                    if (
-                        ((indexY >= startY && indexY <= endY) ||
-                            (indexY <= startY && indexY >= endY)) &&
-                        ((indexX >= startX && indexX <= endX) ||
-                            (indexX <= startX && indexX >= endX))
-                    ) {
-                        element.style.backgroundColor = 'rgb(9, 109, 202)';
-                        element.classList.add(TABLE_CELL_SELECTED_CLASS);
-                    } else {
-                        element.classList.remove(TABLE_CELL_SELECTED_CLASS);
-                        element.style.backgroundColor = '';
+                    if (element) {
+                        if (
+                            ((indexY >= startY && indexY <= endY) ||
+                                (indexY <= startY && indexY >= endY)) &&
+                            ((indexX >= startX && indexX <= endX) ||
+                                (indexX <= startX && indexX >= endX))
+                        ) {
+                            element.style.backgroundColor = 'rgb(9, 109, 202)';
+                            element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                        } else {
+                            element.classList.remove(TABLE_CELL_SELECTED_CLASS);
+                            element.style.backgroundColor = '';
+                        }
                     }
                 }
             }
@@ -458,6 +461,28 @@ export default class VTable {
                 if (element) {
                     element.style.backgroundColor = 'rgb(9, 109, 202)';
                     element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                }
+            }
+        }
+    }
+
+    selectRows() {
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            let shouldHighlight = false;
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                if (this.cells[indexY][indexX].selected) {
+                    shouldHighlight = true;
+                    break;
+                }
+            }
+            if (shouldHighlight) {
+                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                    let element = this.cells[indexY][indexX].td as HTMLElement;
+
+                    if (element) {
+                        element.style.backgroundColor = 'rgb(9, 109, 202)';
+                        element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                    }
                 }
             }
         }
