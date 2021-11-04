@@ -1,6 +1,8 @@
 import safeInstanceOf from './safeInstanceOf';
 import { IEditor } from 'roosterjs-editor-types';
+
 const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
+const TEMP_BACKGROUND_COLOR = 'tempBackgroundColor';
 
 /**
  * Remove the selected style of the cells
@@ -10,7 +12,8 @@ export default function clearSelectedTableCells(editor: IEditor) {
     getSelectedTableCells(editor).forEach((cell: Element) => {
         if (safeInstanceOf(cell, 'HTMLTableCellElement')) {
             cell.classList.remove(TABLE_CELL_SELECTED_CLASS);
-            cell.style.backgroundColor = '';
+            cell.style.backgroundColor = cell.dataset[TEMP_BACKGROUND_COLOR];
+            delete cell.dataset[TEMP_BACKGROUND_COLOR];
         }
     });
 }

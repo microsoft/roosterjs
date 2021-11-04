@@ -5,6 +5,7 @@ import toArray from '../utils/toArray';
 import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
+const TEMP_BACKGROUND_COLOR = 'tempBackgroundColor';
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -441,11 +442,16 @@ export default class VTable {
                             ((indexX >= startX && indexX <= endX) ||
                                 (indexX <= startX && indexX >= endX))
                         ) {
+                            if (element.style.backgroundColor != 'rgb(9, 109, 202)') {
+                                element.dataset[TEMP_BACKGROUND_COLOR] =
+                                    element.style.backgroundColor;
+                            }
                             element.style.backgroundColor = 'rgb(9, 109, 202)';
                             element.classList.add(TABLE_CELL_SELECTED_CLASS);
                         } else {
                             element.classList.remove(TABLE_CELL_SELECTED_CLASS);
-                            element.style.backgroundColor = '';
+                            element.style.backgroundColor = element.dataset[TEMP_BACKGROUND_COLOR];
+                            delete element.dataset[TEMP_BACKGROUND_COLOR];
                         }
                     }
                 }

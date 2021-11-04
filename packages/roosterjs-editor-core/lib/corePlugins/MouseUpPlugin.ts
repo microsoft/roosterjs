@@ -1,15 +1,8 @@
-import {
-    ChangeSource,
-    EditorPlugin,
-    IEditor,
-    Keys,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     clearSelectedTableCells,
     findClosestElementAncestor,
-    getSelectedTableCells,
+    getTagOfNode,
     safeInstanceOf,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -25,9 +18,7 @@ export default class MouseUpPlugin implements EditorPlugin {
     private mouseDownX: number;
     private mouseDownY: number;
 
-    private firstTDSelected: HTMLTableCellElement;
-    private lastTDSelected: HTMLTableCellElement;
-    // private firstOnMouseMove: boolean = true;
+    private lastTarget: EventTarget;
 
     /**
      * Get a friendly name of  this plugin
@@ -75,153 +66,9 @@ export default class MouseUpPlugin implements EditorPlugin {
             event.eventType != PluginEventType.MouseDown &&
             event.eventType != PluginEventType.MouseUp
         ) {
-            if (
-                event.eventType == PluginEventType.KeyUp ||
-                (event.eventType == PluginEventType.ContextMenu && event.items.length == 0) ||
-                (event.eventType == PluginEventType.ContentChanged &&
-                    event.source == ChangeSource.Format)
-            ) {
-                return;
-            }
-
-            if (!this.firstTDSelected && !this.lastTDSelected) {
-                this.firstTDSelected = this.editor.getElementAtCursor('td') as HTMLTableCellElement;
-            }
-
-            const table = findClosestElementAncestor(
-                this.editor.getElementAtCursor('*:last-child'),
-                null,
-                'Table'
-            ) as HTMLTableElement;
-            if (event.eventType == PluginEventType.KeyDown) {
-                if (event.rawEvent.shiftKey && table) {
-                    if (event.rawEvent.which == Keys.SHIFT) {
-                        return;
-                    }
-
-                    if (event.rawEvent.which == Keys.LEFT) {
-                        if (
-                            this.lastTDSelected?.previousSibling &&
-                            safeInstanceOf(
-                                this.lastTDSelected.previousSibling,
-                                'HTMLTableCellElement'
-                            )
-                        ) {
-                            this.lastTDSelected = this.lastTDSelected.previousSibling;
-                        } else if (
-                            !this.lastTDSelected &&
-                            this.firstTDSelected &&
-                            this.firstTDSelected.previousSibling &&
-                            safeInstanceOf(
-                                this.firstTDSelected.previousSibling,
-                                'HTMLTableCellElement'
-                            )
-                        ) {
-                            this.lastTDSelected = this.firstTDSelected.previousSibling;
-                        }
-                    }
-
-                    if (event.rawEvent.which == Keys.RIGHT) {
-                        if (
-                            this.lastTDSelected?.nextSibling &&
-                            safeInstanceOf(this.lastTDSelected.nextSibling, 'HTMLTableCellElement')
-                        ) {
-                            this.lastTDSelected = this.lastTDSelected.nextSibling;
-                        } else if (!this.lastTDSelected && this.firstTDSelected) {
-                            this.lastTDSelected = this.firstTDSelected;
-                        }
-                    }
-
-                    if (event.rawEvent.which == Keys.UP) {
-                        const tr = this.lastTDSelected?.parentElement;
-                        if (safeInstanceOf(tr, 'HTMLTableRowElement')) {
-                            const previousTR = tr.previousSibling;
-                            if (safeInstanceOf(previousTR, 'HTMLTableRowElement')) {
-                                let lastTDIndex: number;
-                                for (let index = 0; index < tr.children.length; index++) {
-                                    if (tr.children[index] == this.lastTDSelected) {
-                                        lastTDIndex = index;
-                                        break;
-                                    }
-                                }
-
-                                let newLast = previousTR.children[lastTDIndex];
-                                if (safeInstanceOf(newLast, 'HTMLTableCellElement')) {
-                                    this.lastTDSelected = newLast;
-                                }
-                            }
-                        } else if (!this.lastTDSelected && this.firstTDSelected) {
-                            const tr = this.firstTDSelected.parentElement;
-                            if (safeInstanceOf(tr, 'HTMLTableRowElement')) {
-                                const previousTR = tr.previousSibling;
-                                if (safeInstanceOf(previousTR, 'HTMLTableRowElement')) {
-                                    let lastTDIndex: number;
-                                    for (let index = 0; index < tr.children.length; index++) {
-                                        if (tr.children[index] == this.firstTDSelected) {
-                                            lastTDIndex = index;
-                                            break;
-                                        }
-                                    }
-
-                                    let newLast = previousTR.children[lastTDIndex];
-                                    if (safeInstanceOf(newLast, 'HTMLTableCellElement')) {
-                                        this.lastTDSelected = newLast;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (event.rawEvent.which == Keys.DOWN) {
-                        const tr = this.lastTDSelected?.parentElement;
-                        if (safeInstanceOf(tr, 'HTMLTableRowElement')) {
-                            const nextTR = tr.nextSibling;
-                            if (safeInstanceOf(nextTR, 'HTMLTableRowElement')) {
-                                let lastTDIndex: number;
-                                for (let index = 0; index < tr.children.length; index++) {
-                                    if (tr.children[index] == this.lastTDSelected) {
-                                        lastTDIndex = index;
-                                        break;
-                                    }
-                                }
-
-                                let newLast = nextTR.children[lastTDIndex];
-                                if (safeInstanceOf(newLast, 'HTMLTableCellElement')) {
-                                    this.lastTDSelected = newLast;
-                                }
-                            }
-                        } else if (!this.lastTDSelected && this.firstTDSelected) {
-                            const tr = this.firstTDSelected.parentElement;
-                            if (safeInstanceOf(tr, 'HTMLTableRowElement')) {
-                                const previousTR = tr.nextSibling;
-                                if (safeInstanceOf(previousTR, 'HTMLTableRowElement')) {
-                                    let lastTDIndex: number;
-                                    for (let index = 0; index < tr.children.length; index++) {
-                                        if (tr.children[index] == this.firstTDSelected) {
-                                            lastTDIndex = index;
-                                            break;
-                                        }
-                                    }
-
-                                    let newLast = previousTR.children[lastTDIndex];
-                                    if (safeInstanceOf(newLast, 'HTMLTableCellElement')) {
-                                        this.lastTDSelected = newLast;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (
-                        event.rawEvent.which == Keys.PAGEUP ||
-                        event.rawEvent.which == Keys.PAGEDOWN
-                    ) {
-                        this.v2();
-                        return;
-                    }
-
-                    this.setTableSelectedRange(table);
-                    return;
+            if (event.eventType == PluginEventType.KeyDown && event.rawEvent.shiftKey) {
+                if (event.rawEvent.which != Keys.SHIFT) {
+                    setTimeout(() => this.highlightSelection(), 5);
                 }
             }
             this.clearTableCellSelection();
@@ -230,12 +77,10 @@ export default class MouseUpPlugin implements EditorPlugin {
 
     private clearTableCellSelection() {
         if (this.editor) {
-            if (this.firstTDSelected && getSelectedTableCells(this.editor).length > 0) {
-                // this.editor.select(new Position(this.firstTDSelected, PositionType.Begin));
+            let range = this.editor.getSelectionRange();
+            if (!range || range.collapsed) {
+                clearSelectedTableCells(this.editor);
             }
-            this.firstTDSelected = null;
-            this.lastTDSelected = null;
-            clearSelectedTableCells(this.editor);
         }
     }
 
@@ -257,56 +102,17 @@ export default class MouseUpPlugin implements EditorPlugin {
         }
     };
     private onMouseMove = (rawEvent: MouseEvent) => {
-        // if (this.editor && this.firstOnMouseMove) {
-        //     const target = findClosestElementAncestor(rawEvent.target as Node, null, 'td');
-        //     if (target && safeInstanceOf(target, 'HTMLTableCellElement')) {
-        //         const table = findClosestElementAncestor(target, null, 'Table') as HTMLTableElement;
-        //         const vTable = new VTable(table);
-        //         vTable.highlightSelection(target, target);
-        //         this.firstTDSelected = target;
-        //         this.firstOnMouseMove = false;
-        //     }
-        //     return;
-        // }
-        // if (this.editor) {
-        //     const endContainer = findClosestElementAncestor(
-        //         this.editor.getSelectionRange()?.endContainer,
-        //         null,
-        //         'td'
-        //     );
-        //     let target =
-        //         endContainer != this.firstTDSelected
-        //             ? endContainer
-        //             : findClosestElementAncestor(
-        //                   this.editor.getSelectionRange()?.startContainer,
-        //                   null,
-        //                   'td'
-        //               );
-        //     const table = findClosestElementAncestor(target, null, 'Table') as HTMLTableElement;
-        //     if (rawEvent.y > table?.getBoundingClientRect().bottom) {
-        //         let vTable = new VTable(table);
-        //         vTable.selectRows();
-        //     } else if (
-        //         target &&
-        //         safeInstanceOf(target, 'HTMLTableCellElement') &&
-        //         target != this.lastTDSelected
-        //     ) {
-        //         this.lastTDSelected = target;
-        //         console.clear();
-        //         console.log(this.firstTDSelected);
-        //         console.log(this.lastTDSelected);
-        //         this.setTableSelectedRange(table);
-        //     }
-        // }
-        if (event.target != this.lastTarget) {
-            this.lastTarget = event.target;
-            this.v2();
+        if (event.target && event.target != this.lastTarget) {
+            this.highlightSelection();
         }
+        this.lastTarget = event.target;
     };
-    private lastTarget: EventTarget;
-    v2 = () => {
+    highlightSelection = () => {
         clearSelectedTableCells(this.editor);
         const range = this.editor.getSelectionTraverser();
+
+        let firstTDSelected: HTMLTableCellElement;
+        let lastTDSelected: HTMLTableCellElement;
 
         let currentElement = range.currentBlockElement;
         let table: HTMLTableElement;
@@ -315,7 +121,11 @@ export default class MouseUpPlugin implements EditorPlugin {
             range.getNextBlockElement();
 
             let element = currentElement.collapseToSingleElement();
-            if (safeInstanceOf(element, 'HTMLTableCellElement')) {
+
+            if (getTagOfNode(element) != 'TD') {
+                element = findClosestElementAncestor(element, null, 'td');
+            }
+            if (element && safeInstanceOf(element, 'HTMLTableCellElement')) {
                 let tempTable = findClosestElementAncestor(
                     element,
                     null,
@@ -323,22 +133,19 @@ export default class MouseUpPlugin implements EditorPlugin {
                 ) as HTMLTableElement;
 
                 if (tempTable && tempTable != table) {
-                    if (table) {
-                        this.setTableSelectedRange(table);
-                    }
                     table = tempTable;
-                    this.firstTDSelected = element;
+                    firstTDSelected = element;
                 } else {
-                    this.lastTDSelected = element;
+                    lastTDSelected = element;
                 }
 
                 if (range.currentBlockElement == currentElement) {
-                    this.setTableSelectedRange(table);
+                    this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
                     break;
                 }
             } else {
                 if (table) {
-                    this.setTableSelectedRange(table);
+                    this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
                 }
             }
 
@@ -348,8 +155,16 @@ export default class MouseUpPlugin implements EditorPlugin {
         }
     };
 
-    setTableSelectedRange = (table: HTMLTableElement) => {
+    setTableSelectedRange = (
+        table: HTMLTableElement,
+        firstTDSelected: HTMLTableCellElement,
+        lastTDSelected: HTMLTableCellElement
+    ) => {
+        if (firstTDSelected && !lastTDSelected) {
+            lastTDSelected = firstTDSelected;
+        }
+
         let vTable = new VTable(table);
-        vTable.highlightSelection(this.firstTDSelected, this.lastTDSelected);
+        vTable.highlightSelection(firstTDSelected, lastTDSelected);
     };
 }
