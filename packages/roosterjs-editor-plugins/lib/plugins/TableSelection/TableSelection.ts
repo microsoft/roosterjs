@@ -43,7 +43,15 @@ export default class TableSelectionPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
+        if (event.eventType == PluginEventType.MouseUp && event.isClicking) {
+            this.clearTableCellSelection();
+            return;
+        }
+        if (
+            event.eventType == PluginEventType.MouseDown &&
+            !event.rawEvent.shiftKey &&
+            !this.mouseUpEventListerAdded
+        ) {
             this.clearTableCellSelection();
             this.editor
                 .getDocument()
@@ -51,11 +59,17 @@ export default class TableSelectionPlugin implements EditorPlugin {
             this.editor
                 .getDocument()
                 .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
+            this.mouseUpEventListerAdded = true;
         } else {
             if (event.eventType == PluginEventType.KeyDown && event.rawEvent.shiftKey) {
                 if (event.rawEvent.which != Keys.SHIFT) {
                     setTimeout(() => this.highlightSelection(), 5);
                 }
+            }
+
+            if (event.eventType == PluginEventType.MouseDown && event.rawEvent.shiftKey) {
+                console.log(event);
+                setTimeout(() => this.highlightSelection(), 0);
             }
             this.clearTableCellSelection();
         }
@@ -72,7 +86,10 @@ export default class TableSelectionPlugin implements EditorPlugin {
 
     private onMouseMove = (rawEvent: MouseEvent) => {
         if (event.target && event.target != this.lastTarget) {
-            this.highlightSelection();
+            let range = this.editor.getSelectionRange();
+            if (range && !range.collapsed) {
+                this.highlightSelection();
+            }
         }
         this.lastTarget = event.target;
     };
@@ -142,7 +159,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
         if (this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
-            this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, true);
+            this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, false);
         }
     }
 

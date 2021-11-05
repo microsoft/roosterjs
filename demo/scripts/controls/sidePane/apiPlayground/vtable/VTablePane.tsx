@@ -62,6 +62,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
     private topBorderColor = React.createRef<HTMLInputElement>();
     private bottomBorderColor = React.createRef<HTMLInputElement>();
     private verticalBorderColor = React.createRef<HTMLInputElement>();
+    private applyBackgroundColor = React.createRef<HTMLInputElement>();
 
     constructor(props: ApiPaneProps) {
         super(props);
@@ -241,6 +242,24 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                             </tr>
                         </table>
                         <button onClick={this.onWriteBack}>Write back</button>
+                        <hr />
+                        <table>
+                            <CustomizeFormatRow
+                                text="Background Color"
+                                inputRef={this.applyBackgroundColor}
+                            />
+
+                            <tr>
+                                <td
+                                    colSpan={2}
+                                    className={styles.buttonRow}
+                                    onClick={this.onApplyBackgroundColorClick}>
+                                    <button className={styles.button}>
+                                        Apply Background Color on Selection
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
                     </>
                 )}
             </>
@@ -307,6 +326,16 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
             vtable.writeBack();
             editor.focus();
             editor.select(td, PositionType.Begin);
+        });
+        this.createVTable();
+    };
+
+    private onApplyBackgroundColorClick = () => {
+        const editor = this.props.getEditor();
+        editor.addUndoSnapshot(() => {
+            const vtable = this.state.vtable;
+            vtable.setBackgroundColor(this.applyBackgroundColor.current.value);
+            editor.focus();
         });
         this.createVTable();
     };

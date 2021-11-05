@@ -444,7 +444,7 @@ export default class VTable {
                         ) {
                             if (element.style.backgroundColor != 'rgb(9, 109, 202)') {
                                 element.dataset[TEMP_BACKGROUND_COLOR] =
-                                    element.style.backgroundColor;
+                                    element.style.backgroundColor || 'white';
                             }
                             element.style.backgroundColor = 'rgb(9, 109, 202)';
                             element.classList.add(TABLE_CELL_SELECTED_CLASS);
@@ -454,6 +454,18 @@ export default class VTable {
                             delete element.dataset[TEMP_BACKGROUND_COLOR];
                         }
                     }
+                }
+            }
+        }
+    }
+
+    forEachSelectedCell(callback: (cell: VCell) => void) {
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                let element = this.cells[indexY][indexX].td as HTMLElement;
+
+                if (element.dataset[TEMP_BACKGROUND_COLOR]) {
+                    callback(this.cells[indexY][indexX]);
                 }
             }
         }
@@ -606,6 +618,12 @@ export default class VTable {
         this.normalizeEmptyTableCells();
         this.normalizeTableCellSize();
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
+    }
+
+    setBackgroundColor(backgroundColor: string) {
+        this.forEachSelectedCell(
+            cell => (cell.td.dataset[TEMP_BACKGROUND_COLOR] = backgroundColor)
+        );
     }
 }
 
