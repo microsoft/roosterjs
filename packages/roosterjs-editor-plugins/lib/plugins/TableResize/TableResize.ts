@@ -1,11 +1,4 @@
-import {
-    clearSelectedTableCells,
-    createElement,
-    getComputedStyle,
-    normalizeRect,
-    Position,
-    VTable,
-} from 'roosterjs-editor-dom';
+import { createElement, getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentPosition,
@@ -15,7 +8,6 @@ import {
     KnownCreateElementDataIndex,
     PluginEvent,
     PluginEventType,
-    PositionType,
     Rect,
     TableOperation,
 } from 'roosterjs-editor-types';
@@ -35,7 +27,6 @@ const VERTICAL_INSERTER_ID = 'verticalInserter';
 const HORIZONTAL_RESIZER_ID = 'horizontalResizer';
 const VERTICAL_RESIZER_ID = 'verticalResizer';
 const TABLE_RESIZER_ID = 'tableResizer';
-const TABLE_SELECTOR_ID = 'tableSelector';
 
 const enum ResizeState {
     None,
@@ -64,7 +55,6 @@ export default class TableResize implements EditorPlugin {
     private horizontalResizer: HTMLDivElement;
     private verticalResizer: HTMLDivElement;
     private tableResizer: HTMLDivElement;
-    private tableSelector: HTMLDivElement;
     private resizingState: ResizeState = ResizeState.None;
 
     private currentInsertTd: HTMLTableCellElement;
@@ -468,14 +458,11 @@ export default class TableResize implements EditorPlugin {
         while (this.tableResizerContainer?.hasChildNodes()) {
             this.tableResizerContainer.removeChild(this.tableResizerContainer.lastChild);
         }
-        this.tableSelector = null;
         this.tableResizer = null;
         // add new one if exists
         if (rect) {
             this.tableResizer = this.createTableResizer(rect);
-            this.tableSelector = this.createTableSelector(rect);
             this.tableResizerContainer.appendChild(this.tableResizer);
-            this.tableResizerContainer.appendChild(this.tableSelector);
         }
     }
 
@@ -496,25 +483,6 @@ export default class TableResize implements EditorPlugin {
         div.style.height = `${TABLE_RESIZER_LENGTH}px`;
 
         div.addEventListener('mousedown', this.startResizingTable);
-
-        return div;
-    }
-
-    private createTableSelector(rect: Rect): HTMLDivElement {
-        const div = createElement(
-            KnownCreateElementDataIndex.TableSelector,
-            this.editor.getDocument()
-        ) as HTMLDivElement;
-
-        div.id = TABLE_SELECTOR_ID;
-        div.style.top = `${rect.top - TABLE_RESIZER_LENGTH}px`;
-        div.style.left = `${rect.left - TABLE_RESIZER_LENGTH - 2}px`;
-        div.style.width = `${TABLE_RESIZER_LENGTH}px`;
-        div.style.height = `${TABLE_RESIZER_LENGTH}px`;
-
-        div.addEventListener('click', (ev: MouseEvent) =>
-            this.selectAllCells(ev, this.currentTable)
-        );
 
         return div;
     }
@@ -798,26 +766,5 @@ export default class TableResize implements EditorPlugin {
             }
         });
         this.isRTL = getComputedStyle(this.editor.getDocument().body, 'direction') == 'rtl';
-    }
-
-    private selectAllCells(e: MouseEvent, table: HTMLTableElement) {
-        clearSelectedTableCells(this.editor);
-        let vTable = new VTable(table);
-        vTable.selectAll();
-
-        let tbody = table.querySelector('tbody');
-
-        this.editor.runAsync(editor =>
-            editor.select(
-                new Position(
-                    tbody.querySelector('tr:first-child > td:first-child'),
-                    PositionType.Before
-                ).normalize(),
-                new Position(
-                    tbody.querySelector('tr:last-child > td:last-child'),
-                    PositionType.After
-                ).normalize()
-            )
-        );
     }
 }

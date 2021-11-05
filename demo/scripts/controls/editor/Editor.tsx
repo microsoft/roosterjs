@@ -16,6 +16,7 @@ import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
+import { TableSelection } from 'roosterjs-editor-plugins/lib/TableSelection';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
 
@@ -78,6 +79,7 @@ export default function Editor(props: EditorProps) {
             contextMenu: pluginList.contextMenu
                 ? new ContextMenu(CONTEXT_MENU_DATA_PROVIDER)
                 : null,
+            tableSelection: pluginList.tableSelection ? new TableSelection() : null,
         };
         const plugins = [
             ...Object.keys(editorInstanceToggleablePlugins).map(
