@@ -43,7 +43,6 @@ export default class TableSelectionPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        console.log(event);
         if (event.eventType == PluginEventType.MouseUp) {
             if (event.isClicking && event.rawEvent.which != Keys.RIGHT_CLICK) {
                 this.clearTableCellSelection(true /** isClicking */);
