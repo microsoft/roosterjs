@@ -1,5 +1,6 @@
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
+    Browser,
     clearSelectedTableCells,
     findClosestElementAncestor,
     getTagOfNode,
@@ -82,7 +83,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
     }
 
     private onMouseMove = (rawEvent: MouseEvent) => {
-        if (event.target && event.target != this.lastTarget) {
+        if ((event.target && event.target != this.lastTarget) || Browser.isFirefox) {
             let range = this.editor.getSelectionRange();
             if (range) {
                 if (!range.collapsed) {
@@ -100,48 +101,86 @@ export default class TableSelectionPlugin implements EditorPlugin {
     };
 
     highlightSelection = () => {
-        const range = this.editor.getSelectionTraverser();
-
         let firstTDSelected: HTMLTableCellElement;
         let lastTDSelected: HTMLTableCellElement;
-
-        let currentElement = range.currentBlockElement;
         let table: HTMLTableElement;
-        while (range.currentBlockElement) {
-            currentElement = range.currentBlockElement;
-            range.getNextBlockElement();
 
-            let element = currentElement.collapseToSingleElement();
+        if (Browser.isFirefox) {
+            const selection = this.editor.getDocument().getSelection();
 
-            if (getTagOfNode(element) != 'TD') {
-                element = findClosestElementAncestor(element, null, 'td');
+            for (let index = 0; index < selection.rangeCount; index++) {
+                const range = selection.getRangeAt(index);
+                const container = range.startContainer;
+                if (getTagOfNode(container) == 'TR') {
+                    let element = container.childNodes[range.startOffset] as HTMLElement;
+
+                    if (getTagOfNode(element) != 'TD') {
+                        element = findClosestElementAncestor(element, null, 'td');
+                    }
+
+                    if (element && safeInstanceOf(element, 'HTMLTableCellElement')) {
+                        let tempTable = findClosestElementAncestor(
+                            element,
+                            null,
+                            'table'
+                        ) as HTMLTableElement;
+                        if (tempTable && tempTable != table) {
+                            table = tempTable;
+                            firstTDSelected = element;
+                        } else {
+                            lastTDSelected = element;
+                        }
+
+                        if (index == selection.rangeCount - 1) {
+                            this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
+                            break;
+                        }
+                    } else {
+                        if (table) {
+                            this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
+                        }
+                    }
+                }
             }
-            if (element && safeInstanceOf(element, 'HTMLTableCellElement')) {
-                let tempTable = findClosestElementAncestor(
-                    element,
-                    null,
-                    'table'
-                ) as HTMLTableElement;
+        } else {
+            const range = this.editor.getSelectionTraverser();
 
-                if (tempTable && tempTable != table) {
-                    table = tempTable;
-                    firstTDSelected = element;
+            let currentElement = range.currentBlockElement;
+            while (range.currentBlockElement) {
+                currentElement = range.currentBlockElement;
+                range.getNextBlockElement();
+
+                let element = currentElement.collapseToSingleElement();
+
+                if (getTagOfNode(element) != 'TD') {
+                    element = findClosestElementAncestor(element, null, 'td');
+                }
+                if (element && safeInstanceOf(element, 'HTMLTableCellElement')) {
+                    let tempTable = findClosestElementAncestor(
+                        element,
+                        null,
+                        'table'
+                    ) as HTMLTableElement;
+                    if (tempTable && tempTable != table) {
+                        table = tempTable;
+                        firstTDSelected = element;
+                    } else {
+                        lastTDSelected = element;
+                    }
+
+                    if (range.currentBlockElement == currentElement) {
+                        this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
+                        break;
+                    }
                 } else {
-                    lastTDSelected = element;
+                    if (table) {
+                        this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
+                    }
                 }
 
                 if (range.currentBlockElement == currentElement) {
-                    this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
                     break;
                 }
-            } else {
-                if (table) {
-                    this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
-                }
-            }
-
-            if (range.currentBlockElement == currentElement) {
-                break;
             }
         }
     };
@@ -154,7 +193,6 @@ export default class TableSelectionPlugin implements EditorPlugin {
         if (firstTDSelected && !lastTDSelected) {
             lastTDSelected = firstTDSelected;
         }
-
         let vTable = new VTable(table);
         vTable.highlightSelection(firstTDSelected, lastTDSelected);
     };

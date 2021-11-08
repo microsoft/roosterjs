@@ -430,7 +430,6 @@ export default class VTable {
                     break;
                 }
             }
-
             for (let indexY = 0; indexY < this.cells.length; indexY++) {
                 for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                     let element = this.cells[indexY][indexX].td as HTMLElement;
@@ -444,7 +443,7 @@ export default class VTable {
                         ) {
                             if (element.style.backgroundColor != 'rgb(9, 109, 202)') {
                                 element.dataset[TEMP_BACKGROUND_COLOR] =
-                                    element.style.backgroundColor || 'white';
+                                    element.style.backgroundColor;
                             }
                             element.style.backgroundColor = 'rgb(9, 109, 202)';
                             element.classList.add(TABLE_CELL_SELECTED_CLASS);
@@ -464,8 +463,7 @@ export default class VTable {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
-
-                if (element.dataset[TEMP_BACKGROUND_COLOR]) {
+                if (element.classList.contains(TABLE_CELL_SELECTED_CLASS)) {
                     selectedCells += 1;
                     callback(this.cells[indexY][indexX]);
                 }
