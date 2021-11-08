@@ -316,6 +316,8 @@ export default class VTable {
                 style.verticalAlign = 'middle';
                 break;
             case TableOperation.AlignCellBottom:
+                style.verticalAlign = 'bottom';
+                break;
         }
     }
 
