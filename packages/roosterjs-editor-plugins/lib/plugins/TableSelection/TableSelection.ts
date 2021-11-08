@@ -96,7 +96,6 @@ export default class TableSelectionPlugin implements EditorPlugin {
     };
 
     highlightSelection = () => {
-        clearSelectedTableCells(this.editor);
         const range = this.editor.getSelectionTraverser();
 
         let firstTDSelected: HTMLTableCellElement;
