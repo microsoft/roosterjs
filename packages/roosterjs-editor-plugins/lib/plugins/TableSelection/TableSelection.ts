@@ -88,8 +88,16 @@ export default class TableSelectionPlugin implements EditorPlugin {
     private onMouseMove = (rawEvent: MouseEvent) => {
         if (event.target && event.target != this.lastTarget) {
             let range = this.editor.getSelectionRange();
-            if (range && !range.collapsed) {
-                this.highlightSelection();
+            if (range) {
+                if (!range.collapsed) {
+                    this.highlightSelection();
+                } else {
+                    const table = this.editor.getElementAtCursor('TABLE') as HTMLTableElement;
+                    const td = this.editor.getElementAtCursor('TD') as HTMLTableCellElement;
+                    if (table && td) {
+                        this.setTableSelectedRange(table, td, null);
+                    }
+                }
             }
         }
         this.lastTarget = event.target;
