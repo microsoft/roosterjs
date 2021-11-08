@@ -316,8 +316,6 @@ export default class VTable {
                 style.verticalAlign = 'middle';
                 break;
             case TableOperation.AlignCellBottom:
-                style.verticalAlign = 'bottom';
-                break;
         }
     }
 
@@ -459,16 +457,20 @@ export default class VTable {
         }
     }
 
-    forEachSelectedCell(callback: (cell: VCell) => void) {
+    forEachSelectedCell(callback: (cell: VCell) => void): number {
+        let selectedCells = 0;
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
 
                 if (element.dataset[TEMP_BACKGROUND_COLOR]) {
+                    selectedCells += 1;
                     callback(this.cells[indexY][indexX]);
                 }
             }
         }
+
+        return selectedCells;
     }
 
     selectAll() {
@@ -621,9 +623,20 @@ export default class VTable {
     }
 
     setBackgroundColor(backgroundColor: string) {
-        this.forEachSelectedCell(
-            cell => (cell.td.dataset[TEMP_BACKGROUND_COLOR] = backgroundColor)
+        if (!this.table) {
+            return;
+        }
+
+        const modifiedCells = this.forEachSelectedCell(
+            (cell: VCell) => (cell.td.dataset[TEMP_BACKGROUND_COLOR] = backgroundColor)
         );
+
+        if (modifiedCells == 0) {
+            let currentRow = this.cells[this.row];
+            let currentCell = currentRow[this.col];
+
+            currentCell.td.style.backgroundColor = backgroundColor;
+        }
     }
 }
 
