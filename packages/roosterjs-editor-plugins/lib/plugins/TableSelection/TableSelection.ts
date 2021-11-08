@@ -43,6 +43,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        console.log(event);
         if (event.eventType == PluginEventType.MouseUp) {
             if (event.isClicking && event.rawEvent.which != Keys.RIGHT_CLICK) {
                 this.clearTableCellSelection(true /** isClicking */);
@@ -62,14 +63,10 @@ export default class TableSelectionPlugin implements EditorPlugin {
             }
             this.mouseUpEventListerAdded = true;
         } else {
-            if (event.eventType == PluginEventType.KeyDown && event.rawEvent.shiftKey) {
-                if (event.rawEvent.which != Keys.SHIFT) {
-                    setTimeout(() => this.highlightSelection(), 5);
-                }
-            }
-
-            if (event.eventType == PluginEventType.MouseDown && event.rawEvent.shiftKey) {
-                setTimeout(() => this.highlightSelection(), 0);
+            const range = this.editor?.getSelectionRange();
+            if (range && !range.collapsed) {
+                this.highlightSelection();
+                return;
             }
             this.clearTableCellSelection();
         }
