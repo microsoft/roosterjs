@@ -69,7 +69,6 @@ export default class TableSelectionPlugin implements EditorPlugin {
             }
 
             if (event.eventType == PluginEventType.MouseDown && event.rawEvent.shiftKey) {
-                console.log(event);
                 setTimeout(() => this.highlightSelection(), 0);
             }
             this.clearTableCellSelection();
