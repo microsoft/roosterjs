@@ -43,22 +43,23 @@ export default class TableSelectionPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.MouseUp && event.isClicking) {
-            this.clearTableCellSelection();
-            return;
+        if (event.eventType == PluginEventType.MouseUp) {
+            if (event.isClicking && event.rawEvent.which != Keys.RIGHT_CLICK) {
+                this.clearTableCellSelection(true /** isClicking */);
+                return;
+            }
         }
-        if (
-            event.eventType == PluginEventType.MouseDown &&
-            !event.rawEvent.shiftKey &&
-            !this.mouseUpEventListerAdded
-        ) {
-            this.clearTableCellSelection();
+        if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
             this.editor
                 .getDocument()
                 .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
-            this.editor
-                .getDocument()
-                .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
+
+            if (!event.rawEvent.shiftKey) {
+                this.clearTableCellSelection();
+                this.editor
+                    .getDocument()
+                    .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
+            }
             this.mouseUpEventListerAdded = true;
         } else {
             if (event.eventType == PluginEventType.KeyDown && event.rawEvent.shiftKey) {
@@ -75,10 +76,11 @@ export default class TableSelectionPlugin implements EditorPlugin {
         }
     }
 
-    private clearTableCellSelection() {
+    private clearTableCellSelection(isClicking: boolean = false) {
         if (this.editor) {
             let range = this.editor.getSelectionRange();
-            if (!range || range.collapsed) {
+
+            if (!range || range.collapsed || isClicking) {
                 clearSelectedTableCells(this.editor);
             }
         }
@@ -159,7 +161,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
         if (this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
-            this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, false);
+            this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, true);
         }
     }
 
