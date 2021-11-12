@@ -2,6 +2,7 @@ import * as Color from 'color';
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import ColorPicker from '../../../colorPicker/ColorPicker';
+import { getDarkColor } from 'roosterjs-color-utils';
 import { getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import { IEditor, PositionType, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
@@ -340,7 +341,15 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
         const editor = this.props.getEditor();
         editor.addUndoSnapshot(() => {
             const vtable = this.state.vtable;
-            vtable.setBackgroundColor(this.applyBackgroundColor.current.value);
+            const color = Color(this.applyBackgroundColor.current.value);
+            const value = `rgb(${color.red()}, ${color.green()}, ${color.blue()})`;
+            vtable.setBackgroundColor(
+                {
+                    lightModeColor: value,
+                    darkModeColor: getDarkColor(value),
+                },
+                editor.isDarkMode()
+            );
             editor.focus();
         });
         this.createVTable();

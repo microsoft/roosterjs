@@ -1,4 +1,10 @@
-import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
+import {
+    arrayPush,
+    Browser,
+    clearSelectedTableCells,
+    isCharacterValue,
+    setSelectedTableCells,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContextMenuProvider,
@@ -144,6 +150,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onFocus = () => {
         this.editor.select(this.state.selectionRange);
+        setSelectedTableCells(this.editor);
         this.state.selectionRange = null;
     };
     private onKeyDownDocument = (event: KeyboardEvent) => {
@@ -161,6 +168,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     private cacheSelection = () => {
         if (!this.state.selectionRange) {
             this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
+            clearSelectedTableCells(this.editor, false);
         }
     };
     private onScroll = (e: UIEvent) => {

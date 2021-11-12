@@ -22,6 +22,10 @@
     position: relative;
 }
 
+.editor table *::selection {
+    color: transparent;
+}
+
 .resizer {
     flex-grow: 0;
     flex-shrink: 0;

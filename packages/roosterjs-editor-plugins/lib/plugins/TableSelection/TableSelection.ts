@@ -2,10 +2,8 @@ import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roost
 import {
     Browser,
     clearSelectedTableCells,
-    findClosestElementAncestor,
-    getTagOfNode,
-    safeInstanceOf,
-    VTable,
+    highlightTableSelection,
+    setTableSelectedRange,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -44,9 +42,13 @@ export default class TableSelectionPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.MouseUp) {
+        if (event.eventType == PluginEventType.BeforeSetContent) {
+            this.clearTableCellSelection(true /** forceClear */);
+            this.editor.select(this.editor.getElementAtCursor('td'));
+        }
+        if (event.eventType == PluginEventType.MouseUp && !this.mouseUpEventListerAdded) {
             if (event.isClicking && event.rawEvent.which != Keys.RIGHT_CLICK) {
-                this.clearTableCellSelection(true /** isClicking */);
+                this.clearTableCellSelection(true /** forceClear */);
                 return;
             }
         }
@@ -62,21 +64,25 @@ export default class TableSelectionPlugin implements EditorPlugin {
                     .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
             }
             this.mouseUpEventListerAdded = true;
-        } else {
+        } else if (!this.mouseUpEventListerAdded) {
             const range = this.editor?.getSelectionRange();
             if (range && !range.collapsed) {
-                this.highlightSelection();
+                highlightTableSelection(
+                    Browser.isFirefox
+                        ? this.editor.getDocument().getSelection()
+                        : this.editor.getSelectionTraverser()
+                );
                 return;
             }
             this.clearTableCellSelection();
         }
     }
 
-    private clearTableCellSelection(isClicking: boolean = false) {
+    private clearTableCellSelection(forceClear?: boolean) {
         if (this.editor) {
             let range = this.editor.getSelectionRange();
 
-            if (!range || range.collapsed || isClicking) {
+            if (!range || range.collapsed || forceClear) {
                 clearSelectedTableCells(this.editor);
             }
         }
@@ -87,114 +93,21 @@ export default class TableSelectionPlugin implements EditorPlugin {
             let range = this.editor.getSelectionRange();
             if (range) {
                 if (!range.collapsed) {
-                    this.highlightSelection();
+                    highlightTableSelection(
+                        Browser.isFirefox
+                            ? this.editor.getDocument().getSelection()
+                            : this.editor.getSelectionTraverser()
+                    );
                 } else {
                     const table = this.editor.getElementAtCursor('TABLE') as HTMLTableElement;
                     const td = this.editor.getElementAtCursor('TD') as HTMLTableCellElement;
                     if (table && td) {
-                        this.setTableSelectedRange(table, td, null);
+                        setTableSelectedRange(table, td, null);
                     }
                 }
             }
         }
         this.lastTarget = event.target;
-    };
-
-    highlightSelection = () => {
-        let firstTDSelected: HTMLTableCellElement;
-        let lastTDSelected: HTMLTableCellElement;
-        let table: HTMLTableElement;
-
-        if (Browser.isFirefox) {
-            const selection = this.editor.getDocument().getSelection();
-
-            for (let index = 0; index < selection.rangeCount; index++) {
-                const range = selection.getRangeAt(index);
-                const container = range.startContainer;
-                if (getTagOfNode(container) == 'TR') {
-                    let element = container.childNodes[range.startOffset] as HTMLElement;
-
-                    if (getTagOfNode(element) != 'TD') {
-                        element = findClosestElementAncestor(element, null, 'td');
-                    }
-
-                    if (element && safeInstanceOf(element, 'HTMLTableCellElement')) {
-                        let tempTable = findClosestElementAncestor(
-                            element,
-                            null,
-                            'table'
-                        ) as HTMLTableElement;
-                        if (tempTable && tempTable != table) {
-                            table = tempTable;
-                            firstTDSelected = element;
-                        } else {
-                            lastTDSelected = element;
-                        }
-
-                        if (index == selection.rangeCount - 1) {
-                            this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
-                            break;
-                        }
-                    } else {
-                        if (table) {
-                            this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
-                        }
-                    }
-                }
-            }
-        } else {
-            const range = this.editor.getSelectionTraverser();
-
-            let currentElement = range.currentBlockElement;
-            while (range.currentBlockElement) {
-                currentElement = range.currentBlockElement;
-                range.getNextBlockElement();
-
-                let element = currentElement.collapseToSingleElement();
-
-                if (getTagOfNode(element) != 'TD') {
-                    element = findClosestElementAncestor(element, null, 'td');
-                }
-                if (element && safeInstanceOf(element, 'HTMLTableCellElement')) {
-                    let tempTable = findClosestElementAncestor(
-                        element,
-                        null,
-                        'table'
-                    ) as HTMLTableElement;
-                    if (tempTable && tempTable != table) {
-                        table = tempTable;
-                        firstTDSelected = element;
-                    } else {
-                        lastTDSelected = element;
-                    }
-
-                    if (range.currentBlockElement == currentElement) {
-                        this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
-                        break;
-                    }
-                } else {
-                    if (table) {
-                        this.setTableSelectedRange(table, firstTDSelected, lastTDSelected);
-                    }
-                }
-
-                if (range.currentBlockElement == currentElement) {
-                    break;
-                }
-            }
-        }
-    };
-
-    setTableSelectedRange = (
-        table: HTMLTableElement,
-        firstTDSelected: HTMLTableCellElement,
-        lastTDSelected: HTMLTableCellElement
-    ) => {
-        if (firstTDSelected && !lastTDSelected) {
-            lastTDSelected = firstTDSelected;
-        }
-        let vTable = new VTable(table);
-        vTable.highlightSelection(firstTDSelected, lastTDSelected);
     };
 
     private removeMouseUpEventListener() {

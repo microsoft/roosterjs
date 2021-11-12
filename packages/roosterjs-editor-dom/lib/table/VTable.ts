@@ -1,8 +1,10 @@
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
-import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { getHighlightColor, getOriginalColor } from '../utils/clearSelectedTableCells';
+import { ModeIndependentColor, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
 const TEMP_BACKGROUND_COLOR = 'tempBackgroundColor';
@@ -441,16 +443,27 @@ export default class VTable {
                             ((indexX >= startX && indexX <= endX) ||
                                 (indexX <= startX && indexX >= endX))
                         ) {
-                            if (element.style.backgroundColor != 'rgb(9, 109, 202)') {
-                                element.dataset[TEMP_BACKGROUND_COLOR] =
-                                    element.style.backgroundColor;
+                            const highlighColor = getHighlightColor(element.style.backgroundColor);
+                            if (
+                                !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
+                                element.style.backgroundColor != highlighColor &&
+                                (!element.dataset[TEMP_BACKGROUND_COLOR] ||
+                                    element.dataset[TEMP_BACKGROUND_COLOR] == '')
+                            ) {
+                                element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                                    element.style.backgroundColor
+                                );
                             }
-                            element.style.backgroundColor = 'rgb(9, 109, 202)';
+                            element.style.backgroundColor = highlighColor;
                             element.classList.add(TABLE_CELL_SELECTED_CLASS);
                         } else {
-                            element.classList.remove(TABLE_CELL_SELECTED_CLASS);
-                            element.style.backgroundColor = element.dataset[TEMP_BACKGROUND_COLOR];
-                            delete element.dataset[TEMP_BACKGROUND_COLOR];
+                            if (element.classList.contains(TABLE_CELL_SELECTED_CLASS)) {
+                                element.classList.remove(TABLE_CELL_SELECTED_CLASS);
+                                element.style.backgroundColor = getOriginalColor(
+                                    element.dataset[TEMP_BACKGROUND_COLOR]
+                                );
+                                delete element.dataset[TEMP_BACKGROUND_COLOR];
+                            }
                         }
                     }
                 }
@@ -481,28 +494,6 @@ export default class VTable {
                 if (element) {
                     element.style.backgroundColor = 'rgb(9, 109, 202)';
                     element.classList.add(TABLE_CELL_SELECTED_CLASS);
-                }
-            }
-        }
-    }
-
-    selectRows() {
-        for (let indexY = 0; indexY < this.cells.length; indexY++) {
-            let shouldHighlight = false;
-            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                if (this.cells[indexY][indexX].selected) {
-                    shouldHighlight = true;
-                    break;
-                }
-            }
-            if (shouldHighlight) {
-                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                    let element = this.cells[indexY][indexX].td as HTMLElement;
-
-                    if (element) {
-                        element.style.backgroundColor = 'rgb(9, 109, 202)';
-                        element.classList.add(TABLE_CELL_SELECTED_CLASS);
-                    }
                 }
             }
         }
@@ -622,20 +613,31 @@ export default class VTable {
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
     }
 
-    setBackgroundColor(backgroundColor: string) {
+    setBackgroundColor(backgroundColor: string | ModeIndependentColor, isInDarkMode: boolean) {
         if (!this.table) {
             return;
         }
 
-        const modifiedCells = this.forEachSelectedCell(
-            (cell: VCell) => (cell.td.dataset[TEMP_BACKGROUND_COLOR] = backgroundColor)
-        );
+        const handler = (cell: VCell) => {
+            setColor(cell.td, backgroundColor, true, isInDarkMode);
+
+            const colorString = typeof backgroundColor === 'string' ? backgroundColor.trim() : '';
+            const modeIndependentColor =
+                typeof backgroundColor === 'string' ? null : backgroundColor;
+
+            cell.td.dataset[TEMP_BACKGROUND_COLOR] =
+                (isInDarkMode
+                    ? modeIndependentColor?.darkModeColor
+                    : modeIndependentColor?.lightModeColor) || colorString;
+        };
+
+        const modifiedCells = this.forEachSelectedCell(handler);
 
         if (modifiedCells == 0) {
             let currentRow = this.cells[this.row];
             let currentCell = currentRow[this.col];
 
-            currentCell.td.style.backgroundColor = backgroundColor;
+            handler(currentCell);
         }
     }
 }
