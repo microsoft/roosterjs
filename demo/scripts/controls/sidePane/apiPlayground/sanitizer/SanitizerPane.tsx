@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import { HtmlSanitizer } from 'roosterjs-editor-dom';
+import { trustedHTMLHandler } from '../../../../utils/trustedHTMLHandler';
 
 const styles = require('./SanitizerPane.scss');
 
@@ -29,10 +30,27 @@ export default class SanitizerPane extends React.Component<ApiPaneProps, {}> {
     }
 
     private inline = () => {
-        this.result.current.value = this.sanitizer.exec(this.source.current.value, true);
+        const doc = this.getDOMDocument();
+
+        if (doc?.body) {
+            this.sanitizer.convertGlobalCssToInlineCss(doc);
+            this.result.current.value = doc.body.innerHTML;
+        }
     };
 
     private sanitize = () => {
-        this.result.current.value = HtmlSanitizer.sanitizeHtml(this.source.current.value);
+        const doc = this.getDOMDocument();
+
+        if (doc?.body) {
+            this.sanitizer.sanitize(doc.body.firstChild);
+            this.result.current.value = doc.body.innerHTML;
+        }
     };
+
+    private getDOMDocument(): Document {
+        const parser = new DOMParser();
+        const html = trustedHTMLHandler(this.source.current.value) || '';
+        const doc = parser.parseFromString(html, 'text/html');
+        return doc;
+    }
 }
