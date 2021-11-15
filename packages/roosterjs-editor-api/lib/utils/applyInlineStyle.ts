@@ -1,11 +1,11 @@
 import { ChangeSource, IEditor, NodeType, PositionType } from 'roosterjs-editor-types';
-import { getSelectedTableCells } from 'roosterjs-editor-dom/lib/utils/clearSelectedTableCells';
-import { TableMetadata } from 'roosterjs-editor-dom/lib/table/tableMetadata';
 import {
     applyTextStyle,
     ContentTraverser,
     findClosestElementAncestor,
+    getSelectedTableCells,
     getTagOfNode,
+    TableMetadata,
 } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';

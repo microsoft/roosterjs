@@ -47,7 +47,6 @@ export function setSelectedTableCells(editor: IEditor) {
 }
 
 /**
- * @internal
  * Get the cells with the selected cells class
  * @param editor Editor Instance
  * @returns Array of Nodes

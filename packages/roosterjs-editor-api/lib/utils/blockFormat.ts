@@ -1,8 +1,11 @@
 import experimentCommitListChains from '../experiment/experimentCommitListChains';
 import { ChangeSource, IEditor, NodePosition, Region } from 'roosterjs-editor-types';
-import { findClosestElementAncestor, VListChain } from 'roosterjs-editor-dom';
-import { getSelectedTableCells } from 'roosterjs-editor-dom/lib/utils/clearSelectedTableCells';
-import { TableMetadata } from 'roosterjs-editor-dom/lib/table/tableMetadata';
+import {
+    findClosestElementAncestor,
+    getSelectedTableCells,
+    TableMetadata,
+    VListChain,
+} from 'roosterjs-editor-dom';
 
 /**
  * Split selection into regions, and perform a block-wise formatting action for each region.

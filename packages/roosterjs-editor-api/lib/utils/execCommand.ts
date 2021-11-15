@@ -1,7 +1,7 @@
-import { getSelectedTableCells } from 'roosterjs-editor-dom/lib/utils/clearSelectedTableCells';
 import {
     ContentTraverser,
     findClosestElementAncestor,
+    getSelectedTableCells,
     getTagOfNode,
     PendableFormatCommandMap,
     PendableFormatNames,
