@@ -82,7 +82,7 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
                             tempRange.setStartBefore(element as Node);
                         }
 
-                        if (element == start.node) {
+                        if (element == end.node) {
                             tempRange.setEnd(element, end.offset);
                         } else {
                             tempRange.setEndAfter(element as Node);
