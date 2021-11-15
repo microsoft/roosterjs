@@ -1,4 +1,4 @@
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     Browser,
     clearSelectedTableCells,
@@ -44,13 +44,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforeSetContent) {
             this.clearTableCellSelection(true /** forceClear */);
-            this.editor.select(this.editor.getElementAtCursor('td'));
-        }
-        if (event.eventType == PluginEventType.MouseUp && !this.mouseUpEventListerAdded) {
-            if (event.isClicking && event.rawEvent.which != Keys.RIGHT_CLICK) {
-                this.clearTableCellSelection(true /** forceClear */);
-                return;
-            }
+            return;
         }
         if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
             this.editor
@@ -64,7 +58,10 @@ export default class TableSelectionPlugin implements EditorPlugin {
                     .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
             }
             this.mouseUpEventListerAdded = true;
-        } else if (!this.mouseUpEventListerAdded) {
+        } else if (
+            !this.mouseUpEventListerAdded ||
+            (event.eventType == PluginEventType.MouseUp && !this.mouseUpEventListerAdded)
+        ) {
             const range = this.editor?.getSelectionRange();
             if (range && !range.collapsed) {
                 highlightTableSelection(

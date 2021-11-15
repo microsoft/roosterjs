@@ -5,9 +5,10 @@ import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
 import { getHighlightColor, getOriginalColor } from '../utils/clearSelectedTableCells';
 import { ModeIndependentColor, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { TableMetadata } from './tableMetadata';
 
-const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
-const TEMP_BACKGROUND_COLOR = 'tempBackgroundColor';
+const TABLE_CELL_SELECTED = TableMetadata.TABLE_CELL_SELECTED;
+const TEMP_BACKGROUND_COLOR = TableMetadata.TEMP_BACKGROUND_COLOR;
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -66,7 +67,9 @@ export default class VTable {
                                 spanAbove: rowSpan > 0,
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
-                                selected: !!td.classList.contains(TABLE_CELL_SELECTED_CLASS),
+                                selected: !!td.classList.contains(
+                                    TableMetadata.TABLE_CELL_SELECTED
+                                ),
                             };
                         }
                     }
@@ -445,7 +448,7 @@ export default class VTable {
                         ) {
                             const highlighColor = getHighlightColor(element.style.backgroundColor);
                             if (
-                                !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
+                                !element.classList.contains(TABLE_CELL_SELECTED) &&
                                 element.style.backgroundColor != highlighColor &&
                                 (!element.dataset[TEMP_BACKGROUND_COLOR] ||
                                     element.dataset[TEMP_BACKGROUND_COLOR] == '')
@@ -455,10 +458,10 @@ export default class VTable {
                                 );
                             }
                             element.style.backgroundColor = highlighColor;
-                            element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                            element.classList.add(TABLE_CELL_SELECTED);
                         } else {
-                            if (element.classList.contains(TABLE_CELL_SELECTED_CLASS)) {
-                                element.classList.remove(TABLE_CELL_SELECTED_CLASS);
+                            if (element.classList.contains(TABLE_CELL_SELECTED)) {
+                                element.classList.remove(TABLE_CELL_SELECTED);
                                 element.style.backgroundColor = getOriginalColor(
                                     element.dataset[TEMP_BACKGROUND_COLOR]
                                 );
@@ -476,7 +479,7 @@ export default class VTable {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
-                if (element.classList.contains(TABLE_CELL_SELECTED_CLASS)) {
+                if (element.classList.contains(TABLE_CELL_SELECTED)) {
                     selectedCells += 1;
                     callback(this.cells[indexY][indexX]);
                 }
@@ -493,7 +496,7 @@ export default class VTable {
 
                 if (element) {
                     element.style.backgroundColor = 'rgb(9, 109, 202)';
-                    element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                    element.classList.add(TABLE_CELL_SELECTED);
                 }
             }
         }

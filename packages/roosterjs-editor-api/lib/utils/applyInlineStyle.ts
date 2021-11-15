@@ -1,5 +1,12 @@
-import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
 import { ChangeSource, IEditor, NodeType, PositionType } from 'roosterjs-editor-types';
+import { getSelectedTableCells } from 'roosterjs-editor-dom/lib/utils/clearSelectedTableCells';
+import { TableMetadata } from 'roosterjs-editor-dom/lib/table/tableMetadata';
+import {
+    applyTextStyle,
+    ContentTraverser,
+    findClosestElementAncestor,
+    getTagOfNode,
+} from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -50,18 +57,59 @@ export default function applyInlineStyle(
         editor.addUndoSnapshot(() => {
             let firstNode: Node;
             let lastNode: Node;
+            let rangeContainsOnlyTable: boolean = true;
+            const selectedCells = Array.from(getSelectedTableCells(editor));
+
             let contentTraverser = editor.getSelectionTraverser();
             let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
+
             while (inlineElement) {
                 let nextInlineElement = contentTraverser.getNextInlineElement();
                 inlineElement.applyStyle((element, isInnerNode) => {
-                    callback(element, isInnerNode);
+                    const closestTD =
+                        getTagOfNode(element) == 'TD'
+                            ? element
+                            : findClosestElementAncestor(element, null, 'TD');
+                    if (
+                        closestTD &&
+                        closestTD.classList.contains(TableMetadata.TABLE_CELL_SELECTED)
+                    ) {
+                        const blockRange = new Range();
+                        blockRange.setStartBefore(closestTD);
+                        blockRange.setEndAfter(closestTD);
+                        const contentTraverser = ContentTraverser.createBlockTraverser(
+                            closestTD,
+                            blockRange
+                        );
+                        let inlineElement =
+                            contentTraverser && contentTraverser.currentInlineElement;
+                        while (inlineElement) {
+                            let nextInlineElement = contentTraverser.getNextInlineElement();
+                            inlineElement.applyStyle(callback);
+                            inlineElement = nextInlineElement;
+                        }
+
+                        element = (rangeContainsOnlyTable
+                            ? selectedCells[0]
+                            : selectedCells[selectedCells.length - 1]) as HTMLElement;
+                    } else if (!closestTD) {
+                        callback(element, isInnerNode);
+                        rangeContainsOnlyTable = false;
+                    }
+
                     firstNode = firstNode || element;
                     lastNode = element;
                 });
                 inlineElement = nextInlineElement;
             }
-            if (firstNode && lastNode) {
+            if (rangeContainsOnlyTable) {
+                editor.select(
+                    selectedCells[0],
+                    PositionType.Before,
+                    selectedCells[selectedCells.length - 1],
+                    PositionType.After
+                );
+            } else if (firstNode && lastNode) {
                 editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
             }
         }, ChangeSource.Format);

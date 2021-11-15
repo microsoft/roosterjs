@@ -1,6 +1,8 @@
 import experimentCommitListChains from '../experiment/experimentCommitListChains';
 import { ChangeSource, IEditor, NodePosition, Region } from 'roosterjs-editor-types';
-import { VListChain } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor, VListChain } from 'roosterjs-editor-dom';
+import { getSelectedTableCells } from 'roosterjs-editor-dom/lib/utils/clearSelectedTableCells';
+import { TableMetadata } from 'roosterjs-editor-dom/lib/table/tableMetadata';
 
 /**
  * Split selection into regions, and perform a block-wise formatting action for each region.
@@ -18,7 +20,17 @@ export default function blockFormat(
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
         if (!beforeRunCallback || beforeRunCallback()) {
-            const regions = editor.getSelectedRegions();
+            const regions = editor.getSelectedRegions().filter(region => {
+                const rootNode = region.rootNode;
+                if (
+                    !findClosestElementAncestor(rootNode, null, 'table') ||
+                    rootNode.classList.contains(TableMetadata.TABLE_CELL_SELECTED) ||
+                    Array.from(getSelectedTableCells(editor)).length == 0
+                ) {
+                    return region;
+                }
+            });
+
             const chains = VListChain.createListChains(regions, start?.node);
             regions.forEach(region => callback(region, start, end, chains));
             experimentCommitListChains(editor, chains);

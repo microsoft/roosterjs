@@ -22,8 +22,12 @@
     position: relative;
 }
 
-.editor table *::selection {
-    background-color: transparent;
+.editor td:not(td[data-original-background-color]) *::selection {
+    background-color: transparent !important;
+}
+
+.editor td:not(td[data-original-background-color])::selection {
+    background-color: transparent !important;
 }
 
 .resizer {
