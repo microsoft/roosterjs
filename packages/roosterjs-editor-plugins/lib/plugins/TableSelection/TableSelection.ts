@@ -13,6 +13,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
     private editor: IEditor;
     private mouseUpEventListerAdded: boolean;
     private lastTarget: EventTarget;
+    private firstTarget: EventTarget;
 
     /**
      * Get a friendly name of  this plugin
@@ -27,6 +28,28 @@ export default class TableSelectionPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        console.log(this.editor.getScrollContainer());
+        setTimeout(() => {
+            const styleElement = document.createElement('style');
+            styleElement.id = 'Style4TableSelection';
+            this.editor.getDocument().head.append(styleElement);
+
+            let sheet = styleElement.sheet;
+            // sheet.insertRule(
+            //     'td.TableCellSelected *::selection { background-color: red !important;}'
+            // );
+            // sheet.insertRule(
+            //     'td.TableCellSelected::selection { background-color: red !important;}'
+            // );
+
+            sheet.insertRule(
+                'td:not(td.TableCellSelected) *::selection { background-color: transparent !important;}'
+            );
+
+            sheet.insertRule(
+                'td:not(td.TableCellSelected)::selection { background-color: transparent !important;}'
+            );
+        }, 500);
     }
 
     /**
@@ -35,6 +58,9 @@ export default class TableSelectionPlugin implements EditorPlugin {
     dispose() {
         this.removeMouseUpEventListener();
         this.editor = null;
+        document
+            .getElementById('Style4TableSelection')
+            .parentNode.removeChild(document.getElementById('Style4TableSelection'));
     }
 
     /**
@@ -59,6 +85,35 @@ export default class TableSelectionPlugin implements EditorPlugin {
 
             if (!event.rawEvent.shiftKey) {
                 this.clearTableCellSelection();
+
+                // document.addEventListener('selectstart', ev => {
+                //     console.log(ev);
+                //     console.log('Selection started');
+                //     if (
+                //         (ev.target as HTMLElement).tagName == 'TD' ||
+                //         findClosestElementAncestor(ev.target as HTMLElement, null, 'td')
+                //     ) {
+                //         ev.preventDefault();
+                //         ev.stopPropagation();
+                //         return false;
+                //     }
+                // });
+
+                // this.editor
+                //     .getDocument()
+                //     .querySelectorAll('table td')
+                //     .forEach(td => {
+                //         (td as HTMLElement).style.userSelect = 'none';
+                //         td.addEventListener(
+                //             'selectStart',
+                //             (ev: Event) => {
+                //                 console.log(ev);
+                //                 return false;
+                //             },
+                //             true
+                //         );
+                //     });
+
                 this.editor
                     .getDocument()
                     .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
@@ -66,7 +121,11 @@ export default class TableSelectionPlugin implements EditorPlugin {
             this.mouseUpEventListerAdded = true;
         } else if (!this.mouseUpEventListerAdded) {
             const range = this.editor?.getSelectionRange();
-            if (range && !range.collapsed) {
+            if (
+                range &&
+                range.commonAncestorContainer.nodeType != Node.TEXT_NODE &&
+                !range.collapsed
+            ) {
                 highlightTableSelection(
                     Browser.isFirefox
                         ? this.editor.getDocument().getSelection()
@@ -88,8 +147,13 @@ export default class TableSelectionPlugin implements EditorPlugin {
         }
     }
 
-    private onMouseMove = (rawEvent: MouseEvent) => {
-        if ((event.target && event.target != this.lastTarget) || Browser.isFirefox) {
+    private onMouseMove = (event: MouseEvent) => {
+        if (
+            event.target &&
+            this.lastTarget &&
+            event.target != this.lastTarget &&
+            event.target != this.firstTarget
+        ) {
             let range = this.editor.getSelectionRange();
             if (range) {
                 if (!range.collapsed) {
@@ -106,13 +170,18 @@ export default class TableSelectionPlugin implements EditorPlugin {
                     }
                 }
             }
+        } else if (event.target == this.firstTarget) {
+            clearSelectedTableCells(this.editor);
         }
+        this.firstTarget = this.firstTarget || event.target;
         this.lastTarget = event.target;
     };
 
     private removeMouseUpEventListener() {
         if (this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
+            this.lastTarget = null;
+            this.firstTarget = null;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
             this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, true);
         }
