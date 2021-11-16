@@ -19,6 +19,7 @@ export function clearSelectedTableCells(editor: IEditor, shouldRemoveClass: bool
             }
             if (shouldRemoveClass) {
                 cell.classList.remove(TableMetadata.TABLE_CELL_SELECTED);
+                cell.classList.remove(TableMetadata.TABLE_CELL_NOT_SELECTED);
             } else {
                 cell.dataset[TableMetadata.ON_FOCUS_CACHE] = 'true';
             }
@@ -62,9 +63,18 @@ export function getSelectedTableCells(editor: IEditor) {
  * @returns color to be applied when a cell is selected
  */
 export function getHighlightColor(colorString: string) {
-    const color = getColor(colorString, 'rgba');
-    if (color) {
-        return color;
+    if (colorString && (colorString.indexOf('rgba') > -1 || colorString.indexOf('rgb') > -1)) {
+        const rgb = colorString
+            .trim()
+            .substring(colorString.indexOf('(') + 1, colorString.length - 1)
+            .split(',');
+
+        const red = parseInt(rgb[0]);
+        const green = parseInt(rgb[1]);
+        const blue = parseInt(rgb[2]);
+        if (red && green && blue) {
+            return `rgba(${red}, ${green}, ${blue}, ${TableMetadata.SELECTION_COLOR_OPACITY})`;
+        }
     }
 
     return `rgba(198,198,198, ${TableMetadata.SELECTION_COLOR_OPACITY})`;

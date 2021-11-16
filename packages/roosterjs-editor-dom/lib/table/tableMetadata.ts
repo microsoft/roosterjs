@@ -15,6 +15,10 @@ export const enum TableMetadata {
      */
     TABLE_CELL_SELECTED = '_tableCellSelected',
     /**
+     * Class applied to table cell not selected
+     */
+    TABLE_CELL_NOT_SELECTED = '_tableCellNotSelected',
+    /**
      * Data set applied on a selected table cell to store the original background color
      */
     TEMP_BACKGROUND_COLOR = 'originalBackgroundColor',

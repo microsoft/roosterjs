@@ -4,6 +4,7 @@ import {
     clearSelectedTableCells,
     highlightTableSelection,
     setTableSelectedRange,
+    TableMetadata,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -13,6 +14,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
     private editor: IEditor;
     private mouseUpEventListerAdded: boolean;
     private lastTarget: EventTarget;
+    private firstTarget: EventTarget;
 
     /**
      * Get a friendly name of  this plugin
@@ -27,6 +29,21 @@ export default class TableSelectionPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        const prevElement = this.editor.getDocument().getElementById('Style4TableSelection');
+        if (!prevElement) {
+            const styleElement = document.createElement('style');
+            styleElement.id = 'Style4TableSelection';
+            this.editor.getDocument().head.append(styleElement);
+
+            let sheet = styleElement.sheet;
+            sheet.insertRule(
+                `td.${TableMetadata.TABLE_CELL_NOT_SELECTED} *::selection { background-color: transparent !important;}`
+            );
+
+            sheet.insertRule(
+                `td.${TableMetadata.TABLE_CELL_NOT_SELECTED}::selection { background-color: transparent !important;}`
+            );
+        }
     }
 
     /**
@@ -35,6 +52,11 @@ export default class TableSelectionPlugin implements EditorPlugin {
     dispose() {
         this.removeMouseUpEventListener();
         this.editor = null;
+
+        const styleElement = this.editor.getDocument().getElementById('Style4TableSelection');
+        if (styleElement) {
+            styleElement.parentNode.removeChild(styleElement);
+        }
     }
 
     /**
@@ -63,7 +85,11 @@ export default class TableSelectionPlugin implements EditorPlugin {
             (event.eventType == PluginEventType.MouseUp && !this.mouseUpEventListerAdded)
         ) {
             const range = this.editor?.getSelectionRange();
-            if (range && !range.collapsed) {
+            if (
+                range &&
+                range.commonAncestorContainer.nodeType != Node.TEXT_NODE &&
+                !range.collapsed
+            ) {
                 highlightTableSelection(
                     Browser.isFirefox
                         ? this.editor.getDocument().getSelection()
@@ -85,8 +111,13 @@ export default class TableSelectionPlugin implements EditorPlugin {
         }
     }
 
-    private onMouseMove = (rawEvent: MouseEvent) => {
-        if ((event.target && event.target != this.lastTarget) || Browser.isFirefox) {
+    private onMouseMove = (event: MouseEvent) => {
+        if (
+            event.target &&
+            this.lastTarget &&
+            event.target != this.lastTarget &&
+            event.target != this.firstTarget
+        ) {
             let range = this.editor.getSelectionRange();
             if (range) {
                 if (!range.collapsed) {
@@ -103,13 +134,18 @@ export default class TableSelectionPlugin implements EditorPlugin {
                     }
                 }
             }
+        } else if (event.target == this.firstTarget) {
+            clearSelectedTableCells(this.editor);
         }
+        this.firstTarget = this.firstTarget || event.target;
         this.lastTarget = event.target;
     };
 
     private removeMouseUpEventListener() {
         if (this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
+            this.lastTarget = null;
+            this.firstTarget = null;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
             this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, true);
         }

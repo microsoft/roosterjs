@@ -459,6 +459,7 @@ export default class VTable {
                             }
                             element.style.backgroundColor = highlighColor;
                             element.classList.add(TABLE_CELL_SELECTED);
+                            element.classList.remove(TableMetadata.TABLE_CELL_NOT_SELECTED);
                         } else {
                             if (element.classList.contains(TABLE_CELL_SELECTED)) {
                                 element.classList.remove(TABLE_CELL_SELECTED);
@@ -467,6 +468,7 @@ export default class VTable {
                                 );
                                 delete element.dataset[TEMP_BACKGROUND_COLOR];
                             }
+                            element.classList.add(TableMetadata.TABLE_CELL_NOT_SELECTED);
                         }
                     }
                 }
