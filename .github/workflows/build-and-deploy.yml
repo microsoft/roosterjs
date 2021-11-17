@@ -21,10 +21,10 @@ jobs:
             - name: Install Firefox
               uses: browser-actions/setup-firefox@latest
 
-            - name: Generate code coverage report
-              uses: GabrielBB/xvfb-action@v1
-              with:
-                  run: npm run-script test:coverage
+            #- name: Generate code coverage report
+            #  uses: GabrielBB/xvfb-action@v1
+            #  with:
+            #      run: npm run-script test:coverage
 
             - name: Deploy
               uses: JamesIves/github-pages-deploy-action@3.6.2
