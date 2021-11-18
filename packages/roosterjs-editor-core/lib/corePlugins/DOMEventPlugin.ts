@@ -150,7 +150,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onFocus = () => {
         this.editor.select(this.state.selectionRange);
-        setSelectedTableCells(this.editor);
+        setSelectedTableCells(this.state.selectionRange?.commonAncestorContainer);
         this.state.selectionRange = null;
     };
     private onKeyDownDocument = (event: KeyboardEvent) => {
@@ -168,7 +168,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     private cacheSelection = () => {
         if (!this.state.selectionRange) {
             this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
-            clearSelectedTableCells(this.editor, false);
+            clearSelectedTableCells(this.state.selectionRange.commonAncestorContainer, false);
         }
     };
     private onScroll = (e: UIEvent) => {

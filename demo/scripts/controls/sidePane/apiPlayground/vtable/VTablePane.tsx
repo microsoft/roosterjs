@@ -26,9 +26,8 @@ function TableCell(props: {
     editor: IEditor;
     isCurrent: boolean;
     onClickCell: (td: HTMLTableCellElement) => void;
-    isSelected: boolean;
 }) {
-    const { cell, editor, isCurrent, isSelected } = props;
+    const { cell, editor, isCurrent } = props;
     const onMouseOver = React.useCallback(() => {
         editor.select(cell.td);
     }, [cell, editor]);
@@ -53,7 +52,6 @@ function TableCell(props: {
             style={{
                 cursor: 'pointer',
                 border: isCurrent ? 'solid 2px black' : '',
-                backgroundColor: isSelected ? 'blue' : 'white',
             }}
             onMouseOver={onMouseOver}
             onClick={onClick}>
@@ -98,7 +96,6 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                                 editor={editor}
                                                 isCurrent={currentTd == cell.td}
                                                 onClickCell={this.onClickCell}
-                                                isSelected={cell.selected}
                                             />
                                         </td>
                                     ))}

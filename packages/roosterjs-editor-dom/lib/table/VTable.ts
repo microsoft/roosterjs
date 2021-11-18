@@ -66,7 +66,6 @@ export default class VTable {
                                 spanAbove: rowSpan > 0,
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
-                                selected: !!td.classList.contains(TABLE_CELL_SELECTED_CLASS),
                             };
                         }
                     }
@@ -486,6 +485,14 @@ export default class VTable {
         return selectedCells;
     }
 
+    forEachCell(callback: (cell: VCell) => void) {
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                callback(this.cells[indexY][indexX]);
+            }
+        }
+    }
+
     selectAll() {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
@@ -619,16 +626,19 @@ export default class VTable {
         }
 
         const handler = (cell: VCell) => {
-            setColor(cell.td, backgroundColor, true, isInDarkMode);
+            if (cell.td) {
+                setColor(cell.td, backgroundColor, true, isInDarkMode);
 
-            const colorString = typeof backgroundColor === 'string' ? backgroundColor.trim() : '';
-            const modeIndependentColor =
-                typeof backgroundColor === 'string' ? null : backgroundColor;
+                const colorString =
+                    typeof backgroundColor === 'string' ? backgroundColor.trim() : '';
+                const modeIndependentColor =
+                    typeof backgroundColor === 'string' ? null : backgroundColor;
 
-            cell.td.dataset[TEMP_BACKGROUND_COLOR] =
-                (isInDarkMode
-                    ? modeIndependentColor?.darkModeColor
-                    : modeIndependentColor?.lightModeColor) || colorString;
+                cell.td.dataset[TEMP_BACKGROUND_COLOR] =
+                    (isInDarkMode
+                        ? modeIndependentColor?.darkModeColor
+                        : modeIndependentColor?.lightModeColor) || colorString;
+            }
         };
 
         const modifiedCells = this.forEachSelectedCell(handler);

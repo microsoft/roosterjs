@@ -1,4 +1,4 @@
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     Browser,
     clearSelectedTableCells,
@@ -28,27 +28,20 @@ export default class TableSelectionPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        console.log(this.editor.getScrollContainer());
         setTimeout(() => {
             const styleElement = document.createElement('style');
             styleElement.id = 'Style4TableSelection';
             this.editor.getDocument().head.append(styleElement);
 
-            let sheet = styleElement.sheet;
+            // let sheet = styleElement.sheet;
+
             // sheet.insertRule(
-            //     'td.TableCellSelected *::selection { background-color: red !important;}'
-            // );
-            // sheet.insertRule(
-            //     'td.TableCellSelected::selection { background-color: red !important;}'
+            //     'td:not(td.TableCellSelected) *::selection { background-color: transparent !important;}'
             // );
 
-            sheet.insertRule(
-                'td:not(td.TableCellSelected) *::selection { background-color: transparent !important;}'
-            );
-
-            sheet.insertRule(
-                'td:not(td.TableCellSelected)::selection { background-color: transparent !important;}'
-            );
+            // sheet.insertRule(
+            //     'td:not(td.TableCellSelected)::selection { background-color: transparent !important;}'
+            // );
         }, 500);
     }
 
@@ -58,9 +51,6 @@ export default class TableSelectionPlugin implements EditorPlugin {
     dispose() {
         this.removeMouseUpEventListener();
         this.editor = null;
-        document
-            .getElementById('Style4TableSelection')
-            .parentNode.removeChild(document.getElementById('Style4TableSelection'));
     }
 
     /**
@@ -68,15 +58,19 @@ export default class TableSelectionPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        if (event.eventType == PluginEventType.ExtractContentWithDom) {
+            clearSelectedTableCells(event.clonedRoot);
+            return;
+        }
         if (event.eventType == PluginEventType.BeforeSetContent) {
             this.clearTableCellSelection(true /** forceClear */);
             this.editor.select(this.editor.getElementAtCursor('td'));
+            return;
         }
-        if (event.eventType == PluginEventType.MouseUp && !this.mouseUpEventListerAdded) {
-            if (event.isClicking && event.rawEvent.which != Keys.RIGHT_CLICK) {
-                this.clearTableCellSelection(true /** forceClear */);
-                return;
-            }
+        if (event.eventType == PluginEventType.MouseUp) {
+            setTimeout(() => {
+                this.clearTableCellSelection();
+            }, 50);
         }
         if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
             this.editor
@@ -86,33 +80,39 @@ export default class TableSelectionPlugin implements EditorPlugin {
             if (!event.rawEvent.shiftKey) {
                 this.clearTableCellSelection();
 
-                // document.addEventListener('selectstart', ev => {
-                //     console.log(ev);
-                //     console.log('Selection started');
+                // this.editor.getDocument().addEventListener(
+                //     'selectionchange',
+                //     (ev: Event) => {
+                //         console.log(ev);
+                //         console.log(this.editor?.getDocument().getSelection());
+                //         ev.preventDefault();
+                //         ev.stopPropagation();
+                //         return false;
+                //     },
+                //     true
+                // );
+                // // this.editor.getDocument().addEventListener('selectionchange', (ev: Event) => {
+                //     const range = this.editor.getSelectionRange();
                 //     if (
-                //         (ev.target as HTMLElement).tagName == 'TD' ||
-                //         findClosestElementAncestor(ev.target as HTMLElement, null, 'td')
+                //         (range &&
+                //             safeInstanceOf(range.endContainer, 'HTMLElement') &&
+                //             range.endContainer.classList.contains('TableCellSelected')) ||
+                //         findClosestElementAncestor(range.endContainer, null, '.TableCellSelected')
                 //     ) {
+                //         console.clear();
+                //         console.log(ev);
+                //         console.log(this.editor?.getDocument().getSelection());
+                //         console.log(this.editor.getSelectionRange());
+
+                //         range.setEndBefore(range.endContainer);
+                //         this.editor.select(range);
+                //         console.log(this.editor.getSelectionRange());
+
                 //         ev.preventDefault();
                 //         ev.stopPropagation();
                 //         return false;
                 //     }
                 // });
-
-                // this.editor
-                //     .getDocument()
-                //     .querySelectorAll('table td')
-                //     .forEach(td => {
-                //         (td as HTMLElement).style.userSelect = 'none';
-                //         td.addEventListener(
-                //             'selectStart',
-                //             (ev: Event) => {
-                //                 console.log(ev);
-                //                 return false;
-                //             },
-                //             true
-                //         );
-                //     });
 
                 this.editor
                     .getDocument()
@@ -142,7 +142,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
             let range = this.editor.getSelectionRange();
 
             if (!range || range.collapsed || forceClear) {
-                clearSelectedTableCells(this.editor);
+                clearSelectedTableCells(this.editor.getScrollContainer());
             }
         }
     }
@@ -163,18 +163,26 @@ export default class TableSelectionPlugin implements EditorPlugin {
                             : this.editor.getSelectionTraverser()
                     );
                 } else {
-                    const table = this.editor.getElementAtCursor('TABLE') as HTMLTableElement;
-                    const td = this.editor.getElementAtCursor('TD') as HTMLTableCellElement;
+                    const table = this.editor.getElementAtCursor(
+                        'TABLE',
+                        event.target as Node
+                    ) as HTMLTableElement;
+                    const td = this.editor.getElementAtCursor(
+                        'TD',
+                        event.target as Node
+                    ) as HTMLTableCellElement;
                     if (table && td) {
-                        setTableSelectedRange(table, td, null);
+                        setTableSelectedRange(table, this.firstTarget as HTMLTableCellElement, td);
                     }
                 }
             }
         } else if (event.target == this.firstTarget) {
-            clearSelectedTableCells(this.editor);
+            clearSelectedTableCells(this.editor.getScrollContainer());
         }
         this.firstTarget = this.firstTarget || event.target;
         this.lastTarget = event.target;
+
+        event.preventDefault();
     };
 
     private removeMouseUpEventListener() {

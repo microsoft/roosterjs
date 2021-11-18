@@ -245,7 +245,6 @@ export default class Editor implements IEditor {
      * @returns HTML string representing current editor content
      */
     public getContent(mode: GetContentMode = GetContentMode.CleanHTML): string {
-        clearSelectedTableCells(this);
         return this.core.api.getContent(this.core, mode);
     }
 
@@ -391,7 +390,7 @@ export default class Editor implements IEditor {
                   (<SelectionPath>arg1).end
               )
             : createRange(arg1, arg2, arg3, arg4);
-        clearSelectedTableCells(this);
+        clearSelectedTableCells(this.core.contentDiv);
         return this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 

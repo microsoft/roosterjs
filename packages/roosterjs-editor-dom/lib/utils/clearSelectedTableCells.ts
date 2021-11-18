@@ -1,5 +1,7 @@
 import safeInstanceOf from './safeInstanceOf';
-import { IEditor } from 'roosterjs-editor-types';
+import VCell from 'roosterjs-editor-types/lib/interface/VCell';
+import VTable from '../table/VTable';
+import { findClosestElementAncestor } from '..';
 
 const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
 const TEMP_BACKGROUND_COLOR = 'tempBackgroundColor';
@@ -9,24 +11,37 @@ const SELECTION_COLOR_OPACITY = 0.7;
  * Remove the selected style of the cells
  * @param editor Editor Instance
  */
-export function clearSelectedTableCells(editor: IEditor, shouldRemoveClass: boolean = true) {
-    getSelectedTableCells(editor).forEach((cell: Element) => {
-        if (safeInstanceOf(cell, 'HTMLTableCellElement')) {
-            if (
-                shouldRemoveClass &&
-                cell.dataset[ON_FOCUS_CACHE] &&
-                cell.dataset[ON_FOCUS_CACHE] == 'true'
-            ) {
-                delete cell.dataset[ON_FOCUS_CACHE];
-                return;
-            }
-            if (shouldRemoveClass) {
-                cell.classList.remove(TABLE_CELL_SELECTED_CLASS);
-            } else {
-                cell.dataset[ON_FOCUS_CACHE] = 'true';
-            }
-            cell.style.backgroundColor = getOriginalColor(cell.dataset[TEMP_BACKGROUND_COLOR]);
-            delete cell.dataset[TEMP_BACKGROUND_COLOR];
+export function clearSelectedTableCells(container: Node, shouldRemoveClass: boolean = true) {
+    getSelectedTableCells(container).forEach((element: Element) => {
+        if (safeInstanceOf(element, 'HTMLTableElement')) {
+            const vTable = new VTable(element);
+            vTable.forEachCell((vCell: VCell) => {
+                const cell = vCell.td;
+
+                if (
+                    cell &&
+                    safeInstanceOf(cell, 'HTMLTableCellElement') &&
+                    cell.classList.contains(TABLE_CELL_SELECTED_CLASS)
+                ) {
+                    if (
+                        shouldRemoveClass &&
+                        cell.dataset[ON_FOCUS_CACHE] &&
+                        cell.dataset[ON_FOCUS_CACHE] == 'true'
+                    ) {
+                        delete cell.dataset[ON_FOCUS_CACHE];
+                        return;
+                    }
+                    if (shouldRemoveClass) {
+                        cell.classList.remove(TABLE_CELL_SELECTED_CLASS);
+                    } else {
+                        cell.dataset[ON_FOCUS_CACHE] = 'true';
+                    }
+                    cell.style.backgroundColor = getOriginalColor(
+                        cell.dataset[TEMP_BACKGROUND_COLOR]
+                    );
+                    delete cell.dataset[TEMP_BACKGROUND_COLOR];
+                }
+            });
         }
     });
 }
@@ -35,14 +50,28 @@ export function clearSelectedTableCells(editor: IEditor, shouldRemoveClass: bool
  * Set the selected style to the selected cells
  * @param editor Editor Instance
  */
-export function setSelectedTableCells(editor: IEditor) {
-    getSelectedTableCells(editor).forEach((cell: Element) => {
-        if (safeInstanceOf(cell, 'HTMLTableCellElement')) {
-            const highlighColor = getHighlightColor(cell.style.backgroundColor);
-            cell.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(cell.style.backgroundColor);
-            cell.style.backgroundColor = highlighColor;
-        }
-    });
+export function setSelectedTableCells(container: Node) {
+    if (container) {
+        getSelectedTableCells(container).forEach((element: Element) => {
+            if (safeInstanceOf(element, 'HTMLTableElement')) {
+                const vTable = new VTable(element);
+                vTable.forEachCell((vCell: VCell) => {
+                    const cell = vCell.td;
+                    if (
+                        cell &&
+                        safeInstanceOf(cell, 'HTMLTableCellElement') &&
+                        cell.classList.contains(TABLE_CELL_SELECTED_CLASS)
+                    ) {
+                        const highlighColor = getHighlightColor(cell.style.backgroundColor);
+                        cell.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                            cell.style.backgroundColor
+                        );
+                        cell.style.backgroundColor = highlighColor;
+                    }
+                });
+            }
+        });
+    }
 }
 
 /**
@@ -51,8 +80,18 @@ export function setSelectedTableCells(editor: IEditor) {
  * @param editor Editor Instance
  * @returns Array of Nodes
  */
-export function getSelectedTableCells(editor: IEditor) {
-    return editor?.getDocument().querySelectorAll('.' + TABLE_CELL_SELECTED_CLASS);
+export function getSelectedTableCells(container: Node) {
+    if (container && safeInstanceOf(container, 'HTMLElement')) {
+        let result = container.querySelectorAll('table');
+        if (result.length == 0) {
+            let table = findClosestElementAncestor(container, null, 'table');
+            if (table) {
+                return [table];
+            }
+        }
+
+        return result;
+    }
 }
 
 /**
