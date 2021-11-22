@@ -5,7 +5,6 @@ import {
     findClosestElementAncestor,
     getSelectedTableCells,
     getTagOfNode,
-    TableMetadata,
 } from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';
@@ -70,29 +69,11 @@ export default function applyInlineStyle(
                         getTagOfNode(element) == 'TD'
                             ? element
                             : findClosestElementAncestor(element, null, 'TD');
-                    if (
-                        closestTD &&
-                        closestTD.classList.contains(TableMetadata.TABLE_CELL_SELECTED)
-                    ) {
-                        const blockRange = new Range();
-                        blockRange.setStartBefore(closestTD);
-                        blockRange.setEndAfter(closestTD);
-                        const contentTraverser = ContentTraverser.createBlockTraverser(
-                            closestTD,
-                            blockRange
-                        );
-                        let inlineElement =
-                            contentTraverser && contentTraverser.currentInlineElement;
-                        while (inlineElement) {
-                            let nextInlineElement = contentTraverser.getNextInlineElement();
-                            inlineElement.applyStyle(callback);
-                            inlineElement = nextInlineElement;
-                        }
-
+                    if (closestTD && selectedCells.length > 0) {
                         element = (rangeContainsOnlyTable
                             ? selectedCells[0]
                             : selectedCells[selectedCells.length - 1]) as HTMLElement;
-                    } else if (!closestTD) {
+                    } else {
                         callback(element, isInnerNode);
                         rangeContainsOnlyTable = false;
                     }
@@ -102,6 +83,20 @@ export default function applyInlineStyle(
                 });
                 inlineElement = nextInlineElement;
             }
+
+            selectedCells.forEach(cell => {
+                const blockRange = new Range();
+                blockRange.setStartBefore(cell);
+                blockRange.setEndAfter(cell);
+                const contentTraverser = ContentTraverser.createBlockTraverser(cell, blockRange);
+                let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
+                while (inlineElement) {
+                    let nextInlineElement = contentTraverser.getNextInlineElement();
+                    inlineElement.applyStyle(callback);
+                    inlineElement = nextInlineElement;
+                }
+            });
+
             if (rangeContainsOnlyTable) {
                 editor.select(
                     selectedCells[0],

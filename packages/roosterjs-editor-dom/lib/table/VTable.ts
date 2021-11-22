@@ -76,6 +76,9 @@ export default class VTable {
                 }
             });
 
+            console.log(trs);
+            console.log(this.trs);
+
             if (normalizeSize) {
                 this.normalizeSize();
             }
@@ -497,8 +500,20 @@ export default class VTable {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
 
                 if (element) {
-                    element.style.backgroundColor = 'rgb(9, 109, 202)';
+                    const highlighColor = getHighlightColor(element.style.backgroundColor);
+                    if (
+                        !element.classList.contains(TABLE_CELL_SELECTED) &&
+                        element.style.backgroundColor != highlighColor &&
+                        (!element.dataset[TEMP_BACKGROUND_COLOR] ||
+                            element.dataset[TEMP_BACKGROUND_COLOR] == '')
+                    ) {
+                        element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                            element.style.backgroundColor
+                        );
+                    }
+                    element.style.backgroundColor = highlighColor;
                     element.classList.add(TABLE_CELL_SELECTED);
+                    element.classList.remove(TableMetadata.TABLE_CELL_NOT_SELECTED);
                 }
             }
         }

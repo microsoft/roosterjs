@@ -2,7 +2,6 @@ import {
     ContentTraverser,
     findClosestElementAncestor,
     getSelectedTableCells,
-    getTagOfNode,
     PendableFormatCommandMap,
     PendableFormatNames,
 } from 'roosterjs-editor-dom';
@@ -49,6 +48,8 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
             if (selectedCells.length == 0) {
                 formatter();
             } else {
+                const selection = editor.getDocument().defaultView.getSelection();
+
                 let range = new Range();
                 range.setStart(
                     findClosestElementAncestor(start.node, null, 'table')
@@ -58,8 +59,11 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
                 );
                 range.setEnd(end.node, end.offset);
 
+                let startNode: Node;
+                let endNode: Node;
+
                 const contentTraverser = ContentTraverser.createSelectionTraverser(
-                    editor.getScrollContainer(),
+                    range.commonAncestorContainer,
                     range
                 );
                 let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
@@ -67,36 +71,52 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
                     let nextInlineElement = contentTraverser.getNextInlineElement();
 
                     const element = inlineElement.getContainerNode();
-                    const findClosestTD = findClosestElementAncestor(element, null, 'TD');
+                    const findClosestTD = findClosestElementAncestor(
+                        element,
+                        range.commonAncestorContainer,
+                        'TD'
+                    );
 
                     let tempRange = new Range();
                     if (selectedCells.indexOf(findClosestTD) > -1) {
-                        tempRange.selectNode(findClosestTD as Node);
-                        editor.getDocument().defaultView.getSelection().removeAllRanges();
-                        editor.getDocument().defaultView.getSelection().addRange(tempRange);
-                        formatter();
-                    } else if (getTagOfNode(findClosestTD) != 'TD') {
-                        if (element == start.node) {
-                            tempRange.setStart(element, start.offset);
-                        } else {
-                            tempRange.setStartBefore(element as Node);
-                        }
+                        startNode = null;
+                        endNode = null;
 
-                        if (element == end.node) {
-                            tempRange.setEnd(element, end.offset);
-                        } else {
-                            tempRange.setEndAfter(element as Node);
-                        }
-
-                        editor.getDocument().defaultView.getSelection().removeAllRanges();
-                        editor.getDocument().defaultView.getSelection().addRange(tempRange);
+                        tempRange.setStartBefore(findClosestTD);
+                        tempRange.setEndAfter(findClosestTD);
+                        selection.removeAllRanges();
+                        selection.addRange(tempRange);
                         formatter();
+                    } else if (!findClosestTD) {
+                        startNode = startNode || element;
+                        endNode = element;
+
+                        if (
+                            findClosestElementAncestor(
+                                element,
+                                range.commonAncestorContainer,
+                                'TD'
+                            ) ||
+                            !nextInlineElement
+                        ) {
+                            tempRange.setStartBefore(startNode);
+                            if (endNode == range.endContainer) {
+                                tempRange.setEnd(endNode, range.endOffset);
+                            } else {
+                                tempRange.setEndAfter(endNode);
+                            }
+
+                            selection.removeAllRanges();
+                            selection.addRange(tempRange);
+                            formatter();
+                        }
                     }
-
-                    editor.getDocument().defaultView.getSelection().removeAllRanges();
-                    editor.getDocument().defaultView.getSelection().addRange(range);
                     inlineElement = nextInlineElement;
                 }
+                console.log(editor.getSelectionRange(true));
+                console.log(range);
+                selection.removeAllRanges();
+                selection.addRange(range);
             }
         };
         editor.addUndoSnapshot(handler, ChangeSource.Format);

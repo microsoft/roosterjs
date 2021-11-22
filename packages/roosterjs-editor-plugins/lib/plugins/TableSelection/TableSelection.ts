@@ -1,4 +1,10 @@
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    BeforeCutCopyEvent,
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import {
     Browser,
     clearSelectedTableCells,
@@ -16,6 +22,9 @@ export default class TableSelectionPlugin implements EditorPlugin {
     private lastTarget: EventTarget;
     private firstTarget: EventTarget;
 
+    private mouseDownX: number;
+    private mouseDownY: number;
+
     /**
      * Get a friendly name of  this plugin
      */
@@ -29,7 +38,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        const prevElement = this.editor.getDocument().getElementById('Style4TableSelection');
+        const prevElement = this.editor?.getDocument().getElementById('Style4TableSelection');
         if (!prevElement) {
             const styleElement = document.createElement('style');
             styleElement.id = 'Style4TableSelection';
@@ -51,12 +60,9 @@ export default class TableSelectionPlugin implements EditorPlugin {
      */
     dispose() {
         this.removeMouseUpEventListener();
-        this.editor = null;
+        clearSelectedTableCells(this.editor);
 
-        const styleElement = this.editor.getDocument().getElementById('Style4TableSelection');
-        if (styleElement) {
-            styleElement.parentNode.removeChild(styleElement);
-        }
+        this.editor = null;
     }
 
     /**
@@ -64,25 +70,31 @@ export default class TableSelectionPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        if (event.eventType == PluginEventType.BeforeCutCopy) {
+            this.handleBeforeCutCopy(event);
+        }
+
         if (event.eventType == PluginEventType.BeforeSetContent) {
-            this.clearTableCellSelection(true /** forceClear */);
+            this.clearTableCellSelection(true /* forceClear */);
             return;
         }
         if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
             this.editor
                 .getDocument()
                 .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+            this.clearTableCellSelection();
 
             if (!event.rawEvent.shiftKey) {
-                this.clearTableCellSelection();
                 this.editor
                     .getDocument()
                     .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
             }
+            this.mouseDownX = event.rawEvent.pageX;
+            this.mouseDownY = event.rawEvent.pageY;
             this.mouseUpEventListerAdded = true;
         } else if (
             !this.mouseUpEventListerAdded ||
-            (event.eventType == PluginEventType.MouseUp && !this.mouseUpEventListerAdded)
+            (event.eventType == PluginEventType.MouseUp && event.isClicking)
         ) {
             const range = this.editor?.getSelectionRange();
             if (
@@ -99,12 +111,15 @@ export default class TableSelectionPlugin implements EditorPlugin {
             }
             this.clearTableCellSelection();
         }
+
+        if (event.eventType == PluginEventType.MouseUp && event.isClicking) {
+            this.clearTableCellSelection(true /* forceClear */);
+        }
     }
 
     private clearTableCellSelection(forceClear?: boolean) {
         if (this.editor) {
             let range = this.editor.getSelectionRange();
-
             if (!range || range.collapsed || forceClear) {
                 clearSelectedTableCells(this.editor);
             }
@@ -118,6 +133,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
             event.target != this.lastTarget &&
             event.target != this.firstTarget
         ) {
+            clearSelectedTableCells(this.editor);
             let range = this.editor.getSelectionRange();
             if (range) {
                 if (!range.collapsed) {
@@ -133,9 +149,9 @@ export default class TableSelectionPlugin implements EditorPlugin {
                         setTableSelectedRange(table, td, null);
                     }
                 }
+            } else if (event.target == this.firstTarget) {
+                clearSelectedTableCells(this.editor);
             }
-        } else if (event.target == this.firstTarget) {
-            clearSelectedTableCells(this.editor);
         }
         this.firstTarget = this.firstTarget || event.target;
         this.lastTarget = event.target;
@@ -151,9 +167,24 @@ export default class TableSelectionPlugin implements EditorPlugin {
         }
     }
 
-    private onMouseUp = () => {
+    private onMouseUp = (rawEvent: MouseEvent) => {
         if (this.editor) {
             this.removeMouseUpEventListener();
+            if (this.mouseDownX == rawEvent.pageX && this.mouseDownY == rawEvent.pageY) {
+                setTimeout(() => {
+                    this.clearTableCellSelection();
+                }, 50);
+            }
         }
     };
+
+    private handleBeforeCutCopy(event: BeforeCutCopyEvent) {
+        event.clonedRoot
+            .querySelectorAll('td.' + TableMetadata.TABLE_CELL_NOT_SELECTED)
+            .forEach(cell => {
+                if (cell.parentNode) {
+                    cell.parentNode.removeChild(cell);
+                }
+            });
+    }
 }

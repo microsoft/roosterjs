@@ -56,7 +56,7 @@ export const highlightTableSelection = (selection: Selection | IContentTraverser
             let element = currentElement.collapseToSingleElement();
 
             if (getTagOfNode(element) != 'TD') {
-                element = findClosestElementAncestor(element, null, 'td');
+                element = findClosestElementAncestor(element, null, 'td,th');
             }
             if (element && safeInstanceOf(element, 'HTMLTableCellElement')) {
                 let tempTable = findClosestElementAncestor(
@@ -103,5 +103,6 @@ export const setTableSelectedRange = (
         lastTDSelected = firstTDSelected;
     }
     let vTable = new VTable(table);
+    console.log(vTable);
     vTable.highlightSelection(firstTDSelected, lastTDSelected);
 };
