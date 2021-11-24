@@ -13,16 +13,20 @@ const TEMP_BACKGROUND_COLOR = TableMetadata.TEMP_BACKGROUND_COLOR;
  * @param editor Editor Instance
  */
 export function clearSelectedTableCells(container: Node, cacheSelection: boolean = false) {
-    getSelectedTables(container)?.forEach(element => {
-        if (safeInstanceOf(element, 'HTMLTableElement')) {
-            const vTable = new VTable(element);
-            vTable.forEachCell(cell => {
-                if (cell.td) {
-                    vTable.deselectCellHandler(cell.td, cacheSelection);
-                }
-            });
-        }
-    });
+    const tables = getSelectedTables(container);
+
+    if (tables) {
+        tables.forEach(element => {
+            if (safeInstanceOf(element, 'HTMLTableElement')) {
+                const vTable = new VTable(element);
+                vTable.forEachCell(cell => {
+                    if (cell.td) {
+                        vTable.deselectCellHandler(cell.td, cacheSelection);
+                    }
+                });
+            }
+        });
+    }
 }
 
 /**
@@ -31,29 +35,33 @@ export function clearSelectedTableCells(container: Node, cacheSelection: boolean
  */
 export function OnFocusTableSelection(container: Node) {
     if (container) {
-        getSelectedTables(container).forEach((element: Element) => {
-            if (safeInstanceOf(element, 'HTMLTableElement')) {
-                const vTable = new VTable(element);
-                vTable.forEachCell((vCell: VCell) => {
-                    const cell = vCell.td;
-                    if (cell && safeInstanceOf(cell, 'HTMLTableCellElement')) {
-                        vTable.highlightCellHandler(vCell.td, (element: HTMLElement) => {
-                            if (element.dataset[TableMetadata.ON_FOCUS_CACHE]) {
-                                element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
-                                    element.style.backgroundColor
-                                );
-                                const highlighColor = getHighlightColor(
-                                    element.style.backgroundColor ?? element.style.background
-                                );
-                                element.style.background = highlighColor;
-                                element.classList.add(TABLE_CELL_SELECTED_CLASS);
-                                delete element.dataset[TableMetadata.ON_FOCUS_CACHE];
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        const tables = getSelectedTables(container);
+
+        if (tables) {
+            tables.forEach((element: Element) => {
+                if (safeInstanceOf(element, 'HTMLTableElement')) {
+                    const vTable = new VTable(element);
+                    vTable.forEachCell((vCell: VCell) => {
+                        const cell = vCell.td;
+                        if (cell && safeInstanceOf(cell, 'HTMLTableCellElement')) {
+                            vTable.highlightCellHandler(vCell.td, (element: HTMLElement) => {
+                                if (element.dataset[TableMetadata.ON_FOCUS_CACHE]) {
+                                    element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                                        element.style.backgroundColor
+                                    );
+                                    const highlighColor = getHighlightColor(
+                                        element.style.backgroundColor ?? element.style.background
+                                    );
+                                    element.style.background = highlighColor;
+                                    element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                                    delete element.dataset[TableMetadata.ON_FOCUS_CACHE];
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 }
 
