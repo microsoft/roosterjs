@@ -3,11 +3,13 @@ import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
-import { getHighlightColor, getOriginalColor } from '../utils/clearSelectedTableCells';
+import { getHighlightColor, getOriginalColor } from '../utils/getTableOriginalColor';
 import { ModeIndependentColor, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { TableMetadata } from './tableMetadata';
 
-const TABLE_CELL_SELECTED_CLASS = 'TableCellSelected';
-const TEMP_BACKGROUND_COLOR = 'tempBackgroundColor';
+const TABLE_CELL_SELECTED_CLASS = TableMetadata.TABLE_CELL_SELECTED;
+const TEMP_BACKGROUND_COLOR = TableMetadata.TEMP_BACKGROUND_COLOR;
+
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -31,6 +33,16 @@ export default class VTable {
      * Current column index
      */
     col: number;
+
+    /**
+     * Current column index
+     */
+    startRange: number[];
+
+    /**
+     * Current column index
+     */
+    endRange: number[];
 
     private trs: HTMLTableRowElement[] = [];
 
@@ -408,29 +420,13 @@ export default class VTable {
         return this.getTd(this.row, this.col);
     }
 
-    highlightSelection(start: HTMLTableCellElement, end: HTMLTableCellElement) {
-        let startX: number = null;
-        let startY: number = null;
-        let endX: number = null;
-        let endY: number = null;
-        if (this.cells) {
-            for (let indexY = 0; indexY < this.cells.length; indexY++) {
-                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                    if (this.cells[indexY][indexX].td == start) {
-                        startX = indexX;
-                        startY = indexY;
-                    }
+    highlight() {
+        if (this.startRange && this.endRange) {
+            let startX: number = this.startRange[0];
+            let startY: number = this.startRange[1];
+            let endX: number = this.endRange[0];
+            let endY: number = this.endRange[1];
 
-                    if (this.cells[indexY][indexX].td == end) {
-                        endX = indexX;
-                        endY = indexY;
-                    }
-                }
-
-                if (startX && startY && endX && endY) {
-                    break;
-                }
-            }
             for (let indexY = 0; indexY < this.cells.length; indexY++) {
                 for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                     let element = this.cells[indexY][indexX].td as HTMLElement;
@@ -442,33 +438,83 @@ export default class VTable {
                             ((indexX >= startX && indexX <= endX) ||
                                 (indexX <= startX && indexX >= endX))
                         ) {
-                            const highlighColor = getHighlightColor(element.style.backgroundColor);
-                            if (
-                                !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
-                                element.style.backgroundColor != highlighColor &&
-                                (!element.dataset[TEMP_BACKGROUND_COLOR] ||
-                                    element.dataset[TEMP_BACKGROUND_COLOR] == '')
-                            ) {
-                                element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
-                                    element.style.backgroundColor
-                                );
-                            }
-                            element.style.backgroundColor = highlighColor;
-                            element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                            this.highlightCellHandler(element);
                         } else {
-                            if (element.classList.contains(TABLE_CELL_SELECTED_CLASS)) {
-                                element.classList.remove(TABLE_CELL_SELECTED_CLASS);
-                                element.style.backgroundColor = getOriginalColor(
-                                    element.dataset[TEMP_BACKGROUND_COLOR]
-                                );
-                                delete element.dataset[TEMP_BACKGROUND_COLOR];
-                            }
+                            this.deselectCellHandler(element);
                         }
                     }
                 }
             }
         }
     }
+
+    highlightSelection(start: number[], end: number[]) {
+        this.startRange = start;
+        this.endRange = end;
+
+        this.highlight();
+    }
+
+    highlightCellHandler = (
+        element: HTMLElement,
+        beforeExecuteCallback?: (element: HTMLElement) => void
+    ) => {
+        beforeExecuteCallback?.(element);
+
+        const shouldExecute =
+            !beforeExecuteCallback ||
+            (beforeExecuteCallback && element.classList.contains(TABLE_CELL_SELECTED_CLASS));
+
+        if (shouldExecute) {
+            const highlighColor = getHighlightColor(
+                element.style.backgroundColor ?? element.style.background
+            );
+            if (
+                !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
+                element.style.backgroundColor != highlighColor &&
+                (!element.dataset[TEMP_BACKGROUND_COLOR] ||
+                    element.dataset[TEMP_BACKGROUND_COLOR] == '')
+            ) {
+                element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                    element.style.backgroundColor ?? element.style.background
+                );
+            }
+            element.style.backgroundColor = highlighColor;
+            element.classList.add(TABLE_CELL_SELECTED_CLASS);
+
+            element.querySelectorAll('table').forEach(table => {
+                const vTable = new VTable(table);
+                vTable.forEachCell(cell =>
+                    vTable.highlightCellHandler(cell.td, beforeExecuteCallback)
+                );
+            });
+        }
+    };
+
+    deselectCellHandler = (cell: HTMLElement, cacheSelection: boolean = false) => {
+        if (
+            cell &&
+            safeInstanceOf(cell, 'HTMLTableCellElement') &&
+            cell.classList.contains(TABLE_CELL_SELECTED_CLASS)
+        ) {
+            cell.classList.remove(TABLE_CELL_SELECTED_CLASS);
+            cell.style.backgroundColor = getOriginalColor(cell.dataset[TEMP_BACKGROUND_COLOR]);
+            delete cell.dataset[TEMP_BACKGROUND_COLOR];
+            cell.querySelectorAll('table').forEach(table => {
+                const vTable = new VTable(table);
+                vTable.forEachCell(cell => vTable.deselectCellHandler(cell.td, cacheSelection));
+            });
+
+            if (cacheSelection) {
+                cell.classList.add(TABLE_CELL_SELECTED_CLASS);
+                cell.dataset[TableMetadata.ON_FOCUS_CACHE] = 'onBlur';
+
+                cell.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                    cell.style.backgroundColor ?? cell.style.background
+                );
+            }
+        }
+    };
 
     forEachSelectedCell(callback: (cell: VCell) => void): number {
         let selectedCells = 0;
@@ -485,26 +531,38 @@ export default class VTable {
         return selectedCells;
     }
 
-    forEachCell(callback: (cell: VCell) => void) {
+    forEachCell(callback: (cell: VCell, x?: number, y?: number) => void) {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                callback(this.cells[indexY][indexX]);
+                callback(this.cells[indexY][indexX], indexX, indexY);
             }
         }
     }
 
-    selectAll() {
+    getCellCoordinates(cellInput: Element) {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                let element = this.cells[indexY][indexX].td as HTMLElement;
-
-                if (element) {
-                    element.style.backgroundColor = 'rgb(9, 109, 202)';
-                    element.classList.add(TABLE_CELL_SELECTED_CLASS);
+                if (cellInput == this.cells[indexY][indexX].td) {
+                    return [indexX, indexY];
                 }
             }
         }
+
+        return null;
     }
+
+    // selectAll() {
+    //     for (let indexY = 0; indexY < this.cells.length; indexY++) {
+    //         for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+    //             let element = this.cells[indexY][indexX].td as HTMLElement;
+
+    //             if (element) {
+    //                 element.style.backgroundColor = 'rgb(9, 109, 202)';
+    //                 element.classList.add(TABLE_CELL_SELECTED_CLASS);
+    //             }
+    //         }
+    //     }
+    // }
 
     private getTd(row: number, col: number) {
         if (this.cells) {

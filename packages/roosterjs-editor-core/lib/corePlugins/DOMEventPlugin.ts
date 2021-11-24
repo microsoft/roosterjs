@@ -3,7 +3,7 @@ import {
     Browser,
     clearSelectedTableCells,
     isCharacterValue,
-    setSelectedTableCells,
+    OnFocusTableSelection,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -150,7 +150,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onFocus = () => {
         this.editor.select(this.state.selectionRange);
-        setSelectedTableCells(this.state.selectionRange?.commonAncestorContainer);
+        OnFocusTableSelection(this.state.scrollContainer);
         this.state.selectionRange = null;
     };
     private onKeyDownDocument = (event: KeyboardEvent) => {
@@ -168,8 +168,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     private cacheSelection = () => {
         if (!this.state.selectionRange) {
             this.state.selectionRange = this.editor.getSelectionRange(false /*tryGetFromCache*/);
-            clearSelectedTableCells(this.state.selectionRange.commonAncestorContainer, false);
         }
+        clearSelectedTableCells(this.state.scrollContainer, true);
     };
     private onScroll = (e: UIEvent) => {
         this.editor.triggerPluginEvent(PluginEventType.Scroll, {

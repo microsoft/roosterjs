@@ -347,7 +347,6 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                 },
                 editor.isDarkMode()
             );
-            editor.focus();
         });
         this.createVTable();
     };
