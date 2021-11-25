@@ -175,6 +175,7 @@ export { default as LifecyclePluginState } from './corePluginState/LifecyclePlug
 export { default as PendingFormatStatePluginState } from './corePluginState/PendingFormatStatePluginState';
 export { default as UndoPluginState } from './corePluginState/UndoPluginState';
 export { default as CopyPastePluginState } from './corePluginState/CopyPastePluginState';
+export { default as TableSelectionPluginState } from './corePluginState/TableSelectionPluginState';
 
 // Other type
 export {

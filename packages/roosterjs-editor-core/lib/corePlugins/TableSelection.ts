@@ -1,28 +1,44 @@
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+    PluginWithState,
+    TableSelectionPluginState,
+} from 'roosterjs-editor-types';
 import {
     clearSelectedTableCells,
     findClosestElementAncestor,
     getTagOfNode,
+    OnFocusTableSelection,
     safeInstanceOf,
     setTableSelectedRange,
     TableMetadata,
     VTable,
+    isNodeAfter,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = TableMetadata.TABLE_CELL_SELECTOR;
 /**
+ * @internal
  * TableSelectionPlugin help highlight table cells
  */
-export default class TableSelectionPlugin implements EditorPlugin {
+export default class TableSelectionPlugin implements PluginWithState<TableSelectionPluginState> {
+    private state: TableSelectionPluginState;
+
     private editor: IEditor;
     private mouseUpEventListerAdded: boolean;
-    private lastTarget: Node;
-    private firstTarget: Node;
-    private vTable: VTable;
     private CLEAR_SELECTION_TIMEOUT_JOB: number;
+    private vTable: VTable;
+    private traversedTables: VTable[];
 
-    private vSelection: boolean;
-
+    constructor(private contentDiv: HTMLDivElement) {
+        this.state = {
+            lastTarget: null,
+            firstTarget: null,
+            vSelection: false,
+        };
+    }
     /**
      * Get a friendly name of  this plugin
      */
@@ -46,6 +62,10 @@ export default class TableSelectionPlugin implements EditorPlugin {
         this.editor = null;
     }
 
+    getState() {
+        return this.state;
+    }
+
     /**
      * Handle events triggered from editor
      * @param event PluginEvent object
@@ -56,14 +76,21 @@ export default class TableSelectionPlugin implements EditorPlugin {
             return;
         }
         if (event.eventType == PluginEventType.MouseUp) {
-            if (!this.vSelection && event.isClicking) {
+            if (event.isClicking) {
                 const currentWindow = this.editor.getDocument().defaultView;
                 if (this.CLEAR_SELECTION_TIMEOUT_JOB) {
                     currentWindow.clearTimeout(this.CLEAR_SELECTION_TIMEOUT_JOB);
                 }
+
                 this.CLEAR_SELECTION_TIMEOUT_JOB = currentWindow.setTimeout(() => {
                     this.clearTableCellSelection();
-                    this.highlightSelection();
+
+                    if (
+                        this.state.vSelection ||
+                        (!this.state.vSelection && !this.editor.getSelectionRange().collapsed)
+                    ) {
+                        OnFocusTableSelection(this.contentDiv);
+                    }
                 }, 50);
             }
         }
@@ -75,8 +102,9 @@ export default class TableSelectionPlugin implements EditorPlugin {
             if (!event.rawEvent.shiftKey) {
                 this.clearTableCellSelection();
 
-                this.lastTarget = null;
-                this.firstTarget = null;
+                this.state.lastTarget = null;
+                this.state.firstTarget = null;
+                this.traversedTables = [];
                 this.editor
                     .getDocument()
                     .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
@@ -88,13 +116,13 @@ export default class TableSelectionPlugin implements EditorPlugin {
                 event.eventType == PluginEventType.KeyUp
             ) {
                 const range = this.editor?.getSelectionRange();
-                this.firstTarget = this.firstTarget || range?.startContainer;
-                if (getTagOfNode(this.firstTarget) == 'TR' && range) {
-                    this.firstTarget = range.startContainer;
+                this.state.firstTarget = this.state.firstTarget || range?.startContainer;
+                if (getTagOfNode(this.state.firstTarget) == 'TR' && range) {
+                    this.state.firstTarget = range.startContainer;
                 }
-                const firstTable = this.editor.getElementAtCursor('table', this.firstTarget);
+                const firstTable = this.editor.getElementAtCursor('table', this.state.firstTarget);
                 if (event.rawEvent.shiftKey) {
-                    const next = (range.endContainer == this.lastTarget
+                    const next = (range.endContainer == this.state.lastTarget
                         ? range.startContainer
                         : range.endContainer) as Element;
                     const lastTarget = this.editor.getElementAtCursor('table', range.endContainer);
@@ -108,27 +136,27 @@ export default class TableSelectionPlugin implements EditorPlugin {
                             this.editor.runAsync(() => {
                                 if (!this.vTable) {
                                     this.vTable = new VTable(firstTable as HTMLTableElement);
-                                    if (this.firstTarget.nodeType == Node.TEXT_NODE) {
-                                        this.firstTarget = this.editor.getElementAtCursor(
+                                    if (this.state.firstTarget.nodeType == Node.TEXT_NODE) {
+                                        this.state.firstTarget = this.editor.getElementAtCursor(
                                             TABLE_CELL_SELECTOR,
-                                            this.firstTarget
+                                            this.state.firstTarget
                                         );
                                     }
                                     this.vTable.startRange = this.vTable.getCellCoordinates(
-                                        this.firstTarget as Element
+                                        this.state.firstTarget as Element
                                     );
                                 }
                                 this.vTable.endRange = this.vTable.getCellCoordinates(next);
                                 this.vTable.highlight();
                                 range.setStart(next, 0);
                                 range.setEnd(next, 0);
-                                this.vSelection = true;
+                                this.state.vSelection = true;
                             });
                         }
                     } else {
                         this.highlightSelection();
                     }
-                    this.lastTarget = next;
+                    this.state.lastTarget = next;
                 } else if (
                     event.eventType == PluginEventType.KeyUp &&
                     !event.rawEvent.shiftKey &&
@@ -145,9 +173,9 @@ export default class TableSelectionPlugin implements EditorPlugin {
             let range = this.editor.getSelectionRange();
             if (
                 this.editor.hasFocus() &&
-                ((!this.vSelection && range && !range.collapsed) || this.vSelection)
+                ((!this.state.vSelection && range && !range.collapsed) || this.state.vSelection)
             ) {
-                clearSelectedTableCells(this.editor.getScrollContainer());
+                clearSelectedTableCells(this.contentDiv);
             }
         }
     }
@@ -159,10 +187,10 @@ export default class TableSelectionPlugin implements EditorPlugin {
             });
             this.vTable = null;
         } else if (this.vTable == undefined) {
-            clearSelectedTableCells(this.editor.getScrollContainer());
+            clearSelectedTableCells(this.contentDiv);
         }
-        this.firstTarget = null;
-        this.lastTarget = null;
+        this.state.firstTarget = null;
+        this.state.lastTarget = null;
     }
 
     private onMouseMove = (event: MouseEvent) => {
@@ -188,7 +216,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
             return;
         }
 
-        let firstTable = this.editor.getElementAtCursor('table', this.firstTarget);
+        let firstTable = this.editor.getElementAtCursor('table', this.state.firstTarget);
         let targetTable = this.editor.getElementAtCursor('table', eventTarget);
 
         ({ eventTarget, firstTable, targetTable } = this.prepareSelection(
@@ -208,15 +236,15 @@ export default class TableSelectionPlugin implements EditorPlugin {
             const table = this.editor.getElementAtCursor('TABLE', eventTarget) as HTMLTableElement;
             const firstTableTD = this.editor.getElementAtCursor(
                 TABLE_CELL_SELECTOR,
-                this.firstTarget
+                this.state.firstTarget
             );
             const range = this.editor.getSelectionRange();
 
-            if (eventTarget && this.lastTarget && eventTarget != this.firstTarget) {
+            if (eventTarget && this.state.lastTarget && eventTarget != this.state.firstTarget) {
                 //Virtual Selection, handled when selection started inside of a table and the end of the selection
                 //Is in the same table.
-                if (!this.vSelection) {
-                    this.vSelection = true;
+                if (!this.state.vSelection) {
+                    this.state.vSelection = true;
                 }
 
                 //Check if the container of the range is only text, means that the user only selected text inside of a cell
@@ -224,11 +252,11 @@ export default class TableSelectionPlugin implements EditorPlugin {
                     if (targetTable != firstTable && targetTable?.contains(firstTable)) {
                         //If selection started in a table that is inside of another table and moves to parent table
                         //Make the firstTarget the TD of the parent table.
-                        this.firstTarget = this.editor.getElementAtCursor(
+                        this.state.firstTarget = this.editor.getElementAtCursor(
                             TABLE_CELL_SELECTOR,
                             eventTarget
                         );
-                        (this.firstTarget as HTMLElement)
+                        (this.state.firstTarget as HTMLElement)
                             .querySelectorAll('table')
                             .forEach(table => {
                                 const vTable = new VTable(table);
@@ -243,7 +271,7 @@ export default class TableSelectionPlugin implements EditorPlugin {
                     if (table && td) {
                         setTableSelectedRange(
                             table,
-                            firstTableTD ?? (this.firstTarget as HTMLElement),
+                            firstTableTD ?? (this.state.firstTarget as HTMLElement),
                             td
                         );
 
@@ -253,66 +281,225 @@ export default class TableSelectionPlugin implements EditorPlugin {
 
                     event.preventDefault();
                 }
-            } else if (eventTarget == this.firstTarget) {
+            } else if (eventTarget == this.state.firstTarget) {
                 if (range && range.commonAncestorContainer.nodeType != Node.TEXT_NODE) {
                     setTableSelectedRange(table, firstTableTD, firstTableTD);
                     event.preventDefault();
                 }
             }
         } else {
-            if (event.target != this.lastTarget || (eventTarget as HTMLTableCellElement)) {
-                this.highlightSelection();
+            if (event.target != this.state.lastTarget || (eventTarget as HTMLTableCellElement)) {
+                // this.highlightSelection();
+                this.highlightSelection2(
+                    eventTarget || (event.target as Node),
+                    targetTable,
+                    firstTable,
+                    event
+                );
             }
         }
 
-        this.firstTarget = this.firstTarget || eventTarget;
-        this.firstTarget =
-            this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, this.firstTarget) ||
-            this.firstTarget;
-        this.lastTarget = isIDPartSelector(eventTarget as HTMLElement)
-            ? this.lastTarget
+        this.state.firstTarget = this.state.firstTarget || eventTarget;
+        this.state.firstTarget =
+            this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, this.state.firstTarget) ||
+            this.state.firstTarget;
+
+        if (this.state.firstTarget == this.contentDiv) {
+            this.state.firstTarget = null;
+        }
+        this.state.lastTarget = isIDPartSelector(eventTarget as HTMLElement)
+            ? this.state.lastTarget
             : eventTarget;
     };
 
     private prepareSelection(eventTarget: Node, firstTable: HTMLElement, targetTable: HTMLElement) {
         let isNewTargetTableContained =
-            eventTarget != this.firstTarget &&
-            firstTable?.contains(findClosestElementAncestor(targetTable, firstTable, 'TD'));
+            eventTarget != this.state.firstTarget &&
+            firstTable?.contains(
+                findClosestElementAncestor(targetTable, firstTable, TABLE_CELL_SELECTOR)
+            );
 
-        if (isNewTargetTableContained && this.vSelection) {
+        if (isNewTargetTableContained && this.state.vSelection) {
             while (isNewTargetTableContained) {
-                eventTarget = findClosestElementAncestor(targetTable, firstTable, 'TD');
+                eventTarget = findClosestElementAncestor(
+                    targetTable,
+                    firstTable,
+                    TABLE_CELL_SELECTOR
+                );
                 targetTable = this.editor.getElementAtCursor('table', eventTarget);
                 isNewTargetTableContained =
-                    eventTarget != this.firstTarget &&
-                    firstTable?.contains(findClosestElementAncestor(targetTable, firstTable, 'TD'));
+                    eventTarget != this.state.firstTarget &&
+                    firstTable?.contains(
+                        findClosestElementAncestor(targetTable, firstTable, TABLE_CELL_SELECTOR)
+                    );
             }
         }
 
         let isFirstTargetTableContained =
-            eventTarget != this.firstTarget &&
-            targetTable?.contains(findClosestElementAncestor(firstTable, targetTable, 'TD'));
+            eventTarget != this.state.firstTarget &&
+            targetTable?.contains(
+                findClosestElementAncestor(firstTable, targetTable, TABLE_CELL_SELECTOR)
+            );
 
-        if (isFirstTargetTableContained && this.vSelection) {
+        if (isFirstTargetTableContained && this.state.vSelection) {
             while (isFirstTargetTableContained) {
-                this.firstTarget = findClosestElementAncestor(firstTable, targetTable, 'TD');
-                firstTable = this.editor.getElementAtCursor('table', this.firstTarget);
+                this.state.firstTarget = findClosestElementAncestor(
+                    firstTable,
+                    targetTable,
+                    TABLE_CELL_SELECTOR
+                );
+                firstTable = this.editor.getElementAtCursor('table', this.state.firstTarget);
                 isFirstTargetTableContained =
-                    eventTarget != this.firstTarget &&
+                    eventTarget != this.state.firstTarget &&
                     targetTable?.contains(
-                        findClosestElementAncestor(firstTable, targetTable, 'TD')
+                        findClosestElementAncestor(firstTable, targetTable, TABLE_CELL_SELECTOR)
                     );
             }
         }
         return { eventTarget, firstTable, targetTable };
     }
 
+    private isAfter(node1: Node, node2: Node, targetTable: Node, range: Range) {
+        if (node1 == this.contentDiv) {
+            node1 = range.endContainer;
+        }
+        if (
+            targetTable &&
+            safeInstanceOf(targetTable, 'HTMLTableElement') &&
+            range.commonAncestorContainer == targetTable.parentNode
+        ) {
+            const next = (range.endContainer == this.state.lastTarget
+                ? range.startContainer
+                : range.endContainer) as Element;
+
+            const first = range.endContainer == next ? range.endContainer : range.startContainer;
+
+            return isNodeAfter(next, first);
+        } else {
+            return isNodeAfter(node1, node2);
+        }
+    }
+
+    private highlightSelection2(
+        currentTarget: Node,
+        targetTable: HTMLElement,
+        firstTable: HTMLElement,
+        event: MouseEvent
+    ) {
+        console.clear();
+        if (!this.contentDiv.contains(currentTarget)) {
+            return;
+        }
+        currentTarget =
+            this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, currentTarget) || currentTarget;
+        const range = this.editor.getSelectionRange();
+
+        if (safeInstanceOf(firstTable, 'HTMLTableElement')) {
+            let vTable = this.traversedTables.filter(table => table.table == firstTable)[0];
+            if (!vTable) {
+                vTable = new VTable(firstTable);
+                this.traversedTables.push(vTable);
+            }
+        }
+
+        if (this.state.vSelection && this.state.firstTarget) {
+            range.setStart(this.state.firstTarget, 0);
+            this.state.vSelection = false;
+            this.vTable = new VTable(this.state.firstTarget as HTMLTableCellElement);
+
+            let lastItemCoordinates = this.vTable.getCellCoordinates(
+                this.state.firstTarget as HTMLElement
+            );
+            if (!this.isAfter(currentTarget, this.state.firstTarget, this.vTable.table, range)) {
+                this.vTable.startRange = [0, 0];
+
+                this.vTable.endRange = [
+                    this.vTable.cells[lastItemCoordinates[1]].length - 1,
+                    lastItemCoordinates[1],
+                ];
+            } else {
+                this.vTable.endRange = [
+                    this.vTable.cells.length,
+                    this.vTable.cells[this.vTable.cells.length - 1].length - 1,
+                ];
+
+                this.vTable.startRange = [0, lastItemCoordinates[1]];
+            }
+
+            this.vTable.highlight();
+        }
+        if (
+            safeInstanceOf(targetTable, 'HTMLTableElement') &&
+            safeInstanceOf(currentTarget, 'HTMLTableCellElement')
+        ) {
+            let vTable = this.traversedTables.filter(table => table.table == targetTable)[0];
+            if (!vTable) {
+                vTable = new VTable(targetTable);
+                this.traversedTables.push(vTable);
+            }
+
+            if (
+                vTable.cells.length != targetTable.rows.length ||
+                vTable.cells[0].length != targetTable.rows[0].cells.length
+            ) {
+                const tempVTable = new VTable(targetTable);
+                this.traversedTables.splice(this.traversedTables.indexOf(vTable), 1, tempVTable);
+                vTable = tempVTable;
+            }
+            let lastItemCoordinates = vTable.getCellCoordinates(currentTarget);
+            if (this.isAfter(currentTarget, this.state.firstTarget, targetTable, range)) {
+                vTable.startRange = [0, 0];
+                vTable.endRange = [
+                    vTable.cells[lastItemCoordinates[1]].length - 1,
+                    lastItemCoordinates[1],
+                ];
+            } else {
+                vTable.endRange = [
+                    vTable.cells.length,
+                    vTable.cells[vTable.cells.length - 1].length - 1,
+                ];
+                vTable.startRange = [0, lastItemCoordinates[1]];
+            }
+
+            vTable.highlight();
+        }
+
+        const cleanSelection = this.traversedTables;
+        cleanSelection.forEach(vTable => {
+            if (
+                isNodeAfter(vTable.table, this.state.firstTarget) &&
+                isNodeAfter(vTable.table, currentTarget) &&
+                vTable.table.parentNode != currentTarget &&
+                currentTarget != this.contentDiv
+            ) {
+                vTable.forEachCell(cell => {
+                    vTable.deselectCellHandler(cell.td);
+                });
+                this.traversedTables.slice(this.traversedTables.indexOf(vTable));
+            }
+
+            if (
+                isNodeAfter(this.state.firstTarget, vTable.table) &&
+                isNodeAfter(currentTarget, vTable.table) &&
+                vTable.table.parentNode != currentTarget &&
+                currentTarget != this.contentDiv &&
+                !vTable.table.contains(currentTarget) &&
+                !vTable.table.contains(this.state.firstTarget)
+            ) {
+                vTable.forEachCell(cell => {
+                    vTable.deselectCellHandler(cell.td);
+                });
+                this.traversedTables.slice(this.traversedTables.indexOf(vTable));
+            }
+        });
+    }
+
     private highlightSelection() {
         const range = this.editor.getSelectionRange();
 
-        if (this.vSelection && this.firstTarget) {
-            range.setStart(this.firstTarget, 0);
-            this.vSelection = false;
+        if (this.state.vSelection && this.state.firstTarget) {
+            range.setStart(this.state.firstTarget, 0);
+            this.state.vSelection = false;
         }
         if (range.commonAncestorContainer) {
             clearSelectedTableCells(range.commonAncestorContainer);
@@ -321,7 +508,6 @@ export default class TableSelectionPlugin implements EditorPlugin {
         const selection = this.editor.getSelectionTraverser();
         let firstTDSelected: HTMLTableCellElement;
         let lastTDSelected: HTMLTableCellElement;
-
         let table: HTMLTableElement;
 
         while (selection?.currentInlineElement) {
@@ -378,21 +564,21 @@ export default class TableSelectionPlugin implements EditorPlugin {
 
     private onMouseUp = () => {
         if (this.editor) {
-            if (!this.vSelection) {
-                // const range = this.editor.getSelectionRange();
-                // if (safeInstanceOf(this.firstTarget, 'HTMLTableCellElement')) {
-                //     const row = this.editor.getElementAtCursor('tr,th', this.firstTarget);
-                //     if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-                //         range.setStartBefore(row.cells[0]);
-                //     }
-                // }
-                // if (safeInstanceOf(this.lastTarget, 'HTMLTableCellElement')) {
-                //     const row = this.editor.getElementAtCursor('tr,th', this.lastTarget);
-                //     if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-                //         range.setEndAfter(row.cells[row.cells.length - 1]);
-                //     }
-                // }
-            }
+            // if (!this.state.vSelection) {
+            //     const range = this.editor.getSelectionRange();
+            //     if (safeInstanceOf(this.state.firstTarget, 'HTMLTableCellElement')) {
+            //         const row = this.editor.getElementAtCursor('tr,th', this.state.firstTarget);
+            //         if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+            //             range.setStartBefore(row.cells[0]);
+            //         }
+            //     }
+            //     if (safeInstanceOf(this.lastTarget, 'HTMLTableCellElement')) {
+            //         const row = this.editor.getElementAtCursor('tr,th', this.lastTarget);
+            //         if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+            //             range.setEndAfter(row.cells[row.cells.length - 1]);
+            //         }
+            //     }
+            // }
 
             this.removeMouseUpEventListener();
         }
