@@ -5,6 +5,7 @@ import EntityPlugin from './EntityPlugin';
 import LifecyclePlugin from './LifecyclePlugin';
 import MouseUpPlugin from './MouseUpPlugin';
 import PendingFormatStatePlugin from './PendingFormatStatePlugin';
+import TableSelectionPlugin from './TableSelection';
 import TypeInContainerPlugin from './TypeInContainerPlugin';
 import UndoPlugin from './UndoPlugin';
 import { CorePlugins, EditorOptions, PluginState } from 'roosterjs-editor-types';
@@ -41,6 +42,7 @@ export default function createCorePlugins(
         copyPaste: map.copyPaste || new CopyPastePlugin(options),
         entity: map.entity || new EntityPlugin(),
         lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),
+        tableSelection: map.tableSelection || new TableSelectionPlugin(contentDiv),
     };
 }
 
@@ -58,5 +60,6 @@ export function getPluginState(corePlugins: CorePlugins): PluginState {
         undo: corePlugins.undo.getState(),
         entity: corePlugins.entity.getState(),
         copyPaste: corePlugins.copyPaste.getState(),
+        tableSelection: corePlugins.tableSelection.getState(),
     };
 }

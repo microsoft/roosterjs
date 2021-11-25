@@ -35,12 +35,12 @@ export default class VTable {
     col: number;
 
     /**
-     * Current column index
+     * Start of the  Selection Range
      */
     startRange: number[];
 
     /**
-     * Current column index
+     * End of the  Selection Range
      */
     endRange: number[];
 
