@@ -132,7 +132,7 @@ it('default shortcut calls the changeFontSize increase when typing CTRL+SHiFT+.'
     expect(changeFontSizeSpy).toHaveBeenCalledWith(editor, FontSizeChange.Increase);
 });
 
-it('default shortcut calls the changeFontSize increase when typing CTRL+SHiFT+,', () => {
+it('default shortcut calls the changeFontSize increase when typing CTRL+SHiFT+, ', () => {
     const changeFontSizeSpy = spyOn(roosterEditorApi, 'changeFontSize');
     const rawEvent = new KeyboardEvent('keydown', {
         ctrlKey: true,
