@@ -1,5 +1,4 @@
 import * as roosterEditorApi from 'roosterjs-editor-api';
-import * as roosterEditorDom from 'roosterjs-editor-dom';
 import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import { DocumentCommand, FontSizeChange, IEditor } from 'roosterjs-editor-types';
 import { ShortcutFeatures } from '../../../lib/plugins/ContentEdit/features/shortcutFeatures';
