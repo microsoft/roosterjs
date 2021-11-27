@@ -1,8 +1,13 @@
 import {
+    BeforeCutCopyEvent,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
+    PluginKeyDownEvent,
+    PluginKeyUpEvent,
+    PluginMouseDownEvent,
+    PluginMouseUpEvent,
     PluginWithState,
     TableSelectionPluginState,
 } from 'roosterjs-editor-types';
@@ -37,6 +42,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             lastTarget: null,
             firstTarget: null,
             vSelection: false,
+            startRange: [],
+            endRange: [],
         };
     }
     /**
@@ -73,98 +80,134 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.ExtractContentWithDom) {
             clearSelectedTableCells(event.clonedRoot, true);
-            return;
         }
         if (event.eventType == PluginEventType.MouseUp) {
-            if (event.isClicking) {
-                const currentWindow = this.editor.getDocument().defaultView;
-                if (this.CLEAR_SELECTION_TIMEOUT_JOB) {
-                    currentWindow.clearTimeout(this.CLEAR_SELECTION_TIMEOUT_JOB);
-                }
-
-                this.CLEAR_SELECTION_TIMEOUT_JOB = currentWindow.setTimeout(() => {
-                    this.clearTableCellSelection();
-
-                    if (
-                        this.state.vSelection ||
-                        (!this.state.vSelection && !this.editor.getSelectionRange().collapsed)
-                    ) {
-                        OnFocusTableSelection(this.contentDiv);
-                    }
-                }, 50);
+            this.handleMouseUp(event);
+        }
+        if (event.eventType == PluginEventType.BeforeCutCopy) {
+            if (event.vTableSelection) {
+                this.handleBeforeCutCopy(event);
             }
         }
         if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
-            this.editor
-                .getDocument()
-                .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
-
-            if (!event.rawEvent.shiftKey) {
-                this.clearTableCellSelection();
-
-                this.state.lastTarget = null;
-                this.state.firstTarget = null;
-                this.traversedTables = [];
-                this.editor
-                    .getDocument()
-                    .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
-            }
-            this.mouseUpEventListerAdded = true;
+            this.handleMouseDown(event);
         } else if (!this.mouseUpEventListerAdded) {
             if (
                 event.eventType == PluginEventType.KeyDown ||
                 event.eventType == PluginEventType.KeyUp
             ) {
-                const range = this.editor?.getSelectionRange();
-                this.state.firstTarget = this.state.firstTarget || range?.startContainer;
-                if (getTagOfNode(this.state.firstTarget) == 'TR' && range) {
-                    this.state.firstTarget = range.startContainer;
-                }
-                const firstTable = this.editor.getElementAtCursor('table', this.state.firstTarget);
-                if (event.rawEvent.shiftKey) {
-                    const next = (range.endContainer == this.state.lastTarget
-                        ? range.startContainer
-                        : range.endContainer) as Element;
-                    const lastTarget = this.editor.getElementAtCursor('table', range.endContainer);
-
-                    if (firstTable == lastTarget) {
-                        if (
-                            firstTable == lastTarget &&
-                            !range.collapsed &&
-                            range.commonAncestorContainer.nodeType != Node.TEXT_NODE
-                        ) {
-                            this.editor.runAsync(() => {
-                                if (!this.vTable) {
-                                    this.vTable = new VTable(firstTable as HTMLTableElement);
-                                    if (this.state.firstTarget.nodeType == Node.TEXT_NODE) {
-                                        this.state.firstTarget = this.editor.getElementAtCursor(
-                                            TABLE_CELL_SELECTOR,
-                                            this.state.firstTarget
-                                        );
-                                    }
-                                    this.vTable.startRange = this.vTable.getCellCoordinates(
-                                        this.state.firstTarget as Element
-                                    );
-                                }
-                                this.vTable.endRange = this.vTable.getCellCoordinates(next);
-                                this.vTable.highlight();
-                                range.setStart(next, 0);
-                                range.setEnd(next, 0);
-                                this.state.vSelection = true;
-                            });
-                        }
-                    } else {
-                        this.highlightSelection();
-                    }
-                    this.state.lastTarget = next;
-                } else if (
-                    event.eventType == PluginEventType.KeyUp &&
-                    !event.rawEvent.shiftKey &&
-                    event.rawEvent.which != Keys.SHIFT
-                ) {
-                    this.clearVTable();
-                }
+                this.handleKeyEvent(event);
             }
+        }
+    }
+    private handleBeforeCutCopy(event: BeforeCutCopyEvent) {
+        const clonedTable = event.clonedRoot.querySelector('table');
+
+        const clonedVTable = new VTable(clonedTable);
+        clonedVTable.startRange = event.vTableStartRange;
+        clonedVTable.endRange = event.vTableEndRange;
+
+        clonedVTable.removeCellsBySelection(false);
+        clonedVTable.writeBack();
+
+        event.range.setStart(clonedTable.parentNode, 0);
+        event.range.setEndAfter(clonedTable);
+
+        if (event.isCut) {
+            this.vTable.removeCellsBySelection(true);
+            this.vTable.writeBack();
+
+            this.clearVTable();
+        }
+    }
+
+    private handleKeyEvent(event: PluginKeyDownEvent | PluginKeyUpEvent) {
+        const range = this.editor?.getSelectionRange();
+        this.state.firstTarget = this.state.firstTarget || range?.startContainer;
+        if (getTagOfNode(this.state.firstTarget) == 'TR' && range) {
+            this.state.firstTarget = range.startContainer;
+        }
+        const firstTable = this.editor.getElementAtCursor('table', this.state.firstTarget);
+        if (event.rawEvent.shiftKey) {
+            const next = (range.endContainer == this.state.lastTarget
+                ? range.startContainer
+                : range.endContainer) as Element;
+            const lastTarget = this.editor.getElementAtCursor('table', range.endContainer);
+
+            if (firstTable == lastTarget) {
+                if (
+                    firstTable == lastTarget &&
+                    !range.collapsed &&
+                    range.commonAncestorContainer.nodeType != Node.TEXT_NODE
+                ) {
+                    this.editor.runAsync(() => {
+                        if (!this.vTable) {
+                            this.vTable = new VTable(firstTable as HTMLTableElement);
+                            if (this.state.firstTarget.nodeType == Node.TEXT_NODE) {
+                                this.state.firstTarget = this.editor.getElementAtCursor(
+                                    TABLE_CELL_SELECTOR,
+                                    this.state.firstTarget
+                                );
+                            }
+                            this.state.startRange = this.vTable.getCellCoordinates(
+                                this.state.firstTarget as Element
+                            );
+                        }
+                        this.state.endRange = this.vTable.getCellCoordinates(next);
+                        this.vTable.highlightSelection(this.state.startRange, this.state.endRange);
+                        range.setStart(next, 0);
+                        range.setEnd(next, 0);
+                        this.state.vSelection = true;
+                    });
+                }
+            } else {
+                this.highlightSelection();
+            }
+            this.state.lastTarget = next;
+        } else if (
+            event.eventType == PluginEventType.KeyUp &&
+            !event.rawEvent.shiftKey &&
+            event.rawEvent.which != Keys.SHIFT
+        ) {
+            this.clearVTable();
+        }
+    }
+
+    private handleMouseDown(event: PluginMouseDownEvent) {
+        this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+
+        if (!event.rawEvent.shiftKey) {
+            this.clearTableCellSelection();
+
+            this.state.lastTarget = null;
+            this.state.firstTarget = null;
+            this.state.startRange = null;
+            this.state.endRange = null;
+            this.traversedTables = [];
+            this.editor
+                .getDocument()
+                .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
+        }
+        this.mouseUpEventListerAdded = true;
+    }
+
+    private handleMouseUp(event: PluginMouseUpEvent) {
+        if (event.isClicking) {
+            const currentWindow = this.editor.getDocument().defaultView;
+            if (this.CLEAR_SELECTION_TIMEOUT_JOB) {
+                currentWindow.clearTimeout(this.CLEAR_SELECTION_TIMEOUT_JOB);
+            }
+
+            this.CLEAR_SELECTION_TIMEOUT_JOB = currentWindow.setTimeout(() => {
+                this.clearTableCellSelection();
+
+                if (
+                    this.state.vSelection ||
+                    (!this.state.vSelection && !this.editor.getSelectionRange().collapsed)
+                ) {
+                    OnFocusTableSelection(this.contentDiv);
+                }
+            }, 50);
         }
     }
 
@@ -191,6 +234,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         }
         this.state.firstTarget = null;
         this.state.lastTarget = null;
+        this.state.startRange = null;
+        this.state.endRange = null;
     }
 
     private onMouseMove = (event: MouseEvent) => {
@@ -263,20 +308,29 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                                 vTable.forEachCell(cell => vTable.highlightCellHandler(cell.td));
                             });
                     }
-                    const td = this.editor.getElementAtCursor(
+                    const currentTargetTD = this.editor.getElementAtCursor(
                         TABLE_CELL_SELECTOR,
                         eventTarget
                     ) as HTMLTableCellElement;
 
-                    if (table && td) {
-                        setTableSelectedRange(
-                            table,
-                            firstTableTD ?? (this.state.firstTarget as HTMLElement),
-                            td
-                        );
+                    if (table && currentTargetTD) {
+                        if (
+                            (!this.vTable || !this.vTable?.table) &&
+                            safeInstanceOf(firstTableTD, 'HTMLTableCellElement')
+                        ) {
+                            this.vTable = new VTable(firstTableTD);
+                        }
 
-                        range.setStart(td, 0);
-                        range.setEnd(td, 0);
+                        this.state.startRange = this.vTable.getCellCoordinates(
+                            firstTableTD ?? (this.state.firstTarget as HTMLElement)
+                        );
+                        this.state.endRange = this.vTable.getCellCoordinates(
+                            currentTargetTD ?? firstTableTD
+                        );
+                        this.vTable.highlightSelection(this.state.startRange, this.state.endRange);
+
+                        range.setStart(currentTargetTD, 0);
+                        range.setEnd(currentTargetTD, 0);
                     }
 
                     event.preventDefault();
@@ -290,7 +344,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         } else {
             if (event.target != this.state.lastTarget || (eventTarget as HTMLTableCellElement)) {
                 // this.highlightSelection();
-                this.highlightSelection2(
+                this.highlightSelectionMouseMove(
                     eventTarget || (event.target as Node),
                     targetTable,
                     firstTable,
@@ -308,7 +362,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             this.state.firstTarget = null;
         }
         this.state.lastTarget = isIDPartSelector(eventTarget as HTMLElement)
-            ? this.state.lastTarget
+            ? this.state.lastTarget || eventTarget
             : eventTarget;
     };
 
@@ -363,33 +417,37 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         if (node1 == this.contentDiv) {
             node1 = range.endContainer;
         }
-        if (
-            targetTable &&
-            safeInstanceOf(targetTable, 'HTMLTableElement') &&
-            range.commonAncestorContainer == targetTable.parentNode
-        ) {
-            const next = (range.endContainer == this.state.lastTarget
-                ? range.startContainer
-                : range.endContainer) as Element;
+        // if (
+        //     targetTable &&
+        //     safeInstanceOf(targetTable, 'HTMLTableElement') &&
+        //     (range.collapsed || range.commonAncestorContainer == targetTable.parentNode)
+        // ) {
+        //     const next = (range.endContainer == this.state.lastTarget
+        //         ? range.startContainer
+        //         : range.endContainer) as Element;
 
-            const first = range.endContainer == next ? range.endContainer : range.startContainer;
+        //     const first = range.endContainer == next ? range.endContainer : range.startContainer;
 
-            return isNodeAfter(next, first);
-        } else {
-            return isNodeAfter(node1, node2);
-        }
+        //     return isNodeAfter(next, first);
+        // } else {
+        return isNodeAfter(node1, node2) && !node2.contains(targetTable);
+        // }
     }
 
-    private highlightSelection2(
+    private highlightSelectionMouseMove(
         currentTarget: Node,
         targetTable: HTMLElement,
         firstTable: HTMLElement,
         event: MouseEvent
     ) {
-        console.clear();
         if (!this.contentDiv.contains(currentTarget)) {
             return;
         }
+
+        if (currentTarget == this.contentDiv) {
+            return;
+        }
+
         currentTarget =
             this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, currentTarget) || currentTarget;
         const range = this.editor.getSelectionRange();
@@ -402,7 +460,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             }
         }
 
-        if (this.state.vSelection && this.state.firstTarget) {
+        if (this.state.vSelection && this.state.firstTarget && this.vTable) {
             range.setStart(this.state.firstTarget, 0);
             this.state.vSelection = false;
             this.vTable = new VTable(this.state.firstTarget as HTMLTableCellElement);
@@ -419,8 +477,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 ];
             } else {
                 this.vTable.endRange = [
-                    this.vTable.cells.length,
                     this.vTable.cells[this.vTable.cells.length - 1].length - 1,
+                    this.vTable.cells.length - 1,
                 ];
 
                 this.vTable.startRange = [0, lastItemCoordinates[1]];
@@ -428,6 +486,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
             this.vTable.highlight();
         }
+
         if (
             safeInstanceOf(targetTable, 'HTMLTableElement') &&
             safeInstanceOf(currentTarget, 'HTMLTableCellElement')
@@ -438,14 +497,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 this.traversedTables.push(vTable);
             }
 
-            if (
-                vTable.cells.length != targetTable.rows.length ||
-                vTable.cells[0].length != targetTable.rows[0].cells.length
-            ) {
-                const tempVTable = new VTable(targetTable);
-                this.traversedTables.splice(this.traversedTables.indexOf(vTable), 1, tempVTable);
-                vTable = tempVTable;
-            }
             let lastItemCoordinates = vTable.getCellCoordinates(currentTarget);
             if (this.isAfter(currentTarget, this.state.firstTarget, targetTable, range)) {
                 vTable.startRange = [0, 0];
@@ -455,8 +506,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 ];
             } else {
                 vTable.endRange = [
-                    vTable.cells.length,
                     vTable.cells[vTable.cells.length - 1].length - 1,
+                    vTable.cells.length - 1,
                 ];
                 vTable.startRange = [0, lastItemCoordinates[1]];
             }
@@ -465,6 +516,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         }
 
         const cleanSelection = this.traversedTables;
+        //Check all the traversed tables
+        //If the start and the current target are before the table, remove all selection and remove vTable from the traversed tables
         cleanSelection.forEach(vTable => {
             if (
                 isNodeAfter(vTable.table, this.state.firstTarget) &&
@@ -492,6 +545,46 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 this.traversedTables.slice(this.traversedTables.indexOf(vTable));
             }
         });
+
+        //Select all cells if the current target is after and the start target is before the table
+        this.traversedTables.forEach(vTable => {
+            const highlightAllCells = () => {
+                const cells = vTable.table.querySelectorAll(TABLE_CELL_SELECTOR);
+                vTable.startRange = vTable.getCellCoordinates(cells[0]);
+                vTable.endRange = vTable.getCellCoordinates(cells[cells.length - 1]);
+                vTable.highlight();
+            };
+            if (
+                isNodeAfter(vTable.table, this.state.firstTarget) &&
+                !isNodeAfter(vTable.table, currentTarget) &&
+                !vTable.table.contains(currentTarget)
+            ) {
+                highlightAllCells();
+            }
+
+            if (
+                isNodeAfter(this.state.firstTarget, vTable.table) &&
+                !isNodeAfter(currentTarget, vTable.table) &&
+                !vTable.table.contains(currentTarget)
+            ) {
+                highlightAllCells();
+            }
+        });
+
+        //If current target is the div container of the table, select all the table
+        if ((event.target as HTMLElement).querySelector('table')) {
+            let vTable = this.traversedTables.filter(table => table.table == firstTable)[0];
+            if (!vTable) {
+                vTable = new VTable((event.target as HTMLElement).querySelector('table'));
+            }
+            vTable.startRange = [0, 0];
+            vTable.endRange = [
+                vTable.cells[vTable.cells.length - 1].length - 1,
+                vTable.cells.length - 1,
+            ];
+            vTable.highlight();
+            this.traversedTables.push(vTable);
+        }
     }
 
     private highlightSelection() {
@@ -564,21 +657,29 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     private onMouseUp = () => {
         if (this.editor) {
-            // if (!this.state.vSelection) {
-            //     const range = this.editor.getSelectionRange();
-            //     if (safeInstanceOf(this.state.firstTarget, 'HTMLTableCellElement')) {
-            //         const row = this.editor.getElementAtCursor('tr,th', this.state.firstTarget);
-            //         if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-            //             range.setStartBefore(row.cells[0]);
-            //         }
-            //     }
-            //     if (safeInstanceOf(this.lastTarget, 'HTMLTableCellElement')) {
-            //         const row = this.editor.getElementAtCursor('tr,th', this.lastTarget);
-            //         if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-            //             range.setEndAfter(row.cells[row.cells.length - 1]);
-            //         }
-            //     }
-            // }
+            if (!this.state.vSelection && this.state.lastTarget != this.contentDiv) {
+                const range = this.editor.getSelectionRange();
+                if (safeInstanceOf(this.state.firstTarget, 'HTMLTableCellElement')) {
+                    const row = this.editor.getElementAtCursor('tr,th', this.state.firstTarget);
+                    if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+                        if (isNodeAfter(this.state.firstTarget, this.state.lastTarget)) {
+                            range.setEndAfter(row.cells[row.cells.length - 1]);
+                        } else {
+                            range.setStartBefore(row.cells[0]);
+                        }
+                    }
+                }
+                if (safeInstanceOf(this.state.lastTarget, 'HTMLTableCellElement')) {
+                    const row = this.editor.getElementAtCursor('tr,th', this.state.lastTarget);
+                    if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+                        if (isNodeAfter(this.state.lastTarget, this.state.firstTarget)) {
+                            range.setEndAfter(row.cells[row.cells.length - 1]);
+                        } else {
+                            range.setStartBefore(row.cells[0]);
+                        }
+                    }
+                }
+            }
 
             this.removeMouseUpEventListener();
         }

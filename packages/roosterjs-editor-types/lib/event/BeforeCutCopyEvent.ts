@@ -24,4 +24,19 @@ export default interface BeforeCutCopyEvent extends BasePluginEvent<PluginEventT
      * Whether this is a cut event
      */
     isCut: boolean;
+
+    /**
+     * Is from virtual table selection
+     */
+    vTableSelection?: boolean;
+
+    /**
+     * Start range of a vTable
+     */
+    vTableStartRange?: number[];
+
+    /**
+     * End range of a vTable
+     */
+    vTableEndRange?: number[];
 }
