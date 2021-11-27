@@ -78,7 +78,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
     private onCutCopy(event: Event, isCut: boolean) {
         let originalRange = this.editor.getSelectionRange();
-        debugger;
         const {
             firstTarget,
             vSelection,
