@@ -78,13 +78,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
     private onCutCopy(event: Event, isCut: boolean) {
         let originalRange = this.editor.getSelectionRange();
-        const {
-            firstTarget,
-            vSelection,
-            lastTarget,
-            startRange,
-            endRange,
-        } = this.editor.getTableSelection();
+        const tableSelection = this.editor.getTableSelection();
+        const { firstTarget, vSelection, lastTarget, startRange, endRange } = tableSelection || {};
 
         if (originalRange.collapsed && vSelection) {
             if (isNodeAfter(firstTarget, lastTarget)) {

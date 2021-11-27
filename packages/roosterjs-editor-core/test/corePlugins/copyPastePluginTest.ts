@@ -7,6 +7,7 @@ import {
     DOMEventHandlerFunction,
     IEditor,
     PluginEventType,
+    TableSelectionPluginState,
 } from 'roosterjs-editor-types';
 
 describe('CopyPastePlugin paste', () => {
@@ -122,6 +123,15 @@ describe('CopyPastePlugin copy', () => {
             addUndoSnapshot: (f: () => void) => f(),
             focus: () => {},
             getTrustedHTMLHandler: (html: string) => html,
+            getTableSelection: (): TableSelectionPluginState => {
+                return {
+                    lastTarget: null,
+                    firstTarget: null,
+                    startRange: null,
+                    endRange: null,
+                    vSelection: false,
+                };
+            },
         });
 
         plugin.initialize(editor);
