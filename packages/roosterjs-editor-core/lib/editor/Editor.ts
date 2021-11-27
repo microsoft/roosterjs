@@ -34,6 +34,7 @@ import {
     RegionType,
     SelectionPath,
     StyleBasedFormatState,
+    TableSelectionPluginState,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import {
@@ -459,6 +460,14 @@ export default class Editor implements IEditor {
         return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
     }
 
+    /**
+     * Get Selection made inside of a table using the Table Selection Plugin.
+     * @param core — The EditorCore object
+     * @returns — Metadata about the selection
+     */
+    public getTableSelection(): TableSelectionPluginState {
+        return this.core.tableSelection;
+    }
     //#endregion
 
     //#region EVENT API

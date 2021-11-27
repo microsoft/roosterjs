@@ -421,7 +421,7 @@ export default class VTable {
     }
 
     highlight() {
-        if (this.startRange && this.endRange) {
+        if (this.startRange && this.endRange && this.cells && this.table) {
             let startX: number = this.startRange[0];
             let startY: number = this.startRange[1];
             let endX: number = this.endRange[0];
@@ -539,7 +539,32 @@ export default class VTable {
         }
     }
 
-    getCellCoordinates(cellInput: Element) {
+    removeCellsBySelection(inside: boolean = true) {
+        let startX: number = this.startRange[0];
+        let startY: number = this.startRange[1];
+        let endX: number = this.endRange[0];
+        let endY: number = this.endRange[1];
+        const tempCells: VCell[][] = [];
+
+        const conditional = (x: number, y: number) =>
+            ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
+            ((x >= startX && x <= endX) || (x <= startX && x >= endX));
+
+        const conditionalHandler = (x: number, y: number, inside: boolean) =>
+            inside ? !conditional(x, y) : conditional(x, y);
+
+        this.forEachCell((cell: VCell, x?: number, y?: number) => {
+            if (conditionalHandler(x, y, inside)) {
+                while (tempCells.length - 1 < y) {
+                    tempCells.push([]);
+                }
+                tempCells[y].push(cell);
+            }
+        });
+        this.cells = tempCells.filter(cell => cell.length > 0);
+    }
+
+    getCellCoordinates(cellInput: Node) {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 if (cellInput == this.cells[indexY][indexX].td) {
