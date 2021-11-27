@@ -703,7 +703,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     lastRow = row as HTMLTableRowElement;
                 }
             });
-
             if (firstRow && lastRow) {
                 setTableSelectedRange(
                     table,
