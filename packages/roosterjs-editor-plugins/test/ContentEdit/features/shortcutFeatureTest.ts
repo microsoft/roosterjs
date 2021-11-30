@@ -16,6 +16,12 @@ afterEach(() => {
     TestHelper.removeElement(TEST_ID);
 });
 
+const spyOnFunction = <T>(obj: T, func: keyof T) => {
+    const spy = jasmine.createSpy(func as string);
+    Object.defineProperty(obj, func, { value: spy });
+    return spy;
+};
+
 it('default shortcut handler calls cached command action', () => {
     const command = {
         action: jasmine.createSpy(),
@@ -24,7 +30,11 @@ it('default shortcut handler calls cached command action', () => {
             stopPropagation: jasmine.createSpy(),
         },
     };
-    spyOn(roosterEditorDom, 'cacheGetEventData').and.returnValue(command);
+    const cacheGetEventDataSpy = jasmine.createSpy();
+    cacheGetEventDataSpy.and.returnValue(command);
+    const mock = roosterEditorDom as any;
+    const saveImpl = mock.cacheGetEventData;
+    mock.cacheGetEventData = cacheGetEventDataSpy;
     const shortCutFeature = ShortcutFeatures.defaultShortcut;
     const rawEvent = new KeyboardEvent('down', null);
     const preventDefaultSpy = spyOn(rawEvent, 'preventDefault');
@@ -34,9 +44,10 @@ it('default shortcut handler calls cached command action', () => {
         eventType: 2,
     };
     shortCutFeature.handleEvent(event, editor);
-    expect(command.action).toHaveBeenCalled();
+    expect(command.action).toHaveBeenCalledTimes(1);
     expect(preventDefaultSpy).toHaveBeenCalled();
     expect(stopPropagationSpy).toHaveBeenCalled();
+    mock.cacheGetEventData = saveImpl;
 });
 
 const parameters = [
@@ -109,13 +120,14 @@ it('default shortcut calls the redo command on the editor when typing CTRL+Y', (
         eventType: 0,
     };
     const shortCutFeature = ShortcutFeatures.defaultShortcut;
-    const spyUndo = spyOn(editor, 'redo');
+    const spyUndo = spyOnFunction(editor, 'redo');
     shortCutFeature.handleEvent(event, editor);
     expect(spyUndo).toHaveBeenCalled();
 });
 
 it('default shortcut calls the changeFontSize increase when typing CTRL+SHiFT+.', () => {
-    const changeFontSizeSpy = spyOn(roosterEditorApi, 'changeFontSize');
+    const changeFontSizeSpy = spyOnFunction(roosterEditorApi, 'changeFontSize');
+
     const rawEvent = new KeyboardEvent('keydown', {
         ctrlKey: true,
         shiftKey: true,
@@ -133,7 +145,7 @@ it('default shortcut calls the changeFontSize increase when typing CTRL+SHiFT+.'
 });
 
 it('default shortcut calls the changeFontSize increase when typing CTRL+SHiFT+, ', () => {
-    const changeFontSizeSpy = spyOn(roosterEditorApi, 'changeFontSize');
+    const changeFontSizeSpy = spyOnFunction(roosterEditorApi, 'changeFontSize');
     const rawEvent = new KeyboardEvent('keydown', {
         ctrlKey: true,
         shiftKey: true,
