@@ -32,7 +32,7 @@ it('default shortcut handler calls cached command action', () => {
     const cacheGetEventDataSpy = jasmine.createSpy();
     cacheGetEventDataSpy.and.returnValue(command);
     const saveImpl: any = (roosterEditorDom as any).cacheGetEventData;
-    (roosterEditorDom as any).cacheGetEventData = cacheGetEventDataSpy;
+    Object.defineProperty(roosterEditorDom, 'cacheGetEventData', { value: cacheGetEventDataSpy });
     const shortCutFeature = ShortcutFeatures.defaultShortcut;
     const rawEvent = new KeyboardEvent('down', null);
     const preventDefaultSpy = spyOn(rawEvent, 'preventDefault');
