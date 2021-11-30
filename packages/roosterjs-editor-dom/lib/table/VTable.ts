@@ -492,6 +492,10 @@ export default class VTable {
     };
 
     deselectCellHandler = (cell: HTMLElement, cacheSelection: boolean = false) => {
+        if (cell.dataset[TableMetadata.ON_FOCUS_CACHE] == 'onBlur') {
+            delete cell.dataset[TableMetadata.ON_FOCUS_CACHE];
+            return;
+        }
         if (
             cell &&
             safeInstanceOf(cell, 'HTMLTableCellElement') &&
@@ -516,12 +520,31 @@ export default class VTable {
         }
     };
 
+    private isInsideOfSelection(x: number, y: number) {
+        if (this.startRange && this.endRange) {
+            let startX: number = this.startRange[0];
+            let startY: number = this.startRange[1];
+            let endX: number = this.endRange[0];
+            let endY: number = this.endRange[1];
+
+            return (
+                ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
+                ((x >= startX && x <= endX) || (x <= startX && x >= endX))
+            );
+        }
+        return false;
+    }
+
     forEachSelectedCell(callback: (cell: VCell) => void): number {
         let selectedCells = 0;
+
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
-                if (element.classList.contains(TABLE_CELL_SELECTED_CLASS)) {
+                if (
+                    element.classList.contains(TABLE_CELL_SELECTED_CLASS) ||
+                    this.isInsideOfSelection(indexX, indexY)
+                ) {
                     selectedCells += 1;
                     callback(this.cells[indexY][indexX]);
                 }
@@ -540,18 +563,10 @@ export default class VTable {
     }
 
     removeCellsBySelection(inside: boolean = true) {
-        let startX: number = this.startRange[0];
-        let startY: number = this.startRange[1];
-        let endX: number = this.endRange[0];
-        let endY: number = this.endRange[1];
         const tempCells: VCell[][] = [];
 
-        const conditional = (x: number, y: number) =>
-            ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
-            ((x >= startX && x <= endX) || (x <= startX && x >= endX));
-
         const conditionalHandler = (x: number, y: number, inside: boolean) =>
-            inside ? !conditional(x, y) : conditional(x, y);
+            inside ? !this.isInsideOfSelection(x, y) : this.isInsideOfSelection(x, y);
 
         this.forEachCell((cell: VCell, x?: number, y?: number) => {
             if (conditionalHandler(x, y, inside)) {
@@ -565,10 +580,12 @@ export default class VTable {
     }
 
     getCellCoordinates(cellInput: Node) {
-        for (let indexY = 0; indexY < this.cells.length; indexY++) {
-            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                if (cellInput == this.cells[indexY][indexX].td) {
-                    return [indexX, indexY];
+        if (this.cells) {
+            for (let indexY = 0; indexY < this.cells.length; indexY++) {
+                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                    if (cellInput == this.cells[indexY][indexX].td) {
+                        return [indexX, indexY];
+                    }
                 }
             }
         }
