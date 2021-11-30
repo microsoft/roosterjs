@@ -31,9 +31,8 @@ it('default shortcut handler calls cached command action', () => {
     };
     const cacheGetEventDataSpy = jasmine.createSpy();
     cacheGetEventDataSpy.and.returnValue(command);
-    const mock = roosterEditorDom as any;
-    const saveImpl = mock.cacheGetEventData;
-    mock.cacheGetEventData = cacheGetEventDataSpy;
+    const saveImpl: any = (roosterEditorDom as any).cacheGetEventData;
+    (roosterEditorDom as any).cacheGetEventData = cacheGetEventDataSpy;
     const shortCutFeature = ShortcutFeatures.defaultShortcut;
     const rawEvent = new KeyboardEvent('down', null);
     const preventDefaultSpy = spyOn(rawEvent, 'preventDefault');
@@ -46,7 +45,7 @@ it('default shortcut handler calls cached command action', () => {
     expect(command.action).toHaveBeenCalledTimes(1);
     expect(preventDefaultSpy).toHaveBeenCalled();
     expect(stopPropagationSpy).toHaveBeenCalled();
-    mock.cacheGetEventData = saveImpl;
+    (roosterEditorDom as any).cacheGetEventData = saveImpl;
 });
 
 const parameters = [
