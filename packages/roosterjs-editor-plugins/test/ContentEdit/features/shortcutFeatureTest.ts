@@ -45,7 +45,7 @@ it('default shortcut handler calls cached command action', () => {
     expect(command.action).toHaveBeenCalledTimes(1);
     expect(preventDefaultSpy).toHaveBeenCalled();
     expect(stopPropagationSpy).toHaveBeenCalled();
-    (roosterEditorDom as any).cacheGetEventData = saveImpl;
+    Object.defineProperty(roosterEditorDom, 'cacheGetEventData', { value: saveImpl });
 });
 
 const parameters = [
