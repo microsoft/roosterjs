@@ -200,4 +200,15 @@ describe('transformColor Light to dark', () => {
             '<div style="color: white; background-color: black;" data-ogsc="red" data-ogsb="green"></div>'
         );
     });
+
+    it('single element with inherit color', () => {
+        const core = createEditorCore(div, { inDarkMode: true, getDarkColor });
+        const element = document.createElement('div');
+        element.style.color = 'inherit';
+        element.style.backgroundColor = 'inherit';
+        transformColor(core, element, true, null, ColorTransformDirection.LightToDark);
+        expect(element.outerHTML).toBe(
+            '<div style="color: inherit; background-color: inherit;"></div>'
+        );
+    });
 });

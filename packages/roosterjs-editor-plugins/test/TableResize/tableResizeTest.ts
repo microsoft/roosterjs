@@ -8,10 +8,6 @@ import {
     DOMEventHandlerFunction,
 } from 'roosterjs-editor-types';
 
-const RESIZING_DIVIATION = 4;
-const INSERTING_DIVIATION = 3;
-const CELL_RESIZER_WIDTH = 4;
-
 const VERTICAL_INSERTER = 'verticalInserter';
 const HORIZONTAL_INSERTER = 'horizontalInserter';
 const TABLE_RESIZER = 'tableResizer';
@@ -143,13 +139,8 @@ describe('Table Resizer/Inserter tests', () => {
     let editor: IEditor;
     let plugin: TableResize;
     const insideTheOffset = 5;
-    const OFFSET_X = 5;
-    const OFFSET_Y = 2;
-    const TEST_TABLE_WIDTH = 3;
-    const TEST_TABLE_HEIGHT = 3;
     const TEST_ID = 'inserterTest';
 
-    let tempNode: HTMLElement = null;
     let handler: Record<string, DOMEventHandlerFunction>;
     let addDomEventHandler: jasmine.Spy;
 
@@ -167,19 +158,15 @@ describe('Table Resizer/Inserter tests', () => {
                 };
             });
 
-        plugin.initialize(<IEditor>(<any>{
+        editor = <IEditor>(<any>{
             ...editor,
             addDomEventHandler,
             addUndoSnapshot: (f: () => void) => f(),
             insertNode: (node: HTMLElement) => {
-                tempNode = node;
                 document.body.appendChild(node);
             },
             runAsync: (callback: () => void) => {
-                if (tempNode) {
-                    tempNode.innerHTML = 'test html';
-                }
-                callback();
+                handler.resizeCells = callback;
             },
             getDocument: () => document,
             select: () => {},
@@ -189,7 +176,17 @@ describe('Table Resizer/Inserter tests', () => {
                 };
             },
             isDarkMode: () => false,
-        }));
+            queryElements: (table: string, callback: (table: HTMLTableElement) => void) => {
+                const tables = document.getElementsByTagName(table);
+                const tableList = Array.from(tables);
+                tableList.forEach(table => {
+                    callback(table as HTMLTableElement);
+                });
+            },
+            dispose: () => {},
+        });
+
+        plugin.initialize(editor);
     });
 
     afterEach(() => {
@@ -218,7 +215,8 @@ describe('Table Resizer/Inserter tests', () => {
         if (isRtl) {
             editor.getDocument().body.style.direction = 'rtl';
         }
-        editor.setContent(testTables[tableIndex].htmlData);
+        const editorDiv = editor.getDocument().getElementById(TEST_ID);
+        editorDiv.innerHTML = testTables[tableIndex].htmlData;
         const table = document.getElementsByTagName('table')[0];
         return table.getBoundingClientRect();
     }
@@ -235,23 +233,7 @@ describe('Table Resizer/Inserter tests', () => {
         return table.rows[0].cells.length;
     }
 
-    function runInserterTest(
-        inserterType: string,
-        mouseStart: Position,
-        mouseEnd: Position,
-        expectedResultBeforeMove: boolean,
-        expectedResultAfterMove: boolean,
-        expectedPosition?: DOMRect
-    ) {
-        handler.mousemove(
-            new MouseEvent('mousemove', {
-                clientX: mouseStart.x,
-                clientY: mouseStart.y,
-            })
-        );
-
-        // test
-        expect(!!editor.getDocument().getElementById(inserterType)).toBe(expectedResultBeforeMove);
+    function runInserterTest(inserterType: string, mouseEnd: Position) {
         handler.mousemove(
             new MouseEvent('mousemove', {
                 clientX: mouseEnd.x,
@@ -259,19 +241,8 @@ describe('Table Resizer/Inserter tests', () => {
             })
         );
 
-        expect(!!editor.getDocument().getElementById(inserterType)).toBe(expectedResultAfterMove);
-
-        if (expectedResultAfterMove) {
-            const inserter = editor.getDocument().getElementById(inserterType);
-            const inserterRect = inserter.getBoundingClientRect();
-            if (!!expectedPosition) {
-                const diff =
-                    inserterType == VERTICAL_INSERTER
-                        ? inserterRect.left + inserterRect.width / 2 - expectedPosition.x
-                        : inserterRect.top + inserterRect.height / 2 - expectedPosition.y;
-                expect(Math.abs(diff)).toBeLessThanOrEqual(INSERTING_DIVIATION);
-            }
-
+        const inserter = editor.getDocument().getElementById(inserterType);
+        if (!!inserter) {
             const table = getCurrentTable();
             const rows = getTableRows(table);
             const cols = getTableColumns(table);
@@ -284,163 +255,17 @@ describe('Table Resizer/Inserter tests', () => {
     }
 
     // inserter tests
-    it('removes the vertical inserter when moving the cursor out of the offset zone', () => {
+    it('adds a new row if the vertical inserter is detected and clicked', () => {
         const rect = initialize(0);
-        runInserterTest(
-            VERTICAL_INSERTER,
-            { x: rect.right, y: rect.top - OFFSET_Y },
-            { x: rect.right / 2, y: rect.bottom },
-            true,
-            false
-        );
+        runInserterTest(VERTICAL_INSERTER, { x: rect.right - insideTheOffset, y: rect.top });
     });
 
-    it('keeps the vertical inserter when moving the cursor inside the safe zone', () => {
+    it('adds a new column if the horizontal inserter is detected and clicked', () => {
         const rect = initialize(0);
-        runInserterTest(
-            VERTICAL_INSERTER,
-            { x: rect.right, y: rect.top - OFFSET_Y },
-            { x: rect.right - insideTheOffset, y: rect.top },
-            true,
-            true
-        );
-    });
-
-    it('removes the horizontal inserter when moving the cursor out of the offset zone', () => {
-        const rect = initialize(0);
-        runInserterTest(
-            HORIZONTAL_INSERTER,
-            { x: rect.left, y: rect.bottom },
-            { x: (rect.right - rect.left) / 2, y: (rect.bottom - rect.top) / 2 },
-            true,
-            false
-        );
-    });
-
-    it('keeps the horizontal inserter when moving the cursor inside the safe zone', () => {
-        const rect = initialize(0);
-        runInserterTest(
-            HORIZONTAL_INSERTER,
-            { x: rect.left, y: rect.bottom },
-            { x: rect.left, y: rect.bottom - insideTheOffset },
-            true,
-            true
-        );
-    });
-
-    it('removes the horizontal inserter when moving the cursor out of the offset zone with culture language RTL', () => {
-        const rect = initialize(0, true);
-        runInserterTest(
-            HORIZONTAL_INSERTER,
-            { x: rect.right, y: rect.bottom },
-            { x: (rect.right - rect.left) / 2, y: (rect.bottom - rect.top) / 2 },
-            true,
-            false
-        );
-    });
-
-    it('keeps the horizontal inserter when moving the cursor inside the safe zone with culture language RTL', () => {
-        const rect = initialize(0, true);
-        runInserterTest(
-            HORIZONTAL_INSERTER,
-            { x: rect.right, y: rect.bottom },
-            { x: rect.right + insideTheOffset / 2, y: rect.bottom },
-            true,
-            true
-        );
-    });
-
-    it('removes the vertical inserter when moving the cursor out of the offset zone with culture language RTL', () => {
-        const rect = initialize(0, true);
-        const cellRect = getCellRect(0, 0);
-
-        runInserterTest(
-            VERTICAL_INSERTER,
-            { x: cellRect.left, y: cellRect.top },
-            { x: rect.left + rect.width / 2, y: rect.bottom },
-            true,
-            false
-        );
-    });
-
-    it('removes the vertical inserter for the first cell if the X coordinate of the cursor position is less than the half distance of the cell', () => {
-        initialize(0);
-        const cellRect = getCellRect(0, 0);
-
-        runInserterTest(
-            VERTICAL_INSERTER,
-            {
-                x: cellRect.left + (cellRect.right - cellRect.left) / 2 + OFFSET_X,
-                y: cellRect.top - OFFSET_Y,
-            },
-            {
-                x: cellRect.left + (cellRect.right - cellRect.left) / 2 - OFFSET_X,
-                y: cellRect.top - OFFSET_Y,
-            },
-            true,
-            false
-        );
-    });
-
-    it('sets the vertical inserter at the previous td for non-first cells if the X coordinate of the cursor position is less than the half distance of the cell', () => {
-        initialize(0);
-        const cellRect = getCellRect(0, 1);
-
-        runInserterTest(
-            VERTICAL_INSERTER,
-            {
-                x: cellRect.left + cellRect.width / 2 + OFFSET_X,
-                y: cellRect.top - OFFSET_Y,
-            },
-            {
-                x: cellRect.left + cellRect.width / 2 - OFFSET_X,
-                y: cellRect.top - OFFSET_Y,
-            },
-            true,
-            true,
-            new DOMRect(cellRect.left, cellRect.top)
-        );
-    });
-
-    it('sets the horizontal inserter at the previous td for non-first cells if the Y coordinate of the cursor position is less than the half distance of the cell', () => {
-        initialize(0);
-        const cellRect = getCellRect(1, 0);
-
-        runInserterTest(
-            HORIZONTAL_INSERTER,
-            {
-                x: cellRect.left + OFFSET_X,
-                y: cellRect.top + cellRect.height / 2 + OFFSET_Y,
-            },
-            {
-                x: cellRect.left + OFFSET_X,
-                y: cellRect.top + cellRect.height / 2 - OFFSET_Y,
-            },
-            true,
-            true,
-            new DOMRect(cellRect.left, cellRect.top)
-        );
+        runInserterTest(HORIZONTAL_INSERTER, { x: rect.left, y: rect.bottom - insideTheOffset });
     });
 
     /************************ Resizer related tests ************************/
-
-    function runShowResizerTest(resizerId: string, mousePos: Position, expectedPos?: Position) {
-        const mouseEvent = new MouseEvent('mousemove', {
-            clientX: mousePos.x,
-            clientY: mousePos.y,
-        });
-
-        handler.mousemove(mouseEvent);
-
-        const resizer = editor.getDocument().getElementById(resizerId);
-        expect(!!resizer).toBe(true);
-        if (!!resizer && !!expectedPos) {
-            const resizerX = resizer.getBoundingClientRect().x;
-            const resizerY = resizer.getBoundingClientRect().y;
-            expect(Math.abs(resizerX - expectedPos.x)).toBeLessThanOrEqual(RESIZING_DIVIATION);
-            expect(Math.abs(resizerY - expectedPos.y)).toBeLessThanOrEqual(RESIZING_DIVIATION);
-        }
-    }
 
     function getTableRectSet(table: HTMLTableElement): DOMRect[] {
         const rectSet: DOMRect[] = [];
@@ -491,185 +316,44 @@ describe('Table Resizer/Inserter tests', () => {
             clientX: mouseStart.x,
             clientY: mouseStart.y,
         });
-        editorDiv.dispatchEvent(mouseMoveEvent);
+        handler.mousemove(mouseMoveEvent);
 
-        const resizer = editor.getDocument().getElementById(resizerId);
-        expect(!!resizer).toBe(true);
+        let resizer = editor.getDocument().getElementById(resizerId);
+        if (!!resizer) {
+            const tableBeforeClick = getTableRectSet(getCurrentTable());
+            const mouseClickEvent = new MouseEvent('mousedown');
+            resizer.dispatchEvent(mouseClickEvent);
+            const tableAfterClick = getTableRectSet(getCurrentTable());
+            // validate the table doesn't shift after clicking on the resizer
+            runTableShapeTest(tableBeforeClick, tableAfterClick);
 
-        const tableBeforeClick = getTableRectSet(getCurrentTable());
-        // mouse down and start resizing (this will initiate currentCellsToResize and nextCellsToResize)
-        const mouseClickEvent = new MouseEvent('mousedown', {
-            clientX: mouseStart.x,
-            clientY: mouseStart.y,
-        });
-        resizer.dispatchEvent(mouseClickEvent);
-
-        const tableAfterClick = getTableRectSet(getCurrentTable());
-        // validate the table doesn't shift after clicking on the resizer
-        runTableShapeTest(tableBeforeClick, tableAfterClick);
-
-        editor.runAsync = (callback: any) => callback(editor);
-        spyOn(editor, 'addUndoSnapshot').and.callFake((event, callback) => {});
-
-        const mouseMoveResize = new MouseEvent('mousemove', {
-            clientX: mouseEnd.x,
-            clientY: mouseEnd.y,
-        });
-        const doc = editor.getDocument();
-        doc.dispatchEvent(mouseMoveResize);
-
-        // release mouse and stop resizing
-        const mouseMoveEndEvent = new MouseEvent('mouseup', {
-            clientX: mouseEnd.x,
-            clientY: mouseEnd.y,
-        });
-        editorDiv.dispatchEvent(mouseMoveEndEvent);
-    }
-
-    function runResizeTableTest(
-        mouseStart: Position,
-        mouseEnd: Position,
-        expectedTableWidth: number,
-        expectedTableHeight: number
-    ) {
-        moveAndResize(mouseStart, mouseEnd, ResizeState.Both);
-
-        const tableRect = editor
-            .getDocument()
-            .getElementsByTagName('table')[0]
-            .getBoundingClientRect();
-
-        expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
-            RESIZING_DIVIATION
-        );
-        expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(
-            RESIZING_DIVIATION
-        );
-    }
-
-    function runResizeRowTest(
-        mouseStart: Position,
-        mouseEnd: Position,
-        expectedRow: Map<Position, DOMRect>,
-        expectedTableWidth: number,
-        expectedTableHeight: number
-    ) {
-        moveAndResize(mouseStart, mouseEnd, ResizeState.Horizontal);
-
-        expectedRow.forEach((tRect, pos) => {
-            const cellRect = getCellRect(pos.x, pos.y);
-            expect(!!cellRect).toBe(true);
-            expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(RESIZING_DIVIATION);
-            expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(
-                RESIZING_DIVIATION
-            );
-        });
-
-        const table = getCurrentTable();
-        const tableRect = table.getBoundingClientRect();
-        expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
-            RESIZING_DIVIATION
-        );
-        expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(
-            RESIZING_DIVIATION
-        );
-    }
-
-    function runResizeColumnTest(
-        mouseStart: Position,
-        mouseEnd: Position,
-        expectedLeftColumn: Map<Position, DOMRect>,
-        expectedRightColumn: Map<Position, DOMRect> | undefined,
-        expectedTableWidth: number,
-        expectedTableHeight: number
-    ) {
-        moveAndResize(mouseStart, mouseEnd, ResizeState.Vertical);
-
-        expectedLeftColumn.forEach((tRect, pos) => {
-            const cellRect = getCellRect(pos.x, pos.y);
-            expect(!!cellRect).toBe(true);
-            expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(RESIZING_DIVIATION);
-            expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(
-                RESIZING_DIVIATION
-            );
-        });
-
-        if (!!expectedRightColumn) {
-            expectedRightColumn.forEach((tRect, pos) => {
-                const cellRect = getCellRect(pos.x, pos.y);
-                expect(!!cellRect).toBe(true);
-                expect(Math.abs(cellRect.width - tRect.width)).toBeLessThanOrEqual(
-                    RESIZING_DIVIATION
-                );
-                expect(Math.abs(cellRect.height - tRect.height)).toBeLessThanOrEqual(
-                    RESIZING_DIVIATION
-                );
+            const mouseMoveResize = new MouseEvent('mousemove', {
+                clientX: mouseEnd.x,
+                clientY: mouseEnd.y,
             });
-        }
+            const doc = editor.getDocument();
+            // this will assign handler.resizeCells with the actual handler
+            doc.dispatchEvent(mouseMoveResize);
+            handler.resizeCells(mouseMoveResize);
 
-        const table = getCurrentTable();
-        const tableRect = table.getBoundingClientRect();
-        expect(Math.abs(tableRect.width - expectedTableWidth)).toBeLessThanOrEqual(
-            RESIZING_DIVIATION
-        );
-        expect(Math.abs(tableRect.height - expectedTableHeight)).toBeLessThanOrEqual(
-            RESIZING_DIVIATION
-        );
+            // release mouse and stop resizing
+            const mouseMoveEndEvent = new MouseEvent('mouseup');
+            editorDiv.dispatchEvent(mouseMoveEndEvent);
+
+            resizer = editor.getDocument().getElementById(resizerId);
+            expect(!!resizer).toBe(false);
+        }
     }
-
-    /************************** Resizier showing tests **************************/
-
-    xit('adds the vertical resizer when mouse lands inside each cell', () => {
-        const tableRect = initialize(0);
-
-        for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
-            for (let j = 0; j < TEST_TABLE_HEIGHT; j++) {
-                const cellRect = getCellRect(i, j);
-                runShowResizerTest(
-                    'verticalResizer',
-                    {
-                        x: cellRect.left + cellRect.width / 2,
-                        y: cellRect.top + cellRect.height / 2,
-                    },
-                    { x: cellRect.right - CELL_RESIZER_WIDTH + 1, y: tableRect.top }
-                );
-            }
-        }
-    });
-
-    xit('adds the horizontal resizer when mouse lands inside each cell', () => {
-        const tableRect = initialize(0);
-        for (let i = 0; i < TEST_TABLE_WIDTH; i++) {
-            for (let j = 0; j < TEST_TABLE_HEIGHT; j++) {
-                const cellRect = getCellRect(i, j);
-                runShowResizerTest(
-                    'horizontalResizer',
-                    {
-                        x: cellRect.left + cellRect.width / 2,
-                        y: cellRect.top + cellRect.height / 2,
-                    },
-                    { x: tableRect.left, y: cellRect.bottom - CELL_RESIZER_WIDTH + 1 }
-                );
-            }
-        }
-    });
 
     /************************** Resizier removing tests **************************/
 
     function removeResizerTest(pluginEvent: PluginEvent) {
-        const tableRect = initialize(0);
-        runShowResizerTest(TABLE_RESIZER, {
-            x: tableRect.right,
-            y: tableRect.bottom,
-        });
-
         plugin.onPluginEvent(pluginEvent);
-
         const resizer = editor.getDocument().getElementById(TABLE_RESIZER);
         expect(!!resizer).toBe(false);
     }
 
-    xit('removes resisizer on input', () => {
+    it('removes table resisizer on input', () => {
         const pluginEvent: PluginEvent = {
             eventType: PluginEventType.Input,
             rawEvent: null,
@@ -677,7 +361,7 @@ describe('Table Resizer/Inserter tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    xit('removes resisizer on content change', () => {
+    it('removes table resisizer on content change', () => {
         const pluginEvent: PluginEvent = {
             eventType: PluginEventType.ContentChanged,
             source: null,
@@ -685,7 +369,7 @@ describe('Table Resizer/Inserter tests', () => {
         removeResizerTest(pluginEvent);
     });
 
-    xit('removes resisizer on scrolling', () => {
+    it('removes table resisizer on scrolling', () => {
         const pluginEvent: PluginEvent = {
             eventType: PluginEventType.Scroll,
             scrollContainer: editor.getDocument().body as HTMLElement,
@@ -702,21 +386,11 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const cellRect = getCellRect(0, 0);
         const targetPos: number = testTable.rows[1] + delta;
-        const expectedCellWidth = testTable.cellWidth;
-        const expectedCellHeight: number = targetPos - testTable.rows[0];
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height + (targetPos - testTable.rows[1]);
 
-        runResizeRowTest(
+        moveAndResize(
             { x: cellRect.left + cellRect.width / 2, y: cellRect.bottom },
             { x: cellRect.left + cellRect.width / 2, y: targetPos },
-            new Map([
-                [{ x: 0, y: 0 }, new DOMRect(0, 0, expectedCellWidth, expectedCellHeight)],
-                [{ x: 0, y: 1 }, new DOMRect(0, 0, expectedCellWidth, expectedCellHeight)],
-                [{ x: 0, y: 2 }, new DOMRect(0, 0, expectedCellWidth, expectedCellHeight)],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Horizontal
         );
     }
 
@@ -726,76 +400,49 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const cellRect = getCellRect(2, 2);
         const targetPos: number = testTable.rows[testTable.rows.length - 1] + delta;
-        const expectedCellWidth = testTable.cellWidth;
-        const expectedCellHeight: number = targetPos - testTable.rows[2];
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height + (targetPos - testTable.rows[3]);
 
-        runResizeRowTest(
+        moveAndResize(
             { x: cellRect.left + cellRect.width / 2, y: cellRect.bottom },
             { x: cellRect.left + cellRect.width / 2, y: targetPos },
-            new Map([
-                [{ x: 2, y: 0 }, new DOMRect(0, 0, expectedCellWidth, expectedCellHeight)],
-                [{ x: 2, y: 1 }, new DOMRect(0, 0, expectedCellWidth, expectedCellHeight)],
-                [{ x: 2, y: 2 }, new DOMRect(0, 0, expectedCellWidth, expectedCellHeight)],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Horizontal
         );
     }
 
-    xit('resizes the first row correctly with default table', () => {
+    it('resizes the first row correctly with default table', () => {
         resizeFirstRowTest(0);
     });
 
-    xit('resizes the first row correctly with Excel table', () => {
+    it('resizes the first row correctly with Excel table', () => {
         resizeFirstRowTest(1);
     });
 
-    xit('resizes the first row correctly with Word table', () => {
+    it('resizes the first row correctly with Word table', () => {
         resizeFirstRowTest(2);
     });
 
-    xit('resizes the last row correctly with default table', () => {
+    it('resizes the last row correctly with default table', () => {
         resizeLastRowTest(0);
     });
 
-    xit('resizes the last row correctly with Excel table', () => {
+    it('resizes the last row correctly with Excel table', () => {
         resizeLastRowTest(1);
     });
 
-    xit('resizes the last row correctly with Word table', () => {
+    it('resizes the last row correctly with Word table', () => {
         resizeLastRowTest(2);
     });
 
-    xit('resizes the row correctly with merged cells', () => {
+    it('resizes the row correctly with merged cells', () => {
         initialize(3);
         const delta = 35;
         const testTable = testTables[3];
         const cellRect = getCellRect(1, 1);
         const targetPos: number = testTable.rows[2] + delta;
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height + delta;
 
-        runResizeRowTest(
+        moveAndResize(
             { x: cellRect.left + cellRect.width / 2, y: cellRect.bottom },
             { x: cellRect.left + cellRect.width / 2, y: targetPos },
-            new Map([
-                [
-                    { x: 1, y: 0 },
-                    new DOMRect(0, 0, getCellRect(1, 0).width, getCellRect(1, 0).height + delta),
-                ],
-                [
-                    { x: 1, y: 1 },
-                    new DOMRect(0, 0, getCellRect(1, 1).width, getCellRect(1, 1).height + delta),
-                ],
-                [
-                    { x: 1, y: 2 },
-                    new DOMRect(0, 0, getCellRect(1, 2).width, getCellRect(1, 2).height + delta),
-                ],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Horizontal
         );
     });
     /************************ Resizing column related tests ************************/
@@ -806,27 +453,11 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const cellRect = getCellRect(0, 0);
         const targetPos: number = testTable.columns[1] - delta;
-        const expectedLeftWidth: number = targetPos - testTable.columns[0];
-        const expectedRightWidth: number = testTable.columns[2] - targetPos;
-        const expectedCellHeight = testTable.cellHeight;
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height;
 
-        runResizeColumnTest(
+        moveAndResize(
             { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
             { x: targetPos, y: cellRect.top + cellRect.height / 2 + 50 },
-            new Map([
-                [{ x: 0, y: 0 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 1, y: 0 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 2, y: 0 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-            ]),
-            new Map([
-                [{ x: 0, y: 1 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 1, y: 1 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 2, y: 1 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Vertical
         );
     }
 
@@ -835,27 +466,11 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const cellRect = getCellRect(0, 1);
         const targetPos: number = testTable.columns[0] + 10;
-        const expectedLeftWidth: number = testTable.cellWidth;
-        const expectedRightWidth: number = testTable.cellWidth;
-        const expectedCellHeight = testTable.cellHeight;
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height;
 
-        runResizeColumnTest(
+        moveAndResize(
             { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
             { x: targetPos, y: cellRect.top + cellRect.height / 2 - 20 },
-            new Map([
-                [{ x: 0, y: 1 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 1, y: 1 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 2, y: 1 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-            ]),
-            new Map([
-                [{ x: 0, y: 2 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 1, y: 2 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 2, y: 2 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Vertical
         );
     }
 
@@ -865,27 +480,11 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const cellRect = getCellRect(1, 1);
         const targetPos: number = testTable.columns[2] + delta;
-        const expectedLeftWidth: number = targetPos - testTable.columns[1];
-        const expectedRightWidth: number = testTable.columns[3] - targetPos;
-        const expectedCellHeight = testTable.cellHeight;
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height;
 
-        runResizeColumnTest(
+        moveAndResize(
             { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
             { x: targetPos, y: cellRect.top + cellRect.height / 2 - 15 },
-            new Map([
-                [{ x: 0, y: 1 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 1, y: 1 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 2, y: 1 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-            ]),
-            new Map([
-                [{ x: 0, y: 2 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 1, y: 2 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 2, y: 2 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Vertical
         );
     }
 
@@ -895,27 +494,11 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const cellRect = getCellRect(2, 0);
         const targetPos: number = testTable.columns[2] - delta;
-        const expectedLeftWidth: number = testTable.cellWidth;
-        const expectedRightWidth: number = testTable.cellWidth;
-        const expectedCellHeight = testTable.cellHeight;
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height;
 
-        runResizeColumnTest(
+        moveAndResize(
             { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
             { x: targetPos, y: cellRect.top + cellRect.height / 2 + 17 },
-            new Map([
-                [{ x: 0, y: 0 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 1, y: 0 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 2, y: 0 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-            ]),
-            new Map([
-                [{ x: 0, y: 1 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 1, y: 1 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-                [{ x: 2, y: 1 }, new DOMRect(0, 0, expectedRightWidth, expectedCellHeight)],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Vertical
         );
     }
 
@@ -925,200 +508,109 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const cellRect = getCellRect(2, 2);
         const targetPos: number = testTable.columns[testTable.columns.length - 1] + delta;
-        const expectedLeftWidth: number = targetPos - testTable.columns[2];
-        const expectedCellHeight = testTable.cellHeight;
-        const expectedTableWidth = targetPos - testTable.columns[0];
-        const expectedTableHeight = testTable.height;
 
-        runResizeColumnTest(
+        moveAndResize(
             { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
             { x: targetPos, y: cellRect.top + cellRect.height / 2 - 5 },
-            new Map([
-                [{ x: 0, y: 2 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 1, y: 2 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-                [{ x: 2, y: 2 }, new DOMRect(0, 0, expectedLeftWidth, expectedCellHeight)],
-            ]),
-            undefined,
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Vertical
         );
     }
 
-    xit('resizes the column to the left correctly with default table', () => {
+    it('resizes the column to the left correctly with default table', () => {
         resizeColumnToLeftTest(0);
     });
 
-    xit('resizes the column to the left correctly with Excel table', () => {
+    it('resizes the column to the left correctly with Excel table', () => {
         resizeColumnToLeftTest(1);
     });
 
-    xit('resizes the column to the left correctly with Word table', () => {
+    it('resizes the column to the left correctly with Word table', () => {
         resizeColumnToLeftTest(2);
     });
 
-    xit('resizes the column to the left correctly with merged cells', () => {
+    it('resizes the column to the left correctly with merged cells', () => {
         initialize(3);
         const delta = 20;
         const testTable = testTables[3];
         const cellRect = getCellRect(1, 1);
         const targetPos: number = testTable.columns[3] - delta;
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height;
 
-        runResizeColumnTest(
+        moveAndResize(
             { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
             { x: targetPos, y: cellRect.top + cellRect.height / 2 + 50 },
-            new Map([
-                [
-                    { x: 0, y: 2 },
-                    new DOMRect(0, 0, targetPos - testTable.columns[2], getCellRect(0, 2).height),
-                ],
-                [
-                    { x: 1, y: 1 },
-                    new DOMRect(0, 0, targetPos - testTable.columns[1], getCellRect(1, 1).height),
-                ],
-                [
-                    { x: 2, y: 1 },
-                    new DOMRect(0, 0, targetPos - testTable.columns[2], getCellRect(2, 1).height),
-                ],
-                [
-                    { x: 3, y: 2 },
-                    new DOMRect(0, 0, targetPos - testTable.columns[2], getCellRect(3, 2).height),
-                ],
-            ]),
-            new Map([
-                [
-                    { x: 0, y: 3 },
-                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(0, 3).height),
-                ],
-                [
-                    { x: 1, y: 2 },
-                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(1, 2).height),
-                ],
-                [
-                    { x: 2, y: 2 },
-                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(2, 2).height),
-                ],
-                [
-                    { x: 3, y: 3 },
-                    new DOMRect(0, 0, testTable.columns[4] - targetPos, getCellRect(3, 3).height),
-                ],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Vertical
         );
     });
 
-    xit('does not resize the column to the left correctly with merged cells since too narrow', () => {
+    it('does not resize the column to the left correctly with merged cells since too narrow', () => {
         initialize(3);
         const testTable = testTables[3];
         const cellRect = getCellRect(1, 1);
         const targetPos: number = testTable.columns[2];
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = testTable.height;
 
-        runResizeColumnTest(
+        moveAndResize(
             { x: cellRect.right, y: cellRect.top + cellRect.height / 2 },
             { x: targetPos, y: cellRect.top + cellRect.height / 2 + 50 },
-            new Map([
-                [
-                    { x: 0, y: 2 },
-                    new DOMRect(0, 0, getCellRect(0, 2).width, getCellRect(0, 2).height),
-                ],
-                [
-                    { x: 1, y: 1 },
-                    new DOMRect(0, 0, getCellRect(1, 1).width, getCellRect(1, 1).height),
-                ],
-                [
-                    { x: 2, y: 1 },
-                    new DOMRect(0, 0, getCellRect(2, 1).width, getCellRect(2, 1).height),
-                ],
-                [
-                    { x: 3, y: 2 },
-                    new DOMRect(0, 0, getCellRect(3, 2).width, getCellRect(3, 2).height),
-                ],
-            ]),
-            new Map([
-                [
-                    { x: 0, y: 3 },
-                    new DOMRect(0, 0, getCellRect(0, 3).width, getCellRect(0, 3).height),
-                ],
-                [
-                    { x: 1, y: 2 },
-                    new DOMRect(0, 0, getCellRect(1, 2).width, getCellRect(1, 2).height),
-                ],
-                [
-                    { x: 2, y: 2 },
-                    new DOMRect(0, 0, getCellRect(2, 2).width, getCellRect(2, 2).height),
-                ],
-                [
-                    { x: 3, y: 3 },
-                    new DOMRect(0, 0, getCellRect(3, 3).width, getCellRect(3, 3).height),
-                ],
-            ]),
-            expectedTableWidth,
-            expectedTableHeight
+            ResizeState.Vertical
         );
     });
 
-    xit('does not resize the column to the left because it is too narrow with default table', () => {
+    it('does not resize the column to the left because it is too narrow with default table', () => {
         resizeColumnToLeftTooNarrowTest(0);
     });
 
-    xit('does not resize the column to the left because it is too narrow with Excel table', () => {
+    it('does not resize the column to the left because it is too narrow with Excel table', () => {
         resizeColumnToLeftTooNarrowTest(1);
     });
 
-    xit('does not resize the column to the left because it is too narrow with Word table', () => {
+    it('does not resize the column to the left because it is too narrow with Word table', () => {
         resizeColumnToLeftTooNarrowTest(2);
     });
 
-    xit('resizes the column to the right correctly with default table', () => {
+    it('resizes the column to the right correctly with default table', () => {
         resizeColumnToRightTest(0);
     });
 
-    xit('resizes the column to the right correctly with Excel table', () => {
+    it('resizes the column to the right correctly with Excel table', () => {
         resizeColumnToRightTest(1);
     });
 
-    xit('resizes the column to the right correctly with Word table', () => {
+    it('resizes the column to the right correctly with Word table', () => {
         resizeColumnToRightTest(2);
     });
 
-    xit('does not resize the column to the right because it is too narrow with default table', () => {
+    it('does not resize the column to the right because it is too narrow with default table', () => {
         resizeColumnToRightTestTooNarrowTest(0);
     });
 
-    xit('does not resize the column to the right because it is too narrow with Excel table', () => {
+    it('does not resize the column to the right because it is too narrow with Excel table', () => {
         resizeColumnToRightTestTooNarrowTest(1);
     });
 
-    xit('does not resize the column to the right because it is too narrow with Word table', () => {
+    it('does not resize the column to the right because it is too narrow with Word table', () => {
         resizeColumnToRightTestTooNarrowTest(2);
     });
 
-    xit('resizes the last column to the right correctly with default table', () => {
+    it('resizes the last column to the right correctly with default table', () => {
         resizeLastColumnToRightTest(0);
     });
 
-    xit('resizes the last column to the right correctly with Excel table', () => {
+    it('resizes the last column to the right correctly with Excel table', () => {
         resizeLastColumnToRightTest(1);
     });
 
-    xit('resizes the last column to the right correctly with Word table', () => {
+    it('resizes the last column to the right correctly with Word table', () => {
         resizeLastColumnToRightTest(2);
     });
 
     /************************ Resizing table related tests ************************/
 
-    function resizeTAbleWiderTest(i: number) {
+    function resizeTableWiderTest(i: number) {
         const tableRect = initialize(i);
         const testTable = testTables[i];
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
         const mouseEnd = { x: 700, y: testTable.rows[3] };
-        const expectedTableWidth = 700 - testTable.columns[0];
-        const expectedTableHeight = testTable.height;
-        runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
+        moveAndResize(mouseStart, mouseEnd, ResizeState.Both);
     }
 
     function resizeTableNarrowerTest(i: number) {
@@ -1126,103 +618,92 @@ describe('Table Resizer/Inserter tests', () => {
         const testTable = testTables[i];
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
         const mouseEnd = { x: 300, y: testTable.rows[3] };
-        const expectedTableWidth = 300 - testTable.columns[0];
-        const expectedTableHeight = testTable.height;
-        runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
+        moveAndResize(mouseStart, mouseEnd, ResizeState.Both);
     }
 
     function resizeTableTallerTest(i: number) {
         const tableRect = initialize(i);
-        const testTable = testTables[i];
         const newBorderY = tableRect.bottom + 100;
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
         const mouseEnd = { x: tableRect.right, y: newBorderY };
-        const expectedTableWidth = testTable.width;
-        const expectedTableHeight = newBorderY - testTable.rows[0];
-        runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
+        moveAndResize(mouseStart, mouseEnd, ResizeState.Both);
     }
 
     function resizeTableNarrowerTallerTest(i: number) {
         const tableRect = initialize(i);
-        const testTable = testTables[i];
         const newBorderX = tableRect.left + tableRect.width * 0.7;
         const newBorderY = tableRect.bottom + 100;
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
         const mouseEnd = { x: newBorderX, y: newBorderY };
-        const expectedTableWidth = newBorderX - testTable.columns[0];
-        const expectedTableHeight = newBorderY - testTable.rows[0];
-        runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
+        moveAndResize(mouseStart, mouseEnd, ResizeState.Both);
     }
 
     function resizeTableWiderTallerTest(i: number) {
         const tableRect = initialize(i);
-        const testTable = testTables[i];
         const newBorderX = tableRect.left + tableRect.width * 2.0;
         const newBorderY = tableRect.bottom + 250;
         const mouseStart = { x: tableRect.right, y: tableRect.bottom };
         const mouseEnd = { x: newBorderX, y: newBorderY };
-        const expectedTableWidth = newBorderX - testTable.columns[0];
-        const expectedTableHeight = newBorderY - testTable.rows[0];
-        runResizeTableTest(mouseStart, mouseEnd, expectedTableWidth, expectedTableHeight);
+        moveAndResize(mouseStart, mouseEnd, ResizeState.Both);
     }
 
-    xit('resizes the table to be wider correctly with default table', () => {
-        resizeTAbleWiderTest(0);
+    it('resizes the table to be wider correctly with default table', () => {
+        resizeTableWiderTest(0);
     });
 
-    xit('resizes the table to be wider correctly with Excel table', () => {
-        resizeTAbleWiderTest(1);
+    it('resizes the table to be wider correctly with Excel table', () => {
+        resizeTableWiderTest(1);
     });
 
-    xit('resizes the table to be wider correctly with Word table', () => {
-        resizeTAbleWiderTest(2);
+    it('resizes the table to be wider correctly with Word table', () => {
+        resizeTableWiderTest(2);
     });
 
-    xit('resizes the table to be narrower correctly with default table', () => {
+    it('resizes the table to be narrower correctly with default table', () => {
         resizeTableNarrowerTest(0);
     });
 
-    xit('resizes the table to be narrower correctly with Excel table', () => {
+    it('resizes the table to be narrower correctly with Excel table', () => {
         resizeTableNarrowerTest(1);
     });
 
-    xit('resizes the table to be narrower correctly with Word table', () => {
+    it('resizes the table to be narrower correctly with Word table', () => {
         resizeTableNarrowerTest(2);
     });
 
-    xit('resizes the table to be taller correctly with default table', () => {
+    it('resizes the table to be taller correctly with default table', () => {
         resizeTableTallerTest(0);
     });
 
-    xit('resizes the table to be taller correctly with Excel table', () => {
+    it('resizes the table to be taller correctly with Excel table', () => {
         resizeTableTallerTest(1);
     });
 
-    xit('resizes the table to be taller correctly with Word table', () => {
+    it('resizes the table to be taller correctly with Word table', () => {
         resizeTableTallerTest(2);
     });
 
-    xit('resizes the table to be narrower and taller correctly with default table', () => {
+    it('resizes the table to be narrower and taller correctly with default table', () => {
         resizeTableNarrowerTallerTest(0);
     });
 
-    xit('resizes the table to be narrower and taller correctly with Excel table', () => {
+    it('resizes the table to be narrower and taller correctly with Excel table', () => {
         resizeTableNarrowerTallerTest(1);
     });
 
-    xit('resizes the table to be narrower and taller correctly with Word table', () => {
+    it('resizes the table to be narrower and taller correctly with Word table', () => {
         resizeTableNarrowerTallerTest(2);
     });
 
-    xit('resizes the table to be wider and taller correctly with default table', () => {
+    it('resizes the table to be wider and taller correctly with default table', () => {
         resizeTableWiderTallerTest(0);
     });
 
-    xit('resizes the table to be wider and taller correctly with Excel table', () => {
+    it('resizes the table to be wider and taller correctly with Excel table', () => {
         resizeTableWiderTallerTest(1);
     });
 
-    xit('resizes the table to be wider and taller correctly with Word table', () => {
+    it('resizes the table to be wider and taller correctly with Word table', () => {
         resizeTableWiderTallerTest(2);
     });
 

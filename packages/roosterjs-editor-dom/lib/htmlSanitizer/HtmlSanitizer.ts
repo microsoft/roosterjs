@@ -32,6 +32,7 @@ import {
  */
 export default class HtmlSanitizer {
     /**
+     * @deprecated Use new HtmlSanitizer().convertGlobalCssToInlineCss() instead
      * Convert global CSS to inline CSS if any
      * @param html HTML source
      * @param additionalStyleNodes (Optional) additional HTML STYLE elements used as global CSS
@@ -44,6 +45,7 @@ export default class HtmlSanitizer {
     }
 
     /**
+     * @deprecated Use new HtmlSanitizer().sanitize() instead
      * Sanitize HTML string, remove any unused HTML node/attribute/CSS.
      * @param html HTML source string
      * @param options Options used for this sanitizing process
@@ -91,6 +93,7 @@ export default class HtmlSanitizer {
     }
 
     /**
+     * @deprecated Use HtmlSanitizer.convertGlobalCssToInlineCss() and HtmlSanitizer.sanitize() instead
      * Sanitize HTML string
      * This function will do the following work:
      * 1. Convert global CSS into inline CSS
@@ -102,7 +105,7 @@ export default class HtmlSanitizer {
      */
     exec(html: string, convertCssOnly?: boolean, currentStyles?: StringMap): string {
         const parser = new DOMParser();
-        const doc = parser.parseFromString(unsafeConvertToTrustedHTML(html) || '', 'text/html');
+        const doc = parser.parseFromString(html || '', 'text/html');
 
         if (doc && doc.body && doc.body.firstChild) {
             this.convertGlobalCssToInlineCss(doc);
@@ -320,14 +323,3 @@ export default class HtmlSanitizer {
         return calculatedClasses.length > 0 ? calculatedClasses.join(' ') : null;
     }
 }
-
-const trustedTypes = (<any>window).trustedTypes;
-const policy = trustedTypes?.createPolicy('roosterjsUnsafeConvertHTML', {
-    // This is unsafe. However, we only use this function for HtmlSanitizer which we will
-    // sanitize HTML tree by our own code. So we just directly return the HTML string here.
-    createHTML: (html: string) => html,
-});
-
-const unsafeConvertToTrustedHTML = policy
-    ? (html: string) => policy.createHTML(html || '')
-    : (html: string) => html;

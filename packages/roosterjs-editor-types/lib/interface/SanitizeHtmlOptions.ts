@@ -2,6 +2,7 @@ import HtmlSanitizerOptions from './HtmlSanitizerOptions';
 import { StringMap } from '../type/htmlSanitizerCallbackTypes';
 
 /**
+ * @deprecated
  * Options for sanitizeHtml function
  */
 export default interface SanitizeHtmlOptions extends HtmlSanitizerOptions {

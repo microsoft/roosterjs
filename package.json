@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "8.11.1",
+    "version": "8.11.5",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
@@ -17,14 +17,14 @@
         "b": "node tools/build.js clean normalize buildcommonjs",
         "builddemo": "node tools/build.js builddemo",
         "builddoc": "node tools/build.js builddoc",
-        "build": "node tools/build.js clean checkdep normalize tslint buildcommonjs dts pack:prod builddemo",
+        "build": "node tools/build.js clean checkdep normalize tslint buildcommonjs dts packprod builddemo",
         "build:ci": "node tools/build.js --noProgressBar clean checkdep normalize tslint buildcommonjs buildamd dts pack packprod builddemo builddoc",
         "start": "node tools/start.js",
         "test": "karma start",
         "test:chrome": "karma start --chrome",
         "test:debug": "karma start --no-single-run",
         "test:coverage": "karma start --coverage",
-        "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod builddemo publish"
+        "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod builddemo builddoc publish"
     },
     "devDependencies": {
         "@types/color": "3.0.0",

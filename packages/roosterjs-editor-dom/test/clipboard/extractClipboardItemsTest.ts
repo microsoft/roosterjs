@@ -218,4 +218,16 @@ describe('extractClipboardItems', () => {
             linkPreview: linkPreview,
         });
     });
+
+    it('input with svg text', async () => {
+        const svg = '<svg>test</svg>';
+        const clipboardData = await extractClipboardItems([createStringItem('image/svg+xml', svg)]);
+        expect(clipboardData).toEqual({
+            types: [],
+            text: '',
+            image: null,
+            rawHtml: null,
+            customValues: {},
+        });
+    });
 });
