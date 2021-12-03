@@ -15,7 +15,6 @@ import {
     clearSelectedTableCells,
     findClosestElementAncestor,
     getTagOfNode,
-    OnFocusTableSelection,
     safeInstanceOf,
     setTableSelectedRange,
     TableMetadata,
@@ -37,6 +36,12 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     private CLEAR_SELECTION_TIMEOUT_JOB: number;
     private vTable: VTable;
     private traversedTables: VTable[];
+
+    // private previousX: number;
+    private previousY: number;
+
+    // private currentX: number;
+    private currentY: number;
 
     constructor(private contentDiv: HTMLDivElement) {
         this.state = {
@@ -113,7 +118,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             clonedVTable.startRange = event.vTableStartRange;
             clonedVTable.endRange = event.vTableEndRange;
 
-            clonedVTable.removeCellsBySelection(false);
+            clonedVTable.removeCellsOutsideOfSelection();
             clonedVTable.writeBack();
 
             event.range.setStart(clonedTable.parentNode, 0);
@@ -125,10 +130,11 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                         const deleteRange = new Range();
                         deleteRange.selectNodeContents(cell.td);
                         deleteRange.deleteContents();
+                        cell.td.appendChild(this.editor.getDocument().createElement('BR'));
                     }
                 });
 
-                this.clearVTable();
+                this.clearState();
             }
 
             clearSelectedTableCells(event.clonedRoot);
@@ -181,7 +187,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             !event.rawEvent.shiftKey &&
             event.rawEvent.which != Keys.SHIFT
         ) {
-            this.clearVTable();
+            this.clearState();
         }
     }
 
@@ -189,13 +195,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
 
         if (!event.rawEvent.shiftKey) {
-            this.clearTableCellSelection();
-
-            this.state.lastTarget = null;
-            this.state.firstTarget = null;
-            this.state.startRange = null;
-            this.state.endRange = null;
-            this.traversedTables = [];
+            this.clearState();
             this.editor
                 .getDocument()
                 .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
@@ -209,16 +209,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             if (this.CLEAR_SELECTION_TIMEOUT_JOB) {
                 currentWindow.clearTimeout(this.CLEAR_SELECTION_TIMEOUT_JOB);
             }
-            this.CLEAR_SELECTION_TIMEOUT_JOB = currentWindow.setTimeout(() => {
-                if (
-                    this.state.vSelection ||
-                    (!this.state.vSelection && !this.editor.getSelectionRange().collapsed)
-                ) {
-                    OnFocusTableSelection(this.contentDiv);
-                } else {
-                    this.clearTableCellSelection();
-                }
-            }, 20);
+            this.clearTableCellSelection();
         }
     }
 
@@ -230,19 +221,23 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         }
     }
 
-    private clearVTable() {
-        clearSelectedTableCells(this.contentDiv);
+    private clearState() {
+        this.clearTableCellSelection();
         this.vTable = null;
+        this.traversedTables = [];
         this.state.firstTarget = null;
         this.state.lastTarget = null;
         this.state.startRange = null;
         this.state.endRange = null;
+        this.state.vSelection = false;
     }
 
     private onMouseMove = (event: MouseEvent) => {
         let eventTarget =
             this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, event.target as Node) ||
             (event.target as Node);
+
+        this.currentY = event.pageY;
 
         //If the event target is part of the resize plugin elements, ignore
         if (isElementPartOfTableResize(eventTarget as HTMLElement)) {
@@ -292,10 +287,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             const range = this.editor.getSelectionRange();
 
             if (eventTarget && this.state.lastTarget && eventTarget != this.state.firstTarget) {
-                //Virtual Selection, handled when selection started inside of a table and the end of the selection
-                //Is in the same table.
-                this.state.vSelection = true;
-
                 //Check if the container of the range is only text, means that the user only selected text inside of a cell
                 if (range && range.commonAncestorContainer.nodeType != Node.TEXT_NODE) {
                     if (targetTable != firstTable && targetTable?.contains(firstTable)) {
@@ -309,7 +300,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                             .querySelectorAll('table')
                             .forEach(table => {
                                 const vTable = new VTable(table);
-                                vTable.forEachCell(cell => vTable.highlightCellHandler(cell.td));
+                                vTable.highlightAll();
                             });
                     }
                     const currentTargetTD = this.editor.getElementAtCursor(
@@ -318,8 +309,11 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     ) as HTMLTableCellElement;
 
                     if (table && currentTargetTD) {
+                        //Virtual Selection, handled when selection started inside of a table and the end of the selection
+                        //Is in the same table.
+                        this.state.vSelection = true;
                         if (
-                            (!this.vTable || !this.vTable?.table) &&
+                            this.vTable?.table != firstTable &&
                             safeInstanceOf(firstTableTD, 'HTMLTableCellElement')
                         ) {
                             this.vTable = new VTable(firstTableTD);
@@ -347,7 +341,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             }
         } else {
             if (event.target != this.state.lastTarget || (eventTarget as HTMLTableCellElement)) {
-                // this.highlightSelection();
                 this.highlightSelectionMouseMove(
                     eventTarget || (event.target as Node),
                     targetTable,
@@ -370,6 +363,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 ? this.state.lastTarget || eventTarget
                 : eventTarget;
         }
+
+        this.previousY = event.pageY;
     };
 
     private prepareSelection(eventTarget: Node, firstTable: HTMLElement, targetTable: HTMLElement) {
@@ -422,6 +417,10 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     private isAfter(node1: Node, node2: Node, range: Range) {
         if (node1 == this.contentDiv) {
             node1 = range.endContainer;
+        }
+
+        if (node2.contains(node1) && getTagOfNode(node2) == 'div') {
+            return this.currentY > this.previousY;
         }
 
         return isNodeAfter(node1, node2) || node1.contains(node2);
@@ -515,18 +514,31 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             //Check all the traversed tables
             //If the start and the current target are before the table, remove all selection and remove vTable from the traversed tables
             cleanSelection.forEach(vTable => {
+                /**
+                 *  Deselect all the cells when the table is before the selection range
+                 *  1. Check if table is after the first target
+                 *  2. Check if table is after the last target
+                 *  3. Check that current target is different than the parent of the table
+                 *  4. Check that current target is different than the editor div.
+                 */
                 if (
                     isNodeAfter(vTable.table, this.state.firstTarget) &&
                     isNodeAfter(vTable.table, currentTarget) &&
                     vTable.table.parentNode != currentTarget &&
                     currentTarget != this.contentDiv
                 ) {
-                    vTable.forEachCell(cell => {
-                        vTable.deselectCellHandler(cell.td);
-                    });
+                    vTable.deSelectAll();
                     this.traversedTables.slice(this.traversedTables.indexOf(vTable));
                 }
 
+                /**
+                 *  Deselect all the cells when the table is after the selection range
+                 *  1. Check if first target is after the table
+                 *  2. Check if last target is after the table
+                 *  3. Check that current target is different than the parent of the table
+                 *  4. Check that current target is different than the editor div.
+                 *  5-6. Need to check that the first and last target are not contained inside of the table.
+                 */
                 if (
                     isNodeAfter(this.state.firstTarget, vTable.table) &&
                     isNodeAfter(currentTarget, vTable.table) &&
@@ -535,9 +547,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     !vTable.table.contains(currentTarget) &&
                     !vTable.table.contains(this.state.firstTarget)
                 ) {
-                    vTable.forEachCell(cell => {
-                        vTable.deselectCellHandler(cell.td);
-                    });
+                    vTable.deSelectAll();
                     this.traversedTables.slice(this.traversedTables.indexOf(vTable));
                 }
             });
@@ -550,6 +560,12 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     vTable.endRange = vTable.getCellCoordinates(cells[cells.length - 1]);
                     vTable.highlight();
                 };
+
+                /**
+                 *  Select all the cells when the table is after the selection range
+                 *  1 - 2. Check if table is between the last and first targets
+                 *  3 - 4. Need to check that the first and last target are not contained inside of the table.
+                 */
                 if (
                     isNodeAfter(vTable.table, this.state.firstTarget) &&
                     !isNodeAfter(vTable.table, currentTarget) &&
@@ -559,6 +575,11 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     highlightAllCells();
                 }
 
+                /**
+                 *  Select all the cells when the table is after the selection range
+                 *  1 - 2. Check if table is between the last and first targets
+                 *  3 - 4. Need to check that the first and last target are not contained inside of the table.
+                 */
                 if (
                     isNodeAfter(this.state.firstTarget, vTable.table) &&
                     !isNodeAfter(currentTarget, vTable.table) &&
@@ -570,7 +591,10 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             });
 
             //If current target is the div container of the table, select all the table
-            if ((event.target as HTMLElement).querySelector('table')) {
+            if (
+                (event.target as HTMLElement).querySelector('table') &&
+                (event.target as Node) != this.state.firstTarget
+            ) {
                 let vTable = this.traversedTables.filter(table => table.table == targetTable)[0];
                 if (!vTable) {
                     vTable = new VTable((event.target as HTMLElement).querySelector('table'));
@@ -656,25 +680,32 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     private onMouseUp = () => {
         if (this.editor) {
-            if (!this.state.vSelection && this.state.lastTarget != this.contentDiv) {
-                const range = this.editor.getSelectionRange();
-                if (safeInstanceOf(this.state.firstTarget, 'HTMLTableCellElement')) {
-                    const row = this.editor.getElementAtCursor('tr', this.state.firstTarget);
-                    if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-                        if (isNodeAfter(this.state.firstTarget, this.state.lastTarget)) {
-                            range.setEndAfter(row.cells[row.cells.length - 1]);
-                        } else {
-                            range.setStartBefore(row.cells[0]);
+            const range = this.editor.getSelectionRange();
+
+            if (
+                !this.state.vSelection &&
+                this.state.lastTarget != this.contentDiv &&
+                !range.collapsed
+            ) {
+                if (range && range.commonAncestorContainer.nodeType != Node.TEXT_NODE) {
+                    if (safeInstanceOf(this.state.firstTarget, 'HTMLTableCellElement')) {
+                        const row = this.editor.getElementAtCursor('tr', this.state.firstTarget);
+                        if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+                            if (isNodeAfter(this.state.firstTarget, this.state.lastTarget)) {
+                                range.setEndAfter(row.cells[row.cells.length - 1]);
+                            } else {
+                                range.setStartBefore(row.cells[0]);
+                            }
                         }
                     }
-                }
-                if (safeInstanceOf(this.state.lastTarget, 'HTMLTableCellElement')) {
-                    const row = this.editor.getElementAtCursor('tr', this.state.lastTarget);
-                    if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-                        if (isNodeAfter(this.state.lastTarget, this.state.firstTarget)) {
-                            range.setEndAfter(row.cells[row.cells.length - 1]);
-                        } else {
-                            range.setStartBefore(row.cells[0]);
+                    if (safeInstanceOf(this.state.lastTarget, 'HTMLTableCellElement')) {
+                        const row = this.editor.getElementAtCursor('tr', this.state.lastTarget);
+                        if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+                            if (isNodeAfter(this.state.lastTarget, this.state.firstTarget)) {
+                                range.setEndAfter(row.cells[row.cells.length - 1]);
+                            } else {
+                                range.setStartBefore(row.cells[0]);
+                            }
                         }
                     }
                 }

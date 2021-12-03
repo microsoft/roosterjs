@@ -420,6 +420,9 @@ export default class VTable {
         return this.getTd(this.row, this.col);
     }
 
+    /**
+     * Highlights a range of cells, used in the TableSelection Plugin
+     */
     highlight() {
         if (this.startRange && this.endRange && this.cells && this.table) {
             let startX: number = this.startRange[0];
@@ -448,6 +451,11 @@ export default class VTable {
         }
     }
 
+    /**
+     * Sets the range of selection and highlights
+     * @param start represents the start of the range type of array [x, y]
+     * @param end  represents the end of the range type of array [x, y]
+     */
     highlightSelection(start: number[], end: number[]) {
         this.startRange = start;
         this.endRange = end;
@@ -455,43 +463,63 @@ export default class VTable {
         this.highlight();
     }
 
-    highlightCellHandler = (
-        element: HTMLElement,
-        beforeExecuteCallback?: (element: HTMLElement) => void
-    ) => {
-        beforeExecuteCallback?.(element);
+    /**
+     * Highlights all the cells in the table.
+     */
+    highlightAll() {
+        this.forEachCell(cell => {
+            if (cell.td) {
+                this.highlightCellHandler(cell.td);
+            }
+        });
+    }
 
-        const shouldExecute =
-            !beforeExecuteCallback ||
-            (beforeExecuteCallback && element.classList.contains(TABLE_CELL_SELECTED_CLASS));
+    /**
+     * Removes the selection of all the tables
+     * @param cacheSelection wether we need to cache the selection
+     */
+    deSelectAll(cacheSelection: boolean = false) {
+        this.forEachCell(cell => {
+            if (cell.td) {
+                this.deselectCellHandler(cell.td, cacheSelection);
+            }
+        });
+    }
 
-        if (shouldExecute) {
-            const highlighColor = getHighlightColor(
+    /**
+     * Handler to apply te selected styles on the cell
+     * @param element element to apply the style
+     */
+    private highlightCellHandler = (element: HTMLElement) => {
+        const highlighColor = getHighlightColor(
+            element.style.backgroundColor ?? element.style.background
+        );
+        if (
+            !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
+            element.style.backgroundColor != highlighColor &&
+            (!element.dataset[TEMP_BACKGROUND_COLOR] ||
+                element.dataset[TEMP_BACKGROUND_COLOR] == '')
+        ) {
+            element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
                 element.style.backgroundColor ?? element.style.background
             );
-            if (
-                !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
-                element.style.backgroundColor != highlighColor &&
-                (!element.dataset[TEMP_BACKGROUND_COLOR] ||
-                    element.dataset[TEMP_BACKGROUND_COLOR] == '')
-            ) {
-                element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
-                    element.style.backgroundColor ?? element.style.background
-                );
-            }
-            element.style.backgroundColor = highlighColor;
-            element.classList.add(TABLE_CELL_SELECTED_CLASS);
-
-            element.querySelectorAll('table').forEach(table => {
-                const vTable = new VTable(table);
-                vTable.forEachCell(cell =>
-                    vTable.highlightCellHandler(cell.td, beforeExecuteCallback)
-                );
-            });
         }
+        element.style.backgroundColor = highlighColor;
+        element.classList.add(TABLE_CELL_SELECTED_CLASS);
+
+        element.querySelectorAll('table').forEach(table => {
+            const vTable = new VTable(table);
+            vTable.forEachCell(cell => vTable.highlightCellHandler(cell.td));
+        });
     };
 
-    deselectCellHandler = (cell: HTMLElement, cacheSelection: boolean = false) => {
+    /**
+     * Handler to remove the selected style
+     * @param cell element to apply the style
+     * @param cacheSelection wether we need to cache the selection
+     * @returns
+     */
+    private deselectCellHandler = (cell: HTMLElement, cacheSelection: boolean = false) => {
         if (cell.dataset[TableMetadata.ON_FOCUS_CACHE] == 'onBlur') {
             delete cell.dataset[TableMetadata.ON_FOCUS_CACHE];
             return;
@@ -520,6 +548,10 @@ export default class VTable {
         }
     };
 
+    /**
+     * Check if the cell is inside of the selection range
+     * @returns true if it is inside, otherwise false
+     */
     private isInsideOfSelection(x: number, y: number) {
         if (this.startRange && this.endRange) {
             let startX: number = this.startRange[0];
@@ -535,6 +567,11 @@ export default class VTable {
         return false;
     }
 
+    /**
+     * Executes an action to all the cells within the selection range.
+     * @param callback action to apply on each selected cell
+     * @returns the amount of cells modified
+     */
     forEachSelectedCell(callback: (cell: VCell) => void): number {
         let selectedCells = 0;
 
@@ -542,7 +579,7 @@ export default class VTable {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
                 if (
-                    element.classList.contains(TABLE_CELL_SELECTED_CLASS) ||
+                    element?.classList.contains(TABLE_CELL_SELECTED_CLASS) ||
                     this.isInsideOfSelection(indexX, indexY)
                 ) {
                     selectedCells += 1;
@@ -554,6 +591,10 @@ export default class VTable {
         return selectedCells;
     }
 
+    /**
+     * Execute an action on all the cells
+     * @param callback action to apply on all the cells.
+     */
     forEachCell(callback: (cell: VCell, x?: number, y?: number) => void) {
         for (let indexY = 0; indexY < this.cells.length; indexY++) {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
@@ -562,14 +603,14 @@ export default class VTable {
         }
     }
 
-    removeCellsBySelection(inside: boolean = true) {
+    /**
+     * Remove the cells outside of the selection.
+     */
+    removeCellsOutsideOfSelection() {
         const tempCells: VCell[][] = [];
 
-        const conditionalHandler = (x: number, y: number, inside: boolean) =>
-            inside ? !this.isInsideOfSelection(x, y) : this.isInsideOfSelection(x, y);
-
         this.forEachCell((cell: VCell, x?: number, y?: number) => {
-            if (conditionalHandler(x, y, inside)) {
+            if (this.isInsideOfSelection(x, y)) {
                 while (tempCells.length - 1 < y) {
                     tempCells.push([]);
                 }
@@ -579,32 +620,31 @@ export default class VTable {
         this.cells = tempCells.filter(cell => cell.length > 0);
     }
 
+    /**
+     * Gets the coordinates of a cell
+     * @param cellInput The cell the function is going to retrieve the coordinate
+     * @returns an array[2] => [x,y]
+     */
     getCellCoordinates(cellInput: Node) {
+        let result: number[] = [];
         if (this.cells) {
             for (let indexY = 0; indexY < this.cells.length; indexY++) {
                 for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                     if (cellInput == this.cells[indexY][indexX].td) {
-                        return [indexX, indexY];
+                        result = [indexX, indexY];
+                    } else if (
+                        indexY == result[1] &&
+                        indexX == result[0] + 1 &&
+                        this.cells[indexY][indexX].spanLeft
+                    ) {
+                        result[0] += 1;
                     }
                 }
             }
         }
 
-        return null;
+        return result;
     }
-
-    // selectAll() {
-    //     for (let indexY = 0; indexY < this.cells.length; indexY++) {
-    //         for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-    //             let element = this.cells[indexY][indexX].td as HTMLElement;
-
-    //             if (element) {
-    //                 element.style.backgroundColor = 'rgb(9, 109, 202)';
-    //                 element.classList.add(TABLE_CELL_SELECTED_CLASS);
-    //             }
-    //         }
-    //     }
-    // }
 
     private getTd(row: number, col: number) {
         if (this.cells) {

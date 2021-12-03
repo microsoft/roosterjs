@@ -6,11 +6,11 @@ import VTable from '../table/VTable';
  * @param firstTDSelected first table cell of the range
  * @param lastTDSelected last table cell of the range
  */
-export const setTableSelectedRange = (
+export default function setTableSelectedRange(
     table: HTMLTableElement,
     firstTDSelected: HTMLElement,
     lastTDSelected: HTMLElement
-) => {
+) {
     if (firstTDSelected && !lastTDSelected) {
         lastTDSelected = firstTDSelected;
     }
@@ -33,4 +33,4 @@ export const setTableSelectedRange = (
     if (start && end) {
         vTable.highlightSelection(start, end);
     }
-};
+}
