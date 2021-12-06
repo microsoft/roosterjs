@@ -17,6 +17,9 @@ jobs:
                   persist-credentials: false
 
             - name: Install dependencies
+              run: npm --version
+
+            - name: Install dependencies
               run: npm install  --legacy-peer-deps
 
             - name: Build
