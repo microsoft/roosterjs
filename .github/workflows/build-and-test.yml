@@ -30,6 +30,9 @@ jobs:
                   persist-credentials: false
 
             - name: Install dependencies
+              run: npm --version
+
+            - name: Install dependencies
               run: npm install
 
             - name: Install Chrome
