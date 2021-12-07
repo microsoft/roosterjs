@@ -33,6 +33,9 @@ jobs:
               run: npm --version
 
             - name: Install dependencies
+              run: node --version
+
+            - name: Install dependencies
               run: npm install
 
             - name: Install Chrome
