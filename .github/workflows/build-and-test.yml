@@ -16,6 +16,11 @@ jobs:
               with:
                   persist-credentials: false
 
+            - name: Set Node Version
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 'v14.18.2'
+
             - name: Install dependencies
               run: npm install
 
@@ -29,8 +34,10 @@ jobs:
               with:
                   persist-credentials: false
 
-            - name: Install dependencies
-              run: npm --version
+            - name: Set Node Version
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 'v14.18.2'
 
             - name: Install dependencies
               run: npm install
@@ -49,6 +56,11 @@ jobs:
               uses: actions/checkout@v2.3.1
               with:
                   persist-credentials: false
+
+            - name: Set Node Version
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 'v14.18.2'
 
             - name: Install dependencies
               run: npm install
