@@ -26,4 +26,9 @@ export default interface VCell {
      * The height in pixel of the actual td (including border and padding)
      */
     height?: number;
+
+    /**
+     * Wether the row is the last one in a Row.
+     */
+    isLastInRow?: boolean;
 }
