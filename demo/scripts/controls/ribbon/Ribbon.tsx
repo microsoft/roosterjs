@@ -17,7 +17,9 @@ export default class Ribbon extends React.Component<RibbonProps, {}> {
         return editor ? (
             <div className={this.props.className || ''}>
                 {Object.keys(ribbonButtons)
-                    .filter(key => !ribbonButtons[key].isHidden || !ribbonButtons[key].isHidden())
+                    .filter(
+                        key => !ribbonButtons[key].isHidden || !ribbonButtons[key].isHidden(editor)
+                    )
                     .map(key => (
                         <RibbonButton
                             key={key}
