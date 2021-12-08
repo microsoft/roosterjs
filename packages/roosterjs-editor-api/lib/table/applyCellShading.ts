@@ -5,17 +5,17 @@ import { VTable } from 'roosterjs-editor-dom';
  * Apply cell shading on a vTable selection
  * @param editor The editor which contains the table to format
  * @param color color to apply to the cells
- * @param table The table to format. This is optional. When not passed, the current table (if any) will be formatted
+ * @param element The table to format. This is optional. When not passed, the current table (if any) will be formatted
  */
 export default function applyCellShading(
     editor: IEditor,
     color: string | ModeIndependentColor,
-    table?: HTMLTableElement
+    element?: HTMLTableElement | HTMLTableCellElement
 ) {
-    table = table || (editor.getElementAtCursor('TABLE') as HTMLTableElement);
-    if (table) {
+    element = element || (editor.getElementAtCursor('td,th') as HTMLTableCellElement);
+    if (element) {
         editor.addUndoSnapshot((start, end) => {
-            let vtable = new VTable(table);
+            let vtable = new VTable(element);
             vtable.setBackgroundColor(color, editor.isDarkMode());
             editor.focus();
             editor.select(start, end);

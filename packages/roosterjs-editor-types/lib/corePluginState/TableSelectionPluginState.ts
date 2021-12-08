@@ -7,4 +7,5 @@ export default interface TableSelectionPluginState {
     startRange: number[];
     endRange: number[];
     vSelection: boolean;
+    startedSelection: boolean;
 }
