@@ -381,9 +381,12 @@ const buttons: { [key: string]: RibbonButtonType } = {
     },
     cellColor: {
         title: 'Cell Shading',
-        isDisabled: editor =>
-            !editor.getTableSelection().vSelection ||
-            !(editor.getSelectionRange().collapsed && !!editor.getElementAtCursor('table')),
+        isHidden: editor => {
+            return (
+                !editor.getElementAtCursor('td,th') &&
+                (editor.getTableSelection()?.vSelection || editor.getSelectionRange()?.collapsed)
+            );
+        },
         onClick: (editor, color) => {
             applyCellShading(editor, color);
         },
