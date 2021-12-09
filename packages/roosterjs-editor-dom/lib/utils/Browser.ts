@@ -61,3 +61,16 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
 export const Browser = window
     ? getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion)
     : {};
+
+/**
+ * Obtains wether the current device is Android
+ * @param window current window
+ * @returns true if is android, otherwise false
+ */
+export const isAndroid = (window: Window) => {
+    var userAgent = window.navigator.userAgent || navigator.vendor;
+    if (/android/i.test(userAgent)) {
+        return true;
+    }
+    return false;
+};
