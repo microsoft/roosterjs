@@ -817,7 +817,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     private setupSelectorContainer() {
         const document = this.editor.getDocument();
         this.wholeTableSelectorContainer = document.createElement('div');
-        this.editor.insertNode(this.wholeTableSelectorContainer, {
+        this.editor?.insertNode(this.wholeTableSelectorContainer, {
             updateCursor: false,
             insertOnNewLine: false,
             replaceSelection: false,
