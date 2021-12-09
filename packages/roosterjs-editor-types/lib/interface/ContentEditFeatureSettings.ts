@@ -202,6 +202,33 @@ export interface TableFeatureSettings {
 }
 
 /**
+ * Settings for table features
+ */
+export interface TableFeatureSettings {
+    /**
+     * When press TAB or SHIFT+TAB key in table cell, jump to next/previous table cell
+     * @default true
+     */
+    tabInTable: boolean;
+
+    /**
+     * When press Up or Down in table cell, jump to the table cell above/below
+     * @default true for Chrome and safari, false for other browsers since they already have correct behavior
+     */
+    upDownInTable: boolean;
+}
+
+/**
+ * Settings for text features
+ */
+export interface TextFeatureSettings {
+    /**
+     * When press backspace to delete a character with backspace
+     */
+    textSpeechOnBackspace: boolean;
+}
+
+/**
  * A list to specify whether each of the listed content edit features is enabled
  */
 export default interface ContentEditFeatureSettings
@@ -213,4 +240,5 @@ export default interface ContentEditFeatureSettings
         ShortcutFeatureSettings,
         CursorFeatureSettings,
         MarkdownFeatureSettings,
-        EntityFeatureSettings {}
+        EntityFeatureSettings,
+        TableFeatureSettings {}
