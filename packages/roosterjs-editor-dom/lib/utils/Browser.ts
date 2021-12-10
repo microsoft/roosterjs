@@ -69,8 +69,5 @@ export const Browser = window
  */
 export const isAndroid = (window: Window) => {
     var userAgent = window.navigator.userAgent || navigator.vendor;
-    if (/android/i.test(userAgent)) {
-        return true;
-    }
-    return false;
+    return /android/i.test(userAgent);
 };
