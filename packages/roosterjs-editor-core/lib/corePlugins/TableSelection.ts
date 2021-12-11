@@ -139,9 +139,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     /**
      * Handles the Before Copy Event.
-     * If it is a vSelection:   On we need to remove the cells outside of the selection.
-     *                          If it is a Cut Operation, we remove the contents of the selection Range
-     * After that, we clear the selection range from the cloned Root.
+     * Clear the selection range from the cloned Root.
      * @param event plugin event
      */
     private handleBeforeCutCopy(event: BeforeCutCopyEvent) {
@@ -176,7 +174,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     /**
      * Handles the on key event.
-     * If selection starts inside of a
      * @param event the plugin event
      */
     private handleKeyEvent(event: PluginKeyDownEvent | PluginKeyUpEvent) {

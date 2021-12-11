@@ -688,7 +688,6 @@ export default class VTable {
      */
     removeCellsBySelection(outsideOfSelection: boolean = true) {
         const tempCells: VCell[][] = [];
-
         let startX: number = this.startRange[0];
         let startY: number = this.startRange[1];
         let endX: number = this.endRange[0];
