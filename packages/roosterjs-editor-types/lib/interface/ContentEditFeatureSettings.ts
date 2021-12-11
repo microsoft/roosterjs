@@ -199,6 +199,16 @@ export interface TableFeatureSettings {
      * @default true for Chrome and safari, false for other browsers since they already have correct behavior
      */
     upDownInTable: boolean;
+
+    /**
+     * When press Backspace, delete the contents inside of the selection, if it is vSelection
+     */
+    deleteTableContents: boolean;
+
+    /**
+     * When press Delete, delete the Table cells selected if it is vSelection
+     */
+    deleteTableStructure: boolean;
 }
 
 /**
