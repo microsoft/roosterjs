@@ -685,7 +685,7 @@ export default class VTable {
     /**
      * Remove the cells outside of the selection.
      */
-    removeCellsOutsideOfSelection() {
+    removeCellsBySelection(outsideOfSelection = true) {
         const tempCells: VCell[][] = [];
 
         let startX: number = this.startRange[0];
@@ -699,11 +699,16 @@ export default class VTable {
             (endX == 0 && endY == 0 && startX == colIndex && startY == this.cells.length - 1);
 
         if (selectedAllTable) {
+            if (!outsideOfSelection) {
+                this.cells = [];
+            }
             return;
         }
+        const validation = (x: number, y: number) =>
+            outsideOfSelection ? this.isInsideOfSelection(x, y) : !this.isInsideOfSelection(x, y);
 
         this.forEachCell((cell: VCell, x?: number, y?: number) => {
-            if (this.isInsideOfSelection(x, y)) {
+            if (validation(x, y)) {
                 while (tempCells.length - 1 < y) {
                     tempCells.push([]);
                 }

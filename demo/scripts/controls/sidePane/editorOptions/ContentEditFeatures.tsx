@@ -36,6 +36,9 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     markdownInlineCode: 'Markdown style Code blocks',
     maintainListChainWhenDelete:
         'Maintain the list of number in the right order after press delete before the first item',
+    deleteTableContents:
+        'When press Backspace, delete the contents inside of the selection, if it is vSelection',
+    deleteTableStructure: 'When press Delete, delete the Table cells selected if it is vSelection',
 };
 
 export interface ContentEditFeaturessProps {
