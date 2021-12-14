@@ -3,8 +3,10 @@ import {
     EditorPlugin,
     ExperimentalFeatures,
     IEditor,
+    PendableFormatState,
     PluginEvent,
     PluginEventType,
+    PositionType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -13,6 +15,7 @@ import {
  */
 export default class TypeInContainerPlugin implements EditorPlugin {
     private editor: IEditor;
+    private pendableFormat: PendableFormatState;
 
     /**
      * Get a friendly name of  this plugin
@@ -53,6 +56,9 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             let shouldAlwaysApplyDefaultFormat = this.editor.isFeatureEnabled(
                 ExperimentalFeatures.AlwaysApplyDefaultFormat
             );
+            if (event.rawEvent.key === 'Enter') {
+                this.pendableFormat = this.editor.getPendableFormatState();
+            }
 
             if (
                 !range ||
@@ -67,13 +73,55 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                 return;
             }
 
+            fixPendableFormatState(this.editor, this.pendableFormat);
+
             if (range.collapsed) {
-                this.editor.ensureTypeInContainer(Position.getStart(range), event.rawEvent);
+                this.editor.ensureTypeInContainer(Position.getEnd(range), event.rawEvent);
             } else {
                 this.editor.runAsync(editor => {
                     editor.ensureTypeInContainer(editor.getFocusedPosition(), event.rawEvent);
                 });
             }
         }
+    }
+}
+
+function fixPendableFormatState(editor: IEditor, pendableFormat: PendableFormatState) {
+    const position = editor.getFocusedPosition();
+    if (position.offset === PositionType.Begin && pendableFormat) {
+        checkPendableFormat(editor, pendableFormat);
+    }
+}
+
+function checkPendableFormat(editor: IEditor, pendableFormat: PendableFormatState) {
+    const b = editor.getElementAtCursor('B');
+    const i = editor.getElementAtCursor('I');
+    const u = editor.getElementAtCursor('U');
+    const strike = editor.getElementAtCursor('STRIKE');
+    const sup = editor.getElementAtCursor('SUP');
+    const sub = editor.getElementAtCursor('SUB');
+    if (!pendableFormat.isBold) {
+        removeNode(b);
+    }
+    if (!pendableFormat.isItalic) {
+        removeNode(i);
+    }
+    if (!pendableFormat.isUnderline) {
+        removeNode(u);
+    }
+    if (!pendableFormat.isStrikeThrough) {
+        removeNode(strike);
+    }
+    if (!pendableFormat.isSuperscript) {
+        removeNode(sup);
+    }
+    if (!pendableFormat.isSubscript) {
+        removeNode(sub);
+    }
+}
+
+function removeNode(element: HTMLElement) {
+    if (element) {
+        element.parentNode.replaceChild(element.firstElementChild, element);
     }
 }
