@@ -16,7 +16,7 @@ export { default as extractClipboardItemsForIE } from './clipboard/extractClipbo
 
 export { default as arrayPush } from './utils/arrayPush';
 export { default as applyTextStyle } from './utils/applyTextStyle';
-export { Browser, getBrowserInfo, isAndroid } from './utils/Browser';
+export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
 export { default as collapseNodes } from './utils/collapseNodes';
