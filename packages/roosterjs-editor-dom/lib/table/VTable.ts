@@ -542,6 +542,9 @@ export default class VTable {
     highlightAll() {
         this.startRange = null;
         this.endRange = null;
+        if (!this.table.classList.contains(TableMetadata.TABLE_SELECTED)) {
+            this.table.classList.add(TableMetadata.TABLE_SELECTED);
+        }
         this.forEachCell((cell, x, y) => {
             if (cell.td) {
                 this.highlightCellHandler(cell.td);

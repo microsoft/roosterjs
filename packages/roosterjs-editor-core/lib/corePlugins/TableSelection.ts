@@ -110,30 +110,36 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        this.range = this.editor?.getSelectionRange();
-        switch (event.eventType) {
-            case PluginEventType.ExtractContentWithDom:
-                clearSelectedTableCells(event.clonedRoot, true);
-                break;
-            case PluginEventType.MouseUp:
-                this.handleMouseUp(event);
-                break;
-            case PluginEventType.BeforeCutCopy:
-                this.handleBeforeCutCopy(event);
-                break;
-            case PluginEventType.MouseDown:
-                if (!this.state.startedSelection) {
-                    this.handleMouseDown(event);
-                }
-                break;
-            case PluginEventType.KeyDown:
-            case PluginEventType.KeyUp:
-                if (!this.state.startedSelection) {
-                    this.handleKeyEvent(event);
-                }
-                break;
-            default:
-                break;
+        if (this.editor) {
+            this.cacheTables();
+            this.range = this.editor.getSelectionRange();
+
+            switch (event.eventType) {
+                case PluginEventType.ExtractContentWithDom:
+                    clearSelectedTableCells(event.clonedRoot, true);
+                    break;
+                case PluginEventType.MouseUp:
+                    this.handleMouseUp(event);
+                    break;
+                case PluginEventType.BeforeCutCopy:
+                    this.handleBeforeCutCopy(event);
+                    break;
+                case PluginEventType.MouseDown:
+                    if (!this.state.startedSelection) {
+                        this.handleMouseDown(event);
+                    }
+                    break;
+                case PluginEventType.KeyDown:
+                    if (!this.state.startedSelection) {
+                        this.handleKeyEvent(event);
+                    }
+                    break;
+                case PluginEventType.KeyUp:
+                    if (!this.state.startedSelection) {
+                        this.handleKeyUp(event);
+                    }
+                    break;
+            }
         }
     }
 
@@ -220,7 +226,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             if (this.range.commonAncestorContainer.nodeType == Node.TEXT_NODE) {
                 return;
             }
-
             let firstTable = this.editor.getElementAtCursor(
                 'table',
                 this.state.firstTarget
@@ -240,28 +245,26 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     false
                 );
             }
-        } else if (event.eventType == PluginEventType.KeyUp) {
-            if (
-                !this.range.collapsed &&
-                !this.state.vSelection &&
-                this.range.commonAncestorContainer.nodeType != Node.TEXT_NODE
-            ) {
-                //If the selection is not collapsed, verify what tables are inside of the range, and highlight the tables.
-                this.cachedTables = [];
-                this.editor.queryElements('table', table => {
-                    const vTable = new VTable(table);
-                    this.cachedTables.push(vTable);
-                });
-                this.state.firstTarget = this.range.startContainer;
-                const eventTarget = this.range.endContainer;
-                this.state.lastTarget = eventTarget;
-                this.handleSelectionOutsideOfTable(eventTarget);
-                return;
-            }
+        }
+    }
 
-            if (!event.rawEvent.shiftKey && event.rawEvent.which != Keys.SHIFT) {
-                this.clearState();
-            }
+    private handleKeyUp(event: PluginKeyUpEvent) {
+        if (
+            this.range.collapsed &&
+            !this.state.vSelection &&
+            !this.range.collapsed &&
+            this.range.commonAncestorContainer.nodeType != Node.TEXT_NODE
+        ) {
+            //If the selection is not collapsed, verify what tables are inside of the range, and highlight the tables.
+            this.state.firstTarget = this.range.startContainer;
+            const eventTarget = this.range.endContainer;
+            this.state.lastTarget = eventTarget;
+            this.handleSelectionOutsideOfTable(eventTarget);
+            return;
+        }
+
+        if (!event.rawEvent.shiftKey && event.rawEvent.which != Keys.SHIFT) {
+            this.clearState();
         }
     }
 
@@ -374,8 +377,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             }
         }
         this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
-
-        if (!event.rawEvent.shiftKey) {
+        if (event.rawEvent.which == Keys.LEFT_CLICK && !event.rawEvent.shiftKey) {
             this.clearState();
 
             this.state.firstTarget =
@@ -383,15 +385,42 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     TABLE_CELL_SELECTOR,
                     event.rawEvent.target as Node
                 ) || (event.rawEvent.target as HTMLElement);
-            this.editor.queryElements('table', table => {
-                const vTable = new VTable(table);
-                this.cachedTables.push(vTable);
-            });
             this.editor
                 .getDocument()
                 .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
             this.state.startedSelection = true;
         }
+    }
+
+    private cacheTables() {
+        if (!this.cachedTables) {
+            this.cachedTables = [];
+        }
+        this.editor?.queryElements('table', table => {
+            if (
+                table.isContentEditable &&
+                !this.editor.getElementAtCursor('table', table.parentNode)
+            ) {
+                const filteredTables = this.cachedTables.filter(vT => vT.table == table);
+                if (filteredTables.length == 0) {
+                    const vTable = new VTable(table);
+                    this.cachedTables.push(vTable);
+                } else {
+                    const currentTable = filteredTables[0];
+                    this.cachedTables[this.cachedTables.indexOf(currentTable)] = new VTable(table);
+                }
+            }
+        });
+
+        this.cachedTables = this.cachedTables.filter(vt => this.contentDiv.contains(vt.table));
+
+        const tempTables = this.cachedTables;
+
+        tempTables.forEach((vTable, index) => {
+            if (!this.contentDiv.contains(vTable.table)) {
+                this.cachedTables.slice(this.cachedTables.indexOf(vTable), 1);
+            }
+        });
     }
 
     private handleMouseUp(event: PluginMouseUpEvent) {
@@ -463,8 +492,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     eventTarget || (event.target as Node),
                     targetTable,
                     firstTable,
-                    true,
-                    event
+                    true
                 );
             }
         }
@@ -550,8 +578,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
                 this.state.startRange = this.vTable.startRange;
                 this.state.endRange = this.state.endRange;
-
-                event.preventDefault();
             }
         }
     }
@@ -615,8 +641,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         currentTarget: Node,
         targetTable: HTMLElement,
         firstTable: HTMLElement,
-        isFromMouseEvent: boolean = true,
-        event?: Event
+        isFromMouseEvent: boolean = true
     ) {
         if (currentTarget == this.contentDiv) {
             return;
@@ -624,14 +649,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
         currentTarget =
             this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, currentTarget) || currentTarget;
-
-        if (safeInstanceOf(firstTable, 'HTMLTableElement')) {
-            let vTable = this.cachedTables.filter(table => table.table == firstTable)[0];
-            if (!vTable) {
-                vTable = new VTable(firstTable);
-                this.cachedTables.push(vTable);
-            }
-        }
 
         if (this.state.vSelection && this.state.firstTarget && this.vTable) {
             if (!isFromMouseEvent && currentTarget.contains(firstTable)) {
@@ -642,7 +659,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 modifyRange(this.range, this.state.firstTarget, 0, currentTarget, 0);
             } else {
                 if (isNodeAfter(this.state.firstTarget, this.state.lastTarget)) {
-                    modifyRange(this.range, this.state.lastTarget, 0);
+                    modifyRange(this.range, this.state.firstTarget, 0);
                 } else {
                     modifyRange(this.range, this.state.firstTarget, 0);
                 }
@@ -679,40 +696,45 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     // If selection  started outside of a table or moves outside of the first table and finishes inside of a different table,
     // selects all the row in the table where it started and where it finished
-    private onMouseUp = () => {
+    private onMouseUp = (event: MouseEvent) => {
         if (this.editor) {
-            this.range = this.editor.getSelectionRange();
-            if (
-                !this.state.vSelection &&
-                this.state.lastTarget != this.contentDiv &&
-                !this.range.collapsed
-            ) {
-                if (this.range && this.range.commonAncestorContainer.nodeType != Node.TEXT_NODE) {
-                    if (safeInstanceOf(this.state.firstTarget, 'HTMLTableCellElement')) {
-                        const row = this.editor.getElementAtCursor('tr', this.state.firstTarget);
-                        if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-                            if (isNodeAfter(this.state.firstTarget, this.state.lastTarget)) {
-                                this.range.setEnd(row, row.cells.length - 1);
-                            } else {
-                                this.range.setStart(row, 0);
-                            }
-                        }
-                    }
-                    if (safeInstanceOf(this.state.lastTarget, 'HTMLTableCellElement')) {
-                        const row = this.editor.getElementAtCursor('tr', this.state.lastTarget);
-                        if (safeInstanceOf(row, 'HTMLTableRowElement')) {
-                            if (isNodeAfter(this.state.lastTarget, this.state.firstTarget)) {
-                                this.range.setEnd(row, row.cells.length - 1);
-                            } else {
-                                this.range.setStart(row, 0);
-                            }
-                        }
-                    }
-                }
-            }
+            this.selectAllRow(event);
             this.removeMouseUpEventListener();
         }
     };
+
+    private selectAllRow(event: MouseEvent) {
+        this.range = this.editor.getSelectionRange();
+
+        if (
+            this.range &&
+            (!(this.state.firstTarget && this.state.lastTarget) ||
+                (this.state.vSelection && this.range.collapsed))
+        ) {
+            return;
+        }
+
+        if (safeInstanceOf(this.state.firstTarget, 'HTMLTableCellElement')) {
+            const row = this.editor.getElementAtCursor('tr', this.state.firstTarget);
+            if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+                if (isNodeAfter(this.state.firstTarget, this.state.lastTarget)) {
+                    this.range.setEnd(row, row.cells.length - 1);
+                } else {
+                    this.range.setStart(row, 0);
+                }
+            }
+        }
+        if (safeInstanceOf(this.state.lastTarget, 'HTMLTableCellElement')) {
+            const row = this.editor.getElementAtCursor('tr', this.state.lastTarget);
+            if (safeInstanceOf(row, 'HTMLTableRowElement')) {
+                if (isNodeAfter(this.state.lastTarget, this.state.firstTarget)) {
+                    this.range.setEnd(row, row.cells.length - 1);
+                } else {
+                    this.range.setStart(row, 0);
+                }
+            }
+        }
+    }
 
     private handleSelectionOutsideOfTable(currentTarget: Node, targetTable?: HTMLElement) {
         if (!targetTable) {
@@ -724,10 +746,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             safeInstanceOf(currentTarget, 'HTMLTableCellElement')
         ) {
             let vTable = this.cachedTables.filter(table => table.table == targetTable)[0];
-            if (!vTable) {
-                vTable = new VTable(targetTable);
-                this.cachedTables.push(vTable);
-            }
 
             let lastItemCoordinates = vTable.getCellCoordinates(currentTarget);
             if (this.isAfter(currentTarget, this.state.firstTarget)) {
@@ -946,7 +964,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     private clearState() {
         this.clearTableCellSelection();
         this.vTable = null;
-        this.cachedTables = [];
         this.state.firstTarget = null;
         this.state.lastTarget = null;
         this.state.startRange = null;
