@@ -1,5 +1,7 @@
 import { BrowserInfo } from 'roosterjs-editor-types';
 
+const isAndroidRegex = /android/i;
+
 /**
  * Get current browser information from user agent string
  * @param userAgent The userAgent string of a browser
@@ -40,6 +42,7 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
 
     let isMac = appVersion.indexOf('Mac') != -1;
     let isWin = appVersion.indexOf('Win') != -1 || appVersion.indexOf('NT') != -1;
+    let isAndroid = isAndroidRegex.test(userAgent);
 
     return {
         isMac,
@@ -52,6 +55,7 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
         isFirefox,
         isEdge,
         isIEOrEdge: isIE || isEdge,
+        isAndroid,
     };
 }
 
@@ -61,13 +65,3 @@ export function getBrowserInfo(userAgent: string, appVersion: string): BrowserIn
 export const Browser = window
     ? getBrowserInfo(window.navigator.userAgent, window.navigator.appVersion)
     : {};
-
-/**
- * Obtains wether the current device is Android
- * @param window current window
- * @returns true if is android, otherwise false
- */
-export const isAndroid = (window: Window) => {
-    var userAgent = window.navigator.userAgent || navigator.vendor;
-    return /android/i.test(userAgent);
-};
