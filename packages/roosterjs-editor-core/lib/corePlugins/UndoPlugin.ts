@@ -1,7 +1,7 @@
 import {
     EditorOptions,
     IEditor,
-    Keys,
+    LiteralKeys,
     PluginEvent,
     PluginEventType,
     PluginWithState,
@@ -28,7 +28,7 @@ const MAX_SIZE_LIMIT = 1e7;
  */
 export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     private editor: IEditor;
-    private lastKeyPress: number;
+    private lastKeyPress: string;
     private state: UndoPluginState;
 
     /**
@@ -81,7 +81,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     willHandleEventExclusively(event: PluginEvent) {
         return (
             event.eventType == PluginEventType.KeyDown &&
-            event.rawEvent.which == Keys.BACKSPACE &&
+            event.rawEvent.key == LiteralKeys.BACKSPACE &&
             this.canUndoAutoComplete()
         );
     }
@@ -126,12 +126,12 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     private onKeyDown(evt: KeyboardEvent): void {
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
-        if (evt.which == Keys.BACKSPACE || evt.which == Keys.DELETE) {
-            if (evt.which == Keys.BACKSPACE && this.canUndoAutoComplete()) {
+        if (evt.key == LiteralKeys.BACKSPACE || evt.key == LiteralKeys.DELETE) {
+            if (evt.key == LiteralKeys.BACKSPACE && this.canUndoAutoComplete()) {
                 evt.preventDefault();
                 this.editor.undo();
                 this.state.autoCompletePosition = null;
-                this.lastKeyPress = evt.which;
+                this.lastKeyPress = evt.key;
             } else {
                 let selectionRange = this.editor.getSelectionRange();
 
@@ -142,7 +142,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 if (
                     selectionRange &&
                     (!selectionRange.collapsed ||
-                        this.lastKeyPress != evt.which ||
+                        this.lastKeyPress != evt.key ||
                         isCtrlOrMetaPressed(evt))
                 ) {
                     this.addUndoSnapshot();
@@ -150,14 +150,14 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
 
                 // Since some content is deleted, always set hasNewContent to true so that we will take undo snapshot next time
                 this.state.hasNewContent = true;
-                this.lastKeyPress = evt.which;
+                this.lastKeyPress = evt.key;
             }
-        } else if (evt.which >= Keys.PAGEUP && evt.which <= Keys.DOWN) {
+        } else if (evt.key >= LiteralKeys.PAGEUP && evt.key <= LiteralKeys.DOWN) {
             // PageUp, PageDown, Home, End, Left, Right, Up, Down
             if (this.state.hasNewContent) {
                 this.addUndoSnapshot();
             }
-            this.lastKeyPress = 0;
+            this.lastKeyPress = LiteralKeys.NULL;
         }
     }
 
@@ -171,11 +171,11 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         let range = this.editor.getSelectionRange();
         if (
             (range && !range.collapsed) ||
-            (evt.which == Keys.SPACE && this.lastKeyPress != Keys.SPACE) ||
-            evt.which == Keys.ENTER
+            (evt.key == LiteralKeys.SPACE && this.lastKeyPress != LiteralKeys.SPACE) ||
+            evt.key == LiteralKeys.ENTER
         ) {
             this.addUndoSnapshot();
-            if (evt.which == Keys.ENTER) {
+            if (evt.key == LiteralKeys.ENTER) {
                 // Treat ENTER as new content so if there is no input after ENTER and undo,
                 // we restore the snapshot before ENTER
                 this.state.hasNewContent = true;
@@ -184,12 +184,12 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             this.clearRedoForInput();
         }
 
-        this.lastKeyPress = evt.which;
+        this.lastKeyPress = evt.key;
     }
 
     private clearRedoForInput() {
         this.state.snapshotsService.clearRedo();
-        this.lastKeyPress = 0;
+        this.lastKeyPress = LiteralKeys.NULL;
         this.state.hasNewContent = true;
     }
 
