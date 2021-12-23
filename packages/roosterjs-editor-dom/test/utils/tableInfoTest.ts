@@ -1,6 +1,6 @@
+import TableFormat from 'roosterjs-editor-types/lib/interface/TableFormat';
 import VTable from '../../lib/table/VTable';
 import { deleteTableInfo, getTableFormatInfo, saveTableInfo } from '../../lib/utils/tableInfo';
-import { TableFormat } from 'roosterjs-editor-types';
 
 const TABLE_STYLE_INFO = 'roosterTableInfo';
 const format: TableFormat = {
@@ -34,11 +34,17 @@ function createTable(format: TableFormat) {
     return node;
 }
 
+function removeTable() {
+    const table = document.getElementById('id1');
+    table.parentNode.removeChild(table);
+}
+
 describe('saveTableInfo', () => {
     it('should save table info', () => {
         const table = createTable(format);
         saveTableInfo(table, format);
         expect(table.dataset[TABLE_STYLE_INFO]).toBe(expectedTableInfo);
+        removeTable();
     });
 });
 
@@ -48,6 +54,7 @@ describe('deleteTableInfo', () => {
         saveTableInfo(table, format);
         deleteTableInfo(table);
         expect(table.dataset[TABLE_STYLE_INFO]).toBe(undefined);
+        removeTable();
     });
 });
 
@@ -57,5 +64,6 @@ describe('getTableFormatInfo', () => {
         saveTableInfo(table, format);
         const tableInfo = getTableFormatInfo(table);
         expect(tableInfo).toEqual(JSON.parse(expectedTableInfo) as TableFormat);
+        removeTable();
     });
 });
