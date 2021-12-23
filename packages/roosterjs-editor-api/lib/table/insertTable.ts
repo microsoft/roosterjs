@@ -1,5 +1,5 @@
 import { ChangeSource, IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
-import { Position, VTable } from 'roosterjs-editor-dom';
+import { Position, saveTableInfo, VTable } from 'roosterjs-editor-dom';
 
 /**
  * Insert table into editor at current selection
@@ -45,6 +45,7 @@ export default function insertTable(
                 verticalBorderColor: '#ABABAB',
             }
         );
+        saveTableInfo(table, format);
         vtable.writeBack();
         editor.insertNode(fragment);
         editor.runAsync(editor =>
