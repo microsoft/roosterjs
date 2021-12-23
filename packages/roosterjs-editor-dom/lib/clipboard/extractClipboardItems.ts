@@ -63,7 +63,7 @@ export default function extractClipboardItems(
         (items || []).map(item => {
             const type = item.type;
 
-            if (type.indexOf(ContentTypePrefix.Image) == 0 && !data.image) {
+            if (type.indexOf(ContentTypePrefix.Image) == 0 && !data.image && item.kind == 'file') {
                 data.types.push(type);
                 data.image = item.getAsFile();
                 return new Promise<void>(resolve => {

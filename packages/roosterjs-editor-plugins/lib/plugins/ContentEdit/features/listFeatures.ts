@@ -235,7 +235,7 @@ function getCacheNextSibling(event: PluginKeyboardEvent, editor: IEditor): Node 
 function prepareAutoBullet(editor: IEditor, range: Range) {
     const block = editor.getBlockElementAtNode(range.startContainer);
     const endNode = block?.getEndNode();
-    if (endNode && getTagOfNode(endNode) != 'BR' && block?.getTextContent().trim() === '') {
+    if (endNode && getTagOfNode(endNode) != 'BR') {
         const br = editor.getDocument().createElement('BR');
         if (isBlockElement(endNode)) {
             endNode.appendChild(br);

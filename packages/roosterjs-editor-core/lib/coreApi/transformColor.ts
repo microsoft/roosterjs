@@ -91,7 +91,8 @@ function transformToDarkMode(element: HTMLElement, getDarkColor: (color: string)
         if (
             !element.dataset[names[ColorAttributeEnum.CssDataSet]] &&
             !element.dataset[names[ColorAttributeEnum.HtmlDataSet]] &&
-            (styleColor || attrColor)
+            (styleColor || attrColor) &&
+            styleColor != 'inherit' // For inherit style, no need to change it and let it keep inherit from parent element
         ) {
             const newColor = getDarkColor(computedValues[index] || styleColor || attrColor);
             element.style.setProperty(names[ColorAttributeEnum.CssColor], newColor, 'important');
