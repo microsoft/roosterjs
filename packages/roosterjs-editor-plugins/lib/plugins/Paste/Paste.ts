@@ -4,7 +4,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
-import { toArray } from 'roosterjs-editor-dom';
+import { getTagOfNode, toArray } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     ExperimentalFeatures,
@@ -111,6 +111,19 @@ export default class Paste implements EditorPlugin {
             } else {
                 convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);
+            }
+
+            if (
+                clipboardData.htmlFirstLevelChildTags?.length == 1 &&
+                clipboardData.htmlFirstLevelChildTags[0] == 'TABLE'
+            ) {
+                const div = this.editor.getElementAtCursor('div');
+                if (getTagOfNode(div.lastChild) == 'BR' && div.childElementCount == 1) {
+                    div.removeChild(div.lastChild);
+                }
+                const divC = this.editor.getDocument().createElement('div');
+                divC.appendChild(this.editor.getDocument().createElement('br'));
+                div.parentNode.insertBefore(divC, div.nextSibling);
             }
 
             // Replace unknown tags with SPAN

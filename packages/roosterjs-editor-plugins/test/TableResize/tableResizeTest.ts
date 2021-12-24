@@ -183,6 +183,7 @@ describe('Table Resizer/Inserter tests', () => {
                     callback(table as HTMLTableElement);
                 });
             },
+            getTableSelection: () => {},
             dispose: () => {},
         });
 

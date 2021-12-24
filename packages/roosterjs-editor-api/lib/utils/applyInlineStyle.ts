@@ -1,5 +1,11 @@
-import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
 import { ChangeSource, IEditor, NodeType, PositionType } from 'roosterjs-editor-types';
+import {
+    applyTextStyle,
+    ContentTraverser,
+    getTagOfNode,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -16,7 +22,34 @@ export default function applyInlineStyle(
     editor.focus();
     let range = editor.getSelectionRange();
 
-    if (range && range.collapsed) {
+    const tableSelection = editor.getTableSelection();
+
+    if (tableSelection.vSelection) {
+        const table = editor.getElementAtCursor('table');
+        if (safeInstanceOf(table, 'HTMLTableElement')) {
+            const vTable = new VTable(table);
+            vTable.startRange = tableSelection.startRange;
+            vTable.endRange = tableSelection.endRange;
+            vTable.forEachSelectedCell(cell => {
+                if (cell.td) {
+                    const range = new Range();
+                    range.selectNodeContents(cell.td);
+                    const blockTraverser = ContentTraverser.createSelectionTraverser(
+                        cell.td,
+                        range
+                    );
+                    let inlineElement = blockTraverser && blockTraverser.currentInlineElement;
+                    while (inlineElement) {
+                        let nextInlineElement = blockTraverser.getNextInlineElement();
+                        inlineElement.applyStyle((element, isInnerNode) => {
+                            callback(element, isInnerNode);
+                        });
+                        inlineElement = nextInlineElement;
+                    }
+                }
+            });
+        }
+    } else if (range && range.collapsed) {
         let node = range.startContainer;
         let isEmptySpan =
             getTagOfNode(node) == 'SPAN' &&

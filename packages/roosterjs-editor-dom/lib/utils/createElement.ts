@@ -50,6 +50,10 @@ export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateE
         tag: 'div',
         style: 'position: fixed; cursor: ne-resize; user-select: none; border: 1px solid #808080',
     },
+    [KnownCreateElementDataIndex.TableSelector]: {
+        tag: 'div',
+        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+    },
 };
 
 /**

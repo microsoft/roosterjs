@@ -18,6 +18,7 @@ export interface BuildInPluginList {
     customReplace: boolean;
     pickerPlugin: boolean;
     contextMenu: boolean;
+    tableSelection: boolean;
 }
 
 export default interface BuildInPluginState {

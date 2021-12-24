@@ -53,6 +53,7 @@ describe('Editor', () => {
             'CopyPaste',
             'Entity',
             'Lifecycle',
+            'TableSelection',
         ]);
 
         expect(core.domEvent).toEqual({
@@ -158,6 +159,7 @@ describe('Editor', () => {
             'CopyPaste',
             'Entity',
             'Lifecycle',
+            'TableSelection',
         ]);
 
         expect(core.domEvent).toEqual({

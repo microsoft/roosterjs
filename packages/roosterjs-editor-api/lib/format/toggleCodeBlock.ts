@@ -1,4 +1,5 @@
 import blockWrap from '../utils/blockWrap';
+import tableSelectionBeforeCallBackWrap from '../utils/tableSelectionBeforeCallBackWrap';
 import { IEditor, QueryScope } from 'roosterjs-editor-types';
 import { unwrap, wrap } from 'roosterjs-editor-dom';
 
@@ -23,13 +24,22 @@ export default function toggleCodeBlock(
             const pre = wrap(code, PRE_TAG);
             styler?.(pre);
         },
-        () =>
-            editor.queryElements(SELECTOR, QueryScope.OnSelection, code => {
-                if (!code.previousSibling && !code.nextSibling) {
-                    const parent = code.parentNode;
-                    unwrap(code);
+        () => {
+            const handleCallback = (node: HTMLElement) => {
+                if (!node.previousSibling && !node.nextSibling) {
+                    const parent = node.parentNode;
+                    unwrap(node);
                     unwrap(parent);
                 }
-            }).length == 0
+            };
+            return tableSelectionBeforeCallBackWrap(
+                editor,
+                SELECTOR,
+                () =>
+                    editor.queryElements(SELECTOR, QueryScope.OnSelection, handleCallback).length ==
+                    0,
+                handleCallback
+            );
+        }
     );
 }

@@ -34,6 +34,7 @@ import {
     RegionType,
     SelectionPath,
     StyleBasedFormatState,
+    TableSelectionPluginState,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import {
@@ -57,6 +58,7 @@ import {
     isPositionAtBeginningOf,
     arrayPush,
     toArray,
+    TableMetadata,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -389,6 +391,7 @@ export default class Editor implements IEditor {
                   (<SelectionPath>arg1).end
               )
             : createRange(arg1, arg2, arg3, arg4);
+
         return this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 
@@ -453,10 +456,37 @@ export default class Editor implements IEditor {
      * Get impacted regions from selection
      */
     public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
-        const range = this.getSelectionRange();
-        return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
+        const tableSelection = this.getTableSelection();
+        let range: Range;
+        if (tableSelection?.vSelection) {
+            range = new Range();
+            range.selectNodeContents(this.getElementAtCursor('table'));
+        }
+        range = range || this.getSelectionRange();
+        const regions = range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
+
+        if (tableSelection?.vSelection) {
+            return regions.filter((value, index, arr) => {
+                if (
+                    value?.rootNode?.classList?.contains(TableMetadata.TABLE_CELL_SELECTED) &&
+                    safeInstanceOf(value.rootNode, 'HTMLTableCellElement')
+                ) {
+                    return true;
+                }
+            });
+        }
+
+        return regions;
     }
 
+    /**
+     * Get Selection made inside of a table using the Table Selection Plugin.
+     * @param core — The EditorCore object
+     * @returns — Metadata about the selection
+     */
+    public getTableSelection(): TableSelectionPluginState {
+        return this.core.tableSelection;
+    }
     //#endregion
 
     //#region EVENT API

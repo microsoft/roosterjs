@@ -30,6 +30,7 @@ import {
     insertImage,
     setTextColor,
     setBackgroundColor,
+    applyCellShading,
 } from 'roosterjs-editor-api';
 
 const buttons: { [key: string]: RibbonButtonType } = {
@@ -376,6 +377,38 @@ const buttons: { [key: string]: RibbonButtonType } = {
             !(Browser.isChrome || Browser.isFirefox) || editor.getDocument().defaultView != window,
         onClick: () => {
             MainPaneBase.getInstance().popout();
+        },
+    },
+    cellColor: {
+        title: 'Cell Shading',
+        isHidden: editor => {
+            return (
+                !editor.getElementAtCursor('td,th') &&
+                (editor.getTableSelection()?.vSelection || editor.getSelectionRange()?.collapsed)
+            );
+        },
+        onClick: (editor, color) => {
+            applyCellShading(editor, color);
+        },
+        dropDownItems: {
+            '#00ffff': 'Cyan',
+            '#00ff00': 'Green',
+            '#ffff00': 'Yellow',
+            '#ff8000': 'Orange',
+            '#ff0000': 'Red',
+            '#ff00ff': 'Magenta',
+            '#80ffff': 'Light Cyan',
+            '#80ff80': 'Light Green',
+            '#ffff80': 'Light Yellow',
+            '#ffc080': 'Light Orange',
+            '#ff8080': 'Light Red',
+            '#ff80ff': 'Light Magenta',
+            '#ffffff': 'White',
+            '#cccccc': 'Light Gray',
+            '#999999': 'Gray',
+            '#666666': 'Dark Gray',
+            '#333333': 'Darker Gray',
+            '#000000': 'Black',
         },
     },
 };
