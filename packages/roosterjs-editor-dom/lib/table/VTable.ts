@@ -557,7 +557,7 @@ export default class VTable {
 
     /**
      * Removes the selection of all the tables
-     * @param cacheSelection wether we need to cache the selection
+     * @param cacheSelection whether we need to cache the selection
      */
     deSelectAll(cacheSelection: boolean = false) {
         this.forEachCell(cell => {
@@ -598,7 +598,7 @@ export default class VTable {
     /**
      * Handler to remove the selected style
      * @param cell element to apply the style
-     * @param cacheSelection wether we need to cache the selection
+     * @param cacheSelection whether we need to cache the selection
      * @returns
      */
     private deselectCellHandler = (cell: HTMLElement, cacheSelection: boolean = false) => {
@@ -687,7 +687,7 @@ export default class VTable {
 
     /**
      * Remove the cells outside of the selection.
-     * @param outsideOfSelection wether to remove the cells outside or inside of the selection
+     * @param outsideOfSelection whether to remove the cells outside or inside of the selection
      */
     removeCellsBySelection(outsideOfSelection: boolean = true) {
         const tempCells: VCell[][] = [];

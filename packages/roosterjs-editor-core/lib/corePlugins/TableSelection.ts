@@ -47,7 +47,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     // Or moves outside of a table
     private cachedTables: VTable[];
 
-    // Used to determine wether if the previous element is after the last target
+    // Used to determine whether if the previous element is after the last target
     private previousY: number;
     private currentY: number;
 
@@ -672,19 +672,19 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             );
 
             if (!this.isAfter(currentTarget, this.state.firstTarget)) {
-                this.vTable.startRange = [0, 0];
+                this.vTable.startRange = [0 /* x */, 0 /* y */];
 
                 this.vTable.endRange = [
-                    this.vTable.cells[lastItemCoordinates[1]].length - 1,
-                    lastItemCoordinates[1],
+                    this.vTable.cells[lastItemCoordinates[1]].length - 1 /* x */,
+                    lastItemCoordinates[1] /* y */,
                 ];
             } else {
                 this.vTable.endRange = [
-                    this.vTable.cells[this.vTable.cells.length - 1].length - 1,
-                    this.vTable.cells.length - 1,
+                    this.vTable.cells[this.vTable.cells.length - 1].length - 1 /* x */,
+                    this.vTable.cells.length - 1 /* y */,
                 ];
 
-                this.vTable.startRange = [0, lastItemCoordinates[1]];
+                this.vTable.startRange = [0 /* x */, lastItemCoordinates[1] /* y */];
             }
 
             this.vTable.highlight();
@@ -749,17 +749,17 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
             let lastItemCoordinates = vTable.getCellCoordinates(currentTarget);
             if (this.isAfter(currentTarget, this.state.firstTarget)) {
-                vTable.startRange = [0, 0];
+                vTable.startRange = [0 /* x */, 0 /* y */];
                 vTable.endRange = [
-                    vTable.cells[lastItemCoordinates[1]].length - 1,
-                    lastItemCoordinates[1],
+                    vTable.cells[lastItemCoordinates[1]].length - 1 /* x */,
+                    lastItemCoordinates[1] /* y */,
                 ];
             } else {
                 vTable.endRange = [
-                    vTable.cells[vTable.cells.length - 1].length - 1,
-                    vTable.cells.length - 1,
+                    vTable.cells[vTable.cells.length - 1].length - 1 /* x */,
+                    vTable.cells.length - 1 /* y */,
                 ];
-                vTable.startRange = [0, lastItemCoordinates[1]];
+                vTable.startRange = [0 /* x */, lastItemCoordinates[1] /* y */];
             }
 
             vTable.highlight();
