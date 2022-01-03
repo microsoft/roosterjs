@@ -140,17 +140,20 @@ export default class VTable {
         if (!format.bandedRows) {
             return;
         }
-        const evenRows = this.cells.filter(row => this.cells.indexOf(row) % 2 === 0);
-        const oddRows = this.cells.filter(row => this.cells.indexOf(row) % 2 === 1);
-        evenRows.forEach(row => {
-            row.filter(cell => cell.td).forEach(
-                cell => (cell.td.style.backgroundColor = format.bgColorEven)
-            );
-        });
-        oddRows.forEach(row => {
-            row.filter(cell => cell.td).forEach(
-                cell => (cell.td.style.backgroundColor = format.bgColorOdd)
-            );
+        this.cells.forEach((row, index) => {
+            if (index % 2 === 0) {
+                row.forEach(cell =>
+                    cell.td
+                        ? (cell.td.style.backgroundColor = format.bgColorEven || TRANSPARENT)
+                        : ''
+                );
+            } else {
+                row.forEach(cell =>
+                    cell.td
+                        ? (cell.td.style.backgroundColor = format.bgColorOdd || TRANSPARENT)
+                        : ''
+                );
+            }
         });
     }
 
@@ -163,11 +166,15 @@ export default class VTable {
             return;
         }
         this.cells.forEach(row => {
-            row.filter(cell => cell.td).forEach(cell => {
-                if (row.indexOf(cell) % 2 === 0) {
-                    cell.td.style.backgroundColor = format.bgColumnColorEven;
-                } else {
-                    cell.td.style.backgroundColor = format.bgColumnColorOdd;
+            row.forEach((cell, index) => {
+                if (index % 2 === 0 && !format.bandedRows) {
+                    cell.td
+                        ? (cell.td.style.backgroundColor = format.bgColumnColorEven || TRANSPARENT)
+                        : '';
+                } else if (!format.bandedRows) {
+                    cell.td
+                        ? (cell.td.style.backgroundColor = format.bgColumnColorOdd || TRANSPARENT)
+                        : '';
                 }
             });
         });
@@ -283,7 +290,7 @@ export default class VTable {
      */
     private setHeaderRowFormat(format: Partial<TableFormat>) {
         if (!format.headerRow) {
-            format.headerRowColor = format.bgColor;
+            return;
         }
         this.forEachCellOfRow(0, (cell, i) => {
             if (cell.td && format.headerRow) {

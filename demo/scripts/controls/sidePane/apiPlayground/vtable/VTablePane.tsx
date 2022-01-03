@@ -14,24 +14,41 @@ import {
 } from 'roosterjs-editor-types';
 
 const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) => TableFormat> = {
-    GRID_WITHOUT_BORDER: (color, lightColor) =>
+    DEFAULT: (color, lightColor) =>
         createTableFormat(
             null /**bgColor */,
             color /**topBorder */,
             color /**bottomBorder */,
             color /** verticalColors*/,
-            true /** bandedRows */,
+            false /** bandedRows */,
             false /** bandedColumns */,
-            true /** headerRow */,
+            false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.onlyMiddleBorders /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
+            null /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            lightColor /** bgColumnColorOdd */,
             null /** bgColumnColorEven */,
-            null /** headerRowColor */
+            color /** headerRowColor */
         ),
-    GRID_WITH_BORDER: (color, lightColor) =>
+    DEFAULT_WITH_BACKGROUND_COLOR: (color, lightColor) =>
+        createTableFormat(
+            lightColor /**bgColor */,
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            null /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            lightColor /** bgColumnColorOdd */,
+            null /** bgColumnColorEven */,
+            color /** headerRowColor */
+        ),
+    GRID_WITHOUT_BORDER: (color, lightColor) =>
         createTableFormat(
             null /**bgColor */,
             color /**topBorder */,
@@ -41,27 +58,10 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            null /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
-            null /** headerRowColor */
-        ),
-    HEADER_ROW_WITH_BANDED_ROWS: (color, lightColor) =>
-        createTableFormat(
-            null /**bgColor */,
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            true /** bandedRows */,
-            false /** bandedColumns */,
-            true /** headerRow */,
-            false /** firstColumn */,
-            null /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
+            TableBorderFormat.onlyMiddleBorders /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            lightColor /** bgColumnColorOdd */,
             null /** bgColumnColorEven */,
             color /** headerRowColor */
         ),
@@ -71,67 +71,16 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             color /**topBorder */,
             color /**bottomBorder */,
             null /** verticalColors*/,
-            true /** bandedRows */,
-            false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            null /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
-            null /** headerRowColor */
-        ),
-    HEADER_ROW: (color, lightColor) =>
-        createTableFormat(
-            null /**bgColor */,
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
             false /** bandedRows */,
             false /** bandedColumns */,
-            true /** headerRow */,
+            false /** headerRow */,
             false /** firstColumn */,
             null /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
-            color /** headerRowColor */
-        ),
-    HEADER_ROW_AND_BANDED_ROWS_FIRST_COLUMN: (color, lightColor) =>
-        createTableFormat(
-            null /**bgColor */,
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            true /** bandedRows */,
-            false /** bandedColumns */,
-            true /** headerRow */,
-            true /** firstColumn */,
-            null /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
-            color /** headerRowColor */
-        ),
-    BANDED_ROWS_FIRST_COLUMN: (color, lightColor) =>
-        createTableFormat(
-            null /**bgColor */,
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            true /** bandedRows */,
-            false /** bandedColumns */,
-            false /** headerRow */,
-            true /** firstColumn */,
-            TableBorderFormat.removeHeaderRowMiddleBorder /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
+            lightColor /** bgColumnColorOdd */,
             null /** bgColumnColorEven */,
-            null /** headerRowColor */
+            color /** headerRowColor */
         ),
     BANDED_ROWS_FIRST_COLUMN_NO_BORDER: (color, lightColor) =>
         createTableFormat(
@@ -139,64 +88,25 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             color /**topBorder */,
             color /**bottomBorder */,
             color /** verticalColors*/,
-            true /** bandedRows */,
+            false /** bandedRows */,
             false /** bandedColumns */,
             false /** headerRow */,
-            true /** firstColumn */,
+            false /** firstColumn */,
             TableBorderFormat.onlyExternalHeaderRowAndFirstColumnBorders /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
-            null /** headerRowColor */
-        ),
-    HEADER_ROW_AND_BANDED_ROWS_FIRST_COLUMN_LIST: (color, lightColor) =>
-        createTableFormat(
-            null /**bgColor */,
-            color /**topBorder */,
-            color /**bottomBorder */,
-            null /** verticalColors*/,
-            true /** bandedRows */,
-            false /** bandedColumns */,
-            true /** headerRow */,
-            false /** firstColumn */,
-            null /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
+            lightColor /** bgColumnColorOdd */,
             null /** bgColumnColorEven */,
             color /** headerRowColor */
-        ),
-    BANDED_COLUMNS: (color, lightColor) =>
-        createTableFormat(
-            null /**bgColor */,
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            false /** bandedRows */,
-            true /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            null /** tableBorderFormat */,
-            null /** bgColorEven */,
-            null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            lightColor /** bgColumnColorEven */,
-            null /** headerRowColor */
         ),
 };
 
 const PREDEFINED_STYLES_KEYS = {
+    default: 'DEFAULT',
     gridWithoutBorder: 'GRID_WITHOUT_BORDER',
-    gridWithBorder: 'GRID_WITH_BORDER',
-    headerRowWithBandedRows: 'HEADER_ROW_WITH_BANDED_ROWS',
     list: 'LIST',
-    headerRow: 'HEADER_ROW',
-    headerRowAndBandedRowsFirstColumn: 'HEADER_ROW_AND_BANDED_ROWS_FIRST_COLUMN',
-    headerRowAndBandedRowsFirstColumnList: 'HEADER_ROW_AND_BANDED_ROWS_FIRST_COLUMN_LIST',
-    banded_columns: 'BANDED_COLUMNS',
-    bandedRowsFirstColumn: 'BANDED_ROWS_FIRST_COLUMN',
     bandedRowsFirstColumnNoBorder: 'BANDED_ROWS_FIRST_COLUMN_NO_BORDER',
+    defaultWithBackgroundColor: 'DEFAULT_WITH_BACKGROUND_COLOR',
 };
 
 const TABLE_COLORS: Record<string, string> = {
@@ -392,22 +302,25 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                             </tr>
                             <tr>
                                 <td>State:</td>
-                                <td>{this.renderSetHeaderRowButton(editor)}</td>
-                                <td>{this.renderSetFirstColumnButton(editor)}</td>
-                                <td>{this.renderSetBandedColumnButton(editor)}</td>
-                                <td>{this.renderSetBandedRowButton(editor)}</td>
+                                <td>
+                                    {this.renderSetHeaderRowButton(editor)}
+                                    {this.renderSetFirstColumnButton(editor)}
+                                    {this.renderSetBandedColumnButton(editor)}
+                                    {this.renderSetBandedRowButton(editor)}
+                                </td>
                             </tr>
                             <tr>
                                 <td>Predefined:</td>
                                 <td>
                                     {this.renderFormatTableButton(
-                                        'Grid with border',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.gridWithBorder](
+                                        'Default',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.default](
                                             TABLE_COLORS.blue,
                                             `${TABLE_COLORS.blue}20`
                                         ),
                                         editor
                                     )}
+
                                     {this.renderFormatTableButton(
                                         'Grid without border',
                                         PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.gridWithoutBorder](
@@ -416,36 +329,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                         ),
                                         editor
                                     )}
-                                    {this.renderFormatTableButton(
-                                        'Header Row',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.headerRow](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Header Row and Banded Rows First Column',
-                                        PREDEFINED_STYLES[
-                                            PREDEFINED_STYLES_KEYS.headerRowAndBandedRowsFirstColumn
-                                        ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Header Row and Banded First Column List',
-                                        PREDEFINED_STYLES[
-                                            PREDEFINED_STYLES_KEYS
-                                                .headerRowAndBandedRowsFirstColumnList
-                                        ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Header Row with Banded Rows',
-                                        PREDEFINED_STYLES[
-                                            PREDEFINED_STYLES_KEYS.headerRowWithBandedRows
-                                        ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
-                                        editor
-                                    )}
+
                                     {this.renderFormatTableButton(
                                         'List',
                                         PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.list](
@@ -455,24 +339,16 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                         editor
                                     )}
                                     {this.renderFormatTableButton(
-                                        'Banded Columns',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.banded_columns](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Banded Row and first column',
+                                        'Banded Row and first column and no border',
                                         PREDEFINED_STYLES[
-                                            PREDEFINED_STYLES_KEYS.bandedRowsFirstColumn
+                                            PREDEFINED_STYLES_KEYS.bandedRowsFirstColumnNoBorder
                                         ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
                                         editor
                                     )}
                                     {this.renderFormatTableButton(
-                                        'Banded Row and first column and no border',
+                                        'Default with background color',
                                         PREDEFINED_STYLES[
-                                            PREDEFINED_STYLES_KEYS.bandedRowsFirstColumnNoBorder
+                                            PREDEFINED_STYLES_KEYS.defaultWithBackgroundColor
                                         ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
                                         editor
                                     )}
@@ -692,51 +568,24 @@ function createTableFormat(
 function setHeaderRow(table: HTMLTableElement): Partial<TableFormat> {
     const format = getTableFormatInfo(table);
     format.headerRow = !format.headerRow;
-    if (format.headerRow) {
-        format.headerRowColor = format.bottomBorderColor;
-    }
-    saveTableInfo(table, format);
     return format;
 }
 
 function setFirstColumn(table: HTMLTableElement): Partial<TableFormat> {
     const format = getTableFormatInfo(table);
     format.firstColumn = !format.firstColumn;
-    saveTableInfo(table, format);
     return format;
 }
 
 function setBandedColumn(table: HTMLTableElement): Partial<TableFormat> {
     const format = getTableFormatInfo(table);
     format.bandedColumns = !format.bandedColumns;
-    if (format.bandedColumns) {
-        const lightColor = `${format.bottomBorderColor}20`;
-        format.bgColumnColorOdd !== format.bgColor
-            ? (format.bgColumnColorOdd = lightColor)
-            : (format.bgColumnColorEven = lightColor);
-    } else {
-        format.bgColumnColorOdd === format.bgColor
-            ? (format.bgColumnColorEven = format.bgColor)
-            : (format.bgColumnColorOdd = format.bgColor);
-    }
-    saveTableInfo(table, format);
     return format;
 }
 
 function setBandedRow(table: HTMLTableElement): Partial<TableFormat> {
     const format = getTableFormatInfo(table);
     format.bandedRows = !format.bandedRows;
-    if (format.bandedRows) {
-        const lightColor = `${format.bottomBorderColor}20`;
-        format.bgColorOdd !== format.bgColor
-            ? (format.bgColorOdd = lightColor)
-            : (format.bgColorEven = lightColor);
-    } else {
-        format.bgColorOdd === format.bgColor
-            ? (format.bgColorEven = format.bgColor)
-            : (format.bgColorOdd = format.bgColor);
-    }
-    saveTableInfo(table, format);
     return format;
 }
 
