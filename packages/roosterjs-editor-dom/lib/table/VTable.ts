@@ -167,14 +167,10 @@ export default class VTable {
         }
         this.cells.forEach(row => {
             row.forEach((cell, index) => {
-                if (index % 2 === 0 && !format.bandedRows) {
-                    cell.td
-                        ? (cell.td.style.backgroundColor = format.bgColumnColorEven || TRANSPARENT)
-                        : '';
-                } else if (!format.bandedRows) {
-                    cell.td
-                        ? (cell.td.style.backgroundColor = format.bgColumnColorOdd || TRANSPARENT)
-                        : '';
+                if (index % 2 === 0 && cell.td) {
+                    cell.td.style.backgroundColor = format.bgColumnColorEven || TRANSPARENT;
+                } else if (cell.td) {
+                    cell.td.style.backgroundColor = format.bgColumnColorOdd || TRANSPARENT;
                 }
             });
         });
