@@ -25,6 +25,7 @@ import {
     createElement,
     normalizeRect,
     queryElements,
+    Browser,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = TableMetadata.TABLE_CELL_SELECTOR;
@@ -523,9 +524,16 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             this.state.firstTarget
         );
 
+        // if the user selected all the text in a cell and started selecting another TD, we should convert to vSelection
+        const shouldConvertToVSelection = !(Browser.isFirefox
+            ? getTagOfNode(this.range.commonAncestorContainer) == 'TBODY'
+            : getTagOfNode(this.range.commonAncestorContainer) == 'TR' &&
+              getTagOfNode(this.range.startContainer) == 'TR' &&
+              getTagOfNode(this.range.endContainer) == 'TR' &&
+              this.range.endContainer == this.range.startContainer);
+
         if (eventTarget && this.state.lastTarget && eventTarget != this.state.firstTarget) {
-            //Check if the container of the this.range is only text, means that the user only selected text inside of a cell
-            if (this.range && this.range.commonAncestorContainer.nodeType != Node.TEXT_NODE) {
+            if (this.range && shouldConvertToVSelection) {
                 if (targetTable != firstTable && targetTable?.contains(firstTable)) {
                     //If selection started in a table that is inside of another table and moves to parent table
                     //Make the firstTarget the TD of the parent table.
@@ -569,16 +577,14 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
                 event.preventDefault();
             }
-        } else if (eventTarget == this.state.firstTarget) {
-            if (this.range && this.range.commonAncestorContainer.nodeType != Node.TEXT_NODE) {
-                this.vTable = new VTable(firstTable);
-                this.state.startRange = this.vTable.getCellCoordinates(firstTableTD);
+        } else if (eventTarget == this.state.firstTarget && this.state.vSelection) {
+            this.vTable = new VTable(firstTable);
+            this.state.startRange = this.vTable.getCellCoordinates(firstTableTD);
 
-                this.vTable.highlightSelection(this.state.startRange, this.state.startRange);
+            this.vTable.highlightSelection(this.state.startRange, this.state.startRange);
 
-                this.state.startRange = this.vTable.startRange;
-                this.state.endRange = this.state.endRange;
-            }
+            this.state.startRange = this.vTable.startRange;
+            this.state.endRange = this.state.endRange;
         }
     }
 
@@ -696,20 +702,21 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     // If selection  started outside of a table or moves outside of the first table and finishes inside of a different table,
     // selects all the row in the table where it started and where it finished
-    private onMouseUp = (event: MouseEvent) => {
+    private onMouseUp = () => {
         if (this.editor) {
-            this.selectAllRow(event);
+            this.selectAllRow();
             this.removeMouseUpEventListener();
         }
     };
 
-    private selectAllRow(event: MouseEvent) {
+    private selectAllRow() {
         this.range = this.editor.getSelectionRange();
 
         if (
-            this.range &&
-            (!(this.state.firstTarget && this.state.lastTarget) ||
-                (this.state.vSelection && this.range.collapsed))
+            (this.range &&
+                (!(this.state.firstTarget && this.state.lastTarget) ||
+                    (this.state.vSelection && this.range.collapsed))) ||
+            this.contentDiv.querySelectorAll('.' + TableMetadata.TABLE_CELL_SELECTED).length == 0
         ) {
             return;
         }
@@ -718,7 +725,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             const row = this.editor.getElementAtCursor('tr', this.state.firstTarget);
             if (safeInstanceOf(row, 'HTMLTableRowElement')) {
                 if (isNodeAfter(this.state.firstTarget, this.state.lastTarget)) {
-                    this.range.setEnd(row, row.cells.length - 1);
+                    this.range.setEnd(row, row.cells.length);
                 } else {
                     this.range.setStart(row, 0);
                 }
@@ -728,7 +735,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             const row = this.editor.getElementAtCursor('tr', this.state.lastTarget);
             if (safeInstanceOf(row, 'HTMLTableRowElement')) {
                 if (isNodeAfter(this.state.lastTarget, this.state.firstTarget)) {
-                    this.range.setEnd(row, row.cells.length - 1);
+                    this.range.setEnd(row, row.cells.length);
                 } else {
                     this.range.setStart(row, 0);
                 }
