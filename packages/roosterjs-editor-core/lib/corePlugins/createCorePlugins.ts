@@ -32,11 +32,11 @@ export default function createCorePlugins(
     return {
         typeInContainer: map.typeInContainer || new TypeInContainerPlugin(),
         edit: map.edit || new EditPlugin(),
+        pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
         _placeholder: null,
         typeAfterLink: null, //deprecated after firefox update
         undo: map.undo || new UndoPlugin(options),
         domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
-        pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
         mouseUp: map.mouseUp || new MouseUpPlugin(),
         copyPaste: map.copyPaste || new CopyPastePlugin(options),
         entity: map.entity || new EntityPlugin(),
