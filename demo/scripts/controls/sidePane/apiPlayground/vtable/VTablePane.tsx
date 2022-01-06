@@ -3,7 +3,7 @@ import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import ColorPicker from '../../../colorPicker/ColorPicker';
 import { formatTable } from 'roosterjs-editor-api';
-import { getTableFormatInfo, getTagOfNode, saveTableInfo, VTable } from 'roosterjs-editor-dom';
+import { getTableFormatInfo, getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import {
     IEditor,
     PositionType,
@@ -497,7 +497,6 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
             <button
                 className={styles.button}
                 onClick={() => {
-                    saveTableInfo(this.state.vtable.table, format);
                     formatTable(editor, format, this.state.vtable.table);
                     this.forceUpdate();
                 }}>

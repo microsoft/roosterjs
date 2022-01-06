@@ -2,9 +2,12 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
+import { changeElementTag } from '..';
 import { TableBorderFormat, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 const TRANSPARENT = 'transparent';
+const TABLE_CELL_TAG_NAME = 'TD';
+const TABLE_HEADER_TAG_NAME = 'TH';
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
@@ -143,13 +146,13 @@ export default class VTable {
         this.cells.forEach((row, index) => {
             if (index % 2 === 0) {
                 row.forEach(cell =>
-                    cell.td
+                    cell.td && format.bgColorEven
                         ? (cell.td.style.backgroundColor = format.bgColorEven || TRANSPARENT)
                         : ''
                 );
             } else {
                 row.forEach(cell =>
-                    cell.td
+                    cell.td && format.bgColorOdd
                         ? (cell.td.style.backgroundColor = format.bgColorOdd || TRANSPARENT)
                         : ''
                 );
@@ -165,11 +168,12 @@ export default class VTable {
         if (!format.bandedColumns) {
             return;
         }
+
         this.cells.forEach(row => {
             row.forEach((cell, index) => {
-                if (index % 2 === 0 && cell.td) {
+                if (index % 2 === 0 && cell.td && format.bgColumnColorEven) {
                     cell.td.style.backgroundColor = format.bgColumnColorEven || TRANSPARENT;
-                } else if (cell.td) {
+                } else if (index % 2 === 1 && cell.td && format.bgColumnColorOdd) {
                     cell.td.style.backgroundColor = format.bgColumnColorOdd || TRANSPARENT;
                 }
             });
@@ -263,9 +267,17 @@ export default class VTable {
      */
     private setFirstColumnFormat(format: Partial<TableFormat>) {
         if (!format.firstColumn) {
+            this.forEachCellOfColumn(0, (cell, row, i) => {
+                if (cell.td) {
+                    cell.td = changeElementTag(
+                        cell.td,
+                        TABLE_CELL_TAG_NAME
+                    ) as HTMLTableCellElement;
+                    cell.td.scope = '';
+                }
+            });
             return;
         }
-
         this.forEachCellOfColumn(0, (cell, row, i) => {
             if (cell.td) {
                 if (i !== 0) {
@@ -275,6 +287,8 @@ export default class VTable {
                 if (i !== this.cells.length - 1 && i !== 0) {
                     cell.td.style.borderBottomColor = TRANSPARENT;
                 }
+                cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
+                cell.td.scope = 'col';
             }
         });
     }
@@ -286,11 +300,25 @@ export default class VTable {
      */
     private setHeaderRowFormat(format: Partial<TableFormat>) {
         if (!format.headerRow) {
+            this.forEachCellOfRow(0, (cell, i) => {
+                if (cell.td) {
+                    cell.td = changeElementTag(
+                        cell.td,
+                        TABLE_CELL_TAG_NAME
+                    ) as HTMLTableCellElement;
+                    cell.td.scope = '';
+                }
+            });
             return;
         }
         this.forEachCellOfRow(0, (cell, i) => {
-            if (cell.td && format.headerRow) {
+            if (cell.td) {
                 cell.td.style.backgroundColor = format.headerRowColor;
+                cell.td.style.borderRightColor = format.headerRowColor;
+                cell.td.style.borderLeftColor = format.headerRowColor;
+                cell.td.style.borderTopColor = format.headerRowColor;
+                cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
+                cell.td.scope = 'row';
             }
         });
     }

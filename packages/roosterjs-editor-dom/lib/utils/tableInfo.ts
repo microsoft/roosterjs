@@ -47,16 +47,16 @@ function getPastedTableStyle(table: HTMLTableElement): Partial<TableFormat> {
     const headerRow =
         headerRowBg === getCellsOfRow(table, 1)[0].style.backgroundColor ? false : true;
     const firstRow = getCellsOfColumn(table, 0)[1].style.borderBottom === 'none' ? true : false;
-    const oddRowCell = getCellsOfRow(table, 1)[1];
-    const evenRowCell = getCellsOfRow(table, 2)[1];
-    const topBorderColor = oddRowCell.style.borderTopColor;
+    const oddRowCell = getCellsOfColumn(table, 1)[1];
+    const evenRowCell = getCellsOfColumn(table, 1)[2];
+    const topBorderColor = oddRowCell.style.borderBottomColor;
     const bottomBorderColor = oddRowCell.style.borderBottomColor;
     const verticalBorderColor = oddRowCell.style.borderRightColor;
     const oddCellBg = oddRowCell.style.backgroundColor;
     const evenCellBg = evenRowCell.style.backgroundColor;
     const bandedRows = oddCellBg === evenCellBg ? false : true;
-    const oddColumnCell = getCellsOfColumn(table, 1)[1];
-    const evenColumnCell = getCellsOfColumn(table, 2)[1];
+    const oddColumnCell = getCellsOfRow(table, 1)[1];
+    const evenColumnCell = getCellsOfRow(table, 1)[2];
     const oddColumnCellBg = oddColumnCell.style.backgroundColor;
     const evenColumnCellBg = evenColumnCell.style.backgroundColor;
     const bandedColumns = oddColumnCellBg === evenColumnCellBg ? false : true;
@@ -68,10 +68,10 @@ function getPastedTableStyle(table: HTMLTableElement): Partial<TableFormat> {
         firstColumn: firstRow,
         bandedRows: bandedRows,
         bandedColumns: bandedColumns,
-        bgColumnColorEven: evenColumnCellBg,
-        bgColumnColorOdd: oddColumnCellBg,
-        bgColorEven: evenCellBg,
-        bgColorOdd: oddCellBg,
+        bgColumnColorEven: null,
+        bgColumnColorOdd: `${bottomBorderColor}20`,
+        bgColorEven: null,
+        bgColorOdd: `${bottomBorderColor}20`,
         headerRowColor: headerRowBg,
     };
 }

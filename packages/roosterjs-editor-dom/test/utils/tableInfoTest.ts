@@ -67,3 +67,12 @@ describe('getTableFormatInfo', () => {
         removeTable();
     });
 });
+
+describe('getTableFormatInfo', () => {
+    it('should return the info that was from getPastedTableStyle ', () => {
+        const table = createTable(format);
+        const tableInfo = getTableFormatInfo(table);
+        expect(tableInfo).toEqual(JSON.parse(expectedTableInfo) as TableFormat);
+        removeTable();
+    });
+});
