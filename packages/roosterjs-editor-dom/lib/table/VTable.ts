@@ -1,8 +1,8 @@
+import changeElementTag from '../utils/changeElementTag';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { changeElementTag } from '..';
 import { TableBorderFormat, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 const TRANSPARENT = 'transparent';
