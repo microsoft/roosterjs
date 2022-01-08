@@ -9,7 +9,6 @@ const tslintStep = require('./buildTools/tslint');
 const checkDependencyStep = require('./buildTools/checkDependency');
 const cleanStep = require('./buildTools/clean');
 const normalizeStep = require('./buildTools/normalize');
-const generateTargetWindowStep = require('./buildTools/generateTargetWindow');
 const buildAmdStep = require('./buildTools/buildAmd');
 const buildCommonJsStep = require('./buildTools/buildCommonJs');
 const pack = require('./buildTools/pack');
@@ -22,7 +21,6 @@ const allTasks = [
     checkDependencyStep,
     cleanStep,
     normalizeStep,
-    generateTargetWindowStep,
     buildAmdStep,
     buildCommonJsStep,
     pack.commonJsDebug,

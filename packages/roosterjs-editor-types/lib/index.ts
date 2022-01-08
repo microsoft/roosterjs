@@ -106,7 +106,7 @@ export { default as Snapshots } from './interface/Snapshots';
 export { default as TableFormat } from './interface/TableFormat';
 export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
-export { default as TargetWindowBase } from './interface/TargetWindowBase.g';
+export { default as TargetWindowBase } from './interface/TargetWindowBase';
 export { default as TargetWindow } from './interface/TargetWindow';
 export {
     default as IEditor,
