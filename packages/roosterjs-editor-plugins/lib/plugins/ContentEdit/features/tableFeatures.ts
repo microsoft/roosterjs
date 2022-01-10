@@ -123,6 +123,51 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };
 
+/**
+ * When press Backspace, delete the contents inside of the selection, if it is vSelection
+ */
+const DeleteTableContents: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.DELETE],
+    shouldHandleEvent: (event, editor) => editor.getTableSelection()?.vSelection,
+    handleEvent: (event, editor) => {
+        const tableSelection = editor.getTableSelection();
+        const table = editor.getElementAtCursor('table') as HTMLTableElement;
+        if (table && tableSelection.vSelection) {
+            editor.addUndoSnapshot(() => {
+                const vTable = new VTable(table);
+                vTable.startRange = tableSelection.startRange;
+                vTable.endRange = tableSelection.endRange;
+                vTable.forEachSelectedCell(cell => {
+                    if (cell.td) {
+                        const range = new Range();
+                        range.selectNodeContents(cell.td);
+                        range.deleteContents();
+                        cell.td.appendChild(editor.getDocument().createElement('br'));
+                    }
+                });
+            });
+        }
+    },
+};
+
+/**
+ * When press Delete, delete the Table cells selected if it is vSelection
+ */
+const DeleteTableStructure: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.BACKSPACE],
+    shouldHandleEvent: (event, editor) => editor.getTableSelection()?.vSelection,
+    handleEvent: (event, editor) => {
+        const tableSelection = editor.getTableSelection();
+        const table = editor.getElementAtCursor('table') as HTMLTableElement;
+        if (table && tableSelection.vSelection) {
+            const vTable = new VTable(table);
+            vTable.startRange = tableSelection.startRange;
+            vTable.endRange = tableSelection.endRange;
+            vTable.removeCellsBySelection(false);
+            vTable.writeBack();
+        }
+    },
+};
 function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement {
     return cacheGetEventData(event, 'TABLE_CELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
@@ -142,4 +187,6 @@ export const TableFeatures: Record<
 > = {
     tabInTable: TabInTable,
     upDownInTable: UpDownInTable,
+    deleteTableContents: DeleteTableContents,
+    deleteTableStructure: DeleteTableStructure,
 };

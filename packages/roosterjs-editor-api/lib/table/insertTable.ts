@@ -1,5 +1,11 @@
-import { ChangeSource, IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
 import { Position, saveTableInfo, VTable } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    ContentPosition,
+    IEditor,
+    PositionType,
+    TableFormat,
+} from 'roosterjs-editor-types';
 
 const DEFAULT_FORMAT: Partial<TableFormat> = {
     bgColor: null,
@@ -33,10 +39,12 @@ export default function insertTable(
     rows: number,
     format?: TableFormat
 ) {
+    const isInsideTable = editor.getElementAtCursor('td,th');
+
     let document = editor.getDocument();
     let fragment = document.createDocumentFragment();
     let table = document.createElement('table') as HTMLTableElement;
-    fragment.appendChild(table);
+
     table.cellSpacing = '0';
     table.cellPadding = '1';
     for (let i = 0; i < rows; i++) {
@@ -49,6 +57,16 @@ export default function insertTable(
             td.style.width = getTableCellWidth(columns);
         }
     }
+    if (!isInsideTable) {
+        let divTableContainer = document.createElement('div');
+        divTableContainer.appendChild(table);
+        fragment.appendChild(divTableContainer);
+        const div = document.createElement('div');
+        div.append(document.createElement('br'));
+        fragment.append(div);
+    } else {
+        fragment.appendChild(table);
+    }
 
     editor.focus();
     editor.addUndoSnapshot(() => {
@@ -56,7 +74,16 @@ export default function insertTable(
         saveTableInfo(table, format || DEFAULT_FORMAT);
         vtable.applyFormat(format || DEFAULT_FORMAT);
         vtable.writeBack();
-        editor.insertNode(fragment);
+        if (!isInsideTable) {
+            editor.insertNode(fragment, {
+                insertOnNewLine: true,
+                replaceSelection: true,
+                position: ContentPosition.SelectionStart,
+                updateCursor: true,
+            });
+        } else {
+            editor.insertNode(fragment);
+        }
         editor.runAsync(editor =>
             editor.select(new Position(table, PositionType.Begin).normalize())
         );

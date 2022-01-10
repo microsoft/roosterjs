@@ -1,3 +1,4 @@
+import isNodeAfter from 'roosterjs-editor-dom/lib/utils/isNodeAfter';
 import {
     addRangeToSelection,
     createElement,
@@ -5,6 +6,8 @@ import {
     setHtmlWithSelectionPath,
     moveChildNodes,
     Browser,
+    safeInstanceOf,
+    VTable,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -75,7 +78,20 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
-        const originalRange = this.editor.getSelectionRange();
+        let originalRange = this.editor.getSelectionRange();
+        const tableSelection = this.editor.getTableSelection();
+        const { firstTarget, vSelection, lastTarget, startRange, endRange } = tableSelection || {};
+        if (originalRange.collapsed && vSelection) {
+            if (isNodeAfter(firstTarget, lastTarget)) {
+                originalRange.setStartBefore(lastTarget);
+                originalRange.setEndAfter(firstTarget);
+            } else {
+                originalRange.setStartBefore(firstTarget);
+                originalRange.setEndAfter(lastTarget);
+            }
+            this.editor.select(originalRange);
+        }
+
         if (originalRange && !originalRange.collapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
@@ -94,11 +110,22 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 range: newRange,
                 rawEvent: event as ClipboardEvent,
                 isCut,
+                vTableSelection: vSelection,
+                vTableStartRange: startRange,
+                vTableEndRange: endRange,
             });
 
             this.editor.runAsync(editor => {
                 this.cleanUpAndRestoreSelection(tempDiv, originalRange);
 
+                if (vSelection) {
+                    if (vSelection && safeInstanceOf(firstTarget, 'HTMLTableCellElement')) {
+                        const vTable = new VTable(firstTarget);
+                        vTable.highlightSelection(startRange, endRange);
+                        originalRange.setStartBefore(lastTarget);
+                        originalRange.collapse(true);
+                    }
+                }
                 if (isCut) {
                     editor.addUndoSnapshot(() => {
                         const position = this.editor.deleteSelectedContent();

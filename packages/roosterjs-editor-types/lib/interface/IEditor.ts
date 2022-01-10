@@ -6,6 +6,7 @@ import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
 import Region from './Region';
 import SelectionPath from './SelectionPath';
+import TableSelectionPluginState from '../corePluginState/TableSelectionPluginState';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
@@ -321,6 +322,12 @@ export default interface IEditor {
      */
     getSelectedRegions(type?: RegionType): Region[];
 
+    /**
+     * Get Selection made inside of a table using the Table Selection Plugin.
+     * @param core The EditorCore object
+     * @returns Metadata about the selection
+     */
+    getTableSelection(): TableSelectionPluginState;
     //#endregion
 
     //#region EVENT API

@@ -1,9 +1,22 @@
 import changeElementTag from '../utils/changeElementTag';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
+import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
-import { TableBorderFormat, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { getHighlightColor, getOriginalColor } from '../utils/getTableOriginalColor';
+import { TableMetadata } from './tableMetadata';
+import {
+    ModeIndependentColor,
+    TableBorderFormat,
+    TableFormat,
+    TableOperation,
+    VCell,
+} from 'roosterjs-editor-types';
+
+const TABLE_CELL_SELECTED_CLASS = TableMetadata.TABLE_CELL_SELECTED;
+const TEMP_BACKGROUND_COLOR = TableMetadata.TEMP_BACKGROUND_COLOR;
 
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
@@ -31,6 +44,16 @@ export default class VTable {
      * Current column index
      */
     col: number;
+
+    /**
+     * Start of the  Selection Range
+     */
+    startRange: number[];
+
+    /**
+     * End of the  Selection Range
+     */
+    endRange: number[];
 
     private trs: HTMLTableRowElement[] = [];
 
@@ -610,7 +633,324 @@ export default class VTable {
         return this.getTd(this.row, this.col);
     }
 
-    private getTd(row: number, col: number) {
+    /**
+     * Highlights a range of cells, used in the TableSelection Plugin
+     */
+    highlight() {
+        this.normalizeSelectionRange();
+
+        if (this.startRange && this.endRange && this.cells && this.table) {
+            if (!this.table.classList.contains(TableMetadata.TABLE_SELECTED)) {
+                this.table.classList.add(TableMetadata.TABLE_SELECTED);
+            }
+            let startX: number = this.startRange[0];
+            let startY: number = this.startRange[1];
+            let endX: number = this.endRange[0];
+            let endY: number = this.endRange[1];
+
+            let colIndex = this.cells[this.cells.length - 1].length - 1;
+            const selectedAllTable =
+                (startX == 0 && startY == 0 && endX == colIndex && endY == this.cells.length - 1) ||
+                (endX == 0 && endY == 0 && startX == colIndex && startY == this.cells.length - 1);
+
+            for (let indexY = 0; indexY < this.cells.length; indexY++) {
+                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                    let element = this.getMergedCell(indexX, indexY);
+                    if (element) {
+                        if (
+                            selectedAllTable ||
+                            (((indexY >= startY && indexY <= endY) ||
+                                (indexY <= startY && indexY >= endY)) &&
+                                ((indexX >= startX && indexX <= endX) ||
+                                    (indexX <= startX && indexX >= endX)))
+                        ) {
+                            this.highlightCellHandler(element);
+                        } else {
+                            this.deselectCellHandler(element);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Modified the selection range to take into account the col and row spans
+     */
+    normalizeSelectionRange() {
+        if (this.cells) {
+            const handler = (input: number[]) => {
+                let tempRange: number[];
+                tempRange = input;
+                this.forEachCellOfRow(tempRange[1], (cell, i) => {
+                    if (i > tempRange[0]) {
+                        if (cell.spanLeft && i == input[0] + 1) {
+                            input[0] += 1;
+                        }
+                    }
+                });
+                tempRange = input;
+                this.forEachCellOfColumn(tempRange[0], (cell, row, i) => {
+                    if (i > tempRange[1]) {
+                        if (cell.spanAbove && i == input[1] + 1) {
+                            input[1] += 1;
+                        }
+                    }
+                });
+            };
+
+            if (this.startRange[0] >= this.endRange[0] && this.startRange[1] >= this.endRange[1]) {
+                handler(this.startRange);
+            } else {
+                handler(this.endRange);
+            }
+        }
+    }
+
+    private getMergedCell(x: number, y: number, setAsStart?: boolean) {
+        let element = this.cells[y][x].td as HTMLElement;
+        if (this.cells[y][x].spanLeft) {
+            for (let cellX = x; cellX > 0; cellX--) {
+                const cell = this.cells[y][cellX];
+                if (cell.spanAbove) {
+                    element = null;
+                    break;
+                }
+                if (cell.td) {
+                    element = cell.td;
+                    x = cellX;
+                    break;
+                }
+            }
+        }
+        if (setAsStart != null) {
+            if (setAsStart) {
+                this.startRange = [x, this.startRange[0]];
+            } else {
+                this.endRange = [x, this.endRange[0]];
+            }
+        }
+
+        return element;
+    }
+    /**
+     * Sets the range of selection and highlights
+     * @param start represents the start of the range type of array [x, y]
+     * @param end  represents the end of the range type of array [x, y]
+     */
+    highlightSelection(start: number[], end: number[]) {
+        this.startRange = start;
+        this.endRange = end;
+
+        this.highlight();
+    }
+
+    /**
+     * Highlights all the cells in the table.
+     */
+    highlightAll() {
+        this.startRange = null;
+        this.endRange = null;
+        if (!this.table.classList.contains(TableMetadata.TABLE_SELECTED)) {
+            this.table.classList.add(TableMetadata.TABLE_SELECTED);
+        }
+        this.forEachCell((cell, x, y) => {
+            if (cell.td) {
+                this.highlightCellHandler(cell.td);
+                const currentIndex: number[] = [x, y];
+                this.startRange = this.startRange || currentIndex;
+                this.endRange = currentIndex;
+            }
+        });
+    }
+
+    /**
+     * Removes the selection of all the tables
+     * @param cacheSelection whether we need to cache the selection
+     */
+    deSelectAll(cacheSelection: boolean = false) {
+        this.forEachCell(cell => {
+            if (cell.td) {
+                this.deselectCellHandler(cell.td, cacheSelection);
+            }
+        });
+        if (this.table?.classList.contains(TableMetadata.TABLE_SELECTED)) {
+            this.table.classList.remove(TableMetadata.TABLE_SELECTED);
+        }
+    }
+
+    /**
+     * Handler to apply te selected styles on the cell
+     * @param element element to apply the style
+     */
+    private highlightCellHandler = (element: HTMLElement) => {
+        const highlighColor = getHighlightColor();
+        if (
+            !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
+            element.style.backgroundColor != highlighColor &&
+            (!element.dataset[TEMP_BACKGROUND_COLOR] ||
+                element.dataset[TEMP_BACKGROUND_COLOR] == '')
+        ) {
+            element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                element.style.backgroundColor ?? element.style.background
+            );
+        }
+        element.style.backgroundColor = highlighColor;
+        element.classList.add(TABLE_CELL_SELECTED_CLASS);
+
+        element.querySelectorAll('table').forEach(table => {
+            const vTable = new VTable(table);
+            vTable.forEachCell(cell => vTable.highlightCellHandler(cell.td));
+        });
+    };
+
+    /**
+     * Handler to remove the selected style
+     * @param cell element to apply the style
+     * @param cacheSelection whether we need to cache the selection
+     * @returns
+     */
+    private deselectCellHandler = (cell: HTMLElement, cacheSelection: boolean = false) => {
+        if (cell.dataset[TableMetadata.ON_FOCUS_CACHE] == 'onBlur') {
+            delete cell.dataset[TableMetadata.ON_FOCUS_CACHE];
+            return;
+        }
+        if (
+            cell &&
+            safeInstanceOf(cell, 'HTMLTableCellElement') &&
+            cell.classList.contains(TABLE_CELL_SELECTED_CLASS)
+        ) {
+            cell.classList.remove(TABLE_CELL_SELECTED_CLASS);
+            cell.style.backgroundColor = getOriginalColor(cell.dataset[TEMP_BACKGROUND_COLOR]);
+            delete cell.dataset[TEMP_BACKGROUND_COLOR];
+            cell.querySelectorAll('table').forEach(table => {
+                const vTable = new VTable(table);
+                vTable.forEachCell(cell => vTable.deselectCellHandler(cell.td, cacheSelection));
+            });
+
+            if (cacheSelection) {
+                cell.classList.add(TABLE_CELL_SELECTED_CLASS);
+                cell.dataset[TableMetadata.ON_FOCUS_CACHE] = 'onBlur';
+
+                cell.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
+                    cell.style.backgroundColor ?? cell.style.background
+                );
+            }
+        }
+    };
+
+    /**
+     * Check if the cell is inside of the selection range
+     * @returns true if it is inside, otherwise false
+     */
+    private isInsideOfSelection(x: number, y: number) {
+        if (this.startRange && this.endRange) {
+            let startX: number = this.startRange[0];
+            let startY: number = this.startRange[1];
+            let endX: number = this.endRange[0];
+            let endY: number = this.endRange[1];
+
+            return (
+                ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
+                ((x >= startX && x <= endX) || (x <= startX && x >= endX))
+            );
+        }
+        return false;
+    }
+
+    /**
+     * Executes an action to all the cells within the selection range.
+     * @param callback action to apply on each selected cell
+     * @returns the amount of cells modified
+     */
+    forEachSelectedCell(callback: (cell: VCell) => void): number {
+        let selectedCells = 0;
+
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                let element = this.cells[indexY][indexX].td as HTMLElement;
+                if (
+                    element?.classList.contains(TABLE_CELL_SELECTED_CLASS) ||
+                    this.isInsideOfSelection(indexX, indexY)
+                ) {
+                    selectedCells += 1;
+                    callback(this.cells[indexY][indexX]);
+                }
+            }
+        }
+
+        return selectedCells;
+    }
+
+    /**
+     * Execute an action on all the cells
+     * @param callback action to apply on all the cells.
+     */
+    forEachCell(callback: (cell: VCell, x?: number, y?: number) => void) {
+        for (let indexY = 0; indexY < this.cells.length; indexY++) {
+            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                callback(this.cells[indexY][indexX], indexX, indexY);
+            }
+        }
+    }
+
+    /**
+     * Remove the cells outside of the selection.
+     * @param outsideOfSelection whether to remove the cells outside or inside of the selection
+     */
+    removeCellsBySelection(outsideOfSelection: boolean = true) {
+        const tempCells: VCell[][] = [];
+        let startX: number = this.startRange[0];
+        let startY: number = this.startRange[1];
+        let endX: number = this.endRange[0];
+        let endY: number = this.endRange[1];
+
+        let colIndex = this.cells[this.cells.length - 1].length - 1;
+        const selectedAllTable =
+            (startX == 0 && startY == 0 && endX == colIndex && endY == this.cells.length - 1) ||
+            (endX == 0 && endY == 0 && startX == colIndex && startY == this.cells.length - 1);
+
+        if (selectedAllTable) {
+            if (!outsideOfSelection) {
+                this.cells = [];
+            }
+            return;
+        }
+        const validation = (x: number, y: number) =>
+            outsideOfSelection ? this.isInsideOfSelection(x, y) : !this.isInsideOfSelection(x, y);
+
+        this.forEachCell((cell: VCell, x?: number, y?: number) => {
+            if (validation(x, y)) {
+                while (tempCells.length - 1 < y) {
+                    tempCells.push([]);
+                }
+                tempCells[y].push(cell);
+            }
+        });
+        this.cells = tempCells.filter(cell => cell.length > 0);
+    }
+
+    /**
+     * Gets the coordinates of a cell
+     * @param cellInput The cell the function is going to retrieve the coordinate
+     * @returns an array[2] => [x,y]
+     */
+    getCellCoordinates(cellInput: Node) {
+        let result: number[] = [];
+        if (this.cells) {
+            for (let indexY = 0; indexY < this.cells.length; indexY++) {
+                for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
+                    if (cellInput == this.cells[indexY][indexX].td) {
+                        result = [indexX, indexY];
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
             col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
@@ -642,7 +982,7 @@ export default class VTable {
     }
 
     private forEachCellOfRow(row: number, callback: (cell: VCell, i: number) => any) {
-        for (let i = 0; i < this.cells[row].length; i++) {
+        for (let i = 0; i < this.cells[row]?.length; i++) {
             callback(this.getCell(row, i), i);
         }
     }
@@ -722,6 +1062,39 @@ export default class VTable {
         this.normalizeEmptyTableCells();
         this.normalizeTableCellSize();
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
+    }
+
+    setBackgroundColor(backgroundColor: string | ModeIndependentColor, isInDarkMode: boolean) {
+        if (!this.table) {
+            return;
+        }
+
+        const handler = (td: HTMLTableCellElement) => {
+            if (td) {
+                setColor(td, backgroundColor, true, isInDarkMode);
+
+                const colorString =
+                    typeof backgroundColor === 'string' ? backgroundColor.trim() : '';
+                const modeIndependentColor =
+                    typeof backgroundColor === 'string' ? null : backgroundColor;
+
+                td.dataset[TEMP_BACKGROUND_COLOR] =
+                    (isInDarkMode
+                        ? modeIndependentColor?.darkModeColor
+                        : modeIndependentColor?.lightModeColor) || colorString;
+
+                queryElements(td, 'td,th', handler);
+            }
+        };
+
+        const modifiedCells = this.forEachSelectedCell(cell => handler(cell.td));
+
+        if (modifiedCells == 0) {
+            let currentRow = this.cells[this.row];
+            let currentCell = currentRow[this.col];
+
+            handler(currentCell.td);
+        }
     }
 }
 

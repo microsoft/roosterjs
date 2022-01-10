@@ -6,6 +6,7 @@ import EntityPluginState from '../corePluginState/EntityPluginState';
 import LifecyclePluginState from '../corePluginState/LifecyclePluginState';
 import PendingFormatStatePluginState from '../corePluginState/PendingFormatStatePluginState';
 import PluginWithState from './PluginWithState';
+import TableSelectionPluginState from '../corePluginState/TableSelectionPluginState';
 import UndoPluginState from '../corePluginState/UndoPluginState';
 
 /**
@@ -64,6 +65,11 @@ export default interface CorePlugins {
      * Lifecycle plugin handles editor initialization and disposing
      */
     readonly lifecycle: PluginWithState<LifecyclePluginState>;
+
+    /**
+     * tableSelection handles the selection of cells
+     */
+    readonly tableSelection: PluginWithState<TableSelectionPluginState>;
 }
 
 /**

@@ -61,7 +61,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
     }
 
     if (option.position == ContentPosition.Outside) {
-        contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
+        contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
         return true;
     }
 

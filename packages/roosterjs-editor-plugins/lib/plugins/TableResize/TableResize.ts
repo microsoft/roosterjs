@@ -144,6 +144,10 @@ export default class TableResize implements EditorPlugin {
             return;
         }
 
+        if (this.editor.getTableSelection()?.startedSelection) {
+            return;
+        }
+
         if (!this.tableRectMap) {
             this.cacheRects();
         }
