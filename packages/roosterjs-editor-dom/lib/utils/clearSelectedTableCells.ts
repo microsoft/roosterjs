@@ -9,14 +9,14 @@ const TABLE_CELL_SELECTED_CLASS = TableMetadata.TABLE_CELL_SELECTED;
  * Remove the selected style of the cells
  * @param editor Editor Instance
  */
-export default function clearSelectedTableCells(container: Node, cacheSelection: boolean = false) {
+export default function clearSelectedTableCells(container: Node) {
     const tables = getSelectedTables(container);
 
     if (tables) {
         tables.forEach(element => {
             if (safeInstanceOf(element, 'HTMLTableElement')) {
                 const vTable = new VTable(element);
-                vTable.deSelectAll(cacheSelection);
+                vTable.deSelectAll();
             }
         });
     }
