@@ -7,6 +7,7 @@ import {
     VTable,
     safeInstanceOf,
     isNodeAfter,
+    Browser,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -187,7 +188,12 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private cleanUpAndRestoreSelection(tempDiv: HTMLDivElement, range: Range) {
+        if (Browser.isAndroid) {
+            range.collapse();
+        }
+
         this.editor.select(range);
+
         tempDiv.style.backgroundColor = '';
         tempDiv.style.color = '';
         tempDiv.style.display = 'none';
