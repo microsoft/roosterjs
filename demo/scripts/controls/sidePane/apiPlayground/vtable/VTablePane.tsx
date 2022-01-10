@@ -25,10 +25,10 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** headerRow */,
             false /** firstColumn */,
             null /** tableBorderFormat */,
-            null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            lightColor /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
+            lightColor /** bgColorEven */,
+            null /** bgColorOdd */,
+            null /** bgColumnColorOdd */,
+            lightColor /** bgColumnColorEven */,
             color /** headerRowColor */
         ),
     DEFAULT_WITH_BACKGROUND_COLOR: (color, lightColor) =>
@@ -43,9 +43,9 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             null /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            lightColor /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
+            'transparent' /** bgColorOdd */,
+            null /** bgColumnColorOdd */,
+            'transparent' /** bgColumnColorEven */,
             color /** headerRowColor */
         ),
     GRID_WITHOUT_BORDER: (color, lightColor) =>

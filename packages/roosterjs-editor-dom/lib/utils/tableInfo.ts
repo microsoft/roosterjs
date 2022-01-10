@@ -45,21 +45,30 @@ function safeParseJSON(json: string): any {
 function getPastedTableStyle(table: HTMLTableElement): Partial<TableFormat> {
     const headerRowBg = getCellsOfRow(table, 0)[0].style.backgroundColor;
     const headerRow =
-        headerRowBg === getCellsOfRow(table, 1)[0].style.backgroundColor ? false : true;
-    const firstRow = getCellsOfColumn(table, 0)[1].style.borderBottom === 'none' ? true : false;
+        (getCellsOfRow(table, 1)[0] &&
+            headerRowBg === getCellsOfRow(table, 1)[0].style.backgroundColor) ||
+        (getCellsOfRow(table, 2)[1] &&
+            headerRowBg === getCellsOfRow(table, 2)[1].style.backgroundColor)
+            ? false
+            : true;
+    const firstRow =
+        getCellsOfColumn(table, 0)[1] && getCellsOfColumn(table, 0)[1].style.borderBottom === 'none'
+            ? true
+            : false;
     const oddRowCell = getCellsOfColumn(table, 1)[1];
     const evenRowCell = getCellsOfColumn(table, 1)[2];
-    const topBorderColor = oddRowCell.style.borderBottomColor;
-    const bottomBorderColor = oddRowCell.style.borderBottomColor;
-    const verticalBorderColor = oddRowCell.style.borderRightColor;
-    const oddCellBg = oddRowCell.style.backgroundColor;
-    const evenCellBg = evenRowCell.style.backgroundColor;
+    const topBorderColor = oddRowCell && oddRowCell.style.borderBottomColor;
+    const bottomBorderColor = oddRowCell && oddRowCell.style.borderBottomColor;
+    const verticalBorderColor = oddRowCell && oddRowCell.style.borderRightColor;
+    const oddCellBg = oddRowCell && oddRowCell.style.backgroundColor;
+    const evenCellBg = evenRowCell && evenRowCell.style.backgroundColor;
     const bandedRows = oddCellBg === evenCellBg ? false : true;
     const oddColumnCell = getCellsOfRow(table, 1)[1];
     const evenColumnCell = getCellsOfRow(table, 1)[2];
-    const oddColumnCellBg = oddColumnCell.style.backgroundColor;
-    const evenColumnCellBg = evenColumnCell.style.backgroundColor;
+    const oddColumnCellBg = oddColumnCell && oddColumnCell.style.backgroundColor;
+    const evenColumnCellBg = evenColumnCell && evenColumnCell.style.backgroundColor;
     const bandedColumns = oddColumnCellBg === evenColumnCellBg ? false : true;
+
     return {
         topBorderColor: topBorderColor,
         bottomBorderColor: bottomBorderColor,
@@ -68,11 +77,11 @@ function getPastedTableStyle(table: HTMLTableElement): Partial<TableFormat> {
         firstColumn: firstRow,
         bandedRows: bandedRows,
         bandedColumns: bandedColumns,
-        bgColumnColorEven: null,
-        bgColumnColorOdd: `${bottomBorderColor}20`,
-        bgColorEven: null,
-        bgColorOdd: `${bottomBorderColor}20`,
-        headerRowColor: headerRowBg,
+        bgColumnColorEven: bandedColumns ? evenColumnCellBg : null,
+        bgColumnColorOdd: bandedColumns ? oddColumnCellBg : setLightColor(bottomBorderColor),
+        bgColorEven: bandedRows ? evenCellBg : null,
+        bgColorOdd: bandedRows ? oddCellBg : setLightColor(bottomBorderColor),
+        headerRowColor: headerRow ? headerRowBg : bottomBorderColor,
     };
 }
 
@@ -91,4 +100,16 @@ function getCellsOfColumn(table: HTMLTableElement, columnNumber: number): HTMLTa
         column = [...column, table.rows[i].cells[columnNumber]];
     }
     return column;
+}
+
+function setLightColor(rgb: string) {
+    if (!rgb) {
+        return;
+    }
+    const isRGB = rgb.split('(')[0] === 'rgb' ? true : false;
+    if (isRGB) {
+        const numberColors = rgb.split('rgb(')[1].split(')')[0];
+        rgb = `rgba(${numberColors}, 0.125)`;
+    }
+    return rgb;
 }

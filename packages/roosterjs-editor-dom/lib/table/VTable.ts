@@ -147,13 +147,13 @@ export default class VTable {
             if (index % 2 === 0) {
                 row.forEach(cell =>
                     cell.td && format.bgColorEven
-                        ? (cell.td.style.backgroundColor = format.bgColorEven || TRANSPARENT)
+                        ? (cell.td.style.backgroundColor = format.bgColorEven)
                         : ''
                 );
             } else {
                 row.forEach(cell =>
                     cell.td && format.bgColorOdd
-                        ? (cell.td.style.backgroundColor = format.bgColorOdd || TRANSPARENT)
+                        ? (cell.td.style.backgroundColor = format.bgColorOdd)
                         : ''
                 );
             }
@@ -172,9 +172,9 @@ export default class VTable {
         this.cells.forEach(row => {
             row.forEach((cell, index) => {
                 if (index % 2 === 0 && cell.td && format.bgColumnColorEven) {
-                    cell.td.style.backgroundColor = format.bgColumnColorEven || TRANSPARENT;
+                    cell.td.style.backgroundColor = format.bgColumnColorEven;
                 } else if (index % 2 === 1 && cell.td && format.bgColumnColorOdd) {
-                    cell.td.style.backgroundColor = format.bgColumnColorOdd || TRANSPARENT;
+                    cell.td.style.backgroundColor = format.bgColumnColorOdd;
                 }
             });
         });
