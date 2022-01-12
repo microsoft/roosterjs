@@ -41,7 +41,7 @@ export function getEditInfoFromImage(image: HTMLImageElement): ImageEditInfo {
 
 function getInitialEditInfo(image: HTMLImageElement): ImageEditInfo {
     return {
-        src: image.getAttribute('src'),
+        src: image.getAttribute('src') || '',
         widthPx: image.clientWidth,
         heightPx: image.clientHeight,
         naturalWidth: image.naturalWidth,
