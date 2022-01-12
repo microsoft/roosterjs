@@ -46,9 +46,9 @@ describe('Editor', () => {
         expect(core.plugins.map(p => p.getName())).toEqual([
             'TypeInContainer',
             'Edit',
+            'PendingFormatState',
             'Undo',
             'DOMEvent',
-            'PendingFormatState',
             'MouseUp',
             'CopyPaste',
             'Entity',
@@ -150,10 +150,10 @@ describe('Editor', () => {
         expect(core.plugins.map(p => p.getName())).toEqual([
             'TypeInContainer',
             'Edit',
+            'PendingFormatState',
             'test plugin',
             'Undo',
             'DOMEvent',
-            'PendingFormatState',
             'test mouse up',
             'CopyPaste',
             'Entity',
