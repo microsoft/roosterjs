@@ -6,7 +6,7 @@ import {
     PluginKeyboardEvent,
     PositionType,
     Keys,
-} from 'roosterjs-editor-types/lib';
+} from 'roosterjs-editor-types';
 describe('CursorFeatures | ', () => {
     let editor: IEditor;
     const TEST_ID = 'CursorFeatureTest';

@@ -1,6 +1,6 @@
 import createEditorCore from './createMockEditorCore';
 import { getPendableFormatState } from '../../lib/coreApi/getPendableFormatState';
-import { PendableFormatState } from 'roosterjs-editor-types/lib';
+import { PendableFormatState } from 'roosterjs-editor-types';
 
 describe('getPendableFormatState', () => {
     let div: HTMLDivElement;

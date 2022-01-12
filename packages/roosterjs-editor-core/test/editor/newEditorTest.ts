@@ -1,7 +1,7 @@
 import Editor from '../../lib/editor/Editor';
 import { addUndoSnapshot } from '../../lib/coreApi/addUndoSnapshot';
 import { attachDomEvent } from '../../lib/coreApi/attachDomEvent';
-import { Browser } from 'roosterjs-editor-dom/lib';
+import { Browser } from 'roosterjs-editor-dom';
 import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
 import { EditorCore } from 'roosterjs-editor-types';
 import { ensureTypeInContainer } from '../../lib/coreApi/ensureTypeInContainer';

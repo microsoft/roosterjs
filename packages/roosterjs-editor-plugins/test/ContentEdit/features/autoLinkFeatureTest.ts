@@ -5,7 +5,7 @@ import {
     LinkInlineElement,
     Position,
     PositionContentSearcher,
-} from 'roosterjs-editor-dom/lib';
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ClipboardData,
@@ -15,7 +15,7 @@ import {
     PluginKeyboardEvent,
     InlineElement,
     PositionType,
-} from 'roosterjs-editor-types/lib';
+} from 'roosterjs-editor-types';
 describe('AutoLinkFeature ShouldHandle Tests:  ', () => {
     let editor: IEditor;
     const TEST_ID = 'AutoLinkFeatureShouldHandleTests';
@@ -229,6 +229,10 @@ describe('AutoLinkFeature HandleEvent Tests:  ', () => {
 
     beforeEach(done => {
         editor = TestHelper.initEditor(TEST_ID);
+        editor.runAsync = (callback: (editor: IEditor) => void) => {
+            callback(editor);
+            return () => {};
+        };
         done();
     });
 
@@ -253,68 +257,58 @@ describe('AutoLinkFeature HandleEvent Tests:  ', () => {
         autoLinkFeature.handleEvent(keyboardEvent, editor);
     }
 
-    function runWrap(content: string, expected: string, doneCallback: () => void) {
+    function runWrap(content: string, expected: string) {
         runAutoLinkhandleEventTest(content);
-        setTimeout(() => {
-            editorContent = editor.getContent();
-            expect(editorContent).toBe(expected);
-            doneCallback();
-        }, 2000);
+        editorContent = editor.getContent();
+        expect(editorContent).toBe(expected);
     }
 
-    it('AutoLink | Handle Event 1', done => {
+    it('AutoLink | Handle Event 1', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">www.site.com</div>`,
-            `<div id="${TEST_ELEMENT_ID}"><a href="http://www.site.com">www.site.com</a></div>`,
-            () => done()
+            `<div id="${TEST_ELEMENT_ID}"><a href="http://www.site.com">www.site.com</a></div>`
         );
     });
 
-    it('AutoLink | Handle Event 2', done => {
+    it('AutoLink | Handle Event 2', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">www.site</div>`,
-            '<div id="test"><a href="http://www.site">www.site</a></div>',
-            () => done()
+            '<div id="test"><a href="http://www.site">www.site</a></div>'
         );
     });
 
-    it('AutoLink | Handle Event 3', done => {
+    it('AutoLink | Handle Event 3', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">https://www.site.com</div>`,
-            '<div id="test"><a href="https://www.site.com">https://www.site.com</a></div>',
-            () => done()
+            '<div id="test"><a href="https://www.site.com">https://www.site.com</a></div>'
         );
     });
 
-    it('AutoLink | Handle Event 4', done => {
+    it('AutoLink | Handle Event 4', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">www.site</div>`,
-            '<div id="test"><a href="http://www.site">www.site</a></div>',
-            () => done()
+            '<div id="test"><a href="http://www.site">www.site</a></div>'
         );
     });
 
-    it('AutoLink | Handle Event 5', done => {
+    it('AutoLink | Handle Event 5', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">https://site.com</div>`,
-            '<div id="test"><a href="https://site.com">https://site.com</a></div>',
-            () => done()
+            '<div id="test"><a href="https://site.com">https://site.com</a></div>'
         );
     });
 
-    it('AutoLink | Handle Event 6', done => {
+    it('AutoLink | Handle Event 6', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">https://www.site</div>`,
-            '<div id="test"><a href="https://www.site">https://www.site</a></div>',
-            () => done()
+            '<div id="test"><a href="https://www.site">https://www.site</a></div>'
         );
     });
 
-    it('AutoLink | Handle Event 7', done => {
+    it('AutoLink | Handle Event 7', () => {
         runWrap(
             `<div id="${TEST_ELEMENT_ID}">telnet://192.168.0.0</div>`,
-            '<div id="test"><a href="telnet://192.168.0.0">telnet://192.168.0.0</a></div>',
-            () => done()
+            '<div id="test"><a href="telnet://192.168.0.0">telnet://192.168.0.0</a></div>'
         );
     });
 });
