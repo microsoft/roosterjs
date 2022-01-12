@@ -82,7 +82,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (this.editor.isInIME() || event.eventType != PluginEventType.Input) {
+        if (event.eventType != PluginEventType.Input || this.editor.isInIME()) {
             return;
         }
 
