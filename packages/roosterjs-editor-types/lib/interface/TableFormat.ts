@@ -7,22 +7,22 @@ export default interface TableFormat {
     /**
      * Background color
      */
-    bgColor: string;
+    bgColor: string | null;
 
     /**
      * Top border color for each row
      */
-    topBorderColor: string;
+    topBorderColor: string | null;
 
     /**
      * Bottom border color for each row
      */
-    bottomBorderColor: string;
+    bottomBorderColor: string | null;
 
     /**
      * Vertical border color for each row
      */
-    verticalBorderColor: string;
+    verticalBorderColor: string | null;
 
     /**
      * Set header row
@@ -32,7 +32,7 @@ export default interface TableFormat {
     /**
      * Header row background color for even cells
      */
-    headerRowColor: string;
+    headerRowColor: string | null;
     /**
      * Set first column
      */
@@ -45,12 +45,12 @@ export default interface TableFormat {
     /**
      * Background color for even columns
      */
-    bgColumnColorEven: string;
+    bgColumnColorEven: string | null;
 
     /**
      * Background color for odd columns
      */
-    bgColumnColorOdd: string;
+    bgColumnColorOdd: string | null;
     /**
      * Set banded rows
      */
@@ -59,15 +59,15 @@ export default interface TableFormat {
     /**
      * Background color for even rows
      */
-    bgColorEven: string;
+    bgColorEven: string | null;
 
     /**
      * Background color for odd rows
      */
-    bgColorOdd: string;
+    bgColorOdd: string | null;
 
     /**
      * Table Borders Type
      */
-    tableBorderFormat: TableBorderFormat;
+    tableBorderFormat: TableBorderFormat | null;
 }
