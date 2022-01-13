@@ -3,7 +3,6 @@ import {
     BuildInEditFeature,
     IEditor,
     Keys,
-    NodeType,
     PluginEvent,
     PositionType,
     TableFeatureSettings,
@@ -13,9 +12,9 @@ import {
 import {
     Browser,
     cacheGetEventData,
+    clearSelectedTableCells,
     contains,
     getTagOfNode,
-    isVoidHtmlElement,
     Position,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -64,19 +63,17 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
  */
 const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.UP, Keys.DOWN],
-    shouldHandleEvent: cacheGetTableCell,
+    shouldHandleEvent: (event, editor) =>
+        cacheGetTableCell(event, editor) && !event.rawEvent.shiftKey,
     handleEvent: (event, editor) => {
         const td = cacheGetTableCell(event, editor);
         const vtable = new VTable(td);
         const isUp = event.rawEvent.which == Keys.UP;
         const step = isUp ? -1 : 1;
-        const hasShiftKey = event.rawEvent.shiftKey;
         const selection = editor.getDocument().defaultView?.getSelection();
         let targetTd: HTMLTableCellElement = null;
 
         if (selection) {
-            let { anchorNode, anchorOffset } = selection;
-
             for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
                 let cell = vtable.getCell(row, vtable.col);
                 if (cell.td && cell.td != td) {
@@ -97,25 +94,9 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
                               vtable.table,
                               isUp ? PositionType.Before : PositionType.After
                           );
-                    if (hasShiftKey) {
-                        newPos =
-                            newPos.node.nodeType == NodeType.Element &&
-                            isVoidHtmlElement(newPos.node)
-                                ? new Position(
-                                      newPos.node,
-                                      newPos.isAtEnd ? PositionType.After : PositionType.Before
-                                  )
-                                : newPos;
-                        const selection = editor.getDocument().defaultView?.getSelection();
-                        selection?.setBaseAndExtent(
-                            anchorNode,
-                            anchorOffset,
-                            newPos.node,
-                            newPos.offset
-                        );
-                    } else {
-                        editor.select(newPos);
-                    }
+
+                    clearSelectedTableCells(vtable.table.parentNode);
+                    editor.select(newPos);
                 }
             });
         }

@@ -1,6 +1,6 @@
 import * as TestHelper from '../TestHelper';
 import { Browser } from '../../../roosterjs-editor-dom/lib/utils/Browser';
-import { IEditor } from 'roosterjs-editor-types';
+import { IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 const TABLE_SELECTOR_LENGTH = 12;
 describe('TableSelectionPlugin', () => {
@@ -20,7 +20,7 @@ describe('TableSelectionPlugin', () => {
         div.parentNode.removeChild(div);
     });
 
-    function runTest(content: string, result: string, rangeCollapsed: boolean) {
+    function runTest(content: string, result: string) {
         editor.setContent(content);
         const target = document.getElementById(targetId);
         const target2 = document.getElementById(targetId2);
@@ -30,7 +30,6 @@ describe('TableSelectionPlugin', () => {
         simulateMouseEvent('mousemove', target2);
         simulateMouseEvent('mouseup', target2);
         expect(editor.getScrollContainer().innerHTML).toBe(result);
-        expect(editor.getSelectionRange().collapsed).toBe(rangeCollapsed);
     }
 
     it('Selection inside of table 1', () => {
@@ -39,8 +38,7 @@ describe('TableSelectionPlugin', () => {
             : '<table class="_tableSelected"><tbody><tr><td id="tableSelectionTestId" data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td id="tableSelectionTestId2" data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table>';
         runTest(
             `<table><tr ><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table>`,
-            expected,
-            true
+            expected
         );
     });
 
@@ -51,8 +49,7 @@ describe('TableSelectionPlugin', () => {
 
         runTest(
             `<div><br></div><div><table cellspacing="0" cellpadding="1" style="border-collapse: collapse;"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td id=${targetId} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">fsad fasd</td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td id=${targetId2} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table></div><div><br></div>`,
-            expected,
-            true
+            expected
         );
     });
 
@@ -62,8 +59,7 @@ describe('TableSelectionPlugin', () => {
             : '<div><br></div><div><table cellspacing="0" cellpadding="1" style="border-collapse: collapse;" class="_tableSelected"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td id="tableSelectionTestId" style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected">fsad fasd</td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected"><br></td><td id="tableSelectionTestId2" style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="" class="_tableCellSelected"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table></div><div><br></div>';
         runTest(
             `<div><br></div><div><table cellspacing="0" cellpadding="1" style="border-collapse: collapse;"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td id=${targetId} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">fsad fasd</td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td id=${targetId2} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table></div><div><br></div>`,
-            expected,
-            true
+            expected
         );
     });
 
@@ -73,8 +69,7 @@ describe('TableSelectionPlugin', () => {
             : '<table class="_tableSelected"><tbody><tr><td style="background-color: rgba(198, 198, 198, 0.7);" id="tableSelectionTestId" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected">a</td><td style="background-color: rgba(198, 198, 198, 0.7);" id="tableSelectionTestId2" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected">w</td></tr></tbody></table>';
         runTest(
             `<table><tr ><td style="background-color: rgba(35, 35, 35);"  id=${targetId}>a</td><td style="background-color: rgba(35, 35, 35);" id=${targetId2}>w</td></tr></table>`,
-            expected,
-            true
+            expected
         );
     });
 
@@ -84,8 +79,7 @@ describe('TableSelectionPlugin', () => {
             : '<div><br></div><div><table cellspacing="0" cellpadding="1" style="border-collapse: collapse;" class="_tableSelected"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="background-color: rgba(35, 35, 35);"><br></td><td style="background-color: rgba(198, 198, 198, 0.7);" id="tableSelectionTestId" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected">fsad fasd</td><td style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected"><br></td><td style="background-color: rgba(35, 35, 35);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="background-color: rgba(35, 35, 35);"><br></td><td style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected"><br></td><td style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected"><br></td><td style="background-color: rgba(35, 35, 35);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="background-color: rgba(35, 35, 35);"><br></td><td style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected"><br></td><td style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected"><br></td><td style="background-color: rgba(35, 35, 35);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="background-color: rgba(35, 35, 35);"><br></td><td style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected"><br></td><td style="background-color: rgba(198, 198, 198, 0.7);" id="tableSelectionTestId2" data-original-background-color="rgb(35,  35,  35)" class="_tableCellSelected"><br></td><td style="background-color: rgba(35, 35, 35);"><br></td></tr></tbody></table></div><div><br></div>';
         runTest(
             `<div><br></div><div><table cellspacing="0" cellpadding="1" style="border-collapse: collapse;"><tbody><tr style="background-color: rgb(255, 255, 255);"><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   id=${targetId} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">fsad fasd</td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   id=${targetId2} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td  style="background-color: rgba(35, 35, 35);"   style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table></div><div><br></div>`,
-            expected,
-            true
+            expected
         );
     });
 
@@ -95,8 +89,7 @@ describe('TableSelectionPlugin', () => {
             : '<div id="tableSelectionTestId">asd</div><div><table class="_tableSelected"><tbody><tr><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td id="tableSelectionTestId2" data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table></div>';
         runTest(
             `<div  id=${targetId}>asd</div><div><table><tr ><td>a</td><td id=${targetId2}>w</td></tr></table></div>`,
-            expected,
-            false
+            expected
         );
     });
 
@@ -106,8 +99,7 @@ describe('TableSelectionPlugin', () => {
             : '<div id="tableSelectionTestId">asd</div><div><table class="_tableSelected"><tbody><tr><td id="tableSelectionTestId2" data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table></div>';
         runTest(
             `<div  id=${targetId}>asd</div><div><table><tr ><td id=${targetId2}>a</td><td >w</td></tr></table></div>`,
-            expected,
-            false
+            expected
         );
     });
 
@@ -117,8 +109,7 @@ describe('TableSelectionPlugin', () => {
             : '<div id="tableSelectionTestId">asd</div><div><table class="_tableSelected"><tbody><tr><td id="tableSelectionTestId2" data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr><tr><td>a</td><td>w</td></tr></tbody></table></div>';
         runTest(
             `<div id=${targetId}>asd</div><div><table><tr ><td id=${targetId2}>a</td><td >w</td></tr><tr ><td >a</td><td >w</td></tr></table></div>`,
-            expected,
-            false
+            expected
         );
     });
 
