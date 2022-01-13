@@ -5,7 +5,7 @@ import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
-import { getHighlightColor, getOriginalColor } from '../utils/getTableOriginalColor';
+import { getHighlightColor } from '../utils/getTableOriginalColor';
 import { TableMetadata } from './tableMetadata';
 import {
     ModeIndependentColor,
@@ -1144,4 +1144,13 @@ function cloneNode<T extends Node>(node: T): T {
         }
     }
     return newNode;
+}
+
+/**
+ * Get the original color before the selection was made
+ * @param colorString Color
+ * @returns original color before the selection was made
+ */
+function getOriginalColor(colorString: string) {
+    return colorString ?? '';
 }
