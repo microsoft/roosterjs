@@ -26,4 +26,11 @@ export const enum GetContentMode {
      * Get plain text content only, all format will be ignored
      */
     PlainText,
+
+    /**
+     * A fast way to get plain text content, the line-end positions may not be exactly same with HTML content,
+     * but the text content should be the same. This is used for quickly retrieve text content and check
+     * text only
+     */
+    PlainTextFast,
 }
