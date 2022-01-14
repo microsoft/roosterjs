@@ -6,7 +6,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
 import { getHighlightColor } from '../utils/getTableOriginalColor';
-import { getTableFormatInfo } from '..';
+import { getTableFormatInfo } from '../utils/tableInfo';
 import { TableMetadata } from './tableMetadata';
 import {
     ModeIndependentColor,
