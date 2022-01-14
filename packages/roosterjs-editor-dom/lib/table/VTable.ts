@@ -104,7 +104,7 @@ export default class VTable {
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
      */
-    writeBack() {
+    writeBack(format?: Partial<TableFormat>) {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
@@ -117,6 +117,9 @@ export default class VTable {
                     }
                 });
             });
+            if (format) {
+                this.applyFormat(format);
+            }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
         }
