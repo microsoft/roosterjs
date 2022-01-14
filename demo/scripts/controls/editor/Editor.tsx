@@ -25,13 +25,14 @@ export interface EditorProps {
     plugins: EditorPlugin[];
     initState: BuildInPluginState;
     snapshotService: UndoSnapshotsService;
+    scale: number;
     className?: string;
 }
 
 export default function Editor(props: EditorProps) {
     const contentDiv = React.useRef<HTMLDivElement>();
     const editor = React.useRef<IEditor>();
-
+    const { scale, initState } = props;
     const {
         pluginList,
         contentEditFeatures,
@@ -40,7 +41,7 @@ export default function Editor(props: EditorProps) {
         forcePreserveRatio,
         defaultFormat,
         experimentalFeatures,
-    } = props.initState;
+    } = initState;
 
     const getLinkCallback = React.useCallback(
         (): ((url: string) => string) =>
@@ -61,6 +62,10 @@ export default function Editor(props: EditorProps) {
             imageEdit: pluginList.imageEdit
                 ? new ImageEditPlugin({
                       preserveRatio: forcePreserveRatio,
+                      sizeTransformer: (x, y) => ({
+                          deltaX: x / scale,
+                          deltaY: y / scale,
+                      }),
                   })
                 : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
@@ -109,9 +114,18 @@ export default function Editor(props: EditorProps) {
         props.snapshotService,
     ]);
 
+    const editorStyles = {
+        transform: `scale(${scale})`,
+        transformOrigin: 'left top',
+        height: `calc(${100 / scale}%)`,
+        width: `calc(${100 / scale}%)`,
+    };
+
     return (
-        <div className={props.className}>
-            <div className={styles.editor} ref={contentDiv} />
+        <div className={props.className} style={{ width: '100%' }}>
+            <div style={editorStyles}>
+                <div className={styles.editor} ref={contentDiv} />
+            </div>
         </div>
     );
 }

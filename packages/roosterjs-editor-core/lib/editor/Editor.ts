@@ -112,7 +112,10 @@ export default class Editor implements IEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        this.core.plugins.reverse().forEach(plugin => plugin.dispose());
+        for (let i = this.core.plugins.length - 1; i >= 0; i--) {
+            this.core.plugins[i].dispose();
+        }
+
         this.core = null;
     }
 

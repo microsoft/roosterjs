@@ -74,6 +74,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     minRotateDeg: 5,
     imageSelector: 'img',
     rotateIconHTML: null,
+    sizeTransformer: null,
 };
 
 /**
@@ -547,7 +548,8 @@ export default class ImageEdit implements EditorPlugin {
                               y: element.dataset.y as Y,
                           },
                           this.updateWrapper,
-                          dragAndDrop
+                          dragAndDrop,
+                          this.options.sizeTransformer
                       )
               )
             : [];

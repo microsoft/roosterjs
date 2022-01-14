@@ -328,6 +328,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
     },
     paste: {
         title: 'Paste Again',
+        image: require('../svg/paste.svg'),
         onClick: (editor, key) => {
             editor.focus();
             const data = getLastClipboardData(editor).data;
@@ -353,6 +354,22 @@ const buttons: { [key: string]: RibbonButtonType } = {
             original: 'Paste Original',
             text: 'Paste Text',
             merge: 'Paste and Merge Format',
+        },
+    },
+    zoom: {
+        title: 'Zoom',
+        image: require('../svg/zoom.svg'),
+        onClick: (editor, key) => {
+            const scale = parseInt(key.substring(1)) / 100;
+            MainPaneBase.getInstance().setScale(scale);
+        },
+        isDisabled: editor => editor.getDocument().defaultView != window,
+        dropDownItems: {
+            z50: '50%',
+            z75: '75%',
+            z100: '100%',
+            z150: '150%',
+            z200: '200%',
         },
     },
     export: {

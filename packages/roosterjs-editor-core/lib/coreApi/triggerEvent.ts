@@ -1,4 +1,10 @@
-import { EditorCore, EditorPlugin, PluginEvent, TriggerEvent } from 'roosterjs-editor-types';
+import {
+    EditorCore,
+    EditorPlugin,
+    PluginEvent,
+    PluginEventType,
+    TriggerEvent,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -13,7 +19,8 @@ export const triggerEvent: TriggerEvent = (
     broadcast: boolean
 ) => {
     if (
-        !core.lifecycle.shadowEditFragment &&
+        (!core.lifecycle.shadowEditFragment ||
+            pluginEvent.eventType == PluginEventType.BeforeDispose) &&
         (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin)))
     ) {
         core.plugins.forEach(plugin => {
