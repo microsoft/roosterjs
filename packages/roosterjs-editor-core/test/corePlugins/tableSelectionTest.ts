@@ -1,6 +1,6 @@
 import * as TestHelper from '../TestHelper';
 import { Browser } from '../../../roosterjs-editor-dom/lib/utils/Browser';
-import { IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { IEditor } from 'roosterjs-editor-types';
 
 const TABLE_SELECTOR_LENGTH = 12;
 describe('TableSelectionPlugin', () => {
