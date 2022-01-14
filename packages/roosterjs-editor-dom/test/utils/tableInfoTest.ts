@@ -23,20 +23,6 @@ const format: TableFormat = {
 const expectedTableInfo =
     '{"bgColor":null,"topBorderColor":"#0C64C0","bottomBorderColor":"#0C64C0","verticalBorderColor":"#0C64C0","bandedRows":true,"bgColorEven":"#0C64C020","bgColorOdd":null,"bandedColumns":false,"bgColumnColorEven":null,"bgColumnColorOdd":null,"headerRow":false,"headerRowColor":null,"firstColumn":false,"tableBorderFormat":null}';
 
-const expectedPastedTable: Partial<TableFormat> = {
-    bandedColumns: false,
-    bandedRows: false,
-    bgColorEven: null,
-    bgColorOdd: undefined,
-    bgColumnColorEven: null,
-    bgColumnColorOdd: undefined,
-    bottomBorderColor: undefined,
-    firstColumn: false,
-    headerRow: true,
-    headerRowColor: 'rgba(12, 100, 192, 0.125)',
-    topBorderColor: undefined,
-    verticalBorderColor: undefined,
-};
 function createTable(format: TableFormat) {
     let div = document.createElement('div');
     document.body.appendChild(div);
@@ -78,15 +64,6 @@ describe('getTableFormatInfo', () => {
         saveTableInfo(table, format);
         const tableInfo = getTableFormatInfo(table);
         expect(tableInfo).toEqual(JSON.parse(expectedTableInfo) as TableFormat);
-        removeTable();
-    });
-});
-
-describe('getTableFormatInfo', () => {
-    it('should return the info that was from getPastedTableStyle ', () => {
-        const table = createTable(format);
-        const tableInfo = getTableFormatInfo(table);
-        expect(tableInfo).toEqual(expectedPastedTable);
         removeTable();
     });
 });

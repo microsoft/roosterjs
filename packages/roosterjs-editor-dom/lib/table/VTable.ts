@@ -6,6 +6,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
 import { getHighlightColor } from '../utils/getTableOriginalColor';
+import { getTableFormatInfo } from '..';
 import { TableMetadata } from './tableMetadata';
 import {
     ModeIndependentColor,
@@ -104,7 +105,7 @@ export default class VTable {
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
      */
-    writeBack(format?: Partial<TableFormat>) {
+    writeBack() {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
@@ -117,6 +118,7 @@ export default class VTable {
                     }
                 });
             });
+            const format = getTableFormatInfo(this.table);
             if (format) {
                 this.applyFormat(format);
             }

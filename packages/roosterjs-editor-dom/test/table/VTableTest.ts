@@ -1,4 +1,5 @@
 import VTable from '../../lib/table/VTable';
+import { getTableFormatInfo } from '../../lib';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 
 describe('VTable.ctor', () => {
@@ -357,6 +358,13 @@ describe('VTable.edit', () => {
         let vTable = new VTable(node);
         vTable.edit(operation);
         vTable.writeBack();
+        const format = getTableFormatInfo(node);
+        const expectedDiv = document.createElement('div');
+        expectedDiv.innerHTML = expectedHtml;
+        const expectedVTable = new VTable(expectedDiv.firstChild as HTMLTableElement);
+        if (format) {
+            expectedVTable.applyFormat(format);
+        }
         expect(div.innerHTML).toBe(expectedHtml, 'Start from ' + id);
         document.body.removeChild(div);
     }
