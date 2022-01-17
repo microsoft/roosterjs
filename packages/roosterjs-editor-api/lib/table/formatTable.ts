@@ -1,5 +1,5 @@
 import { ChangeSource, IEditor, TableFormat } from 'roosterjs-editor-types';
-import { VTable } from 'roosterjs-editor-dom';
+import { saveTableInfo, VTable } from 'roosterjs-editor-dom';
 
 /**
  * Format table
@@ -16,6 +16,7 @@ export default function formatTable(
     if (table) {
         editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(table);
+            saveTableInfo(table, format);
             vtable.applyFormat(format);
             vtable.writeBack();
             editor.focus();

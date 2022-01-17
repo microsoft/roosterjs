@@ -55,6 +55,7 @@ export { default as moveChildNodes } from './utils/moveChildNodes';
 export { default as setListItemStyle } from './utils/setListItemStyle';
 export { default as clearSelectedTableCells } from './utils/clearSelectedTableCells';
 export { default as isNodeAfter } from './utils/isNodeAfter';
+export { getTableFormatInfo, saveTableInfo, deleteTableInfo } from './utils/tableInfo';
 
 export { default as VTable } from './table/VTable';
 export { TableMetadata } from './table/tableMetadata';

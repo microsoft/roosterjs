@@ -51,4 +51,9 @@ export default interface BrowserInfo {
      * Whether current browser is IE/Edge
      */
     readonly isIEOrEdge?: boolean;
+
+    /**
+     * Whether current OS is Android
+     */
+    readonly isAndroid?: boolean;
 }
