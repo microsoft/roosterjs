@@ -402,9 +402,17 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     //#region Mouse events
     private handleMouseDown(event: PluginMouseDownEvent) {
         if (event.rawEvent.which == Keys.RIGHT_CLICK && this.state.vSelection) {
+            debugger;
             //If the user is right clicking To open context menu
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);
             if (td?.classList.contains(TableMetadata.TABLE_CELL_SELECTED)) {
+                this.state.firstTarget = null;
+                this.state.lastTarget = null;
+
+                this.editor.queryElements('td.' + TableMetadata.TABLE_CELL_SELECTED, node => {
+                    this.state.firstTarget = this.state.firstTarget || node;
+                    this.state.lastTarget = node;
+                });
                 const selection = this.editor.getDocument().defaultView.getSelection();
                 selection.setBaseAndExtent(this.state.firstTarget, 0, this.state.lastTarget, 0);
                 this.vTable.highlight();
