@@ -198,14 +198,13 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         ) {
             return;
         }
-        const selection = this.editor.getDocument().defaultView.getSelection();
-        const { anchorNode } = selection;
+        const pos = this.editor.getFocusedPosition();
         this.range = this.editor.getSelectionRange();
 
-        this.state.firstTarget = this.state.firstTarget || anchorNode;
+        this.state.firstTarget = this.state.firstTarget || pos.node;
         let forceSelection = false;
         if (getTagOfNode(this.state.firstTarget) == 'TR' && this.range) {
-            this.state.firstTarget = anchorNode;
+            this.state.firstTarget = pos.node;
         }
 
         if (
@@ -402,7 +401,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     //#region Mouse events
     private handleMouseDown(event: PluginMouseDownEvent) {
         if (event.rawEvent.which == Keys.RIGHT_CLICK && this.state.vSelection) {
-            debugger;
             //If the user is right clicking To open context menu
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);
             if (td?.classList.contains(TableMetadata.TABLE_CELL_SELECTED)) {
@@ -422,12 +420,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
         if (event.rawEvent.which == Keys.LEFT_CLICK && !event.rawEvent.shiftKey) {
             this.clearState();
-
-            this.state.firstTarget =
-                this.editor.getElementAtCursor(
-                    TABLE_CELL_SELECTOR,
-                    event.rawEvent.target as Node
-                ) || (event.rawEvent.target as HTMLElement);
             this.editor
                 .getDocument()
                 .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
@@ -447,6 +439,9 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     }
 
     private onMouseMove = (event: MouseEvent) => {
+        if (event.currentTarget == this.contentDiv) {
+            return;
+        }
         this.range = this.editor.getSelectionRange();
         let eventTarget =
             getCellAtCursor(this.editor, event.target as Node) || (event.target as HTMLElement);
@@ -734,8 +729,12 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     private isAfter(node1: Node, node2: Node) {
         if (node1 && node2) {
-            if (node1 == this.contentDiv) {
-                node1 = this.range.endContainer;
+            if (node2.contains(node1)) {
+                const r1 = (node1 as Element).getBoundingClientRect?.();
+                const r2 = (node2 as Element).getBoundingClientRect?.();
+                if (r1 && r2) {
+                    return r1.top > r2.top && r1.bottom < r2.bottom;
+                }
             }
 
             const position = new Position(node1, PositionType.End);
@@ -948,10 +947,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             let vTable = this.cachedTables.filter(table => table.table == targetTable)[0];
 
             let lastItemCoordinates = vTable.getCellCoordinates(currentTarget);
-            if (
-                this.isAfter(currentTarget, this.state.firstTarget) ||
-                lastItemCoordinates[1] == 0
-            ) {
+            if (this.isAfter(currentTarget, this.state.firstTarget)) {
                 vTable.startRange = [0 /* x */, 0 /* y */];
                 vTable.endRange = [
                     vTable.cells[lastItemCoordinates[1]].length - 1 /* x */,
@@ -969,7 +965,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
         //Check all the traversed tables
         //If the start and the current target are before the table, remove all selection and remove vTable from the traversed tables
-
         const focusPosition = this.editor.getFocusedPosition();
         const anchorPosition = new Position(this.state.firstTarget, PositionType.Begin);
         this.cachedTables.forEach(vTable => {
@@ -1066,7 +1061,6 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
     private setData(setTargets: boolean = true) {
         const pos = this.editor.getFocusedPosition();
-        const selection = this.editor.getDocument().defaultView.getSelection();
         if (pos) {
             this.firstTable = this.editor.getElementAtCursor(
                 'table',
@@ -1076,8 +1070,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             this.targetTable = this.editor.getElementAtCursor('table', pos.node);
             if (setTargets) {
                 this.state.firstTarget =
-                    this.state.firstTarget || getCellAtCursor(this.editor, selection.anchorNode);
-
+                    this.state.firstTarget || getCellAtCursor(this.editor, pos.node);
                 this.state.lastTarget = getCellAtCursor(this.editor, pos.node);
 
                 if (this.state.firstTarget == this.contentDiv && this.state.lastTarget) {
