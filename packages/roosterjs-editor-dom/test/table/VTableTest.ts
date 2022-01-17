@@ -1,4 +1,5 @@
 import VTable from '../../lib/table/VTable';
+import { getTableFormatInfo } from '../../lib';
 import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 
 describe('VTable.ctor', () => {
@@ -274,6 +275,73 @@ describe('VTable.applyFormat', () => {
             '<table id="id1" style="border-collapse: collapse;"><tr style="background-color: rgb(0, 0, 255);"><td style="border-width: 1px; border-style: solid; border-color: rgb(0, 255, 0) rgb(0, 0, 0) rgb(0, 255, 255);"></td></tr><tr style="background-color: rgb(255, 0, 0);"><td style="border-width: 1px; border-style: solid; border-color: rgb(0, 255, 0) rgb(0, 0, 0) rgb(0, 255, 255);"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="border-width: 1px; border-style: solid; border-color: rgb(0, 255, 0) rgb(0, 0, 0) rgb(0, 255, 255);"></td></tr></table>'
         );
     });
+
+    it('Header Row', () => {
+        runTest(
+            '<table id=id1><tr><td></td></tr><tr><td></td></tr></table>',
+            'id1',
+            {
+                bgColorEven: '#FF0000',
+                bgColorOdd: '#0000FF',
+                topBorderColor: '#0C64C0',
+                bottomBorderColor: '#0C64C0',
+                verticalBorderColor: '#0C64C0',
+                headerRow: true,
+                headerRowColor: '#0C64C0',
+            },
+            '<table id="id1" style="border-collapse: collapse;"><tr style="background-color: rgb(0, 0, 255);"><td style="  width: 100px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgb(12, 100, 192);"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="width: 85.071px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); box-sizing: border-box; height: 21.1648px;"></td></tr></table>'
+        );
+    });
+
+    it('First Column', () => {
+        runTest(
+            '<table id=id1><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr></table>',
+            'id1',
+            {
+                bgColorEven: '#FF0000',
+                bgColorOdd: '#0000FF',
+                topBorderColor: '#0C64C0',
+                bottomBorderColor: '#0C64C0',
+                verticalBorderColor: '#0C64C0',
+                firstColumn: true,
+            },
+            '<table id="id1" style="border-collapse: collapse;"><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: transparent rgb(12, 100, 192) rgb(12, 100, 192); background-color: transparent;"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: transparent rgb(12, 100, 192); background-color: transparent;"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="  width: 100px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgb(12, 100, 192);"></td></tr></table>'
+        );
+    });
+
+    it('Banded Column', () => {
+        runTest(
+            '<table id=id1><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr></table>',
+            'id1',
+            {
+                bgColorEven: '#FF0000',
+                bgColorOdd: '#0000FF',
+                topBorderColor: '#0C64C0',
+                bottomBorderColor: '#0C64C0',
+                verticalBorderColor: '#0C64C0',
+                bandedColumns: true,
+                bgColumnColorEven: '#0C64C020',
+                bgColumnColorOdd: null,
+            },
+            '<table id="id1" style="border-collapse: collapse;"><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr></table>'
+        );
+    });
+
+    it('Banded row', () => {
+        runTest(
+            '<table id=id1><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr></table>',
+            'id1',
+            {
+                bgColorEven: '#0C64C020',
+                bgColorOdd: null,
+                topBorderColor: '#0C64C0',
+                bottomBorderColor: '#0C64C0',
+                verticalBorderColor: '#0C64C0',
+                bandedRows: true,
+            },
+            '<table id="id1" style="border-collapse: collapse;"><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr></table>'
+        );
+    });
 });
 
 describe('VTable.edit', () => {
@@ -290,6 +358,13 @@ describe('VTable.edit', () => {
         let vTable = new VTable(node);
         vTable.edit(operation);
         vTable.writeBack();
+        const format = getTableFormatInfo(node);
+        const expectedDiv = document.createElement('div');
+        expectedDiv.innerHTML = expectedHtml;
+        const expectedVTable = new VTable(expectedDiv.firstChild as HTMLTableElement);
+        if (format) {
+            expectedVTable.applyFormat(format);
+        }
         expect(div.innerHTML).toBe(expectedHtml, 'Start from ' + id);
         document.body.removeChild(div);
     }
