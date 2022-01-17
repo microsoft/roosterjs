@@ -6,7 +6,8 @@ import {
     moveChildNodes,
     VTable,
     safeInstanceOf,
-    isNodeAfter,
+    Position,
+    Browser,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -19,6 +20,7 @@ import {
     ExperimentalFeatures,
     PluginWithState,
     KnownCreateElementDataIndex,
+    PositionType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -81,7 +83,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         const tableSelection = this.editor.getTableSelection();
         const { firstTarget, vSelection, lastTarget, startRange, endRange } = tableSelection || {};
         if (originalRange.collapsed && vSelection) {
-            if (isNodeAfter(firstTarget, lastTarget)) {
+            const firstTargetPos = new Position(firstTarget, PositionType.Begin);
+            const lastTargetPos = new Position(lastTarget, PositionType.Begin);
+            if (firstTargetPos.isAfter(lastTargetPos)) {
                 originalRange.setStartBefore(lastTarget);
                 originalRange.setEndAfter(firstTarget);
             } else {
@@ -187,7 +191,12 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private cleanUpAndRestoreSelection(tempDiv: HTMLDivElement, range: Range) {
+        if (Browser.isAndroid) {
+            range.collapse();
+        }
+
         this.editor.select(range);
+
         tempDiv.style.backgroundColor = '';
         tempDiv.style.color = '';
         tempDiv.style.display = 'none';

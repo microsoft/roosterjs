@@ -7,10 +7,6 @@ export const enum TableMetadata {
      */
     SELECTION_COLOR_OPACITY = 0.7,
     /**
-     * Data set property to indicate that the selection is cached
-     */
-    ON_FOCUS_CACHE = 'onFocusCache',
-    /**
      * Class applied to table cell selected
      */
     TABLE_CELL_SELECTED = '_tableCellSelected',
