@@ -441,7 +441,10 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     private onMouseMove = (event: MouseEvent) => {
         this.range = this.editor.getSelectionRange();
         const pos = this.editor.getFocusedPosition();
-        let eventTarget = getCellAtCursor(this.editor, pos.node);
+        let eventTarget = getCellAtCursor(
+            this.editor,
+            Browser.isFirefox ? (event.target as Node) : pos.node
+        );
 
         if (eventTarget! == this.state.firstTarget) {
             return;
@@ -1104,7 +1107,8 @@ function isCell(node: Node) {
 
 function getCellAtCursor(editor: IEditor, node: Node) {
     if (editor) {
-        return editor.getElementAtCursor(TABLE_CELL_SELECTOR, node) || (node as HTMLElement);
+        let result = editor.getElementAtCursor(TABLE_CELL_SELECTOR, node) || (node as HTMLElement);
+        return result;
     }
     return node as HTMLElement;
 }
