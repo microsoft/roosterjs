@@ -141,4 +141,13 @@ describe('getContent', () => {
             '<div><a href="#">text1</a>text2text3</div><!--{"start":[0,0,0,0],"end":[0,1,10]}-->'
         );
     });
+
+    it('getContent with GetContentMode.PlainTextFast', () => {
+        const core = createEditorCore(div, {});
+
+        div.innerHTML = 'test1<div>test2</div>test3';
+        const content = core.api.getContent(core, GetContentMode.PlainTextFast);
+
+        expect(content).toBe('test1test2test3');
+    });
 });

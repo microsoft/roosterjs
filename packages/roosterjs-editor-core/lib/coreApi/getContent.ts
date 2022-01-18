@@ -29,7 +29,9 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
     // has been changed by uncommitted shadow edit which should be ignored.
     const root = core.lifecycle.shadowEditFragment || core.contentDiv;
 
-    if (mode == GetContentMode.PlainText) {
+    if (mode == GetContentMode.PlainTextFast) {
+        content = root.textContent;
+    } else if (mode == GetContentMode.PlainText) {
         content = getTextContent(root);
     } else if (triggerExtractContentEvent || core.lifecycle.isDarkMode) {
         const clonedRoot = cloneNode(root);

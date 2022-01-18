@@ -354,7 +354,7 @@ export default class ImageEdit implements EditorPlugin {
         wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         // Cache current src so that we can compare it after edit see if src is changed
-        this.lastSrc = this.image.src;
+        this.lastSrc = this.image.getAttribute('src');
 
         // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
         this.image.src = this.editInfo.src;
