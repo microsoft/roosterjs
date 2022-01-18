@@ -231,7 +231,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             this.state.lastTarget = this.state.lastTarget ?? this.state.firstTarget;
             this.setData(false);
             if (this.firstTable! == this.targetTable!) {
-                if (ancestorTag != 'TR' && !this.state.vSelection) {
+                if (ancestorTag != 'TR' && ancestorTag != 'TBODY' && !this.state.vSelection) {
                     return;
                 }
                 //When selection start and end is inside of the same table
