@@ -439,31 +439,20 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     }
 
     private onMouseMove = (event: MouseEvent) => {
-        if (event.currentTarget == this.contentDiv) {
-            return;
-        }
         this.range = this.editor.getSelectionRange();
-        let eventTarget =
-            getCellAtCursor(this.editor, event.target as Node) || (event.target as HTMLElement);
-        this.setData();
-        //Ignore if
-        // Is a DIV that only contains a Table
-        // If the event target is not contained in the editor.
-        if (
-            (eventTarget.childElementCount == 1 &&
-                getTagOfNode(eventTarget.lastChild) == 'TABLE' &&
-                getTagOfNode(eventTarget) == 'DIV') ||
-            !this.contentDiv.contains(eventTarget)
-        ) {
-            event.preventDefault();
+        const pos = this.editor.getFocusedPosition();
+        let eventTarget = getCellAtCursor(this.editor, pos.node);
+
+        if (eventTarget! == this.state.firstTarget) {
             return;
         }
+        this.setData();
 
         // Handle if the table cell contains a Paragraph.
         // Most of the Word tables contain a P inside each cell.
         if (
-            getTagOfNode(event.target as Node) == 'p' &&
-            eventTarget != (event.target as Node) &&
+            getTagOfNode(pos.node) == 'p' &&
+            eventTarget != pos.node &&
             safeInstanceOf(eventTarget, 'HTMLTableCellElement')
         ) {
             updateSelection(this.editor, eventTarget, 0);
@@ -492,8 +481,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             this.selectionInsideTableMouseMove(eventTarget, targetTable, firstTable, event);
         } else {
             //If Selection starts out of a table, or moves out of a table.
-            if (event.target != this.state.lastTarget || (eventTarget as HTMLTableCellElement)) {
-                this.highlightSelection(eventTarget || (event.target as Node), targetTable);
+            if (pos.node != this.state.lastTarget || (eventTarget as HTMLTableCellElement)) {
+                this.highlightSelection(eventTarget || pos.node, targetTable);
             }
         }
     };
@@ -508,7 +497,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     };
 
     private selectionInsideTableMouseMove(
-        eventTarget: HTMLElement,
+        eventTarget: Node,
         targetTable: HTMLElement,
         firstTable: HTMLTableElement,
         event: MouseEvent
@@ -1071,6 +1060,14 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             if (setTargets) {
                 this.state.firstTarget =
                     this.state.firstTarget || getCellAtCursor(this.editor, pos.node);
+
+                if (
+                    getTagOfNode(this.state.firstTarget) == 'DIV' &&
+                    this.state.firstTarget.childNodes.length > 1
+                ) {
+                    this.state.firstTarget = getCellAtCursor(this.editor, pos.node);
+                }
+
                 this.state.lastTarget = getCellAtCursor(this.editor, pos.node);
 
                 if (this.state.firstTarget == this.contentDiv && this.state.lastTarget) {
