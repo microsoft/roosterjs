@@ -1184,6 +1184,6 @@ function getOriginalColor(colorString: string) {
  * Retrieve the color to be applied when a cell is selected
  * @returns color to be applied when a cell is selected
  */
-export function getHighlightColor() {
+function getHighlightColor() {
     return `rgba(198,198,198, ${TableMetadata.SELECTION_COLOR_OPACITY})`;
 }

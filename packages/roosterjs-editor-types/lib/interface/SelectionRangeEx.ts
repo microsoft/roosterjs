@@ -58,9 +58,15 @@ export interface ISelectionRangeEx {
     ranges: Range[];
 }
 
+/**
+ * Types of Selection Ranges that the SelectionRangeEx can return
+ */
 export const enum SelectionRangeTypes {
     Normal,
     VSelection,
 }
 
+/**
+ * Types of ranges used in editor api getSelectionRangeEx
+ */
 export type SelectionRangeEx = INormalSelectionRange | ITableSelectionRange;

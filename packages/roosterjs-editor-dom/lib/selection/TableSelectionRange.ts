@@ -1,6 +1,9 @@
+import VTable from '../table/VTable';
 import { ITableSelectionRange, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { VTable } from '..';
-
+/**
+ * Table selection Range used in the getSelectedRangeEx editor Api
+ * Can create a object with an array of ranges depending on a vTable range provided.
+ */
 export default class TableSelectionRange implements ITableSelectionRange {
     constructor(
         tableElement: HTMLTableElement | HTMLTableCellElement,
