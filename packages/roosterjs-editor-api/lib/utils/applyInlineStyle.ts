@@ -1,11 +1,11 @@
-import { ChangeSource, IEditor, NodeType, PositionType } from 'roosterjs-editor-types';
+import { applyTextStyle, ContentTraverser, getTagOfNode } from 'roosterjs-editor-dom';
 import {
-    applyTextStyle,
-    ContentTraverser,
-    getTagOfNode,
-    safeInstanceOf,
-    VTable,
-} from 'roosterjs-editor-dom';
+    ChangeSource,
+    IEditor,
+    NodeType,
+    PositionType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -20,36 +20,10 @@ export default function applyInlineStyle(
     callback: (element: HTMLElement, isInnerNode?: boolean) => any
 ) {
     editor.focus();
-    let range = editor.getSelectionRange();
+    let srEx = editor.getSelectionRangeEx();
 
-    const tableSelection = editor.getTableSelection();
-
-    if (tableSelection.vSelection) {
-        const table = editor.getElementAtCursor('table');
-        if (safeInstanceOf(table, 'HTMLTableElement')) {
-            const vTable = new VTable(table);
-            vTable.startRange = tableSelection.startRange;
-            vTable.endRange = tableSelection.endRange;
-            vTable.forEachSelectedCell(cell => {
-                if (cell.td) {
-                    const range = new Range();
-                    range.selectNodeContents(cell.td);
-                    const blockTraverser = ContentTraverser.createSelectionTraverser(
-                        cell.td,
-                        range
-                    );
-                    let inlineElement = blockTraverser && blockTraverser.currentInlineElement;
-                    while (inlineElement) {
-                        let nextInlineElement = blockTraverser.getNextInlineElement();
-                        inlineElement.applyStyle((element, isInnerNode) => {
-                            callback(element, isInnerNode);
-                        });
-                        inlineElement = nextInlineElement;
-                    }
-                }
-            });
-        }
-    } else if (range && range.collapsed) {
+    if (srEx && srEx.isCollapsed()) {
+        let range = srEx.ranges[0];
         let node = range.startContainer;
         let isEmptySpan =
             getTagOfNode(node) == 'SPAN' &&
@@ -83,20 +57,26 @@ export default function applyInlineStyle(
         editor.addUndoSnapshot(() => {
             let firstNode: Node;
             let lastNode: Node;
-            let contentTraverser = editor.getSelectionTraverser();
-            let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
-            while (inlineElement) {
-                let nextInlineElement = contentTraverser.getNextInlineElement();
-                inlineElement.applyStyle((element, isInnerNode) => {
-                    callback(element, isInnerNode);
-                    firstNode = firstNode || element;
-                    lastNode = element;
-                });
-                inlineElement = nextInlineElement;
-            }
-            if (firstNode && lastNode) {
-                editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
-            }
+            const selectionRange = editor.getSelectionRangeEx();
+            selectionRange.ranges.forEach(range => {
+                const contentTraverser = ContentTraverser.createSelectionTraverser(
+                    range.commonAncestorContainer,
+                    range
+                );
+                let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
+                while (inlineElement) {
+                    let nextInlineElement = contentTraverser.getNextInlineElement();
+                    inlineElement.applyStyle((element, isInnerNode) => {
+                        callback(element, isInnerNode);
+                        firstNode = firstNode || element;
+                        lastNode = element;
+                    });
+                    inlineElement = nextInlineElement;
+                }
+                if (firstNode && lastNode && srEx.type == SelectionRangeTypes.Normal) {
+                    editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
+                }
+            });
         }, ChangeSource.Format);
     }
 }

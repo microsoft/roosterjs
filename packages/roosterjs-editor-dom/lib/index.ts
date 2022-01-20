@@ -71,6 +71,8 @@ export { default as getSelectionRangeInRegion } from './region/getSelectionRange
 export { default as mergeBlocksInRegion } from './region/mergeBlocksInRegion';
 
 export { default as Position } from './selection/Position';
+export { default as NormalSelectionRange } from './selection/NormalSelectionRange';
+export { default as TableSelectionRange } from './selection/TableSelectionRange';
 export { default as createRange } from './selection/createRange';
 export { default as getPositionRect } from './selection/getPositionRect';
 export { default as isPositionAtBeginningOf } from './selection/isPositionAtBeginningOf';

@@ -33,6 +33,7 @@ import {
     Region,
     RegionType,
     SelectionPath,
+    SelectionRangeEx,
     StyleBasedFormatState,
     TableSelectionPluginState,
     TrustedHTMLHandler,
@@ -355,6 +356,17 @@ export default class Editor implements IEditor {
     }
 
     /**
+     * Get current selection range from Editor.
+     * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
+     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now.
+     * Default value is true
+     * @returns current selection range, or null if editor never got focus before
+     */
+    public getSelectionRangeEx(tryGetFromCache: boolean = true): SelectionRangeEx {
+        return this.core.api.getSelectionRangeEx(this.core, tryGetFromCache);
+    }
+
+    /**
      * Get current selection in a serializable format
      * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
      * @returns current selection path, or null if editor never got focus before
@@ -648,7 +660,7 @@ export default class Editor implements IEditor {
      * Get a content traverser for current selection
      */
     public getSelectionTraverser(): IContentTraverser {
-        let range = this.getSelectionRange();
+        const range = this.getSelectionRange();
         return (
             range &&
             ContentTraverser.createSelectionTraverser(

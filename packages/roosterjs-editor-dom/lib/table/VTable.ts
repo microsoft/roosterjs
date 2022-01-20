@@ -5,7 +5,6 @@ import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
-import { getHighlightColor } from '../utils/getTableOriginalColor';
 import { getTableFormatInfo } from '../utils/tableInfo';
 import { TableMetadata } from './tableMetadata';
 import {
@@ -976,7 +975,7 @@ export default class VTable {
         }
     }
 
-    private forEachCellOfRow(row: number, callback: (cell: VCell, i: number) => any) {
+    forEachCellOfRow(row: number, callback: (cell: VCell, i: number) => any) {
         for (let i = 0; i < this.cells[row]?.length; i++) {
             callback(this.getCell(row, i), i);
         }
@@ -1091,6 +1090,37 @@ export default class VTable {
             handler(currentCell.td);
         }
     }
+
+    /**
+     * Transforms the selected cells to Ranges.
+     * For Each Row a Range with selected cells, a Range is going to be returned.
+     * @returns
+     */
+    getSelectedRanges() {
+        const ranges: Range[] = [];
+        const rows = this.cells.length;
+
+        for (let y = 0; y < rows; y++) {
+            const rowRange = new Range();
+            let firstSelected: HTMLTableCellElement = null;
+            let lastSelected: HTMLTableCellElement = null;
+
+            this.forEachCellOfRow(y, (cell, x) => {
+                if (cell.td && this.isInsideOfSelection(x, y)) {
+                    firstSelected = firstSelected || cell.td;
+                    lastSelected = cell.td;
+                }
+            });
+
+            if (firstSelected) {
+                rowRange.setStartBefore(firstSelected);
+                rowRange.setEndAfter(lastSelected);
+                ranges.push(rowRange);
+            }
+        }
+
+        return ranges.length > 0 ? ranges : null;
+    }
 }
 
 function setHTMLElementSizeInPx(element: HTMLElement, newWidth?: number, newHeight?: number) {
@@ -1148,4 +1178,12 @@ function cloneNode<T extends Node>(node: T): T {
  */
 function getOriginalColor(colorString: string) {
     return colorString ?? '';
+}
+
+/**
+ * Retrieve the color to be applied when a cell is selected
+ * @returns color to be applied when a cell is selected
+ */
+export function getHighlightColor() {
+    return `rgba(198,198,198, ${TableMetadata.SELECTION_COLOR_OPACITY})`;
 }
