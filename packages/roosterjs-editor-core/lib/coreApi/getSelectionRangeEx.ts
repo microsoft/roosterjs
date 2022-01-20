@@ -58,7 +58,10 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (
 
             let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
             if (!result && selection && selection.rangeCount > 0) {
-                return createNormalSelectionEx(getRangesFromSelection(selection, core.contentDiv));
+                let range = selection.getRangeAt(0);
+                if (contains(core.contentDiv, range)) {
+                    return createNormalSelectionEx([range]);
+                }
             }
         }
 
@@ -67,18 +70,6 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (
         }
     }
 };
-
-function getRangesFromSelection(selection: Selection, contentDiv: HTMLDivElement): Range[] {
-    const result: Range[] = [];
-    for (let index = 0; index < selection.rangeCount; index++) {
-        let range = selection.getRangeAt(index);
-        if (contains(contentDiv, range)) {
-            result.push(range);
-        }
-    }
-
-    return result.length > 0 ? result : null;
-}
 
 function createNormalSelectionEx(ranges: Range[]): SelectionRangeEx {
     return new NormalSelectionRange(ranges);

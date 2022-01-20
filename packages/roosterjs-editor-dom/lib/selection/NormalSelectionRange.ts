@@ -6,13 +6,13 @@ import { INormalSelectionRange, SelectionRangeTypes } from 'roosterjs-editor-typ
 export default class NormalSelectionRange implements INormalSelectionRange {
     constructor(ranges: Range[]) {
         this.ranges = ranges;
+        this.type = SelectionRangeTypes.Normal;
     }
 
     type: SelectionRangeTypes.Normal;
-
     ranges: Range[];
 
     isCollapsed = () => {
-        return this.ranges.length == 1 && this.ranges[0].collapsed;
+        return this.ranges[0].collapsed;
     };
 }

@@ -57,8 +57,7 @@ export default function applyInlineStyle(
         editor.addUndoSnapshot(() => {
             let firstNode: Node;
             let lastNode: Node;
-            const selectionRange = editor.getSelectionRangeEx();
-            selectionRange.ranges.forEach(range => {
+            srEx.ranges.forEach(range => {
                 const contentTraverser = editor.getSelectionTraverser(range);
                 let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
                 while (inlineElement) {

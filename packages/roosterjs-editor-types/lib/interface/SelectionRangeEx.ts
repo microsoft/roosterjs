@@ -61,7 +61,7 @@ export interface ISelectionRangeEx {
 /**
  * Types of Selection Ranges that the SelectionRangeEx can return
  */
-export const enum SelectionRangeTypes {
+export enum SelectionRangeTypes {
     Normal,
     VSelection,
 }

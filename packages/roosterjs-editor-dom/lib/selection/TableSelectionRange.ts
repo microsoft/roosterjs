@@ -15,7 +15,9 @@ export default class TableSelectionRange implements ITableSelectionRange {
         this.vTable.endRange = endRange;
 
         this.ranges = this.vTable.getSelectedRanges();
+        this.type = SelectionRangeTypes.VSelection;
     }
+
     vTable: VTable;
     type: SelectionRangeTypes.VSelection;
 
