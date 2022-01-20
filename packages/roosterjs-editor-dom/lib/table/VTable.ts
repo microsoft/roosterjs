@@ -1,8 +1,14 @@
+import changeElementTag from '../utils/changeElementTag';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { getTableFormatInfo, saveTableInfo } from '../utils/tableInfo';
+import { TableBorderFormat, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+
+const TRANSPARENT = 'transparent';
+const TABLE_CELL_TAG_NAME = 'TD';
+const TABLE_HEADER_TAG_NAME = 'TH';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -90,6 +96,10 @@ export default class VTable {
                     }
                 });
             });
+            const format = getTableFormatInfo(this.table);
+            if (format) {
+                this.applyFormat(format);
+            }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
         }
@@ -104,10 +114,21 @@ export default class VTable {
             return;
         }
         this.table.style.borderCollapse = 'collapse';
-        this.trs[0].style.backgroundColor = format.bgColorOdd || 'transparent';
-        if (this.trs[1]) {
-            this.trs[1].style.backgroundColor = format.bgColorEven || 'transparent';
-        }
+        this.setBorderColors(format);
+        this.setTableRowColor(format);
+        this.setTableColumnsColor(format);
+        this.setBorderType(format);
+        this.setFirstColumnFormat(format);
+        this.setHeaderRowFormat(format);
+        saveTableInfo(this.table, format);
+    }
+
+    /**
+     * Set color to borders of an table
+     * @param format
+     * @returns
+     */
+    private setBorderColors(format: Partial<TableFormat>) {
         this.cells.forEach(row =>
             row
                 .filter(cell => cell.td)
@@ -116,8 +137,198 @@ export default class VTable {
                     cell.td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
                     cell.td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
                     cell.td.style.borderRight = getBorderStyle(format.verticalBorderColor);
+                    cell.td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
+                    cell.td.style.backgroundColor = format.bgColor;
                 })
         );
+    }
+
+    /**
+     * Set color to even and odd rows
+     * @param format
+     */
+    private setTableRowColor(format: Partial<TableFormat>) {
+        if (!format.bandedRows) {
+            return;
+        }
+        this.cells.forEach((row, index) => {
+            if (index % 2 === 0) {
+                row.forEach(cell =>
+                    cell.td && format.bgColorEven
+                        ? (cell.td.style.backgroundColor = format.bgColorEven)
+                        : ''
+                );
+            } else {
+                row.forEach(cell =>
+                    cell.td && format.bgColorOdd
+                        ? (cell.td.style.backgroundColor = format.bgColorOdd)
+                        : ''
+                );
+            }
+        });
+    }
+
+    /**
+     * Set color to even and odd columns
+     * @param format
+     */
+    private setTableColumnsColor(format: Partial<TableFormat>) {
+        if (!format.bandedColumns) {
+            return;
+        }
+
+        this.cells.forEach(row => {
+            row.forEach((cell, index) => {
+                if (index % 2 === 0 && cell.td && format.bgColumnColorEven) {
+                    cell.td.style.backgroundColor = format.bgColumnColorEven;
+                } else if (index % 2 === 1 && cell.td && format.bgColumnColorOdd) {
+                    cell.td.style.backgroundColor = format.bgColumnColorOdd;
+                }
+            });
+        });
+    }
+
+    /**
+     * Organize the borders of table
+     * @param format
+     * @returns
+     */
+    private setBorderType(format: Partial<TableFormat>) {
+        if (!format.tableBorderFormat) {
+            return;
+        }
+        switch (format.tableBorderFormat) {
+            case TableBorderFormat.onlyExternalBorders:
+                this.cells.forEach(row => {
+                    row.filter(cell => cell.td).forEach(cell => {
+                        if (this.cells.indexOf(row) !== 0) {
+                            cell.td.style.borderTopColor = TRANSPARENT;
+                        }
+                        if (this.cells.indexOf(row) !== this.cells.length - 1) {
+                            cell.td.style.borderBottomColor = TRANSPARENT;
+                        }
+                        if (row.indexOf(cell) !== 0) {
+                            cell.td.style.borderLeftColor = TRANSPARENT;
+                        }
+                        if (row.indexOf(cell) !== this.cells[0].length - 1) {
+                            cell.td.style.borderRightColor = TRANSPARENT;
+                        }
+                    });
+                });
+                break;
+            case TableBorderFormat.onlyExternalHeaderRowAndFirstColumnBorders:
+                this.cells.forEach(row => {
+                    row.filter(cell => cell.td).forEach(cell => {
+                        if (this.cells.indexOf(row) !== 0) {
+                            cell.td.style.borderTopColor = TRANSPARENT;
+                        }
+
+                        if (
+                            this.cells.indexOf(row) !== this.cells.length - 1 &&
+                            this.cells.indexOf(row) !== 0
+                        ) {
+                            cell.td.style.borderBottomColor = TRANSPARENT;
+                        }
+                        if (row.indexOf(cell) !== 0) {
+                            cell.td.style.borderLeftColor = TRANSPARENT;
+                        }
+                        if (
+                            row.indexOf(cell) !== this.cells[0].length - 1 &&
+                            row.indexOf(cell) !== 0
+                        ) {
+                            cell.td.style.borderRightColor = TRANSPARENT;
+                        }
+                        if (cell === this.cells[0][0]) {
+                            cell.td.style.borderRightColor = TRANSPARENT;
+                        }
+                    });
+                });
+                break;
+            case TableBorderFormat.removeHeaderRowMiddleBorder:
+                this.forEachCellOfRow(0, (cell, i) => {
+                    if (i !== 0) {
+                        cell.td.style.borderLeftColor = TRANSPARENT;
+                    }
+                    if (i !== this.cells[0].length - 1) {
+                        cell.td.style.borderRightColor = TRANSPARENT;
+                    }
+                });
+                break;
+            case TableBorderFormat.onlyMiddleBorders:
+                this.forEachCellOfColumn(0, (cell, row, i) => {
+                    if (cell.td) {
+                        cell.td.style.borderLeftColor = TRANSPARENT;
+                    }
+                });
+                this.forEachCellOfColumn(this.cells[0].length - 1, (cell, row, i) => {
+                    if (cell.td) {
+                        cell.td.style.borderRightColor = TRANSPARENT;
+                    }
+                });
+        }
+    }
+
+    /**
+     * Apply custom design to the first table column
+     * @param format
+     * @returns
+     */
+    private setFirstColumnFormat(format: Partial<TableFormat>) {
+        if (!format.firstColumn) {
+            this.forEachCellOfColumn(0, (cell, row, i) => {
+                if (cell.td) {
+                    cell.td = changeElementTag(
+                        cell.td,
+                        TABLE_CELL_TAG_NAME
+                    ) as HTMLTableCellElement;
+                    cell.td.scope = '';
+                }
+            });
+            return;
+        }
+        this.forEachCellOfColumn(0, (cell, row, i) => {
+            if (cell.td) {
+                if (i !== 0) {
+                    cell.td.style.borderTopColor = TRANSPARENT;
+                    cell.td.style.backgroundColor = TRANSPARENT;
+                }
+                if (i !== this.cells.length - 1 && i !== 0) {
+                    cell.td.style.borderBottomColor = TRANSPARENT;
+                }
+                cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
+                cell.td.scope = 'col';
+            }
+        });
+    }
+
+    /**
+     * Apply custom design to the Header Row
+     * @param format
+     * @returns
+     */
+    private setHeaderRowFormat(format: Partial<TableFormat>) {
+        if (!format.headerRow) {
+            this.forEachCellOfRow(0, (cell, i) => {
+                if (cell.td) {
+                    cell.td = changeElementTag(
+                        cell.td,
+                        TABLE_CELL_TAG_NAME
+                    ) as HTMLTableCellElement;
+                    cell.td.scope = '';
+                }
+            });
+            return;
+        }
+        this.forEachCellOfRow(0, (cell, i) => {
+            if (cell.td) {
+                cell.td.style.backgroundColor = format.headerRowColor;
+                cell.td.style.borderRightColor = format.headerRowColor;
+                cell.td.style.borderLeftColor = format.headerRowColor;
+                cell.td.style.borderTopColor = format.headerRowColor;
+                cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
+                cell.td.scope = 'row';
+            }
+        });
     }
 
     /**
