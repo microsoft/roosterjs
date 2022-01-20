@@ -1,4 +1,4 @@
-import { applyTextStyle, ContentTraverser, getTagOfNode } from 'roosterjs-editor-dom';
+import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
@@ -59,10 +59,7 @@ export default function applyInlineStyle(
             let lastNode: Node;
             const selectionRange = editor.getSelectionRangeEx();
             selectionRange.ranges.forEach(range => {
-                const contentTraverser = ContentTraverser.createSelectionTraverser(
-                    range.commonAncestorContainer,
-                    range
-                );
+                const contentTraverser = editor.getSelectionTraverser(range);
                 let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
                 while (inlineElement) {
                     let nextInlineElement = contentTraverser.getNextInlineElement();
