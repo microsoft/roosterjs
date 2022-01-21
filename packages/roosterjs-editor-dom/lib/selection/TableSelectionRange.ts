@@ -5,25 +5,20 @@ import { ITableSelectionRange, SelectionRangeTypes } from 'roosterjs-editor-type
  * Can create a object with an array of ranges depending on a vTable range provided.
  */
 export default class TableSelectionRange implements ITableSelectionRange {
-    constructor(
-        tableElement: HTMLTableElement | HTMLTableCellElement,
-        startRange: number[],
-        endRange: number[]
-    ) {
-        this.vTable = new VTable(tableElement);
-        this.vTable.startRange = startRange;
-        this.vTable.endRange = endRange;
+    constructor(vTable: VTable) {
+        this.vTable = vTable;
 
         this.ranges = this.vTable.getSelectedRanges();
-        this.type = SelectionRangeTypes.VSelection;
+
+        this.areAllCollapsed =
+            this.ranges.filter(range => range.collapsed).length == this.ranges.length;
     }
 
-    vTable: VTable;
-    type: SelectionRangeTypes.VSelection;
+    readonly type: SelectionRangeTypes.TableSelection;
 
-    ranges: Range[];
+    readonly vTable: VTable;
 
-    isCollapsed = () => {
-        return this.ranges.length == 1 && this.ranges[0].collapsed;
-    };
+    readonly ranges: Range[];
+
+    readonly areAllCollapsed: boolean;
 }

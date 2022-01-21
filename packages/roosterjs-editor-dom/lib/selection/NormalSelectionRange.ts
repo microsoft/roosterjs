@@ -7,12 +7,14 @@ export default class NormalSelectionRange implements INormalSelectionRange {
     constructor(ranges: Range[]) {
         this.ranges = ranges;
         this.type = SelectionRangeTypes.Normal;
+
+        this.areAllCollapsed =
+            this.ranges.filter(range => range.collapsed).length == this.ranges.length;
     }
 
-    type: SelectionRangeTypes.Normal;
-    ranges: Range[];
+    readonly type: SelectionRangeTypes.Normal;
 
-    isCollapsed = () => {
-        return this.ranges[0].collapsed;
-    };
+    readonly ranges: Range[];
+
+    readonly areAllCollapsed: boolean;
 }

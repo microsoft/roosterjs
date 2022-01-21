@@ -1,4 +1,5 @@
 import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
+import { multipleSelectionRangesWrap } from './multipleSelectionRangesWrap';
 import {
     ChangeSource,
     IEditor,
@@ -22,42 +23,42 @@ export default function applyInlineStyle(
     editor.focus();
     let srEx = editor.getSelectionRangeEx();
 
-    if (srEx && srEx.isCollapsed()) {
-        let range = srEx.ranges[0];
-        let node = range.startContainer;
-        let isEmptySpan =
-            getTagOfNode(node) == 'SPAN' &&
-            (!node.firstChild ||
-                (getTagOfNode(node.firstChild) == 'BR' && !node.firstChild.nextSibling));
-        if (isEmptySpan) {
-            editor.addUndoSnapshot();
-            callback(node as HTMLElement);
-        } else {
-            let isZWSNode =
-                node &&
-                node.nodeType == NodeType.Text &&
-                node.nodeValue == ZERO_WIDTH_SPACE &&
-                getTagOfNode(node.parentNode) == 'SPAN';
-
-            if (!isZWSNode) {
+    multipleSelectionRangesWrap(editor, srEx, range => {
+        if (range && range.collapsed) {
+            let range = srEx.ranges[0];
+            let node = range.startContainer;
+            let isEmptySpan =
+                getTagOfNode(node) == 'SPAN' &&
+                (!node.firstChild ||
+                    (getTagOfNode(node.firstChild) == 'BR' && !node.firstChild.nextSibling));
+            if (isEmptySpan) {
                 editor.addUndoSnapshot();
-                // Create a new text node to hold the selection.
-                // Some content is needed to position selection into the span
-                // for here, we inject ZWS - zero width space
-                node = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
-                range.insertNode(node);
-            }
+                callback(node as HTMLElement);
+            } else {
+                let isZWSNode =
+                    node &&
+                    node.nodeType == NodeType.Text &&
+                    node.nodeValue == ZERO_WIDTH_SPACE &&
+                    getTagOfNode(node.parentNode) == 'SPAN';
 
-            applyTextStyle(node, callback);
-            editor.select(node, PositionType.End);
-        }
-    } else {
-        // This is start and end node that get the style. The start and end needs to be recorded so that selection
-        // can be re-applied post-applying style
-        editor.addUndoSnapshot(() => {
-            let firstNode: Node;
-            let lastNode: Node;
-            srEx.ranges.forEach(range => {
+                if (!isZWSNode) {
+                    editor.addUndoSnapshot();
+                    // Create a new text node to hold the selection.
+                    // Some content is needed to position selection into the span
+                    // for here, we inject ZWS - zero width space
+                    node = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
+                    range.insertNode(node);
+                }
+
+                applyTextStyle(node, callback);
+                editor.select(node, PositionType.End);
+            }
+        } else {
+            // This is start and end node that get the style. The start and end needs to be recorded so that selection
+            // can be re-applied post-applying style
+            editor.addUndoSnapshot(() => {
+                let firstNode: Node;
+                let lastNode: Node;
                 const contentTraverser = editor.getSelectionTraverser(range);
                 let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
                 while (inlineElement) {
@@ -72,7 +73,7 @@ export default function applyInlineStyle(
                 if (firstNode && lastNode && srEx.type == SelectionRangeTypes.Normal) {
                     editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
                 }
-            });
-        }, ChangeSource.Format);
-    }
+            }, ChangeSource.Format);
+        }
+    });
 }

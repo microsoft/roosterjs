@@ -1,32 +1,22 @@
-import {
-    EditorCore,
-    GetSelectionRangeEx,
-    SelectionRangeEx,
-    TableSelectionPluginState,
-} from 'roosterjs-editor-types';
+import { EditorCore, GetSelectionRangeEx, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     contains,
     createRange,
-    findClosestElementAncestor,
     NormalSelectionRange,
     safeInstanceOf,
+    TableMetadata,
     TableSelectionRange,
+    VTable,
 } from 'roosterjs-editor-dom';
 
 /**
  * @internal
  * Get current or cached selection range
  * @param core The EditorCore object
- * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
  * @returns A Range object of the selection range
  */
-export const getSelectionRangeEx: GetSelectionRangeEx = (
-    core: EditorCore,
-    tryGetFromCache: boolean
-) => {
+export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
     let result: SelectionRangeEx = null;
-
-    const tSelection = core.tableSelection;
     if (core.lifecycle.shadowEditFragment) {
         const shadowRange =
             core.lifecycle.shadowEditSelectionPath &&
@@ -35,25 +25,21 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (
                 core.lifecycle.shadowEditSelectionPath.start,
                 core.lifecycle.shadowEditSelectionPath.end
             );
+
         if (shadowRange.collapsed) {
-            const table = findClosestElementAncestor(
-                shadowRange.startContainer,
-                core.contentDiv,
-                'table'
-            ) as HTMLTableElement;
-            if (tSelection.vSelection && safeInstanceOf(table, 'HTMLTableElement')) {
-                return createTableSelectionEx(table, tSelection);
+            const tableSelected = getTableSelected(core.contentDiv);
+
+            if (tableSelected) {
+                return createTableSelectionEx(tableSelected);
             }
         }
 
         return createNormalSelectionEx([shadowRange]);
     } else {
-        if (!tryGetFromCache || core.api.hasFocus(core)) {
-            if (
-                tSelection.vSelection &&
-                safeInstanceOf(tSelection.firstTarget, 'HTMLTableCellElement')
-            ) {
-                return createTableSelectionEx(tSelection.firstTarget, tSelection);
+        if (core.api.hasFocus(core)) {
+            const tableSelected = getTableSelected(core.contentDiv);
+            if (tableSelected) {
+                return createTableSelectionEx(tableSelected);
             }
 
             let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
@@ -65,9 +51,7 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (
             }
         }
 
-        if (!result && tryGetFromCache) {
-            return createNormalSelectionEx([core.domEvent.selectionRange]);
-        }
+        return createNormalSelectionEx([core.domEvent.selectionRange]);
     }
 };
 
@@ -75,9 +59,17 @@ function createNormalSelectionEx(ranges: Range[]): SelectionRangeEx {
     return new NormalSelectionRange(ranges);
 }
 
-function createTableSelectionEx(
-    element: HTMLTableElement | HTMLTableCellElement,
-    state: TableSelectionPluginState
-): SelectionRangeEx {
-    return new TableSelectionRange(element, state.startRange, state.endRange);
+function createTableSelectionEx(vTable: VTable): SelectionRangeEx {
+    return new TableSelectionRange(vTable);
+}
+
+function getTableSelected(container: HTMLElement | DocumentFragment) {
+    const table = container.querySelector('table.' + TableMetadata.TABLE_SELECTED);
+
+    let vTable: VTable = null;
+    if (safeInstanceOf(table, 'HTMLTableElement')) {
+        vTable = new VTable(table, false, true);
+    }
+
+    return vTable;
 }

@@ -116,12 +116,11 @@ export type GetContent = (core: EditorCore, mode: GetContentMode) => string;
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
 
 /**
- * Get current or cached selection range
+ * Get current selection range
  * @param core The EditorCore object
- * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
  * @returns A Range object of the selection range
  */
-export type GetSelectionRangeEx = (core: EditorCore, tryGetFromCache: boolean) => SelectionRangeEx;
+export type GetSelectionRangeEx = (core: EditorCore) => SelectionRangeEx;
 
 /**
  * Get style based format state from current selection, including font name/size and colors

@@ -8,6 +8,7 @@ import toArray from '../utils/toArray';
 import { getTableFormatInfo } from '../utils/tableInfo';
 import { TableMetadata } from './tableMetadata';
 import {
+    IVTable,
     ModeIndependentColor,
     TableBorderFormat,
     TableFormat,
@@ -24,7 +25,7 @@ const TABLE_HEADER_TAG_NAME = 'TH';
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default class VTable {
+export default class VTable implements IVTable {
     /**
      * The HTML table object
      */
@@ -61,7 +62,11 @@ export default class VTable {
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      */
-    constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
+    constructor(
+        node: HTMLTableElement | HTMLTableCellElement,
+        normalizeSize?: boolean,
+        setSelectedRange?: boolean
+    ) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
@@ -90,6 +95,16 @@ export default class VTable {
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
                             };
+                            if (
+                                setSelectedRange &&
+                                td.classList.contains(TableMetadata.TABLE_CELL_SELECTED)
+                            ) {
+                                this.startRange = this.startRange || [
+                                    targetCol,
+                                    rowIndex + rowSpan,
+                                ];
+                                this.endRange = [targetCol, rowIndex + rowSpan];
+                            }
                         }
                     }
                 }
@@ -681,7 +696,7 @@ export default class VTable {
     /**
      * Modifies the selection range to take into account the col and row spans
      */
-    normalizeSelectionRange() {
+    private normalizeSelectionRange() {
         if (this.cells) {
             const handler = (input: number[]) => {
                 let tempRange: number[];
@@ -944,6 +959,11 @@ export default class VTable {
         return result;
     }
 
+    /**
+     * Get the TableCell in a provided coordinate
+     * @param row
+     * @param col
+     */
     getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
@@ -975,7 +995,7 @@ export default class VTable {
         }
     }
 
-    forEachCellOfRow(row: number, callback: (cell: VCell, i: number) => any) {
+    private forEachCellOfRow(row: number, callback: (cell: VCell, i: number) => any) {
         for (let i = 0; i < this.cells[row]?.length; i++) {
             callback(this.getCell(row, i), i);
         }
@@ -1058,6 +1078,11 @@ export default class VTable {
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
     }
 
+    /**
+     * Sets the background color
+     * @param backgroundColor color
+     * @param isInDarkMode whether is in darkmode
+     */
     setBackgroundColor(backgroundColor: string | ModeIndependentColor, isInDarkMode: boolean) {
         if (!this.table) {
             return;
@@ -1119,7 +1144,7 @@ export default class VTable {
             }
         }
 
-        return ranges.length > 0 ? ranges : null;
+        return ranges;
     }
 }
 

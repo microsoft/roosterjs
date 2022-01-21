@@ -362,8 +362,8 @@ export default class Editor implements IEditor {
      * Default value is true
      * @returns current selection range, or null if editor never got focus before
      */
-    public getSelectionRangeEx(tryGetFromCache: boolean = true): SelectionRangeEx {
-        return this.core.api.getSelectionRangeEx(this.core, tryGetFromCache);
+    public getSelectionRangeEx(): SelectionRangeEx {
+        return this.core.api.getSelectionRangeEx(this.core);
     }
 
     /**
@@ -661,13 +661,7 @@ export default class Editor implements IEditor {
      */
     public getSelectionTraverser(range?: Range): IContentTraverser {
         range = range ?? this.getSelectionRange();
-        return (
-            range &&
-            ContentTraverser.createSelectionTraverser(
-                this.core.contentDiv,
-                this.getSelectionRange()
-            )
-        );
+        return range && ContentTraverser.createSelectionTraverser(this.core.contentDiv, range);
     }
 
     /**
