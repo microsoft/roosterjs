@@ -53,8 +53,10 @@ export { default as adjustInsertPosition } from './utils/adjustInsertPosition';
 export { default as createElement, KnownCreateElementData } from './utils/createElement';
 export { default as moveChildNodes } from './utils/moveChildNodes';
 export { default as setListItemStyle } from './utils/setListItemStyle';
+export { default as clearSelectedTableCells } from './utils/clearSelectedTableCells';
 
 export { default as VTable } from './table/VTable';
+export { TableMetadata } from './table/tableMetadata';
 export { default as VList } from './list/VList';
 export { default as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
