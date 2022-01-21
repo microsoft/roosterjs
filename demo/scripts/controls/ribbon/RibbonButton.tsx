@@ -138,11 +138,11 @@ function DropDownItem(props: {
     const onClick = React.useCallback(() => {
         editor.stopShadowEdit();
         buttonOnClick?.(editor, itemName);
-    }, []);
+    }, [editor]);
     const onMouseOver = React.useCallback(() => {
         editor.startShadowEdit();
         buttonOnClick?.(editor, itemName);
-    }, []);
+    }, [editor]);
 
     return (
         <div

@@ -193,3 +193,4 @@ export {
     DOMEventHandler,
 } from './type/domEventHandler';
 export { TrustedHTMLHandler } from './type/TrustedHTMLHandler';
+export { SizeTransformer } from './type/SizeTransformer';

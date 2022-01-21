@@ -17,6 +17,7 @@ export default function PopoutMainPane(props: {}) {
             />
             <div className={styles.body}>
                 <Editor
+                    scale={1}
                     plugins={getAllPluginArray(true /*showSidePane*/)}
                     className={styles.editor}
                     initState={plugins.editorOptions.getBuildInPluginState()}

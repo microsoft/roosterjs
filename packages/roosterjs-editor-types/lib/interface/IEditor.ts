@@ -20,6 +20,7 @@ import { PluginKeyboardEvent } from '../event/PluginDomEvent';
 import { PositionType } from '../enum/PositionType';
 import { QueryScope } from '../enum/QueryScope';
 import { RegionType } from '../enum/RegionType';
+import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
@@ -563,6 +564,11 @@ export default interface IEditor {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler;
+
+    /**
+     * Get a transformer function. It transform the size changes according to current situation.
+     */
+    getSizeTransformer(): SizeTransformer;
 
     //#endregion
 }

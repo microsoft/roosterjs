@@ -30,6 +30,7 @@ class MainPane extends MainPaneBase {
             isPopoutShown: false,
             initState: getPlugins().editorOptions.getBuildInPluginState(),
             supportDarkMode: true,
+            scale: 1,
         };
     }
 
@@ -56,6 +57,7 @@ class MainPane extends MainPaneBase {
                     ) : (
                         <>
                             <Editor
+                                scale={this.state.scale}
                                 plugins={getAllPluginArray(this.state.showSidePane)}
                                 className={styles.editor}
                                 initState={this.state.initState}
@@ -145,6 +147,12 @@ class MainPane extends MainPaneBase {
         window.setTimeout(() => {
             ReactDom.render(<PopoutMainPane />, this.popoutRoot);
         }, 0);
+    }
+
+    setScale(scale: number): void {
+        this.setState({
+            scale: scale,
+        });
     }
 
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
