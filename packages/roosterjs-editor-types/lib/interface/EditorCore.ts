@@ -10,6 +10,7 @@ import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
 import { SelectionRangeEx } from './SelectionRangeEx';
+import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
@@ -37,6 +38,13 @@ export default interface EditorCore extends PluginState {
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
+
+    /**
+     * A transformer function. It transform the size changes according to current situation.
+     * A typical scenario to use this function is when editor is located under a scaled container, so we need to
+     * calculate the scaled size change according to current zoom rate.
+     */
+    sizeTransformer: SizeTransformer;
 }
 
 /**

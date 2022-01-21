@@ -25,13 +25,14 @@ export interface EditorProps {
     plugins: EditorPlugin[];
     initState: BuildInPluginState;
     snapshotService: UndoSnapshotsService;
+    scale: number;
     className?: string;
 }
 
 export default function Editor(props: EditorProps) {
     const contentDiv = React.useRef<HTMLDivElement>();
     const editor = React.useRef<IEditor>();
-
+    const { scale, initState } = props;
     const {
         pluginList,
         contentEditFeatures,
@@ -40,7 +41,7 @@ export default function Editor(props: EditorProps) {
         forcePreserveRatio,
         defaultFormat,
         experimentalFeatures,
-    } = props.initState;
+    } = initState;
 
     const getLinkCallback = React.useCallback(
         (): ((url: string) => string) =>
@@ -92,6 +93,7 @@ export default function Editor(props: EditorProps) {
             experimentalFeatures: experimentalFeatures,
             undoSnapshotService: props.snapshotService,
             trustedHTMLHandler: trustedHTMLHandler,
+            sizeTransformer: size => size / scale,
         };
         editor.current = new RoosterJsEditor(contentDiv.current, options);
         return () => {
@@ -109,9 +111,18 @@ export default function Editor(props: EditorProps) {
         props.snapshotService,
     ]);
 
+    const editorStyles = {
+        transform: `scale(${scale})`,
+        transformOrigin: 'left top',
+        height: `calc(${100 / scale}%)`,
+        width: `calc(${100 / scale}%)`,
+    };
+
     return (
-        <div className={props.className}>
-            <div className={styles.editor} ref={contentDiv} />
+        <div className={props.className} style={{ width: '100%' }}>
+            <div style={editorStyles}>
+                <div className={styles.editor} ref={contentDiv} />
+            </div>
         </div>
     );
 }

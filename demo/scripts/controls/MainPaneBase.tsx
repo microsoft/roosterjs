@@ -8,6 +8,7 @@ export interface MainPaneBaseState {
     isPopoutShown: boolean;
     initState: BuildInPluginState;
     supportDarkMode: boolean;
+    scale: number;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
@@ -35,4 +36,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract isDarkModeSupported(): boolean;
 
     abstract popout(): void;
+
+    abstract setScale(scale: number): void;
 }
