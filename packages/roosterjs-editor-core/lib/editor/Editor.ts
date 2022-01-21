@@ -33,6 +33,7 @@ import {
     Region,
     RegionType,
     SelectionPath,
+    SizeTransformer,
     StyleBasedFormatState,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
@@ -97,6 +98,7 @@ export default class Editor implements IEditor {
             plugins: plugins.filter(x => !!x),
             ...getPluginState(corePlugins),
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
+            sizeTransformer: options.sizeTransformer,
         };
 
         // 3. Initialize plugins
@@ -112,7 +114,10 @@ export default class Editor implements IEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        this.core.plugins.reverse().forEach(plugin => plugin.dispose());
+        for (let i = this.core.plugins.length - 1; i >= 0; i--) {
+            this.core.plugins[i].dispose();
+        }
+
         this.core = null;
     }
 
@@ -835,6 +840,13 @@ export default class Editor implements IEditor {
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler {
         return this.core.trustedHTMLHandler;
+    }
+
+    /**
+     * Get a transformer function. It transform the size changes according to current situation.
+     */
+    getSizeTransformer(): SizeTransformer {
+        return this.core.sizeTransformer;
     }
 
     //#endregion

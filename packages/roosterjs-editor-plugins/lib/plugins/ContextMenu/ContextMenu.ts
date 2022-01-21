@@ -1,6 +1,5 @@
 import { createElement } from 'roosterjs-editor-dom';
 import {
-    ContentPosition,
     EditorPlugin,
     IEditor,
     KnownCreateElementDataIndex,
@@ -102,9 +101,7 @@ export default class ContextMenu<T> implements EditorPlugin {
                 KnownCreateElementDataIndex.ContextMenuWrapper,
                 this.editor.getDocument()
             ) as HTMLElement;
-            this.editor.insertNode(this.container, {
-                position: ContentPosition.Outside,
-            });
+            this.editor.getDocument().body.appendChild(this.container);
         }
         this.container.style.left = x + 'px';
         this.container.style.top = y + 'px';

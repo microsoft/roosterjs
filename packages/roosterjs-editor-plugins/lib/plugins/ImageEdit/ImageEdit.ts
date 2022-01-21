@@ -547,7 +547,8 @@ export default class ImageEdit implements EditorPlugin {
                               y: element.dataset.y as Y,
                           },
                           this.updateWrapper,
-                          dragAndDrop
+                          dragAndDrop,
+                          this.editor.getSizeTransformer()
                       )
               )
             : [];

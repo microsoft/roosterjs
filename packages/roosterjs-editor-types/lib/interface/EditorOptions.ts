@@ -4,6 +4,7 @@ import EditorPlugin from './EditorPlugin';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
+import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
@@ -105,4 +106,11 @@ export default interface EditorOptions {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     trustedHTMLHandler?: TrustedHTMLHandler;
+
+    /**
+     * A transformer function. It transform the size changes according to current situation.
+     * A typical scenario to use this function is when editor is located under a scaled container, so we need to
+     * calculate the scaled size change according to current zoom rate.
+     */
+    sizeTransformer?: SizeTransformer;
 }
