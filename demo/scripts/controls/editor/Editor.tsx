@@ -62,10 +62,6 @@ export default function Editor(props: EditorProps) {
             imageEdit: pluginList.imageEdit
                 ? new ImageEditPlugin({
                       preserveRatio: forcePreserveRatio,
-                      sizeTransformer: (x, y) => ({
-                          deltaX: x / scale,
-                          deltaY: y / scale,
-                      }),
                   })
                 : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
@@ -97,6 +93,7 @@ export default function Editor(props: EditorProps) {
             experimentalFeatures: experimentalFeatures,
             undoSnapshotService: props.snapshotService,
             trustedHTMLHandler: trustedHTMLHandler,
+            sizeTransformer: size => size / scale,
         };
         editor.current = new RoosterJsEditor(contentDiv.current, options);
         return () => {

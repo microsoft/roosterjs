@@ -1,11 +1,9 @@
 import DragAndDropHandler from './DragAndDropHandler';
 
-function defaultTransformer(deltaX: number, deltaY: number) {
-    return {
-        deltaX,
-        deltaY,
-    };
+function defaultTransformer(size: number) {
+    return size;
 }
+
 /**
  * @internal
  * A helper class to help manage drag and drop to an HTML element
@@ -29,10 +27,7 @@ export default class DragAndDropHelper<TContext, TInitValue> {
         private context: TContext,
         private onSubmit: (context: TContext) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
-        private sizeTransformer?: (
-            deltaX: number,
-            deltaY: number
-        ) => { deltaX: number; deltaY: number }
+        private sizeTransformer?: (size: number) => number
     ) {
         trigger.addEventListener('mousedown', this.onMouseDown);
     }
@@ -69,12 +64,9 @@ export default class DragAndDropHelper<TContext, TInitValue> {
 
     private onMouseMove = (e: MouseEvent) => {
         e.preventDefault();
-        const initDeltaX = e.pageX - this.initX;
-        const initDeltaY = e.pageY - this.initY;
-        const { deltaX, deltaY } = (this.sizeTransformer || defaultTransformer)(
-            initDeltaX,
-            initDeltaY
-        );
+        const sizeTransformer = this.sizeTransformer || defaultTransformer;
+        const deltaX = sizeTransformer(e.pageX - this.initX);
+        const deltaY = sizeTransformer(e.pageY - this.initY);
         if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {
             this.onSubmit?.(this.context);
         }

@@ -46,12 +46,4 @@ export default interface ImageEditOptions {
      * @default A predefined SVG icon
      */
     rotateIconHTML?: string;
-
-    /**
-     * A transformer function to help translate delta size from the size we got from mouse move
-     * to a target size. By default it can be null since no transformation is needed.
-     * This is mostly used when editor is put into a scaled container so that muse moved pixels
-     * will not match the actual pixel changes
-     */
-    sizeTransformer?: (deltaX: number, deltaY: number) => { deltaX: number; deltaY: number };
 }
