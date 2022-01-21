@@ -1,5 +1,4 @@
 import {
-    BeforeCutCopyEvent,
     ContentPosition,
     IEditor,
     Keys,
@@ -44,7 +43,7 @@ interface TableSelectionPluginState {
     firstTarget: Node;
     startRange: number[];
     endRange: number[];
-    vSelection: boolean;
+    tableSelection: boolean;
     startedSelection: boolean;
 }
 /**
@@ -76,7 +75,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         this.state = {
             lastTarget: null,
             firstTarget: null,
-            vSelection: false,
+            tableSelection: false,
             startRange: [],
             endRange: [],
             startedSelection: false,
@@ -123,7 +122,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             this.range = this.editor.getSelectionRange();
-
+            const { startedSelection } = this.state;
             switch (event.eventType) {
                 case PluginEventType.ExtractContentWithDom:
                     clearSelectedTableCells(event.clonedRoot);
@@ -131,60 +130,32 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 case PluginEventType.MouseUp:
                     this.handleMouseUpEvent(event);
                     break;
-                case PluginEventType.BeforeCutCopy:
-                    this.handleBeforeCutCopyEvent(event);
-                    break;
                 case PluginEventType.MouseDown:
-                    if (!this.state.startedSelection) {
+                    if (!startedSelection) {
                         this.handleMouseDownEvent(event);
                     }
                     break;
                 case PluginEventType.KeyDown:
-                    if (!this.state.startedSelection) {
+                    if (!startedSelection) {
                         this.handleKeyDownEvent(event);
                     } else {
                         event.rawEvent.preventDefault();
                     }
                     break;
                 case PluginEventType.KeyUp:
-                    if (!this.state.startedSelection) {
+                    if (!startedSelection) {
                         this.handleKeyUpEvent(event);
                     } else {
                         event.rawEvent.preventDefault();
                     }
                     break;
+                case PluginEventType.Scroll:
+                    if (startedSelection) {
+                        event.rawEvent.preventDefault();
+                    }
+                    break;
             }
         }
-    }
-
-    /**
-     * Handles the Before Copy Event.
-     * Clear the selection range from the cloned Root.
-     * @param event plugin event
-     */
-    private handleBeforeCutCopyEvent(event: BeforeCutCopyEvent) {
-        // if (event.vTableSelection) {
-        //     const clonedTable = event.clonedRoot.querySelector('table');
-        //     const clonedVTable = new VTable(clonedTable);
-        //     clonedVTable.startRange = event.vTableStartRange;
-        //     clonedVTable.endRange = event.vTableEndRange;
-        //     clonedVTable.removeCellsBySelection();
-        //     clonedVTable.writeBack();
-        //     event.range.setStart(clonedTable.parentNode, 0);
-        //     event.range.setEndAfter(clonedTable);
-        //     if (event.isCut) {
-        //         this.vTable.forEachSelectedCell(cell => {
-        //             if (cell?.td) {
-        //                 const deleteRange = new Range();
-        //                 deleteRange.selectNodeContents(cell.td);
-        //                 deleteRange.deleteContents();
-        //                 cell.td.appendChild(this.editor.getDocument().createElement('BR'));
-        //             }
-        //         });
-        //         this.clearState();
-        //     }
-        // }
-        // clearSelectedTableCells(event.clonedRoot);
     }
 
     //#region Key events
@@ -193,52 +164,43 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
      * @param event the plugin event
      */
     private handleKeyDownEvent(event: PluginKeyDownEvent | PluginKeyUpEvent) {
-        if (
-            (event.rawEvent.ctrlKey || event.rawEvent.metaKey) &&
-            !(event.rawEvent.shiftKey && (event.rawEvent.ctrlKey || event.rawEvent.metaKey))
-        ) {
+        const { shiftKey, ctrlKey, metaKey, which } = event.rawEvent;
+        if ((shiftKey && (ctrlKey || metaKey)) || which == Keys.SHIFT) {
             return;
         }
         const pos = this.editor.getFocusedPosition();
-        this.range = this.editor.getSelectionRange();
-
         this.state.firstTarget = this.state.firstTarget || pos.node;
-        let forceSelection = false;
+        this.state.lastTarget = this.state.tableSelection ? this.state.lastTarget : pos.node;
+
         if (getTagOfNode(this.state.firstTarget) == 'TR' && this.range) {
             this.state.firstTarget = pos.node;
         }
 
-        if (
-            (event.rawEvent.shiftKey && event.eventType == PluginEventType.KeyDown) ||
-            forceSelection
-        ) {
+        if (shiftKey && event.eventType == PluginEventType.KeyDown) {
             const commonAncestorContainer = this.range.commonAncestorContainer;
             const ancestorTag = getTagOfNode(commonAncestorContainer);
-            if (event.rawEvent.which == Keys.SHIFT) {
-                return;
-            }
 
             if (
-                (!this.state.vSelection &&
+                (!this.state.tableSelection &&
                     !isBlockElement(commonAncestorContainer) &&
                     this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, commonAncestorContainer)) ||
-                (!this.state.vSelection &&
-                    ancestorTag == 'TD' &&
-                    !forceSelection &&
-                    !this.range.collapsed)
+                (!this.state.tableSelection && ancestorTag == 'TD' && !this.range.collapsed)
             ) {
                 return;
             }
             this.state.lastTarget = this.state.lastTarget ?? this.state.firstTarget;
             this.setData(false);
+            this.targetTable = this.editor.getElementAtCursor('table', this.state.lastTarget);
             if (this.firstTable! == this.targetTable!) {
-                if (ancestorTag != 'TR' && !this.state.vSelection) {
+                if (ancestorTag != 'TR' && !this.state.tableSelection) {
                     return;
                 }
+                debugger;
                 //When selection start and end is inside of the same table
                 this.handleKeySelectionInsideTable(event);
-            } else {
+            } else if (this.state.tableSelection) {
                 clearSelectedTableCells(this.contentDiv);
+                this.state.tableSelection = false;
             }
         }
     }
@@ -247,7 +209,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         if (
             this.range &&
             this.range.collapsed &&
-            !this.state.vSelection &&
+            !this.state.tableSelection &&
             !this.range.collapsed &&
             isCell(this.range.commonAncestorContainer)
         ) {
@@ -257,8 +219,8 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             this.state.lastTarget = eventTarget;
             return;
         }
-
-        if (!event.rawEvent.shiftKey && event.rawEvent.which != Keys.SHIFT) {
+        const { shiftKey, which } = event.rawEvent;
+        if (!shiftKey && which != Keys.SHIFT) {
             this.clearState();
         }
     }
@@ -320,14 +282,16 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
         this.vTable.highlightSelection(this.state.startRange, this.state.endRange);
 
-        this.state.vSelection = true;
+        this.state.tableSelection = true;
         event.rawEvent.preventDefault();
     }
     //#endregion
 
     //#region Mouse events
     private handleMouseDownEvent(event: PluginMouseDownEvent) {
-        if (event.rawEvent.which == RIGHT_CLICK && this.state.vSelection) {
+        const { which, shiftKey } = event.rawEvent;
+
+        if (which == RIGHT_CLICK && this.state.tableSelection) {
             //If the user is right clicking To open context menu
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);
             if (td?.classList.contains(TableMetadata.TABLE_CELL_SELECTED)) {
@@ -345,7 +309,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             }
         }
         this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
-        if (event.rawEvent.which == LEFT_CLICK && !event.rawEvent.shiftKey) {
+        if (which == LEFT_CLICK && !shiftKey) {
             this.clearState();
             this.editor
                 .getDocument()
@@ -358,7 +322,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         if (
             event.isClicking &&
             this.range.collapsed &&
-            !this.state.vSelection &&
+            !this.state.tableSelection &&
             event.rawEvent.which != RIGHT_CLICK
         ) {
             this.clearTableCellSelection();
@@ -370,9 +334,11 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             return;
         }
         this.range = this.editor.getSelectionRange();
-        let eventTarget =
-            getCellAtCursor(this.editor, event.target as Node) || (event.target as HTMLElement);
+        let eventTarget = getCellAtCursor(this.editor, event.target as Node);
+        this.targetTable = this.editor.getElementAtCursor('table', eventTarget);
+        this.state.lastTarget = eventTarget;
         this.setData();
+
         //Ignore if
         // Is a DIV that only contains a Table
         // If the event target is not contained in the editor.
@@ -386,16 +352,10 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             return;
         }
 
-        // Handle if the table cell contains a Paragraph.
-        // Most of the Word tables contain a P inside each cell.
-        if (
-            getTagOfNode(event.target as Node) == 'p' &&
-            eventTarget != (event.target as Node) &&
-            safeInstanceOf(eventTarget, 'HTMLTableCellElement')
-        ) {
-            updateSelection(this.editor, eventTarget, 0);
+        if (this.state.tableSelection) {
+            updateSelection(this.editor, this.state.firstTarget, 0);
+            eventTarget = this.state.lastTarget as HTMLElement;
             event.preventDefault();
-            return;
         }
 
         let firstTable = this.editor.getElementAtCursor(
@@ -416,9 +376,30 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
 
         if (firstTable && (targetIsValid || isNewTDContainingFirstTable)) {
             //When starting selection inside of a table and ends inside of the same table.
-            this.selectionInsideTableMouseMove(eventTarget, targetTable, firstTable, event);
-        } else {
+            this.selectionInsideTableMouseMove(eventTarget, event);
+        } else if (this.state.tableSelection) {
             clearSelectedTableCells(this.contentDiv);
+            this.state.tableSelection = false;
+
+            const isBeginAboveEnd = this.isAfter(this.state.firstTarget, eventTarget);
+            const targetPosition = new Position(
+                eventTarget,
+                isBeginAboveEnd ? PositionType.End : PositionType.Begin
+            );
+
+            const firstTargetRange = new Range();
+            if (this.state.firstTarget) {
+                firstTargetRange.selectNodeContents(this.state.firstTarget);
+            }
+            updateSelection(
+                this.editor,
+                this.state.firstTarget,
+                isBeginAboveEnd
+                    ? Position.getEnd(firstTargetRange).offset
+                    : Position.getStart(firstTargetRange).offset,
+                targetPosition.element,
+                targetPosition.offset
+            );
         }
     };
 
@@ -430,17 +411,13 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         }
     };
 
-    private selectionInsideTableMouseMove(
-        eventTarget: HTMLElement,
-        targetTable: HTMLElement,
-        firstTable: HTMLTableElement,
-        event: MouseEvent
-    ) {
+    private selectionInsideTableMouseMove(eventTarget: HTMLElement, event: MouseEvent) {
         const firstTableTD = this.editor.getElementAtCursor(
             TABLE_CELL_SELECTOR,
             this.state.firstTarget
         );
 
+        updateSelection(this.editor, this.state.firstTarget, 0);
         if (
             this.state.firstTarget &&
             eventTarget &&
@@ -448,7 +425,10 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
             eventTarget != this.state.firstTarget
         ) {
             if (this.range && this.shouldConvertToVSelection()) {
-                if (targetTable != firstTable && targetTable?.contains(firstTable)) {
+                if (
+                    this.firstTable != this.targetTable &&
+                    this.targetTable?.contains(this.firstTable)
+                ) {
                     //If selection started in a table that is inside of another table and moves to parent table
                     //Make the firstTarget the TD of the parent table.
                     this.state.firstTarget = this.editor.getElementAtCursor(
@@ -467,12 +447,10 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                     eventTarget
                 ) as HTMLTableCellElement;
 
-                if (firstTable && currentTargetTD) {
-                    //Virtual Selection, handled when selection started inside of a table and the end of the selection
-                    //Is in the same table.
-                    this.state.vSelection = true;
+                if (this.firstTable && currentTargetTD) {
+                    this.state.tableSelection = true;
                     if (
-                        this.vTable?.table != firstTable &&
+                        this.vTable?.table != this.firstTable &&
                         safeInstanceOf(firstTableTD, 'HTMLTableCellElement')
                     ) {
                         this.vTable = new VTable(firstTableTD);
@@ -483,14 +461,12 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                         currentTargetTD ?? firstTableTD
                     );
                     this.vTable.highlightSelection(this.state.startRange, this.state.endRange);
-
-                    updateSelection(this.editor, firstTableTD, 0);
                 }
 
                 event.preventDefault();
             }
-        } else if (eventTarget == this.state.firstTarget && this.state.vSelection) {
-            this.vTable = new VTable(firstTable);
+        } else if (eventTarget == this.state.firstTarget && this.state.tableSelection) {
+            this.vTable = new VTable(this.firstTable);
             this.state.startRange = this.vTable.getCellCoordinates(firstTableTD);
 
             this.vTable.highlightSelection(this.state.startRange, this.state.startRange);
@@ -611,7 +587,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                         vTable.cells[this.state.startRange[1]][this.state.startRange[0]].td;
                     this.state.lastTarget =
                         vTable.cells[this.state.endRange[1]][this.state.endRange[0]].td;
-                    this.state.vSelection = true;
+                    this.state.tableSelection = true;
                     this.vTable = vTable;
 
                     this.editor.triggerPluginEvent(
@@ -648,7 +624,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         this.state.lastTarget = null;
         this.state.startRange = null;
         this.state.endRange = null;
-        this.state.vSelection = false;
+        this.state.tableSelection = false;
         this.firstTable = null;
         this.targetTable = null;
     }
@@ -710,7 +686,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 findClosestElementAncestor(targetTable, firstTable, TABLE_CELL_SELECTOR)
             );
 
-        if (isNewTargetTableContained && this.state.vSelection) {
+        if (isNewTargetTableContained && this.state.tableSelection) {
             while (isNewTargetTableContained) {
                 eventTarget = findClosestElementAncestor(
                     targetTable,
@@ -732,7 +708,7 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 findClosestElementAncestor(firstTable, targetTable, TABLE_CELL_SELECTOR)
             );
 
-        if (isFirstTargetTableContained && this.state.vSelection) {
+        if (isFirstTargetTableContained && this.state.tableSelection) {
             while (isFirstTargetTableContained) {
                 this.state.firstTarget = findClosestElementAncestor(
                     firstTable,
@@ -770,11 +746,9 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
                 this.state.firstTarget
             ) as HTMLTableElement;
             this.range = this.editor.getSelectionRange();
-            this.targetTable = this.editor.getElementAtCursor('table', pos.node);
             if (setTargets) {
                 this.state.firstTarget =
                     this.state.firstTarget || getCellAtCursor(this.editor, pos.node);
-                this.state.lastTarget = getCellAtCursor(this.editor, pos.node);
 
                 if (this.state.firstTarget == this.contentDiv && this.state.lastTarget) {
                     this.state.firstTarget = this.state.lastTarget;
@@ -783,6 +757,21 @@ export default class TableSelectionPlugin implements PluginWithState<TableSelect
         }
     }
 
+    private isAfter(node1: Node, node2: Node) {
+        if (node1 && node2) {
+            if (node2.contains(node1)) {
+                const r1 = (node1 as Element).getBoundingClientRect?.();
+                const r2 = (node2 as Element).getBoundingClientRect?.();
+                if (r1 && r2) {
+                    return r1.top > r2.top && r1.bottom < r2.bottom;
+                }
+            }
+
+            const position = new Position(node1, PositionType.End);
+            return position.isAfter(new Position(node2, PositionType.End));
+        }
+        return false;
+    }
     //#endregion
 }
 
