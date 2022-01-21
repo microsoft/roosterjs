@@ -29,31 +29,7 @@ describe('getSelectionRangeEx', () => {
         });
     });
 
-    it('use cache, focus is not in editor', () => {
-        const core = createEditorCore(div, {});
-        const cachedRange = document.createRange();
-        core.domEvent = {
-            selectionRange: cachedRange,
-            isInIME: false,
-            scrollContainer: null,
-            stopPrintableKeyboardEventPropagation: false,
-            contextMenuProviders: [],
-        };
-        const input = document.createElement('input');
-        document.body.appendChild(input);
-        input.focus();
-
-        const selectionEx = getSelectionRangeEx(core);
-        selectionEx.ranges.forEach(range => {
-            expect(range.startContainer).toBe(div);
-            expect(range.endContainer).toBe(div);
-            expect(range.startOffset).toBe(0);
-            expect(range.endOffset).toBe(1);
-        });
-        document.body.removeChild(input);
-    });
-
-    it('use cache, focus is in editor', () => {
+    it('table selection', () => {
         const core = createEditorCore(div, {});
         div.contentEditable = 'true';
         div.innerHTML =
@@ -68,7 +44,7 @@ describe('getSelectionRangeEx', () => {
             expect(range.startContainer).toBe(tr);
             expect(range.endContainer).toBe(tr);
             expect(range.startOffset).toBe(0);
-            expect(range.endOffset).toBe(1);
+            expect(range.endOffset).toBe(2);
             cont++;
         });
     });

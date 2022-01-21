@@ -1,6 +1,7 @@
 import { ChangeSource, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Wrap to add a undo snapshot before applying format, if there are more than one range.
  * Otherwise, for each range an undosnapshot would be added.
  * @param editor editor instance
