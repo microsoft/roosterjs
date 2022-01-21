@@ -135,6 +135,7 @@ export {
     Focus,
     GetContent,
     GetSelectionRange,
+    GetSelectionRangeEx,
     GetStyleBasedFormatState,
     GetPendableFormatState,
     HasFocus,
@@ -164,8 +165,16 @@ export { default as UndoSnapshotsService } from './interface/UndoSnapshotsServic
 export { default as PickerDataProvider } from './interface/PickerDataProvider';
 export { default as PickerPluginOptions } from './interface/PickerPluginOptions';
 export { default as VCell } from './interface/VCell';
+export { default as IVTable } from './interface/IVTable';
 export { default as ImageEditOptions } from './interface/ImageEditOptions';
 export { default as CreateElementData } from './interface/CreateElementData';
+export {
+    ISelectionRangeEx,
+    INormalSelectionRange,
+    ITableSelectionRange,
+    SelectionRangeEx,
+    SelectionRangeTypes,
+} from './interface/SelectionRangeEx';
 
 // Core Plugin State
 export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';

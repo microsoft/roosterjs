@@ -2,12 +2,13 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { IVTable, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { TableMetadata } from './tableMetadata';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default class VTable {
+export default class VTable implements IVTable {
     /**
      * The HTML table object
      */
@@ -28,13 +29,27 @@ export default class VTable {
      */
     col: number;
 
+    /**
+     * Start of the  Selection Range
+     */
+    startRange: number[];
+
+    /**
+     * End of the  Selection Range
+     */
+    endRange: number[];
+
     private trs: HTMLTableRowElement[] = [];
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      */
-    constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
+    constructor(
+        node: HTMLTableElement | HTMLTableCellElement,
+        normalizeSize?: boolean,
+        setSelectedRange?: boolean
+    ) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
@@ -63,6 +78,17 @@ export default class VTable {
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
                             };
+
+                            if (
+                                setSelectedRange &&
+                                td.classList.contains(TableMetadata.TABLE_CELL_SELECTED)
+                            ) {
+                                this.startRange = this.startRange || [
+                                    targetCol,
+                                    rowIndex + rowSpan,
+                                ];
+                                this.endRange = [targetCol, rowIndex + rowSpan];
+                            }
                         }
                     }
                 }
@@ -72,6 +98,32 @@ export default class VTable {
                 this.normalizeSize();
             }
         }
+    }
+
+    getSelectedRanges(): Range[] {
+        const ranges: Range[] = [];
+        const rows = this.cells.length;
+
+        for (let y = 0; y < rows; y++) {
+            const rowRange = new Range();
+            let firstSelected: HTMLTableCellElement = null;
+            let lastSelected: HTMLTableCellElement = null;
+
+            this.forEachCellOfRow(y, (cell, x) => {
+                if (cell.td && this.isInsideOfSelection(x, y)) {
+                    firstSelected = firstSelected || cell.td;
+                    lastSelected = cell.td;
+                }
+            });
+
+            if (firstSelected) {
+                rowRange.setStartBefore(firstSelected);
+                rowRange.setEndAfter(lastSelected);
+                ranges.push(rowRange);
+            }
+        }
+
+        return ranges;
     }
 
     /**
@@ -407,7 +459,7 @@ export default class VTable {
         return this.getTd(this.row, this.col);
     }
 
-    private getTd(row: number, col: number) {
+    getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
             col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
@@ -519,6 +571,25 @@ export default class VTable {
         this.normalizeEmptyTableCells();
         this.normalizeTableCellSize();
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
+    }
+
+    /**
+     * Check if the cell is inside of the selection range
+     * @returns true if it is inside, otherwise false
+     */
+    private isInsideOfSelection(x: number, y: number) {
+        if (this.startRange && this.endRange) {
+            let startX: number = this.startRange[0];
+            let startY: number = this.startRange[1];
+            let endX: number = this.endRange[0];
+            let endY: number = this.endRange[1];
+
+            return (
+                ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
+                ((x >= startX && x <= endX) || (x <= startX && x >= endX))
+            );
+        }
+        return false;
     }
 }
 
