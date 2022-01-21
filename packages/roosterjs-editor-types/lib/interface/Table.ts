@@ -1,11 +1,12 @@
 import TableFormat from './TableFormat';
+import TableSelection from './TableSelection';
 import VCell from './VCell';
 import { TableOperation } from '../enum/TableOperation';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default interface IVTable {
+export default interface Table {
     /**
      * The HTML table object
      */
@@ -27,14 +28,9 @@ export default interface IVTable {
     col: number;
 
     /**
-     * Start of the  Selection Range
+     * Selected range of cells with the coordinates of the first and last cell selected.
      */
-    startRange: number[];
-
-    /**
-     * End of the  Selection Range
-     */
-    endRange: number[];
+    selection: TableSelection;
 
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
@@ -114,7 +110,7 @@ export default interface IVTable {
     /**
      * Transforms the selected cells to Ranges.
      * For Each Row a Range with selected cells, a Range is going to be returned.
-     * @returns
+     * @returns Array of ranges from the selected table cells.
      */
     getSelectedRanges(): Range[];
 }

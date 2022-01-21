@@ -2,13 +2,14 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { IVTable, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
-import { TableMetadata } from './tableMetadata';
+import { Table, TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
+
+const TABLE_CELL_SELECTED = '_tableCellSelected';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default class VTable implements IVTable {
+export default class VTable implements Table {
     /**
      * The HTML table object
      */
@@ -30,27 +31,25 @@ export default class VTable implements IVTable {
     col: number;
 
     /**
-     * Start of the  Selection Range
+     * Selected range of cells with the coordinates of the first and last cell selected.
      */
-    startRange: number[];
-
-    /**
-     * End of the  Selection Range
-     */
-    endRange: number[];
+    selection: TableSelection;
 
     private trs: HTMLTableRowElement[] = [];
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
+     * @param normalizeSize Whether table size needs to be normalized
      */
-    constructor(
-        node: HTMLTableElement | HTMLTableCellElement,
-        normalizeSize?: boolean,
-        setSelectedRange?: boolean
-    ) {
+    constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
+        this.selection = {
+            firstCol: null,
+            firstRow: null,
+            lastCol: null,
+            lastRow: null,
+        };
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
@@ -78,16 +77,11 @@ export default class VTable implements IVTable {
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
                             };
-
-                            if (
-                                setSelectedRange &&
-                                td.classList.contains(TableMetadata.TABLE_CELL_SELECTED)
-                            ) {
-                                this.startRange = this.startRange || [
-                                    targetCol,
-                                    rowIndex + rowSpan,
-                                ];
-                                this.endRange = [targetCol, rowIndex + rowSpan];
+                            if (td.classList.contains(TABLE_CELL_SELECTED)) {
+                                this.selection.firstCol = this.selection.firstCol ?? targetCol;
+                                this.selection.firstRow = this.selection.firstRow ?? rowIndex;
+                                this.selection.lastCol = targetCol;
+                                this.selection.lastRow = rowIndex;
                             }
                         }
                     }
@@ -103,6 +97,7 @@ export default class VTable implements IVTable {
     getSelectedRanges(): Range[] {
         const ranges: Range[] = [];
         const rows = this.cells.length;
+        const { firstCol, firstRow, lastCol, lastRow } = this.selection;
 
         for (let y = 0; y < rows; y++) {
             const rowRange = new Range();
@@ -110,7 +105,11 @@ export default class VTable implements IVTable {
             let lastSelected: HTMLTableCellElement = null;
 
             this.forEachCellOfRow(y, (cell, x) => {
-                if (cell.td && this.isInsideOfSelection(x, y)) {
+                if (
+                    cell.td &&
+                    ((y >= firstRow && y <= lastRow) || (y <= firstRow && y >= lastRow)) &&
+                    ((x >= firstCol && x <= lastCol) || (x <= firstCol && x >= lastCol))
+                ) {
                     firstSelected = firstSelected || cell.td;
                     lastSelected = cell.td;
                 }
@@ -571,25 +570,6 @@ export default class VTable implements IVTable {
         this.normalizeEmptyTableCells();
         this.normalizeTableCellSize();
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
-    }
-
-    /**
-     * Check if the cell is inside of the selection range
-     * @returns true if it is inside, otherwise false
-     */
-    private isInsideOfSelection(x: number, y: number) {
-        if (this.startRange && this.endRange) {
-            let startX: number = this.startRange[0];
-            let startY: number = this.startRange[1];
-            let endX: number = this.endRange[0];
-            let endY: number = this.endRange[1];
-
-            return (
-                ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
-                ((x >= startX && x <= endX) || (x <= startX && x >= endX))
-            );
-        }
-        return false;
     }
 }
 

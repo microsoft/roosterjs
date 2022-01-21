@@ -453,7 +453,7 @@ export default interface IEditor {
     /**
      * Get a content traverser for current selection
      */
-    getSelectionTraverser(range?: Range): IContentTraverser;
+    getSelectionTraverser(): IContentTraverser;
 
     /**
      * Get a content traverser for current block element start from specified position

@@ -1,13 +1,12 @@
-import { EditorCore, GetSelectionRangeEx, SelectionRangeEx } from 'roosterjs-editor-types';
+import { contains, createRange, safeInstanceOf, VTable } from 'roosterjs-editor-dom';
 import {
-    contains,
-    createRange,
-    NormalSelectionRange,
-    safeInstanceOf,
-    TableSelectionRange,
-    TableMetadata,
-    VTable,
-} from 'roosterjs-editor-dom';
+    EditorCore,
+    GetSelectionRangeEx,
+    SelectionRangeEx,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
+
+const TABLE_SELECTED = '_tableSelected';
 
 /**
  * @internal
@@ -56,19 +55,29 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
 };
 
 function createNormalSelectionEx(ranges: Range[]): SelectionRangeEx {
-    return new NormalSelectionRange(ranges);
+    return {
+        type: SelectionRangeTypes.Normal,
+        ranges: ranges,
+        areAllCollapsed: ranges.filter(range => range.collapsed).length == ranges.length,
+    };
 }
 
 function createTableSelectionEx(vTable: VTable): SelectionRangeEx {
-    return new TableSelectionRange(vTable);
+    const ranges = vTable.getSelectedRanges();
+    return {
+        type: SelectionRangeTypes.TableSelection,
+        ranges: ranges,
+        vTable: vTable,
+        areAllCollapsed: ranges.filter(range => range.collapsed).length == ranges.length,
+    };
 }
 
 function getTableSelected(container: HTMLElement | DocumentFragment) {
-    const table = container.querySelector('table.' + TableMetadata.TABLE_SELECTED);
+    const table = container.querySelector('table.' + TABLE_SELECTED);
 
     let vTable: VTable = null;
     if (safeInstanceOf(table, 'HTMLTableElement')) {
-        vTable = new VTable(table, false, true);
+        vTable = new VTable(table, false);
     }
 
     return vTable;

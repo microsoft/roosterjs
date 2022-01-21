@@ -1,22 +1,9 @@
-import IVTable from './IVTable';
-
-/**
- * Represents the selection made inside of a table.
- */
-export interface ITableSelectionRange
-    extends ISelectionRangeEx<SelectionRangeTypes.TableSelection> {
-    vTable: IVTable;
-}
+import Table from './Table';
 
 /**
  * Represents normal selection
  */
-export interface INormalSelectionRange extends ISelectionRangeEx<SelectionRangeTypes.Normal> {}
-
-/**
- * Represents normal selection
- */
-export interface ISelectionRangeEx<T> {
+export interface SelectionRangeExBase<T extends SelectionRangeTypes> {
     /**
      * Selection Type definition
      */
@@ -32,6 +19,19 @@ export interface ISelectionRangeEx<T> {
      */
     areAllCollapsed: boolean;
 }
+
+/**
+ * Represents the selection made inside of a table.
+ */
+export interface TableSelectionRange
+    extends SelectionRangeExBase<SelectionRangeTypes.TableSelection> {
+    vTable: Table;
+}
+
+/**
+ * Represents normal selection
+ */
+export interface NormalSelectionRange extends SelectionRangeExBase<SelectionRangeTypes.Normal> {}
 
 /**
  * Types of Selection Ranges that the SelectionRangeEx can return
@@ -50,4 +50,4 @@ export const enum SelectionRangeTypes {
 /**
  * Types of ranges used in editor api getSelectionRangeEx
  */
-export type SelectionRangeEx = INormalSelectionRange | ITableSelectionRange;
+export type SelectionRangeEx = NormalSelectionRange | TableSelectionRange;
