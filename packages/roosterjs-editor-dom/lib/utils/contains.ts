@@ -1,4 +1,4 @@
-import safeInstanceOf from '../utils/safeInstanceOf';
+import safeInstanceOf from './safeInstanceOf';
 import { NodeType } from 'roosterjs-editor-types';
 
 /**

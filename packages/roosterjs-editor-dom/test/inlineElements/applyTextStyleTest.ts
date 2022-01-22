@@ -1,4 +1,4 @@
-import applyTextStyle from '../../lib/utils/applyTextStyle';
+import applyTextStyle from '../../lib/inlineElements/applyTextStyle';
 import Position from '../../lib/selection/Position';
 import { PositionType } from 'roosterjs-editor-types';
 
