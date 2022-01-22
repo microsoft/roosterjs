@@ -634,9 +634,15 @@ export default class Editor implements IEditor {
     /**
      * Get a content traverser for current selection
      */
-    public getSelectionTraverser(range?: Range): IContentTraverser {
-        range = range ?? this.getSelectionRange();
-        return range && ContentTraverser.createSelectionTraverser(this.core.contentDiv, range);
+    public getSelectionTraverser(): IContentTraverser {
+        let range = this.getSelectionRange();
+        return (
+            range &&
+            ContentTraverser.createSelectionTraverser(
+                this.core.contentDiv,
+                this.getSelectionRange()
+            )
+        );
     }
 
     /**
