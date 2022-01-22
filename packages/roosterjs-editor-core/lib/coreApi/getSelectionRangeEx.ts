@@ -25,14 +25,6 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                 core.lifecycle.shadowEditSelectionPath.end
             );
 
-        if (shadowRange.collapsed) {
-            const tableSelected = getTableSelected(core.contentDiv);
-
-            if (tableSelected) {
-                return createTableSelectionEx(tableSelected);
-            }
-        }
-
         return createNormalSelectionEx([shadowRange]);
     } else {
         if (core.api.hasFocus(core)) {
@@ -58,7 +50,7 @@ function createNormalSelectionEx(ranges: Range[]): SelectionRangeEx {
     return {
         type: SelectionRangeTypes.Normal,
         ranges: ranges,
-        areAllCollapsed: ranges.filter(range => range.collapsed).length == ranges.length,
+        areAllCollapsed: checkAllCollapsed(ranges),
     };
 }
 
@@ -68,8 +60,12 @@ function createTableSelectionEx(vTable: VTable): SelectionRangeEx {
         type: SelectionRangeTypes.TableSelection,
         ranges: ranges,
         vTable: vTable,
-        areAllCollapsed: ranges.filter(range => range.collapsed).length == ranges.length,
+        areAllCollapsed: checkAllCollapsed(ranges),
     };
+}
+
+function checkAllCollapsed(ranges: Range[]): boolean {
+    return ranges.filter(range => range?.collapsed).length == ranges.length;
 }
 
 function getTableSelected(container: HTMLElement | DocumentFragment) {
@@ -77,7 +73,7 @@ function getTableSelected(container: HTMLElement | DocumentFragment) {
 
     let vTable: VTable = null;
     if (safeInstanceOf(table, 'HTMLTableElement')) {
-        vTable = new VTable(table, false);
+        vTable = new VTable(table);
     }
 
     return vTable;

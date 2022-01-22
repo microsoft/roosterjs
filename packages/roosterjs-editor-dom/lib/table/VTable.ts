@@ -44,12 +44,12 @@ export default class VTable implements Table {
      */
     constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
-        this.selection = {
-            firstCol: null,
-            firstRow: null,
-            lastCol: null,
-            lastRow: null,
-        };
+        this.selection = null;
+        let firstCol: number = null;
+        let firstRow: number = null;
+        let lastCol: number;
+        let lastRow: number;
+
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
@@ -78,10 +78,10 @@ export default class VTable implements Table {
                                 height: hasTd ? rect.height : undefined,
                             };
                             if (td.classList.contains(TABLE_CELL_SELECTED)) {
-                                this.selection.firstCol = this.selection.firstCol ?? targetCol;
-                                this.selection.firstRow = this.selection.firstRow ?? rowIndex;
-                                this.selection.lastCol = targetCol;
-                                this.selection.lastRow = rowIndex;
+                                firstCol = firstCol ?? targetCol;
+                                firstRow = firstRow ?? rowIndex;
+                                lastCol = targetCol;
+                                lastRow = rowIndex;
                             }
                         }
                     }
@@ -92,8 +92,22 @@ export default class VTable implements Table {
                 this.normalizeSize();
             }
         }
+
+        if (firstCol !== null && firstRow !== null) {
+            this.selection = {
+                firstCol,
+                firstRow,
+                lastCol,
+                lastRow,
+            };
+        }
     }
 
+    /**
+     * Transforms the selected cells to Ranges.
+     * For Each Row a Range with selected cells, a Range is going to be returned.
+     * @returns Array of ranges from the selected table cells.
+     */
     getSelectedRanges(): Range[] {
         const ranges: Range[] = [];
         const rows = this.cells.length;
@@ -458,6 +472,11 @@ export default class VTable implements Table {
         return this.getTd(this.row, this.col);
     }
 
+    /**
+     * Get the Table Cell in a provided coordinate
+     * @param row row of the cell
+     * @param col column of the cell
+     */
     getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);

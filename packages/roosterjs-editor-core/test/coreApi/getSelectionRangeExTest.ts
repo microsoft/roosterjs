@@ -14,6 +14,16 @@ describe('getSelectionRangeEx', () => {
         div = null;
     });
 
+    it('do not use cache, focus is not in editor', () => {
+        const core = createEditorCore(div, {});
+        const input = document.createElement('input');
+        document.body.appendChild(input);
+        input.focus();
+        const selection = getSelectionRangeEx(core);
+        expect(selection.ranges[0]).toBeNull();
+        document.body.removeChild(input);
+    });
+
     it('do not use cache, focus is in editor', () => {
         const core = createEditorCore(div, {});
         div.contentEditable = 'true';
@@ -27,6 +37,27 @@ describe('getSelectionRangeEx', () => {
             expect(range.startOffset).toBe(0);
             expect(range.endOffset).toBe(1);
         });
+    });
+
+    it('use cache, focus is not in editor', () => {
+        const core = createEditorCore(div, {});
+        const cachedRange = document.createRange();
+        core.domEvent = {
+            selectionRange: cachedRange,
+            isInIME: false,
+            scrollContainer: null,
+            stopPrintableKeyboardEventPropagation: false,
+            contextMenuProviders: [],
+        };
+        const input = document.createElement('input');
+        document.body.appendChild(input);
+        input.focus();
+
+        const selection = getSelectionRangeEx(core);
+        selection.ranges.forEach(range => {
+            expect(range).toBe(cachedRange);
+        });
+        document.body.removeChild(input);
     });
 
     it('table selection', () => {

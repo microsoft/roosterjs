@@ -101,9 +101,9 @@ export default interface Table {
     getCurrentTd(): HTMLTableCellElement;
 
     /**
-     * Get the TableCell in a provided coordinate
-     * @param row
-     * @param col
+     * Get the Table Cell in a provided coordinate
+     * @param row row of the cell
+     * @param col column of the cell
      */
     getTd(row: number, col: number): HTMLTableCellElement;
 

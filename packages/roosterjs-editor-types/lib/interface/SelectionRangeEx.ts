@@ -25,6 +25,9 @@ export interface SelectionRangeExBase<T extends SelectionRangeTypes> {
  */
 export interface TableSelectionRange
     extends SelectionRangeExBase<SelectionRangeTypes.TableSelection> {
+    /**
+     * Table that has cells selected
+     */
     vTable: Table;
 }
 
