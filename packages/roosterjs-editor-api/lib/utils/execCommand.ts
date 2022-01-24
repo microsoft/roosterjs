@@ -1,4 +1,5 @@
 import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { multipleSelectionRangesWrap } from './multipleSelectionRangesWrap';
 import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
 
 /**
@@ -16,22 +17,24 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
 
     let formatter = () => editor.getDocument().execCommand(command, false, null);
 
-    let range = editor.getSelectionRange();
-    if (range && range.collapsed) {
-        editor.addUndoSnapshot();
-        const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
-        formatter();
-        const formatName = Object.keys(PendableFormatCommandMap).filter(
-            (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
-        )[0] as PendableFormatNames;
+    let selection = editor.getSelectionRangeEx();
+    multipleSelectionRangesWrap(editor, selection, range => {
+        if (range && range.collapsed) {
+            editor.addUndoSnapshot();
+            const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
+            formatter();
+            const formatName = Object.keys(PendableFormatCommandMap).filter(
+                (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
+            )[0] as PendableFormatNames;
 
-        if (formatName) {
-            formatState[formatName] = !formatState[formatName];
-            editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
-                formatState: formatState,
-            });
+            if (formatName) {
+                formatState[formatName] = !formatState[formatName];
+                editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
+                    formatState: formatState,
+                });
+            }
+        } else {
+            editor.addUndoSnapshot(formatter, ChangeSource.Format);
         }
-    } else {
-        editor.addUndoSnapshot(formatter, ChangeSource.Format);
-    }
+    });
 }
