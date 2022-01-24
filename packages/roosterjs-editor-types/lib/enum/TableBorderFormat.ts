@@ -1,22 +1,25 @@
 /**
  * Table format border
  */
-
 export const enum TableBorderFormat {
+    /**
+     * Default border type
+     */
+    DEFAULT,
     /**
      * Only the top, bottom, left and right border of the table are displayed
      */
-    onlyExternalBorders = 'onlyExternalBorders',
+    EXTERNAL,
     /**
-     * All borders except header rows border are displayed
+     * All borders except header rows borders are displayed
      */
-    removeHeaderRowMiddleBorder = 'removeHeaderRowMiddleBorder',
+    NO_HEADER_VERTICAL,
     /**
      * All borders except left and right border of the table are displayed
      */
-    onlyMiddleBorders = 'onlyInternalBorders',
+    MIDDLE,
     /**
-     * Only the top, bottom, left and right border of the table are displayed
+     * Only the borders of header row, first column and whole table are displayed
      */
-    onlyExternalHeaderRowAndFirstColumnBorders = 'onlyExternalHeaderRowAndFirstColumnBorders',
+    FIRST_COLUMN_HEADER_EXTERNAL,
 }

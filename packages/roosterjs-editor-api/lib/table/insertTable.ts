@@ -1,23 +1,6 @@
 import { ChangeSource, IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
 import { Position, VTable } from 'roosterjs-editor-dom';
 
-const DEFAULT_FORMAT: Partial<TableFormat> = {
-    bgColor: null,
-    topBorderColor: '#ABABAB',
-    bottomBorderColor: '#ABABAB',
-    verticalBorderColor: '#ABABAB',
-    headerRow: false,
-    firstColumn: false,
-    bandedRows: false,
-    bandedColumns: false,
-    bgColumnColorEven: null,
-    bgColumnColorOdd: '#ABABAB20',
-    bgColorEven: null,
-    bgColorOdd: '#ABABAB20',
-    headerRowColor: '#ABABAB',
-    tableBorderFormat: null,
-};
-
 /**
  * Insert table into editor at current selection
  * @param editor The editor instance
@@ -53,7 +36,7 @@ export default function insertTable(
     editor.focus();
     editor.addUndoSnapshot(() => {
         let vtable = new VTable(table);
-        vtable.applyFormat(format || DEFAULT_FORMAT);
+        vtable.applyFormatAndStyle(format);
         vtable.writeBack();
         editor.insertNode(fragment);
         editor.runAsync(editor =>

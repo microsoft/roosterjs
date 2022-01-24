@@ -58,7 +58,7 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.onlyMiddleBorders /** tableBorderFormat */,
+            TableBorderFormat.MIDDLE /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             lightColor /** bgColumnColorOdd */,
@@ -92,7 +92,7 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.onlyExternalHeaderRowAndFirstColumnBorders /** tableBorderFormat */,
+            TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             lightColor /** bgColumnColorOdd */,
@@ -513,7 +513,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
             this.verticalBorderColor.current.value || undefined
         );
 
-        this.state.vtable.applyFormat(format);
+        this.state.vtable.applyFormatAndStyle(format);
         this.forceUpdate();
     };
 
@@ -564,25 +564,25 @@ function createTableFormat(
     };
 }
 
-function setHeaderRow(table: HTMLTableElement): Partial<TableFormat> {
+function setHeaderRow(table: HTMLTableElement): Required<TableFormat> {
     const format = getTableFormatInfo(table);
     format.headerRow = !format.headerRow;
     return format;
 }
 
-function setFirstColumn(table: HTMLTableElement): Partial<TableFormat> {
+function setFirstColumn(table: HTMLTableElement): Required<TableFormat> {
     const format = getTableFormatInfo(table);
     format.firstColumn = !format.firstColumn;
     return format;
 }
 
-function setBandedColumn(table: HTMLTableElement): Partial<TableFormat> {
+function setBandedColumn(table: HTMLTableElement): Required<TableFormat> {
     const format = getTableFormatInfo(table);
     format.bandedColumns = !format.bandedColumns;
     return format;
 }
 
-function setBandedRow(table: HTMLTableElement): Partial<TableFormat> {
+function setBandedRow(table: HTMLTableElement): Required<TableFormat> {
     const format = getTableFormatInfo(table);
     format.bandedRows = !format.bandedRows;
     return format;

@@ -9,14 +9,14 @@ import { VTable } from 'roosterjs-editor-dom';
  */
 export default function formatTable(
     editor: IEditor,
-    format: Partial<TableFormat>,
+    format: Required<TableFormat>,
     table?: HTMLTableElement
 ) {
     table = table || (editor.getElementAtCursor('TABLE') as HTMLTableElement);
     if (table) {
         editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(table);
-            vtable.applyFormat(format);
+            vtable.applyFormatAndStyle(format);
             vtable.writeBack();
             editor.focus();
             editor.select(start, end);

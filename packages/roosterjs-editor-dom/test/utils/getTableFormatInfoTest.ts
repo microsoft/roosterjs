@@ -1,8 +1,7 @@
+import getTableFormatInfo from '../../lib/utils/getFormatTableInfo';
 import VTable from '../../lib/table/VTable';
-import { deleteTableInfo, getTableFormatInfo, saveTableInfo } from '../../lib/utils/tableInfo';
 import { TableFormat } from 'roosterjs-editor-types';
 
-const TABLE_STYLE_INFO = 'roosterTableInfo';
 const format: TableFormat = {
     bgColor: null,
     topBorderColor: '#0C64C0',
@@ -30,7 +29,7 @@ function createTable(format: TableFormat) {
     div.innerHTML = '<table id=id1><tr><td></td></tr><tr><td></td></tr> <tr><td></td></tr></table>';
     let node = document.getElementById(id) as HTMLTableElement;
     let vTable = new VTable(node);
-    vTable.applyFormat(format);
+    vTable.applyFormatAndStyle(format);
     return node;
 }
 
@@ -39,29 +38,9 @@ function removeTable() {
     table.parentNode.removeChild(table);
 }
 
-describe('saveTableInfo', () => {
-    it('should save table info', () => {
-        const table = createTable(format);
-        saveTableInfo(table, format);
-        expect(table.dataset[TABLE_STYLE_INFO]).toBe(expectedTableInfo);
-        removeTable();
-    });
-});
-
-describe('deleteTableInfo', () => {
-    it('should save table info', () => {
-        const table = createTable(format);
-        saveTableInfo(table, format);
-        deleteTableInfo(table);
-        expect(table.dataset[TABLE_STYLE_INFO]).toBe(undefined);
-        removeTable();
-    });
-});
-
 describe('getTableFormatInfo', () => {
     it('should return the info of a table ', () => {
         const table = createTable(format);
-        saveTableInfo(table, format);
         const tableInfo = getTableFormatInfo(table);
         expect(tableInfo).toEqual(JSON.parse(expectedTableInfo) as TableFormat);
         removeTable();
