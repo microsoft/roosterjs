@@ -81,6 +81,12 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><span class="tsd-signature-type">Table</span></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -97,6 +103,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#cells" class="tsd-kind-icon">cells</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#col" class="tsd-kind-icon">col</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#row" class="tsd-kind-icon">row</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#selection" class="tsd-kind-icon">selection</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#table" class="tsd-kind-icon">table</a></li>
 							</ul>
 						</section>
@@ -110,6 +117,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#getcell" class="tsd-kind-icon">get<wbr>Cell</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#getcellswithborder" class="tsd-kind-icon">get<wbr>Cells<wbr>With<wbr>Border</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#getcurrenttd" class="tsd-kind-icon">get<wbr>Current<wbr>Td</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#getselectedranges" class="tsd-kind-icon">get<wbr>Selected<wbr>Ranges</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#gettd" class="tsd-kind-icon">get<wbr>Td</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#normalizetablecellsize" class="tsd-kind-icon">normalize<wbr>Table<wbr>Cell<wbr>Size</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_dom.vtable.html#writeback" class="tsd-kind-icon">write<wbr>Back</a></li>
 							</ul>
@@ -129,7 +138,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L31">roosterjs-editor-dom/lib/table/VTable.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L38">roosterjs-editor-dom/lib/table/VTable.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -147,6 +156,9 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> normalizeSize: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether table size needs to be normalized</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_dom.vtable.html" class="tsd-signature-type" data-tsd-kind="Class">VTable</a></h4>
@@ -161,8 +173,9 @@
 					<h3>cells</h3>
 					<div class="tsd-signature tsd-kind-icon">cells<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">default</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of Table.cells</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L19">roosterjs-editor-dom/lib/table/VTable.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L21">roosterjs-editor-dom/lib/table/VTable.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -176,8 +189,9 @@
 					<h3>col</h3>
 					<div class="tsd-signature tsd-kind-icon">col<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of Table.col</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L29">roosterjs-editor-dom/lib/table/VTable.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L31">roosterjs-editor-dom/lib/table/VTable.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -191,8 +205,9 @@
 					<h3>row</h3>
 					<div class="tsd-signature tsd-kind-icon">row<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of Table.row</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L24">roosterjs-editor-dom/lib/table/VTable.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L26">roosterjs-editor-dom/lib/table/VTable.ts:26</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -202,12 +217,29 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="selection" class="tsd-anchor"></a>
+					<h3>selection</h3>
+					<div class="tsd-signature tsd-kind-icon">selection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">default</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of Table.selection</p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L36">roosterjs-editor-dom/lib/table/VTable.ts:36</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Selected range of cells with the coordinates of the first and last cell selected.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="table" class="tsd-anchor"></a>
 					<h3>table</h3>
 					<div class="tsd-signature tsd-kind-icon">table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLTableElement</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of Table.table</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L14">roosterjs-editor-dom/lib/table/VTable.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L16">roosterjs-editor-dom/lib/table/VTable.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -228,8 +260,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.applyFormat</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L102">roosterjs-editor-dom/lib/table/VTable.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L166">roosterjs-editor-dom/lib/table/VTable.ts:166</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -259,8 +292,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.edit</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L127">roosterjs-editor-dom/lib/table/VTable.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L191">roosterjs-editor-dom/lib/table/VTable.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -290,8 +324,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.forEachCellOfCurrentColumn</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L328">roosterjs-editor-dom/lib/table/VTable.ts:328</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L392">roosterjs-editor-dom/lib/table/VTable.ts:392</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -345,8 +380,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.forEachCellOfCurrentRow</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L389">roosterjs-editor-dom/lib/table/VTable.ts:389</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L453">roosterjs-editor-dom/lib/table/VTable.ts:453</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -397,8 +433,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.getCell</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L399">roosterjs-editor-dom/lib/table/VTable.ts:399</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L463">roosterjs-editor-dom/lib/table/VTable.ts:463</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -435,8 +472,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.getCellsWithBorder</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L356">roosterjs-editor-dom/lib/table/VTable.ts:356</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L420">roosterjs-editor-dom/lib/table/VTable.ts:420</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -486,8 +524,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.getCurrentTd</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L406">roosterjs-editor-dom/lib/table/VTable.ts:406</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L470">roosterjs-editor-dom/lib/table/VTable.ts:470</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -495,6 +534,69 @@
 									<p>Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell</p>
 								</div>
 							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLTableCellElement</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getselectedranges" class="tsd-anchor"></a>
+					<h3>get<wbr>Selected<wbr>Ranges</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Selected<wbr>Ranges<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of Table.getSelectedRanges</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L111">roosterjs-editor-dom/lib/table/VTable.ts:111</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Transforms the selected cells to Ranges.
+									For Each Row a Range with selected cells, a Range is going to be returned.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Range</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>Array of ranges from the selected table cells.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="gettd" class="tsd-anchor"></a>
+					<h3>get<wbr>Td</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Td<span class="tsd-signature-symbol">(</span>row<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, col<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLTableCellElement</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of Table.getTd</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L479">roosterjs-editor-dom/lib/table/VTable.ts:479</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the Table Cell in a provided coordinate</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>row: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>row of the cell</p>
+									</div>
+								</li>
+								<li>
+									<h5>col: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>column of the cell</p>
+									</div>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLTableCellElement</span></h4>
 						</li>
 					</ul>
@@ -509,7 +611,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L498">roosterjs-editor-dom/lib/table/VTable.ts:498</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L567">roosterjs-editor-dom/lib/table/VTable.ts:567</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -525,8 +627,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of Table.writeBack</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/604f5b0/packages/roosterjs-editor-dom/lib/table/VTable.ts#L80">roosterjs-editor-dom/lib/table/VTable.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/e50d8bf/packages/roosterjs-editor-dom/lib/table/VTable.ts#L144">roosterjs-editor-dom/lib/table/VTable.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -589,6 +692,9 @@
 								<a href="roosterjs_editor_dom.vtable.html#row" class="tsd-kind-icon">row</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.vtable.html#selection" class="tsd-kind-icon">selection</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="roosterjs_editor_dom.vtable.html#table" class="tsd-kind-icon">table</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -611,6 +717,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_editor_dom.vtable.html#getcurrenttd" class="tsd-kind-icon">get<wbr>Current<wbr>Td</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.vtable.html#getselectedranges" class="tsd-kind-icon">get<wbr>Selected<wbr>Ranges</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_dom.vtable.html#gettd" class="tsd-kind-icon">get<wbr>Td</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_editor_dom.vtable.html#normalizetablecellsize" class="tsd-kind-icon">normalize<wbr>Table<wbr>Cell<wbr>Size</a>
