@@ -2,12 +2,14 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import { Table, TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
+
+const TABLE_CELL_SELECTED = '_tableCellSelected';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default class VTable {
+export default class VTable implements Table {
     /**
      * The HTML table object
      */
@@ -28,14 +30,26 @@ export default class VTable {
      */
     col: number;
 
+    /**
+     * Selected range of cells with the coordinates of the first and last cell selected.
+     */
+    selection: TableSelection;
+
     private trs: HTMLTableRowElement[] = [];
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
+     * @param normalizeSize Whether table size needs to be normalized
      */
     constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
+        this.selection = null;
+        let firstCol: number = null;
+        let firstRow: number = null;
+        let lastCol: number;
+        let lastRow: number;
+
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
@@ -63,6 +77,12 @@ export default class VTable {
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
                             };
+                            if (td.classList.contains(TABLE_CELL_SELECTED)) {
+                                firstCol = firstCol ?? targetCol + colSpan;
+                                firstRow = firstRow ?? rowIndex + rowSpan;
+                                lastCol = targetCol + colSpan;
+                                lastRow = rowIndex + rowSpan;
+                            }
                         }
                     }
                 }
@@ -72,6 +92,50 @@ export default class VTable {
                 this.normalizeSize();
             }
         }
+
+        if (firstCol !== null && firstRow !== null) {
+            this.selection = {
+                firstCol,
+                firstRow,
+                lastCol,
+                lastRow,
+            };
+        }
+    }
+
+    /**
+     * Transforms the selected cells to Ranges.
+     * For Each Row a Range with selected cells, a Range is going to be returned.
+     * @returns Array of ranges from the selected table cells.
+     */
+    getSelectedRanges(): Range[] {
+        const ranges: Range[] = [];
+        if (this.selection) {
+            const rows = this.cells.length;
+            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
+            for (let y = 0; y < rows; y++) {
+                const rowRange = new Range();
+                let firstSelected: HTMLTableCellElement = null;
+                let lastSelected: HTMLTableCellElement = null;
+                this.forEachCellOfRow(y, (cell, x) => {
+                    if (
+                        cell.td &&
+                        ((y >= firstRow && y <= lastRow) || (y <= firstRow && y >= lastRow)) &&
+                        ((x >= firstCol && x <= lastCol) || (x <= firstCol && x >= lastCol))
+                    ) {
+                        firstSelected = firstSelected || cell.td;
+                        lastSelected = cell.td;
+                    }
+                });
+                if (firstSelected) {
+                    rowRange.setStartBefore(firstSelected);
+                    rowRange.setEndAfter(lastSelected);
+                    ranges.push(rowRange);
+                }
+            }
+        }
+
+        return ranges;
     }
 
     /**
@@ -407,7 +471,12 @@ export default class VTable {
         return this.getTd(this.row, this.col);
     }
 
-    private getTd(row: number, col: number) {
+    /**
+     * Get the Table Cell in a provided coordinate
+     * @param row row of the cell
+     * @param col column of the cell
+     */
+    getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
             col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;

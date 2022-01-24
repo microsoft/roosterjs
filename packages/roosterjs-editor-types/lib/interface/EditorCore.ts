@@ -9,6 +9,7 @@ import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
+import { SelectionRangeEx } from './SelectionRangeEx';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
@@ -121,6 +122,13 @@ export type GetContent = (core: EditorCore, mode: GetContentMode) => string;
  * @returns A Range object of the selection range
  */
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
+
+/**
+ * Get current selection range
+ * @param core The EditorCore object
+ * @returns A Range object of the selection range
+ */
+export type GetSelectionRangeEx = (core: EditorCore) => SelectionRangeEx;
 
 /**
  * Get style based format state from current selection, including font name/size and colors
@@ -279,6 +287,14 @@ export interface CoreApiMap {
      * @returns A Range object of the selection range
      */
     getSelectionRange: GetSelectionRange;
+
+    /**
+     * Get current or cached selection range
+     * @param core The EditorCore object
+     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
+     * @returns A Range object of the selection range
+     */
+    getSelectionRangeEx: GetSelectionRangeEx;
 
     /**
      * Get style based format state from current selection, including font name/size and colors
