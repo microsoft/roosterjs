@@ -1,20 +1,17 @@
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
-import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import setColor from '../utils/setColor';
 import toArray from '../utils/toArray';
-import { ModeIndependentColor, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
-import { TableMetadata } from './tableMetadata';
+import { Table, TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
 
-const TABLE_CELL_SELECTED_CLASS = TableMetadata.TABLE_CELL_SELECTED;
-const TEMP_BACKGROUND_COLOR = TableMetadata.TEMP_BACKGROUND_COLOR;
-
-const HIGHLIGHT_COLOR = `rgba(198,198,198, ${TableMetadata.SELECTION_COLOR_OPACITY})`;
+const TABLE_CELL_SELECTED = '_tableCellSelected';
+const TEMP_BACKGROUND_COLOR = 'originalBackgroundColor';
+const HIGHLIGHT_COLOR = `rgba(198,198,198,0.7)`;
+const TABLE_SELECTED = '_tableSelected';
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default class VTable {
+export default class VTable implements Table {
     /**
      * The HTML table object
      */
@@ -36,23 +33,25 @@ export default class VTable {
     col: number;
 
     /**
-     * Start of the  Selection Range
+     * Selected range of cells with the coordinates of the first and last cell selected.
      */
-    startRange: number[];
-
-    /**
-     * End of the  Selection Range
-     */
-    endRange: number[];
+    selection: TableSelection;
 
     private trs: HTMLTableRowElement[] = [];
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
+     * @param normalizeSize Whether table size needs to be normalized
      */
     constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
+        this.selection = null;
+        let firstCol: number = null;
+        let firstRow: number = null;
+        let lastCol: number;
+        let lastRow: number;
+
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
@@ -80,6 +79,12 @@ export default class VTable {
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
                             };
+                            if (td.classList.contains(TABLE_CELL_SELECTED)) {
+                                firstCol = firstCol ?? targetCol + colSpan;
+                                firstRow = firstRow ?? rowIndex + rowSpan;
+                                lastCol = targetCol + colSpan;
+                                lastRow = rowIndex + rowSpan;
+                            }
                         }
                     }
                 }
@@ -89,6 +94,50 @@ export default class VTable {
                 this.normalizeSize();
             }
         }
+
+        if (firstCol !== null && firstRow !== null) {
+            this.selection = {
+                firstCol,
+                firstRow,
+                lastCol,
+                lastRow,
+            };
+        }
+    }
+
+    /**
+     * Transforms the selected cells to Ranges.
+     * For Each Row a Range with selected cells, a Range is going to be returned.
+     * @returns Array of ranges from the selected table cells.
+     */
+    getSelectedRanges(): Range[] {
+        const ranges: Range[] = [];
+        if (this.selection) {
+            const rows = this.cells.length;
+            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
+            for (let y = 0; y < rows; y++) {
+                const rowRange = new Range();
+                let firstSelected: HTMLTableCellElement = null;
+                let lastSelected: HTMLTableCellElement = null;
+                this.forEachCellOfRow(y, (cell, x) => {
+                    if (
+                        cell.td &&
+                        ((y >= firstRow && y <= lastRow) || (y <= firstRow && y >= lastRow)) &&
+                        ((x >= firstCol && x <= lastCol) || (x <= firstCol && x >= lastCol))
+                    ) {
+                        firstSelected = firstSelected || cell.td;
+                        lastSelected = cell.td;
+                    }
+                });
+                if (firstSelected) {
+                    rowRange.setStartBefore(firstSelected);
+                    rowRange.setEndAfter(lastSelected);
+                    ranges.push(rowRange);
+                }
+            }
+        }
+
+        return ranges;
     }
 
     /**
@@ -428,16 +477,16 @@ export default class VTable {
      * Highlights a range of cells, used in the TableSelection Plugin
      */
     highlight() {
-        this.normalizeSelectionRange();
-
-        if (this.startRange && this.endRange && this.cells && this.table) {
-            if (!this.table.classList.contains(TableMetadata.TABLE_SELECTED)) {
-                this.table.classList.add(TableMetadata.TABLE_SELECTED);
+        if (this.selection && this.cells && this.table) {
+            if (!this.table.classList.contains(TABLE_SELECTED)) {
+                this.table.classList.add(TABLE_SELECTED);
             }
-            let startX: number = this.startRange[0];
-            let startY: number = this.startRange[1];
-            let endX: number = this.endRange[0];
-            let endY: number = this.endRange[1];
+            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
+
+            let startX: number = firstCol;
+            let startY: number = firstRow;
+            let endX: number = lastCol;
+            let endY: number = lastRow;
 
             let colIndex = this.cells[this.cells.length - 1].length - 1;
             const selectedAllTable =
@@ -465,44 +514,7 @@ export default class VTable {
         }
     }
 
-    /**
-     * Modifies the selection range to take into account the col and row spans
-     */
-    normalizeSelectionRange() {
-        if (this.cells) {
-            const handler = (input: number[]) => {
-                let tempRange: number[];
-                tempRange = input;
-                this.forEachCellOfRow(tempRange[1], (cell, i) => {
-                    if (i > tempRange[0]) {
-                        if (cell.spanLeft && i == input[0] + 1) {
-                            input[0] += 1;
-                        }
-                    }
-                });
-                tempRange = input;
-                this.forEachCellOfColumn(tempRange[0], (cell, row, i) => {
-                    if (i > tempRange[1]) {
-                        if (cell.spanAbove && i == input[1] + 1) {
-                            input[1] += 1;
-                        }
-                    }
-                });
-            };
-            if (this.startRange && this.endRange) {
-                if (
-                    this.startRange[0] >= this.endRange[0] &&
-                    this.startRange[1] >= this.endRange[1]
-                ) {
-                    handler(this.startRange);
-                } else {
-                    handler(this.endRange);
-                }
-            }
-        }
-    }
-
-    private getMergedCell(x: number, y: number, setAsStart?: boolean) {
+    private getMergedCell(x: number, y: number) {
         let element = this.cells[y][x].td as HTMLElement;
         if (this.cells[y][x].spanLeft) {
             for (let cellX = x; cellX > 0; cellX--) {
@@ -518,13 +530,6 @@ export default class VTable {
                 }
             }
         }
-        if (setAsStart != null) {
-            if (setAsStart) {
-                this.startRange = [x, this.startRange[0]];
-            } else {
-                this.endRange = [x, this.endRange[0]];
-            }
-        }
 
         return element;
     }
@@ -533,10 +538,8 @@ export default class VTable {
      * @param start represents the start of the range type of array [x, y]
      * @param end  represents the end of the range type of array [x, y]
      */
-    highlightSelection(start: number[], end: number[]) {
-        this.startRange = start;
-        this.endRange = end;
-
+    highlightSelection(selection: TableSelection) {
+        this.selection = selection;
         this.highlight();
     }
 
@@ -544,19 +547,30 @@ export default class VTable {
      * Highlights all the cells in the table.
      */
     highlightAll() {
-        this.startRange = null;
-        this.endRange = null;
-        if (!this.table.classList.contains(TableMetadata.TABLE_SELECTED)) {
-            this.table.classList.add(TableMetadata.TABLE_SELECTED);
+        let firstCol: number = null;
+        let firstRow: number = null;
+        let lastCol: number;
+        let lastRow: number;
+        if (!this.table.classList.contains(TABLE_SELECTED)) {
+            this.table.classList.add(TABLE_SELECTED);
         }
         this.forEachCell((cell, x, y) => {
             if (cell.td) {
                 this.highlightCellHandler(cell.td);
-                const currentIndex: number[] = [x, y];
-                this.startRange = this.startRange || currentIndex;
-                this.endRange = currentIndex;
+
+                firstCol = firstCol ?? x;
+                firstRow = firstRow ?? y;
+                lastCol = x;
+                lastRow = y;
             }
         });
+
+        this.selection = {
+            firstCol,
+            firstRow,
+            lastCol,
+            lastRow,
+        };
     }
 
     /**
@@ -568,8 +582,8 @@ export default class VTable {
                 this.deselectCellHandler(cell.td);
             }
         });
-        if (this.table?.classList.contains(TableMetadata.TABLE_SELECTED)) {
-            this.table.classList.remove(TableMetadata.TABLE_SELECTED);
+        if (this.table?.classList.contains(TABLE_SELECTED)) {
+            this.table.classList.remove(TABLE_SELECTED);
         }
     }
 
@@ -580,7 +594,7 @@ export default class VTable {
     private highlightCellHandler = (element: HTMLElement) => {
         const highlighColor = HIGHLIGHT_COLOR;
         if (
-            !element.classList.contains(TABLE_CELL_SELECTED_CLASS) &&
+            !element.classList.contains(TABLE_CELL_SELECTED) &&
             element.style.backgroundColor != highlighColor &&
             (!element.dataset[TEMP_BACKGROUND_COLOR] ||
                 element.dataset[TEMP_BACKGROUND_COLOR] == '')
@@ -590,7 +604,7 @@ export default class VTable {
             );
         }
         element.style.backgroundColor = highlighColor;
-        element.classList.add(TABLE_CELL_SELECTED_CLASS);
+        element.classList.add(TABLE_CELL_SELECTED);
 
         element.querySelectorAll('table').forEach(table => {
             const vTable = new VTable(table);
@@ -608,9 +622,9 @@ export default class VTable {
         if (
             cell &&
             safeInstanceOf(cell, 'HTMLTableCellElement') &&
-            cell.classList.contains(TABLE_CELL_SELECTED_CLASS)
+            cell.classList.contains(TABLE_CELL_SELECTED)
         ) {
-            cell.classList.remove(TABLE_CELL_SELECTED_CLASS);
+            cell.classList.remove(TABLE_CELL_SELECTED);
             cell.style.backgroundColor = getOriginalColor(cell.dataset[TEMP_BACKGROUND_COLOR]);
             delete cell.dataset[TEMP_BACKGROUND_COLOR];
             cell.querySelectorAll('table').forEach(table => {
@@ -625,17 +639,19 @@ export default class VTable {
      * @returns true if it is inside, otherwise false
      */
     private isInsideOfSelection(x: number, y: number) {
-        if (this.startRange && this.endRange) {
-            let startX: number = this.startRange[0];
-            let startY: number = this.startRange[1];
-            let endX: number = this.endRange[0];
-            let endY: number = this.endRange[1];
+        if (this.selection) {
+            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
+            let startX: number = firstCol;
+            let startY: number = firstRow;
+            let endX: number = lastCol;
+            let endY: number = lastRow;
 
             return (
                 ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
                 ((x >= startX && x <= endX) || (x <= startX && x >= endX))
             );
         }
+
         return false;
     }
 
@@ -651,7 +667,7 @@ export default class VTable {
             for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                 let element = this.cells[indexY][indexX].td as HTMLElement;
                 if (
-                    element?.classList.contains(TABLE_CELL_SELECTED_CLASS) ||
+                    element?.classList.contains(TABLE_CELL_SELECTED) ||
                     this.isInsideOfSelection(indexX, indexY)
                 ) {
                     selectedCells += 1;
@@ -681,10 +697,12 @@ export default class VTable {
      */
     removeCellsBySelection(outsideOfSelection: boolean = true) {
         const tempCells: VCell[][] = [];
-        let startX: number = this.startRange[0];
-        let startY: number = this.startRange[1];
-        let endX: number = this.endRange[0];
-        let endY: number = this.endRange[1];
+
+        const { firstCol, firstRow, lastCol, lastRow } = this.selection;
+        let startX: number = firstCol;
+        let startY: number = firstRow;
+        let endX: number = lastCol;
+        let endY: number = lastRow;
 
         let colIndex = this.cells[this.cells.length - 1].length - 1;
         const selectedAllTable =
@@ -731,6 +749,11 @@ export default class VTable {
         return result;
     }
 
+    /**
+     * Get the Table Cell in a provided coordinate
+     * @param row row of the cell
+     * @param col column of the cell
+     */
     getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
@@ -843,39 +866,6 @@ export default class VTable {
         this.normalizeEmptyTableCells();
         this.normalizeTableCellSize();
         setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
-    }
-
-    setBackgroundColor(backgroundColor: string | ModeIndependentColor, isInDarkMode: boolean) {
-        if (!this.table) {
-            return;
-        }
-
-        const handler = (td: HTMLTableCellElement) => {
-            if (td) {
-                setColor(td, backgroundColor, true, isInDarkMode);
-
-                const colorString =
-                    typeof backgroundColor === 'string' ? backgroundColor.trim() : '';
-                const modeIndependentColor =
-                    typeof backgroundColor === 'string' ? null : backgroundColor;
-
-                td.dataset[TEMP_BACKGROUND_COLOR] =
-                    (isInDarkMode
-                        ? modeIndependentColor?.darkModeColor
-                        : modeIndependentColor?.lightModeColor) || colorString;
-
-                queryElements(td, 'td,th', handler);
-            }
-        };
-
-        const modifiedCells = this.forEachSelectedCell(cell => handler(cell.td));
-
-        if (modifiedCells == 0) {
-            let currentRow = this.cells[this.row];
-            let currentCell = currentRow[this.col];
-
-            handler(currentCell.td);
-        }
     }
 }
 
