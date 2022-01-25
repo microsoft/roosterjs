@@ -78,10 +78,10 @@ export default class VTable implements Table {
                                 height: hasTd ? rect.height : undefined,
                             };
                             if (td.classList.contains(TABLE_CELL_SELECTED)) {
-                                firstCol = firstCol ?? targetCol;
-                                firstRow = firstRow ?? rowIndex;
-                                lastCol = targetCol;
-                                lastRow = rowIndex;
+                                firstCol = firstCol ?? targetCol + colSpan;
+                                firstRow = firstRow ?? rowIndex + rowSpan;
+                                lastCol = targetCol + colSpan;
+                                lastRow = rowIndex + rowSpan;
                             }
                         }
                     }
@@ -110,29 +110,28 @@ export default class VTable implements Table {
      */
     getSelectedRanges(): Range[] {
         const ranges: Range[] = [];
-        const rows = this.cells.length;
-        const { firstCol, firstRow, lastCol, lastRow } = this.selection;
-
-        for (let y = 0; y < rows; y++) {
-            const rowRange = new Range();
-            let firstSelected: HTMLTableCellElement = null;
-            let lastSelected: HTMLTableCellElement = null;
-
-            this.forEachCellOfRow(y, (cell, x) => {
-                if (
-                    cell.td &&
-                    ((y >= firstRow && y <= lastRow) || (y <= firstRow && y >= lastRow)) &&
-                    ((x >= firstCol && x <= lastCol) || (x <= firstCol && x >= lastCol))
-                ) {
-                    firstSelected = firstSelected || cell.td;
-                    lastSelected = cell.td;
+        if (this.selection) {
+            const rows = this.cells.length;
+            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
+            for (let y = 0; y < rows; y++) {
+                const rowRange = new Range();
+                let firstSelected: HTMLTableCellElement = null;
+                let lastSelected: HTMLTableCellElement = null;
+                this.forEachCellOfRow(y, (cell, x) => {
+                    if (
+                        cell.td &&
+                        ((y >= firstRow && y <= lastRow) || (y <= firstRow && y >= lastRow)) &&
+                        ((x >= firstCol && x <= lastCol) || (x <= firstCol && x >= lastCol))
+                    ) {
+                        firstSelected = firstSelected || cell.td;
+                        lastSelected = cell.td;
+                    }
+                });
+                if (firstSelected) {
+                    rowRange.setStartBefore(firstSelected);
+                    rowRange.setEndAfter(lastSelected);
+                    ranges.push(rowRange);
                 }
-            });
-
-            if (firstSelected) {
-                rowRange.setStartBefore(firstSelected);
-                rowRange.setEndAfter(lastSelected);
-                ranges.push(rowRange);
             }
         }
 
