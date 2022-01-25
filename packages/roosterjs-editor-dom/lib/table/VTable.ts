@@ -1,5 +1,5 @@
 import changeElementTag from '../utils/changeElementTag';
-import getTableFormatInfo from '../utils/getFormatTableInfo';
+import getTableFormatInfo from '../utils/getTableFormatInfo';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -10,21 +10,18 @@ const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';
 const TABLE_STYLE_INFO = 'roosterTableInfo';
-const DEFAULT_FORMAT: Required<TableFormat> = {
-    bgColor: null,
+const DEFAULT_FORMAT: TableFormat = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
     verticalBorderColor: '#ABABAB',
-    headerRow: false,
-    firstColumn: false,
-    bandedRows: false,
-    bandedColumns: false,
-    bgColumnColorEven: null,
-    bgColumnColorOdd: '#ABABAB20',
+    hasHeaderRow: false,
+    hasFirstColumn: false,
+    hasBandedRows: false,
+    hasBandedColumns: false,
     bgColorEven: null,
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
-    tableBorderFormat: null,
+    tableBorderFormat: TableBorderFormat.DEFAULT,
 };
 
 /**
@@ -152,19 +149,51 @@ export default class VTable {
      * Apply the given table format to this virtual table
      * @param format Table format to apply
      */
-    applyFormatAndStyle(format: Required<TableFormat>) {
+    applyFormatAndStyle(format: TableFormat) {
         if (!this.table) {
             return;
         }
         format = { ...DEFAULT_FORMAT, ...format };
         this.table.style.borderCollapse = 'collapse';
-        this.setBorderColors(format);
-        this.setTableRowColor(format);
-        this.setTableColumnsColor(format);
-        this.setBorderType(format);
+        this.setBordersType(format);
+        this.setColor(format);
         this.setFirstColumnFormat(format);
         this.setHeaderRowFormat(format);
         this.saveTableInfo(this.table, format);
+    }
+
+    /**
+     * Set color to the table
+     * @param format
+     */
+    private setColor(format: TableFormat) {
+        const color = (index: number) => (index % 2 === 0 ? format.bgColorEven : format.bgColorOdd);
+        const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
+        const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven ? true : false;
+        this.cells.forEach((row, index) => {
+            row.forEach(cell => {
+                if (cell.td) {
+                    if (hasBandedRows) {
+                        const backgroundColor = color(index);
+                        cell.td.style.backgroundColor = backgroundColor;
+                    } else if (shouldColorWholeTable) {
+                        cell.td.style.backgroundColor = format.bgColorOdd;
+                    } else {
+                        cell.td.style.backgroundColor = null;
+                    }
+                }
+            });
+        });
+        if (hasBandedColumns) {
+            this.cells.forEach(row => {
+                row.forEach((cell, index) => {
+                    const backgroundColor = color(index);
+                    if (cell.td && backgroundColor) {
+                        cell.td.style.backgroundColor = backgroundColor;
+                    }
+                });
+            });
+        }
     }
 
     /**
@@ -172,143 +201,101 @@ export default class VTable {
      * @param format
      * @returns
      */
-    private setBorderColors(format: Partial<TableFormat>) {
-        this.cells.forEach(row =>
-            row
-                .filter(cell => cell.td)
-                .forEach(cell => {
-                    cell.td.style.borderTop = getBorderStyle(format.topBorderColor);
-                    cell.td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
-                    cell.td.style.borderRight = getBorderStyle(format.verticalBorderColor);
-                    cell.td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
-                    cell.td.style.backgroundColor = format.bgColor;
-                })
-        );
+    private setBorderColors(td: HTMLTableCellElement, format: Partial<TableFormat>) {
+        td.style.borderTop = getBorderStyle(format.topBorderColor);
+        td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
+        td.style.borderRight = getBorderStyle(format.verticalBorderColor);
+        td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
     }
 
     /**
-     * Set color to even and odd rows
-     * @param format
+     * Format the border type
+     * @returns
      */
-    private setTableRowColor(format: Partial<TableFormat>) {
-        if (!format.bandedRows) {
-            return;
-        }
-        const color = (index: number) => (index % 2 === 0 ? format.bgColorEven : format.bgColorOdd);
-        this.cells.forEach((row, index) => {
-            row.forEach(cell => {
-                const backgroundColor = color(index);
-                if (cell.td && backgroundColor) {
-                    cell.td.style.backgroundColor = backgroundColor;
-                }
-            });
-        });
-    }
-
-    /**
-     * Set color to even and odd columns
-     * @param format
-     */
-    private setTableColumnsColor(format: Required<TableFormat>) {
-        if (!format.bandedColumns) {
-            return;
-        }
-        const color = (index: number) =>
-            index % 2 === 0 ? format.bgColumnColorEven : format.bgColumnColorOdd;
-        this.cells.forEach(row => {
-            row.forEach((cell, index) => {
-                const backgroundColor = color(index);
-                if (cell.td && backgroundColor) {
-                    cell.td.style.backgroundColor = backgroundColor;
-                }
-            });
-        });
-    }
-
     private formatBorders(
-        borderType: TableBorderFormat,
+        format: TableFormat,
         td: HTMLTableCellElement,
-        isNotFirstRow: boolean,
-        isNotLastRow: boolean,
-        isNotFirstColumn: boolean,
-        isNotLastColumn: boolean,
-        isFirstCell: boolean,
-        isNotLastColumnCell: boolean
+        isFirstRow: boolean,
+        isLastRow: boolean,
+        isFirstColumn: boolean,
+        isLastColumn: boolean,
+        isLastColumnCell: boolean
     ) {
-        switch (borderType) {
+        this.setBorderColors(td, format);
+        switch (format.tableBorderFormat) {
             case TableBorderFormat.DEFAULT:
                 return;
             case TableBorderFormat.EXTERNAL:
-                if (isNotFirstRow) {
+                if (!isFirstRow) {
                     td.style.borderTopColor = TRANSPARENT;
                 }
-                if (isNotLastRow) {
+                if (!isLastRow) {
                     td.style.borderBottomColor = TRANSPARENT;
                 }
-                if (isNotFirstColumn) {
+                if (!isFirstColumn) {
                     td.style.borderLeftColor = TRANSPARENT;
                 }
-                if (isNotLastColumn) {
+                if (!isLastColumn) {
                     td.style.borderRightColor = TRANSPARENT;
                 }
 
                 break;
             case TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL:
-                if (isNotFirstRow) {
+                if (!isFirstRow) {
                     td.style.borderTopColor = TRANSPARENT;
                 }
 
-                if (isNotLastRow && isNotFirstRow) {
+                if (!isLastRow && !isFirstRow) {
                     td.style.borderBottomColor = TRANSPARENT;
                 }
-                if (isNotFirstColumn) {
+                if (!isFirstColumn) {
                     td.style.borderLeftColor = TRANSPARENT;
                 }
-                if (isNotLastColumn && isNotFirstColumn) {
+                if (!isLastColumn && !isFirstColumn) {
                     td.style.borderRightColor = TRANSPARENT;
                 }
-                if (isFirstCell) {
+                if (isFirstColumn && isFirstRow) {
                     td.style.borderRightColor = TRANSPARENT;
                 }
 
                 break;
             case TableBorderFormat.NO_HEADER_VERTICAL:
-                if (isNotFirstRow) {
+                if (isFirstRow) {
                     td.style.borderLeftColor = TRANSPARENT;
                 }
-                if (isNotLastColumnCell) {
+                if (isLastColumnCell) {
                     td.style.borderRightColor = TRANSPARENT;
                 }
 
                 break;
             case TableBorderFormat.MIDDLE:
-                if (!isNotFirstColumn) {
+                if (isFirstColumn) {
                     td.style.borderLeftColor = TRANSPARENT;
                 }
-                if (!isNotLastColumn) {
+                if (isLastColumn) {
                     td.style.borderRightColor = TRANSPARENT;
                 }
         }
     }
 
     /**
-     * Organize the borders of table
+     * Organize the borders of table according to a border type
      * @param format
      * @returns
      */
-    private setBorderType(format: Required<TableFormat>) {
+
+    private setBordersType(format: TableFormat) {
         this.cells.forEach((row, rowIndex) => {
             row.forEach((cell, cellIndex) => {
                 if (cell.td) {
                     this.formatBorders(
-                        format.tableBorderFormat,
+                        format,
                         cell.td,
-                        rowIndex !== 0,
-                        rowIndex !== this.cells.length - 1,
-                        cellIndex !== 0,
-                        cellIndex !== this.cells[0].length - 1,
-                        cell === this.cells[0][0],
-                        rowIndex !== this.cells[0].length - 1
+                        rowIndex === 0,
+                        rowIndex === this.cells.length - 1,
+                        cellIndex === 0,
+                        cellIndex === this.cells[0].length - 1,
+                        rowIndex === this.cells[0].length - 1
                     );
                 }
             });
@@ -321,7 +308,7 @@ export default class VTable {
      * @returns
      */
     private setFirstColumnFormat(format: Partial<TableFormat>) {
-        if (!format.firstColumn) {
+        if (!format.hasFirstColumn) {
             this.forEachCellOfColumn(0, (cell, row, i) => {
                 if (cell.td) {
                     cell.td = changeElementTag(
@@ -353,8 +340,8 @@ export default class VTable {
      * @param format
      * @returns
      */
-    private setHeaderRowFormat(format: Required<TableFormat>) {
-        if (!format.headerRow) {
+    private setHeaderRowFormat(format: TableFormat) {
+        if (!format.hasHeaderRow) {
             this.forEachCellOfRow(0, (cell, i) => {
                 if (cell.td) {
                     cell.td = changeElementTag(
@@ -383,7 +370,7 @@ export default class VTable {
      * @param table The table the info will be saved
      * @param format The format of the table
      */
-    saveTableInfo(table: HTMLTableElement, format: Required<TableFormat>) {
+    saveTableInfo(table: HTMLTableElement, format: TableFormat) {
         if (table && format) {
             table.dataset[TABLE_STYLE_INFO] = JSON.stringify(format);
         }

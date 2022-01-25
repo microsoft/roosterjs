@@ -5,68 +5,55 @@ import { TableBorderFormat } from '../enum/TableBorderFormat';
  */
 export default interface TableFormat {
     /**
-     * Background color for odd rows
-     */
-    bgColor: string | null;
-    /**
      * Top border color for each row
      */
-    topBorderColor: string;
+    topBorderColor?: string | null;
 
     /**
      * Bottom border color for each row
      */
-    bottomBorderColor: string;
+    bottomBorderColor?: string | null;
 
     /**
      * Vertical border color for each row
      */
-    verticalBorderColor: string | null;
+    verticalBorderColor?: string | null;
 
     /**
      * Set header row
      */
-    headerRow: boolean;
+    hasHeaderRow?: boolean;
 
     /**
      * Header row background color for even cells
      */
-    headerRowColor: string | null;
+    headerRowColor?: string | null;
     /**
      * Set first column
      */
-    firstColumn: boolean;
+    hasFirstColumn?: boolean;
     /**
      * Set banded columns
      */
-    bandedColumns: boolean;
+    hasBandedColumns?: boolean;
 
-    /**
-     * Background color for even columns
-     */
-    bgColumnColorEven: string | null;
-
-    /**
-     * Background color for odd columns
-     */
-    bgColumnColorOdd: string | null;
     /**
      * Set banded rows
      */
-    bandedRows: boolean;
+    hasBandedRows?: boolean;
 
     /**
      * Background color for even rows
      */
-    bgColorEven: string | null;
+    bgColorEven?: string | null;
 
     /**
      * Background color for odd rows
      */
-    bgColorOdd: string | null;
+    bgColorOdd?: string | null;
 
     /**
      * Table Borders Type
      */
-    tableBorderFormat: TableBorderFormat | null;
+    tableBorderFormat?: TableBorderFormat;
 }

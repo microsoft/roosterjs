@@ -1,26 +1,23 @@
-import getTableFormatInfo from '../../lib/utils/getFormatTableInfo';
+import getTableFormatInfo from '../../lib/utils/getTableFormatInfo';
 import VTable from '../../lib/table/VTable';
 import { TableFormat } from 'roosterjs-editor-types';
 
 const format: TableFormat = {
-    bgColor: null,
     topBorderColor: '#0C64C0',
     bottomBorderColor: '#0C64C0',
     verticalBorderColor: '#0C64C0',
-    bandedRows: true,
     bgColorEven: '#0C64C020',
     bgColorOdd: null,
-    bandedColumns: false,
-    bgColumnColorEven: null,
-    bgColumnColorOdd: null,
-    headerRow: false,
     headerRowColor: null,
-    firstColumn: false,
     tableBorderFormat: null,
+    hasHeaderRow: false,
+    hasFirstColumn: false,
+    hasBandedRows: false,
+    hasBandedColumns: false,
 };
 
 const expectedTableInfo =
-    '{"bgColor":null,"topBorderColor":"#0C64C0","bottomBorderColor":"#0C64C0","verticalBorderColor":"#0C64C0","bandedRows":true,"bgColorEven":"#0C64C020","bgColorOdd":null,"bandedColumns":false,"bgColumnColorEven":null,"bgColumnColorOdd":null,"headerRow":false,"headerRowColor":null,"firstColumn":false,"tableBorderFormat":null}';
+    '{"topBorderColor":"#0C64C0","bottomBorderColor":"#0C64C0","verticalBorderColor":"#0C64C0","bgColorEven":"#0C64C020","bgColorOdd":null,"headerRowColor":null,"tableBorderFormat":null, "hasHeaderRow": false, "hasFirstColumn": false, "hasBandedRows": false, "hasBandedColumns": false}';
 
 function createTable(format: TableFormat) {
     let div = document.createElement('div');

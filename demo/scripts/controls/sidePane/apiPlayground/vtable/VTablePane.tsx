@@ -16,7 +16,6 @@ import {
 const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) => TableFormat> = {
     DEFAULT: (color, lightColor) =>
         createTableFormat(
-            null /**bgColor */,
             color /**topBorder */,
             color /**bottomBorder */,
             color /** verticalColors*/,
@@ -27,13 +26,10 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             null /** tableBorderFormat */,
             lightColor /** bgColorEven */,
             null /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            lightColor /** bgColumnColorEven */,
             color /** headerRowColor */
         ),
     DEFAULT_WITH_BACKGROUND_COLOR: (color, lightColor) =>
         createTableFormat(
-            lightColor /**bgColor */,
             color /**topBorder */,
             color /**bottomBorder */,
             color /** verticalColors*/,
@@ -43,14 +39,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             null /** tableBorderFormat */,
             null /** bgColorEven */,
-            'transparent' /** bgColorOdd */,
-            null /** bgColumnColorOdd */,
-            'transparent' /** bgColumnColorEven */,
+            lightColor /** bgColorOdd */,
             color /** headerRowColor */
         ),
     GRID_WITHOUT_BORDER: (color, lightColor) =>
         createTableFormat(
-            null /**bgColor */,
             color /**topBorder */,
             color /**bottomBorder */,
             color /** verticalColors*/,
@@ -61,13 +54,10 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             TableBorderFormat.MIDDLE /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            lightColor /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
             color /** headerRowColor */
         ),
     LIST: (color, lightColor) =>
         createTableFormat(
-            null /**bgColor */,
             color /**topBorder */,
             color /**bottomBorder */,
             null /** verticalColors*/,
@@ -78,13 +68,10 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             null /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            lightColor /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
             color /** headerRowColor */
         ),
     BANDED_ROWS_FIRST_COLUMN_NO_BORDER: (color, lightColor) =>
         createTableFormat(
-            null /**bgColor */,
             color /**topBorder */,
             color /**bottomBorder */,
             color /** verticalColors*/,
@@ -95,8 +82,6 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            lightColor /** bgColumnColorOdd */,
-            null /** bgColumnColorEven */,
             color /** headerRowColor */
         ),
 };
@@ -507,7 +492,6 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
 
     private onCustomizeFormat = () => {
         const format = createTableFormat(
-            this.bgColor.current.value || undefined,
             this.topBorderColor.current.value || undefined,
             this.bottomBorderColor.current.value || undefined,
             this.verticalBorderColor.current.value || undefined
@@ -531,7 +515,6 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
 }
 
 function createTableFormat(
-    bgColor?: string,
     topBorder?: string,
     bottomBorder?: string,
     verticalBorder?: string,
@@ -542,49 +525,44 @@ function createTableFormat(
     borderFormat?: TableBorderFormat,
     bgColorEven?: string,
     bgColorOdd?: string,
-    bgColumnColorEven?: string,
-    bgColumnColorOdd?: string,
     headerRowColor?: string
 ): TableFormat {
     return {
-        bgColor: bgColor,
         topBorderColor: topBorder,
         bottomBorderColor: bottomBorder,
         verticalBorderColor: verticalBorder,
-        bandedRows: bandedRows,
+        hasBandedRows: bandedRows,
         bgColorEven: bgColorEven,
         bgColorOdd: bgColorOdd,
-        bandedColumns: bandedColumns,
-        bgColumnColorEven: bgColumnColorEven,
-        bgColumnColorOdd: bgColumnColorOdd,
-        headerRow: headerRow,
+        hasBandedColumns: bandedColumns,
+        hasHeaderRow: headerRow,
         headerRowColor: headerRowColor,
-        firstColumn: firstColumn,
+        hasFirstColumn: firstColumn,
         tableBorderFormat: borderFormat,
     };
 }
 
-function setHeaderRow(table: HTMLTableElement): Required<TableFormat> {
+function setHeaderRow(table: HTMLTableElement): TableFormat {
     const format = getTableFormatInfo(table);
-    format.headerRow = !format.headerRow;
+    format.hasHeaderRow = !format.hasHeaderRow;
     return format;
 }
 
-function setFirstColumn(table: HTMLTableElement): Required<TableFormat> {
+function setFirstColumn(table: HTMLTableElement): TableFormat {
     const format = getTableFormatInfo(table);
-    format.firstColumn = !format.firstColumn;
+    format.hasFirstColumn = !format.hasFirstColumn;
     return format;
 }
 
-function setBandedColumn(table: HTMLTableElement): Required<TableFormat> {
+function setBandedColumn(table: HTMLTableElement): TableFormat {
     const format = getTableFormatInfo(table);
-    format.bandedColumns = !format.bandedColumns;
+    format.hasBandedColumns = !format.hasBandedColumns;
     return format;
 }
 
-function setBandedRow(table: HTMLTableElement): Required<TableFormat> {
+function setBandedRow(table: HTMLTableElement): TableFormat {
     const format = getTableFormatInfo(table);
-    format.bandedRows = !format.bandedRows;
+    format.hasBandedRows = !format.hasBandedRows;
     return format;
 }
 

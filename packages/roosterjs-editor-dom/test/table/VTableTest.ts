@@ -286,7 +286,7 @@ describe('VTable.applyFormat', () => {
                 topBorderColor: '#0C64C0',
                 bottomBorderColor: '#0C64C0',
                 verticalBorderColor: '#0C64C0',
-                headerRow: true,
+                hasHeaderRow: true,
                 headerRowColor: '#0C64C0',
             },
             '<table id="id1" style="border-collapse: collapse;"><tr style="background-color: rgb(0, 0, 255);"><td style="  width: 100px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgb(12, 100, 192);"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="width: 85.071px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); box-sizing: border-box; height: 21.1648px;"></td></tr></table>'
@@ -303,7 +303,7 @@ describe('VTable.applyFormat', () => {
                 topBorderColor: '#0C64C0',
                 bottomBorderColor: '#0C64C0',
                 verticalBorderColor: '#0C64C0',
-                firstColumn: true,
+                hasFirstColumn: true,
             },
             '<table id="id1" style="border-collapse: collapse;"><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: transparent rgb(12, 100, 192) rgb(12, 100, 192); background-color: transparent;"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: transparent rgb(12, 100, 192); background-color: transparent;"></td></tr><tr style="background-color: rgb(0, 0, 255);"><td style="  width: 100px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgb(12, 100, 192);"></td></tr></table>'
         );
@@ -319,9 +319,7 @@ describe('VTable.applyFormat', () => {
                 topBorderColor: '#0C64C0',
                 bottomBorderColor: '#0C64C0',
                 verticalBorderColor: '#0C64C0',
-                bandedColumns: true,
-                bgColumnColorEven: '#0C64C020',
-                bgColumnColorOdd: null,
+                hasBandedColumns: true,
             },
             '<table id="id1" style="border-collapse: collapse;"><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr></table>'
         );
@@ -337,7 +335,7 @@ describe('VTable.applyFormat', () => {
                 topBorderColor: '#0C64C0',
                 bottomBorderColor: '#0C64C0',
                 verticalBorderColor: '#0C64C0',
-                bandedRows: true,
+                hasBandedRows: true,
             },
             '<table id="id1" style="border-collapse: collapse;"><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192);"><br></td></tr><tr><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(12, 100, 192); background-color: rgba(12, 100, 192, 0.125);"><br></td></tr></table>'
         );
