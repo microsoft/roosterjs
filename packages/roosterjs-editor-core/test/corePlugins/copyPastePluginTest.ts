@@ -7,6 +7,7 @@ import {
     DOMEventHandlerFunction,
     IEditor,
     PluginEventType,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
 describe('CopyPastePlugin paste', () => {
@@ -122,6 +123,13 @@ describe('CopyPastePlugin copy', () => {
             addUndoSnapshot: (f: () => void) => f(),
             focus: () => {},
             getTrustedHTMLHandler: (html: string) => html,
+            getSelectionRangeEx: () => {
+                return {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [<Range>{ collapsed: false }],
+                    areAllCollapsed: true,
+                };
+            },
         });
 
         plugin.initialize(editor);
