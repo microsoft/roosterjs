@@ -38,7 +38,7 @@ describe('TableCellSelectionPlugin', () => {
         div.parentNode.removeChild(div);
     });
 
-    function runTest(content: string, result: string, expectTableSelection: boolean = true) {
+    function runTest(content: string, result: string) {
         editor.setContent(content);
         const target = document.getElementById(targetId);
         const target2 = document.getElementById(targetId2);
@@ -47,7 +47,6 @@ describe('TableCellSelectionPlugin', () => {
         initTableSelection(target);
         simulateMouseEvent('mousemove', target2);
         expect(editor.getScrollContainer().innerHTML).toBe(result);
-        expect((TableCellSelectionPlugin as any).tableSelection).toBe(expectTableSelection);
     }
 
     function initTableSelection(target: HTMLElement) {
@@ -160,8 +159,7 @@ describe('TableCellSelectionPlugin', () => {
 
         runTest(
             `<div><table cellpadding="1" cellspacing="0"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td id='${targetId}' style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><table cellpadding="1" cellspacing="0"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);" id="init"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr></tbody></table></div><div><br></div><div><br></div><div><br></div><div id='${targetId2}'>asdsad</div>`,
-            expected,
-            false
+            expected
         );
     });
 
