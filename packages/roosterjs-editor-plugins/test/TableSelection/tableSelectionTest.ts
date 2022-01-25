@@ -1,8 +1,8 @@
-import TableCellSelectionPlugin from 'roosterjs-editor-plugins';
 import { Browser } from 'roosterjs-editor-dom/lib/utils/Browser';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
 import { IEditor } from 'roosterjs-editor-types';
+import { TableCellSelectionPlugin } from '../../lib/TableSelection';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
 const TABLE_SELECTOR_LENGTH = 12;
