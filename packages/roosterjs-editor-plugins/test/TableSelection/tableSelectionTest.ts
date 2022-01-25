@@ -1,4 +1,4 @@
-import TableCellSelectionPlugin from 'roosterjs-editor-plugins/lib/plugins/TableSelection/TableSelection';
+import TableCellSelectionPlugin from 'roosterjs-editor-plugins';
 import { Browser } from 'roosterjs-editor-dom/lib/utils/Browser';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
