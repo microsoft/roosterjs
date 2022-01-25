@@ -182,6 +182,7 @@ export default class VTable implements Table {
         if (!format || !this.table) {
             return;
         }
+        this.table.style.borderCollapse = 'collapse';
         this.trs[0].style.backgroundColor = format.bgColorOdd || 'transparent';
         if (this.trs[1]) {
             this.trs[1].style.backgroundColor = format.bgColorEven || 'transparent';
@@ -549,8 +550,7 @@ export default class VTable implements Table {
     }
     /**
      * Sets the range of selection and highlights
-     * @param start represents the start of the range type of array [x, y]
-     * @param end  represents the end of the range type of array [x, y]
+     * @param selection The selection to apply to the table
      */
     highlightSelection(selection: TableSelection) {
         this.selection = selection;
@@ -740,8 +740,8 @@ export default class VTable implements Table {
 
     /**
      * Gets the coordinates of a cell
-     * @param cellInput The cell the function is going to retrieve the coordinate
-     * @returns an array[2] => [x,y]
+     * @param cellInput The cell the to find the coordinates
+     * @returns Coordinates of the cell, null if not found
      */
     getCellCoordinates(cellInput: Node): Coordinates {
         let result: Coordinates;

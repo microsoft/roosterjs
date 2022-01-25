@@ -20,7 +20,6 @@ import {
     findClosestElementAncestor,
     getTagOfNode,
     safeInstanceOf,
-    TableMetadata,
     VTable,
     createElement,
     queryElements,
@@ -30,7 +29,8 @@ import {
     normalizeRect,
 } from 'roosterjs-editor-dom';
 
-const TABLE_CELL_SELECTOR = TableMetadata.TABLE_CELL_SELECTOR;
+const TABLE_CELL_SELECTOR = 'td,th';
+const TABLE_CELL_SELECTED = '_tableCellSelected';
 const TABLE_SELECTOR_ID = 'tableSelector';
 const TABLE_SELECTOR_LENGTH = 12;
 const LEFT_CLICK = 1;
@@ -249,11 +249,11 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
         if (which == RIGHT_CLICK && this.tableSelection) {
             //If the user is right clicking To open context menu
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);
-            if (td?.classList.contains(TableMetadata.TABLE_CELL_SELECTED)) {
+            if (td?.classList.contains(TABLE_CELL_SELECTED)) {
                 this.firstTarget = null;
                 this.lastTarget = null;
 
-                this.editor.queryElements('td.' + TableMetadata.TABLE_CELL_SELECTED, node => {
+                this.editor.queryElements('td.' + TABLE_CELL_SELECTED, node => {
                     this.firstTarget = this.firstTarget || node;
                     this.lastTarget = node;
                 });
@@ -734,4 +734,40 @@ function shouldConvertToTableSelection(range: Range) {
         getTagOfNode(range.commonAncestorContainer) == 'TBODY' ||
         getTagOfNode(range.commonAncestorContainer) == 'TR'
     );
+}
+
+/**
+ * Remove the selected style of the cells
+ * @param container the container to get the cells from
+ */
+function clearSelectedTableCells(container: Node) {
+    const tables = getSelectedTables(container);
+
+    if (tables) {
+        tables.forEach(element => {
+            if (safeInstanceOf(element, 'HTMLTableElement')) {
+                const vTable = new VTable(element);
+                vTable.deSelectAll();
+            }
+        });
+    }
+}
+
+/**
+ * Get the cells with the selected cells class
+ * @param container the container to get the cells from
+ * @returns Array of Nodes with selected class
+ */
+function getSelectedTables(container: Node) {
+    if (container && safeInstanceOf(container, 'HTMLElement')) {
+        let result = container.querySelectorAll('table');
+        if (result.length == 0) {
+            let table = findClosestElementAncestor(container, null, 'table');
+            if (table && table.querySelectorAll('.' + TABLE_CELL_SELECTED).length > 0) {
+                return [table];
+            }
+        }
+
+        return result;
+    }
 }
