@@ -1,3 +1,4 @@
+import Coordinates from './Coordinates';
 import TableFormat from './TableFormat';
 import TableSelection from './TableSelection';
 import VCell from './VCell';
@@ -113,4 +114,51 @@ export default interface Table {
      * @returns Array of ranges from the selected table cells.
      */
     getSelectedRanges(): Range[];
+
+    /**
+     * Highlights a range of cells, used in the TableSelection Plugin
+     */
+    highlight(): void;
+
+    /**
+     * Sets the range of selection and highlights the cells
+     * @param selection The selection to apply to the table
+     */
+    highlightSelection(selection: TableSelection): void;
+
+    /**
+     * Highlights all the cells in the table.
+     */
+    highlightAll(): void;
+
+    /**
+     * Removes the selection of all the tables
+     */
+    deSelectAll(): void;
+
+    /**
+     * Executes an action to all the cells within the selection range.
+     * @param callback action to apply on each selected cell
+     * @returns the amount of cells modified
+     */
+    forEachSelectedCell(callback: (cell: VCell) => void): number;
+
+    /**
+     * Execute an action on all the cells
+     * @param callback action to apply on all the cells.
+     */
+    forEachCell(callback: (cell: VCell, x?: number, y?: number) => void): void;
+
+    /**
+     * Remove the cells outside of the selection.
+     * @param outsideOfSelection whether to remove the cells outside or inside of the selection
+     */
+    removeCellsBySelection(outsideOfSelection: boolean): void;
+
+    /**
+     * Gets the coordinates of a cell
+     * @param cellInput The cell the to find the coordinates
+     * @returns Coordinates of the cell, null if not found
+     */
+    getCellCoordinates(cellInput: Node): Coordinates;
 }

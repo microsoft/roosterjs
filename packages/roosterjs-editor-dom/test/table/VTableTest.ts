@@ -225,10 +225,14 @@ describe('VTable.ctor', () => {
                 ],
             ],
             {
-                firstCol: 0,
-                firstRow: 0,
-                lastCol: 3,
-                lastRow: 7,
+                firstCell: {
+                    x: 0,
+                    y: 0,
+                },
+                lastCell: {
+                    x: 3,
+                    y: 7,
+                },
             }
         );
     });

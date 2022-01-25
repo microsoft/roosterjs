@@ -14,6 +14,7 @@ export interface BuildInPluginList {
     watermark: boolean;
     imageEdit: boolean;
     cutPasteListChain: boolean;
+    tableSelection: boolean;
     tableResize: boolean;
     customReplace: boolean;
     pickerPlugin: boolean;

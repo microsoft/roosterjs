@@ -15,6 +15,7 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
+import { TableCellSelectionPlugin } from 'roosterjs-editor-plugins/lib/TableSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
@@ -65,6 +66,9 @@ export default function Editor(props: EditorProps) {
                   })
                 : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
+            tableSelection: pluginList.tableSelection
+                ? new TableCellSelectionPlugin(contentDiv.current)
+                : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
             pickerPlugin: pluginList.pickerPlugin
                 ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {
