@@ -1,1 +1,1 @@
-export { default as TableSelection } from './TableSelection';
+export { default as TableCellSelectionPlugin } from './TableCellSelection';

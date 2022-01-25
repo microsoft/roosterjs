@@ -8,8 +8,8 @@ import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChai
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
+import { TableCellSelectionPlugin } from 'roosterjs-editor-plugins/lib/TableSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
-import { TableSelection } from 'roosterjs-editor-plugins/lib/TableSelection';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
 
 export type EditorInstanceToggleablePlugins = {
@@ -24,5 +24,5 @@ export type EditorInstanceToggleablePlugins = {
     pickerPlugin: PickerPlugin;
     contextMenu: ContextMenu<ContextMenuItem>;
     resetList: ResetListPlugin;
-    tableSelection: TableSelection;
+    tableSelection: TableCellSelectionPlugin;
 };

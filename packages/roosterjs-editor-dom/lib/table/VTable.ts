@@ -2,11 +2,18 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { Table, TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
+import {
+    Coordinates,
+    Table,
+    TableFormat,
+    TableOperation,
+    TableSelection,
+    VCell,
+} from 'roosterjs-editor-types';
 
 const TABLE_CELL_SELECTED = '_tableCellSelected';
 const TEMP_BACKGROUND_COLOR = 'originalBackgroundColor';
-const HIGHLIGHT_COLOR = `rgba(198,198,198,0.7)`;
+const HIGHLIGHT_COLOR = 'rgba(198,198,198,0.7)';
 const TABLE_SELECTED = '_tableSelected';
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -97,10 +104,14 @@ export default class VTable implements Table {
 
         if (firstCol !== null && firstRow !== null) {
             this.selection = {
-                firstCol,
-                firstRow,
-                lastCol,
-                lastRow,
+                firstCell: {
+                    x: firstCol,
+                    y: firstRow,
+                },
+                lastCell: {
+                    x: lastCol,
+                    y: lastRow,
+                },
             };
         }
     }
@@ -114,7 +125,7 @@ export default class VTable implements Table {
         const ranges: Range[] = [];
         if (this.selection) {
             const rows = this.cells.length;
-            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
+            const { firstCell, lastCell } = this.selection;
             for (let y = 0; y < rows; y++) {
                 const rowRange = new Range();
                 let firstSelected: HTMLTableCellElement = null;
@@ -122,8 +133,10 @@ export default class VTable implements Table {
                 this.forEachCellOfRow(y, (cell, x) => {
                     if (
                         cell.td &&
-                        ((y >= firstRow && y <= lastRow) || (y <= firstRow && y >= lastRow)) &&
-                        ((x >= firstCol && x <= lastCol) || (x <= firstCol && x >= lastCol))
+                        ((y >= firstCell.y && y <= lastCell.y) ||
+                            (y <= firstCell.y && y >= lastCell.y)) &&
+                        ((x >= firstCell.x && x <= lastCell.x) ||
+                            (x <= firstCell.x && x >= lastCell.x))
                     ) {
                         firstSelected = firstSelected || cell.td;
                         lastSelected = cell.td;
@@ -481,17 +494,18 @@ export default class VTable implements Table {
             if (!this.table.classList.contains(TABLE_SELECTED)) {
                 this.table.classList.add(TABLE_SELECTED);
             }
-            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
-
-            let startX: number = firstCol;
-            let startY: number = firstRow;
-            let endX: number = lastCol;
-            let endY: number = lastRow;
+            const { firstCell, lastCell } = this.selection;
 
             let colIndex = this.cells[this.cells.length - 1].length - 1;
             const selectedAllTable =
-                (startX == 0 && startY == 0 && endX == colIndex && endY == this.cells.length - 1) ||
-                (endX == 0 && endY == 0 && startX == colIndex && startY == this.cells.length - 1);
+                (firstCell.x == 0 &&
+                    firstCell.y == 0 &&
+                    lastCell.x == colIndex &&
+                    lastCell.y == this.cells.length - 1) ||
+                (lastCell.x == 0 &&
+                    lastCell.y == 0 &&
+                    firstCell.x == colIndex &&
+                    firstCell.y == this.cells.length - 1);
 
             for (let indexY = 0; indexY < this.cells.length; indexY++) {
                 for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
@@ -499,10 +513,10 @@ export default class VTable implements Table {
                     if (element) {
                         if (
                             selectedAllTable ||
-                            (((indexY >= startY && indexY <= endY) ||
-                                (indexY <= startY && indexY >= endY)) &&
-                                ((indexX >= startX && indexX <= endX) ||
-                                    (indexX <= startX && indexX >= endX)))
+                            (((indexY >= firstCell.y && indexY <= lastCell.y) ||
+                                (indexY <= firstCell.y && indexY >= lastCell.y)) &&
+                                ((indexX >= firstCell.x && indexX <= lastCell.x) ||
+                                    (indexX <= firstCell.x && indexX >= lastCell.x)))
                         ) {
                             this.highlightCellHandler(element);
                         } else {
@@ -566,10 +580,14 @@ export default class VTable implements Table {
         });
 
         this.selection = {
-            firstCol,
-            firstRow,
-            lastCol,
-            lastRow,
+            firstCell: {
+                x: firstCol,
+                y: firstRow,
+            },
+            lastCell: {
+                x: lastCol,
+                y: lastRow,
+            },
         };
     }
 
@@ -635,27 +653,6 @@ export default class VTable implements Table {
     };
 
     /**
-     * Check if the cell is inside of the selection range
-     * @returns true if it is inside, otherwise false
-     */
-    private isInsideOfSelection(x: number, y: number) {
-        if (this.selection) {
-            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
-            let startX: number = firstCol;
-            let startY: number = firstRow;
-            let endX: number = lastCol;
-            let endY: number = lastRow;
-
-            return (
-                ((y >= startY && y <= endY) || (y <= startY && y >= endY)) &&
-                ((x >= startX && x <= endX) || (x <= startX && x >= endX))
-            );
-        }
-
-        return false;
-    }
-
-    /**
      * Executes an action to all the cells within the selection range.
      * @param callback action to apply on each selected cell
      * @returns the amount of cells modified
@@ -663,15 +660,20 @@ export default class VTable implements Table {
     forEachSelectedCell(callback: (cell: VCell) => void): number {
         let selectedCells = 0;
 
-        for (let indexY = 0; indexY < this.cells.length; indexY++) {
-            for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
-                let element = this.cells[indexY][indexX].td as HTMLElement;
+        const { lastCell, firstCell } = this.selection;
+
+        for (let y = 0; y < this.cells.length; y++) {
+            for (let x = 0; x < this.cells[y].length; x++) {
+                let element = this.cells[y][x].td as HTMLElement;
                 if (
                     element?.classList.contains(TABLE_CELL_SELECTED) ||
-                    this.isInsideOfSelection(indexX, indexY)
+                    (((y >= firstCell.y && y <= lastCell.y) ||
+                        (y <= firstCell.y && y >= lastCell.y)) &&
+                        ((x >= firstCell.x && x <= lastCell.x) ||
+                            (x <= firstCell.x && x >= lastCell.x)))
                 ) {
                     selectedCells += 1;
-                    callback(this.cells[indexY][indexX]);
+                    callback(this.cells[y][x]);
                 }
             }
         }
@@ -698,16 +700,18 @@ export default class VTable implements Table {
     removeCellsBySelection(outsideOfSelection: boolean = true) {
         const tempCells: VCell[][] = [];
 
-        const { firstCol, firstRow, lastCol, lastRow } = this.selection;
-        let startX: number = firstCol;
-        let startY: number = firstRow;
-        let endX: number = lastCol;
-        let endY: number = lastRow;
+        const { firstCell, lastCell } = this.selection;
 
         let colIndex = this.cells[this.cells.length - 1].length - 1;
         const selectedAllTable =
-            (startX == 0 && startY == 0 && endX == colIndex && endY == this.cells.length - 1) ||
-            (endX == 0 && endY == 0 && startX == colIndex && startY == this.cells.length - 1);
+            (firstCell.x == 0 &&
+                firstCell.y == 0 &&
+                lastCell.x == colIndex &&
+                lastCell.y == this.cells.length - 1) ||
+            (lastCell.x == 0 &&
+                lastCell.y == 0 &&
+                firstCell.x == colIndex &&
+                firstCell.y == this.cells.length - 1);
 
         if (selectedAllTable) {
             if (!outsideOfSelection) {
@@ -715,8 +719,13 @@ export default class VTable implements Table {
             }
             return;
         }
+
+        const isInsideOfSelection = (x: number, y: number) =>
+            ((y >= firstCell.y && y <= lastCell.y) || (y <= firstCell.y && y >= lastCell.y)) &&
+            ((x >= firstCell.x && x <= lastCell.x) || (x <= firstCell.x && x >= lastCell.x));
+
         const validation = (x: number, y: number) =>
-            outsideOfSelection ? this.isInsideOfSelection(x, y) : !this.isInsideOfSelection(x, y);
+            outsideOfSelection ? isInsideOfSelection(x, y) : !isInsideOfSelection(x, y);
 
         this.forEachCell((cell: VCell, x?: number, y?: number) => {
             if (validation(x, y)) {
@@ -734,13 +743,16 @@ export default class VTable implements Table {
      * @param cellInput The cell the function is going to retrieve the coordinate
      * @returns an array[2] => [x,y]
      */
-    getCellCoordinates(cellInput: Node) {
-        let result: number[] = [];
+    getCellCoordinates(cellInput: Node): Coordinates {
+        let result: Coordinates;
         if (this.cells) {
             for (let indexY = 0; indexY < this.cells.length; indexY++) {
                 for (let indexX = 0; indexX < this.cells[indexY].length; indexX++) {
                     if (cellInput == this.cells[indexY][indexX].td) {
-                        result = [indexX, indexY];
+                        result = {
+                            x: indexX,
+                            y: indexY,
+                        };
                     }
                 }
             }

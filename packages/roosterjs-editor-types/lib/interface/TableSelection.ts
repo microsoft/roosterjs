@@ -1,21 +1,16 @@
+import Coordinates from './Coordinates';
+
 /**
  * Represents a selection made inside of a table
  */
 export default interface TableSelection {
     /**
-     * Column of the first cell selected
+     * First Cell selection x and y position in the table
      */
-    firstCol: number;
+    firstCell: Coordinates;
+
     /**
-     * Row of the first cell selected
+     * Last Cell selection x and y position in the table
      */
-    firstRow: number;
-    /**
-     * Column of the last cell selected
-     */
-    lastCol: number;
-    /**
-     * Row of the last cell selected
-     */
-    lastRow: number;
+    lastCell: Coordinates;
 }

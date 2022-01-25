@@ -1,4 +1,4 @@
-import TableSelectionPlugin from 'roosterjs-editor-plugins/lib/plugins/TableSelection/TableSelection';
+import TableCellSelectionPlugin from 'roosterjs-editor-plugins/lib/plugins/TableSelection/TableSelection';
 import { Browser } from 'roosterjs-editor-dom/lib/utils/Browser';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
@@ -6,21 +6,21 @@ import { IEditor } from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
 const TABLE_SELECTOR_LENGTH = 12;
-describe('TableSelectionPlugin', () => {
+describe('TableCellSelectionPlugin', () => {
     let editor: IEditor;
     let id = 'tableSelectionContainerId';
     let targetId = 'tableSelectionTestId';
     let targetId2 = 'tableSelectionTestId2';
-    let tableSelectionPlugin: TableSelectionPlugin;
+    let tableCellSelection: TableCellSelectionPlugin;
 
     beforeEach(() => {
         let node = document.createElement('div');
         node.id = id;
         document.body.insertBefore(node, document.body.childNodes[0]);
-        tableSelectionPlugin = new TableSelectionPlugin(node);
+        tableCellSelection = new TableCellSelectionPlugin(node);
 
         let options: EditorOptions = {
-            plugins: [tableSelectionPlugin],
+            plugins: [tableCellSelection],
             defaultFormat: {
                 fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
                 fontSize: '11pt',
@@ -47,7 +47,7 @@ describe('TableSelectionPlugin', () => {
         initTableSelection(target);
         simulateMouseEvent('mousemove', target2);
         expect(editor.getScrollContainer().innerHTML).toBe(result);
-        expect((tableSelectionPlugin as any).tableSelection).toBe(expectTableSelection);
+        expect((TableCellSelectionPlugin as any).tableSelection).toBe(expectTableSelection);
     }
 
     function initTableSelection(target: HTMLElement) {
