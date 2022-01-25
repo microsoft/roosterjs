@@ -617,9 +617,8 @@ export default class VTable implements Table {
             (!element.dataset[TEMP_BACKGROUND_COLOR] ||
                 element.dataset[TEMP_BACKGROUND_COLOR] == '')
         ) {
-            element.dataset[TEMP_BACKGROUND_COLOR] = getOriginalColor(
-                element.style.backgroundColor ?? element.style.background
-            );
+            element.dataset[TEMP_BACKGROUND_COLOR] =
+                element.style.backgroundColor ?? element.style.background ?? '';
         }
         element.style.backgroundColor = highlighColor;
         element.classList.add(TABLE_CELL_SELECTED);
@@ -633,8 +632,6 @@ export default class VTable implements Table {
     /**
      * Handler to remove the selected style
      * @param cell element to apply the style
-     * @param cacheSelection whether we need to cache the selection
-     * @returns
      */
     private deselectCellHandler = (cell: HTMLElement) => {
         if (
@@ -643,7 +640,7 @@ export default class VTable implements Table {
             cell.classList.contains(TABLE_CELL_SELECTED)
         ) {
             cell.classList.remove(TABLE_CELL_SELECTED);
-            cell.style.backgroundColor = getOriginalColor(cell.dataset[TEMP_BACKGROUND_COLOR]);
+            cell.style.backgroundColor = cell.dataset[TEMP_BACKGROUND_COLOR] ?? '';
             delete cell.dataset[TEMP_BACKGROUND_COLOR];
             cell.querySelectorAll('table').forEach(table => {
                 const vTable = new VTable(table);
@@ -798,7 +795,7 @@ export default class VTable implements Table {
     }
 
     private forEachCellOfRow(row: number, callback: (cell: VCell, i: number) => any) {
-        for (let i = 0; i < this.cells[row]?.length; i++) {
+        for (let i = 0; i < this.cells[row].length; i++) {
             callback(this.getCell(row, i), i);
         }
     }
@@ -901,6 +898,7 @@ function getTableFromTd(td: HTMLTableCellElement) {
 function getBorderStyle(style: string): string {
     return 'solid 1px ' + (style || 'transparent');
 }
+
 /**
  * Clone a table cell
  * @param cell The cell to clone
@@ -926,13 +924,4 @@ function cloneNode<T extends Node>(node: T): T {
         }
     }
     return newNode;
-}
-
-/**
- * Get the original color before the selection was made
- * @param colorString Color
- * @returns original color before the selection was made
- */
-function getOriginalColor(colorString: string) {
-    return colorString ?? '';
 }

@@ -1,4 +1,6 @@
 import {
+    BeforeCutCopyEvent,
+    BuildInEditFeature,
     ContentPosition,
     Coordinates,
     EditorPlugin,
@@ -7,16 +9,17 @@ import {
     KnownCreateElementDataIndex,
     PluginEvent,
     PluginEventType,
+    PluginKeyboardEvent,
     PluginKeyDownEvent,
     PluginKeyUpEvent,
     PluginMouseDownEvent,
     PluginMouseUpEvent,
     PositionType,
     Rect,
+    SelectionRangeTypes,
     TableSelection,
 } from 'roosterjs-editor-types';
 import {
-    clearSelectedTableCells,
     findClosestElementAncestor,
     getTagOfNode,
     safeInstanceOf,
@@ -30,6 +33,7 @@ import {
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
+const TABLE_SELECTED = '_tableSelected';
 const TABLE_CELL_SELECTED = '_tableCellSelected';
 const TABLE_SELECTOR_ID = 'tableSelector';
 const TABLE_SELECTOR_LENGTH = 12;
@@ -40,7 +44,9 @@ const RIGHT_CLICK = 3;
  * TableSelectionPlugin help highlight table cells
  */
 export default class TableCellSelectionPlugin implements EditorPlugin {
-    // State property
+    private editor: IEditor;
+
+    // State properties
     private lastTarget: Node;
     private firstTarget: Node;
     private tableRange: TableSelection;
@@ -49,8 +55,6 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
     private vTable: VTable;
     private firstTable: HTMLTableElement;
     private targetTable: HTMLElement;
-
-    private editor: IEditor;
 
     // Range used in all the class
     private range: Range;
@@ -87,6 +91,8 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
         this.onMouseMoveDisposer = this.editor.addDomEventHandler({
             mousemove: this.tableSelectorEvent,
         });
+        this.editor.addContentEditFeature(this.DeleteTableContents);
+        this.editor.addContentEditFeature(this.DeleteTableStructure);
     }
 
     /**
@@ -109,6 +115,9 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
             switch (event.eventType) {
                 case PluginEventType.ExtractContentWithDom:
                     clearSelectedTableCells(event.clonedRoot);
+                    break;
+                case PluginEventType.BeforeCutCopy:
+                    this.handleBeforeCutCopy(event);
                     break;
                 case PluginEventType.MouseUp:
                     this.handleMouseUpEvent(event);
@@ -139,6 +148,35 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
                     break;
             }
         }
+    }
+
+    /**
+     * Handles the Before Copy Event.
+     * Clear the selection range from the cloned Root.
+     * @param event plugin event
+     */
+    private handleBeforeCutCopy(event: BeforeCutCopyEvent) {
+        const clonedTable = event.clonedRoot.querySelector('table.' + TABLE_SELECTED);
+        if (clonedTable) {
+            const clonedVTable = new VTable(clonedTable as HTMLTableElement);
+
+            clonedVTable.removeCellsBySelection();
+            clonedVTable.writeBack();
+
+            event.range.selectNode(clonedTable);
+
+            if (event.isCut) {
+                this.vTable.forEachSelectedCell(cell => {
+                    if (cell?.td) {
+                        const deleteRange = new Range();
+                        deleteRange.selectNodeContents(cell.td);
+                        deleteRange.deleteContents();
+                        cell.td.appendChild(this.editor.getDocument().createElement('BR'));
+                    }
+                });
+            }
+        }
+        clearSelectedTableCells(event.clonedRoot);
     }
 
     //#region Key events
@@ -541,6 +579,54 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
         this.tableSelector.style.display = 'unset';
     }
 
+    //#endregion
+
+    //#region Content Edit Features
+
+    /**
+     * When press Backspace, delete the contents inside of the selection, if it is vSelection
+     */
+    DeleteTableContents: BuildInEditFeature<PluginKeyboardEvent> = {
+        keys: [Keys.DELETE],
+        shouldHandleEvent: (event, editor) => {
+            const selection = editor.getSelectionRangeEx();
+            return selection.type == SelectionRangeTypes.TableSelection;
+        },
+        handleEvent: (event, editor) => {
+            const selection = editor.getSelectionRangeEx();
+            if (selection.type == SelectionRangeTypes.TableSelection && selection.vTable) {
+                editor.addUndoSnapshot(() => {
+                    selection.vTable.forEachSelectedCell(cell => {
+                        if (cell.td) {
+                            const range = new Range();
+                            range.selectNodeContents(cell.td);
+                            range.deleteContents();
+                            cell.td.appendChild(editor.getDocument().createElement('br'));
+                        }
+                    });
+                });
+            }
+        },
+    };
+
+    /**
+     * When press Delete, delete the Table cells selected if it is vSelection
+     */
+    DeleteTableStructure: BuildInEditFeature<PluginKeyboardEvent> = {
+        keys: [Keys.BACKSPACE],
+        shouldHandleEvent: (event, editor) => {
+            const selection = editor.getSelectionRangeEx();
+            return selection.type == SelectionRangeTypes.TableSelection;
+        },
+        handleEvent: (event, editor) => {
+            const selection = editor.getSelectionRangeEx();
+            if (selection.type == SelectionRangeTypes.TableSelection && selection.vTable) {
+                const vTable = selection.vTable;
+                vTable.removeCellsBySelection(false);
+                vTable.writeBack();
+            }
+        },
+    };
     //#endregion
 
     //#region utils

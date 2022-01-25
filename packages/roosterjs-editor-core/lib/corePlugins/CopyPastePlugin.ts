@@ -17,6 +17,7 @@ import {
     ExperimentalFeatures,
     PluginWithState,
     KnownCreateElementDataIndex,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
 /**
@@ -75,7 +76,16 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
-        const originalRange = this.editor.getSelectionRange();
+        const selection = this.editor.getSelectionRangeEx();
+        let originalRange: Range = new Range();
+
+        if (selection.type == SelectionRangeTypes.TableSelection && selection.vTable) {
+            originalRange.selectNode(selection.vTable.table);
+            this.editor.select(originalRange);
+        } else if (selection.type == SelectionRangeTypes.Normal) {
+            originalRange = selection.ranges[0];
+        }
+
         if (originalRange && !originalRange.collapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
@@ -87,6 +97,10 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
             if (newRange) {
                 addRangeToSelection(newRange);
+            }
+
+            if (selection.type == SelectionRangeTypes.TableSelection) {
+                originalRange.collapse();
             }
 
             this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
