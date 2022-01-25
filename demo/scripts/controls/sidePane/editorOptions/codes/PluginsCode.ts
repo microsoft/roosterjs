@@ -3,6 +3,7 @@ import CodeElement from './CodeElement';
 import ContentEditCode from './ContentEditCode';
 import HyperLinkCode from './HyperLinkCode';
 import PickerPluginCode from './PickerPluginCode';
+import TableSelectionCode from './TableSelectionCode';
 import WatermarkCode from './WatermarkCode';
 import {
     CustomReplaceCode,
@@ -29,6 +30,7 @@ export default class PluginsCode extends CodeElement {
             pluginList.tableResize && new TableResizeCode(),
             pluginList.pickerPlugin && new PickerPluginCode(),
             pluginList.customReplace && new CustomReplaceCode(),
+            pluginList.tableCellSelection && new TableSelectionCode(),
         ].filter(plugin => !!plugin);
     }
 

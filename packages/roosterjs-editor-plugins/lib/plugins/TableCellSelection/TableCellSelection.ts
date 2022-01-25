@@ -43,7 +43,7 @@ const RIGHT_CLICK = 3;
 /**
  * TableSelectionPlugin help highlight table cells
  */
-export default class TableCellSelectionPlugin implements EditorPlugin {
+export default class TableCellSelection implements EditorPlugin {
     private editor: IEditor;
 
     // State properties

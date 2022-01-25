@@ -2,7 +2,7 @@ import { Browser } from 'roosterjs-editor-dom/lib/utils/Browser';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
 import { IEditor } from 'roosterjs-editor-types';
-import { TableCellSelectionPlugin } from '../../lib/TableSelection';
+import { TableCellSelection } from '../../lib/TableCellSelection';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
 const TABLE_SELECTOR_LENGTH = 12;
@@ -11,13 +11,13 @@ describe('TableCellSelectionPlugin', () => {
     let id = 'tableSelectionContainerId';
     let targetId = 'tableSelectionTestId';
     let targetId2 = 'tableSelectionTestId2';
-    let tableCellSelection: TableCellSelectionPlugin;
+    let tableCellSelection: TableCellSelection;
 
     beforeEach(() => {
         let node = document.createElement('div');
         node.id = id;
         document.body.insertBefore(node, document.body.childNodes[0]);
-        tableCellSelection = new TableCellSelectionPlugin(node);
+        tableCellSelection = new TableCellSelection(node);
 
         let options: EditorOptions = {
             plugins: [tableCellSelection],
