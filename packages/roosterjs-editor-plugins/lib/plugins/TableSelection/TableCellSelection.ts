@@ -231,6 +231,9 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
     }
 
     private handleKeySelectionInsideTable(event: PluginKeyDownEvent | PluginKeyUpEvent) {
+        this.firstTarget = getCellAtCursor(this.editor, this.firstTarget);
+        this.lastTarget = getCellAtCursor(this.editor, this.lastTarget);
+
         updateSelection(this.editor, this.firstTarget, 0);
         this.vTable = this.vTable || new VTable(this.firstTable as HTMLTableElement);
         this.tableRange.firstCell = this.vTable.getCellCoordinates(this.firstTarget as Element);
@@ -311,6 +314,7 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
     }
 
     private handleMouseUpEvent(event: PluginMouseUpEvent) {
+        this.range = this.editor.getSelectionRange();
         if (
             event.isClicking &&
             this.range.collapsed &&
