@@ -111,7 +111,6 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
-            this.range = this.editor.getSelectionRange();
             switch (event.eventType) {
                 case PluginEventType.ExtractContentWithDom:
                     clearSelectedTableCells(event.clonedRoot);
@@ -382,8 +381,6 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
         }
     };
 
-    // If selection  started outside of a table or moves outside of the first table and finishes inside of a different table,
-    // selects all the row in the table where it started and where it finished
     private onMouseUp = () => {
         if (this.editor) {
             this.removeMouseUpEventListener();
@@ -391,10 +388,7 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
     };
 
     private selectionInsideTableMouseMove(event: MouseEvent) {
-        let eventTarget = this.lastTarget;
-        const firstTableTD = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR, this.firstTarget);
-
-        if (this.firstTarget && eventTarget && this.lastTarget && eventTarget != this.firstTarget) {
+        if (this.lastTarget != this.firstTarget) {
             if (!this.tableSelection && !shouldConvertToTableSelection(this.range)) {
                 return;
             } else {
@@ -407,7 +401,7 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
                     //Make the firstTarget the TD of the parent table.
                     this.firstTarget = this.editor.getElementAtCursor(
                         TABLE_CELL_SELECTOR,
-                        eventTarget
+                        this.lastTarget
                     );
                     (this.firstTarget as HTMLElement).querySelectorAll('table').forEach(table => {
                         const vTable = new VTable(table);
@@ -416,31 +410,24 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
                 }
             }
 
-            const currentTargetTD = this.editor.getElementAtCursor(
-                TABLE_CELL_SELECTOR,
-                eventTarget
-            ) as HTMLTableCellElement;
-
-            if (this.firstTable && currentTargetTD) {
+            if (this.firstTable) {
                 this.tableSelection = true;
                 if (
                     this.vTable?.table != this.firstTable &&
-                    safeInstanceOf(firstTableTD, 'HTMLTableCellElement')
+                    safeInstanceOf(this.firstTarget, 'HTMLTableCellElement')
                 ) {
-                    this.vTable = new VTable(firstTableTD);
+                    this.vTable = new VTable(this.firstTarget);
                 }
 
-                this.tableRange.firstCell = this.vTable.getCellCoordinates(firstTableTD);
-                this.tableRange.lastCell = this.vTable.getCellCoordinates(
-                    currentTargetTD ?? firstTableTD
-                );
+                this.tableRange.firstCell = this.vTable.getCellCoordinates(this.firstTarget);
+                this.tableRange.lastCell = this.vTable.getCellCoordinates(this.lastTarget);
                 this.vTable.highlightSelection(this.tableRange);
             }
 
             event.preventDefault();
-        } else if (eventTarget == this.firstTarget && this.tableSelection) {
+        } else if (this.lastTarget == this.firstTarget && this.tableSelection) {
             this.vTable = new VTable(this.firstTable);
-            this.tableRange.firstCell = this.vTable.getCellCoordinates(firstTableTD);
+            this.tableRange.firstCell = this.vTable.getCellCoordinates(this.firstTarget);
             this.tableRange.lastCell = this.tableRange.firstCell;
 
             this.vTable.highlightSelection(this.tableRange);
@@ -584,7 +571,7 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
     //#region Content Edit Features
 
     /**
-     * When press Backspace, delete the contents inside of the selection, if it is vSelection
+     * When press Backspace, delete the contents inside of the selection, if it is Table Selection
      */
     DeleteTableContents: BuildInEditFeature<PluginKeyboardEvent> = {
         keys: [Keys.DELETE],
@@ -610,7 +597,7 @@ export default class TableCellSelectionPlugin implements EditorPlugin {
     };
 
     /**
-     * When press Delete, delete the Table cells selected if it is vSelection
+     * When press Delete, delete the Table cells selected if it is Table Selection
      */
     DeleteTableStructure: BuildInEditFeature<PluginKeyboardEvent> = {
         keys: [Keys.BACKSPACE],
