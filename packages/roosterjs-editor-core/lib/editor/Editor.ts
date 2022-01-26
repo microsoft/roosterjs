@@ -209,11 +209,22 @@ export default class Editor implements IEditor {
         scopeOrCallback: QueryScope | ((node: Node) => any) = QueryScope.Body,
         callback?: (node: Node) => any
     ) {
+        const result: HTMLElement[] = [];
         let scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
 
-        let range = scope == QueryScope.Body ? null : this.getSelectionRange();
-        return queryElements(this.core.contentDiv, selector, callback, scope, range);
+        let selectionEx = scope == QueryScope.Body ? null : this.getSelectionRangeEx();
+        if (selectionEx) {
+            selectionEx.ranges.forEach(range => {
+                result.push(
+                    ...queryElements(this.core.contentDiv, selector, callback, scope, range)
+                );
+            });
+        } else {
+            return queryElements(this.core.contentDiv, selector, callback, scope, null);
+        }
+
+        return result;
     }
 
     /**
@@ -470,8 +481,12 @@ export default class Editor implements IEditor {
      * Get impacted regions from selection
      */
     public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
-        const range = this.getSelectionRange();
-        return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
+        const selection = this.getSelectionRangeEx();
+        const result: Region[] = [];
+        selection.ranges.forEach(range => {
+            result.push(...(range ? getRegionsFromRange(this.core.contentDiv, range, type) : []));
+        });
+        return result;
     }
 
     //#endregion
@@ -634,15 +649,9 @@ export default class Editor implements IEditor {
     /**
      * Get a content traverser for current selection
      */
-    public getSelectionTraverser(): IContentTraverser {
-        let range = this.getSelectionRange();
-        return (
-            range &&
-            ContentTraverser.createSelectionTraverser(
-                this.core.contentDiv,
-                this.getSelectionRange()
-            )
-        );
+    public getSelectionTraverser(range?: Range): IContentTraverser {
+        range = range ?? this.getSelectionRange();
+        return range && ContentTraverser.createSelectionTraverser(this.core.contentDiv, range);
     }
 
     /**

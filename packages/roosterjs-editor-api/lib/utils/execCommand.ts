@@ -1,6 +1,11 @@
-import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
-import { multipleSelectionRangesWrap } from './multipleSelectionRangesWrap';
 import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -18,23 +23,36 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
     let formatter = () => editor.getDocument().execCommand(command, false, null);
 
     let selection = editor.getSelectionRangeEx();
-    multipleSelectionRangesWrap(editor, selection, range => {
-        if (range && range.collapsed) {
-            editor.addUndoSnapshot();
-            const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
-            formatter();
-            const formatName = Object.keys(PendableFormatCommandMap).filter(
-                (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
-            )[0] as PendableFormatNames;
+    if (selection && selection.areAllCollapsed) {
+        editor.addUndoSnapshot();
+        const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
+        formatter();
+        const formatName = Object.keys(PendableFormatCommandMap).filter(
+            (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
+        )[0] as PendableFormatNames;
 
-            if (formatName) {
-                formatState[formatName] = !formatState[formatName];
-                editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
-                    formatState: formatState,
-                });
-            }
-        } else {
-            editor.addUndoSnapshot(formatter, ChangeSource.Format);
+        if (formatName) {
+            formatState[formatName] = !formatState[formatName];
+            editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
+                formatState: formatState,
+            });
         }
-    });
+    } else {
+        editor.addUndoSnapshot(() => {
+            if (selection.type == SelectionRangeTypes.TableSelection) {
+                selection.vTable.forEachSelectedCell(cell => {
+                    if (cell.td) {
+                        const range = new Range();
+                        range.selectNodeContents(cell.td);
+                        editor.select(range);
+                        formatter();
+                        range.collapse();
+                        editor.select(range);
+                    }
+                });
+            } else {
+                formatter();
+            }
+        }, ChangeSource.Format);
+    }
 }

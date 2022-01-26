@@ -25,6 +25,10 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                 core.lifecycle.shadowEditSelectionPath.end
             );
 
+        const tableSelected = getTableSelected(core.contentDiv);
+        if (tableSelected) {
+            return createTableSelectionEx(tableSelected);
+        }
         return createNormalSelectionEx([shadowRange]);
     } else {
         if (core.api.hasFocus(core)) {
