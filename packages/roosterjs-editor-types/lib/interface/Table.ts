@@ -106,11 +106,4 @@ export default interface Table {
      * @param col column of the cell
      */
     getTd(row: number, col: number): HTMLTableCellElement;
-
-    /**
-     * Transforms the selected cells to Ranges.
-     * For Each Row a Range with selected cells, a Range is going to be returned.
-     * @returns Array of ranges from the selected table cells.
-     */
-    getSelectedRanges(): Range[];
 }
