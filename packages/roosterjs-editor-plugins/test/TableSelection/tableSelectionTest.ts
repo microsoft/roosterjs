@@ -5,7 +5,6 @@ import { IEditor } from 'roosterjs-editor-types';
 import { TableCellSelection } from '../../lib/TableCellSelection';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
-const TABLE_SELECTOR_LENGTH = 12;
 describe('TableCellSelectionPlugin', () => {
     let editor: IEditor;
     let id = 'tableSelectionContainerId';
@@ -17,7 +16,7 @@ describe('TableCellSelectionPlugin', () => {
         let node = document.createElement('div');
         node.id = id;
         document.body.insertBefore(node, document.body.childNodes[0]);
-        tableCellSelection = new TableCellSelection(node);
+        tableCellSelection = new TableCellSelection();
 
         let options: EditorOptions = {
             plugins: [tableCellSelection],
@@ -179,59 +178,6 @@ describe('TableCellSelectionPlugin', () => {
         simulateMouseEvent('mousemove', targetParent);
         simulateMouseEvent('mousemove', target2);
         expect(editor.getScrollContainer().innerHTML).toBe(result);
-    });
-
-    it('tableSelector display on mouse move inside table', () => {
-        editor.setContent(
-            `<table id='table1'><tr ><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table>`
-        );
-        const target = document.getElementById(targetId);
-        const target2 = document.getElementById(targetId2);
-        editor.focus();
-        editor.select(target);
-        simulateMouseEvent('mousemove', target2);
-
-        const tableSelector = editor.getDocument().getElementById('tableSelector');
-        const table = editor.getDocument().getElementById('table1');
-
-        const rect = table.getBoundingClientRect();
-
-        expect(tableSelector).toBeDefined();
-        expect(tableSelector.style.display).toBe('unset');
-        expect(tableSelector.style.top).toBe(`${rect.top - TABLE_SELECTOR_LENGTH}px`);
-        expect(tableSelector.style.left).toBe(`${rect.left - TABLE_SELECTOR_LENGTH - 2}px`);
-    });
-
-    it('tableSelector before moving to a table and moving to a table', () => {
-        editor.setContent(
-            `<div id=${targetId}><table id='table1'><tr ><td >a</td><td>w</td></tr></table>`
-        );
-        const target = document.getElementById(targetId);
-        simulateMouseEvent('mousemove', target);
-
-        let tableSelector = editor.getDocument().getElementById('tableSelector');
-        expect(tableSelector).toBe(null);
-
-        const target2 = document.getElementById('table1');
-        tableSelector = editor.getDocument().getElementById('tableSelector');
-        simulateMouseEvent('mousemove', target2);
-        expect(tableSelector).toBeDefined();
-    });
-
-    it('tableSelector on click event', () => {
-        editor.setContent(`<div ><table id=${targetId}><tr ><td >a</td><td>w</td></tr></table>`);
-        const target = document.getElementById(targetId);
-        simulateMouseEvent('mousemove', target);
-
-        let tableSelector = editor.getDocument().getElementById('tableSelector');
-        simulateMouseEvent('click', tableSelector);
-
-        expect(tableSelector).toBeDefined();
-        expect(editor.getScrollContainer().innerHTML).toBe(
-            Browser.isFirefox
-                ? '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">a</td><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">w</td></tr></tbody></table></div>'
-                : '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table></div>'
-        );
     });
 
     it('handle ExtractContent', () => {

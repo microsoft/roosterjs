@@ -66,9 +66,7 @@ export default function Editor(props: EditorProps) {
                   })
                 : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
-            tableCellSelection: pluginList.tableCellSelection
-                ? new TableCellSelection(contentDiv.current)
-                : null,
+            tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
             pickerPlugin: pluginList.pickerPlugin
                 ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {

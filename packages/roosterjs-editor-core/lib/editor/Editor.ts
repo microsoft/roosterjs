@@ -470,8 +470,14 @@ export default class Editor implements IEditor {
      * Get impacted regions from selection
      */
     public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
-        const range = this.getSelectionRange();
-        return range ? getRegionsFromRange(this.core.contentDiv, range, type) : [];
+        const selection = this.getSelectionRangeEx();
+        const result: Region[] = [];
+        selection.ranges.forEach(range => {
+            result.push(...(range ? getRegionsFromRange(this.core.contentDiv, range, type) : []));
+        });
+        return result.filter((value, index, self) => {
+            return self.indexOf(value) === index;
+        });
     }
 
     //#endregion

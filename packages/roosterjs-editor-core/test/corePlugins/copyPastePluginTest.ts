@@ -127,7 +127,7 @@ describe('CopyPastePlugin copy', () => {
                 return {
                     type: SelectionRangeTypes.Normal,
                     ranges: [<Range>{ collapsed: false }],
-                    areAllCollapsed: true,
+                    areAllCollapsed: false,
                 };
             },
         });
