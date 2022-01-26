@@ -90,9 +90,6 @@ describe('getSelectionRangeEx', () => {
         const ranges = selection.ranges;
 
         expectedRangesLength.forEach((value, i) => {
-            if (ranges[i] == null) {
-                debugger;
-            }
             expect(ranges[i].startOffset).toBe(value[0]);
             expect(ranges[i].endOffset).toBe(value[1]);
         });
