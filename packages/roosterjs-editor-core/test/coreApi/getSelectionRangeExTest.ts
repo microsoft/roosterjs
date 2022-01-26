@@ -143,5 +143,3 @@ describe('getSelectionRangeEx', () => {
         );
     });
 });
-
-describe('VTable.getSelectedRanges', () => {});
