@@ -2,12 +2,12 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { Table, TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
+import { TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default class VTable implements Table {
+export default class VTable {
     /**
      * The HTML table object
      */
