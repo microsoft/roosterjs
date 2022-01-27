@@ -1,4 +1,4 @@
-import { default as setListItemStyle } from '../../lib/utils/setListItemStyle';
+import { default as setListItemStyle } from '../../lib/list/setListItemStyle';
 
 interface TestChildElement {
     elementTag: string;

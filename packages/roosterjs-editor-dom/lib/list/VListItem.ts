@@ -4,7 +4,7 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import setListItemStyle from '../utils/setListItemStyle';
+import setListItemStyle from './setListItemStyle';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';

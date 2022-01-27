@@ -1,4 +1,4 @@
-import applyTextStyle from '../utils/applyTextStyle';
+import applyTextStyle from './applyTextStyle';
 import createRange from '../selection/createRange';
 import Position from '../selection/Position';
 import { BlockElement, InlineElement, NodePosition, PositionType } from 'roosterjs-editor-types';
