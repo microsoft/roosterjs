@@ -23,9 +23,9 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            null /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
+            TableBorderFormat.DEFAULT /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
             color /** headerRowColor */
         ),
     DEFAULT_WITH_BACKGROUND_COLOR: (color, lightColor) =>
@@ -37,7 +37,7 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            null /** tableBorderFormat */,
+            TableBorderFormat.DEFAULT /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -51,7 +51,7 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            TableBorderFormat.MIDDLE /** tableBorderFormat */,
+            TableBorderFormat.NO_SIDE_BORDERS /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -65,7 +65,7 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** bandedColumns */,
             false /** headerRow */,
             false /** firstColumn */,
-            null /** tableBorderFormat */,
+            TableBorderFormat.DEFAULT /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
@@ -84,6 +84,76 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             lightColor /** bgColorOdd */,
             color /** headerRowColor */
         ),
+    EXTERNAL: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.LIST_WITH_SIDE_BORDERS /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    NO_HEADER_VERTICAL: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.NO_HEADER_BORDERS /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    ESPECIAL_TYPE_1: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.ESPECIAL_TYPE_1 /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    ESPECIAL_TYPE_2: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.ESPECIAL_TYPE_2 /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    ESPECIAL_TYPE_3: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.ESPECIAL_TYPE_3 /** tableBorderFormat */,
+            lightColor /** bgColorEven */,
+            null /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
 };
 
 const PREDEFINED_STYLES_KEYS = {
@@ -92,6 +162,11 @@ const PREDEFINED_STYLES_KEYS = {
     list: 'LIST',
     bandedRowsFirstColumnNoBorder: 'BANDED_ROWS_FIRST_COLUMN_NO_BORDER',
     defaultWithBackgroundColor: 'DEFAULT_WITH_BACKGROUND_COLOR',
+    external: 'EXTERNAL',
+    noHeader: 'NO_HEADER_VERTICAL',
+    especialType1: 'ESPECIAL_TYPE_1',
+    especialType2: 'ESPECIAL_TYPE_2',
+    especialType3: 'ESPECIAL_TYPE_3',
 };
 
 const TABLE_COLORS: Record<string, string> = {
@@ -337,6 +412,46 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                         ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
                                         editor
                                     )}
+                                    {this.renderFormatTableButton(
+                                        'External',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.external](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'No Header Vertical',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.noHeader](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'Especial type 1',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType1](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'Especial type 2',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType2](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'Especial type 3',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType3](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
                                 </td>
                             </tr>
                             <tr>
@@ -497,7 +612,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
             this.verticalBorderColor.current.value || undefined
         );
 
-        this.state.vtable.applyFormatAndStyle(format);
+        this.state.vtable.applyFormat(format);
         this.forceUpdate();
     };
 

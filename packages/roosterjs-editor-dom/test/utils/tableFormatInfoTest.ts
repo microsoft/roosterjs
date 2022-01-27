@@ -1,7 +1,8 @@
-import getTableFormatInfo from '../../lib/utils/getTableFormatInfo';
 import VTable from '../../lib/table/VTable';
+import { getTableFormatInfo, saveTableInfo } from '../../lib/utils/tableFormatInfo';
 import { TableFormat } from 'roosterjs-editor-types';
 
+const TABLE_STYLE_INFO = 'roosterTableInfo';
 const format: TableFormat = {
     topBorderColor: '#0C64C0',
     bottomBorderColor: '#0C64C0',
@@ -9,7 +10,7 @@ const format: TableFormat = {
     bgColorEven: '#0C64C020',
     bgColorOdd: null,
     headerRowColor: null,
-    tableBorderFormat: null,
+    tableBorderFormat: 0,
     hasHeaderRow: false,
     hasFirstColumn: false,
     hasBandedRows: false,
@@ -17,7 +18,7 @@ const format: TableFormat = {
 };
 
 const expectedTableInfo =
-    '{"topBorderColor":"#0C64C0","bottomBorderColor":"#0C64C0","verticalBorderColor":"#0C64C0","bgColorEven":"#0C64C020","bgColorOdd":null,"headerRowColor":null,"tableBorderFormat":null, "hasHeaderRow": false, "hasFirstColumn": false, "hasBandedRows": false, "hasBandedColumns": false}';
+    '{"topBorderColor":"#0C64C0","bottomBorderColor":"#0C64C0","verticalBorderColor":"#0C64C0","bgColorEven":"#0C64C020","bgColorOdd":null,"headerRowColor":null,"tableBorderFormat":0, "hasHeaderRow": false, "hasFirstColumn": false, "hasBandedRows": false, "hasBandedColumns": false}';
 
 function createTable(format: TableFormat) {
     let div = document.createElement('div');
@@ -26,7 +27,8 @@ function createTable(format: TableFormat) {
     div.innerHTML = '<table id=id1><tr><td></td></tr><tr><td></td></tr> <tr><td></td></tr></table>';
     let node = document.getElementById(id) as HTMLTableElement;
     let vTable = new VTable(node);
-    vTable.applyFormatAndStyle(format);
+    vTable.applyFormat(format);
+    vTable.writeBack();
     return node;
 }
 
@@ -40,6 +42,15 @@ describe('getTableFormatInfo', () => {
         const table = createTable(format);
         const tableInfo = getTableFormatInfo(table);
         expect(tableInfo).toEqual(JSON.parse(expectedTableInfo) as TableFormat);
+        removeTable();
+    });
+});
+
+describe('saveTableInfo', () => {
+    it('should return the info of a table ', () => {
+        const table = createTable(format);
+        saveTableInfo(table, format);
+        expect(JSON.parse(table?.dataset[TABLE_STYLE_INFO])).toEqual(JSON.parse(expectedTableInfo));
         removeTable();
     });
 });

@@ -3,23 +3,74 @@
  */
 export const enum TableBorderFormat {
     /**
-     * Default border type
+     * All border of the table are displayed
+     *  __ __ __
+     * |__|__|__|
+     * |__|__|__|
+     * |__|__|__|
      */
     DEFAULT,
+
     /**
-     * Only the top, bottom, left and right border of the table are displayed
+     * Middle vertical border are not displayed
+     *  __ __ __
+     * |__ __ __|
+     * |__ __ __|
+     * |__ __ __|
      */
-    EXTERNAL,
+    LIST_WITH_SIDE_BORDERS,
+
     /**
      * All borders except header rows borders are displayed
+     *  __ __ __
+     *  __|__|__
+     *  __|__|__
      */
-    NO_HEADER_VERTICAL,
+    NO_HEADER_BORDERS,
+
     /**
-     * All borders except left and right border of the table are displayed
+     * The left and right border of the table are not displayed
+     *  __ __ __
+     *  __|__|__
+     *  __|__|__
+     *  __|__|__
      */
-    MIDDLE,
+    NO_SIDE_BORDERS,
+
     /**
-     * Only the borders of header row, first column and whole table are displayed
+     * Only the borders that divides the header row, first column and externals are displayed
+     *  __ __ __
+     * |__ __ __|
+     * |  |     |
+     * |__|__ __|
      */
     FIRST_COLUMN_HEADER_EXTERNAL,
+
+    /**
+     * The header row has no vertical border, except for the first one
+     * The only horizontal border of the table is the top and bottom of header row
+     *  __ __ __
+     * |__ __ __
+     * |  |     |
+     * |  |     |
+     */
+    ESPECIAL_TYPE_1,
+
+    /**
+     * The header row has no vertical border, except for the first one
+     * The first column has no horizontal border, except for the first one
+     *  __ __ __
+     * |__ __ __
+     * |  |__|__|
+     * |  |__|__|
+     */
+    ESPECIAL_TYPE_2,
+
+    /**
+     * The only borders are the bottom of header row and the right border of first column
+     *  __ __ __
+     *    |
+     *    |
+     */
+    ESPECIAL_TYPE_3,
 }

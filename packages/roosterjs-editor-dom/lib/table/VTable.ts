@@ -1,28 +1,14 @@
 import changeElementTag from '../utils/changeElementTag';
-import getTableFormatInfo from '../utils/getTableFormatInfo';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
+import { getTableFormatInfo, saveTableInfo } from '../utils/tableFormatInfo';
 import { TableBorderFormat, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';
-const TABLE_STYLE_INFO = 'roosterTableInfo';
-const DEFAULT_FORMAT: TableFormat = {
-    topBorderColor: '#ABABAB',
-    bottomBorderColor: '#ABABAB',
-    verticalBorderColor: '#ABABAB',
-    hasHeaderRow: false,
-    hasFirstColumn: false,
-    hasBandedRows: false,
-    hasBandedColumns: false,
-    bgColorEven: null,
-    bgColorOdd: '#ABABAB20',
-    headerRowColor: '#ABABAB',
-    tableBorderFormat: TableBorderFormat.DEFAULT,
-};
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -49,6 +35,8 @@ export default class VTable {
     col: number;
 
     private trs: HTMLTableRowElement[] = [];
+
+    formatInfo: TableFormat;
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
@@ -87,7 +75,7 @@ export default class VTable {
                     }
                 }
             });
-
+            this.formatInfo = getTableFormatInfo(this.table);
             if (normalizeSize) {
                 this.normalizeSize();
             }
@@ -110,9 +98,9 @@ export default class VTable {
                     }
                 });
             });
-            const formatInfo = getTableFormatInfo(this.table);
-            if (formatInfo) {
-                this.applyFormatAndStyle(formatInfo);
+            if (this.formatInfo) {
+                this.applyFormat(this.formatInfo);
+                saveTableInfo(this.table, this.formatInfo);
             }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
@@ -120,46 +108,21 @@ export default class VTable {
     }
 
     /**
-     * @deprecated
      * Apply the given table format to this virtual table
      * @param format Table format to apply
      */
     applyFormat(format: Partial<TableFormat>) {
-        if (!format || !this.table) {
-            return;
-        }
-        this.table.style.borderCollapse = 'collapse';
-        this.trs[0].style.backgroundColor = format.bgColorOdd || 'transparent';
-        if (this.trs[1]) {
-            this.trs[1].style.backgroundColor = format.bgColorEven || 'transparent';
-        }
-        this.cells.forEach(row =>
-            row
-                .filter(cell => cell.td)
-                .forEach(cell => {
-                    cell.td.style.borderTop = getBorderStyle(format.topBorderColor);
-                    cell.td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
-                    cell.td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
-                    cell.td.style.borderRight = getBorderStyle(format.verticalBorderColor);
-                })
-        );
-    }
-
-    /**
-     * Apply the given table format to this virtual table
-     * @param format Table format to apply
-     */
-    applyFormatAndStyle(format: TableFormat) {
         if (!this.table) {
             return;
         }
-        format = { ...DEFAULT_FORMAT, ...format };
+        if (format) {
+            this.formatInfo = format;
+        }
         this.table.style.borderCollapse = 'collapse';
-        this.setBordersType(format);
-        this.setColor(format);
-        this.setFirstColumnFormat(format);
-        this.setHeaderRowFormat(format);
-        this.saveTableInfo(this.table, format);
+        this.setBordersType(this.formatInfo);
+        this.setColor(this.formatInfo);
+        this.setFirstColumnFormat(this.formatInfo);
+        this.setHeaderRowFormat(this.formatInfo);
     }
 
     /**
@@ -218,20 +181,13 @@ export default class VTable {
         isFirstRow: boolean,
         isLastRow: boolean,
         isFirstColumn: boolean,
-        isLastColumn: boolean,
-        isLastColumnCell: boolean
+        isLastColumn: boolean
     ) {
         this.setBorderColors(td, format);
         switch (format.tableBorderFormat) {
             case TableBorderFormat.DEFAULT:
                 return;
-            case TableBorderFormat.EXTERNAL:
-                if (!isFirstRow) {
-                    td.style.borderTopColor = TRANSPARENT;
-                }
-                if (!isLastRow) {
-                    td.style.borderBottomColor = TRANSPARENT;
-                }
+            case TableBorderFormat.LIST_WITH_SIDE_BORDERS:
                 if (!isFirstColumn) {
                     td.style.borderLeftColor = TRANSPARENT;
                 }
@@ -259,22 +215,85 @@ export default class VTable {
                 }
 
                 break;
-            case TableBorderFormat.NO_HEADER_VERTICAL:
+            case TableBorderFormat.NO_HEADER_BORDERS:
                 if (isFirstRow) {
+                    td.style.borderTopColor = TRANSPARENT;
+                    td.style.borderRightColor = TRANSPARENT;
                     td.style.borderLeftColor = TRANSPARENT;
                 }
-                if (isLastColumnCell) {
-                    td.style.borderRightColor = TRANSPARENT;
-                }
-
-                break;
-            case TableBorderFormat.MIDDLE:
                 if (isFirstColumn) {
                     td.style.borderLeftColor = TRANSPARENT;
                 }
                 if (isLastColumn) {
                     td.style.borderRightColor = TRANSPARENT;
                 }
+                break;
+            case TableBorderFormat.NO_SIDE_BORDERS:
+                if (isFirstColumn) {
+                    td.style.borderLeftColor = TRANSPARENT;
+                }
+                if (isLastColumn) {
+                    td.style.borderRightColor = TRANSPARENT;
+                }
+                break;
+            case TableBorderFormat.ESPECIAL_TYPE_1:
+                if (isFirstRow) {
+                    td.style.borderRightColor = TRANSPARENT;
+                    td.style.borderLeftColor = TRANSPARENT;
+                }
+                if (isFirstColumn) {
+                    td.style.borderBottomColor = TRANSPARENT;
+                    td.style.borderTopColor = TRANSPARENT;
+                }
+                if (isFirstRow && isFirstColumn) {
+                    td.style.borderLeftColor = format.verticalBorderColor;
+                    td.style.borderBottomColor = format.bottomBorderColor;
+                    td.style.borderTopColor = format.topBorderColor;
+                }
+                break;
+            case TableBorderFormat.ESPECIAL_TYPE_2:
+                if (isFirstRow) {
+                    td.style.borderRightColor = TRANSPARENT;
+                    td.style.borderLeftColor = TRANSPARENT;
+                }
+                if (isFirstColumn) {
+                    td.style.borderBottomColor = TRANSPARENT;
+                    td.style.borderTopColor = TRANSPARENT;
+                }
+                if (isFirstRow && isFirstColumn) {
+                    td.style.borderLeftColor = format.verticalBorderColor;
+                    td.style.borderBottomColor = format.bottomBorderColor;
+                    td.style.borderTopColor = format.topBorderColor;
+                }
+                if (!isFirstRow && !isFirstColumn) {
+                    td.style.borderLeftColor = TRANSPARENT;
+                    td.style.borderBottomColor = TRANSPARENT;
+                    td.style.borderTopColor = TRANSPARENT;
+                    td.style.borderRightColor = TRANSPARENT;
+                }
+
+                break;
+            case TableBorderFormat.ESPECIAL_TYPE_3:
+                if (isFirstRow) {
+                    td.style.borderLeftColor = TRANSPARENT;
+                    td.style.borderTopColor = TRANSPARENT;
+                    td.style.borderRightColor = TRANSPARENT;
+                }
+                if (isFirstColumn) {
+                    td.style.borderLeftColor = TRANSPARENT;
+                    td.style.borderTopColor = TRANSPARENT;
+                    td.style.borderBottomColor = TRANSPARENT;
+                }
+                if (!isFirstRow && !isFirstColumn) {
+                    td.style.borderLeftColor = TRANSPARENT;
+                    td.style.borderBottomColor = TRANSPARENT;
+                    td.style.borderTopColor = TRANSPARENT;
+                    td.style.borderRightColor = TRANSPARENT;
+                }
+                if (isFirstRow && isFirstColumn) {
+                    td.style.borderBottomColor = format.bottomBorderColor;
+                }
+                break;
         }
     }
 
@@ -294,8 +313,7 @@ export default class VTable {
                         rowIndex === 0,
                         rowIndex === this.cells.length - 1,
                         cellIndex === 0,
-                        cellIndex === this.cells[0].length - 1,
-                        rowIndex === this.cells[0].length - 1
+                        cellIndex === row.length - 1
                     );
                 }
             });
@@ -363,17 +381,6 @@ export default class VTable {
                 cell.td.scope = 'row';
             }
         });
-    }
-
-    /**
-     * Save the format info of a table
-     * @param table The table the info will be saved
-     * @param format The format of the table
-     */
-    saveTableInfo(table: HTMLTableElement, format: TableFormat) {
-        if (table && format) {
-            table.dataset[TABLE_STYLE_INFO] = JSON.stringify(format);
-        }
     }
 
     /**

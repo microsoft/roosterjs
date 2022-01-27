@@ -16,7 +16,7 @@ export default function formatTable(
     if (table) {
         editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(table);
-            vtable.applyFormatAndStyle(format);
+            vtable.applyFormat(format);
             vtable.writeBack();
             editor.focus();
             editor.select(start, end);

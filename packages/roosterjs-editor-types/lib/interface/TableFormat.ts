@@ -8,22 +8,18 @@ export default interface TableFormat {
      * Top border color for each row
      */
     topBorderColor?: string | null;
-
     /**
      * Bottom border color for each row
      */
     bottomBorderColor?: string | null;
-
     /**
      * Vertical border color for each row
      */
     verticalBorderColor?: string | null;
-
     /**
      * Set header row
      */
     hasHeaderRow?: boolean;
-
     /**
      * Header row background color for even cells
      */
@@ -36,22 +32,18 @@ export default interface TableFormat {
      * Set banded columns
      */
     hasBandedColumns?: boolean;
-
     /**
      * Set banded rows
      */
     hasBandedRows?: boolean;
-
     /**
-     * Background color for even rows
+     * Background color for even row or even columns
      */
     bgColorEven?: string | null;
-
     /**
-     * Background color for odd rows
+     * Background color for odd row or odd columns
      */
     bgColorOdd?: string | null;
-
     /**
      * Table Borders Type
      */
