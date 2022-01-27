@@ -2,7 +2,7 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
+import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -28,11 +28,6 @@ export default class VTable {
      */
     col: number;
 
-    /**
-     * Selected range of cells with the coordinates of the first and last cell selected.
-     */
-    selection: TableSelection;
-
     private trs: HTMLTableRowElement[] = [];
 
     /**
@@ -42,12 +37,6 @@ export default class VTable {
      */
     constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
-        this.selection = null;
-        let firstCol: number = null;
-        let firstRow: number = null;
-        let lastCol: number;
-        let lastRow: number;
-
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
@@ -83,15 +72,6 @@ export default class VTable {
             if (normalizeSize) {
                 this.normalizeSize();
             }
-        }
-
-        if (firstCol !== null && firstRow !== null) {
-            this.selection = {
-                firstCol,
-                firstRow,
-                lastCol,
-                lastRow,
-            };
         }
     }
 
