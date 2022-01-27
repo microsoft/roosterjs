@@ -33,6 +33,7 @@ import {
     Region,
     RegionType,
     SelectionPath,
+    SelectionRangeEx,
     SizeTransformer,
     StyleBasedFormatState,
     TrustedHTMLHandler,
@@ -355,6 +356,17 @@ export default class Editor implements IEditor {
      */
     public getSelectionRange(tryGetFromCache: boolean = true): Range {
         return this.core.api.getSelectionRange(this.core, tryGetFromCache);
+    }
+
+    /**
+     * Get current selection range from Editor.
+     * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
+     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now.
+     * Default value is true
+     * @returns current selection range, or null if editor never got focus before
+     */
+    public getSelectionRangeEx(): SelectionRangeEx {
+        return this.core.api.getSelectionRangeEx(this.core);
     }
 
     /**
