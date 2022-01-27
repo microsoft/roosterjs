@@ -1,4 +1,4 @@
-import safeInstanceOf from '../utils/safeInstanceOf';
+import safeInstanceOf from './safeInstanceOf';
 
 /**
  * Get innerHTML of the given node
