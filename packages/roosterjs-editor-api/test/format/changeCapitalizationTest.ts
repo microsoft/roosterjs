@@ -1,7 +1,6 @@
 import * as TestHelper from '../TestHelper';
 import changeCapitalization from '../../lib/format/changeCapitalization';
-import { Capitalization } from 'roosterjs-editor-types';
-import { IEditor } from 'roosterjs-editor-types';
+import { Capitalization, IEditor } from 'roosterjs-editor-types';
 
 describe('changeCapitalization()', () => {
     let testID = 'changeCapitalization';

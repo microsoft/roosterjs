@@ -1,5 +1,5 @@
 import createRange from '../../lib/selection/createRange';
-import deleteSelectedContent from '../../lib/selection/deleteSelectedContent';
+import deleteSelectedContent from '../../lib/edit/deleteSelectedContent';
 import getHtmlWithSelectionPath from '../../lib/selection/getHtmlWithSelectionPath';
 import setHtmlWithSelectionPath from '../../lib/selection/setHtmlWithSelectionPath';
 

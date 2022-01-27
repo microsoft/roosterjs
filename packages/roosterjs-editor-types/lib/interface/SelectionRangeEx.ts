@@ -1,5 +1,3 @@
-import Table from './Table';
-
 /**
  * Represents normal selection
  */
@@ -28,7 +26,7 @@ export interface TableSelectionRange
     /**
      * Table that has cells selected
      */
-    vTable: Table;
+    table: HTMLTableElement;
 }
 
 /**

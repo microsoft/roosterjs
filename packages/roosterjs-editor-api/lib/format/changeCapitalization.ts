@@ -1,6 +1,5 @@
-import { IEditor } from 'roosterjs-editor-types';
-import { Capitalization, NodeType } from 'roosterjs-editor-types';
 import applyInlineStyle from '../utils/applyInlineStyle';
+import { Capitalization, IEditor, NodeType } from 'roosterjs-editor-types';
 import { getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
 
 /**

@@ -1,23 +1,23 @@
-import changeElementTag from './changeElementTag';
-import contains from './contains';
+import changeElementTag from '../utils/changeElementTag';
+import contains from '../utils/contains';
 import createRange from '../selection/createRange';
-import findClosestElementAncestor from './findClosestElementAncestor';
+import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
-import getTagOfNode from './getTagOfNode';
-import isNodeEmpty from './isNodeEmpty';
+import getTagOfNode from '../utils/getTagOfNode';
+import isNodeEmpty from '../utils/isNodeEmpty';
 import isPositionAtBeginningOf from '../selection/isPositionAtBeginningOf';
-import isVoidHtmlElement from './isVoidHtmlElement';
+import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import LinkInlineElement from '../inlineElements/LinkInlineElement';
 import Position from '../selection/Position';
 import PositionContentSearcher from '../contentTraverser/PositionContentSearcher';
-import queryElements from './queryElements';
-import splitTextNode from './splitTextNode';
-import toArray from './toArray';
-import unwrap from './unwrap';
+import queryElements from '../utils/queryElements';
+import splitTextNode from '../utils/splitTextNode';
+import toArray from '../utils/toArray';
+import unwrap from '../utils/unwrap';
 import VTable from '../table/VTable';
-import wrap from './wrap';
+import wrap from '../utils/wrap';
 import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
-import { splitBalancedNodeRange } from './splitParentNode';
+import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
 const adjustSteps: ((
     root: HTMLElement,
