@@ -1,12 +1,13 @@
 import { normalizeTableSelection } from './normalizeTableSelection';
-import { Table, VCell } from 'roosterjs-editor-types';
+import { VCell } from 'roosterjs-editor-types';
+import { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal
  * Remove the cells outside of the selection.
  * @param outsideOfSelection whether to remove the cells outside or inside of the selection
  */
-export function removeCellsBySelection(vTable: Table, outsideOfSelection: boolean = true) {
+export function removeCellsBySelection(vTable: VTable, outsideOfSelection: boolean = true) {
     const { firstCell, lastCell } = normalizeTableSelection(vTable.selection);
     const rowsLength = vTable.cells.length - 1;
     const colIndex = vTable.cells[rowsLength].length - 1;

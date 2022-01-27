@@ -1,5 +1,6 @@
-import { Table, VCell } from 'roosterjs-editor-types';
 import { tableCellSelectionCommon } from './tableCellSelectionCommon';
+import { VCell } from 'roosterjs-editor-types';
+import { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -7,7 +8,7 @@ import { tableCellSelectionCommon } from './tableCellSelectionCommon';
  * @param callback action to apply on each selected cell
  * @returns the amount of cells modified
  */
-export function forEachSelectedCell(vTable: Table, callback: (cell: VCell) => void): number {
+export function forEachSelectedCell(vTable: VTable, callback: (cell: VCell) => void): number {
     let selectedCells = 0;
 
     const { lastCell, firstCell } = vTable.selection;

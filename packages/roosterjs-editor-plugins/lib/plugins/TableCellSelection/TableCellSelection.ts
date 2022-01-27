@@ -520,7 +520,7 @@ export default class TableCellSelection implements EditorPlugin {
         handleEvent: (_, editor) => {
             const selection = editor.getSelectionRangeEx();
             if (selection.type == SelectionRangeTypes.TableSelection) {
-                const vTable = new VTable(selection.vTable.table);
+                const vTable = new VTable(selection.table);
                 let firstCell: HTMLTableCellElement = null;
                 let lastCell: HTMLTableCellElement;
                 vTable.table.querySelectorAll('.' + TABLE_CELL_SELECTED).forEach(cell => {
