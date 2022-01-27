@@ -1,5 +1,5 @@
 import VTable from '../../lib/table/VTable';
-import { TableFormat, TableOperation, TableSelection } from 'roosterjs-editor-types';
+import { TableFormat, TableOperation } from 'roosterjs-editor-types';
 
 describe('VTable.ctor', () => {
     function runTest(
@@ -7,8 +7,7 @@ describe('VTable.ctor', () => {
         id: string,
         col: number,
         row: number,
-        result: [boolean, boolean, boolean][][],
-        selectionExpect: TableSelection = null
+        result: [boolean, boolean, boolean][][]
     ) {
         let div = document.createElement('div');
         document.body.appendChild(div);
@@ -26,7 +25,6 @@ describe('VTable.ctor', () => {
                 expect(!!cell.spanAbove).toBe(td[2], `spanAbove[${i}][${j}]`);
             }
         }
-        expect(vTable.selection).toEqual(selectionExpect);
         document.body.removeChild(div);
     }
 
