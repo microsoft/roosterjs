@@ -2,14 +2,12 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { Table, TableFormat, TableOperation, TableSelection, VCell } from 'roosterjs-editor-types';
-
-const TABLE_CELL_SELECTED = '_tableCellSelected';
+import { TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
  */
-export default class VTable implements Table {
+export default class VTable {
     /**
      * The HTML table object
      */
@@ -30,11 +28,6 @@ export default class VTable implements Table {
      */
     col: number;
 
-    /**
-     * Selected range of cells with the coordinates of the first and last cell selected.
-     */
-    selection: TableSelection;
-
     private trs: HTMLTableRowElement[] = [];
 
     /**
@@ -44,12 +37,6 @@ export default class VTable implements Table {
      */
     constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
-        this.selection = null;
-        let firstCol: number = null;
-        let firstRow: number = null;
-        let lastCol: number;
-        let lastRow: number;
-
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
             let trs = toArray(this.table.rows);
@@ -77,12 +64,6 @@ export default class VTable implements Table {
                                 width: hasTd ? rect.width : undefined,
                                 height: hasTd ? rect.height : undefined,
                             };
-                            if (td.classList.contains(TABLE_CELL_SELECTED)) {
-                                firstCol = firstCol ?? targetCol + colSpan;
-                                firstRow = firstRow ?? rowIndex + rowSpan;
-                                lastCol = targetCol + colSpan;
-                                lastRow = rowIndex + rowSpan;
-                            }
                         }
                     }
                 }
@@ -92,50 +73,6 @@ export default class VTable implements Table {
                 this.normalizeSize();
             }
         }
-
-        if (firstCol !== null && firstRow !== null) {
-            this.selection = {
-                firstCol,
-                firstRow,
-                lastCol,
-                lastRow,
-            };
-        }
-    }
-
-    /**
-     * Transforms the selected cells to Ranges.
-     * For Each Row a Range with selected cells, a Range is going to be returned.
-     * @returns Array of ranges from the selected table cells.
-     */
-    getSelectedRanges(): Range[] {
-        const ranges: Range[] = [];
-        if (this.selection) {
-            const rows = this.cells.length;
-            const { firstCol, firstRow, lastCol, lastRow } = this.selection;
-            for (let y = 0; y < rows; y++) {
-                const rowRange = new Range();
-                let firstSelected: HTMLTableCellElement = null;
-                let lastSelected: HTMLTableCellElement = null;
-                this.forEachCellOfRow(y, (cell, x) => {
-                    if (
-                        cell.td &&
-                        ((y >= firstRow && y <= lastRow) || (y <= firstRow && y >= lastRow)) &&
-                        ((x >= firstCol && x <= lastCol) || (x <= firstCol && x >= lastCol))
-                    ) {
-                        firstSelected = firstSelected || cell.td;
-                        lastSelected = cell.td;
-                    }
-                });
-                if (firstSelected) {
-                    rowRange.setStartBefore(firstSelected);
-                    rowRange.setEndAfter(lastSelected);
-                    ranges.push(rowRange);
-                }
-            }
-        }
-
-        return ranges;
     }
 
     /**
