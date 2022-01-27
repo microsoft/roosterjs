@@ -169,7 +169,8 @@
 <a name='L104'></a><a href='#L104'>104</a>
 <a name='L105'></a><a href='#L105'>105</a>
 <a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1814x</span>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1814x</span>
 <span class="cline-any cline-yes">1785x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">91x</span>
@@ -180,18 +181,18 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1787x</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">7132x</span>
 <span class="cline-any cline-yes">1766x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">5738x</span>
+<span class="cline-any cline-yes">5857x</span>
 <span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1936x</span>
@@ -212,24 +213,22 @@
 <span class="cline-any cline-yes">50x</span>
 <span class="cline-any cline-yes">85x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">468x</span>
+<span class="cline-any cline-yes">467x</span>
 <span class="cline-any cline-yes">483x</span>
 <span class="cline-any cline-yes">437x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3569x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">1884x</span>
 <span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-yes">43x</span>
@@ -246,7 +245,6 @@
 <span class="cline-any cline-yes">2042x</span>
 <span class="cline-any cline-yes">224x</span>
 <span class="cline-any cline-yes">347x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2061x</span>
 <span class="cline-any cline-yes">3535x</span>
@@ -267,7 +265,7 @@
 <span class="cline-any cline-yes">2324x</span>
 <span class="cline-any cline-yes">2436x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">90x</span>
+<span class="cline-any cline-yes">78x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -275,6 +273,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
 export { default as getFirstLastBlockElement } from './blockElements/getFirstLastBlockElement';
 &nbsp;
@@ -286,13 +288,13 @@ export { default as ImageInlineElement } from './inlineElements/ImageInlineEleme
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
+export { default as applyTextStyle } from './inlineElements/applyTextStyle';
 &nbsp;
 export { default as extractClipboardEvent } from './clipboard/extractClipboardEvent';
 export { <span class="fstat-no" title="function not covered" >default </span>as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { <span class="fstat-no" title="function not covered" >default </span>as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
 &nbsp;
 export { default as arrayPush } from './utils/arrayPush';
-export { default as applyTextStyle } from './utils/applyTextStyle';
 export { Browser, <span class="fstat-no" title="function not covered" >getBrowserInfo </span>} from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
@@ -317,7 +319,6 @@ export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
 export { getFirstLeafNode, <span class="fstat-no" title="function not covered" >getLastLeafNode </span>} from './utils/getLeafNode';
-export { <span class="fstat-no" title="function not covered" >default </span>as getTextContent } from './utils/getTextContent';
 export { <span class="fstat-no" title="function not covered" >default </span>as splitTextNode } from './utils/splitTextNode';
 export { default as normalizeRect } from './utils/normalizeRect';
 export { default as toArray } from './utils/toArray';
@@ -326,16 +327,15 @@ export { <span class="fstat-no" title="function not covered" >default </span>as 
 export { <span class="fstat-no" title="function not covered" >default </span>as getInnerHTML } from './utils/getInnerHTML';
 export { default as setColor } from './utils/setColor';
 export { <span class="fstat-no" title="function not covered" >default </span>as matchesSelector } from './utils/matchesSelector';
-export { default as adjustInsertPosition } from './utils/adjustInsertPosition';
 export { default as createElement, <span class="fstat-no" title="function not covered" >KnownCreateElementData </span>} from './utils/createElement';
 export { default as moveChildNodes } from './utils/moveChildNodes';
-export { default as setListItemStyle } from './utils/setListItemStyle';
 &nbsp;
 export { default as VTable } from './table/VTable';
 export { <span class="fstat-no" title="function not covered" >default </span>as VList } from './list/VList';
 export { <span class="fstat-no" title="function not covered" >default </span>as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
 export { default as VListChain } from './list/VListChain';
+export { default as setListItemStyle } from './list/setListItemStyle';
 &nbsp;
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';
@@ -352,7 +352,6 @@ export { default as getSelectionPath } from './selection/getSelectionPath';
 export { default as getHtmlWithSelectionPath } from './selection/getHtmlWithSelectionPath';
 export { default as setHtmlWithSelectionPath } from './selection/setHtmlWithSelectionPath';
 export { default as addRangeToSelection } from './selection/addRangeToSelection';
-export { <span class="fstat-no" title="function not covered" >default </span>as deleteSelectedContent } from './selection/deleteSelectedContent';
 &nbsp;
 export { default as addSnapshot } from './snapshots/addSnapshot';
 export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSnapshot';
@@ -381,6 +380,10 @@ export { default as isCtrlOrMetaPressed } from './event/isCtrlOrMetaPressed';
 &nbsp;
 export { default as getStyles } from './style/getStyles';
 export { default as setStyles } from './style/setStyles';
+&nbsp;
+export { default as adjustInsertPosition } from './edit/adjustInsertPosition';
+export { <span class="fstat-no" title="function not covered" >default </span>as deleteSelectedContent } from './edit/deleteSelectedContent';
+export { <span class="fstat-no" title="function not covered" >default </span>as getTextContent } from './edit/getTextContent';
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -388,7 +391,7 @@ export { default as setStyles } from './style/setStyles';
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Jan 24 2022 21:49:29 GMT+0000 (Coordinated Universal Time)
+                at Thu Jan 27 2022 17:26:22 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>
