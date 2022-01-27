@@ -53,9 +53,6 @@ export default class TableCellSelection implements EditorPlugin {
     private firstTable: HTMLTableElement;
     private targetTable: HTMLElement;
 
-    // Range used in all the class
-    private range: Range;
-
     constructor() {
         this.lastTarget = null;
         this.firstTarget = null;
@@ -126,10 +123,29 @@ export default class TableCellSelection implements EditorPlugin {
                     break;
                 case PluginEventType.Scroll:
                     if (this.startedSelection) {
-                        event.rawEvent.preventDefault();
+                        this.handleScrollEvent();
                     }
                     break;
             }
+        }
+    }
+
+    /**
+     * Handle Scroll Event and mantains the selection range,
+     * Since when we scroll the cursor does not trigger the on Mouse Move event
+     * The table selection gets removed.
+     */
+    private handleScrollEvent() {
+        this.setData(this.editor.getElementAtCursor());
+        if (this.firstTable == this.targetTable) {
+            if (this.tableSelection) {
+                this.vTable.selection.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
+                highlight(this.vTable);
+                this.tableRange.lastCell = this.vTable.selection.lastCell;
+                updateSelection(this.editor, this.firstTarget, 0);
+            }
+        } else if (this.tableRange) {
+            this.restoreSelection();
         }
     }
 
@@ -191,11 +207,9 @@ export default class TableCellSelection implements EditorPlugin {
                 this.setData(this.tableSelection ? this.lastTarget : pos.node);
 
                 if (this.firstTable! == this.targetTable!) {
-                    const range = editor.getSelectionRange();
-                    if (!shouldConvertToTableSelection(range) && !this.tableSelection) {
+                    if (!this.shouldConvertToTableSelection() && !this.tableSelection) {
                         return;
                     }
-
                     //When selection start and end is inside of the same table
                     this.handleKeySelectionInsideTable(event);
                 } else if (this.tableSelection) {
@@ -335,6 +349,19 @@ export default class TableCellSelection implements EditorPlugin {
             return;
         }
 
+        //If already in table selection and the new target is contained in the last target cell, no need to
+        //Apply selection styles again.
+        if (this.tableSelection && contains(this.lastTarget, event.target as Node, true)) {
+            updateSelection(this.editor, this.firstTarget, 0);
+            event.preventDefault();
+            return;
+        }
+
+        if (getTagOfNode(event.target as Node) == 'TABLE') {
+            event.preventDefault();
+            return;
+        }
+
         this.setData(event.target as Node);
         //Ignore if
         // Is a DIV that only contains a Table
@@ -350,37 +377,15 @@ export default class TableCellSelection implements EditorPlugin {
         }
 
         this.prepareSelection();
-
-        const targetIsValid = this.targetTable == this.firstTable;
         const isNewTDContainingFirstTable = safeInstanceOf(this.lastTarget, 'HTMLTableCellElement')
             ? contains(this.lastTarget, this.firstTable)
             : false;
 
-        if (this.firstTable && (targetIsValid || isNewTDContainingFirstTable)) {
+        if (this.firstTable! == this.targetTable! || isNewTDContainingFirstTable) {
             //When starting selection inside of a table and ends inside of the same table.
             this.selectionInsideTableMouseMove(event);
         } else if (this.tableSelection) {
-            clearSelectedTableCells(this.editor);
-            this.tableSelection = false;
-            const isBeginAboveEnd = this.isAfter(this.firstTarget, this.lastTarget);
-            const targetPosition = new Position(
-                this.lastTarget,
-                isBeginAboveEnd ? PositionType.End : PositionType.Begin
-            );
-
-            const firstTargetRange = new Range();
-            if (this.firstTarget) {
-                firstTargetRange.selectNodeContents(this.firstTarget);
-            }
-            updateSelection(
-                this.editor,
-                this.firstTarget,
-                isBeginAboveEnd
-                    ? Position.getEnd(firstTargetRange).offset
-                    : Position.getStart(firstTargetRange).offset,
-                targetPosition.element,
-                targetPosition.offset
-            );
+            this.restoreSelection();
         }
 
         if (this.tableSelection) {
@@ -395,27 +400,47 @@ export default class TableCellSelection implements EditorPlugin {
         }
     };
 
+    private restoreSelection() {
+        clearSelectedTableCells(this.editor);
+        this.tableSelection = false;
+        const isBeginAboveEnd = this.isAfter(this.firstTarget, this.lastTarget);
+        const targetPosition = new Position(
+            this.lastTarget,
+            isBeginAboveEnd ? PositionType.End : PositionType.Begin
+        );
+
+        const firstTargetRange = new Range();
+        if (this.firstTarget) {
+            firstTargetRange.selectNodeContents(this.firstTarget);
+        }
+        updateSelection(
+            this.editor,
+            this.firstTarget,
+            isBeginAboveEnd
+                ? Position.getEnd(firstTargetRange).offset
+                : Position.getStart(firstTargetRange).offset,
+            targetPosition.element,
+            targetPosition.offset
+        );
+    }
+
     private selectionInsideTableMouseMove(event: MouseEvent) {
         if (this.lastTarget != this.firstTarget) {
-            if (!this.tableSelection && !shouldConvertToTableSelection(this.range)) {
-                return;
-            } else {
-                updateSelection(this.editor, this.firstTarget, 0);
-                if (
-                    this.firstTable != this.targetTable &&
-                    this.targetTable?.contains(this.firstTable)
-                ) {
-                    //If selection started in a table that is inside of another table and moves to parent table
-                    //Make the firstTarget the TD of the parent table.
-                    this.firstTarget = this.editor.getElementAtCursor(
-                        TABLE_CELL_SELECTOR,
-                        this.lastTarget
-                    );
-                    (this.firstTarget as HTMLElement).querySelectorAll('table').forEach(table => {
-                        const vTable = new VTable(table);
-                        highlightAll(vTable);
-                    });
-                }
+            updateSelection(this.editor, this.firstTarget, 0);
+            if (
+                this.firstTable != this.targetTable &&
+                this.targetTable?.contains(this.firstTable)
+            ) {
+                //If selection started in a table that is inside of another table and moves to parent table
+                //Make the firstTarget the TD of the parent table.
+                this.firstTarget = this.editor.getElementAtCursor(
+                    TABLE_CELL_SELECTOR,
+                    this.lastTarget
+                );
+                (this.firstTarget as HTMLElement).querySelectorAll('table').forEach(table => {
+                    const vTable = new VTable(table);
+                    highlightAll(vTable);
+                });
             }
 
             if (this.firstTable) {
@@ -635,7 +660,6 @@ export default class TableCellSelection implements EditorPlugin {
 
     private setData(eventTarget: Node) {
         const pos = this.editor.getFocusedPosition();
-        this.range = this.editor.getSelectionRange();
         if (pos) {
             this.firstTarget = this.firstTarget || getCellAtCursor(this.editor, pos.node);
 
@@ -670,6 +694,27 @@ export default class TableCellSelection implements EditorPlugin {
         }
         return false;
     }
+
+    // if the user selected all the text in a cell and started selecting another TD, we should convert to vSelection
+    private shouldConvertToTableSelection() {
+        if (!this.firstTable || !this.editor) {
+            return false;
+        }
+        const regions = this.editor.getSelectedRegions();
+        if (regions.length == 1) {
+            return false;
+        }
+
+        let result = true;
+
+        regions.forEach(value => {
+            if (!contains(this.firstTable, value.rootNode)) {
+                result = false;
+            }
+        });
+
+        return result;
+    }
     //#endregion
 }
 
@@ -698,14 +743,6 @@ function getTableAtCursor(editor: IEditor, node: Node) {
         return editor.getElementAtCursor('table', node);
     }
     return null;
-}
-
-// if the user selected all the text in a cell and started selecting another TD, we should convert to vSelection
-function shouldConvertToTableSelection(range: Range) {
-    return (
-        getTagOfNode(range.commonAncestorContainer) == 'TBODY' ||
-        getTagOfNode(range.commonAncestorContainer) == 'TR'
-    );
 }
 
 function clearSelectedTableCells(input: IEditor) {

@@ -77,7 +77,6 @@ describe('TableCellSelectionPlugin', () => {
         const target = document.getElementById(targetId);
         editor.focus();
 
-        let target2 = target.nextElementSibling as HTMLElement;
         const newRange = new Range();
         newRange.setStart(target, 0);
         newRange.setEnd(target, 1);
@@ -92,7 +91,7 @@ describe('TableCellSelectionPlugin', () => {
         newRange.setEnd(target, 1);
         editor.select(newRange);
 
-        simulateMouseEvent('mousemove', target2);
+        simulateMouseEvent('mousemove', target);
         expect(editor.getScrollContainer().innerHTML).toBe(expected);
     });
 
