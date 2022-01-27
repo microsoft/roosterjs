@@ -1,4 +1,4 @@
-import { contains, createRange, safeInstanceOf, VTable } from 'roosterjs-editor-dom';
+import { contains, createRange, safeInstanceOf } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     GetSelectionRangeEx,
@@ -7,6 +7,8 @@ import {
 } from 'roosterjs-editor-types';
 
 const TABLE_SELECTED = '_tableSelected';
+const TABLE_CELL_SELECTED_CLASS = '_tableCellSelected';
+const TABLE_CELL_SELECTOR = `td.${TABLE_CELL_SELECTED_CLASS},th.${TABLE_CELL_SELECTED_CLASS}`;
 
 /**
  * @internal
@@ -58,27 +60,50 @@ function createNormalSelectionEx(ranges: Range[]): SelectionRangeEx {
     };
 }
 
-function createTableSelectionEx(vTable: VTable): SelectionRangeEx {
-    const ranges = vTable.getSelectedRanges();
+function createTableSelectionEx(table: HTMLTableElement): SelectionRangeEx {
+    const ranges: Range[] = getRangesFromTable(table);
+
     return {
         type: SelectionRangeTypes.TableSelection,
         ranges: ranges,
-        vTable: vTable,
+        table: table,
         areAllCollapsed: checkAllCollapsed(ranges),
     };
+}
+
+function getRangesFromTable(table: HTMLTableElement) {
+    const ranges: Range[] = [];
+    table.querySelectorAll('tr').forEach(row => {
+        const rowRange = new Range();
+        let firstSelected: HTMLTableCellElement = null;
+        let lastSelected: HTMLTableCellElement = null;
+        row.querySelectorAll(TABLE_CELL_SELECTOR).forEach(cell => {
+            if (safeInstanceOf(cell, 'HTMLTableCellElement')) {
+                firstSelected = firstSelected || cell;
+                lastSelected = cell;
+            }
+        });
+
+        if (firstSelected) {
+            rowRange.setStartBefore(firstSelected);
+            rowRange.setEndAfter(lastSelected);
+            ranges.push(rowRange);
+        }
+    });
+
+    return ranges;
 }
 
 function checkAllCollapsed(ranges: Range[]): boolean {
     return ranges.filter(range => range?.collapsed).length == ranges.length;
 }
 
-function getTableSelected(container: HTMLElement | DocumentFragment) {
+function getTableSelected(container: HTMLElement | DocumentFragment): HTMLTableElement {
     const table = container.querySelector('table.' + TABLE_SELECTED);
 
-    let vTable: VTable = null;
     if (safeInstanceOf(table, 'HTMLTableElement')) {
-        vTable = new VTable(table);
+        return table;
     }
 
-    return vTable;
+    return null;
 }

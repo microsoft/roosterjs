@@ -3,7 +3,7 @@ import collapseNodesInRegion from '../region/collapseNodesInRegion';
 import getRegionsFromRange from '../region/getRegionsFromRange';
 import getSelectionRangeInRegion from '../region/getSelectionRangeInRegion';
 import mergeBlocksInRegion from '../region/mergeBlocksInRegion';
-import Position from './Position';
+import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';

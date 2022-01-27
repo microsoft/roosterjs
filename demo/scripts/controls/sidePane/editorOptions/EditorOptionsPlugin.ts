@@ -13,7 +13,7 @@ const initialState: BuildInPluginState = {
         watermark: false,
         imageEdit: true,
         cutPasteListChain: true,
-        tableSelection: true,
+        tableCellSelection: true,
         tableResize: true,
         customReplace: true,
         pickerPlugin: true,

@@ -167,7 +167,6 @@ export { default as UndoSnapshotsService } from './interface/UndoSnapshotsServic
 export { default as PickerDataProvider } from './interface/PickerDataProvider';
 export { default as PickerPluginOptions } from './interface/PickerPluginOptions';
 export { default as VCell } from './interface/VCell';
-export { default as Table } from './interface/Table';
 export { default as ImageEditOptions } from './interface/ImageEditOptions';
 export { default as CreateElementData } from './interface/CreateElementData';
 export {
