@@ -1,4 +1,4 @@
-import applyTextStyle from '../utils/applyTextStyle';
+import applyTextStyle from './applyTextStyle';
 import isNodeAfter from '../utils/isNodeAfter';
 import Position from '../selection/Position';
 import {
