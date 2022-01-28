@@ -118,7 +118,7 @@ describe('toggleItalic()', () => {
 
         // Act
         toggleItalic(editor);
-        debugger;
+
         // Assert
         expect(editor.getContent()).toBe(expected);
     });

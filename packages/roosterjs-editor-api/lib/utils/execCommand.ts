@@ -40,15 +40,11 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
     } else {
         editor.addUndoSnapshot(() => {
             if (selection.type == SelectionRangeTypes.TableSelection) {
-                selection.vTable.forEachSelectedCell(cell => {
-                    if (cell.td) {
-                        const range = new Range();
-                        range.selectNodeContents(cell.td);
-                        editor.select(range);
-                        formatter();
-                        range.collapse();
-                        editor.select(range);
-                    }
+                selection.ranges.forEach(range => {
+                    editor.select(range);
+                    formatter();
+                    range.collapse();
+                    editor.select(range);
                 });
             } else {
                 formatter();
