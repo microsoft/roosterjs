@@ -82,6 +82,11 @@ export default class TableEditor {
             for (; j < tr.cells.length; j++) {
                 const td = tr.cells[j];
                 const tdRect = normalizeRect(td.getBoundingClientRect());
+
+                if (!tdRect) {
+                    continue;
+                }
+
                 const lessThanBottom = y <= tdRect.bottom;
                 const lessThanRight = this.isRTL ? x >= tdRect.right : x <= tdRect.right;
 

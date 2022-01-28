@@ -366,20 +366,23 @@ export default class VTable {
                 const cell = this.getCell(i, j);
                 if (cell.td) {
                     const cellRect = normalizeRect(cell.td.getBoundingClientRect());
-                    let found: boolean = false;
-                    if (getLeftCells) {
-                        if (cellRect.right == borderPos) {
-                            found = true;
-                            cells.push(cell.td);
-                        } else if (found) {
-                            break;
-                        }
-                    } else {
-                        if (cellRect.left == borderPos) {
-                            found = true;
-                            cells.push(cell.td);
-                        } else if (found) {
-                            break;
+
+                    if (cellRect) {
+                        let found: boolean = false;
+                        if (getLeftCells) {
+                            if (cellRect.right == borderPos) {
+                                found = true;
+                                cells.push(cell.td);
+                            } else if (found) {
+                                break;
+                            }
+                        } else {
+                            if (cellRect.left == borderPos) {
+                                found = true;
+                                cells.push(cell.td);
+                            } else if (found) {
+                                break;
+                            }
                         }
                     }
                 }

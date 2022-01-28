@@ -67,15 +67,19 @@ function onDragStart(context: DragAndDropContext, event: MouseEvent) {
     const vTable = new VTable(td, true /*normalizeSize*/, sizeTransformer);
     const rect = normalizeRect(td.getBoundingClientRect());
 
-    // calculate and retrieve the cells of the two columns shared by the current vertical resizer
-    const currentCells = vTable.getCellsWithBorder(isRTL ? rect.left : rect.right, !isRTL);
-    const nextCells = vTable.getCellsWithBorder(isRTL ? rect.left : rect.right, isRTL);
+    if (rect) {
+        // calculate and retrieve the cells of the two columns shared by the current vertical resizer
+        const currentCells = vTable.getCellsWithBorder(isRTL ? rect.left : rect.right, !isRTL);
+        const nextCells = vTable.getCellsWithBorder(isRTL ? rect.left : rect.right, isRTL);
 
-    return {
-        vTable,
-        currentCells,
-        nextCells,
-    };
+        return {
+            vTable,
+            currentCells,
+            nextCells,
+        };
+    } else {
+        return { vTable, currentCells: [], nextCells: [] }; // Just a fallback
+    }
 }
 
 function onDraggingHorizontal(
@@ -128,11 +132,14 @@ function onDraggingVertical(
     const newWidthList = new Map<HTMLTableCellElement, number>();
     currentCells.forEach(td => {
         const rect = normalizeRect(td.getBoundingClientRect());
-        td.style.wordBreak = 'break-word';
-        td.style.whiteSpace = 'normal';
-        td.style.boxSizing = 'border-box';
-        const newWidth = sizeTransformer(getHorizontalDistance(rect, event.pageX, !isRTL));
-        newWidthList.set(td, newWidth);
+
+        if (rect) {
+            td.style.wordBreak = 'break-word';
+            td.style.whiteSpace = 'normal';
+            td.style.boxSizing = 'border-box';
+            const newWidth = sizeTransformer(getHorizontalDistance(rect, event.pageX, !isRTL));
+            newWidthList.set(td, newWidth);
+        }
     });
     newWidthList.forEach((newWidth, td) => {
         td.style.width = `${newWidth}px`;
@@ -192,9 +199,11 @@ function canResizeColumns(
     for (let i = 0; i < currentCells.length; i++) {
         const td = currentCells[i];
         const rect = normalizeRect(td.getBoundingClientRect());
-        const width = sizeTransformer(getHorizontalDistance(rect, newPos, !isRTL));
-        if (width < MIN_CELL_WIDTH) {
-            return false;
+        if (rect) {
+            const width = sizeTransformer(getHorizontalDistance(rect, newPos, !isRTL));
+            if (width < MIN_CELL_WIDTH) {
+                return false;
+            }
         }
     }
 
@@ -203,7 +212,10 @@ function canResizeColumns(
         let width: number = Number.MAX_SAFE_INTEGER;
         if (td) {
             const rect = normalizeRect(td.getBoundingClientRect());
-            width = sizeTransformer(getHorizontalDistance(rect, newPos, isRTL));
+
+            if (rect) {
+                width = sizeTransformer(getHorizontalDistance(rect, newPos, isRTL));
+            }
         }
 
         if (width < MIN_CELL_WIDTH) {
