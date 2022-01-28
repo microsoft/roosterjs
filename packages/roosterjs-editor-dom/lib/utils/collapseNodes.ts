@@ -32,7 +32,7 @@ export default function collapseNodes(
     } else if (contains(end, start)) {
         return [end];
     } else if (start.parentNode == end.parentNode) {
-        let nodes: Node[] = toArray(start.parentNode.childNodes);
+        let nodes: Node[] = start.parentNode ? toArray(start.parentNode?.childNodes) : [];
         let startIndex = nodes.indexOf(start);
         let endIndex = nodes.indexOf(end);
         return nodes.slice(startIndex, endIndex + 1);
@@ -65,6 +65,11 @@ export function collapse(
             }
             splitParentNode(node, isStart);
         }
+
+        if (!node.parentNode) {
+            break;
+        }
+
         node = node.parentNode;
     }
     return node;
