@@ -14,7 +14,7 @@ export default function setHtmlWithSelectionPath(
     rootNode: HTMLElement,
     html: string,
     trustedHTMLHandler?: TrustedHTMLHandler
-): Range {
+): Range | null {
     if (!rootNode) {
         return null;
     }
@@ -22,18 +22,18 @@ export default function setHtmlWithSelectionPath(
     html = html || '';
     const lastComment = LastCommentRegex.exec(html);
     rootNode.innerHTML = trustedHTMLHandler?.(html) || html;
-    const path = getSelectionPath(rootNode, lastComment?.[1]);
+    const path = getSelectionPath(rootNode, lastComment?.[1] || '');
 
     return path && createRange(rootNode, path.start, path.end);
 }
 
-function getSelectionPath(root: HTMLElement, alternativeComment: string): SelectionPath {
+function getSelectionPath(root: HTMLElement, alternativeComment: string): SelectionPath | null {
     let pathCommentValue: string = '';
-    let pathCommentNode: Node = null;
-    let path: SelectionPath = null;
+    let pathCommentNode: Node | null = null;
+    let path: SelectionPath | null = null;
     if (root.lastChild?.nodeType == NodeType.Comment) {
         pathCommentNode = root.lastChild;
-        pathCommentValue = pathCommentNode.nodeValue;
+        pathCommentValue = pathCommentNode.nodeValue || '';
     } else {
         pathCommentValue = alternativeComment;
     }

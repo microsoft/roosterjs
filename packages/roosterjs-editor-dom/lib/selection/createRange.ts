@@ -57,9 +57,9 @@ export default function createRange(
     arg2?: number | number[] | Node | NodePosition,
     arg3?: Node | number[],
     arg4?: number
-): Range {
-    let start: NodePosition;
-    let end: NodePosition;
+): Range | null {
+    let start: NodePosition | null = null;
+    let end: NodePosition | null = null;
 
     if (isNodePosition(arg1)) {
         // function createRange(startPosition: NodePosition, endPosition?: NodePosition): Range;
@@ -74,7 +74,7 @@ export default function createRange(
             // function createRange(node: Node, offset: number | PositionType): Range;
             // function createRange(startNode: Node, startOffset: number | PositionType, endNode: Node, endOffset: number | PositionType): Range;
             start = new Position(arg1, arg2);
-            end = safeInstanceOf(arg3, 'Node') ? new Position(arg3, arg4) : null;
+            end = safeInstanceOf(arg3, 'Node') ? new Position(arg3, arg4!) : null;
         } else if (safeInstanceOf(arg2, 'Node') || !arg2) {
             // function createRange(startNode: Node, endNode?: Node): Range;
             start = new Position(arg1, PositionType.Before);
@@ -82,7 +82,7 @@ export default function createRange(
         }
     }
 
-    if (start && start.node) {
+    if (start?.node?.ownerDocument) {
         let range = start.node.ownerDocument.createRange();
         start = getFocusablePosition(start);
         end = getFocusablePosition(end || start);
@@ -109,14 +109,14 @@ function isNodePosition(arg: any): arg is NodePosition {
     return arg && arg.node;
 }
 
-function getPositionFromPath(node: Node, path: number[]): NodePosition {
+function getPositionFromPath(node: Node, path: number[]): NodePosition | null {
     if (!node || !path) {
         return null;
     }
 
     // Iterate with a for loop to avoid mutating the passed in element path stack
     // or needing to copy it.
-    let offset: number;
+    let offset: number = 0;
 
     for (let i = 0; i < path.length; i++) {
         offset = path[i];

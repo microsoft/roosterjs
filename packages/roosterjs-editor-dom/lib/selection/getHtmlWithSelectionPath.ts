@@ -22,7 +22,7 @@ export default function getHtmlWithSelectionPath(
     let isDOMChanged = false;
 
     queryElements(rootNode, 'table', table => {
-        let tbody: HTMLTableSectionElement = null;
+        let tbody: HTMLTableSectionElement | null = null;
 
         for (let child = table.firstChild; child; child = child.nextSibling) {
             if (getTagOfNode(child) == 'TR') {
