@@ -44,4 +44,8 @@ export const enum KnownCreateElementDataIndex {
     TableVerticalResizer = 8,
     TableResizerLTR = 9,
     TableResizerRTL = 10,
+    /**
+     * Table Selector element
+     */
+    TableSelector = 11,
 }
