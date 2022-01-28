@@ -7,7 +7,7 @@ import { Snapshots } from 'roosterjs-editor-types';
  * @param step The step to move
  * @returns If can move with the given step, returns the snapshot after move, otherwise null
  */
-export default function moveCurrentSnapshot(snapshots: Snapshots, step: number): string {
+export default function moveCurrentSnapshot(snapshots: Snapshots, step: number): string | null {
     if (canMoveCurrentSnapshot(snapshots, step)) {
         snapshots.currentIndex += step;
         snapshots.autoCompleteIndex = -1;

@@ -1,6 +1,5 @@
-import { forEachCell } from './forEachCell';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { tableCellSelectionCommon } from './tableCellSelectionCommon';
-import { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -20,8 +19,9 @@ export function highlightCellHandler(element: HTMLElement) {
     element.style.backgroundColor = tableCellSelectionCommon.HIGHLIGHT_COLOR;
     element.classList.add(tableCellSelectionCommon.TABLE_CELL_SELECTED);
 
-    element.querySelectorAll('table').forEach(table => {
-        const vTable = new VTable(table);
-        forEachCell(vTable, cell => highlightCellHandler(cell.td));
+    element.querySelectorAll('td, th').forEach(cell => {
+        if (safeInstanceOf(cell, 'HTMLTableCellElement')) {
+            highlightCellHandler(cell);
+        }
     });
 }

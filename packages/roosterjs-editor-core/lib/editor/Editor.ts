@@ -486,7 +486,9 @@ export default class Editor implements IEditor {
         selection.ranges.forEach(range => {
             result.push(...(range ? getRegionsFromRange(this.core.contentDiv, range, type) : []));
         });
-        return result;
+        return result.filter((value, index, self) => {
+            return self.indexOf(value) === index;
+        });
     }
 
     //#endregion
