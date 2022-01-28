@@ -110,7 +110,6 @@ describe('getSelectionRangeEx', () => {
         ]);
     });
     it('Simple table selection 1', () => {
-        debugger;
         runTest(
             '<table id="id0"  class="_tableSelected"><tbody><tr><td class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="">2</td></tr><tr><td id="id2" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="">4</td></tr></tbody></table>',
             'id0',
