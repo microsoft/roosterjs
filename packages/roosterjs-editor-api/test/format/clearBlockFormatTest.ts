@@ -20,10 +20,6 @@ describe('clearBlockFormat()', () => {
         clearBlockFormat(editor);
         let result = editor.getContent();
         expect(result).toBe(expected);
-        if (result != expected) {
-            console.log(result);
-            debugger;
-        }
     }
 
     it('Empty', () => {

@@ -116,7 +116,6 @@ describe('FormatUtils', () => {
     it('setFontSize() table selection', () => {
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
-        debugger;
         editor.setContent(TestHelper.tableSelectionContents[0]);
         let mockFontSize = '6pt';
         setFontSize(editor, mockFontSize);
