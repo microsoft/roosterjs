@@ -158,7 +158,7 @@ export default class TableCellSelection implements EditorPlugin {
         const clonedTable = event.clonedRoot.querySelector('table.' + TABLE_SELECTED);
         if (clonedTable) {
             const clonedVTable = new VTable(clonedTable as HTMLTableElement);
-
+            clonedVTable.selection = this.tableRange;
             removeCellsBySelection(clonedVTable);
             clonedVTable.writeBack();
 
@@ -521,6 +521,7 @@ export default class TableCellSelection implements EditorPlugin {
             const selection = editor.getSelectionRangeEx();
             if (selection.type == SelectionRangeTypes.TableSelection) {
                 const vTable = new VTable(selection.table);
+                vTable.selection = this.tableRange;
                 let firstCell: HTMLTableCellElement = null;
                 let lastCell: HTMLTableCellElement;
                 vTable.table.querySelectorAll('.' + TABLE_CELL_SELECTED).forEach(cell => {
