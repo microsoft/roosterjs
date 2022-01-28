@@ -8,16 +8,23 @@ import { TableSelection } from 'roosterjs-editor-types';
  */
 export function normalizeTableSelection(input: TableSelection): TableSelection {
     const { firstCell, lastCell } = input;
-    let firstEl =
-        firstCell.y < lastCell.y
-            ? firstCell
-            : firstCell.y == lastCell.y
-            ? firstCell.x < lastCell.x
-                ? firstCell
-                : lastCell
-            : lastCell;
 
-    let lastEl = firstEl == firstCell ? lastCell : firstCell;
+    let newFirst = {
+        x: min(firstCell.x, lastCell.x),
+        y: min(firstCell.y, lastCell.y),
+    };
+    let newLast = {
+        x: max(firstCell.x, lastCell.x),
+        y: max(firstCell.y, lastCell.y),
+    };
 
-    return { firstCell: firstEl, lastCell: lastEl };
+    return { firstCell: newFirst, lastCell: newLast };
+}
+
+function min(input1: number, input2: number) {
+    return input1 > input2 ? input2 : input1;
+}
+
+function max(input1: number, input2: number) {
+    return input1 < input2 ? input2 : input1;
 }
