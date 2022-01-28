@@ -5,9 +5,9 @@ import { Entity, EntityClasses } from 'roosterjs-editor-types';
  * @param element The entity root element. If this element is not an entity root element,
  * it will return null
  */
-export default function getEntityFromElement(element: HTMLElement): Entity {
+export default function getEntityFromElement(element: HTMLElement): Entity | null {
     let isEntity = false;
-    let type: string;
+    let type = '';
     let id = '';
     let isReadonly = false;
 
