@@ -15,7 +15,8 @@ export default function createCellResizer(
     sizeTransformer: SizeTransformer,
     isRTL: boolean,
     isHorizontal: boolean,
-    onChange: () => void
+    onStart: () => void,
+    onEnd: () => false
 ): TableEditFeature {
     const document = td.ownerDocument;
     const div = createElement(
@@ -27,22 +28,20 @@ export default function createCellResizer(
 
     document.body.appendChild(div);
 
-    const context: DragAndDropContext = { td, isRTL, sizeTransformer };
+    const context: DragAndDropContext = { td, isRTL, sizeTransformer, onStart };
     const setPosition = isHorizontal ? setHorizontalPosition : setVerticalPosition;
     setPosition(context, div);
 
     const handler: DragAndDropHandler<DragAndDropContext, DragAndDropInitValue> = {
         onDragStart,
         onDragging: isHorizontal ? onDraggingHorizontal : onDraggingVertical,
+        onDragEnd: onEnd,
     };
 
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
         context,
-        (context, trigger) => {
-            onChange();
-            setPosition(context, trigger);
-        },
+        setPosition,
         handler,
         sizeTransformer
     );
@@ -54,6 +53,7 @@ interface DragAndDropContext {
     td: HTMLTableCellElement;
     isRTL: boolean;
     sizeTransformer: SizeTransformer;
+    onStart: () => void;
 }
 
 interface DragAndDropInitValue {
@@ -63,11 +63,13 @@ interface DragAndDropInitValue {
 }
 
 function onDragStart(context: DragAndDropContext, event: MouseEvent) {
-    const { td, isRTL, sizeTransformer } = context;
+    const { td, isRTL, sizeTransformer, onStart } = context;
     const vTable = new VTable(td, true /*normalizeSize*/, sizeTransformer);
     const rect = normalizeRect(td.getBoundingClientRect());
 
     if (rect) {
+        onStart();
+
         // calculate and retrieve the cells of the two columns shared by the current vertical resizer
         const currentCells = vTable.getCellsWithBorder(isRTL ? rect.left : rect.right, !isRTL);
         const nextCells = vTable.getCellsWithBorder(isRTL ? rect.left : rect.right, isRTL);

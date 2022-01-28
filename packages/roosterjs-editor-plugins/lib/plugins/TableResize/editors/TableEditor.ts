@@ -2,7 +2,7 @@ import createCellResizer from './CellResizer';
 import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { ChangeSource, IEditor } from 'roosterjs-editor-types';
+import { ChangeSource, IEditor, NodePosition } from 'roosterjs-editor-types';
 import { getComputedStyle, normalizeRect } from 'roosterjs-editor-dom';
 
 const INSERTER_HOVER_OFFSET = 5;
@@ -47,32 +47,32 @@ export default class TableEditor {
     private tableResizer: TableEditFeature;
 
     private isRTL: boolean;
-    private isChanged: boolean;
+    private start: NodePosition;
+    private end: NodePosition;
 
-    constructor(private editor: IEditor, public readonly table: HTMLTableElement) {
+    constructor(
+        private editor: IEditor,
+        public readonly table: HTMLTableElement,
+        private onChanged: () => void
+    ) {
         const sizeTransformer = editor.getSizeTransformer();
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
             table,
             sizeTransformer,
             this.isRTL,
-            this.onEditTable
+            this.onFinishEditing
         );
-        this.editor.addUndoSnapshot();
+        this.editor.addUndoSnapshot((start, end) => {
+            this.start = start;
+            this.end = end;
+        });
     }
 
     dispose() {
-        if (this.isChanged && !this.editor.isDisposed()) {
-            this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
-        }
-
         this.disposeTableResizer();
         this.disposeCellResizers();
         this.disposeTableInserter();
-    }
-
-    isTableChanged() {
-        return this.isChanged;
     }
 
     onMouseMove(x: number, y: number) {
@@ -138,14 +138,16 @@ export default class TableEditor {
                 sizeTransformer,
                 this.isRTL,
                 true /*isHorizontal*/,
-                this.onResizeCell
+                this.onStartCellResize,
+                this.onFinishEditing
             );
             this.verticalResizer = createCellResizer(
                 td,
                 sizeTransformer,
                 this.isRTL,
                 false /*isHorizontal*/,
-                this.onResizeCell
+                this.onStartCellResize,
+                this.onFinishEditing
             );
         }
     }
@@ -162,7 +164,7 @@ export default class TableEditor {
                 td,
                 this.isRTL,
                 isHorizontal,
-                this.onResizeCell
+                this.onInserted
             );
             if (isHorizontal) {
                 this.horizontalInserter = newInserter;
@@ -201,12 +203,20 @@ export default class TableEditor {
         }
     }
 
-    private onEditTable = () => {
-        this.isChanged = true;
+    private onFinishEditing = (): false => {
+        this.editor.select(this.start, this.end);
+        this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
+        this.editor.focus();
+        this.onChanged();
+        return false;
     };
 
-    private onResizeCell = () => {
+    private onStartCellResize = () => {
         this.disposeTableResizer();
-        this.isChanged = true;
+    };
+
+    private onInserted = () => {
+        this.disposeTableResizer();
+        this.onFinishEditing();
     };
 }

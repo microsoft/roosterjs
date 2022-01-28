@@ -14,7 +14,7 @@ export default function createTableResizer(
     table: HTMLTableElement,
     sizeTransformer: SizeTransformer,
     isRTL: boolean,
-    onChange: () => void
+    onDragEnd: () => false
 ): TableEditFeature {
     const document = table.ownerDocument;
     const div = createElement(
@@ -39,13 +39,11 @@ export default function createTableResizer(
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
         context,
-        (context, trigger) => {
-            onChange();
-            setResizeDivPosition(context, trigger);
-        },
+        setResizeDivPosition,
         {
             onDragStart,
             onDragging,
+            onDragEnd,
         },
         sizeTransformer
     );

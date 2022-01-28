@@ -21,7 +21,7 @@ export default function createTableInserter(
     td: HTMLTableCellElement,
     isRTL: boolean,
     isHorizontal: boolean,
-    onChange: () => void
+    onInsert: () => void
 ): TableEditFeature {
     const table = editor.getElementAtCursor('table', td);
     const tdRect = normalizeRect(td.getBoundingClientRect());
@@ -63,7 +63,7 @@ export default function createTableInserter(
             td,
             isHorizontal,
             editor.getSizeTransformer(),
-            onChange
+            onInsert
         );
 
         return { div, featureHandler: handler, node: td };
@@ -76,7 +76,7 @@ class TableInsertHandler implements Disposable {
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
         private sizeTransformer: SizeTransformer,
-        private onChange: () => void
+        private onInsert: () => void
     ) {
         this.div.addEventListener('click', this.insertTd);
     }
@@ -99,7 +99,7 @@ class TableInsertHandler implements Disposable {
         vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);
         vtable.writeBack();
 
-        this.onChange();
+        this.onInsert();
     };
 }
 
