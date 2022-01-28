@@ -7,10 +7,10 @@ export default function setStyles(element: HTMLElement, styles: Record<string, s
     if (element) {
         const style = Object.keys(styles || {})
             .map(name => {
-                let value = styles[name];
-                name = name ? name.trim() : null;
-                value = value ? value.trim() : null;
-                return name && value ? `${name}:${value}` : null;
+                const value: string | null = styles[name];
+                const trimmedName = name ? name.trim() : null;
+                const trimmedValue = value ? value.trim() : null;
+                return trimmedName && trimmedValue ? `${trimmedName}:${trimmedValue}` : null;
             })
             .filter(x => x)
             .join(';');
