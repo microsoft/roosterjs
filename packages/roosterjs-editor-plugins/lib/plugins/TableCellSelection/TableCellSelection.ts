@@ -3,7 +3,7 @@ import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
 import { highlight } from './utils/highlight';
 import { highlightAll } from './utils/highlightAll';
-import { removeCellsBySelection } from './utils/removeCellsBySelection';
+import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import { tableCellSelectionCommon } from './utils/tableCellSelectionCommon';
 import {
     BeforeCutCopyEvent,
@@ -78,7 +78,6 @@ export default class TableCellSelection implements EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.editor.addContentEditFeature(this.DeleteTableContents);
-        this.editor.addContentEditFeature(this.DeleteTableStructure);
     }
 
     /**
@@ -159,7 +158,7 @@ export default class TableCellSelection implements EditorPlugin {
         if (clonedTable) {
             const clonedVTable = new VTable(clonedTable as HTMLTableElement);
             clonedVTable.selection = this.tableRange;
-            removeCellsBySelection(clonedVTable);
+            removeCellsOutsideSelection(clonedVTable);
             clonedVTable.writeBack();
 
             event.range.selectNode(clonedTable);
@@ -167,10 +166,7 @@ export default class TableCellSelection implements EditorPlugin {
             if (event.isCut) {
                 forEachSelectedCell(this.vTable, cell => {
                     if (cell?.td) {
-                        const deleteRange = new Range();
-                        deleteRange.selectNodeContents(cell.td);
-                        deleteRange.deleteContents();
-                        cell.td.appendChild(this.editor.getDocument().createElement('BR'));
+                        deleteNodeContents(cell.td, this.editor);
                     }
                 });
             }
@@ -486,7 +482,7 @@ export default class TableCellSelection implements EditorPlugin {
      * When press Backspace, delete the contents inside of the selection, if it is Table Selection
      */
     DeleteTableContents: BuildInEditFeature<PluginKeyboardEvent> = {
-        keys: [Keys.DELETE],
+        keys: [Keys.DELETE, Keys.BACKSPACE],
         shouldHandleEvent: (_, editor) => {
             const selection = editor.getSelectionRangeEx();
             return selection.type == SelectionRangeTypes.TableSelection;
@@ -497,45 +493,10 @@ export default class TableCellSelection implements EditorPlugin {
                 editor.addUndoSnapshot(() => {
                     editor.getSelectedRegions().forEach(region => {
                         if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
-                            const range = new Range();
-                            range.selectNodeContents(region.rootNode);
-                            range.deleteContents();
-                            region.rootNode.appendChild(editor.getDocument().createElement('br'));
+                            deleteNodeContents(region.rootNode, editor);
                         }
                     });
                 });
-            }
-        },
-    };
-
-    /**
-     * When press Delete, delete the Table cells selected if it is Table Selection
-     */
-    DeleteTableStructure: BuildInEditFeature<PluginKeyboardEvent> = {
-        keys: [Keys.BACKSPACE],
-        shouldHandleEvent: (_, editor) => {
-            const selection = editor.getSelectionRangeEx();
-            return selection.type == SelectionRangeTypes.TableSelection;
-        },
-        handleEvent: (_, editor) => {
-            const selection = editor.getSelectionRangeEx();
-            if (selection.type == SelectionRangeTypes.TableSelection) {
-                const vTable = new VTable(selection.table);
-                vTable.selection = this.tableRange;
-                let firstCell: HTMLTableCellElement = null;
-                let lastCell: HTMLTableCellElement;
-                vTable.table.querySelectorAll('.' + TABLE_CELL_SELECTED).forEach(cell => {
-                    if (safeInstanceOf(cell, 'HTMLTableCellElement')) {
-                        firstCell = firstCell || cell;
-                        lastCell = cell;
-                    }
-                });
-
-                vTable.selection.firstCell = getCellCoordinates(vTable, firstCell);
-                vTable.selection.lastCell = getCellCoordinates(vTable, lastCell);
-
-                removeCellsBySelection(vTable, false);
-                vTable.writeBack();
             }
         },
     };
@@ -717,6 +678,13 @@ export default class TableCellSelection implements EditorPlugin {
         return result;
     }
     //#endregion
+}
+
+function deleteNodeContents(element: HTMLElement, editor: IEditor) {
+    const range = new Range();
+    range.selectNodeContents(element);
+    range.deleteContents();
+    element.appendChild(editor.getDocument().createElement('br'));
 }
 
 function updateSelection(

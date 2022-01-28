@@ -5,9 +5,8 @@ import { VTable } from 'roosterjs-editor-dom';
 /**
  * @internal
  * Remove the cells outside of the selection.
- * @param outsideOfSelection whether to remove the cells outside or inside of the selection
  */
-export function removeCellsBySelection(vTable: VTable, outsideOfSelection: boolean = true) {
+export function removeCellsOutsideSelection(vTable: VTable) {
     const { firstCell, lastCell } = normalizeTableSelection(vTable.selection);
     const rowsLength = vTable.cells.length - 1;
     const colIndex = vTable.cells[rowsLength].length - 1;
@@ -21,21 +20,15 @@ export function removeCellsBySelection(vTable: VTable, outsideOfSelection: boole
     const selectedAllTable = firstX == 0 && firstY == 0 && lastX == colIndex && lastY == rowsLength;
 
     if (selectedAllTable) {
-        if (!outsideOfSelection) {
-            vTable.cells = [];
-        }
         return;
     }
 
-    const isInsideOfSelection = (x: number, y: number) =>
-        ((y >= firstY && y <= lastY) || (y <= firstY && y >= lastY)) &&
-        ((x >= firstX && x <= lastX) || (x <= firstX && x >= lastX));
-
-    const validation = (x: number, y: number) =>
-        outsideOfSelection ? isInsideOfSelection(x, y) : !isInsideOfSelection(x, y);
-
     vTable.cells.forEach((row, y) => {
-        row = row.filter((_, x) => validation(x, y));
+        row = row.filter(
+            (_, x) =>
+                ((y >= firstY && y <= lastY) || (y <= firstY && y >= lastY)) &&
+                ((x >= firstX && x <= lastX) || (x <= firstX && x >= lastX))
+        );
         if (row.length > 0) {
             resultCells.push(row);
         }
