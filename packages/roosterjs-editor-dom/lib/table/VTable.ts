@@ -2,7 +2,13 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { SizeTransformer, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import {
+    SizeTransformer,
+    TableFormat,
+    TableOperation,
+    TableSelection,
+    VCell,
+} from 'roosterjs-editor-types';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -31,6 +37,11 @@ export default class VTable {
     private trs: HTMLTableRowElement[] = [];
 
     /**
+     * Selected range of cells with the coordinates of the first and last cell selected.
+     */
+    selection: TableSelection;
+
+    /**
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      * @param normalizeSize Whether table size needs to be normalized
@@ -51,8 +62,8 @@ export default class VTable {
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
                     // Skip the cells which already initialized
                     for (; this.cells[rowIndex][targetCol]; targetCol++) {}
-
                     let td = tr.cells[sourceCol];
+
                     if (td == currentTd) {
                         this.col = targetCol;
                         this.row = rowIndex;
@@ -114,6 +125,7 @@ export default class VTable {
         if (this.trs[1]) {
             this.trs[1].style.backgroundColor = format.bgColorEven || 'transparent';
         }
+
         this.cells.forEach(row =>
             row
                 .filter(cell => cell.td)
