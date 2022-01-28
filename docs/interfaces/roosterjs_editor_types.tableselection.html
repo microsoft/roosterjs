@@ -88,10 +88,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableselection.html#firstcol" class="tsd-kind-icon">first<wbr>Col</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableselection.html#firstrow" class="tsd-kind-icon">first<wbr>Row</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableselection.html#lastcol" class="tsd-kind-icon">last<wbr>Col</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableselection.html#lastrow" class="tsd-kind-icon">last<wbr>Row</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableselection.html#firstcell" class="tsd-kind-icon">first<wbr>Cell</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.tableselection.html#lastcell" class="tsd-kind-icon">last<wbr>Cell</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,62 +98,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="firstcol" class="tsd-anchor"></a>
-					<h3>first<wbr>Col</h3>
-					<div class="tsd-signature tsd-kind-icon">first<wbr>Col<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="firstcell" class="tsd-anchor"></a>
+					<h3>first<wbr>Cell</h3>
+					<div class="tsd-signature tsd-kind-icon">first<wbr>Cell<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.coordinates.html" class="tsd-signature-type" data-tsd-kind="Interface">Coordinates</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ec56d72/packages/roosterjs-editor-types/lib/interface/TableSelection.ts#L8">roosterjs-editor-types/lib/interface/TableSelection.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cadb177/packages/roosterjs-editor-types/lib/interface/TableSelection.ts#L10">roosterjs-editor-types/lib/interface/TableSelection.ts:10</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Column of the first cell selected</p>
+							<p>First Cell selection x and y position in the table</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="firstrow" class="tsd-anchor"></a>
-					<h3>first<wbr>Row</h3>
-					<div class="tsd-signature tsd-kind-icon">first<wbr>Row<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="lastcell" class="tsd-anchor"></a>
+					<h3>last<wbr>Cell</h3>
+					<div class="tsd-signature tsd-kind-icon">last<wbr>Cell<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.coordinates.html" class="tsd-signature-type" data-tsd-kind="Interface">Coordinates</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ec56d72/packages/roosterjs-editor-types/lib/interface/TableSelection.ts#L12">roosterjs-editor-types/lib/interface/TableSelection.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cadb177/packages/roosterjs-editor-types/lib/interface/TableSelection.ts#L15">roosterjs-editor-types/lib/interface/TableSelection.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Row of the first cell selected</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="lastcol" class="tsd-anchor"></a>
-					<h3>last<wbr>Col</h3>
-					<div class="tsd-signature tsd-kind-icon">last<wbr>Col<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ec56d72/packages/roosterjs-editor-types/lib/interface/TableSelection.ts#L16">roosterjs-editor-types/lib/interface/TableSelection.ts:16</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Column of the last cell selected</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="lastrow" class="tsd-anchor"></a>
-					<h3>last<wbr>Row</h3>
-					<div class="tsd-signature tsd-kind-icon">last<wbr>Row<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ec56d72/packages/roosterjs-editor-types/lib/interface/TableSelection.ts#L20">roosterjs-editor-types/lib/interface/TableSelection.ts:20</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Row of the last cell selected</p>
+							<p>Last Cell selection x and y position in the table</p>
 						</div>
 					</div>
 				</section>
@@ -198,16 +166,10 @@
 						<a href="roosterjs_editor_types.tableselection.html" class="tsd-kind-icon">Table<wbr>Selection</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableselection.html#firstcol" class="tsd-kind-icon">first<wbr>Col</a>
+								<a href="roosterjs_editor_types.tableselection.html#firstcell" class="tsd-kind-icon">first<wbr>Cell</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableselection.html#firstrow" class="tsd-kind-icon">first<wbr>Row</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableselection.html#lastcol" class="tsd-kind-icon">last<wbr>Col</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.tableselection.html#lastrow" class="tsd-kind-icon">last<wbr>Row</a>
+								<a href="roosterjs_editor_types.tableselection.html#lastcell" class="tsd-kind-icon">last<wbr>Cell</a>
 							</li>
 						</ul>
 					</li>
