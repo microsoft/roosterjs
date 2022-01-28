@@ -134,14 +134,14 @@ function DropDownItem(props: {
     displayName: string;
     buttonOnClick: (editor: IEditor, key: string) => void;
 }) {
-    const { editor, itemName, displayName, buttonOnClick } = props;
+    const { editor, displayName, buttonOnClick, itemName } = props;
     const onClick = React.useCallback(() => {
-        editor.stopShadowEdit();
+        // editor.stopShadowEdit();
         buttonOnClick?.(editor, itemName);
     }, [editor]);
     const onMouseOver = React.useCallback(() => {
-        editor.startShadowEdit();
-        buttonOnClick?.(editor, itemName);
+        // editor.startShadowEdit();
+        // buttonOnClick?.(editor, itemName);
     }, [editor]);
 
     return (

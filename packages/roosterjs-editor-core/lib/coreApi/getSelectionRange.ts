@@ -25,13 +25,19 @@ export const getSelectionRange: GetSelectionRange = (
 
         return result;
     } else {
-        if (!tryGetFromCache || core.api.hasFocus(core)) {
-            let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
-            if (selection && selection.rangeCount > 0) {
-                let range = selection.getRangeAt(0);
-                if (contains(core.contentDiv, range)) {
-                    result = range;
-                }
+        let node = core.contentDiv.parentNode;
+
+        while (node.nodeType != 9 && node.nodeType != 11) {
+            node = node.parentNode;
+        }
+
+        const selection = (<Document>node).getSelection();
+
+        // let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            let range = selection.getRangeAt(0);
+            if (contains(core.contentDiv, range)) {
+                result = range;
             }
         }
 

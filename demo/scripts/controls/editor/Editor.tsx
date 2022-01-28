@@ -95,7 +95,20 @@ export default function Editor(props: EditorProps) {
             trustedHTMLHandler: trustedHTMLHandler,
             sizeTransformer: size => size / scale,
         };
-        editor.current = new RoosterJsEditor(contentDiv.current, options);
+
+        const root =
+            contentDiv.current.shadowRoot || contentDiv.current.attachShadow({ mode: 'open' });
+
+        while (root.firstChild) {
+            root.removeChild(root.firstChild);
+        }
+        const div = document.createElement('div');
+        div.style.width = '100%';
+        div.style.height = '100%';
+        root.appendChild(div);
+
+        editor.current = new RoosterJsEditor(div, options);
+
         return () => {
             editor.current.dispose();
             editor.current = null;
