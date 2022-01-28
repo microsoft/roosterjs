@@ -1,4 +1,5 @@
 import createEditorCore from './createMockEditorCore';
+import { focus } from '../../lib/coreApi/focus';
 import { getSelectionRangeEx } from '../../lib/coreApi/getSelectionRangeEx';
 import { selectNode } from '../TestHelper';
 
@@ -29,6 +30,8 @@ describe('getSelectionRangeEx', () => {
         div.contentEditable = 'true';
         div.innerHTML = '<div>test</div>';
         selectNode(div.firstChild);
+
+        focus(core);
 
         const selectionEx = getSelectionRangeEx(core);
         selectionEx.ranges.forEach(range => {
@@ -107,6 +110,7 @@ describe('getSelectionRangeEx', () => {
         ]);
     });
     it('Simple table selection 1', () => {
+        debugger;
         runTest(
             '<table id="id0"  class="_tableSelected"><tbody><tr><td class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="">2</td></tr><tr><td id="id2" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);" data-original-background-color="">4</td></tr></tbody></table>',
             'id0',
