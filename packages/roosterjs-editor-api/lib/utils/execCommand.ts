@@ -1,5 +1,11 @@
-import { ChangeSource, DocumentCommand, IEditor, PluginEventType } from 'roosterjs-editor-types';
 import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -16,8 +22,8 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
 
     let formatter = () => editor.getDocument().execCommand(command, false, null);
 
-    let range = editor.getSelectionRange();
-    if (range && range.collapsed) {
+    let selection = editor.getSelectionRangeEx();
+    if (selection && selection.areAllCollapsed) {
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
         formatter();
@@ -32,6 +38,17 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
             });
         }
     } else {
-        editor.addUndoSnapshot(formatter, ChangeSource.Format);
+        editor.addUndoSnapshot(() => {
+            if (selection.type == SelectionRangeTypes.TableSelection) {
+                selection.ranges.forEach(range => {
+                    editor.select(range);
+                    formatter();
+                    range.collapse();
+                    editor.select(range);
+                });
+            } else {
+                formatter();
+            }
+        }, ChangeSource.Format);
     }
 }
