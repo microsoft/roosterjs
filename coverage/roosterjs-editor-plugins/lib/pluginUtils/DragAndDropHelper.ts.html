@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">12.2% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/40</span>
+                <span class='fraction'>5/41</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">12.2% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/40</span>
+                <span class='fraction'>5/41</span>
             </div>
         
             
@@ -146,7 +146,12 @@
 <a name='L81'></a><a href='#L81'>81</a>
 <a name='L82'></a><a href='#L82'>82</a>
 <a name='L83'></a><a href='#L83'>83</a>
-<a name='L84'></a><a href='#L84'>84</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -178,18 +183,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,6 +200,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -229,7 +235,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import DragAndDropHandler from './DragAndDropHandler';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Disposable from './Disposable';
+import DragAndDropHandler from './DragAndDropHandler';
+import { SizeTransformer } from 'roosterjs-editor-types';
 &nbsp;
 function <span class="fstat-no" title="function not covered" >defaultTransformer(</span>size: number) {
 <span class="cstat-no" title="statement not covered" >    return size;</span>
@@ -239,7 +247,7 @@ function <span class="fstat-no" title="function not covered" >defaultTransformer
  * @internal
  * A helper class to help manage drag and drop to an HTML element
  */
-export default class DragAndDropHelper&lt;TContext, TInitValue&gt; {
+export default class DragAndDropHelper&lt;TContext, TInitValue&gt; implements Disposable {
     private initX: number;
     private initY: number;
     private initValue: TInitValue;
@@ -256,11 +264,12 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; {
 <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    constructor(</span></span>
         private <span class="cstat-no" title="statement not covered" >trigger: HTMLElement,</span>
         private <span class="cstat-no" title="statement not covered" >context: TContext,</span>
-        private <span class="cstat-no" title="statement not covered" >onSubmit: (context: TContext) =&gt; void,</span>
+        private <span class="cstat-no" title="statement not covered" >onSubmit: (context: TContext, trigger: HTMLElement) =&gt; void,</span>
         private <span class="cstat-no" title="statement not covered" >handler: DragAndDropHandler&lt;TContext, TInitValue&gt;,</span>
-        private <span class="cstat-no" title="statement not covered" >sizeTransformer?: (size: number) =&gt; number</span>
+        private <span class="cstat-no" title="statement not covered" >sizeTransformer: SizeTransformer</span>
     ) {
 <span class="cstat-no" title="statement not covered" >        trigger.addEventListener('mousedown', this.onMouseDown);</span>
+<span class="cstat-no" title="statement not covered" >        this.sizeTransformer = sizeTransformer || defaultTransformer;</span>
     }
 &nbsp;
     /**
@@ -295,11 +304,11 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; {
 &nbsp;
     private <span class="cstat-no" title="statement not covered" >onMouseMove = <span class="fstat-no" title="function not covered" >(e</span>: MouseEvent) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        e.preventDefault();</span>
-        const sizeTransformer = <span class="cstat-no" title="statement not covered" >this.sizeTransformer || defaultTransformer;</span>
+        const sizeTransformer = <span class="cstat-no" title="statement not covered" >this.sizeTransformer;</span>
         const deltaX = <span class="cstat-no" title="statement not covered" >sizeTransformer(e.pageX - this.initX);</span>
         const deltaY = <span class="cstat-no" title="statement not covered" >sizeTransformer(e.pageY - this.initY);</span>
 <span class="cstat-no" title="statement not covered" >        if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {</span>
-<span class="cstat-no" title="statement not covered" >            this.onSubmit?.(this.context);</span>
+<span class="cstat-no" title="statement not covered" >            this.onSubmit?.(this.context, this.trigger);</span>
         }
     };
 &nbsp;
@@ -308,7 +317,7 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; {
 <span class="cstat-no" title="statement not covered" >        this.removeDocumentEvents();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (this.handler.onDragEnd?.(this.context, e, this.initValue)) {</span>
-<span class="cstat-no" title="statement not covered" >            this.onSubmit?.(this.context);</span>
+<span class="cstat-no" title="statement not covered" >            this.onSubmit?.(this.context, this.trigger);</span>
         }
     };
 }
@@ -319,7 +328,7 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri Jan 28 2022 20:52:16 GMT+0000 (Coordinated Universal Time)
+                at Sat Jan 29 2022 00:07:21 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
