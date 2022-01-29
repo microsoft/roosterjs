@@ -1,4 +1,6 @@
+import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
+import { SizeTransformer } from 'roosterjs-editor-types';
 
 function defaultTransformer(size: number) {
     return size;
@@ -8,7 +10,7 @@ function defaultTransformer(size: number) {
  * @internal
  * A helper class to help manage drag and drop to an HTML element
  */
-export default class DragAndDropHelper<TContext, TInitValue> {
+export default class DragAndDropHelper<TContext, TInitValue> implements Disposable {
     private initX: number;
     private initY: number;
     private initValue: TInitValue;
@@ -25,11 +27,12 @@ export default class DragAndDropHelper<TContext, TInitValue> {
     constructor(
         private trigger: HTMLElement,
         private context: TContext,
-        private onSubmit: (context: TContext) => void,
+        private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
-        private sizeTransformer?: (size: number) => number
+        private sizeTransformer: SizeTransformer
     ) {
         trigger.addEventListener('mousedown', this.onMouseDown);
+        this.sizeTransformer = sizeTransformer || defaultTransformer;
     }
 
     /**
@@ -64,11 +67,11 @@ export default class DragAndDropHelper<TContext, TInitValue> {
 
     private onMouseMove = (e: MouseEvent) => {
         e.preventDefault();
-        const sizeTransformer = this.sizeTransformer || defaultTransformer;
+        const sizeTransformer = this.sizeTransformer;
         const deltaX = sizeTransformer(e.pageX - this.initX);
         const deltaY = sizeTransformer(e.pageY - this.initY);
         if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {
-            this.onSubmit?.(this.context);
+            this.onSubmit?.(this.context, this.trigger);
         }
     };
 
@@ -77,7 +80,7 @@ export default class DragAndDropHelper<TContext, TInitValue> {
         this.removeDocumentEvents();
 
         if (this.handler.onDragEnd?.(this.context, e, this.initValue)) {
-            this.onSubmit?.(this.context);
+            this.onSubmit?.(this.context, this.trigger);
         }
     };
 }

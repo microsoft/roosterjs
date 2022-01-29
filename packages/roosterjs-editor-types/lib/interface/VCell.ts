@@ -18,12 +18,14 @@ export default interface VCell {
     spanAbove?: boolean;
 
     /**
-     * The width in pixel of the actual td (including border and padding)
+     * The width in pixel of the actual td (including border and padding).
+     * If the table is under a zoomed container, this value is the visible pixel count after zoom.
      */
     width?: number;
 
     /**
      * The height in pixel of the actual td (including border and padding)
+     * If the table is under a zoomed container, this value is the visible pixel count after zoom.
      */
     height?: number;
 }

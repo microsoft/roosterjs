@@ -135,7 +135,7 @@ const wordTable: TestTable = {
 
 const testTables = [defaultTable, excelTable, wordTable, defaultTableMerged];
 
-describe('Table Resizer/Inserter tests', () => {
+xdescribe('Table Resizer/Inserter tests', () => {
     let editor: IEditor;
     let plugin: TableResize;
     const insideTheOffset = 5;
