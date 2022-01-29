@@ -1,4 +1,6 @@
-import { deSelectAll } from './utils/deSelectAll';
+import WholeTableSelection from './WholeTableSelection';
+import { clearSelectedTableCells } from './utils/clearSelectedTableCells';
+import { clearSelectedTables } from './utils/clearSelectedTables';
 import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
 import { highlight } from './utils/highlight';
@@ -32,7 +34,7 @@ import {
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
-const TABLE_SELECTED = tableCellSelectionCommon.TABLE_SELECTED;
+export const TABLE_SELECTED = tableCellSelectionCommon.TABLE_SELECTED;
 const TABLE_CELL_SELECTED = tableCellSelectionCommon.TABLE_CELL_SELECTED;
 const LEFT_CLICK = 1;
 const RIGHT_CLICK = 3;
@@ -42,7 +44,7 @@ const RIGHT_CLICK = 3;
  */
 export default class TableCellSelection implements EditorPlugin {
     private editor: IEditor;
-
+    private tableSelectorPlugin: WholeTableSelection;
     // State properties
     private lastTarget: Node;
     private firstTarget: Node;
@@ -62,6 +64,7 @@ export default class TableCellSelection implements EditorPlugin {
             lastCell: null,
         };
         this.startedSelection = false;
+        this.tableSelectorPlugin = new WholeTableSelection();
     }
 
     /**
@@ -77,6 +80,7 @@ export default class TableCellSelection implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.tableSelectorPlugin.initialize(editor);
         this.editor.addContentEditFeature(this.DeleteTableContents);
     }
 
@@ -85,6 +89,7 @@ export default class TableCellSelection implements EditorPlugin {
      */
     dispose() {
         this.removeMouseUpEventListener();
+        this.tableSelectorPlugin.dispose();
         this.editor = null;
     }
 
@@ -93,6 +98,7 @@ export default class TableCellSelection implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        this.tableSelectorPlugin.onPluginEvent(event);
         if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.ExtractContentWithDom:
@@ -712,19 +718,4 @@ function getTableAtCursor(editor: IEditor, node: Node) {
         return editor.getElementAtCursor('table', node);
     }
     return null;
-}
-
-function clearSelectedTableCells(input: IEditor) {
-    input.queryElements('table.' + TABLE_SELECTED, deselectTable);
-}
-
-function clearSelectedTables(element: HTMLElement) {
-    element.querySelectorAll('table.' + TABLE_SELECTED).forEach(deselectTable);
-}
-
-function deselectTable(element: HTMLElement) {
-    if (safeInstanceOf(element, 'HTMLTableElement')) {
-        const vTable = new VTable(element);
-        deSelectAll(vTable);
-    }
 }
