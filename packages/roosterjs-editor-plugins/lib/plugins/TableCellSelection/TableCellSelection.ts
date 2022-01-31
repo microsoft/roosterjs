@@ -1,6 +1,5 @@
 import TableSelector from './tableSelector/tableSelector';
-import { clearSelectedTableCells } from './utils/clearSelectedTableCells';
-import { clearSelectedTables } from './utils/clearSelectedTables';
+import { deselectCellHandler } from './utils/deselectCellHandler';
 import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
 import { highlight } from './utils/highlight';
@@ -822,4 +821,23 @@ function getTableAtCursor(editor: IEditor, node: Node) {
         return editor.getElementAtCursor('table', node);
     }
     return null;
+}
+
+export function clearSelectedTableCells(input: IEditor) {
+    input.queryElements('table.' + tableCellSelectionCommon.TABLE_SELECTED, deselectTable);
+}
+
+export function clearSelectedTables(element: HTMLElement) {
+    element
+        .querySelectorAll('table.' + tableCellSelectionCommon.TABLE_SELECTED)
+        .forEach(deselectTable);
+}
+
+export function deselectTable(element: HTMLElement) {
+    if (safeInstanceOf(element, 'HTMLTableElement')) {
+        if (element?.classList.contains(tableCellSelectionCommon.TABLE_SELECTED)) {
+            element.classList.remove(tableCellSelectionCommon.TABLE_SELECTED);
+        }
+        element.querySelectorAll('td,th').forEach(deselectCellHandler);
+    }
 }
