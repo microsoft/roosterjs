@@ -7,6 +7,7 @@ import { focus } from './focus';
 import { getContent } from './getContent';
 import { getPendableFormatState } from './getPendableFormatState';
 import { getSelectionRange } from './getSelectionRange';
+import { getSelectionRangeEx } from './getSelectionRangeEx';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
 import { hasFocus } from './hasFocus';
 import { insertNode } from './insertNode';
@@ -28,6 +29,7 @@ export const coreApiMap: CoreApiMap = {
     focus,
     getContent,
     getSelectionRange,
+    getSelectionRangeEx,
     getStyleBasedFormatState,
     getPendableFormatState,
     hasFocus,

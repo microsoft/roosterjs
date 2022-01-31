@@ -15,6 +15,7 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
+import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { trustedHTMLHandler } from '../../utils/trustedHTMLHandler';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
@@ -25,13 +26,14 @@ export interface EditorProps {
     plugins: EditorPlugin[];
     initState: BuildInPluginState;
     snapshotService: UndoSnapshotsService;
+    scale: number;
     className?: string;
 }
 
 export default function Editor(props: EditorProps) {
     const contentDiv = React.useRef<HTMLDivElement>();
     const editor = React.useRef<IEditor>();
-
+    const { scale, initState } = props;
     const {
         pluginList,
         contentEditFeatures,
@@ -40,7 +42,7 @@ export default function Editor(props: EditorProps) {
         forcePreserveRatio,
         defaultFormat,
         experimentalFeatures,
-    } = props.initState;
+    } = initState;
 
     const getLinkCallback = React.useCallback(
         (): ((url: string) => string) =>
@@ -64,6 +66,7 @@ export default function Editor(props: EditorProps) {
                   })
                 : null,
             cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
+            tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
             tableResize: pluginList.tableResize ? new TableResize() : null,
             pickerPlugin: pluginList.pickerPlugin
                 ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {
@@ -92,6 +95,7 @@ export default function Editor(props: EditorProps) {
             experimentalFeatures: experimentalFeatures,
             undoSnapshotService: props.snapshotService,
             trustedHTMLHandler: trustedHTMLHandler,
+            sizeTransformer: size => size / scale,
         };
         editor.current = new RoosterJsEditor(contentDiv.current, options);
         return () => {
@@ -109,9 +113,18 @@ export default function Editor(props: EditorProps) {
         props.snapshotService,
     ]);
 
+    const editorStyles = {
+        transform: `scale(${scale})`,
+        transformOrigin: 'left top',
+        height: `calc(${100 / scale}%)`,
+        width: `calc(${100 / scale}%)`,
+    };
+
     return (
-        <div className={props.className}>
-            <div className={styles.editor} ref={contentDiv} />
+        <div className={props.className} style={{ width: '100%' }}>
+            <div style={editorStyles}>
+                <div className={styles.editor} ref={contentDiv} />
+            </div>
         </div>
     );
 }

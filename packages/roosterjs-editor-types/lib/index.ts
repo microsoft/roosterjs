@@ -105,6 +105,8 @@ export { default as RegionBase } from './interface/RegionBase';
 export { default as SelectionPath } from './interface/SelectionPath';
 export { default as Snapshots } from './interface/Snapshots';
 export { default as TableFormat } from './interface/TableFormat';
+export { default as TableSelection } from './interface/TableSelection';
+export { default as Coordinates } from './interface/Coordinates';
 export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
 export { default as TargetWindowBase } from './interface/TargetWindowBase';
@@ -136,6 +138,7 @@ export {
     Focus,
     GetContent,
     GetSelectionRange,
+    GetSelectionRangeEx,
     GetStyleBasedFormatState,
     GetPendableFormatState,
     HasFocus,
@@ -167,6 +170,13 @@ export { default as PickerPluginOptions } from './interface/PickerPluginOptions'
 export { default as VCell } from './interface/VCell';
 export { default as ImageEditOptions } from './interface/ImageEditOptions';
 export { default as CreateElementData } from './interface/CreateElementData';
+export {
+    SelectionRangeExBase,
+    NormalSelectionRange,
+    TableSelectionRange,
+    SelectionRangeEx,
+    SelectionRangeTypes,
+} from './interface/SelectionRangeEx';
 
 // Core Plugin State
 export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';
@@ -194,3 +204,4 @@ export {
     DOMEventHandler,
 } from './type/domEventHandler';
 export { TrustedHTMLHandler } from './type/TrustedHTMLHandler';
+export { SizeTransformer } from './type/SizeTransformer';

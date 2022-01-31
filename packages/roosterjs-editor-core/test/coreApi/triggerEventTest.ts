@@ -84,15 +84,30 @@ describe('triggerEvent', () => {
         const core = createEditorCore(div, {
             plugins: [createPlugin(onPluginEvent)],
         });
-        const event = createDefaultEvent();
+        const event = createDefaultEvent(PluginEventType.EditorReady);
         core.lifecycle.shadowEditFragment = document.createDocumentFragment();
         triggerEvent(core, event, false);
         expect(onPluginEvent).not.toHaveBeenCalled();
     });
+
+    it('shadow edit with BeforeDispose event', () => {
+        const onPluginEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            plugins: [createPlugin(onPluginEvent)],
+        });
+        const event = createDefaultEvent(PluginEventType.BeforeDispose);
+        core.lifecycle.shadowEditFragment = document.createDocumentFragment();
+        triggerEvent(core, event, false);
+        expect(onPluginEvent).toHaveBeenCalled();
+    });
 });
 
-function createDefaultEvent(): PluginEvent {
-    return { eventType: PluginEventType.BeforeDispose };
+function createDefaultEvent(
+    type:
+        | PluginEventType.EditorReady
+        | PluginEventType.BeforeDispose = PluginEventType.BeforeDispose
+): PluginEvent {
+    return { eventType: type };
 }
 
 function createPlugin(onPluginEvent: any, willHandleEventExclusively?: any): EditorPlugin {

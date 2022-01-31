@@ -9,6 +9,8 @@ import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
+import { SelectionRangeEx } from './SelectionRangeEx';
+import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
@@ -36,6 +38,13 @@ export default interface EditorCore extends PluginState {
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
+
+    /**
+     * A transformer function. It transform the size changes according to current situation.
+     * A typical scenario to use this function is when editor is located under a scaled container, so we need to
+     * calculate the scaled size change according to current zoom rate.
+     */
+    sizeTransformer: SizeTransformer;
 }
 
 /**
@@ -113,6 +122,13 @@ export type GetContent = (core: EditorCore, mode: GetContentMode) => string;
  * @returns A Range object of the selection range
  */
 export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
+
+/**
+ * Get current selection range
+ * @param core The EditorCore object
+ * @returns A Range object of the selection range
+ */
+export type GetSelectionRangeEx = (core: EditorCore) => SelectionRangeEx;
 
 /**
  * Get style based format state from current selection, including font name/size and colors
@@ -271,6 +287,14 @@ export interface CoreApiMap {
      * @returns A Range object of the selection range
      */
     getSelectionRange: GetSelectionRange;
+
+    /**
+     * Get current or cached selection range
+     * @param core The EditorCore object
+     * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
+     * @returns A Range object of the selection range
+     */
+    getSelectionRangeEx: GetSelectionRangeEx;
 
     /**
      * Get style based format state from current selection, including font name/size and colors

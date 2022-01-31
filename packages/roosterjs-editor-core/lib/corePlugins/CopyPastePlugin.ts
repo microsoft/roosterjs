@@ -75,8 +75,10 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
-        const originalRange = this.editor.getSelectionRange();
-        if (originalRange && !originalRange.collapsed) {
+        const selection = this.editor.getSelectionRangeEx();
+
+        if (selection && !selection.areAllCollapsed) {
+            const originalRange = selection.ranges[0];
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
             const newRange = setHtmlWithSelectionPath(

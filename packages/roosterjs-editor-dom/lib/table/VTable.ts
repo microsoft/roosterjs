@@ -4,7 +4,14 @@ import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { getTableFormatInfo, saveTableInfo } from '../utils/tableFormatInfo';
-import { TableBorderFormat, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import {
+    SizeTransformer,
+    TableBorderFormat,
+    TableFormat,
+    TableOperation,
+    TableSelection,
+    VCell,
+} from 'roosterjs-editor-types';
 
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
@@ -39,10 +46,21 @@ export default class VTable {
     formatInfo: TableFormat;
 
     /**
+     * Selected range of cells with the coordinates of the first and last cell selected.
+     */
+    selection: TableSelection;
+
+    /**
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
+     * @param normalizeSize Whether table size needs to be normalized
+     * @param sizeTransformer A size transformer function used for normalize table size
      */
-    constructor(node: HTMLTableElement | HTMLTableCellElement, normalizeSize?: boolean) {
+    constructor(
+        node: HTMLTableElement | HTMLTableCellElement,
+        normalizeSize?: boolean,
+        sizeTransformer?: SizeTransformer
+    ) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
             let currentTd = safeInstanceOf(node, 'HTMLTableElement') ? null : node;
@@ -53,8 +71,8 @@ export default class VTable {
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
                     // Skip the cells which already initialized
                     for (; this.cells[rowIndex][targetCol]; targetCol++) {}
-
                     let td = tr.cells[sourceCol];
+
                     if (td == currentTd) {
                         this.col = targetCol;
                         this.row = rowIndex;
@@ -77,7 +95,7 @@ export default class VTable {
             });
             this.formatInfo = getTableFormatInfo(this.table);
             if (normalizeSize) {
-                this.normalizeSize();
+                this.normalizeSize(sizeTransformer);
             }
         }
     }
@@ -623,20 +641,23 @@ export default class VTable {
                 const cell = this.getCell(i, j);
                 if (cell.td) {
                     const cellRect = normalizeRect(cell.td.getBoundingClientRect());
-                    let found: boolean = false;
-                    if (getLeftCells) {
-                        if (cellRect.right == borderPos) {
-                            found = true;
-                            cells.push(cell.td);
-                        } else if (found) {
-                            break;
-                        }
-                    } else {
-                        if (cellRect.left == borderPos) {
-                            found = true;
-                            cells.push(cell.td);
-                        } else if (found) {
-                            break;
+
+                    if (cellRect) {
+                        let found: boolean = false;
+                        if (getLeftCells) {
+                            if (cellRect.right == borderPos) {
+                                found = true;
+                                cells.push(cell.td);
+                            } else if (found) {
+                                break;
+                            }
+                        } else {
+                            if (cellRect.left == borderPos) {
+                                found = true;
+                                cells.push(cell.td);
+                            } else if (found) {
+                                break;
+                            }
                         }
                     }
                 }
@@ -670,7 +691,12 @@ export default class VTable {
         return this.getTd(this.row, this.col);
     }
 
-    private getTd(row: number, col: number) {
+    /**
+     * Get the Table Cell in a provided coordinate
+     * @param row row of the cell
+     * @param col column of the cell
+     */
+    getTd(row: number, col: number) {
         if (this.cells) {
             row = Math.min(this.cells.length - 1, row);
             col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
@@ -758,7 +784,7 @@ export default class VTable {
     }
 
     /* normalize width/height for each cell in the table */
-    public normalizeTableCellSize() {
+    public normalizeTableCellSize(sizeTransformer?: SizeTransformer) {
         // remove width/height for each row
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             row.removeAttribute('width');
@@ -772,27 +798,38 @@ export default class VTable {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.cells[i][j];
                 if (cell) {
-                    setHTMLElementSizeInPx(cell.td, cell.width, cell.height);
+                    setHTMLElementSizeInPx(
+                        cell.td,
+                        sizeTransformer?.(cell.width) || cell.width,
+                        sizeTransformer?.(cell.height) || cell.height
+                    );
                 }
             }
         }
     }
 
-    private normalizeSize() {
+    private normalizeSize(sizeTransformer: SizeTransformer) {
         this.normalizeEmptyTableCells();
-        this.normalizeTableCellSize();
-        setHTMLElementSizeInPx(this.table); // Make sure table width/height is fixed to avoid shifting effect
+        this.normalizeTableCellSize(sizeTransformer);
+
+        const rect = this.table.getBoundingClientRect();
+
+        // Make sure table width/height is fixed to avoid shifting effect
+        setHTMLElementSizeInPx(
+            this.table,
+            sizeTransformer(rect.width),
+            sizeTransformer(rect.height)
+        );
     }
 }
 
-function setHTMLElementSizeInPx(element: HTMLElement, newWidth?: number, newHeight?: number) {
+function setHTMLElementSizeInPx(element: HTMLElement, newWidth: number, newHeight: number) {
     if (!!element) {
         element.removeAttribute('width');
         element.removeAttribute('height');
         element.style.boxSizing = 'border-box';
-        const rect = element.getBoundingClientRect();
-        element.style.width = `${newWidth !== undefined ? newWidth : rect.width}px`;
-        element.style.height = `${newHeight !== undefined ? newHeight : rect.height}px`;
+        element.style.width = `${newWidth}px`;
+        element.style.height = `${newHeight}px`;
     }
 }
 

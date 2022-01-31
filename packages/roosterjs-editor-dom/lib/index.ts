@@ -9,13 +9,13 @@ export { default as ImageInlineElement } from './inlineElements/ImageInlineEleme
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';
 export { default as NodeInlineElement } from './inlineElements/NodeInlineElement';
 export { default as PartialInlineElement } from './inlineElements/PartialInlineElement';
+export { default as applyTextStyle } from './inlineElements/applyTextStyle';
 
 export { default as extractClipboardEvent } from './clipboard/extractClipboardEvent';
 export { default as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { default as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
 
 export { default as arrayPush } from './utils/arrayPush';
-export { default as applyTextStyle } from './utils/applyTextStyle';
 export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
@@ -40,7 +40,6 @@ export { default as unwrap } from './utils/unwrap';
 export { default as wrap } from './utils/wrap';
 export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibling';
 export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
-export { default as getTextContent } from './utils/getTextContent';
 export { default as splitTextNode } from './utils/splitTextNode';
 export { default as normalizeRect } from './utils/normalizeRect';
 export { default as toArray } from './utils/toArray';
@@ -49,10 +48,8 @@ export { default as readFile } from './utils/readFile';
 export { default as getInnerHTML } from './utils/getInnerHTML';
 export { default as setColor } from './utils/setColor';
 export { default as matchesSelector } from './utils/matchesSelector';
-export { default as adjustInsertPosition } from './utils/adjustInsertPosition';
 export { default as createElement, KnownCreateElementData } from './utils/createElement';
 export { default as moveChildNodes } from './utils/moveChildNodes';
-export { default as setListItemStyle } from './utils/setListItemStyle';
 export { saveTableInfo, getTableFormatInfo } from './utils/tableFormatInfo';
 
 export { default as VTable } from './table/VTable';
@@ -60,6 +57,7 @@ export { default as VList } from './list/VList';
 export { default as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
 export { default as VListChain } from './list/VListChain';
+export { default as setListItemStyle } from './list/setListItemStyle';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';
@@ -76,7 +74,6 @@ export { default as getSelectionPath } from './selection/getSelectionPath';
 export { default as getHtmlWithSelectionPath } from './selection/getHtmlWithSelectionPath';
 export { default as setHtmlWithSelectionPath } from './selection/setHtmlWithSelectionPath';
 export { default as addRangeToSelection } from './selection/addRangeToSelection';
-export { default as deleteSelectedContent } from './selection/deleteSelectedContent';
 
 export { default as addSnapshot } from './snapshots/addSnapshot';
 export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSnapshot';
@@ -105,3 +102,7 @@ export { default as isCtrlOrMetaPressed } from './event/isCtrlOrMetaPressed';
 
 export { default as getStyles } from './style/getStyles';
 export { default as setStyles } from './style/setStyles';
+
+export { default as adjustInsertPosition } from './edit/adjustInsertPosition';
+export { default as deleteSelectedContent } from './edit/deleteSelectedContent';
+export { default as getTextContent } from './edit/getTextContent';

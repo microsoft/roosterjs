@@ -10,8 +10,12 @@ import VList from './VList';
 import wrap from '../utils/wrap';
 import { getLeafSibling } from '../utils/getLeafSibling';
 import { isListElement } from './getListTypeFromNode';
-import { KnownCreateElementDataIndex, ListType, Region } from 'roosterjs-editor-types';
-import { PositionType } from 'roosterjs-editor-types';
+import {
+    KnownCreateElementDataIndex,
+    ListType,
+    Region,
+    PositionType,
+} from 'roosterjs-editor-types';
 
 const ListSelector = 'ol,ul';
 

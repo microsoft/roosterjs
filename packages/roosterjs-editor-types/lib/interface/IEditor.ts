@@ -20,6 +20,8 @@ import { PluginKeyboardEvent } from '../event/PluginDomEvent';
 import { PositionType } from '../enum/PositionType';
 import { QueryScope } from '../enum/QueryScope';
 import { RegionType } from '../enum/RegionType';
+import { SelectionRangeEx } from './SelectionRangeEx';
+import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
@@ -211,6 +213,13 @@ export default interface IEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     getSelectionRange(tryGetFromCache?: boolean): Range;
+
+    /**
+     * Get current selection range from Editor.
+     * It does a live pull on the selection.
+     * @returns current selection range, or null if editor never got focus before
+     */
+    getSelectionRangeEx(): SelectionRangeEx;
 
     /**
      * Get current selection in a serializable format
@@ -563,6 +572,11 @@ export default interface IEditor {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler;
+
+    /**
+     * Get a transformer function. It transform the size changes according to current situation.
+     */
+    getSizeTransformer(): SizeTransformer;
 
     //#endregion
 }
