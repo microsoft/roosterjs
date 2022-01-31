@@ -99,7 +99,7 @@ export default class Editor implements IEditor {
             plugins: plugins.filter(x => !!x),
             ...getPluginState(corePlugins),
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
-            sizeTransformer: options.sizeTransformer,
+            sizeTransformer: options.sizeTransformer || ((size: number) => size),
         };
 
         // 3. Initialize plugins
