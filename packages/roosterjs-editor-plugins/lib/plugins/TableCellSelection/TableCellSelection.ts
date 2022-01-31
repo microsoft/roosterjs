@@ -98,9 +98,7 @@ export default class TableCellSelection implements EditorPlugin {
         if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.EnteredShadowEdit:
-                    const tableEnter = this.editor
-                        .getDocument()
-                        .querySelector('table.' + TABLE_SELECTED);
+                    const tableEnter = event.fragment.querySelector('table.' + TABLE_SELECTED);
                     if (tableEnter) {
                         removeSelectionStyle(tableEnter as HTMLTableElement);
                     }
