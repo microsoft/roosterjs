@@ -44,9 +44,9 @@ export default function wrap(
 export default function wrap(
     nodes: Node | Node[],
     wrapper?: string | HTMLElement | CreateElementData | KnownCreateElementDataIndex
-): HTMLElement {
+): HTMLElement | null {
     nodes = !nodes ? [] : safeInstanceOf(nodes, 'Node') ? [nodes] : nodes;
-    if (nodes.length == 0 || !nodes[0]) {
+    if (nodes.length == 0 || !nodes[0] || !nodes[0].ownerDocument) {
         return null;
     }
 
