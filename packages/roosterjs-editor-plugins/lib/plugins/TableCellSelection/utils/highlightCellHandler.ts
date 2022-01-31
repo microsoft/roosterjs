@@ -7,17 +7,17 @@ import { tableCellSelectionCommon } from './tableCellSelectionCommon';
  * @param element element to apply the style
  */
 export function highlightCellHandler(element: HTMLElement) {
-    if (
-        !element.classList.contains(tableCellSelectionCommon.TABLE_CELL_SELECTED) &&
-        element.style.backgroundColor != tableCellSelectionCommon.HIGHLIGHT_COLOR &&
-        (!element.dataset[tableCellSelectionCommon.TEMP_BACKGROUND_COLOR] ||
-            element.dataset[tableCellSelectionCommon.TEMP_BACKGROUND_COLOR] == '')
-    ) {
-        element.dataset[tableCellSelectionCommon.TEMP_BACKGROUND_COLOR] =
-            element.style.backgroundColor ?? element.style.background ?? '';
-    }
-    element.style.backgroundColor = tableCellSelectionCommon.HIGHLIGHT_COLOR;
     element.classList.add(tableCellSelectionCommon.TABLE_CELL_SELECTED);
+
+    let style = element.style.backgroundColor;
+    if (style.indexOf('!important') > -1) {
+        element.style.backgroundColor = removeImportant(style);
+    }
+
+    style = element.style.background;
+    if (style.indexOf('!important') > -1) {
+        element.style.background = removeImportant(style);
+    }
 
     element.querySelectorAll('td, th').forEach(cell => {
         if (safeInstanceOf(cell, 'HTMLTableCellElement')) {
@@ -25,3 +25,5 @@ export function highlightCellHandler(element: HTMLElement) {
         }
     });
 }
+
+const removeImportant = (style: string) => style.substring(0, style.indexOf('!'));

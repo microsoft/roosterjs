@@ -1,5 +1,6 @@
 import { deselectCellHandler } from './deselectCellHandler';
 import { forEachCell } from './forEachCell';
+import { removeSelectionStyle } from './removeSelectionStyle';
 import { tableCellSelectionCommon } from './tableCellSelectionCommon';
 import { VTable } from 'roosterjs-editor-dom';
 
@@ -16,4 +17,6 @@ export function deSelectAll(vTable: VTable): void {
     if (vTable.table?.classList.contains(tableCellSelectionCommon.TABLE_SELECTED)) {
         vTable.table.classList.remove(tableCellSelectionCommon.TABLE_SELECTED);
     }
+
+    removeSelectionStyle(vTable.table);
 }

@@ -1,5 +1,6 @@
 import { forEachCell } from './forEachCell';
 import { highlightCellHandler } from './highlightCellHandler';
+import { insertSelectionStyle } from './insertSelectionStyle';
 import { tableCellSelectionCommon } from './tableCellSelectionCommon';
 import { VTable } from 'roosterjs-editor-dom';
 
@@ -36,4 +37,6 @@ export function highlightAll(vTable: VTable): void {
             y: lastRow,
         },
     };
+
+    insertSelectionStyle(vTable.table);
 }

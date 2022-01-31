@@ -12,11 +12,11 @@ export const enum tableCellSelectionCommon {
      */
     TABLE_CELL_SELECTED = '_tableCellSelected',
     /**
-     * Dataset used to store the current color of the cell when is selected
-     */
-    TEMP_BACKGROUND_COLOR = 'originalBackgroundColor',
-    /**
      * highlight color to apply to the selected cells
      */
     HIGHLIGHT_COLOR = 'rgba(198,198,198,0.7)',
+    /**
+     * Id of the Style tag used to apply styles to cells
+     */
+    STYLE_TAG_ID = '_roosterjstemp',
 }

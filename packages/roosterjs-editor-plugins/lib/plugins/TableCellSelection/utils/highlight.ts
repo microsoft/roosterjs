@@ -1,5 +1,6 @@
 import { deselectCellHandler } from './deselectCellHandler';
 import { highlightCellHandler } from './highlightCellHandler';
+import { insertSelectionStyle } from './insertSelectionStyle';
 import { normalizeTableSelection } from './normalizeTableSelection';
 import { tableCellSelectionCommon } from './tableCellSelectionCommon';
 import { VTable } from 'roosterjs-editor-dom';
@@ -40,6 +41,8 @@ export function highlight(vTable: VTable): void {
                 }
             }
         }
+
+        insertSelectionStyle(vTable.table);
     }
 }
 

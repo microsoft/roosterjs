@@ -14,9 +14,6 @@ export function deselectCellHandler(cell: HTMLElement) {
         cell.classList.contains(tableCellSelectionCommon.TABLE_CELL_SELECTED)
     ) {
         cell.classList.remove(tableCellSelectionCommon.TABLE_CELL_SELECTED);
-        cell.style.backgroundColor =
-            cell.dataset[tableCellSelectionCommon.TEMP_BACKGROUND_COLOR] ?? '';
-        delete cell.dataset[tableCellSelectionCommon.TEMP_BACKGROUND_COLOR];
         cell.querySelectorAll('table').forEach(table => {
             const vTable2 = new VTable(table);
             forEachCell(vTable2, cell => deselectCellHandler(cell.td));
