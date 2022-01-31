@@ -74,7 +74,7 @@ const linkMatchRules: { [schema: string]: LinkMatchRule } = {
  * @returns The matched link data, or null if no match found.
  * The link data includes an original url and a normalized url
  */
-export default function matchLink(url: string): LinkData {
+export default function matchLink(url: string): LinkData | null {
     if (url) {
         for (let schema of Object.keys(linkMatchRules)) {
             let rule = linkMatchRules[schema];

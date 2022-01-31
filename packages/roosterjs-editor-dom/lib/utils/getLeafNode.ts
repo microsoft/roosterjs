@@ -6,8 +6,8 @@ import { getLeafSibling } from './getLeafSibling';
  * @param rootNode Root node to get leaf node from
  * @param isFirst True to get first leaf node, false to get last leaf node
  */
-function getLeafNode(rootNode: Node, isFirst: boolean): Node {
-    let getChild = (node: Node): Node => (isFirst ? node.firstChild : node.lastChild);
+function getLeafNode(rootNode: Node, isFirst: boolean): Node | null {
+    let getChild = (node: Node): Node | null => (isFirst ? node.firstChild : node.lastChild);
     let result = getChild(rootNode);
     while (result && getChild(result)) {
         result = getChild(result);
@@ -24,7 +24,7 @@ function getLeafNode(rootNode: Node, isFirst: boolean): Node {
  * Get the first meaningful leaf node
  * @param rootNode Root node to get leaf node from
  */
-export function getFirstLeafNode(rootNode: Node): Node {
+export function getFirstLeafNode(rootNode: Node): Node | null {
     return getLeafNode(rootNode, true /*isFirst*/);
 }
 
@@ -32,6 +32,6 @@ export function getFirstLeafNode(rootNode: Node): Node {
  * Get the last meaningful leaf node
  * @param rootNode Root node to get leaf node from
  */
-export function getLastLeafNode(rootNode: Node): Node {
+export function getLastLeafNode(rootNode: Node): Node | null {
     return getLeafNode(rootNode, false /*isFirst*/);
 }

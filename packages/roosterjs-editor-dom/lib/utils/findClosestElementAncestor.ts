@@ -11,10 +11,10 @@ import { NodeType } from 'roosterjs-editor-types';
  * returns the given node
  */
 export default function findClosestElementAncestor(
-    node: Node,
+    node: Node | null,
     root?: Node,
     selector?: string
-): HTMLElement {
+): HTMLElement | null {
     node = !node ? null : node.nodeType == NodeType.Element ? node : node.parentNode;
     let element = node && node.nodeType == NodeType.Element ? <HTMLElement>node : null;
 
