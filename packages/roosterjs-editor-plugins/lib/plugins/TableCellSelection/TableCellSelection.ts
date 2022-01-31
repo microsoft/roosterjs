@@ -823,20 +823,18 @@ function getTableAtCursor(editor: IEditor, node: Node) {
     return null;
 }
 
-export function clearSelectedTableCells(input: IEditor) {
-    input.queryElements('table.' + tableCellSelectionCommon.TABLE_SELECTED, deselectTable);
+function clearSelectedTableCells(input: IEditor) {
+    input.queryElements('table.' + TABLE_SELECTED, deselectTable);
 }
 
-export function clearSelectedTables(element: HTMLElement) {
-    element
-        .querySelectorAll('table.' + tableCellSelectionCommon.TABLE_SELECTED)
-        .forEach(deselectTable);
+function clearSelectedTables(element: HTMLElement) {
+    element.querySelectorAll('table.' + TABLE_SELECTED).forEach(deselectTable);
 }
 
-export function deselectTable(element: HTMLElement) {
+function deselectTable(element: HTMLElement) {
     if (safeInstanceOf(element, 'HTMLTableElement')) {
-        if (element?.classList.contains(tableCellSelectionCommon.TABLE_SELECTED)) {
-            element.classList.remove(tableCellSelectionCommon.TABLE_SELECTED);
+        if (element?.classList.contains(TABLE_SELECTED)) {
+            element.classList.remove(TABLE_SELECTED);
         }
         element.querySelectorAll('td,th').forEach(deselectCellHandler);
     }
