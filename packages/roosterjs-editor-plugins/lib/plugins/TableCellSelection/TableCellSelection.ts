@@ -429,7 +429,12 @@ export default class TableCellSelection implements EditorPlugin {
         );
     }
 
-    private selectionInsideTableMouseMove(event: MouseEvent) {
+    /**
+     * @internal
+     * Public only for unit testing
+     * @param event mouse event
+     */
+    selectionInsideTableMouseMove(event: MouseEvent) {
         if (this.lastTarget != this.firstTarget) {
             updateSelection(this.editor, this.firstTarget, 0);
             if (
