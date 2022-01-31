@@ -375,6 +375,12 @@ export default class TableCellSelection implements EditorPlugin {
         }
 
         this.setData(event.target as Node);
+
+        // If there is a first target, but is not inside a table, no more actions to perform.
+        if (this.firstTarget && !this.firstTable) {
+            return;
+        }
+
         //Ignore if
         // Is a DIV that only contains a Table
         // If the event target is not contained in the editor.
@@ -393,7 +399,10 @@ export default class TableCellSelection implements EditorPlugin {
             ? contains(this.lastTarget, this.firstTable)
             : false;
 
-        if (this.firstTable! == this.targetTable! || isNewTDContainingFirstTable) {
+        if (
+            (this.firstTable && this.firstTable == this.targetTable) ||
+            isNewTDContainingFirstTable
+        ) {
             //When starting selection inside of a table and ends inside of the same table.
             this.selectionInsideTableMouseMove(event);
         } else if (this.tableSelection) {
@@ -436,7 +445,12 @@ export default class TableCellSelection implements EditorPlugin {
         );
     }
 
-    private selectionInsideTableMouseMove(event: MouseEvent) {
+    /**
+     * @internal
+     * Public only for unit testing
+     * @param event mouse event
+     */
+    selectionInsideTableMouseMove(event: MouseEvent) {
         if (this.lastTarget != this.firstTarget) {
             updateSelection(this.editor, this.firstTarget, 0);
             if (

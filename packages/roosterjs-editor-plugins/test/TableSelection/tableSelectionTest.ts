@@ -103,6 +103,7 @@ describe('TableCellSelectionPlugin', () => {
             ? '<table class="_tableSelected"><tbody><tr><td id="tableSelectionTestId" data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">a</td><td id="tableSelectionTestId2" data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">w</td></tr></tbody></table>'
             : '<table class="_tableSelected"><tbody><tr><td id="tableSelectionTestId" data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td id="tableSelectionTestId2" data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table>';
 
+        spyOn(tableCellSelection, 'selectionInsideTableMouseMove').and.callThrough();
         editor.setContent(
             `<table><tr ><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table>`
         );
@@ -111,6 +112,7 @@ describe('TableCellSelectionPlugin', () => {
         initTableSelection(target);
 
         expect(editor.getScrollContainer().innerHTML).toBe(expected);
+        expect(tableCellSelection.selectionInsideTableMouseMove).toHaveBeenCalledTimes(2);
     });
 
     it('Selection inside of table 2', () => {
@@ -228,6 +230,21 @@ describe('TableCellSelectionPlugin', () => {
                 ? '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">a</td><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">w</td></tr></tbody></table></div>'
                 : '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table></div>'
         );
+    });
+
+    it('should not handle selectionInsideTableMouseMove on selecting text', () => {
+        editor.setContent(
+            '<div id="container"><h2 style="margin:0px 0px 10px;font-family:DauphinPlain;font-size:24px;line-height:24px;text-align:left;background-color:rgb(255, 255, 255)">What is Lorem Ipsum?</h2><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)"><strong style="margin:0px">Lorem Ipsum</strong><span>&nbsp;</span>is simply dummy text of the printing and typesetting industry. .</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">when an unknown printer took a galley of type and scrambled it to make a type&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">specimen book. It has survived not only five centuries, but also the leap into electronic</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">&nbsp;typesetting, remaining essentially unchanged. It was popularised in the 1960s with the</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">&nbsp;release of Letraset sheets containing Lorem Ipsum passages, and more recently with&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p><br></div>'
+        );
+        spyOn(tableCellSelection, 'selectionInsideTableMouseMove').and.callThrough();
+
+        const container = editor.getDocument().getElementById('container');
+        simulateMouseEvent('mousedown', container);
+        container.querySelectorAll('p').forEach(p => {
+            simulateMouseEvent('mousemove', p);
+        });
+
+        expect(tableCellSelection.selectionInsideTableMouseMove).toHaveBeenCalledTimes(0);
     });
 });
 
