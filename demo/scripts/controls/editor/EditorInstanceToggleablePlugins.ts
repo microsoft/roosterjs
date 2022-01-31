@@ -8,6 +8,7 @@ import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChai
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
+import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
 
@@ -23,4 +24,5 @@ export type EditorInstanceToggleablePlugins = {
     pickerPlugin: PickerPlugin;
     contextMenu: ContextMenu<ContextMenuItem>;
     resetList: ResetListPlugin;
+    tableCellSelection: TableCellSelection;
 };

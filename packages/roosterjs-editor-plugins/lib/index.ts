@@ -9,3 +9,4 @@ export * from './Paste';
 export * from './Picker';
 export * from './TableResize';
 export * from './Watermark';
+export * from './TableCellSelection';
