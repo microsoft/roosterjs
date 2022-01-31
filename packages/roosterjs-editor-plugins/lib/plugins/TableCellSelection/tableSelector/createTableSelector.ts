@@ -13,7 +13,7 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
 export default function createTableSelector(
     table: HTMLTableElement,
     sizeTransformer: SizeTransformer,
-    onFinishDragging: () => void
+    onFinishDragging: (vTable: VTable) => void
 ): TableSelectorFeature {
     const document = table.ownerDocument;
     const div = createElement(
@@ -35,8 +35,9 @@ export default function createTableSelector(
 
     const onDragEnd = (context: DragAndDropContext, event: MouseEvent): false => {
         if (event.target == div) {
-            onFinishDragging();
-            highlightAll(new VTable(context.table));
+            const vTable = new VTable(context.table);
+            onFinishDragging(vTable);
+            highlightAll(vTable);
         }
         return false;
     };

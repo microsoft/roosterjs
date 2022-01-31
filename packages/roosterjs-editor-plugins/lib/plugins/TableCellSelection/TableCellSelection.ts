@@ -731,17 +731,30 @@ export default class TableCellSelection implements EditorPlugin {
             }
 
             if (!this.tableSelector && table) {
-                this.tableSelector = new TableSelector(
-                    this.editor,
-                    table,
-                    this.invalidateTableRects
-                );
+                this.tableSelector = new TableSelector(this.editor, table, this.onChanged);
             }
         }
     }
 
     private invalidateTableRects = () => {
         this.tableRectMap = null;
+    };
+
+    private onChanged = (vTable: VTable) => {
+        this.invalidateTableRects();
+        if (vTable) {
+            this.vTable = vTable;
+            this.firstTarget = this.vTable.table.querySelector('td:first-child, th:first-child');
+            this.lastTarget = this.vTable.table.querySelector(
+                'tr:last-child td:last-child, tr:last-child th:last-child'
+            );
+            this.tableSelection = true;
+
+            this.tableRange = {
+                firstCell: getCellCoordinates(this.vTable, this.firstTarget),
+                lastCell: getCellCoordinates(this.vTable, this.lastTarget),
+            };
+        }
     };
 
     private ensureTableRects() {

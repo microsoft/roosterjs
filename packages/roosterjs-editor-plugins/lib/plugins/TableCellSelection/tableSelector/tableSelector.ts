@@ -2,6 +2,7 @@ import createTableSelector from './createTableSelector';
 import { clearSelectedTableCells } from '../utils/clearSelectedTableCells';
 import { IEditor } from 'roosterjs-editor-types';
 import { TableSelectorFeature } from './TableSelectorFeature';
+import { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -12,7 +13,7 @@ export default class TableSelector {
     constructor(
         private editor: IEditor,
         public readonly table: HTMLTableElement,
-        private onChanged: () => void
+        private onChanged: (vTable: VTable) => void
     ) {
         const sizeTransformer = editor.getSizeTransformer();
         this.tableSelector = createTableSelector(table, sizeTransformer, this.onFinishDragging);
@@ -32,11 +33,11 @@ export default class TableSelector {
         }
     }
 
-    private onFinishDragging = (): void => {
+    private onFinishDragging = (vTable: VTable): void => {
         clearSelectedTableCells(this.editor);
         this.editor.focus();
         const firstCell = this.table.querySelector('td,th');
         this.editor.select(firstCell, 0);
-        this.onChanged();
+        this.onChanged(vTable);
     };
 }
