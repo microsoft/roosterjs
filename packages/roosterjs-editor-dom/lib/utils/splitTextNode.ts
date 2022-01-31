@@ -6,10 +6,10 @@
  * Otherwise return the second part, and the passed in textNode will become the first part
  */
 export default function splitTextNode(textNode: Text, offset: number, returnFirstPart: boolean) {
-    const firstPart = textNode.nodeValue.substr(0, offset);
-    const secondPart = textNode.nodeValue.substr(offset);
+    const firstPart = textNode.nodeValue?.substring(0, offset) || '';
+    const secondPart = textNode.nodeValue?.substring(offset) || '';
     const newNode = textNode.ownerDocument.createTextNode(returnFirstPart ? firstPart : secondPart);
     textNode.nodeValue = returnFirstPart ? secondPart : firstPart;
-    textNode.parentNode.insertBefore(newNode, returnFirstPart ? textNode : textNode.nextSibling);
+    textNode.parentNode?.insertBefore(newNode, returnFirstPart ? textNode : textNode.nextSibling);
     return newNode;
 }

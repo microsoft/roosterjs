@@ -16,10 +16,10 @@ export default function isNodeEmpty(node: Node, trimContent?: boolean) {
     if (!node) {
         return false;
     } else if (node.nodeType == NodeType.Text) {
-        return trim(node.nodeValue, trimContent) == '';
+        return trim(node.nodeValue || '', trimContent) == '';
     } else if (node.nodeType == NodeType.Element) {
         let element = node as Element;
-        let textContent = trim(element.textContent, trimContent);
+        let textContent = trim(element.textContent || '', trimContent);
         if (
             textContent != '' ||
             VISIBLE_ELEMENT_TAGS.indexOf(getTagOfNode(element)) >= 0 ||
@@ -31,7 +31,7 @@ export default function isNodeEmpty(node: Node, trimContent?: boolean) {
     return true;
 }
 
-function trim(s: string, trim: boolean) {
+function trim(s: string, trim: boolean | undefined) {
     s = s.replace(ZERO_WIDTH_SPACE, '');
     return trim ? s.trim() : s;
 }
