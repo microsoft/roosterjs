@@ -345,6 +345,8 @@ export default class TableCellSelection implements EditorPlugin {
             return;
         }
 
+        debugger;
+
         //If already in table selection and the new target is contained in the last target cell, no need to
         //Apply selection styles again.
         if (this.tableSelection && contains(this.lastTarget, event.target as Node, true)) {
@@ -377,7 +379,10 @@ export default class TableCellSelection implements EditorPlugin {
             ? contains(this.lastTarget, this.firstTable)
             : false;
 
-        if (this.firstTable! == this.targetTable! || isNewTDContainingFirstTable) {
+        if (
+            (this.firstTable && this.firstTable == this.targetTable) ||
+            isNewTDContainingFirstTable
+        ) {
             //When starting selection inside of a table and ends inside of the same table.
             this.selectionInsideTableMouseMove(event);
         } else if (this.tableSelection) {
