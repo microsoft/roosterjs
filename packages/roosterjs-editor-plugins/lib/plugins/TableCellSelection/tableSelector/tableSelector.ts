@@ -1,19 +1,13 @@
 import createTableSelector from './createTableSelector';
-import Disposable from 'roosterjs-editor-plugins/lib/pluginUtils/Disposable';
 import { clearSelectedTableCells } from '../utils/clearSelectedTableCells';
 import { IEditor } from 'roosterjs-editor-types';
-// import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-
-type TableEditFeature = {
-    div: HTMLDivElement;
-    featureHandler: Disposable;
-};
+import { TableSelectorFeature } from './TableSelectorFeature';
 
 /**
  * @internal
  */
 export default class TableSelector {
-    private tableSelector: TableEditFeature;
+    private tableSelector: TableSelectorFeature;
 
     constructor(
         private editor: IEditor,

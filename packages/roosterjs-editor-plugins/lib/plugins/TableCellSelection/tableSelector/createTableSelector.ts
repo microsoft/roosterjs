@@ -1,17 +1,12 @@
-import Disposable from 'roosterjs-editor-plugins/lib/pluginUtils/Disposable';
-import DragAndDropHelper from 'roosterjs-editor-plugins/lib/pluginUtils/DragAndDropHelper';
+import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import { highlightAll } from '../utils/highlightAll';
 import { KnownCreateElementDataIndex, SizeTransformer } from 'roosterjs-editor-types';
+import { TableSelectorFeature } from './TableSelectorFeature';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
 
-export type TableEditFeature = {
-    node: Node;
-    div: HTMLDivElement;
-    featureHandler: Disposable;
-};
 /**
  * @internal
  */
@@ -19,7 +14,7 @@ export default function createTableSelector(
     table: HTMLTableElement,
     sizeTransformer: SizeTransformer,
     onFinishDragging: () => void
-): TableEditFeature {
+): TableSelectorFeature {
     const document = table.ownerDocument;
     const div = createElement(
         KnownCreateElementDataIndex.TableSelector,
@@ -56,7 +51,7 @@ export default function createTableSelector(
         sizeTransformer
     );
 
-    return { node: table, div, featureHandler };
+    return { div, featureHandler };
 }
 
 interface DragAndDropContext {

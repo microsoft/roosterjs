@@ -2,16 +2,17 @@ import TableSelector from './tableSelector/tableSelector';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType, Rect } from 'roosterjs-editor-types';
 import { normalizeRect } from 'roosterjs-editor-dom';
 
-const TABLE_RESIZER_LENGTH = 12;
+const TABLE_SELECTOR_LENGTH = 12;
 
 /**
+ * @internal
  * WholeTableSelection plugin, provides the ability to select the whole table
  */
 export default class WholeTableSelection implements EditorPlugin {
     private editor: IEditor;
     private onMouseMoveDisposer: () => void;
     private tableRectMap: { table: HTMLTableElement; rect: Rect }[] = null;
-    private tableEditor: TableSelector;
+    private tableSelector: TableSelector;
 
     /**
      * Get a friendly name of  this plugin
@@ -27,7 +28,7 @@ export default class WholeTableSelection implements EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.onMouseMoveDisposer = this.editor.addDomEventHandler({
-            mousemove: this.onMouseMoveTableSelector,
+            mousemove: this.onMouseMove,
         });
     }
 
@@ -37,7 +38,7 @@ export default class WholeTableSelection implements EditorPlugin {
     dispose() {
         this.onMouseMoveDisposer();
         this.invalidateTableRects();
-        this.setTableEditor(null);
+        this.setTableSelector(null);
         this.editor = null;
     }
 
@@ -50,13 +51,13 @@ export default class WholeTableSelection implements EditorPlugin {
             case PluginEventType.Input:
             case PluginEventType.ContentChanged:
             case PluginEventType.Scroll:
-                this.setTableEditor(null);
+                this.setTableSelector(null);
                 this.invalidateTableRects();
                 break;
         }
     }
 
-    private onMouseMoveTableSelector = (e: MouseEvent) => {
+    private onMouseMove = (e: MouseEvent) => {
         if (e.buttons > 0) {
             return;
         }
@@ -69,27 +70,33 @@ export default class WholeTableSelection implements EditorPlugin {
             const { table, rect } = this.tableRectMap[i];
 
             if (
-                x >= rect.left - TABLE_RESIZER_LENGTH &&
-                x <= rect.right + TABLE_RESIZER_LENGTH &&
-                y >= rect.top - TABLE_RESIZER_LENGTH &&
-                y <= rect.bottom + TABLE_RESIZER_LENGTH
+                x >= rect.left - TABLE_SELECTOR_LENGTH &&
+                x <= rect.right + TABLE_SELECTOR_LENGTH &&
+                y >= rect.top - TABLE_SELECTOR_LENGTH &&
+                y <= rect.bottom + TABLE_SELECTOR_LENGTH
             ) {
                 currentTable = table;
                 break;
             }
         }
 
-        this.setTableEditor(currentTable);
+        this.setTableSelector(currentTable);
     };
 
-    private setTableEditor(table: HTMLTableElement) {
-        if (this.tableEditor && table != this.tableEditor.table) {
-            this.tableEditor.dispose();
-            this.tableEditor = null;
-        }
+    private setTableSelector(table: HTMLTableElement) {
+        if (this.editor) {
+            if (this.tableSelector && table != this.tableSelector.table) {
+                this.tableSelector.dispose();
+                this.tableSelector = null;
+            }
 
-        if (!this.tableEditor && table) {
-            this.tableEditor = new TableSelector(this.editor, table, this.invalidateTableRects);
+            if (!this.tableSelector && table) {
+                this.tableSelector = new TableSelector(
+                    this.editor,
+                    table,
+                    this.invalidateTableRects
+                );
+            }
         }
     }
 
