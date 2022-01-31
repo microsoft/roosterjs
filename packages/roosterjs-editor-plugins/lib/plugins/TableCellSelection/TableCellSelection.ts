@@ -740,20 +740,20 @@ export default class TableCellSelection implements EditorPlugin {
         this.tableRectMap = null;
     };
 
-    private onChanged = (vTable: VTable) => {
+    private onChanged = (table: HTMLTableElement) => {
         this.invalidateTableRects();
-        if (vTable) {
-            this.vTable = vTable;
-            this.firstTarget = this.vTable.table.querySelector('td:first-child, th:first-child');
+        clearSelectedTableCells(this.editor);
+        this.editor.focus();
+        this.firstTarget = table.querySelector('td,th');
+        this.editor.select(this.firstTarget, 0);
+        if (table) {
+            this.vTable = new VTable(table);
+            highlightAll(this.vTable);
             this.lastTarget = this.vTable.table.querySelector(
                 'tr:last-child td:last-child, tr:last-child th:last-child'
             );
             this.tableSelection = true;
-
-            this.tableRange = {
-                firstCell: getCellCoordinates(this.vTable, this.firstTarget),
-                lastCell: getCellCoordinates(this.vTable, this.lastTarget),
-            };
+            this.tableRange = this.vTable.selection;
         }
     };
 

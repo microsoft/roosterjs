@@ -1,8 +1,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
-import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { highlightAll } from '../utils/highlightAll';
 import { KnownCreateElementDataIndex, SizeTransformer } from 'roosterjs-editor-types';
 import { TableSelectorFeature } from './TableSelectorFeature';
+import { createElement, normalizeRect } from 'roosterjs-editor-dom';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -13,7 +12,7 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
 export default function createTableSelector(
     table: HTMLTableElement,
     sizeTransformer: SizeTransformer,
-    onFinishDragging: (vTable: VTable) => void
+    onFinishDragging: (table: HTMLTableElement) => void
 ): TableSelectorFeature {
     const document = table.ownerDocument;
     const div = createElement(
@@ -35,9 +34,7 @@ export default function createTableSelector(
 
     const onDragEnd = (context: DragAndDropContext, event: MouseEvent): false => {
         if (event.target == div) {
-            const vTable = new VTable(context.table);
-            onFinishDragging(vTable);
-            highlightAll(vTable);
+            onFinishDragging(context.table);
         }
         return false;
     };
