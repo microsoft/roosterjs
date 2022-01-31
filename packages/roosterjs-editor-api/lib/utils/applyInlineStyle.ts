@@ -1,5 +1,11 @@
 import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
-import { ChangeSource, IEditor, NodeType, PositionType } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    IEditor,
+    NodeType,
+    PositionType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -14,9 +20,10 @@ export default function applyInlineStyle(
     callback: (element: HTMLElement, isInnerNode?: boolean) => any
 ) {
     editor.focus();
-    let range = editor.getSelectionRange();
+    let selection = editor.getSelectionRangeEx();
 
-    if (range && range.collapsed) {
+    if (selection && selection.areAllCollapsed) {
+        const range = selection.ranges[0];
         let node = range.startContainer;
         let isEmptySpan =
             getTagOfNode(node) == 'SPAN' &&
@@ -50,18 +57,21 @@ export default function applyInlineStyle(
         editor.addUndoSnapshot(() => {
             let firstNode: Node;
             let lastNode: Node;
-            let contentTraverser = editor.getSelectionTraverser();
-            let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
-            while (inlineElement) {
-                let nextInlineElement = contentTraverser.getNextInlineElement();
-                inlineElement.applyStyle((element, isInnerNode) => {
-                    callback(element, isInnerNode);
-                    firstNode = firstNode || element;
-                    lastNode = element;
-                });
-                inlineElement = nextInlineElement;
-            }
-            if (firstNode && lastNode) {
+            selection.ranges.forEach(range => {
+                let contentTraverser = editor.getSelectionTraverser(range);
+                let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
+                while (inlineElement) {
+                    let nextInlineElement = contentTraverser.getNextInlineElement();
+                    inlineElement.applyStyle((element, isInnerNode) => {
+                        callback(element, isInnerNode);
+                        firstNode = firstNode || element;
+                        lastNode = element;
+                    });
+                    inlineElement = nextInlineElement;
+                }
+            });
+
+            if (firstNode && lastNode && selection.type == SelectionRangeTypes.Normal) {
                 editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
             }
         }, ChangeSource.Format);

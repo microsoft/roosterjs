@@ -283,4 +283,15 @@ describe('clearAutodetectFormat tests', () => {
         cell = table.rows[0].cells[2];
         expect(cell.innerHTML).toBe(expectedFormat);
     });
+
+    TestHelper.itFirefoxOnly('Table Selection Test', () => {
+        editor.setContent(TestHelper.tableSelectionContents[0]);
+        const expectedFormat =
+            '<table style="border-collapse: collapse;" class="_tableSelected" cellspacing="0" cellpadding="1"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="border-width:1px;border-style:solid;border-color:rgb(171, 171, 171)" data-original-background-color="" class="_tableCellSelected"><div>Test</div></td><td style="border-width:1px;border-style:solid;border-color:rgb(171, 171, 171)" data-original-background-color="" class="_tableCellSelected"><div>Test</div></td><td style="border-width:1px;border-style:solid;border-color:rgb(171, 171, 171)" data-original-background-color="" class="_tableCellSelected"><div>Test</div></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="border-width:1px;border-style:solid;border-color:rgb(171, 171, 171)" data-original-background-color="" class="_tableCellSelected"><div>Test</div></td><td style="border-width:1px;border-style:solid;border-color:rgb(171, 171, 171)" data-original-background-color="" class="_tableCellSelected"><div>Test</div></td><td style="border-width:1px;border-style:solid;border-color:rgb(171, 171, 171)" data-original-background-color="" class="_tableCellSelected"><div>Test</div></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">Test</td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">Test</td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">Test</td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">Test</td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">Test</td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);">Test</td></tr></tbody></table>';
+        editor.focus();
+
+        clearFormat(editor, ClearFormatMode.AutoDetect);
+
+        expect(editor.getContent()).toBe(expectedFormat);
+    });
 });
