@@ -8,11 +8,9 @@ import { tableCellSelectionCommon } from './tableCellSelectionCommon';
  */
 export function deselectTable(element: HTMLElement) {
     if (safeInstanceOf(element, 'HTMLTableElement')) {
-        element.querySelectorAll('table').forEach(table => {
-            if (table?.classList.contains(tableCellSelectionCommon.TABLE_SELECTED)) {
-                table.classList.remove(tableCellSelectionCommon.TABLE_SELECTED);
-            }
-        });
+        if (element?.classList.contains(tableCellSelectionCommon.TABLE_SELECTED)) {
+            element.classList.remove(tableCellSelectionCommon.TABLE_SELECTED);
+        }
         element.querySelectorAll('td,th').forEach(deselectCellHandler);
     }
 }

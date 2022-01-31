@@ -34,7 +34,7 @@ import {
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
-export const TABLE_SELECTED = tableCellSelectionCommon.TABLE_SELECTED;
+const TABLE_SELECTED = tableCellSelectionCommon.TABLE_SELECTED;
 const TABLE_CELL_SELECTED = tableCellSelectionCommon.TABLE_CELL_SELECTED;
 const LEFT_CLICK = 1;
 const RIGHT_CLICK = 3;

@@ -1,6 +1,6 @@
 import { deselectTable } from './deselectTable';
 import { IEditor } from 'roosterjs-editor-types';
-import { TABLE_SELECTED } from '../TableCellSelection';
+import { tableCellSelectionCommon } from './tableCellSelectionCommon';
 
 /**
  * @internal
@@ -8,5 +8,5 @@ import { TABLE_SELECTED } from '../TableCellSelection';
  * @param input Editor Instance
  */
 export function clearSelectedTableCells(input: IEditor) {
-    input.queryElements('table.' + TABLE_SELECTED, deselectTable);
+    input.queryElements('table.' + tableCellSelectionCommon.TABLE_SELECTED, deselectTable);
 }

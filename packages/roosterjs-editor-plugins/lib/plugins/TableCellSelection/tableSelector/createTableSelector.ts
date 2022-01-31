@@ -5,6 +5,7 @@ import { highlightAll } from '../utils/highlightAll';
 import { KnownCreateElementDataIndex, SizeTransformer } from 'roosterjs-editor-types';
 
 const TABLE_SELECTOR_LENGTH = 12;
+const TABLE_SELECTOR_ID = '_Table_Selector';
 
 export type TableEditFeature = {
     node: Node;
@@ -17,7 +18,7 @@ export type TableEditFeature = {
 export default function createTableSelector(
     table: HTMLTableElement,
     sizeTransformer: SizeTransformer,
-    onFinishEditing: () => void
+    onFinishDragging: () => void
 ): TableEditFeature {
     const document = table.ownerDocument;
     const div = createElement(
@@ -25,6 +26,7 @@ export default function createTableSelector(
         document
     ) as HTMLDivElement;
 
+    div.id = TABLE_SELECTOR_ID;
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
     document.body.appendChild(div);
@@ -38,7 +40,7 @@ export default function createTableSelector(
 
     const onDragEnd = (context: DragAndDropContext, event: MouseEvent): false => {
         if (event.target == div) {
-            onFinishEditing();
+            onFinishDragging();
             highlightAll(new VTable(context.table));
         }
         return false;

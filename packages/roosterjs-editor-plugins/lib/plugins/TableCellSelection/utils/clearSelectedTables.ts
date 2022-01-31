@@ -1,5 +1,5 @@
 import { deselectTable } from './deselectTable';
-import { TABLE_SELECTED } from '../TableCellSelection';
+import { tableCellSelectionCommon } from './tableCellSelectionCommon';
 
 /**
  * @internal
@@ -7,5 +7,7 @@ import { TABLE_SELECTED } from '../TableCellSelection';
  * @param element element to clear selection
  */
 export function clearSelectedTables(element: HTMLElement) {
-    element.querySelectorAll('table.' + TABLE_SELECTED).forEach(deselectTable);
+    element
+        .querySelectorAll('table.' + tableCellSelectionCommon.TABLE_SELECTED)
+        .forEach(deselectTable);
 }
