@@ -1,4 +1,4 @@
-import WholeTableSelection from './WholeTableSelection';
+import TableSelector from './tableSelector/tableSelector';
 import { clearSelectedTableCells } from './utils/clearSelectedTableCells';
 import { clearSelectedTables } from './utils/clearSelectedTables';
 import { forEachSelectedCell } from './utils/forEachSelectedCell';
@@ -21,6 +21,7 @@ import {
     PluginKeyUpEvent,
     PluginMouseDownEvent,
     PositionType,
+    Rect,
     SelectionRangeTypes,
     TableSelection,
 } from 'roosterjs-editor-types';
@@ -31,6 +32,7 @@ import {
     VTable,
     Position,
     contains,
+    normalizeRect,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
@@ -38,13 +40,13 @@ const TABLE_SELECTED = tableCellSelectionCommon.TABLE_SELECTED;
 const TABLE_CELL_SELECTED = tableCellSelectionCommon.TABLE_CELL_SELECTED;
 const LEFT_CLICK = 1;
 const RIGHT_CLICK = 3;
+const TABLE_SELECTOR_LENGTH = 12;
 
 /**
  * TableCellSelectionPlugin help highlight table cells
  */
 export default class TableCellSelection implements EditorPlugin {
     private editor: IEditor;
-    private tableSelectorPlugin: WholeTableSelection;
     // State properties
     private lastTarget: Node;
     private firstTarget: Node;
@@ -55,16 +57,16 @@ export default class TableCellSelection implements EditorPlugin {
     private firstTable: HTMLTableElement;
     private targetTable: HTMLElement;
 
+    //TableSelector Props
+    private onMouseMoveDisposer: () => void;
+    private tableRectMap: { table: HTMLTableElement; rect: Rect }[] = null;
+    private tableSelector: TableSelector;
+
     constructor() {
-        this.lastTarget = null;
-        this.firstTarget = null;
-        this.tableSelection = false;
         this.tableRange = {
             firstCell: null,
             lastCell: null,
         };
-        this.startedSelection = false;
-        this.tableSelectorPlugin = new WholeTableSelection();
     }
 
     /**
@@ -80,16 +82,21 @@ export default class TableCellSelection implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.tableSelectorPlugin.initialize(editor);
         this.editor.addContentEditFeature(this.DeleteTableContents);
+        this.onMouseMoveDisposer = this.editor.addDomEventHandler({
+            mousemove: this.onMouseMoveSelector,
+        });
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
+        this.onMouseMoveDisposer();
+        this.invalidateTableRects();
+        this.setTableSelector(null);
         this.removeMouseUpEventListener();
-        this.tableSelectorPlugin.dispose();
+        this.clearState();
         this.editor = null;
     }
 
@@ -98,7 +105,6 @@ export default class TableCellSelection implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        this.tableSelectorPlugin.onPluginEvent(event);
         if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.ExtractContentWithDom:
@@ -126,8 +132,12 @@ export default class TableCellSelection implements EditorPlugin {
                         event.rawEvent.preventDefault();
                     }
                     break;
+                case PluginEventType.Input:
+                case PluginEventType.ContentChanged:
                 case PluginEventType.Scroll:
-                    if (this.startedSelection) {
+                    this.setTableSelector(null);
+                    this.invalidateTableRects();
+                    if (event.eventType == PluginEventType.Scroll && this.startedSelection) {
                         this.handleScrollEvent();
                     }
                     break;
@@ -682,6 +692,73 @@ export default class TableCellSelection implements EditorPlugin {
         });
 
         return result;
+    }
+    //#endregion
+
+    //#region table selector
+
+    private onMouseMoveSelector = (e: MouseEvent) => {
+        if (e.buttons > 0) {
+            return;
+        }
+
+        this.ensureTableRects();
+        const { pageX: x, pageY: y } = e;
+        let currentTable: HTMLTableElement | null = null;
+
+        for (let i = this.tableRectMap.length - 1; i >= 0; i--) {
+            const { table, rect } = this.tableRectMap[i];
+
+            if (
+                x >= rect.left - TABLE_SELECTOR_LENGTH &&
+                x <= rect.right + TABLE_SELECTOR_LENGTH &&
+                y >= rect.top - TABLE_SELECTOR_LENGTH &&
+                y <= rect.bottom + TABLE_SELECTOR_LENGTH
+            ) {
+                currentTable = table;
+                break;
+            }
+        }
+
+        this.setTableSelector(currentTable);
+    };
+
+    private setTableSelector(table: HTMLTableElement) {
+        if (this.editor) {
+            if (this.tableSelector && table != this.tableSelector.table) {
+                this.tableSelector.dispose();
+                this.tableSelector = null;
+            }
+
+            if (!this.tableSelector && table) {
+                this.tableSelector = new TableSelector(
+                    this.editor,
+                    table,
+                    this.invalidateTableRects
+                );
+            }
+        }
+    }
+
+    private invalidateTableRects = () => {
+        this.tableRectMap = null;
+    };
+
+    private ensureTableRects() {
+        if (!this.tableRectMap) {
+            this.tableRectMap = [];
+            this.editor.queryElements('table', table => {
+                if (table.isContentEditable) {
+                    const rect = normalizeRect(table.getBoundingClientRect());
+                    if (rect) {
+                        this.tableRectMap.push({
+                            table,
+                            rect,
+                        });
+                    }
+                }
+            });
+        }
     }
     //#endregion
 }
