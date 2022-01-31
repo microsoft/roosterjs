@@ -345,6 +345,8 @@ export default class TableCellSelection implements EditorPlugin {
             return;
         }
 
+        debugger;
+
         //If already in table selection and the new target is contained in the last target cell, no need to
         //Apply selection styles again.
         if (this.tableSelection && contains(this.lastTarget, event.target as Node, true)) {
