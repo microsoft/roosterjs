@@ -117,7 +117,6 @@ export default class VTable {
                 });
             });
             if (this.formatInfo) {
-                console.log(this.table);
                 this.applyFormat(this.formatInfo);
                 saveTableInfo(this.table, this.formatInfo);
             }
