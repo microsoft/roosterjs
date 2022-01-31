@@ -359,7 +359,7 @@ describe('VTable.edit', () => {
         expectedDiv.innerHTML = expectedHtml;
         const expectedVTable = new VTable(expectedDiv.firstChild as HTMLTableElement);
         expectedVTable.writeBack();
-        expect(div.innerHTML).toBe(expectedDiv.innerHTML, 'Start from ' + id);
+        expect(div.innerHTML).toBe(expectedDiv.innerHTML);
         document.body.removeChild(div);
     }
 
