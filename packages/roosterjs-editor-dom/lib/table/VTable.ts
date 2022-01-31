@@ -36,6 +36,9 @@ export default class VTable {
 
     private trs: HTMLTableRowElement[] = [];
 
+    /**
+     * Selected range of cells with the coordinates of the first and last cell selected.
+     */
     selection: TableSelection;
 
     /**
@@ -59,8 +62,8 @@ export default class VTable {
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
                     // Skip the cells which already initialized
                     for (; this.cells[rowIndex][targetCol]; targetCol++) {}
-
                     let td = tr.cells[sourceCol];
+
                     if (td == currentTd) {
                         this.col = targetCol;
                         this.row = rowIndex;
@@ -122,6 +125,7 @@ export default class VTable {
         if (this.trs[1]) {
             this.trs[1].style.backgroundColor = format.bgColorEven || 'transparent';
         }
+
         this.cells.forEach(row =>
             row
                 .filter(cell => cell.td)
