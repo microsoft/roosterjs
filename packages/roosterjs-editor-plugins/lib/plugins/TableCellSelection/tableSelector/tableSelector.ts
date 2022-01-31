@@ -35,6 +35,8 @@ export default class TableSelector {
     private onFinishDragging = (): void => {
         clearSelectedTableCells(this.editor);
         this.editor.focus();
+        const firstCell = this.table.querySelector('td,th');
+        this.editor.select(firstCell, 0);
         this.onChanged();
     };
 }
