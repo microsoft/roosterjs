@@ -3,7 +3,9 @@ import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
 import { highlight } from './utils/highlight';
 import { highlightAll } from './utils/highlightAll';
+import { insertSelectionStyle } from './utils/insertSelectionStyle';
 import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
+import { removeSelectionStyle } from './utils/removeSelectionStyle';
 import { tableCellSelectionCommon } from './utils/tableCellSelectionCommon';
 import {
     BeforeCutCopyEvent,
@@ -95,6 +97,22 @@ export default class TableCellSelection implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
+                case PluginEventType.EnteredShadowEdit:
+                    const tableEnter = this.editor
+                        .getDocument()
+                        .querySelector('table.' + TABLE_SELECTED);
+                    if (tableEnter) {
+                        removeSelectionStyle(tableEnter as HTMLTableElement);
+                    }
+                    break;
+                case PluginEventType.LeavingShadowEdit:
+                    const table = this.editor
+                        .getDocument()
+                        .querySelector('table.' + TABLE_SELECTED);
+                    if (table) {
+                        insertSelectionStyle(table as HTMLTableElement);
+                    }
+                    break;
                 case PluginEventType.ExtractContentWithDom:
                     clearSelectedTables(event.clonedRoot);
                     break;
