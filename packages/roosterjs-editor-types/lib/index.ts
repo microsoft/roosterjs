@@ -105,6 +105,7 @@ export { default as SelectionPath } from './interface/SelectionPath';
 export { default as Snapshots } from './interface/Snapshots';
 export { default as TableFormat } from './interface/TableFormat';
 export { default as TableSelection } from './interface/TableSelection';
+export { default as Coordinates } from './interface/Coordinates';
 export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';
 export { default as SanitizeHtmlOptions } from './interface/SanitizeHtmlOptions';
 export { default as TargetWindowBase } from './interface/TargetWindowBase';

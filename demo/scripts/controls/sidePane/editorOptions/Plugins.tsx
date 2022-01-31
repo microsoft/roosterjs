@@ -61,6 +61,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                         'contextMenu',
                         'Show customized context menu for special cases'
                     )}
+                    {this.renderPluginItem('tableCellSelection', 'Table Cell Selection')}
                 </tbody>
             </table>
         );
