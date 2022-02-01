@@ -50,7 +50,6 @@ export { default as setColor } from './utils/setColor';
 export { default as matchesSelector } from './utils/matchesSelector';
 export { default as createElement, KnownCreateElementData } from './utils/createElement';
 export { default as moveChildNodes } from './utils/moveChildNodes';
-export { saveTableInfo, getTableFormatInfo } from './utils/tableFormatInfo';
 
 export { default as VTable } from './table/VTable';
 export { default as VList } from './list/VList';

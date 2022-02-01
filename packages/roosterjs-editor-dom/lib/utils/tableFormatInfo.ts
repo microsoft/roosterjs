@@ -9,13 +9,14 @@ const DEFAULT_FORMAT: TableFormat = {
     hasFirstColumn: false,
     hasBandedRows: false,
     hasBandedColumns: false,
-    bgColorEven: null,
+    bgColorEven: 'transparent',
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
 };
 
 /**
+ * @internal
  * Get the format info of a table
  * If the table does not have a info saved, it will be retrieved from the css styles
  * @param table The table that has the info
@@ -51,7 +52,7 @@ function checkIfTableFormatIsValid(format: TableFormat) {
     const stateValues = [hasBandedColumns, hasBandedRows, hasFirstColumn, hasHeaderRow];
 
     if (
-        colorsValues.some(key => !isAValidType(key)) ||
+        colorsValues.some(key => !isAValidColor(key)) ||
         stateValues.some(key => !isBoolean(key)) ||
         !isAValidTableBorderType(tableBorderFormat)
     ) {
@@ -61,8 +62,8 @@ function checkIfTableFormatIsValid(format: TableFormat) {
     return true;
 }
 
-function isAValidType(a: any) {
-    if (a === null || a === undefined || typeof a === 'string') {
+function isAValidColor(color: any) {
+    if (color === null || color === undefined || typeof color === 'string') {
         return true;
     }
     return false;
@@ -75,17 +76,8 @@ function isBoolean(a: any) {
     return false;
 }
 
-function isAValidTableBorderType(a: any) {
-    if (
-        a === TableBorderFormat.DEFAULT ||
-        a === TableBorderFormat.LIST_WITH_SIDE_BORDERS ||
-        a === TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL ||
-        a === TableBorderFormat.NO_SIDE_BORDERS ||
-        a === TableBorderFormat.NO_HEADER_BORDERS ||
-        a === TableBorderFormat.ESPECIAL_TYPE_1 ||
-        a === TableBorderFormat.ESPECIAL_TYPE_2 ||
-        a === TableBorderFormat.ESPECIAL_TYPE_3
-    ) {
+function isAValidTableBorderType(border: number) {
+    if (-1 < border && border < 8) {
         return true;
     }
     return false;
@@ -100,11 +92,15 @@ function safeParseJSON(json: string): any {
 }
 
 /**
+ * @internal
  * Save the format info of a table
  * @param table The table the info will be saved
  * @param format The format of the table
  */
 export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
+    if (JSON.stringify(format) === JSON.stringify(DEFAULT_FORMAT)) {
+        return;
+    }
     if (table && format) {
         table.dataset[TABLE_STYLE_INFO] = JSON.stringify(format);
     }

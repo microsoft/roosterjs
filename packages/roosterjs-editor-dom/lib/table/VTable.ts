@@ -41,14 +41,17 @@ export default class VTable {
      */
     col: number;
 
-    private trs: HTMLTableRowElement[] = [];
-
+    /**
+     * Current format of the table
+     */
     formatInfo: TableFormat;
 
     /**
      * Selected range of cells with the coordinates of the first and last cell selected.
      */
     selection: TableSelection;
+
+    private trs: HTMLTableRowElement[] = [];
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
@@ -133,9 +136,10 @@ export default class VTable {
         if (!this.table) {
             return;
         }
-        if (format) {
-            this.formatInfo = format;
-        }
+        this.formatInfo = {
+            ...(this.formatInfo || {}),
+            ...(format || {}),
+        };
         this.table.style.borderCollapse = 'collapse';
         this.setBordersType(this.formatInfo);
         this.setColor(this.formatInfo);

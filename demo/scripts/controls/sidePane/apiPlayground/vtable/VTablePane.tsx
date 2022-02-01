@@ -3,7 +3,7 @@ import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import ColorPicker from '../../../colorPicker/ColorPicker';
 import { formatTable } from 'roosterjs-editor-api';
-import { getTableFormatInfo, getTagOfNode, VTable } from 'roosterjs-editor-dom';
+import { getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import {
     IEditor,
     PositionType,
@@ -658,25 +658,29 @@ function createTableFormat(
 }
 
 function setHeaderRow(table: HTMLTableElement): TableFormat {
-    const format = getTableFormatInfo(table);
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
     format.hasHeaderRow = !format.hasHeaderRow;
     return format;
 }
 
 function setFirstColumn(table: HTMLTableElement): TableFormat {
-    const format = getTableFormatInfo(table);
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
     format.hasFirstColumn = !format.hasFirstColumn;
     return format;
 }
 
 function setBandedColumn(table: HTMLTableElement): TableFormat {
-    const format = getTableFormatInfo(table);
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
     format.hasBandedColumns = !format.hasBandedColumns;
     return format;
 }
 
 function setBandedRow(table: HTMLTableElement): TableFormat {
-    const format = getTableFormatInfo(table);
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
     format.hasBandedRows = !format.hasBandedRows;
     return format;
 }
