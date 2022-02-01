@@ -22,9 +22,6 @@ const DEFAULT_FORMAT: TableFormat = {
  * @param table The table that has the info
  */
 export function getTableFormatInfo(table: HTMLTableElement) {
-    if (!table) {
-        return;
-    }
     const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]) as TableFormat;
     return checkIfTableFormatIsValid(obj) ? obj : DEFAULT_FORMAT;
 }
@@ -86,7 +83,10 @@ function isAValidTableBorderType(border: any) {
     return false;
 }
 
-function safeParseJSON(json: string): any {
+function safeParseJSON(json: string | undefined): any {
+    if (!json) {
+        return null;
+    }
     try {
         return JSON.parse(json);
     } catch {
@@ -110,6 +110,6 @@ export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
 }
 
 function checkIfItIsDefault(format: TableFormat) {
-    const formatKeys = Object.keys(format) as Array<keyof TableFormat>;
+    const formatKeys = Object.keys(DEFAULT_FORMAT) as Array<keyof TableFormat>;
     return formatKeys.every(key => format[key] === DEFAULT_FORMAT[key]);
 }
