@@ -25,7 +25,7 @@ export function getTableFormatInfo(table: HTMLTableElement) {
     if (!table) {
         return;
     }
-    const obj = safeParseJSON(table.dataset[TABLE_STYLE_INFO]) as TableFormat;
+    const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]) as TableFormat;
     return checkIfTableFormatIsValid(obj) ? obj : DEFAULT_FORMAT;
 }
 
@@ -79,7 +79,7 @@ function isBoolean(a: any) {
     return false;
 }
 
-function isAValidTableBorderType(border: TableBorderFormat) {
+function isAValidTableBorderType(border: any) {
     if (-1 < border && border < 8) {
         return true;
     }
