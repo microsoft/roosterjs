@@ -8,7 +8,7 @@ import { VTable } from 'roosterjs-editor-dom';
  * @internal
  * Removes the selection of all the tables
  */
-export function deSelectAll(vTable: VTable): void {
+export function deSelectAll(vTable: VTable, document: Document): void {
     forEachCell(vTable, cell => {
         if (cell.td) {
             deselectCellHandler(cell.td);
@@ -18,5 +18,5 @@ export function deSelectAll(vTable: VTable): void {
         vTable.table.classList.remove(tableCellSelectionCommon.TABLE_SELECTED);
     }
 
-    removeSelectionStyle(vTable.table);
+    removeSelectionStyle(document);
 }

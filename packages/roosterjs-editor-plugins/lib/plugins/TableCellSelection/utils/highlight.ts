@@ -9,7 +9,7 @@ import { VTable } from 'roosterjs-editor-dom';
  * @internal
  * Highlights a range of cells, used in the TableSelection Plugin
  */
-export function highlight(vTable: VTable): void {
+export function highlight(vTable: VTable, doc: Document): void {
     if (vTable.selection && vTable.cells && vTable) {
         if (!vTable.table.classList.contains(tableCellSelectionCommon.TABLE_SELECTED)) {
             vTable.table.classList.add(tableCellSelectionCommon.TABLE_SELECTED);
@@ -42,7 +42,7 @@ export function highlight(vTable: VTable): void {
             }
         }
 
-        insertSelectionStyle(vTable.table);
+        insertSelectionStyle(vTable.table, doc);
     }
 }
 

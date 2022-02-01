@@ -8,7 +8,7 @@ import { VTable } from 'roosterjs-editor-dom';
  * @internal
  * Highlights all the cells in the table.
  */
-export function highlightAll(vTable: VTable): void {
+export function highlightAll(vTable: VTable, document: Document): void {
     let firstCol: number = null;
     let firstRow: number = null;
     let lastCol: number;
@@ -38,5 +38,5 @@ export function highlightAll(vTable: VTable): void {
         },
     };
 
-    insertSelectionStyle(vTable.table);
+    insertSelectionStyle(vTable.table, document);
 }
