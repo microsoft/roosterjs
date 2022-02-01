@@ -12,10 +12,12 @@ import { NodePosition } from 'roosterjs-editor-types';
  */
 export default function isPositionAtBeginningOf(position: NodePosition, targetNode: Node) {
     if (position) {
-        let { node, offset } = position.normalize();
+        position = position.normalize();
+        let node: Node | null = position.node;
+        const offset = position.offset;
         if (offset == 0) {
-            while (contains(targetNode, node) && areAllPreviousNodesEmpty(node)) {
-                node = node.parentNode;
+            while (node && contains(targetNode, node) && areAllPreviousNodesEmpty(node)) {
+                node = node?.parentNode || null;
             }
 
             return node == targetNode;

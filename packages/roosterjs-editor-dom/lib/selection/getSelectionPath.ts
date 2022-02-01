@@ -7,7 +7,10 @@ import { NodePosition, NodeType, SelectionPath } from 'roosterjs-editor-types';
  * @param rootNode The root node where the path start from
  * @param range The range of selection
  */
-export default function getSelectionPath(rootNode: Node, range: Range): SelectionPath {
+export default function getSelectionPath(
+    rootNode: Node,
+    range: Range | null
+): SelectionPath | null {
     if (!range) {
         return null;
     }
@@ -37,9 +40,10 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
         return [];
     }
 
-    let { node, offset } = position;
+    let node: Node | null = position.node;
+    let offset = position.offset;
     let result: number[] = [];
-    let parent: Node;
+    let parent: Node | null;
 
     if (!contains(rootNode, node, true)) {
         return [];
@@ -48,7 +52,7 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
     if (node.nodeType == NodeType.Text) {
         parent = node.parentNode;
         while (node.previousSibling && node.previousSibling.nodeType == NodeType.Text) {
-            offset += node.previousSibling.nodeValue.length;
+            offset += node.previousSibling.nodeValue?.length || 0;
             node = node.previousSibling;
         }
         result.unshift(offset);
@@ -61,9 +65,9 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
         offset = 0;
         let isPreviousText = false;
 
-        for (let c: Node = parent.firstChild; c && c != node; c = c.nextSibling) {
+        for (let c: Node | null = parent?.firstChild || null; c && c != node; c = c.nextSibling) {
             if (c.nodeType == NodeType.Text) {
-                if (c.nodeValue.length == 0 || isPreviousText) {
+                if (c.nodeValue?.length === 0 || isPreviousText) {
                     continue;
                 }
 
@@ -77,7 +81,7 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
 
         result.unshift(offset);
         node = parent;
-        parent = parent.parentNode;
+        parent = parent?.parentNode || null;
     } while (node && node != rootNode);
 
     return result;
