@@ -6,7 +6,7 @@ import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor
  * All known CreateElementData used by roosterjs to create elements
  */
 export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateElementData> = {
-    [KnownCreateElementDataIndex.None]: null,
+    [KnownCreateElementDataIndex.None]: { tag: '' },
 
     // Edge can sometimes lose current format when Enter to new line.
     // So here we add an extra SPAN for Edge to workaround this bug
@@ -65,7 +65,7 @@ export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateE
 export default function createElement(
     elementData: CreateElementData | KnownCreateElementDataIndex,
     document: Document
-): Element {
+): Element | null {
     if (typeof elementData == 'number') {
         elementData = KnownCreateElementData[elementData];
     }
@@ -104,7 +104,10 @@ export default function createElement(
             if (typeof child === 'string') {
                 result.appendChild(document.createTextNode(child));
             } else if (child) {
-                result.appendChild(createElement(child, document));
+                const childElement = createElement(child, document);
+                if (childElement) {
+                    result.appendChild(childElement);
+                }
             }
         });
     }
