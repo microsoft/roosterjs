@@ -1,4 +1,5 @@
 import createEditorCore from './createMockEditorCore';
+import { focus } from '../../lib/coreApi/focus';
 import { getSelectionRangeEx } from '../../lib/coreApi/getSelectionRangeEx';
 import { selectNode } from '../TestHelper';
 
@@ -29,6 +30,8 @@ describe('getSelectionRangeEx', () => {
         div.contentEditable = 'true';
         div.innerHTML = '<div>test</div>';
         selectNode(div.firstChild);
+
+        focus(core);
 
         const selectionEx = getSelectionRangeEx(core);
         selectionEx.ranges.forEach(range => {

@@ -39,15 +39,20 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
         }
     } else {
         editor.addUndoSnapshot(() => {
-            if (selection.type == SelectionRangeTypes.TableSelection) {
-                selection.ranges.forEach(range => {
+            let tempRange: Range;
+            selection.ranges.forEach(range => {
+                if (selection.type == SelectionRangeTypes.TableSelection) {
                     editor.select(range);
-                    formatter();
-                    range.collapse();
-                    editor.select(range);
-                });
-            } else {
+                }
+
                 formatter();
+
+                tempRange = range;
+            });
+
+            if (tempRange && selection.type == SelectionRangeTypes.TableSelection) {
+                tempRange.collapse();
+                editor.select(tempRange);
             }
         }, ChangeSource.Format);
     }
