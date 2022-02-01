@@ -136,10 +136,8 @@ export default class VTable {
         if (!this.table) {
             return;
         }
-        this.formatInfo = {
-            ...(this.formatInfo || {}),
-            ...(format || {}),
-        };
+
+        this.formatInfo = format ? format : this.formatInfo;
         this.table.style.borderCollapse = 'collapse';
         this.setBordersType(this.formatInfo);
         this.setColor(this.formatInfo);

@@ -9,7 +9,7 @@ const DEFAULT_FORMAT: TableFormat = {
     hasFirstColumn: false,
     hasBandedRows: false,
     hasBandedColumns: false,
-    bgColorEven: 'transparent',
+    bgColorEven: null,
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
@@ -98,10 +98,15 @@ function safeParseJSON(json: string): any {
  * @param format The format of the table
  */
 export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
-    if (JSON.stringify(format) === JSON.stringify(DEFAULT_FORMAT)) {
+    if (checkIfItIsDefault(format)) {
         return;
     }
     if (table && format) {
         table.dataset[TABLE_STYLE_INFO] = JSON.stringify(format);
     }
+}
+
+function checkIfItIsDefault(format: TableFormat) {
+    const formatKeys = Object.keys(format) as Array<keyof TableFormat>;
+    return formatKeys.every(key => format[key] === DEFAULT_FORMAT[key]);
 }
