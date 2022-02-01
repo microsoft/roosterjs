@@ -7,7 +7,7 @@ import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
  * Get bounding rect of this position
  * @param position The position to get rect from
  */
-export default function getPositionRect(position: NodePosition): Rect {
+export default function getPositionRect(position: NodePosition): Rect | null {
     if (!position) {
         return null;
     }
@@ -15,7 +15,8 @@ export default function getPositionRect(position: NodePosition): Rect {
     let range = createRange(position);
 
     // 1) try to get rect using range.getBoundingClientRect()
-    let rect = range.getBoundingClientRect && normalizeRect(range.getBoundingClientRect());
+    let rect: Rect | null =
+        range.getBoundingClientRect && normalizeRect(range.getBoundingClientRect());
 
     if (rect) {
         return rect;
@@ -24,21 +25,21 @@ export default function getPositionRect(position: NodePosition): Rect {
     // 2) try to get rect using range.getClientRects
     position = position.normalize();
     const rects = range.getClientRects && range.getClientRects();
-    rect = rects && rects.length == 1 && normalizeRect(rects[0]);
+    rect = rects && rects.length == 1 ? normalizeRect(rects[0]) : null;
     if (rect) {
         return rect;
     }
 
     // 3) if node is text node, try inserting a SPAN and get the rect of SPAN for others
-    if (position.node.nodeType == NodeType.Text) {
+    if (position.node.nodeType == NodeType.Text && position.node.ownerDocument) {
         const span = createElement(
             { tag: 'span', children: ['\u200b'] },
             position.node.ownerDocument
         );
         range = createRange(position);
-        range.insertNode(span);
-        rect = span.getBoundingClientRect && normalizeRect(span.getBoundingClientRect());
-        span.parentNode.removeChild(span);
+        range.insertNode(span!);
+        rect = span!.getBoundingClientRect && normalizeRect(span!.getBoundingClientRect());
+        span!.parentNode?.removeChild(span!);
         if (rect) {
             return rect;
         }

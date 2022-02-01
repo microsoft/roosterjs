@@ -819,8 +819,8 @@ export default class VTable {
         // Make sure table width/height is fixed to avoid shifting effect
         setHTMLElementSizeInPx(
             this.table,
-            sizeTransformer(rect.width),
-            sizeTransformer(rect.height)
+            sizeTransformer?.(rect.width) || rect.width,
+            sizeTransformer?.(rect.height) || rect.height
         );
     }
 }

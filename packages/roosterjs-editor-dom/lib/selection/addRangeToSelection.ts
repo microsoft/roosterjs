@@ -15,7 +15,7 @@ export default function addRangeToSelection(range: Range, skipSameRange?: boolea
         if (selection.rangeCount > 0) {
             // Workaround IE exception 800a025e
             try {
-                let currentRange: Range;
+                let currentRange: Range | null = null;
                 // Do not remove/add range if current selection is the same with target range
                 // Without this check, execCommand() may fail in Edge since we changed the selection
                 if (

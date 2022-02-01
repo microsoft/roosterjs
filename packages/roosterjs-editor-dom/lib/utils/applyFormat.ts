@@ -32,8 +32,17 @@ export default function applyFormat(
             elementStyle.fontSize = fontSize;
         }
 
-        setColor(element, textColors || textColor, false /*isBackground*/, isDarkMode);
-        setColor(element, backgroundColors || backgroundColor, true /*isBackground*/, isDarkMode);
+        if (textColors) {
+            setColor(element, textColors, false /*isBackground*/, isDarkMode);
+        } else if (textColor) {
+            setColor(element, textColor, false /*isBackground*/, isDarkMode);
+        }
+
+        if (backgroundColors) {
+            setColor(element, backgroundColors, true /*isBackground*/, isDarkMode);
+        } else if (backgroundColor) {
+            setColor(element, backgroundColor, true /*isBackground*/, isDarkMode);
+        }
 
         if (bold) {
             elementStyle.fontWeight = 'bold';
