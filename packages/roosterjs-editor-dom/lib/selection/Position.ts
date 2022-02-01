@@ -37,7 +37,7 @@ export default class Position implements NodePosition {
 
     constructor(
         nodeOrPosition: Node | NodePosition,
-        offsetOrPosType?: number,
+        offsetOrPosType: number = 0,
         private readonly isFromEndOfRange?: boolean
     ) {
         if ((<NodePosition>nodeOrPosition).node) {
@@ -50,14 +50,14 @@ export default class Position implements NodePosition {
         switch (offsetOrPosType) {
             case PositionType.Before:
                 this.offset = getIndexOfNode(this.node);
-                this.node = this.node.parentNode;
+                this.node = this.node.parentNode!; // TODO: how to handle parentNode is null?
                 this.isAtEnd = false;
                 break;
 
             case PositionType.After:
                 this.offset = getIndexOfNode(this.node) + 1;
                 this.isAtEnd = !this.node.nextSibling;
-                this.node = this.node.parentNode;
+                this.node = this.node.parentNode!; // TODO: how to handle parentNode is null?
                 break;
 
             case PositionType.End:
@@ -72,7 +72,7 @@ export default class Position implements NodePosition {
                 break;
         }
 
-        this.element = findClosestElementAncestor(this.node);
+        this.element = findClosestElementAncestor(this.node)!; // TODO: how to handle parent element is null?
     }
 
     /**
@@ -162,9 +162,9 @@ export default class Position implements NodePosition {
     }
 }
 
-function getIndexOfNode(node: Node): number {
+function getIndexOfNode(node: Node | null): number {
     let i = 0;
-    while ((node = node.previousSibling)) {
+    while ((node = node?.previousSibling || null)) {
         i++;
     }
     return i;
@@ -172,7 +172,7 @@ function getIndexOfNode(node: Node): number {
 
 function getEndOffset(node: Node): number {
     if (node.nodeType == NodeType.Text) {
-        return node.nodeValue.length;
+        return node.nodeValue?.length || 0;
     } else if (node.nodeType == NodeType.Element) {
         return node.childNodes.length;
     } else {
