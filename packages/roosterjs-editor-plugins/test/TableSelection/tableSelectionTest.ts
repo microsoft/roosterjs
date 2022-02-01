@@ -207,12 +207,14 @@ describe('TableCellSelectionPlugin', () => {
 
         simulateMouseEvent('mousemove', target2);
 
-        const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-        const table = editor.getDocument().getElementById('table1');
-        const rect = table.getBoundingClientRect();
-        expect(tableSelector).toBeDefined();
-        expect(tableSelector.style.top).toBe(`${rect.top - TABLE_SELECTOR_LENGTH}px`);
-        expect(tableSelector.style.left).toBe(`${rect.left - TABLE_SELECTOR_LENGTH - 2}px`);
+        editor.runAsync(_editor => {
+            const tableSelector = _editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+            const table = _editor.getDocument().getElementById('table1');
+            const rect = table.getBoundingClientRect();
+            expect(tableSelector).toBeDefined();
+            expect(tableSelector.style.top).toBe(`${rect.top - TABLE_SELECTOR_LENGTH}px`);
+            expect(tableSelector.style.left).toBe(`${rect.left - TABLE_SELECTOR_LENGTH - 2}px`);
+        });
     });
 
     it('tableSelector on click event', () => {
@@ -220,16 +222,18 @@ describe('TableCellSelectionPlugin', () => {
         const target = document.getElementById(targetId);
 
         simulateMouseEvent('mousemove', target);
-        let tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-        simulateMouseEvent('mousedown', tableSelector);
-        simulateMouseEvent('mouseup', tableSelector);
+        editor.runAsync(_editor => {
+            let tableSelector = _editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+            simulateMouseEvent('mousedown', tableSelector);
+            simulateMouseEvent('mouseup', tableSelector);
 
-        expect(tableSelector).toBeDefined();
-        expect(editor.getScrollContainer().innerHTML).toBe(
-            Browser.isFirefox
-                ? '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">a</td><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">w</td></tr></tbody></table></div>'
-                : '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table></div>'
-        );
+            expect(tableSelector).toBeDefined();
+            expect(editor.getScrollContainer().innerHTML).toBe(
+                Browser.isFirefox
+                    ? '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">a</td><td data-original-background-color="" style="background-color: rgba(198, 198, 198, 0.7);" class="_tableCellSelected">w</td></tr></tbody></table></div>'
+                    : '<div><table id="tableSelectionTestId" class="_tableSelected"><tbody><tr><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">a</td><td data-original-background-color="" class="_tableCellSelected" style="background-color: rgba(198, 198, 198, 0.7);">w</td></tr></tbody></table></div>'
+            );
+        });
     });
 
     it('should not handle selectionInsideTableMouseMove on selecting text', () => {
