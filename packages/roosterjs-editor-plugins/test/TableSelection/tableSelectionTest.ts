@@ -207,9 +207,9 @@ describe('TableCellSelectionPlugin', () => {
 
         simulateMouseEvent('mousemove', target2);
 
-        editor.runAsync(_editor => {
-            const tableSelector = _editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-            const table = _editor.getDocument().getElementById('table1');
+        editor.runAsync(editor => {
+            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+            const table = editor.getDocument().getElementById('table1');
             const rect = table.getBoundingClientRect();
             expect(tableSelector).toBeDefined();
             expect(tableSelector.style.top).toBe(`${rect.top - TABLE_SELECTOR_LENGTH}px`);
@@ -222,8 +222,8 @@ describe('TableCellSelectionPlugin', () => {
         const target = document.getElementById(targetId);
 
         simulateMouseEvent('mousemove', target);
-        editor.runAsync(_editor => {
-            let tableSelector = _editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+        editor.runAsync(editor => {
+            let tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
             simulateMouseEvent('mousedown', tableSelector);
             simulateMouseEvent('mouseup', tableSelector);
 
