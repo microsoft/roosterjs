@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">94.59% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/36</span>
+                <span class='fraction'>35/37</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">86.36% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>20/22</span>
+                <span class='fraction'>38/44</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.29% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/35</span>
+                <span class='fraction'>34/36</span>
             </div>
         
             
@@ -147,7 +147,11 @@
 <a name='L82'></a><a href='#L82'>82</a>
 <a name='L83'></a><a href='#L83'>83</a>
 <a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,6 +161,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">336x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,7 +193,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1344x</span>
+<span class="cline-any cline-yes">672x</span>
+<span class="cline-any cline-yes">672x</span>
 <span class="cline-any cline-yes">672x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -240,7 +248,10 @@ import { NodePosition, NodeType, SelectionPath } from 'roosterjs-editor-types';
  * @param rootNode The root node where the path start from
  * @param range The range of selection
  */
-export default function getSelectionPath(rootNode: Node, range: Range): SelectionPath {
+export default function getSelectionPath(
+    rootNode: Node,
+    range: Range | null
+): SelectionPath | null {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!range) {
 <span class="cstat-no" title="statement not covered" >        return null;</span>
     }
@@ -270,9 +281,10 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
 <span class="cstat-no" title="statement not covered" >        return [];</span>
     }
 &nbsp;
-    let { node, offset } = position;
+    let node: Node | null = position.node;
+    let offset = position.offset;
     let result: number[] = [];
-    let parent: Node;
+    let parent: Node | null;
 &nbsp;
     if (!contains(rootNode, node, true)) {
         return [];
@@ -281,7 +293,7 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
     if (node.nodeType == NodeType.Text) {
         parent = node.parentNode;
         while (node.previousSibling &amp;&amp; node.previousSibling.nodeType == NodeType.Text) {
-            offset += node.previousSibling.nodeValue.length;
+            offset += node.previousSibling.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength || 0;
             node = node.previousSibling;
         }
         result.unshift(offset);
@@ -294,9 +306,9 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
         offset = 0;
         let isPreviousText = false;
 &nbsp;
-        for (let c: Node = parent.firstChild; c &amp;&amp; c != node; c = c.nextSibling) {
+        for (let c: Node | null = parent<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>irstChild || null; c &amp;&amp; c != node; c = c.nextSibling) {
             if (c.nodeType == NodeType.Text) {
-                if (c.nodeValue.length == 0 || isPreviousText) {
+                if (c.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength === 0 || isPreviousText) {
                     continue;
                 }
 &nbsp;
@@ -310,7 +322,7 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
 &nbsp;
         result.unshift(offset);
         node = parent;
-        parent = parent.parentNode;
+        parent = parent<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>arentNode || null;
     } while (node &amp;&amp; node != rootNode);
 &nbsp;
     return result;
@@ -322,7 +334,7 @@ function getPositionPath(position: NodePosition, rootNode: Node): number[] {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Feb 01 2022 17:57:39 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 01 2022 18:48:52 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
