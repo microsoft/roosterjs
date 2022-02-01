@@ -11,13 +11,13 @@ import isNodeAfter from './isNodeAfter';
  * we remove it. @default false
  * @returns The new parent node
  */
-export default function splitParentNode(node: Node, splitBefore: boolean): Node {
+export default function splitParentNode(node: Node, splitBefore: boolean): Node | null {
     if (!node || !node.parentNode) {
         return null;
     }
 
     let parentNode = node.parentNode;
-    let newParent = parentNode.cloneNode(false /*deep*/) as HTMLElement;
+    let newParent: HTMLElement | null = parentNode.cloneNode(false /*deep*/) as HTMLElement;
     newParent.removeAttribute('id');
     if (splitBefore) {
         while (parentNode.firstChild && parentNode.firstChild != node) {
@@ -31,7 +31,7 @@ export default function splitParentNode(node: Node, splitBefore: boolean): Node 
 
     // When the only child of new parent is ZERO_WIDTH_SPACE, we can still prevent keeping it by set removeEmptyNewNode to true
     if (newParent.firstChild && newParent.innerHTML != '') {
-        parentNode.parentNode.insertBefore(
+        parentNode.parentNode?.insertBefore(
             newParent,
             splitBefore ? parentNode : parentNode.nextSibling
         );
