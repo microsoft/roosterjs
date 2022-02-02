@@ -1,4 +1,4 @@
-import { createRange, getSelectionPath, moveChildNodes } from 'roosterjs-editor-dom';
+import { createRange, getSelectionPath, moveChildNodes, selectTable } from 'roosterjs-editor-dom';
 import { EditorCore, PluginEventType, SwitchShadowEdit } from 'roosterjs-editor-types';
 
 /**
@@ -11,8 +11,9 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
 
     if (isOn) {
         if (!wasInShadowEdit) {
-            const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
-            shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
+            const selection = core.api.getSelectionRangeEx(core);
+            shadowEditSelectionPath =
+                selection && selection.ranges.map(range => getSelectionPath(contentDiv, range));
             shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
 
             moveChildNodes(shadowEditFragment, contentDiv);
@@ -50,15 +51,25 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             contentDiv.appendChild(shadowEditFragment);
             core.api.focus(core);
 
-            if (shadowEditSelectionPath) {
+            if (shadowEditSelectionPath.length == 1) {
                 core.api.selectRange(
                     core,
                     createRange(
                         contentDiv,
-                        shadowEditSelectionPath.start,
-                        shadowEditSelectionPath.end
+                        shadowEditSelectionPath[0].start,
+                        shadowEditSelectionPath[0].end
                     )
                 );
+            } else if (core.domEvent.tableSelectionRange) {
+                const { table, coordinates } = core.domEvent.tableSelectionRange;
+                const tableId = table.id;
+                const tableElement = core.contentDiv.querySelector('#' + tableId);
+                if (table) {
+                    core.domEvent.tableSelectionRange = selectTable(
+                        tableElement as HTMLTableElement,
+                        coordinates
+                    );
+                }
             }
         }
     }

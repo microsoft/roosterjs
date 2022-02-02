@@ -65,7 +65,7 @@ describe('switchShadowEdit', () => {
         core.api.triggerEvent = triggerEvent;
         core.lifecycle.shadowEditFragment = document.createDocumentFragment();
         core.lifecycle.shadowEditFragment.appendChild(testNode);
-        core.lifecycle.shadowEditSelectionPath = { start: [0], end: [0] };
+        core.lifecycle.shadowEditSelectionPath = [{ start: [0], end: [0] }];
         div.focus();
 
         switchShadowEdit(core, true);
@@ -86,7 +86,7 @@ describe('switchShadowEdit', () => {
         core.api.triggerEvent = triggerEvent;
         core.lifecycle.shadowEditFragment = document.createDocumentFragment();
         core.lifecycle.shadowEditFragment.appendChild(testNode);
-        core.lifecycle.shadowEditSelectionPath = { start: [0], end: [0] };
+        core.lifecycle.shadowEditSelectionPath = [{ start: [0], end: [0] }];
         div.focus();
 
         switchShadowEdit(core, false);

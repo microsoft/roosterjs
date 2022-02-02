@@ -61,6 +61,7 @@ describe('Editor', () => {
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: true,
             contextMenuProviders: [],
+            tableSelectionRange: null,
         });
         if (!Browser.isChrome) {
             expect(core.edit).toEqual({
@@ -166,6 +167,7 @@ describe('Editor', () => {
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
+            tableSelectionRange: null,
         });
         if (!Browser.isChrome) {
             expect(core.edit).toEqual({

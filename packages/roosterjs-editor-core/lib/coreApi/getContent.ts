@@ -41,7 +41,7 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
         const path = !includeSelectionMarker
             ? null
             : core.lifecycle.shadowEditFragment
-            ? core.lifecycle.shadowEditSelectionPath
+            ? core.lifecycle.shadowEditSelectionPath[0]
             : originalRange
             ? getSelectionPath(core.contentDiv, originalRange)
             : null;

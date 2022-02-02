@@ -36,6 +36,7 @@ import {
     SelectionRangeEx,
     SizeTransformer,
     StyleBasedFormatState,
+    TableSelection,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import {
@@ -59,6 +60,7 @@ import {
     isPositionAtBeginningOf,
     arrayPush,
     toArray,
+    selectTable,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -418,6 +420,13 @@ export default class Editor implements IEditor {
               )
             : createRange(arg1, arg2, arg3, arg4);
         return this.contains(range) && this.core.api.selectRange(this.core, range);
+    }
+
+    public setTableSelection(table: HTMLTableElement, coordinates: TableSelection) {
+        const selection = selectTable(table, coordinates, this.getDocument());
+
+        this.core.domEvent.tableSelectionRange = selection;
+        return true;
     }
 
     /**

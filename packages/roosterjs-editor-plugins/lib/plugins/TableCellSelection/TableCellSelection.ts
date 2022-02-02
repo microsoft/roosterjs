@@ -1,7 +1,6 @@
 import { deSelectAll } from './utils/deSelectAll';
 import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
-import { highlight } from './utils/highlight';
 import { highlightAll } from './utils/highlightAll';
 import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import { tableCellSelectionCommon } from './utils/tableCellSelectionCommon';
@@ -139,7 +138,7 @@ export default class TableCellSelection implements EditorPlugin {
         if (this.firstTable == this.targetTable) {
             if (this.tableSelection) {
                 this.vTable.selection.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
-                highlight(this.vTable);
+                this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
                 this.tableRange.lastCell = this.vTable.selection.lastCell;
                 updateSelection(this.editor, this.firstTarget, 0);
             }
@@ -262,7 +261,7 @@ export default class TableCellSelection implements EditorPlugin {
         }
 
         this.vTable.selection = this.tableRange;
-        highlight(this.vTable);
+        this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
 
         const isBeginAboveEnd = this.isAfter(this.firstTarget, this.lastTarget);
         const targetPosition = new Position(
@@ -293,7 +292,8 @@ export default class TableCellSelection implements EditorPlugin {
                 });
                 const selection = this.editor.getDocument().defaultView.getSelection();
                 selection.setBaseAndExtent(this.firstTarget, 0, this.lastTarget, 0);
-                highlight(this.vTable);
+                this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
+
                 return;
             }
         }
@@ -329,7 +329,8 @@ export default class TableCellSelection implements EditorPlugin {
 
                     this.firstTarget = first;
                     this.lastTarget = last;
-                    highlight(this.vTable);
+                    this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
+
                     this.tableRange = this.vTable.selection;
                     this.tableSelection = true;
                     this.firstTable = firstTable as HTMLTableElement;
@@ -465,7 +466,7 @@ export default class TableCellSelection implements EditorPlugin {
                 this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget);
                 this.tableRange.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
                 this.vTable.selection = this.tableRange;
-                highlight(this.vTable);
+                this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
             }
 
             event.preventDefault();
@@ -475,7 +476,7 @@ export default class TableCellSelection implements EditorPlugin {
             this.tableRange.lastCell = this.tableRange.firstCell;
 
             this.vTable.selection = this.tableRange;
-            highlight(this.vTable);
+            this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
 
             this.tableRange = this.vTable.selection;
         }
@@ -525,6 +526,9 @@ export default class TableCellSelection implements EditorPlugin {
 
     private clearState() {
         this.clearTableCellSelection();
+        if (this?.vTable?.table) {
+            this.editor.setTableSelection(this.vTable.table, null);
+        }
         this.vTable = null;
         this.firstTarget = null;
         this.lastTarget = null;

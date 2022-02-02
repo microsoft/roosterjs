@@ -51,6 +51,7 @@ describe('getSelectionRangeEx', () => {
             scrollContainer: null,
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
+            tableSelectionRange: null,
         };
         const input = document.createElement('input');
         document.body.appendChild(input);

@@ -14,7 +14,7 @@ export interface EnterShadowEditEvent extends BasePluginEvent<PluginEventType.En
     /**
      * The selection path of original editor content
      */
-    selectionPath: SelectionPath;
+    selectionPath: SelectionPath[];
 }
 
 /**
