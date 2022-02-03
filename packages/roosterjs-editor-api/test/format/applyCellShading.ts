@@ -51,7 +51,6 @@ describe('applyCellShading', () => {
     });
 
     it('applyCellShading in collapsed range in cell', () => {
-        debugger;
         // Arrange
         editor.setContent(TestHelper.tableSelectionContents[1]);
         const expected = Browser.isFirefox
