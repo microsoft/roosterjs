@@ -1,5 +1,5 @@
 import * as TestHelper from '../TestHelper';
-import applyCellShading from '../../lib/format/applyCellShading';
+import applyCellShading from '../../lib/table/applyCellShading';
 import { Browser } from 'roosterjs-editor-dom';
 import { IEditor } from 'roosterjs-editor-types';
 
