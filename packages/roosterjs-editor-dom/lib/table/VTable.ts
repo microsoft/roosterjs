@@ -16,7 +16,7 @@ import {
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';
-const TEMP_BACKGROUND_COLOR = 'originalBackgroundColor';
+const CELL_SHADE = 'cellShade';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -148,7 +148,15 @@ export default class VTable {
         this.setFirstColumnFormat(this.formatInfo);
         this.setHeaderRowFormat(this.formatInfo);
     }
-
+    /**
+     * Check if the cell has shade
+     * @param cell
+     * @returns
+     */
+    private hasCellShade(cell: VCell) {
+        const colorShade = cell.td.dataset[CELL_SHADE];
+        return colorShade ? true : false;
+    }
     /**
      * Check if the cell must receive color
      * @param cell
@@ -156,8 +164,7 @@ export default class VTable {
      * @returns
      */
     private shouldApplyFormatToCell(cell: VCell, isResized?: boolean): boolean {
-        const colorShade = cell.td.dataset[TEMP_BACKGROUND_COLOR];
-        return colorShade && isResized ? true : false;
+        return this.hasCellShade(cell) && isResized ? false : true;
     }
 
     /**
@@ -171,7 +178,7 @@ export default class VTable {
         const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven ? true : false;
         this.cells.forEach((row, index) => {
             row.forEach(cell => {
-                if (cell.td && !this.shouldApplyFormatToCell(cell, isResized)) {
+                if (cell.td && this.shouldApplyFormatToCell(cell, isResized)) {
                     if (hasBandedRows) {
                         const backgroundColor = color(index);
                         cell.td.style.backgroundColor = backgroundColor;
@@ -180,6 +187,9 @@ export default class VTable {
                     } else {
                         cell.td.style.backgroundColor = null;
                     }
+                    if (this.hasCellShade(cell)) {
+                        delete cell.td.dataset[CELL_SHADE];
+                    }
                 }
             });
         });
@@ -187,7 +197,11 @@ export default class VTable {
             this.cells.forEach(row => {
                 row.forEach((cell, index) => {
                     const backgroundColor = color(index);
-                    if (cell.td && backgroundColor) {
+                    if (
+                        cell.td &&
+                        backgroundColor &&
+                        this.shouldApplyFormatToCell(cell, isResized)
+                    ) {
                         cell.td.style.backgroundColor = backgroundColor;
                     }
                 });

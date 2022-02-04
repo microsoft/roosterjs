@@ -159,7 +159,7 @@ export default class TableCellSelection implements EditorPlugin {
             const clonedVTable = new VTable(clonedTable as HTMLTableElement);
             clonedVTable.selection = this.tableRange;
             removeCellsOutsideSelection(clonedVTable);
-            clonedVTable.writeBack();
+            clonedVTable.writeBack(true);
 
             event.range.selectNode(clonedTable);
 
