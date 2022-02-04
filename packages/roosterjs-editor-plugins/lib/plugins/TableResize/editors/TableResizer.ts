@@ -116,7 +116,7 @@ function onDragging(
             }
         }
 
-        vTable.writeBack();
+        vTable.writeBack(true /** isResized **/);
         return true;
     } else {
         return false;

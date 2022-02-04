@@ -16,6 +16,7 @@ import {
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';
+const TEMP_BACKGROUND_COLOR = 'originalBackgroundColor';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -105,8 +106,9 @@ export default class VTable {
 
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
+     * @param isResized if the table was resized, the shaded cell should not be colored
      */
-    writeBack() {
+    writeBack(isResized?: boolean) {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
@@ -120,8 +122,9 @@ export default class VTable {
                 });
             });
             if (this.formatInfo) {
-                this.applyFormat(this.formatInfo);
                 saveTableInfo(this.table, this.formatInfo);
+                this.formatInfo = getTableFormatInfo(this.table);
+                this.applyFormat(this.formatInfo, isResized);
             }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
@@ -131,8 +134,9 @@ export default class VTable {
     /**
      * Apply the given table format to this virtual table
      * @param format Table format to apply
+     * @param isResized if the table was resized, the shaded cell should not be colored
      */
-    applyFormat(format: Partial<TableFormat>) {
+    applyFormat(format: Partial<TableFormat>, isResized?: boolean) {
         if (!this.table) {
             return;
         }
@@ -140,22 +144,34 @@ export default class VTable {
         this.formatInfo = format ? format : this.formatInfo;
         this.table.style.borderCollapse = 'collapse';
         this.setBordersType(this.formatInfo);
-        this.setColor(this.formatInfo);
+        this.setColor(this.formatInfo, isResized);
         this.setFirstColumnFormat(this.formatInfo);
         this.setHeaderRowFormat(this.formatInfo);
     }
 
     /**
-     * Set color to the table
-     * @param format
+     * Check if the cell must receive color
+     * @param cell
+     * @param isResized if the table was resized, the shaded cell should not be colored
+     * @returns
      */
-    private setColor(format: TableFormat) {
+    private shouldApplyFormatToCell(cell: VCell, isResized?: boolean): boolean {
+        const colorShade = cell.td.dataset[TEMP_BACKGROUND_COLOR];
+        return colorShade && isResized ? true : false;
+    }
+
+    /**
+     * Set color to the table
+     * @param format the format that must be applied
+     * @param isResized if the table was resized, the shaded cell should not be colored
+     */
+    private setColor(format: TableFormat, isResized?: boolean) {
         const color = (index: number) => (index % 2 === 0 ? format.bgColorEven : format.bgColorOdd);
         const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
         const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven ? true : false;
         this.cells.forEach((row, index) => {
             row.forEach(cell => {
-                if (cell.td) {
+                if (cell.td && !this.shouldApplyFormatToCell(cell, isResized)) {
                     if (hasBandedRows) {
                         const backgroundColor = color(index);
                         cell.td.style.backgroundColor = backgroundColor;
