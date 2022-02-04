@@ -1,19 +1,6 @@
-import { TableBorderFormat, TableFormat } from 'roosterjs-editor-types';
+import { TableFormat } from 'roosterjs-editor-types';
 
 const TABLE_STYLE_INFO = 'roosterTableInfo';
-const DEFAULT_FORMAT: TableFormat = {
-    topBorderColor: '#ABABAB',
-    bottomBorderColor: '#ABABAB',
-    verticalBorderColor: '#ABABAB',
-    hasHeaderRow: false,
-    hasFirstColumn: false,
-    hasBandedRows: false,
-    hasBandedColumns: false,
-    bgColorEven: null,
-    bgColorOdd: '#ABABAB20',
-    headerRowColor: '#ABABAB',
-    tableBorderFormat: TableBorderFormat.DEFAULT,
-};
 
 /**
  * @internal
@@ -23,7 +10,18 @@ const DEFAULT_FORMAT: TableFormat = {
  */
 export function getTableFormatInfo(table: HTMLTableElement) {
     const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]) as TableFormat;
-    return checkIfTableFormatIsValid(obj) ? obj : DEFAULT_FORMAT;
+    return checkIfTableFormatIsValid(obj) ? obj : null;
+}
+
+/**
+ * Save the format info of a table
+ * @param table The table the info will be saved
+ * @param format The format of the table
+ */
+export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
+    if (table && format) {
+        table.dataset[TABLE_STYLE_INFO] = JSON.stringify(format);
+    }
 }
 
 function checkIfTableFormatIsValid(format: TableFormat) {
@@ -92,24 +90,4 @@ function safeParseJSON(json: string | undefined): any {
     } catch {
         return null;
     }
-}
-
-/**
- * @internal
- * Save the format info of a table
- * @param table The table the info will be saved
- * @param format The format of the table
- */
-export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
-    if (checkIfItIsDefault(format)) {
-        return;
-    }
-    if (table && format) {
-        table.dataset[TABLE_STYLE_INFO] = JSON.stringify(format);
-    }
-}
-
-function checkIfItIsDefault(format: TableFormat) {
-    const formatKeys = Object.keys(DEFAULT_FORMAT) as Array<keyof TableFormat>;
-    return formatKeys.every(key => format[key] === DEFAULT_FORMAT[key]);
 }

@@ -103,7 +103,7 @@ function onDraggingHorizontal(
         }
     });
 
-    vTable.writeBack(true /** isResized **/);
+    vTable.writeBack();
     return true;
 }
 
@@ -155,7 +155,7 @@ function onDraggingVertical(
         });
     }
 
-    vTable.writeBack(true /** isResized **/);
+    vTable.writeBack();
     return true;
 }
 

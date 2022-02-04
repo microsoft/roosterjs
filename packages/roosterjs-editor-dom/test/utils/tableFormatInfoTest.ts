@@ -27,6 +27,7 @@ function createTable(format: TableFormat) {
     div.innerHTML = '<table id=id1><tr><td></td></tr><tr><td></td></tr> <tr><td></td></tr></table>';
     let node = document.getElementById(id) as HTMLTableElement;
     let vTable = new VTable(node);
+    saveTableInfo(node, format);
     vTable.applyFormat(format);
     vTable.writeBack();
     return node;

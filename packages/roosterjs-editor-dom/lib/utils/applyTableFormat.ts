@@ -1,0 +1,299 @@
+import changeElementTag from './changeElementTag';
+import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
+const TRANSPARENT = 'transparent';
+const TABLE_CELL_TAG_NAME = 'TD';
+const TABLE_HEADER_TAG_NAME = 'TH';
+const CELL_SHADE = 'cellShade';
+
+/**
+ * @internal
+ * Apply the given table format to this virtual table
+ * @param format Table format to apply
+ */
+export default function applyTableFormat(cells: VCell[][], format: Partial<TableFormat>) {
+    if (format) {
+        return;
+    }
+    setBordersType(cells, format);
+    setColor(cells, format);
+    setFirstColumnFormat(cells, format);
+    setHeaderRowFormat(cells, format);
+}
+
+/**
+ * Check if the cell has shade
+ * @param cell
+ * @returns
+ */
+function hasCellShade(cell: VCell) {
+    if (!cell.td) {
+        return false;
+    }
+    const colorShade = cell.td.dataset[CELL_SHADE];
+    return colorShade ? true : false;
+}
+
+/**
+ * Set color to the table
+ * @param format the format that must be applied
+ */
+function setColor(cells: VCell[][], format: TableFormat) {
+    const color = (index: number) => (index % 2 === 0 ? format.bgColorEven : format.bgColorOdd);
+    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
+    const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven ? true : false;
+    cells.forEach((row, index) => {
+        row.forEach(cell => {
+            if (cell.td && !hasCellShade(cell)) {
+                if (hasBandedRows) {
+                    const backgroundColor = color(index);
+                    cell.td.style.background = getBorderStyle(backgroundColor);
+                } else if (shouldColorWholeTable) {
+                    cell.td.style.background = getBorderStyle(format.bgColorOdd);
+                } else {
+                    cell.td.style.background = getBorderStyle(null);
+                }
+            }
+        });
+    });
+    if (hasBandedColumns) {
+        cells.forEach(row => {
+            row.forEach((cell, index) => {
+                const backgroundColor = color(index);
+                if (cell.td && backgroundColor && !hasCellShade(cell)) {
+                    cell.td.style.backgroundColor = backgroundColor;
+                }
+            });
+        });
+    }
+}
+
+/**
+ * Set color to borders of an table
+ * @param format
+ * @returns
+ */
+function setBorderColors(td: HTMLTableCellElement, format: Partial<TableFormat>) {
+    td.style.borderTop = getBorderStyle(format.topBorderColor);
+    td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
+    td.style.borderRight = getBorderStyle(format.verticalBorderColor);
+    td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
+}
+
+/**
+ * Format the border type
+ * @returns
+ */
+function formatBorders(
+    format: TableFormat,
+    td: HTMLTableCellElement,
+    isFirstRow: boolean,
+    isLastRow: boolean,
+    isFirstColumn: boolean,
+    isLastColumn: boolean
+) {
+    setBorderColors(td, format);
+    switch (format.tableBorderFormat) {
+        case TableBorderFormat.DEFAULT:
+            return;
+        case TableBorderFormat.LIST_WITH_SIDE_BORDERS:
+            if (!isFirstColumn) {
+                td.style.borderLeftColor = TRANSPARENT;
+            }
+            if (!isLastColumn) {
+                td.style.borderRightColor = TRANSPARENT;
+            }
+
+            break;
+        case TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL:
+            if (!isFirstRow) {
+                td.style.borderTopColor = TRANSPARENT;
+            }
+
+            if (!isLastRow && !isFirstRow) {
+                td.style.borderBottomColor = TRANSPARENT;
+            }
+            if (!isFirstColumn) {
+                td.style.borderLeftColor = TRANSPARENT;
+            }
+            if (!isLastColumn && !isFirstColumn) {
+                td.style.borderRightColor = TRANSPARENT;
+            }
+            if (isFirstColumn && isFirstRow) {
+                td.style.borderRightColor = TRANSPARENT;
+            }
+
+            break;
+        case TableBorderFormat.NO_HEADER_BORDERS:
+            if (isFirstRow) {
+                td.style.borderTopColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
+            }
+            if (isFirstColumn) {
+                td.style.borderLeftColor = TRANSPARENT;
+            }
+            if (isLastColumn) {
+                td.style.borderRightColor = TRANSPARENT;
+            }
+            break;
+        case TableBorderFormat.NO_SIDE_BORDERS:
+            if (isFirstColumn) {
+                td.style.borderLeftColor = TRANSPARENT;
+            }
+            if (isLastColumn) {
+                td.style.borderRightColor = TRANSPARENT;
+            }
+            break;
+        case TableBorderFormat.ESPECIAL_TYPE_1:
+            if (isFirstRow) {
+                td.style.borderRightColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
+            }
+            if (isFirstColumn) {
+                td.style.borderBottomColor = TRANSPARENT;
+                td.style.borderTopColor = TRANSPARENT;
+            }
+            if (isFirstRow && isFirstColumn) {
+                td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
+                td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
+                td.style.borderTop = getBorderStyle(format.topBorderColor);
+            }
+            break;
+        case TableBorderFormat.ESPECIAL_TYPE_2:
+            if (isFirstRow) {
+                td.style.borderRightColor = TRANSPARENT;
+                td.style.borderLeftColor = TRANSPARENT;
+            }
+            if (isFirstColumn) {
+                td.style.borderBottomColor = TRANSPARENT;
+                td.style.borderTopColor = TRANSPARENT;
+            }
+            if (isFirstRow && isFirstColumn) {
+                td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
+                td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
+                td.style.borderTop = getBorderStyle(format.topBorderColor);
+            }
+            if (!isFirstRow && !isFirstColumn) {
+                td.style.borderLeftColor = TRANSPARENT;
+                td.style.borderBottomColor = TRANSPARENT;
+                td.style.borderTopColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
+            }
+
+            break;
+        case TableBorderFormat.ESPECIAL_TYPE_3:
+            if (isFirstRow) {
+                td.style.borderLeftColor = TRANSPARENT;
+                td.style.borderTopColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
+            }
+            if (isFirstColumn) {
+                td.style.borderLeftColor = TRANSPARENT;
+                td.style.borderTopColor = TRANSPARENT;
+                td.style.borderBottomColor = TRANSPARENT;
+            }
+            if (!isFirstRow && !isFirstColumn) {
+                td.style.borderLeftColor = TRANSPARENT;
+                td.style.borderBottomColor = TRANSPARENT;
+                td.style.borderTopColor = TRANSPARENT;
+                td.style.borderRightColor = TRANSPARENT;
+            }
+            if (isFirstRow && isFirstColumn) {
+                td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
+            }
+            break;
+    }
+}
+
+/**
+ * Organize the borders of table according to a border type
+ * @param format
+ * @returns
+ */
+function setBordersType(cells: VCell[][], format: TableFormat) {
+    cells.forEach((row, rowIndex) => {
+        row.forEach((cell, cellIndex) => {
+            if (cell.td) {
+                formatBorders(
+                    format,
+                    cell.td,
+                    rowIndex === 0,
+                    rowIndex === cells.length - 1,
+                    cellIndex === 0,
+                    cellIndex === row.length - 1
+                );
+            }
+        });
+    });
+}
+
+/**
+ * Apply custom design to the first table column
+ * @param format
+ * @returns
+ */
+function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
+    if (!format.hasFirstColumn) {
+        cells.forEach(row => {
+            row.forEach((cell, cellIndex) => {
+                if (cell.td && cellIndex === 0) {
+                    cell.td = changeElementTag(
+                        cell.td,
+                        TABLE_CELL_TAG_NAME
+                    ) as HTMLTableCellElement;
+                    cell.td.scope = '';
+                }
+            });
+        });
+        return;
+    }
+    cells.forEach((row, rowIndex) => {
+        row.forEach((cell, cellIndex) => {
+            if (cell.td && cellIndex === 0) {
+                if (rowIndex !== 0) {
+                    cell.td.style.borderTopColor = TRANSPARENT;
+                    cell.td.style.backgroundColor = TRANSPARENT;
+                }
+                if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
+                    cell.td.style.borderBottomColor = TRANSPARENT;
+                }
+                cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
+                cell.td.scope = 'col';
+            }
+        });
+    });
+}
+
+/**
+ * Apply custom design to the Header Row
+ * @param format
+ * @returns
+ */
+function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
+    if (!format.hasHeaderRow) {
+        cells[0].forEach(cell => {
+            if (cell.td) {
+                cell.td = changeElementTag(cell.td, TABLE_CELL_TAG_NAME) as HTMLTableCellElement;
+                cell.td.scope = '';
+            }
+        });
+        return;
+    }
+    cells[0].forEach(cell => {
+        if (cell.td && format.headerRowColor) {
+            cell.td.style.backgroundColor = format.headerRowColor;
+            cell.td.style.borderRightColor = format.headerRowColor;
+            cell.td.style.borderLeftColor = format.headerRowColor;
+            cell.td.style.borderTopColor = format.headerRowColor;
+            cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
+            cell.td.scope = 'row';
+        }
+    });
+}
+
+function getBorderStyle(style?: string | null): string {
+    if (!style) {
+        return 'solid 1px transparent';
+    }
+    return 'solid 1px ' + style;
+}

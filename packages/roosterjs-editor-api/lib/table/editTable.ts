@@ -12,7 +12,7 @@ export default function editTable(editor: IEditor, operation: TableOperation) {
         editor.addUndoSnapshot((start, end) => {
             let vtable = new VTable(td);
             vtable.edit(operation);
-            vtable.writeBack(true /** isResized */);
+            vtable.writeBack();
             editor.focus();
 
             let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);

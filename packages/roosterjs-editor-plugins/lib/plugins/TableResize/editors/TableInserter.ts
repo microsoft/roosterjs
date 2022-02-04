@@ -97,7 +97,7 @@ class TableInsertHandler implements Disposable {
         }
 
         vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);
-        vtable.writeBack(true);
+        vtable.writeBack();
 
         this.onInsert();
     };
