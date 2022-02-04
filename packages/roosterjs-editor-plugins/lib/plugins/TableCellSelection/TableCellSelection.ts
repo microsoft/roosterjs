@@ -96,11 +96,14 @@ export default class TableCellSelection implements EditorPlugin {
         if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.ContentChanged:
-                    this.editor.queryElements('.' + TABLE_CELL_SELECTED, cell => {
-                        if (cell.style.backgroundColor != common.HIGHLIGHT_COLOR) {
-                            cell.dataset[common.TEMP_BACKGROUND_COLOR] = cell.style.backgroundColor;
-                        }
-                    });
+                    if (event.source == 'Format') {
+                        this.editor.queryElements('.' + TABLE_CELL_SELECTED, cell => {
+                            if (cell.style.backgroundColor != common.HIGHLIGHT_COLOR) {
+                                cell.dataset[common.TEMP_BACKGROUND_COLOR] =
+                                    cell.style.backgroundColor;
+                            }
+                        });
+                    }
                     break;
                 case PluginEventType.ExtractContentWithDom:
                     clearSelectedTables(event.clonedRoot);
