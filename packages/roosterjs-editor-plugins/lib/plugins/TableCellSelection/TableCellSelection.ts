@@ -4,7 +4,7 @@ import { getCellCoordinates } from './utils/getCellCoordinates';
 import { highlight } from './utils/highlight';
 import { highlightAll } from './utils/highlightAll';
 import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
-import { tableCellSelectionCommon } from './utils/tableCellSelectionCommon';
+import { tableCellSelectionCommon as common } from './utils/tableCellSelectionCommon';
 import {
     BeforeCutCopyEvent,
     BuildInEditFeature,
@@ -32,8 +32,8 @@ import {
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
-const TABLE_SELECTED = tableCellSelectionCommon.TABLE_SELECTED;
-const TABLE_CELL_SELECTED = tableCellSelectionCommon.TABLE_CELL_SELECTED;
+const TABLE_SELECTED = common.TABLE_SELECTED;
+const TABLE_CELL_SELECTED = common.TABLE_CELL_SELECTED;
 const LEFT_CLICK = 1;
 const RIGHT_CLICK = 3;
 
@@ -95,6 +95,13 @@ export default class TableCellSelection implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
+                case PluginEventType.ContentChanged:
+                    this.editor.queryElements('.' + TABLE_CELL_SELECTED, cell => {
+                        if (cell.style.backgroundColor != common.HIGHLIGHT_COLOR) {
+                            cell.dataset[common.TEMP_BACKGROUND_COLOR] = cell.style.backgroundColor;
+                        }
+                    });
+                    break;
                 case PluginEventType.ExtractContentWithDom:
                     clearSelectedTables(event.clonedRoot);
                     break;
