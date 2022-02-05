@@ -2,10 +2,6 @@ import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
 import { SizeTransformer } from 'roosterjs-editor-types';
 
-function defaultTransformer(size: number) {
-    return size;
-}
-
 /**
  * @internal
  * A helper class to help manage drag and drop to an HTML element
@@ -32,7 +28,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private sizeTransformer: SizeTransformer
     ) {
         trigger.addEventListener('mousedown', this.onMouseDown);
-        this.sizeTransformer = sizeTransformer || defaultTransformer;
+        this.sizeTransformer = sizeTransformer;
     }
 
     /**

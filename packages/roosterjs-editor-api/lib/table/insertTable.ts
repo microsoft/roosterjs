@@ -36,15 +36,7 @@ export default function insertTable(
     editor.focus();
     editor.addUndoSnapshot(() => {
         let vtable = new VTable(table);
-        vtable.applyFormat(
-            format || {
-                bgColorEven: '#FFF',
-                bgColorOdd: '#FFF',
-                topBorderColor: '#ABABAB',
-                bottomBorderColor: '#ABABAB',
-                verticalBorderColor: '#ABABAB',
-            }
-        );
+        vtable.applyFormat(format);
         vtable.writeBack();
         editor.insertNode(fragment);
         editor.runAsync(editor =>

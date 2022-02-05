@@ -2,16 +2,182 @@ import * as Color from 'color';
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import ColorPicker from '../../../colorPicker/ColorPicker';
+import { formatTable } from 'roosterjs-editor-api';
 import { getTagOfNode, VTable } from 'roosterjs-editor-dom';
-import { IEditor, PositionType, TableFormat, TableOperation, VCell } from 'roosterjs-editor-types';
+import {
+    IEditor,
+    PositionType,
+    TableBorderFormat,
+    TableFormat,
+    TableOperation,
+    VCell,
+} from 'roosterjs-editor-types';
 
-const TABLE_FORMAT = {
-    default: createTableFormat('#FFF', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
-    lightLines: createTableFormat('#FFF', '#FFF', null, '#92C0E0'),
-    towTones: createTableFormat('#C0E4FF', '#FFF'),
-    lightBands: createTableFormat('#D8D8D8', '#FFF'),
-    grid: createTableFormat('#D8D8D8', '#FFF', '#ABABAB', '#ABABAB', '#ABABAB'),
-    clear: createTableFormat('#FFF', '#FFF'),
+const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) => TableFormat> = {
+    DEFAULT: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.DEFAULT /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    DEFAULT_WITH_BACKGROUND_COLOR: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.DEFAULT /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    GRID_WITHOUT_BORDER: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            true /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.NO_SIDE_BORDERS /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    LIST: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            null /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.DEFAULT /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    BANDED_ROWS_FIRST_COLUMN_NO_BORDER: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    EXTERNAL: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.LIST_WITH_SIDE_BORDERS /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    NO_HEADER_VERTICAL: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.NO_HEADER_BORDERS /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    ESPECIAL_TYPE_1: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.ESPECIAL_TYPE_1 /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    ESPECIAL_TYPE_2: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.ESPECIAL_TYPE_2 /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+    ESPECIAL_TYPE_3: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.ESPECIAL_TYPE_3 /** tableBorderFormat */,
+            lightColor /** bgColorEven */,
+            null /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
+};
+
+const PREDEFINED_STYLES_KEYS = {
+    default: 'DEFAULT',
+    gridWithoutBorder: 'GRID_WITHOUT_BORDER',
+    list: 'LIST',
+    bandedRowsFirstColumnNoBorder: 'BANDED_ROWS_FIRST_COLUMN_NO_BORDER',
+    defaultWithBackgroundColor: 'DEFAULT_WITH_BACKGROUND_COLOR',
+    external: 'EXTERNAL',
+    noHeader: 'NO_HEADER_VERTICAL',
+    especialType1: 'ESPECIAL_TYPE_1',
+    especialType2: 'ESPECIAL_TYPE_2',
+    especialType3: 'ESPECIAL_TYPE_3',
+};
+
+const TABLE_COLORS: Record<string, string> = {
+    transparent: 'transparent',
+    black: '#000000',
+    blue: '#0C64C0',
+    orange: '#DE6A19',
+    yellow: '#DCBE22',
+    red: '#ED5C57',
+    purple: '#B36AE2',
+    green: '#0C882A',
 };
 
 interface VTablePaneState {
@@ -57,8 +223,7 @@ function TableCell(props: {
 }
 
 export default class VTablePane extends React.Component<ApiPaneProps, VTablePaneState> {
-    private evenBgColor = React.createRef<HTMLInputElement>();
-    private oddBgColor = React.createRef<HTMLInputElement>();
+    private bgColor = React.createRef<HTMLInputElement>();
     private topBorderColor = React.createRef<HTMLInputElement>();
     private bottomBorderColor = React.createRef<HTMLInputElement>();
     private verticalBorderColor = React.createRef<HTMLInputElement>();
@@ -196,23 +361,97 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                 <th colSpan={2}>Format Table</th>
                             </tr>
                             <tr>
+                                <td>State:</td>
+                                <td>
+                                    {this.renderSetHeaderRowButton(editor)}
+                                    {this.renderSetFirstColumnButton(editor)}
+                                    {this.renderSetBandedColumnButton(editor)}
+                                    {this.renderSetBandedRowButton(editor)}
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Predefined:</td>
                                 <td>
-                                    {this.renderFormatTableButton('Default', TABLE_FORMAT.default)}
-                                    {this.renderFormatTableButton('Grid', TABLE_FORMAT.grid)}
                                     {this.renderFormatTableButton(
-                                        'Light lines',
-                                        TABLE_FORMAT.lightLines
+                                        'Default',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.default](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+
+                                    {this.renderFormatTableButton(
+                                        'Grid without border',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.gridWithoutBorder](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+
+                                    {this.renderFormatTableButton(
+                                        'List',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.list](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
                                     )}
                                     {this.renderFormatTableButton(
-                                        'Two tones',
-                                        TABLE_FORMAT.towTones
+                                        'Banded Row and first column and no border',
+                                        PREDEFINED_STYLES[
+                                            PREDEFINED_STYLES_KEYS.bandedRowsFirstColumnNoBorder
+                                        ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
+                                        editor
                                     )}
                                     {this.renderFormatTableButton(
-                                        'Light bands',
-                                        TABLE_FORMAT.lightBands
+                                        'Default with background color',
+                                        PREDEFINED_STYLES[
+                                            PREDEFINED_STYLES_KEYS.defaultWithBackgroundColor
+                                        ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
+                                        editor
                                     )}
-                                    {this.renderFormatTableButton('Clear', TABLE_FORMAT.clear)}
+                                    {this.renderFormatTableButton(
+                                        'External',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.external](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'No Header Vertical',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.noHeader](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'Especial type 1',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType1](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'Especial type 2',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType2](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
+                                    {this.renderFormatTableButton(
+                                        'Especial type 3',
+                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType3](
+                                            TABLE_COLORS.blue,
+                                            `${TABLE_COLORS.blue}20`
+                                        ),
+                                        editor
+                                    )}
                                 </td>
                             </tr>
                             <tr>
@@ -220,8 +459,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                     Customized Colors:
                                 </th>
                             </tr>
-                            <CustomizeFormatRow text="Even row" inputRef={this.evenBgColor} />
-                            <CustomizeFormatRow text="Odd row" inputRef={this.oddBgColor} />
+                            <CustomizeFormatRow text="BackgroundColor" inputRef={this.bgColor} />
                             <CustomizeFormatRow text="Top border" inputRef={this.topBorderColor} />
                             <CustomizeFormatRow
                                 text="Bottom border"
@@ -231,6 +469,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                 text="Vertical border"
                                 inputRef={this.verticalBorderColor}
                             />
+
                             <tr>
                                 <td
                                     colSpan={2}
@@ -238,6 +477,12 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                     onClick={this.onCustomizeFormat}>
                                     <button className={styles.button}>Apply Format</button>
                                 </td>
+                            </tr>
+
+                            <tr>
+                                <th colSpan={2} className={styles.buttonRow}>
+                                    Style Info:
+                                </th>
                             </tr>
                         </table>
                         <button onClick={this.onWriteBack}>Write back</button>
@@ -273,12 +518,86 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
         );
     }
 
-    private renderFormatTableButton(text: string, format: TableFormat): JSX.Element {
+    private renderSetHeaderRowButton(editor: IEditor): JSX.Element {
         return (
             <button
                 className={styles.button}
                 onClick={() => {
-                    this.state.vtable.applyFormat(format);
+                    formatTable(
+                        editor,
+                        setHeaderRow(this.state.vtable.table),
+                        this.state.vtable.table
+                    );
+
+                    this.forceUpdate();
+                }}>
+                Header Row
+            </button>
+        );
+    }
+
+    private renderSetFirstColumnButton(editor: IEditor): JSX.Element {
+        return (
+            <button
+                className={styles.button}
+                onClick={() => {
+                    formatTable(
+                        editor,
+                        setFirstColumn(this.state.vtable.table),
+                        this.state.vtable.table
+                    );
+
+                    this.forceUpdate();
+                }}>
+                First Column
+            </button>
+        );
+    }
+    private renderSetBandedColumnButton(editor: IEditor): JSX.Element {
+        return (
+            <button
+                className={styles.button}
+                onClick={() => {
+                    formatTable(
+                        editor,
+                        setBandedColumn(this.state.vtable.table),
+                        this.state.vtable.table
+                    );
+
+                    this.forceUpdate();
+                }}>
+                Banded Column
+            </button>
+        );
+    }
+    private renderSetBandedRowButton(editor: IEditor): JSX.Element {
+        return (
+            <button
+                className={styles.button}
+                onClick={() => {
+                    formatTable(
+                        editor,
+                        setBandedRow(this.state.vtable.table),
+                        this.state.vtable.table
+                    );
+
+                    this.forceUpdate();
+                }}>
+                Banded Row
+            </button>
+        );
+    }
+
+    private renderFormatTableButton(
+        text: string,
+        format: TableFormat,
+        editor: IEditor
+    ): JSX.Element {
+        return (
+            <button
+                className={styles.button}
+                onClick={() => {
+                    formatTable(editor, format, this.state.vtable.table);
                     this.forceUpdate();
                 }}>
                 {text}
@@ -288,8 +607,6 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
 
     private onCustomizeFormat = () => {
         const format = createTableFormat(
-            this.evenBgColor.current.value || undefined,
-            this.oddBgColor.current.value || undefined,
             this.topBorderColor.current.value || undefined,
             this.bottomBorderColor.current.value || undefined,
             this.verticalBorderColor.current.value || undefined
@@ -313,19 +630,59 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
 }
 
 function createTableFormat(
-    bgColorEven?: string,
-    bgColorOdd?: string,
     topBorder?: string,
     bottomBorder?: string,
-    verticalBorder?: string
+    verticalBorder?: string,
+    bandedRows?: boolean,
+    bandedColumns?: boolean,
+    headerRow?: boolean,
+    firstColumn?: boolean,
+    borderFormat?: TableBorderFormat,
+    bgColorEven?: string,
+    bgColorOdd?: string,
+    headerRowColor?: string
 ): TableFormat {
     return {
-        bgColorEven: bgColorEven,
-        bgColorOdd: bgColorOdd,
         topBorderColor: topBorder,
         bottomBorderColor: bottomBorder,
         verticalBorderColor: verticalBorder,
+        hasBandedRows: bandedRows,
+        bgColorEven: bgColorEven,
+        bgColorOdd: bgColorOdd,
+        hasBandedColumns: bandedColumns,
+        hasHeaderRow: headerRow,
+        headerRowColor: headerRowColor,
+        hasFirstColumn: firstColumn,
+        tableBorderFormat: borderFormat,
     };
+}
+
+function setHeaderRow(table: HTMLTableElement): TableFormat {
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
+    format.hasHeaderRow = !format.hasHeaderRow;
+    return format;
+}
+
+function setFirstColumn(table: HTMLTableElement): TableFormat {
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
+    format.hasFirstColumn = !format.hasFirstColumn;
+    return format;
+}
+
+function setBandedColumn(table: HTMLTableElement): TableFormat {
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
+    format.hasBandedColumns = !format.hasBandedColumns;
+    return format;
+}
+
+function setBandedRow(table: HTMLTableElement): TableFormat {
+    const vtable = new VTable(table);
+    const format = vtable.formatInfo;
+    format.hasBandedRows = !format.hasBandedRows;
+    return format;
 }
 
 function CustomizeFormatRow(props: { text: string; inputRef: React.RefObject<HTMLInputElement> }) {

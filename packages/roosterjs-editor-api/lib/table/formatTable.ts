@@ -9,7 +9,7 @@ import { VTable } from 'roosterjs-editor-dom';
  */
 export default function formatTable(
     editor: IEditor,
-    format: Partial<TableFormat>,
+    format: TableFormat,
     table?: HTMLTableElement
 ) {
     table = table || (editor.getElementAtCursor('TABLE') as HTMLTableElement);
