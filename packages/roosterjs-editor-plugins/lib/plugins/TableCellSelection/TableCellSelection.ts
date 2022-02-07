@@ -1,9 +1,7 @@
-import { deSelectAll } from './utils/deSelectAll';
 import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
-import { highlightAll } from './utils/highlightAll';
+import { normalizeTableSelection } from './utils/normalizeTableSelection';
 import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
-import { tableCellSelectionCommon } from './utils/tableCellSelectionCommon';
 import {
     BeforeCutCopyEvent,
     BuildInEditFeature,
@@ -31,8 +29,6 @@ import {
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
-const TABLE_SELECTED = tableCellSelectionCommon.TABLE_SELECTED;
-const TABLE_CELL_SELECTED = tableCellSelectionCommon.TABLE_CELL_SELECTED;
 const LEFT_CLICK = 1;
 const RIGHT_CLICK = 3;
 
@@ -83,6 +79,7 @@ export default class TableCellSelection implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
+        this.editor.setTableSelection(null, null);
         this.removeMouseUpEventListener();
         this.editor = null;
     }
@@ -94,9 +91,6 @@ export default class TableCellSelection implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.ExtractContentWithDom:
-                    clearSelectedTables(event.clonedRoot);
-                    break;
                 case PluginEventType.BeforeCutCopy:
                     this.handleBeforeCutCopy(event);
                     break;
@@ -153,23 +147,25 @@ export default class TableCellSelection implements EditorPlugin {
      * @param event plugin event
      */
     private handleBeforeCutCopy(event: BeforeCutCopyEvent) {
-        const clonedTable = event.clonedRoot.querySelector('table.' + TABLE_SELECTED);
-        if (clonedTable) {
-            const clonedVTable = new VTable(clonedTable as HTMLTableElement);
-            clonedVTable.selection = this.tableRange;
-            removeCellsOutsideSelection(clonedVTable);
-            clonedVTable.writeBack();
+        const selection = this.editor.getSelectionRangeEx();
+        if (selection.type == SelectionRangeTypes.TableSelection) {
+            const clonedTable = event.clonedRoot.querySelector('table#' + selection.table.id);
+            if (clonedTable) {
+                const clonedVTable = new VTable(clonedTable as HTMLTableElement);
+                clonedVTable.selection = this.tableRange;
+                removeCellsOutsideSelection(clonedVTable);
+                clonedVTable.writeBack();
 
-            event.range.selectNode(clonedTable);
+                event.range.selectNode(clonedTable);
 
-            if (event.isCut) {
-                forEachSelectedCell(this.vTable, cell => {
-                    if (cell?.td) {
-                        deleteNodeContents(cell.td, this.editor);
-                    }
-                });
+                if (event.isCut) {
+                    forEachSelectedCell(this.vTable, cell => {
+                        if (cell?.td) {
+                            deleteNodeContents(cell.td, this.editor);
+                        }
+                    });
+                }
             }
-            clearSelectedTables(event.clonedRoot);
         }
     }
 
@@ -208,7 +204,7 @@ export default class TableCellSelection implements EditorPlugin {
                     //When selection start and end is inside of the same table
                     this.handleKeySelectionInsideTable(event);
                 } else if (this.tableSelection) {
-                    clearSelectedTableCells(this.editor);
+                    this.editor.setTableSelection(null, null);
                     this.tableSelection = false;
                 }
             });
@@ -282,19 +278,27 @@ export default class TableCellSelection implements EditorPlugin {
         if (which == RIGHT_CLICK && this.tableSelection) {
             //If the user is right clicking To open context menu
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);
-            if (td?.classList.contains(TABLE_CELL_SELECTED)) {
-                this.firstTarget = null;
-                this.lastTarget = null;
+            const coord = getCellCoordinates(this.vTable, td);
+            if (coord) {
+                const selection = normalizeTableSelection(this.tableRange);
+                const { firstCell, lastCell } = selection;
+                if (
+                    coord.y >= firstCell.y &&
+                    coord.y <= lastCell.y &&
+                    coord.x >= firstCell.x &&
+                    coord.x <= lastCell.x
+                ) {
+                    this.firstTarget = this.vTable.getCell(firstCell.y, firstCell.x).td;
+                    this.lastTarget = this.vTable.getCell(lastCell.y, lastCell.x).td;
 
-                this.editor.queryElements('td.' + TABLE_CELL_SELECTED, node => {
-                    this.firstTarget = this.firstTarget || node;
-                    this.lastTarget = node;
-                });
-                const selection = this.editor.getDocument().defaultView.getSelection();
-                selection.setBaseAndExtent(this.firstTarget, 0, this.lastTarget, 0);
-                this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
+                    if (this.firstTarget && this.lastTarget) {
+                        const selection = this.editor.getDocument().defaultView.getSelection();
+                        selection.setBaseAndExtent(this.firstTarget, 0, this.lastTarget, 0);
+                        this.editor.setTableSelection(this.vTable.table, this.vTable.selection);
+                    }
 
-                return;
+                    return;
+                }
             }
         }
         this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
@@ -407,7 +411,7 @@ export default class TableCellSelection implements EditorPlugin {
     };
 
     private restoreSelection() {
-        clearSelectedTableCells(this.editor);
+        this.editor.setTableSelection(null, null);
         this.tableSelection = false;
         const isBeginAboveEnd = this.isAfter(this.firstTarget, this.lastTarget);
         const targetPosition = new Position(
@@ -448,10 +452,6 @@ export default class TableCellSelection implements EditorPlugin {
                     TABLE_CELL_SELECTOR,
                     this.lastTarget
                 );
-                (this.firstTarget as HTMLElement).querySelectorAll('table').forEach(table => {
-                    const vTable = new VTable(table);
-                    highlightAll(vTable);
-                });
             }
 
             if (this.firstTable) {
@@ -518,17 +518,8 @@ export default class TableCellSelection implements EditorPlugin {
     //#endregion
 
     //#region utils
-    private clearTableCellSelection() {
-        if (this.editor?.hasFocus()) {
-            clearSelectedTableCells(this.editor);
-        }
-    }
-
     private clearState() {
-        this.clearTableCellSelection();
-        if (this?.vTable?.table) {
-            this.editor.setTableSelection(this.vTable.table, null);
-        }
+        this.editor.setTableSelection(null, null);
         this.vTable = null;
         this.firstTarget = null;
         this.lastTarget = null;
@@ -730,19 +721,4 @@ function getTableAtCursor(editor: IEditor, node: Node) {
         return editor.getElementAtCursor('table', node);
     }
     return null;
-}
-
-function clearSelectedTableCells(input: IEditor) {
-    input.queryElements('table.' + TABLE_SELECTED, deselectTable);
-}
-
-function clearSelectedTables(element: HTMLElement) {
-    element.querySelectorAll('table.' + TABLE_SELECTED).forEach(deselectTable);
-}
-
-function deselectTable(element: HTMLElement) {
-    if (safeInstanceOf(element, 'HTMLTableElement')) {
-        const vTable = new VTable(element);
-        deSelectAll(vTable);
-    }
 }
