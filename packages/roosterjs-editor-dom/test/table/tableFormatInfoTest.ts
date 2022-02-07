@@ -1,5 +1,5 @@
 import VTable from '../../lib/table/VTable';
-import { getTableFormatInfo, saveTableInfo } from '../../lib/utils/tableFormatInfo';
+import { getTableFormatInfo, saveTableInfo } from '../../lib/table/tableFormatInfo';
 import { TableFormat } from 'roosterjs-editor-types';
 
 const TABLE_STYLE_INFO = 'roosterTableInfo';
@@ -27,7 +27,6 @@ function createTable(format: TableFormat) {
     div.innerHTML = '<table id=id1><tr><td></td></tr><tr><td></td></tr> <tr><td></td></tr></table>';
     let node = document.getElementById(id) as HTMLTableElement;
     let vTable = new VTable(node);
-    saveTableInfo(node, format);
     vTable.applyFormat(format);
     vTable.writeBack();
     return node;

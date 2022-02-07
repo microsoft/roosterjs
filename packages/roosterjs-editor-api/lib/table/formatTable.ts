@@ -1,8 +1,5 @@
 import { ChangeSource, IEditor, TableFormat } from 'roosterjs-editor-types';
-import { saveTableInfo } from 'roosterjs-editor-dom';
 import { VTable } from 'roosterjs-editor-dom';
-
-const CELL_SHADE = 'cellShade';
 
 /**
  * Format table
@@ -18,23 +15,11 @@ export default function formatTable(
     table = table || (editor.getElementAtCursor('TABLE') as HTMLTableElement);
     if (table) {
         editor.addUndoSnapshot((start, end) => {
-            saveTableInfo(table, format);
             let vtable = new VTable(table);
-            deleteCellShadeDataset(vtable);
             vtable.applyFormat(format);
             vtable.writeBack();
             editor.focus();
             editor.select(start, end);
         }, ChangeSource.Format);
     }
-}
-
-function deleteCellShadeDataset(vtable: VTable) {
-    vtable.cells.forEach(row => {
-        row.forEach(cell => {
-            if (cell.td && cell.td.dataset[CELL_SHADE]) {
-                delete cell.td.dataset[CELL_SHADE];
-            }
-        });
-    });
 }

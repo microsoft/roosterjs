@@ -3,7 +3,7 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
-import { getTableFormatInfo } from '../utils/tableFormatInfo';
+import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 
 import {
     SizeTransformer,
@@ -12,6 +12,8 @@ import {
     TableSelection,
     VCell,
 } from 'roosterjs-editor-types';
+
+const CELL_SHADE = 'cellShade';
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -36,11 +38,6 @@ export default class VTable {
      * Current column index
      */
     col: number;
-
-    /**
-     * Current format of the table
-     */
-    formatInfo: TableFormat;
 
     /**
      * Selected range of cells with the coordinates of the first and last cell selected.
@@ -92,7 +89,6 @@ export default class VTable {
                     }
                 }
             });
-            this.formatInfo = getTableFormatInfo(this.table);
             if (normalizeSize) {
                 this.normalizeSize(sizeTransformer);
             }
@@ -101,7 +97,6 @@ export default class VTable {
 
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
-     * @param isResized if the table was resized, the shaded cell should not be colored
      */
     writeBack() {
         if (this.cells) {
@@ -116,8 +111,9 @@ export default class VTable {
                     }
                 });
             });
-            if (this.formatInfo) {
-                this.applyFormat(this.formatInfo);
+            const formatInfo = this.getTableFormatInfo();
+            if (formatInfo) {
+                applyTableFormat(this.table, this.cells, formatInfo);
             }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
@@ -127,14 +123,35 @@ export default class VTable {
     /**
      * Apply the given table format to this virtual table
      * @param format Table format to apply
-     * @param isResized if the table was resized, the shaded cell should not be colored
      */
     applyFormat(format: Partial<TableFormat>) {
         if (!this.table || !format) {
             return;
         }
-        this.table.style.borderCollapse = 'collapse';
-        applyTableFormat(this.cells, format);
+        this.deleteCellShadeDataset(this.cells);
+        applyTableFormat(this.table, this.cells, format);
+        saveTableInfo(this.table, format);
+    }
+
+    /**
+     * Remove the cellshade dataset to apply a new style format at the cell.
+     * @param cells
+     */
+    private deleteCellShadeDataset(cells: VCell[][]) {
+        cells.forEach(row => {
+            row.forEach(cell => {
+                if (cell.td && cell.td.dataset[CELL_SHADE]) {
+                    delete cell.td.dataset[CELL_SHADE];
+                }
+            });
+        });
+    }
+
+    /**
+     * Get the format info of a table
+     */
+    getTableFormatInfo() {
+        return getTableFormatInfo(this.table);
     }
 
     /**

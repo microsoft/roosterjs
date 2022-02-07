@@ -10,10 +10,15 @@ const CELL_SHADE = 'cellShade';
  * Apply the given table format to this virtual table
  * @param format Table format to apply
  */
-export default function applyTableFormat(cells: VCell[][], format: Partial<TableFormat>) {
-    if (format) {
+export default function applyTableFormat(
+    table: HTMLTableElement,
+    cells: VCell[][],
+    format: Partial<TableFormat>
+) {
+    if (!format) {
         return;
     }
+    table.style.borderCollapse = 'collapse';
     setBordersType(cells, format);
     setColor(cells, format);
     setFirstColumnFormat(cells, format);
@@ -46,11 +51,11 @@ function setColor(cells: VCell[][], format: TableFormat) {
             if (cell.td && !hasCellShade(cell)) {
                 if (hasBandedRows) {
                     const backgroundColor = color(index);
-                    cell.td.style.background = getBorderStyle(backgroundColor);
+                    cell.td.style.backgroundColor = backgroundColor || TRANSPARENT;
                 } else if (shouldColorWholeTable) {
-                    cell.td.style.background = getBorderStyle(format.bgColorOdd);
+                    cell.td.style.backgroundColor = format.bgColorOdd || TRANSPARENT;
                 } else {
-                    cell.td.style.background = getBorderStyle(null);
+                    cell.td.style.backgroundColor = TRANSPARENT;
                 }
             }
         });
@@ -154,9 +159,9 @@ function formatBorders(
                 td.style.borderTopColor = TRANSPARENT;
             }
             if (isFirstRow && isFirstColumn) {
-                td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
-                td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
-                td.style.borderTop = getBorderStyle(format.topBorderColor);
+                td.style.borderLeftColor = format.verticalBorderColor || TRANSPARENT;
+                td.style.borderBottomColor = format.bottomBorderColor || TRANSPARENT;
+                td.style.borderTopColor = format.topBorderColor || TRANSPARENT;
             }
             break;
         case TableBorderFormat.ESPECIAL_TYPE_2:
@@ -169,9 +174,9 @@ function formatBorders(
                 td.style.borderTopColor = TRANSPARENT;
             }
             if (isFirstRow && isFirstColumn) {
-                td.style.borderLeft = getBorderStyle(format.verticalBorderColor);
-                td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
-                td.style.borderTop = getBorderStyle(format.topBorderColor);
+                td.style.borderLeftColor = format.verticalBorderColor || TRANSPARENT;
+                td.style.borderBottomColor = format.bottomBorderColor || TRANSPARENT;
+                td.style.borderTopColor = format.topBorderColor || TRANSPARENT;
             }
             if (!isFirstRow && !isFirstColumn) {
                 td.style.borderLeftColor = TRANSPARENT;
@@ -199,7 +204,7 @@ function formatBorders(
                 td.style.borderRightColor = TRANSPARENT;
             }
             if (isFirstRow && isFirstColumn) {
-                td.style.borderBottom = getBorderStyle(format.bottomBorderColor);
+                td.style.borderBottomColor = format.bottomBorderColor || TRANSPARENT;
             }
             break;
     }
@@ -291,9 +296,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
     });
 }
 
-function getBorderStyle(style?: string | null): string {
-    if (!style) {
-        return 'solid 1px transparent';
-    }
-    return 'solid 1px ' + style;
+function getBorderStyle(style?: string | null) {
+    const color = style ? style : 'transparent';
+    return 'solid 1px ' + color;
 }

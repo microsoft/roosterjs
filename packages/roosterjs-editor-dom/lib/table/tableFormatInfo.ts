@@ -14,6 +14,7 @@ export function getTableFormatInfo(table: HTMLTableElement) {
 }
 
 /**
+ * @internal
  * Save the format info of a table
  * @param table The table the info will be saved
  * @param format The format of the table

@@ -712,28 +712,28 @@ function createTableFormat(
 
 function setHeaderRow(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
-    const format = vtable.formatInfo;
+    const format = vtable.getTableFormatInfo();
     format.hasHeaderRow = !format.hasHeaderRow;
     return format;
 }
 
 function setFirstColumn(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
-    const format = vtable.formatInfo;
+    const format = vtable.getTableFormatInfo();
     format.hasFirstColumn = !format.hasFirstColumn;
     return format;
 }
 
 function setBandedColumn(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
-    const format = vtable.formatInfo;
+    const format = vtable.getTableFormatInfo();
     format.hasBandedColumns = !format.hasBandedColumns;
     return format;
 }
 
 function setBandedRow(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
-    const format = vtable.formatInfo;
+    const format = vtable.getTableFormatInfo();
     format.hasBandedRows = !format.hasBandedRows;
     return format;
 }

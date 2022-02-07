@@ -1,4 +1,4 @@
-import { Position, saveTableInfo, VTable } from 'roosterjs-editor-dom';
+import { Position, VTable } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
@@ -55,7 +55,6 @@ export default function insertTable(
 
     editor.focus();
     editor.addUndoSnapshot(() => {
-        saveTableInfo(table, format || DEFAULT_FORMAT);
         let vtable = new VTable(table);
         vtable.applyFormat(format || DEFAULT_FORMAT);
         vtable.writeBack();
