@@ -94,7 +94,6 @@ export default class TableCellSelection implements EditorPlugin {
         if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.EnteredShadowEdit:
-                    console.log();
                     const selection = this.editor.getSelectionRangeEx();
                     if (selection.type == SelectionRangeTypes.TableSelection) {
                         this.editor.select(selection.table, null);
@@ -104,7 +103,6 @@ export default class TableCellSelection implements EditorPlugin {
                     if (this.vTable && this.tableRange) {
                         const table = this.editor.queryElements('#' + this.vTable.table.id);
                         if (table.length == 1) {
-                            debugger;
                             this.editor.select(table[0] as HTMLTableElement, this.tableRange);
                         }
                     }
