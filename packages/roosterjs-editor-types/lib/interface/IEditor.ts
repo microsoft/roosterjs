@@ -6,6 +6,7 @@ import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
 import Region from './Region';
 import SelectionPath from './SelectionPath';
+import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
@@ -297,6 +298,13 @@ export default interface IEditor {
      * @returns True if content is selected, otherwise false
      */
     select(path: SelectionPath): boolean;
+
+    /**
+     * Select content using the Table Selection
+     * @param table to select
+     * @param coordinates first and last cell of the range
+     */
+    select(table: HTMLTableElement, coordinates: TableSelection): boolean;
 
     /**
      * Get current focused position. Return null if editor doesn't have focus at this time.

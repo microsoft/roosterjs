@@ -13,6 +13,7 @@ import { hasFocus } from './hasFocus';
 import { insertNode } from './insertNode';
 import { restoreUndoSnapshot } from './restoreUndoSnapshot';
 import { selectRange } from './selectRange';
+import { selectTable } from './selectTable';
 import { setContent } from './setContent';
 import { switchShadowEdit } from './switchShadowEdit';
 import { transformColor } from './transformColor';
@@ -40,4 +41,5 @@ export const coreApiMap: CoreApiMap = {
     switchShadowEdit,
     transformColor,
     triggerEvent,
+    selectTable,
 };
