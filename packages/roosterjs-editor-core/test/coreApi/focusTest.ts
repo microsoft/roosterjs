@@ -22,6 +22,7 @@ describe('focus', () => {
             scrollContainer: null,
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
+            tableSelectionRange: null,
         };
 
         focus(core);

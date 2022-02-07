@@ -42,6 +42,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             stopPrintableKeyboardEventPropagation: !options.allowKeyboardEventPropagation,
             contextMenuProviders:
                 options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
+            tableSelectionRange: null,
         };
     }
 
