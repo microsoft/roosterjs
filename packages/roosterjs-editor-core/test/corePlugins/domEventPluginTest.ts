@@ -37,6 +37,7 @@ describe('DOMEventPlugin', () => {
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: true,
             contextMenuProviders: [],
+            tableSelectionRange: null,
         });
 
         expect(addDomEventHandler).toHaveBeenCalled();
@@ -86,6 +87,7 @@ describe('DOMEventPlugin', () => {
             selectionRange: null,
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
+            tableSelectionRange: null,
         });
 
         expect(addDomEventHandler).toHaveBeenCalled();

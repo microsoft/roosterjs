@@ -151,7 +151,7 @@ describe('changeFontSize', () => {
         );
     });
 
-    it('Process in table selection', () => {
+    xit('Process in table selection', () => {
         runTest(
             '<div id="divToTest">' + TestHelper.tableSelectionContents[0] + '</div>',
             Browser.isFirefox
