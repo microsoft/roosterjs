@@ -41,7 +41,7 @@ export const selectTable: SelectTable = (
 
     unselect();
 
-    if (!table && !coordinates && styleElement) {
+    if (!coordinates && styleElement) {
         styleElement.parentElement.removeChild(styleElement);
         styleElement = null;
     }
@@ -96,10 +96,13 @@ function buildCss(
                 }
             }
         }
-        firstSelected =
-            firstSelected ||
-            table.querySelector('tr:nth-child(' + i + ')>td:nth-child(' + td1 + ')');
-        lastSelected = table.querySelector('tr:nth-child(' + i + ')>td:nth-child(' + td2 + ')')!;
+
+        const rowSelector = 'tr:nth-child(' + i + ')>';
+        const firstSelector = `${rowSelector}td:nth-child(${td1}),${rowSelector}th:nth-child(${td1})`;
+        const lastSelector = `${rowSelector}td:nth-child(${td2}),${rowSelector}th:nth-child(${td2})`;
+
+        firstSelected = table.querySelector(firstSelector);
+        lastSelected = table.querySelector(lastSelector)!;
         if (firstSelected && lastSelected) {
             const rowRange = new Range();
             rowRange.setStartBefore(firstSelected);
@@ -170,7 +173,6 @@ function ensureUniqueId(table: HTMLTableElement, doc?: Document): string {
     if (doc && !table.id) {
         //Ensure that:
         //  1. there are no elements with the same ID
-        //  2. No Style added for the same ID
         const getElement = () =>
             doc.getElementById(TABLE_ID) || document.getElementById(TABLE_ID + cont);
 
