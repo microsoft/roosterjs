@@ -46,4 +46,9 @@ export default interface LifecyclePluginState {
      * Cached selection path for original content
      */
     shadowEditSelectionPath: SelectionPath;
+
+    /**
+     * Cached table selection path for original content
+     */
+    shadowEditTableSelectionPath: SelectionPath[];
 }

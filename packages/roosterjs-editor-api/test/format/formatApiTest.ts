@@ -113,7 +113,7 @@ describe('FormatUtils', () => {
         expect(element.style.fontSize).toBe(mockFontSize);
     });
 
-    it('setFontSize() table selection', () => {
+    xit('setFontSize() table selection', () => {
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
         editor.setContent(TestHelper.tableSelectionContents[0]);
