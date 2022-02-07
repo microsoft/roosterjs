@@ -76,7 +76,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
     private onCutCopy(event: Event, isCut: boolean) {
         const selection = this.editor.getSelectionRangeEx();
-        debugger;
         if (selection && !selection.areAllCollapsed) {
             const originalRange = selection.ranges[0];
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
