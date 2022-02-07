@@ -38,6 +38,7 @@ describe('LifecyclePlugin', () => {
             experimentalFeatures: [],
             shadowEditSelectionPath: null,
             shadowEditFragment: null,
+            shadowEditTableSelectionPath: null,
             getDarkColor,
         });
 
@@ -90,6 +91,7 @@ describe('LifecyclePlugin', () => {
             experimentalFeatures: [],
             shadowEditFragment: null,
             shadowEditSelectionPath: null,
+            shadowEditTableSelectionPath: null,
             getDarkColor,
         });
 

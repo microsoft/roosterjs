@@ -301,6 +301,8 @@ export default interface IEditor {
 
     /**
      * Select content using the Table Selection
+     * @param table to select
+     * @param coordinates first and last cell of the range
      */
     setTableSelection(table: HTMLTableElement, coordinates: TableSelection): boolean;
 

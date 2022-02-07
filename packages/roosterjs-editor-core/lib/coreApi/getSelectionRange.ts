@@ -19,8 +19,8 @@ export const getSelectionRange: GetSelectionRange = (
             core.lifecycle.shadowEditSelectionPath &&
             createRange(
                 core.contentDiv,
-                core.lifecycle.shadowEditSelectionPath[0].start,
-                core.lifecycle.shadowEditSelectionPath[0].end
+                core.lifecycle.shadowEditSelectionPath.start,
+                core.lifecycle.shadowEditSelectionPath.end
             );
 
         return result;

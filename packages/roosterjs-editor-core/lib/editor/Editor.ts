@@ -60,7 +60,6 @@ import {
     isPositionAtBeginningOf,
     arrayPush,
     toArray,
-    selectTable,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -423,7 +422,7 @@ export default class Editor implements IEditor {
     }
 
     public setTableSelection(table: HTMLTableElement, coordinates: TableSelection) {
-        const selection = selectTable(table, coordinates, this.getDocument());
+        const selection = this.core.api.selectTable(this.core, table, coordinates);
 
         this.core.domEvent.tableSelectionRange = selection;
         return true;

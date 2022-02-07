@@ -1,4 +1,4 @@
-import { contains, createRange } from 'roosterjs-editor-dom';
+import { contains, createRange, findClosestElementAncestor } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     GetSelectionRangeEx,
@@ -15,13 +15,35 @@ import {
 export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
     let result: SelectionRangeEx = null;
     if (core.lifecycle.shadowEditFragment) {
-        const shadowRange =
-            core.lifecycle.shadowEditSelectionPath &&
-            core.lifecycle.shadowEditSelectionPath.map(path =>
+        const { shadowEditTableSelectionPath, shadowEditSelectionPath } = core.lifecycle;
+
+        if (shadowEditTableSelectionPath) {
+            const ranges = core.lifecycle.shadowEditTableSelectionPath.map(path =>
                 createRange(core.contentDiv, path.start, path.end)
             );
 
-        return createNormalSelectionEx(shadowRange);
+            return {
+                type: SelectionRangeTypes.TableSelection,
+                ranges,
+                areAllCollapsed: checkAllCollapsed(ranges),
+                table: findClosestElementAncestor(
+                    ranges[0].startContainer,
+                    core.contentDiv,
+                    'table'
+                ) as HTMLTableElement,
+                coordinates: null,
+            };
+        }
+
+        const shadowRange =
+            shadowEditSelectionPath &&
+            createRange(
+                core.contentDiv,
+                shadowEditSelectionPath.start,
+                shadowEditSelectionPath.end
+            );
+
+        return createNormalSelectionEx([shadowRange]);
     } else {
         if (core.api.hasFocus(core)) {
             if (core.domEvent.tableSelectionRange) {

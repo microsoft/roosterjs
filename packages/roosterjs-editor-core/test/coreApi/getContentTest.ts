@@ -100,12 +100,10 @@ describe('getContent', () => {
         });
         core.lifecycle.shadowEditFragment = document.createDocumentFragment();
         core.lifecycle.shadowEditFragment.appendChild(document.createTextNode('test0'));
-        core.lifecycle.shadowEditSelectionPath = [
-            {
-                start: [0],
-                end: [0],
-            },
-        ];
+        core.lifecycle.shadowEditSelectionPath = {
+            start: [0],
+            end: [0],
+        };
 
         div.innerHTML = '<div>test1</div>';
         const html1 = getContent(core, GetContentMode.RawHTMLOnly);
