@@ -6,25 +6,17 @@ import { TableSelection } from 'roosterjs-editor-types';
  * @returns Table Selection where the first cell is always going to be first selected in the table
  * and the last cell always going to be last selected in the table.
  */
-export function normalizeTableSelection(input: TableSelection): TableSelection {
+export default function normalizeTableSelection(input: TableSelection): TableSelection {
     const { firstCell, lastCell } = input;
 
     let newFirst = {
-        x: min(firstCell.x, lastCell.x),
-        y: min(firstCell.y, lastCell.y),
+        x: Math.min(firstCell.x, lastCell.x),
+        y: Math.min(firstCell.y, lastCell.y),
     };
     let newLast = {
-        x: max(firstCell.x, lastCell.x),
-        y: max(firstCell.y, lastCell.y),
+        x: Math.max(firstCell.x, lastCell.x),
+        y: Math.max(firstCell.y, lastCell.y),
     };
 
     return { firstCell: newFirst, lastCell: newLast };
-}
-
-function min(input1: number, input2: number) {
-    return input1 > input2 ? input2 : input1;
-}
-
-function max(input1: number, input2: number) {
-    return input1 < input2 ? input2 : input1;
 }

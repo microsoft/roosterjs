@@ -1,4 +1,4 @@
-import { normalizeTableSelection } from './normalizeTableSelection';
+import { normalizeTableSelection } from 'roosterjs-editor-dom';
 import { VCell } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
 
@@ -24,11 +24,7 @@ export function removeCellsOutsideSelection(vTable: VTable) {
     }
 
     vTable.cells.forEach((row, y) => {
-        row = row.filter(
-            (_, x) =>
-                ((y >= firstY && y <= lastY) || (y <= firstY && y >= lastY)) &&
-                ((x >= firstX && x <= lastX) || (x <= firstX && x >= lastX))
-        );
+        row = row.filter((_, x) => y >= firstY && y <= lastY && x >= firstX && x <= lastX);
         if (row.length > 0) {
             resultCells.push(row);
         }
