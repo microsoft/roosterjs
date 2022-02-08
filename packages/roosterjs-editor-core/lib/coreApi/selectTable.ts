@@ -4,6 +4,7 @@ import {
     SelectionRangeTypes,
     TableSelection,
     SelectTable,
+    Coordinates,
 } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
@@ -49,7 +50,7 @@ function buildCss(
     coordinates: TableSelection,
     contentDivSelector: string
 ): { css: string; ranges: Range[] } {
-    coordinates = normalizeTableSelection(coordinates);
+    coordinates = normalizeTableSelection(coordinates, table);
     const tr1 = coordinates.firstCell.y + 1;
     const td1 = coordinates.firstCell.x + 1;
     const tr2 = coordinates.lastCell.y + 1;
@@ -163,7 +164,7 @@ function unselect() {
  * @returns Table Selection where the first cell is always going to be first selected in the table
  * and the last cell always going to be last selected in the table.
  */
-function normalizeTableSelection(input: TableSelection): TableSelection {
+function normalizeTableSelection(input: TableSelection, table: HTMLTableElement): TableSelection {
     const { firstCell, lastCell } = input;
 
     let newFirst = {
@@ -174,6 +175,12 @@ function normalizeTableSelection(input: TableSelection): TableSelection {
         x: Math.max(firstCell.x, lastCell.x),
         y: Math.max(firstCell.y, lastCell.y),
     };
+
+    const checkIfExists = (coord: Coordinates) => table.rows.item(coord.y).cells.item(coord.x);
+
+    if (!checkIfExists(newFirst) || !checkIfExists(newLast)) {
+        throw new Error('Table selection provided is not valid');
+    }
 
     return { firstCell: newFirst, lastCell: newLast };
 }
