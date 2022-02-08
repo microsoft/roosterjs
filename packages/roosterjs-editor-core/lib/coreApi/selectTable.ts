@@ -25,7 +25,7 @@ export const selectTable: SelectTable = (
     table: HTMLTableElement,
     coordinates?: TableSelection
 ) => {
-    unselect(table.ownerDocument);
+    unselect(core.contentDiv.ownerDocument);
 
     if (coordinates && table) {
         ensureUniqueId(table, TABLE_ID);
@@ -50,10 +50,10 @@ function buildCss(
     contentDivSelector: string
 ): { css: string; ranges: Range[] } {
     coordinates = normalizeTableSelection(coordinates, table);
-    const tr1 = coordinates.firstCell.y + 1;
-    const td1 = coordinates.firstCell.x + 1;
-    const tr2 = coordinates.lastCell.y + 1;
-    const td2 = coordinates.lastCell.x + 1;
+    const tr1 = coordinates.firstCell.y;
+    const td1 = coordinates.firstCell.x;
+    const tr2 = coordinates.lastCell.y;
+    const td2 = coordinates.lastCell.x;
     const ranges: Range[] = [];
 
     let firstSelected: HTMLTableCellElement | null = null;
@@ -72,7 +72,7 @@ function buildCss(
     const indexes = tableChilds.map(node => {
         const result = {
             el: getTagOfNode(node),
-            start: cont + 1,
+            start: cont,
             end: node.childNodes.length + cont,
         };
 
@@ -87,30 +87,31 @@ function buildCss(
         lastSelected = null;
 
         //Get current TBODY/THEAD/TFOOT
-        const midElement = indexes.filter(ind => ind.start <= rowIndex && ind.end >= rowIndex)[0];
+        const midElement = indexes.filter(ind => ind.start <= rowIndex && ind.end > rowIndex)[0];
 
         const middleElSelector = midElement ? '>' + midElement.el + '>' : '>';
         const currentRow =
-            midElement && rowIndex >= midElement.start ? rowIndex - midElement.start + 1 : rowIndex;
+            midElement && rowIndex + 1 >= midElement.start
+                ? rowIndex + 1 - midElement.start
+                : rowIndex + 1;
 
         for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
             if (row[cellIndex].td) {
-                if (isFirst) {
-                    isFirst = false;
-                } else if (!css.endsWith(',')) {
-                    css += ',';
-                }
                 const tag = getTagOfNode(row[cellIndex].td);
 
                 if (tag == 'TD') {
                     tdCount++;
                 }
-
                 if (tag == 'TH') {
                     thCount++;
                 }
 
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
+                    if (isFirst) {
+                        isFirst = false;
+                    } else if (!css.endsWith(',')) {
+                        css += ',';
+                    }
                     const selector = generateCssFromCell(
                         contentDivSelector,
                         table.id,
