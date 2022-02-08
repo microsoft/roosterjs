@@ -96,7 +96,7 @@ function buildCss(
         for (let j = td1; j <= td2; j++) {
             if (isFirst) {
                 isFirst = false;
-            } else {
+            } else if (!css.endsWith(',')) {
                 css += ',';
             }
 
@@ -111,20 +111,13 @@ function buildCss(
                 j +
                 ')';
 
-            if (table.querySelector(selector)) {
-                css += selector;
-            } else {
-                selector = selector.replace('td', 'th');
-                if (table.querySelector(selector)) {
-                    css += selector;
-                }
-            }
+            css += selector;
         }
 
         const rowSelector =
             (middleElement ? middleElement.el + '>' : '') + 'tr:nth-child(' + currentRow + ')>';
-        const firstSelector = `${rowSelector}td:nth-child(${td1}),${rowSelector}th:nth-child(${td1})`;
-        const lastSelector = `${rowSelector}td:nth-child(${td2}),${rowSelector}th:nth-child(${td2})`;
+        const firstSelector = `${rowSelector}*:nth-child(${td1})`;
+        const lastSelector = `${rowSelector}*:nth-child(${td2})`;
 
         firstSelected = table.querySelector(firstSelector);
         lastSelected = table.querySelector(lastSelector)!;
