@@ -1,4 +1,4 @@
-import { getTagOfNode, toArray } from 'roosterjs-editor-dom';
+import { getTagOfNode, toArray, VTable } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     SelectionRangeTypes,
@@ -9,8 +9,7 @@ import {
 
 const TABLE_ID = 'tableSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
-
-let styleElement: HTMLStyleElement;
+const STYLE_ID = 'tableStyle';
 
 /**
  * @internal
@@ -26,7 +25,7 @@ export const selectTable: SelectTable = (
     table: HTMLTableElement,
     coordinates?: TableSelection
 ) => {
-    unselect();
+    unselect(table.ownerDocument);
 
     if (coordinates && table) {
         ensureUniqueId(table, TABLE_ID);
@@ -62,11 +61,12 @@ function buildCss(
     let css = '';
     let isFirst = true;
 
+    const vTable = new VTable(table);
+
     // Get whether table has thead, tbody or tfoot.
     const tableChilds = toArray(table.childNodes).filter(
         node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
     );
-
     // Set the start and end of each of the table childs, so we can build the selector according the element between the table and the row.
     let cont = 0;
     const indexes = tableChilds.map(node => {
@@ -80,56 +80,59 @@ function buildCss(
         return result;
     });
 
-    for (let i = tr1; i <= tr2; i++) {
+    vTable.cells.forEach((row, rowIndex) => {
+        let tdCount = 0;
+        let thCount = 0;
         firstSelected = null;
         lastSelected = null;
 
         //Get current TBODY/THEAD/TFOOT
-        const middleElement = indexes.filter(ind => ind.start <= i && ind.end >= i)[0];
+        const midElement = indexes.filter(ind => ind.start <= rowIndex && ind.end >= rowIndex)[0];
 
-        //Get selector that is going to be used, if no middle Element, means tr is underneath of the table element.
-        const middleElSelector = middleElement ? '>' + middleElement.el + '>' : '>';
-
-        //Get current index depending on the middle element, if no middle element just return the index
+        const middleElSelector = midElement ? '>' + midElement.el + '>' : '>';
         const currentRow =
-            middleElement && i >= middleElement.start ? i - middleElement.start + 1 : i;
+            midElement && rowIndex >= midElement.start ? rowIndex - midElement.start + 1 : rowIndex;
 
-        for (let j = td1; j <= td2; j++) {
-            if (isFirst) {
-                isFirst = false;
-            } else if (!css.endsWith(',')) {
-                css += ',';
+        for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
+            if (row[cellIndex].td) {
+                if (isFirst) {
+                    isFirst = false;
+                } else if (!css.endsWith(',')) {
+                    css += ',';
+                }
+                const tag = getTagOfNode(row[cellIndex].td);
+
+                if (tag == 'TD') {
+                    tdCount++;
+                }
+
+                if (tag == 'TH') {
+                    thCount++;
+                }
+
+                if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
+                    const selector = generateCssFromCell(
+                        contentDivSelector,
+                        table.id,
+                        middleElSelector,
+                        currentRow,
+                        tag,
+                        tag == 'TD' ? tdCount : thCount
+                    );
+                    css += selector;
+                    firstSelected = firstSelected || table.querySelector(selector);
+                    lastSelected = table.querySelector(selector)!;
+                }
             }
 
-            let selector =
-                contentDivSelector +
-                ' #' +
-                table.id +
-                middleElSelector +
-                ' tr:nth-child(' +
-                currentRow +
-                ')>*:nth-child(' +
-                j +
-                ')';
-
-            css += selector;
+            if (firstSelected && lastSelected) {
+                const rowRange = new Range();
+                rowRange.setStartBefore(firstSelected);
+                rowRange.setEndAfter(lastSelected);
+                ranges.push(rowRange);
+            }
         }
-
-        const rowSelector =
-            (middleElement ? middleElement.el + '>' : '') + 'tr:nth-child(' + currentRow + ')>';
-        const firstSelector = `${rowSelector}*:nth-child(${td1})`;
-        const lastSelector = `${rowSelector}*:nth-child(${td2})`;
-
-        firstSelected = table.querySelector(firstSelector);
-        lastSelected = table.querySelector(lastSelector)!;
-
-        if (firstSelected && lastSelected) {
-            const rowRange = new Range();
-            rowRange.setStartBefore(firstSelected);
-            rowRange.setEndAfter(lastSelected);
-            ranges.push(rowRange);
-        }
-    }
+    });
 
     css += '{background-color: rgba(198,198,198,0.7) !important;}';
 
@@ -141,16 +144,19 @@ function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSel
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
 
+    let styleElement = doc.getElementById(STYLE_ID + CONTENT_DIV_ID) as HTMLStyleElement;
     if (!styleElement) {
         styleElement = doc.createElement('style');
         doc.head.appendChild(styleElement);
+        styleElement.id = STYLE_ID + CONTENT_DIV_ID;
     }
     styleElement.sheet.insertRule(css);
 
     return ranges;
 }
 
-function unselect() {
+function unselect(doc: Document) {
+    let styleElement = doc.getElementById(STYLE_ID + CONTENT_DIV_ID) as HTMLStyleElement;
     if (styleElement?.sheet?.cssRules) {
         while (styleElement.sheet.cssRules.length > 0) {
             styleElement.sheet.deleteRule(0);
@@ -199,4 +205,26 @@ function ensureUniqueId(el: HTMLElement, idPrefix: string) {
 
         el.id = idPrefix + cont;
     }
+}
+function generateCssFromCell(
+    contentDivSelector: string,
+    tableId: string,
+    middleElSelector: string,
+    rowIndex: number,
+    cellTag: string,
+    index: number
+): string {
+    return (
+        contentDivSelector +
+        ' #' +
+        tableId +
+        middleElSelector +
+        ' tr:nth-child(' +
+        rowIndex +
+        ')>' +
+        cellTag +
+        ':nth-child(' +
+        index +
+        ')'
+    );
 }
