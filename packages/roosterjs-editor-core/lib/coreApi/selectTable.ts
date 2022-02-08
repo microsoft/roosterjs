@@ -145,11 +145,11 @@ function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSel
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
 
-    let styleElement = doc.getElementById(STYLE_ID + CONTENT_DIV_ID) as HTMLStyleElement;
+    let styleElement = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
     if (!styleElement) {
         styleElement = doc.createElement('style');
         doc.head.appendChild(styleElement);
-        styleElement.id = STYLE_ID + CONTENT_DIV_ID;
+        styleElement.id = STYLE_ID + core.contentDiv.id;
     }
     styleElement.sheet.insertRule(css);
 
