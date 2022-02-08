@@ -48,21 +48,21 @@ export const enum TableBorderFormat {
 
     /**
      * The header row has no vertical border, except for the first one
-     * The only horizontal border of the table is the top and bottom of header row
-     *  __ __ __
-     * |__ __ __
-     * |  |     |
-     * |  |     |
-     */
-    ESPECIAL_TYPE_1,
-
-    /**
-     * The header row has no vertical border, except for the first one
      * The first column has no horizontal border, except for the first one
      *  __ __ __
      * |__ __ __
      * |  |__|__|
      * |  |__|__|
+     */
+    ESPECIAL_TYPE_1,
+
+    /**
+     * The header row has no vertical border, except for the first one
+     * The only horizontal border of the table is the top and bottom of header row
+     *  __ __ __
+     * |__ __ __
+     * |  |     |
+     * |  |     |
      */
     ESPECIAL_TYPE_2,
 

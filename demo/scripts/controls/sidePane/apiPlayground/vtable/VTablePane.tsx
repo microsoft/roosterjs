@@ -2,7 +2,7 @@ import * as Color from 'color';
 import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import ColorPicker from '../../../colorPicker/ColorPicker';
-import { formatTable } from 'roosterjs-editor-api';
+import { editTable, formatTable } from 'roosterjs-editor-api';
 import { getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import {
     IEditor,
@@ -270,15 +270,22 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                 <td>Insert</td>
                                 <td>
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Above',
                                         TableOperation.InsertAbove
                                     )}
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Below',
                                         TableOperation.InsertBelow
                                     )}
-                                    {this.renderEditTableButton('Left', TableOperation.InsertLeft)}
                                     {this.renderEditTableButton(
+                                        editor,
+                                        'Left',
+                                        TableOperation.InsertLeft
+                                    )}
+                                    {this.renderEditTableButton(
+                                        editor,
                                         'Right',
                                         TableOperation.InsertRight
                                     )}
@@ -288,33 +295,57 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                 <td>Delete</td>
                                 <td>
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Table',
                                         TableOperation.DeleteTable
                                     )}
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Column',
                                         TableOperation.DeleteColumn
                                     )}
-                                    {this.renderEditTableButton('Row', TableOperation.DeleteRow)}
+                                    {this.renderEditTableButton(
+                                        editor,
+                                        'Row',
+                                        TableOperation.DeleteRow
+                                    )}
                                 </td>
                             </tr>
                             <tr>
                                 <td>Merge</td>
                                 <td>
-                                    {this.renderEditTableButton('Above', TableOperation.MergeAbove)}
-                                    {this.renderEditTableButton('Below', TableOperation.MergeBelow)}
-                                    {this.renderEditTableButton('Left', TableOperation.MergeLeft)}
-                                    {this.renderEditTableButton('Right', TableOperation.MergeRight)}
+                                    {this.renderEditTableButton(
+                                        editor,
+                                        'Above',
+                                        TableOperation.MergeAbove
+                                    )}
+                                    {this.renderEditTableButton(
+                                        editor,
+                                        'Below',
+                                        TableOperation.MergeBelow
+                                    )}
+                                    {this.renderEditTableButton(
+                                        editor,
+                                        'Left',
+                                        TableOperation.MergeLeft
+                                    )}
+                                    {this.renderEditTableButton(
+                                        editor,
+                                        'Right',
+                                        TableOperation.MergeRight
+                                    )}
                                 </td>
                             </tr>
                             <tr>
                                 <td>Split</td>
                                 <td>
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Horizontally',
                                         TableOperation.SplitHorizontally
                                     )}
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Vertically',
                                         TableOperation.SplitVertically
                                     )}
@@ -323,35 +354,53 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                             <tr>
                                 <td>Align</td>
                                 <td>
-                                    {this.renderEditTableButton('Left', TableOperation.AlignLeft)}
                                     {this.renderEditTableButton(
+                                        editor,
+                                        'Left',
+                                        TableOperation.AlignLeft
+                                    )}
+                                    {this.renderEditTableButton(
+                                        editor,
                                         'Center',
                                         TableOperation.AlignCenter
                                     )}
-                                    {this.renderEditTableButton('Right', TableOperation.AlignRight)}
+                                    {this.renderEditTableButton(
+                                        editor,
+                                        'Right',
+                                        TableOperation.AlignRight
+                                    )}
                                 </td>
                             </tr>
                             <tr>
                                 <td>Align Cell</td>
                                 <td>
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Left',
                                         TableOperation.AlignCellLeft
                                     )}
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Center',
                                         TableOperation.AlignCellCenter
                                     )}
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Right',
                                         TableOperation.AlignCellRight
                                     )}
-                                    {this.renderEditTableButton('Top', TableOperation.AlignCellTop)}
                                     {this.renderEditTableButton(
+                                        editor,
+                                        'Top',
+                                        TableOperation.AlignCellTop
+                                    )}
+                                    {this.renderEditTableButton(
+                                        editor,
                                         'Middle',
                                         TableOperation.AlignCellMiddle
                                     )}
                                     {this.renderEditTableButton(
+                                        editor,
                                         'Bottom',
                                         TableOperation.AlignCellBottom
                                     )}
@@ -505,12 +554,16 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
         this.setState({ vtable });
     };
 
-    private renderEditTableButton(text: string, operation: TableOperation): JSX.Element {
+    private renderEditTableButton(
+        editor: IEditor,
+        text: string,
+        operation: TableOperation
+    ): JSX.Element {
         return (
             <button
                 className={styles.button}
                 onClick={() => {
-                    this.state.vtable.edit(operation);
+                    editTable(editor, operation);
                     this.forceUpdate();
                 }}>
                 {text}
