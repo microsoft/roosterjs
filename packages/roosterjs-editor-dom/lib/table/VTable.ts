@@ -7,6 +7,7 @@ import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 
 import {
     SizeTransformer,
+    TableBorderFormat,
     TableFormat,
     TableOperation,
     TableSelection,
@@ -14,6 +15,19 @@ import {
 } from 'roosterjs-editor-types';
 
 const CELL_SHADE = 'cellShade';
+const DEFAULT_FORMAT: TableFormat = {
+    topBorderColor: '#ABABAB',
+    bottomBorderColor: '#ABABAB',
+    verticalBorderColor: '#ABABAB',
+    hasHeaderRow: false,
+    hasFirstColumn: false,
+    hasBandedRows: false,
+    hasBandedColumns: false,
+    bgColorEven: null,
+    bgColorOdd: '#ABABAB20',
+    headerRowColor: '#ABABAB',
+    tableBorderFormat: TableBorderFormat.DEFAULT,
+};
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -43,6 +57,11 @@ export default class VTable {
      * Selected range of cells with the coordinates of the first and last cell selected.
      */
     selection: TableSelection;
+
+    /**
+     * Current format of the table
+     */
+    formatInfo: TableFormat;
 
     private trs: HTMLTableRowElement[] = [];
 
@@ -89,6 +108,7 @@ export default class VTable {
                     }
                 }
             });
+            this.formatInfo = getTableFormatInfo(this.table);
             if (normalizeSize) {
                 this.normalizeSize(sizeTransformer);
             }
@@ -111,9 +131,9 @@ export default class VTable {
                     }
                 });
             });
-            const formatInfo = this.getTableFormatInfo();
-            if (formatInfo) {
-                applyTableFormat(this.table, this.cells, formatInfo);
+            if (this.formatInfo) {
+                saveTableInfo(this.table, this.formatInfo);
+                applyTableFormat(this.table, this.cells, this.formatInfo);
             }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
@@ -125,12 +145,11 @@ export default class VTable {
      * @param format Table format to apply
      */
     applyFormat(format: Partial<TableFormat>) {
-        if (!this.table || !format) {
+        if (!this.table) {
             return;
         }
+        this.formatInfo = { ...DEFAULT_FORMAT, ...(this.formatInfo || {}), ...(format || {}) };
         this.deleteCellShadeDataset(this.cells);
-        applyTableFormat(this.table, this.cells, format);
-        saveTableInfo(this.table, format);
     }
 
     /**
@@ -145,13 +164,6 @@ export default class VTable {
                 }
             });
         });
-    }
-
-    /**
-     * Get the format info of a table
-     */
-    getTableFormatInfo() {
-        return getTableFormatInfo(this.table);
     }
 
     /**
