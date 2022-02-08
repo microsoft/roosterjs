@@ -1,4 +1,4 @@
-import { normalizeTableSelection } from 'roosterjs-editor-dom';
+import { getTagOfNode, normalizeTableSelection, toArray } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     SelectionRangeTypes,
@@ -60,16 +60,43 @@ function buildCss(
     const tr2 = coordinates.lastCell.y + 1;
     const td2 = coordinates.lastCell.x + 1;
     const ranges: Range[] = [];
-    const tbodySelector = table.querySelector('tbody') ? '>tbody' : '';
+
     let firstSelected: HTMLTableCellElement | null = null;
     let lastSelected: HTMLTableCellElement | null = null;
-
     let css = '';
-
     let isFirst = true;
+
+    // Get whether table has thead, tbody or tfoot.
+    const tableChilds = toArray(table.childNodes).filter(
+        node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
+    );
+
+    // Set the start and end of each of the table childs, so we can build the selector according the element between the table and the row.
+    let cont = 0;
+    const indexes = tableChilds.map(node => {
+        const result = {
+            el: getTagOfNode(node),
+            start: cont + 1,
+            end: node.childNodes.length + cont,
+        };
+
+        cont = result.end;
+        return result;
+    });
+
     for (let i = tr1; i <= tr2; i++) {
         firstSelected = null;
         lastSelected = null;
+
+        //Get current TBODY/THEAD/TFOOT
+        const middleElement = indexes.filter(ind => ind.start <= i && ind.end >= i)[0];
+
+        //Get selector that is going to be used, if no middle Element, means tr is underneath of the table element.
+        const middleElSelector = middleElement ? '>' + middleElement.el + '>' : '>';
+
+        //Get current index depending on the middle element, if no middle element just return the index
+        const currentRow =
+            middleElement && i >= middleElement.start ? i - middleElement.start + 1 : i;
 
         for (let j = td1; j <= td2; j++) {
             if (isFirst) {
@@ -82,12 +109,13 @@ function buildCss(
                 contentDivSelector +
                 ' #' +
                 table.id +
-                tbodySelector +
-                ' >tr:nth-child(' +
-                i +
+                middleElSelector +
+                ' tr:nth-child(' +
+                currentRow +
                 ')>td:nth-child(' +
                 j +
                 ')';
+
             if (table.querySelector(selector)) {
                 css += selector;
             } else {
@@ -99,8 +127,11 @@ function buildCss(
         }
         firstSelected =
             firstSelected ||
-            table.querySelector('tr:nth-child(' + i + ')>td:nth-child(' + td1 + ')');
-        lastSelected = table.querySelector('tr:nth-child(' + i + ')>td:nth-child(' + td2 + ')')!;
+            table.querySelector('tr:nth-child(' + currentRow + ')>td:nth-child(' + td1 + ')');
+        lastSelected = table.querySelector(
+            'tr:nth-child(' + currentRow + ')>td:nth-child(' + td2 + ')'
+        )!;
+
         if (firstSelected && lastSelected) {
             const rowRange = new Range();
             rowRange.setStartBefore(firstSelected);
@@ -151,7 +182,7 @@ function ensureUniqueId(table: HTMLTableElement, doc?: Document): string {
         //  1. there are no elements with the same ID
         //  2. No Style added for the same ID
         const getElement = () =>
-            doc.getElementById(TABLE_ID) || document.getElementById(TABLE_ID + cont);
+            doc.getElementById(TABLE_ID + cont) || document.getElementById(TABLE_ID + cont);
 
         let element = getElement();
         while (element) {
