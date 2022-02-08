@@ -25,12 +25,13 @@ export const selectTable: SelectTable = (
     table: HTMLTableElement,
     coordinates?: TableSelection
 ) => {
-    const doc = core.contentDiv.ownerDocument;
+    unselect();
 
-    if (coordinates) {
-        ensureUniqueContentDivId(core);
-        table.id = ensureUniqueId(table, doc);
-        const ranges = select(table, coordinates, core);
+    if (coordinates && table) {
+        ensureUniqueId(table, TABLE_ID);
+        ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
+
+        const ranges = select(core, table, coordinates);
         return {
             type: SelectionRangeTypes.TableSelection,
             ranges,
@@ -40,12 +41,6 @@ export const selectTable: SelectTable = (
         };
     }
 
-    unselect();
-
-    if (!table && !coordinates && styleElement) {
-        styleElement.parentElement.removeChild(styleElement);
-        styleElement = null;
-    }
     return null;
 };
 
@@ -112,7 +107,7 @@ function buildCss(
                 middleElSelector +
                 ' tr:nth-child(' +
                 currentRow +
-                ')>td:nth-child(' +
+                ')>*:nth-child(' +
                 j +
                 ')';
 
@@ -126,9 +121,8 @@ function buildCss(
             }
         }
 
-        const rowSelector = middleElement
-            ? middleElement.el + '>'
-            : '' + 'tr:nth-child(' + currentRow + ')>';
+        const rowSelector =
+            (middleElement ? middleElement.el + '>' : '') + 'tr:nth-child(' + currentRow + ')>';
         const firstSelector = `${rowSelector}td:nth-child(${td1}),${rowSelector}th:nth-child(${td1})`;
         const lastSelector = `${rowSelector}td:nth-child(${td2}),${rowSelector}th:nth-child(${td2})`;
 
@@ -148,24 +142,16 @@ function buildCss(
     return { css, ranges };
 }
 
-function select(table: HTMLTableElement, coordinates: TableSelection, core: EditorCore): Range[] {
+function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
     const doc = core.contentDiv.ownerDocument;
-    const contentDivId = core.contentDiv.id;
-
-    const contentDivSelector = '#' + contentDivId;
+    const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
-    if (doc) {
-        unselect();
-        if (styleElement && styleElement.ownerDocument != doc) {
-            styleElement.parentElement.removeChild(styleElement);
-            styleElement = null;
-        }
-        if (!styleElement) {
-            styleElement = doc.createElement('style');
-            doc.head.appendChild(styleElement);
-        }
-        styleElement.sheet.insertRule(css);
+
+    if (!styleElement) {
+        styleElement = doc.createElement('style');
+        doc.head.appendChild(styleElement);
     }
+    styleElement.sheet.insertRule(css);
 
     return ranges;
 }
@@ -199,40 +185,18 @@ function normalizeTableSelection(input: TableSelection): TableSelection {
     return { firstCell: newFirst, lastCell: newLast };
 }
 
-function ensureUniqueId(table: HTMLTableElement, doc?: Document): string {
-    let cont = 0;
-
-    if (doc && !table.id) {
-        //Ensure that:
-        //  1. there are no elements with the same ID
-        const getElement = () =>
-            doc.getElementById(TABLE_ID + cont) || document.getElementById(TABLE_ID + cont);
-
-        let element = getElement();
-        while (element) {
-            element = getElement();
-            cont++;
-        }
-        return TABLE_ID + cont;
-    }
-    return table.id;
-}
-
-function ensureUniqueContentDivId(core: EditorCore) {
-    const div = core.contentDiv;
-    const doc = div.ownerDocument;
-    let id = div.id;
-    const getElement = (doc: Document) => doc.getElementById(CONTENT_DIV_ID + cont);
-    let cont = 0;
-
-    if (!id) {
+function ensureUniqueId(el: HTMLElement, idPrefix: string) {
+    if (el && !el.id) {
+        const doc = el.ownerDocument;
+        const getElement = (doc: Document) => doc.getElementById(idPrefix + cont);
+        let cont = 0;
         //Ensure that there are no elements with the same ID
-        let element = getElement(doc) || getElement(document);
+        let element = getElement(doc);
         while (element) {
-            element = getElement(doc) || getElement(document);
+            element = getElement(doc);
             cont++;
         }
 
-        div.id = CONTENT_DIV_ID + cont;
+        el.id = idPrefix + cont;
     }
 }

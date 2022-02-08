@@ -236,7 +236,7 @@ export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcas
 export type SelectTable = (
     core: EditorCore,
     table: HTMLTableElement,
-    coordinates: TableSelection
+    coordinates?: TableSelection
 ) => TableSelectionRange;
 
 /**
