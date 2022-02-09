@@ -1,4 +1,11 @@
-import { getTagOfNode, normalizeTableSelection, toArray, VTable } from 'roosterjs-editor-dom';
+import {
+    getStyles,
+    getTagOfNode,
+    normalizeTableSelection,
+    setStyles,
+    toArray,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     EditorCore,
     SelectionRangeTypes,
@@ -111,6 +118,9 @@ function buildCss(
                     } else if (!css.endsWith(',')) {
                         css += ',';
                     }
+
+                    removeImportant(row[cellIndex].td);
+
                     const selector = generateCssFromCell(
                         contentDivSelector,
                         table.id,
@@ -201,4 +211,22 @@ function generateCssFromCell(
         index +
         ')'
     );
+}
+
+function removeImportant(cell: HTMLTableCellElement) {
+    if (cell) {
+        const styles = getStyles(cell);
+        let modifiedStyles = 0;
+        ['background-color', 'background'].forEach(style => {
+            if (styles[style]?.indexOf('!important') > -1) {
+                const index = styles[style].indexOf('!');
+                styles[style] = styles[style].substring(0, index);
+                modifiedStyles++;
+            }
+        });
+
+        if (modifiedStyles > 0) {
+            setStyles(cell, styles);
+        }
+    }
 }
