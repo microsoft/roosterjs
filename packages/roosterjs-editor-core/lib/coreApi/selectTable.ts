@@ -64,12 +64,12 @@ function buildCss(
     const vTable = new VTable(table);
 
     // Get whether table has thead, tbody or tfoot.
-    const tableChilds = toArray(table.childNodes).filter(
+    const tableChildren = toArray(table.childNodes).filter(
         node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
     );
     // Set the start and end of each of the table childs, so we can build the selector according the element between the table and the row.
     let cont = 0;
-    const indexes = tableChilds.map(node => {
+    const indexes = tableChildren.map(node => {
         const result = {
             el: getTagOfNode(node),
             start: cont,
