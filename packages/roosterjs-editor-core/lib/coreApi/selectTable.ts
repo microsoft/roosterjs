@@ -1,10 +1,9 @@
-import { getTagOfNode, toArray, VTable } from 'roosterjs-editor-dom';
+import { getTagOfNode, normalizeTableSelection, toArray, VTable } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     SelectionRangeTypes,
     TableSelection,
     SelectTable,
-    Coordinates,
 } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
@@ -125,13 +124,13 @@ function buildCss(
                     lastSelected = table.querySelector(selector)!;
                 }
             }
+        }
 
-            if (firstSelected && lastSelected) {
-                const rowRange = new Range();
-                rowRange.setStartBefore(firstSelected);
-                rowRange.setEndAfter(lastSelected);
-                ranges.push(rowRange);
-            }
+        if (firstSelected && lastSelected) {
+            const rowRange = new Range();
+            rowRange.setStartBefore(firstSelected);
+            rowRange.setEndAfter(lastSelected);
+            ranges.push(rowRange);
         }
     });
 
@@ -164,33 +163,6 @@ function unselect(core: EditorCore) {
             styleElement.sheet.deleteRule(0);
         }
     }
-}
-
-/**
- * Make the first Cell of a table selection always be on top of the last cell.
- * @param input Table selection
- * @returns Table Selection where the first cell is always going to be first selected in the table
- * and the last cell always going to be last selected in the table.
- */
-function normalizeTableSelection(input: TableSelection, table: HTMLTableElement): TableSelection {
-    const { firstCell, lastCell } = input;
-
-    let newFirst = {
-        x: Math.min(firstCell.x, lastCell.x),
-        y: Math.min(firstCell.y, lastCell.y),
-    };
-    let newLast = {
-        x: Math.max(firstCell.x, lastCell.x),
-        y: Math.max(firstCell.y, lastCell.y),
-    };
-
-    const checkIfExists = (coord: Coordinates) => table.rows.item(coord.y).cells.item(coord.x);
-
-    if (!checkIfExists(newFirst) || !checkIfExists(newLast)) {
-        throw new Error('Table selection provided is not valid');
-    }
-
-    return { firstCell: newFirst, lastCell: newLast };
 }
 
 function ensureUniqueId(el: HTMLElement, idPrefix: string) {

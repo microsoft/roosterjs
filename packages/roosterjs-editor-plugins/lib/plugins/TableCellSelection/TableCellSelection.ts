@@ -298,7 +298,7 @@ export default class TableCellSelection implements EditorPlugin {
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);
             const coord = getCellCoordinates(this.vTable, td);
             if (coord) {
-                const selection = normalizeTableSelection(this.tableRange);
+                const selection = normalizeTableSelection(this.tableRange, this.vTable.table);
                 const { firstCell, lastCell } = selection;
                 if (
                     coord.y >= firstCell.y &&

@@ -10,7 +10,7 @@ import { VTable } from 'roosterjs-editor-dom';
  */
 export function forEachSelectedCell(vTable: VTable, callback: (cell: VCell) => void): number {
     let selectedCells = 0;
-    vTable.selection = normalizeTableSelection(vTable.selection);
+    vTable.selection = normalizeTableSelection(vTable.selection, vTable.table);
 
     const { lastCell, firstCell } = vTable.selection;
 

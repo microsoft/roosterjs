@@ -7,7 +7,7 @@ import { VTable } from 'roosterjs-editor-dom';
  * Remove the cells outside of the selection.
  */
 export function removeCellsOutsideSelection(vTable: VTable) {
-    const { firstCell, lastCell } = normalizeTableSelection(vTable.selection);
+    const { firstCell, lastCell } = normalizeTableSelection(vTable.selection, vTable.table);
     const rowsLength = vTable.cells.length - 1;
     const colIndex = vTable.cells[rowsLength].length - 1;
     const resultCells: VCell[][] = [];
