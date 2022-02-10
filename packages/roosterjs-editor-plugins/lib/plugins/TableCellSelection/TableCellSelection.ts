@@ -1,6 +1,6 @@
+import normalizeTableSelection from './utils/normalizeTableSelection';
 import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
-import { normalizeTableSelection } from 'roosterjs-editor-dom';
 import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import {
     BeforeCutCopyEvent,
@@ -148,11 +148,11 @@ export default class TableCellSelection implements EditorPlugin {
         if (this.firstTable == this.targetTable) {
             if (this.tableSelection) {
                 this.vTable.selection.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
-                this.editor.select(this.vTable.table, this.vTable.selection);
+                this.selectTable();
                 this.tableRange.lastCell = this.vTable.selection.lastCell;
                 updateSelection(this.editor, this.firstTarget, 0);
             }
-        } else if (this.tableRange) {
+        } else if (this.tableSelection) {
             this.restoreSelection();
         }
     }
@@ -275,7 +275,7 @@ export default class TableCellSelection implements EditorPlugin {
         }
 
         this.vTable.selection = this.tableRange;
-        this.editor.select(this.vTable.table, this.vTable.selection);
+        this.selectTable();
 
         const isBeginAboveEnd = this.isAfter(this.firstTarget, this.lastTarget);
         const targetPosition = new Position(
@@ -298,8 +298,7 @@ export default class TableCellSelection implements EditorPlugin {
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);
             const coord = getCellCoordinates(this.vTable, td);
             if (coord) {
-                const selection = normalizeTableSelection(this.tableRange, this.vTable.table);
-                const { firstCell, lastCell } = selection;
+                const { firstCell, lastCell } = normalizeTableSelection(this.vTable);
                 if (
                     coord.y >= firstCell.y &&
                     coord.y <= lastCell.y &&
@@ -312,7 +311,7 @@ export default class TableCellSelection implements EditorPlugin {
                     if (this.firstTarget && this.lastTarget) {
                         const selection = this.editor.getDocument().defaultView.getSelection();
                         selection.setBaseAndExtent(this.firstTarget, 0, this.lastTarget, 0);
-                        this.editor.select(this.vTable.table, this.vTable.selection);
+                        this.selectTable();
                     }
 
                     return;
@@ -351,7 +350,7 @@ export default class TableCellSelection implements EditorPlugin {
 
                     this.firstTarget = first;
                     this.lastTarget = last;
-                    this.editor.select(this.vTable.table, this.vTable.selection);
+                    this.selectTable();
 
                     this.tableRange = this.vTable.selection;
                     this.tableSelection = true;
@@ -486,7 +485,7 @@ export default class TableCellSelection implements EditorPlugin {
                 this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget);
                 this.tableRange.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
                 this.vTable.selection = this.tableRange;
-                this.editor.select(this.vTable.table, this.vTable.selection);
+                this.selectTable();
             }
 
             event.preventDefault();
@@ -496,7 +495,7 @@ export default class TableCellSelection implements EditorPlugin {
             this.tableRange.lastCell = this.tableRange.firstCell;
 
             this.vTable.selection = this.tableRange;
-            this.editor.select(this.vTable.table, this.vTable.selection);
+            this.selectTable();
 
             this.tableRange = this.vTable.selection;
         }
@@ -707,6 +706,12 @@ export default class TableCellSelection implements EditorPlugin {
         });
 
         return result;
+    }
+
+    selectTable() {
+        if (this.editor && this.vTable) {
+            this.editor?.select(this.vTable.table, normalizeTableSelection(this.vTable));
+        }
     }
     //#endregion
 }

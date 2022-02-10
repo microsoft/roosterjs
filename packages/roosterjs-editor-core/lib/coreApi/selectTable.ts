@@ -1,11 +1,4 @@
-import {
-    getStyles,
-    getTagOfNode,
-    normalizeTableSelection,
-    setStyles,
-    toArray,
-    VTable,
-} from 'roosterjs-editor-dom';
+import { getStyles, getTagOfNode, setStyles, toArray, VTable } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     SelectionRangeTypes,
@@ -55,7 +48,6 @@ function buildCss(
     coordinates: TableSelection,
     contentDivSelector: string
 ): { css: string; ranges: Range[] } {
-    coordinates = normalizeTableSelection(coordinates, table);
     const tr1 = coordinates.firstCell.y;
     const td1 = coordinates.firstCell.x;
     const tr2 = coordinates.lastCell.y;
