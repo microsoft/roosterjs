@@ -79,9 +79,7 @@ export default class TableCellSelection implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
-        if (this.firstTable) {
-            this.editor.select(this.firstTable, null);
-        }
+        this.editor.select(null);
         this.removeMouseUpEventListener();
         this.editor = null;
     }
