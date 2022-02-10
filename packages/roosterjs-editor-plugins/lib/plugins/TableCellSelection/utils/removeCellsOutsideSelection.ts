@@ -4,6 +4,7 @@ import { VTable } from 'roosterjs-editor-dom';
 /**
  * @internal
  * Remove the cells outside of the selection.
+ * @param vTable VTable to remove selection
  */
 export function removeCellsOutsideSelection(vTable: VTable) {
     const { firstCell, lastCell } = vTable.selection;

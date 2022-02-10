@@ -1,7 +1,8 @@
 import { Coordinates, TableSelection } from 'roosterjs-editor-types';
-import { VTable } from 'roosterjs-editor-dom/lib';
+import { VTable } from 'roosterjs-editor-dom';
 
 /**
+ * @internal
  * Make the first Cell of a table selection always be on top of the last cell.
  * @param input Table selection
  * @returns Table Selection where the first cell is always going to be first selected in the table
