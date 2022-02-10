@@ -1,5 +1,5 @@
 import VTable from '../../lib/table/VTable';
-import { getTableFormatInfo, saveTableInfo } from '../../lib/utils/tableFormatInfo';
+import { getTableFormatInfo, saveTableInfo } from '../../lib/table/tableFormatInfo';
 import { TableFormat } from 'roosterjs-editor-types';
 
 const TABLE_STYLE_INFO = 'roosterTableInfo';

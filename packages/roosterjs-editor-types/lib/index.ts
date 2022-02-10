@@ -149,6 +149,7 @@ export {
     SwitchShadowEdit,
     TransformColor,
     TriggerEvent,
+    SelectTable,
 } from './interface/EditorCore';
 export { default as EditorOptions } from './interface/EditorOptions';
 export {

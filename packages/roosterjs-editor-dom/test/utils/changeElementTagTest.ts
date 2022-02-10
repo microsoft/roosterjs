@@ -45,4 +45,10 @@ describe('changeElementTag()', () => {
             '<p style="margin: 0 2px 2px 0"></p>'
         );
     });
+
+    it('changeElementTag to same tag', () => {
+        const node = document.createElement('div');
+        const newNode = changeElementTag(node, 'div');
+        expect(newNode).toBe(node);
+    });
 });

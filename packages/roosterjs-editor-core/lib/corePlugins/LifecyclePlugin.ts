@@ -100,6 +100,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
             shadowEditSelectionPath: null,
+            shadowEditTableSelectionPath: null,
         };
     }
 

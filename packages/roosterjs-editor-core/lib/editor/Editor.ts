@@ -406,6 +406,14 @@ export default class Editor implements IEditor {
     }
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
+        if (!!(<HTMLTableElement>arg1)?.rows) {
+            const selection = this.core.api.selectTable(this.core, arg1, arg2);
+            this.core.domEvent.tableSelectionRange = selection;
+            return !!selection;
+        } else {
+            this.core.api.selectTable(this.core, null);
+        }
+
         let range = !arg1
             ? null
             : safeInstanceOf(arg1, 'Range')
