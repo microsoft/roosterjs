@@ -26,6 +26,13 @@ export default function changeElementTag(element: HTMLElement, newTag: string): 
         return null;
     }
 
+    const origianlTag = getTagOfNode(element);
+
+    if (origianlTag == newTag.toUpperCase()) {
+        // Already in the target tag, no need to change
+        return element;
+    }
+
     let newElement = element.ownerDocument.createElement(newTag);
 
     for (let i = 0; i < element.attributes.length; i++) {
@@ -35,7 +42,7 @@ export default function changeElementTag(element: HTMLElement, newTag: string): 
 
     moveChildNodes(newElement, element);
 
-    if (getTagOfNode(element) == 'P' || getTagOfNode(newElement) == 'P') {
+    if (origianlTag == 'P' || getTagOfNode(newElement) == 'P') {
         [newElement.style.marginTop, newElement.style.marginBottom] = getComputedStyles(element, [
             'margin-top',
             'margin-bottom',
