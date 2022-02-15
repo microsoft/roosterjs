@@ -79,17 +79,19 @@ describe('Table Selector Tests', () => {
             expect(tableSelector).toBeDefined();
             const selection = editor.getSelectionRangeEx();
             expect(selection.type).toBe(SelectionRangeTypes.TableSelection);
-            expect(selection.coordinates).toEqual({
-                firstCell: {
-                    x: 0,
-                    y: 0,
-                },
-                lastCell: {
-                    y: 7,
-                    x: 7,
-                },
-            });
-            expect(selection.ranges.length).toBe(8);
+            if (selection.type == SelectionRangeTypes.TableSelection) {
+                expect(selection.coordinates).toEqual({
+                    firstCell: {
+                        x: 0,
+                        y: 0,
+                    },
+                    lastCell: {
+                        y: 7,
+                        x: 7,
+                    },
+                });
+                expect(selection.ranges.length).toBe(8);
+            }
         });
     });
 });
