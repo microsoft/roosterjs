@@ -1,3 +1,5 @@
+import TableSelection from './TableSelection';
+
 /**
  * Represents normal selection
  */
@@ -27,6 +29,10 @@ export interface TableSelectionRange
      * Table that has cells selected
      */
     table: HTMLTableElement;
+    /**
+     * Coordinates of first and last Cell
+     */
+    coordinates: TableSelection;
 }
 
 /**
