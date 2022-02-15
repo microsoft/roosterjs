@@ -2,7 +2,7 @@ import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { KnownCreateElementDataIndex, Rect, SizeTransformer } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex, Rect } from 'roosterjs-editor-types';
 
 const CELL_RESIZER_WIDTH = 4;
 const MIN_CELL_WIDTH = 30;
@@ -12,7 +12,7 @@ const MIN_CELL_WIDTH = 30;
  */
 export default function createCellResizer(
     td: HTMLTableCellElement,
-    sizeTransformer: SizeTransformer,
+    zoomScale: number,
     isRTL: boolean,
     isHorizontal: boolean,
     onStart: () => void,
@@ -28,7 +28,7 @@ export default function createCellResizer(
 
     document.body.appendChild(div);
 
-    const context: DragAndDropContext = { td, isRTL, sizeTransformer, onStart };
+    const context: DragAndDropContext = { td, isRTL, zoomScale, onStart };
     const setPosition = isHorizontal ? setHorizontalPosition : setVerticalPosition;
     setPosition(context, div);
 
@@ -43,7 +43,7 @@ export default function createCellResizer(
         context,
         setPosition,
         handler,
-        sizeTransformer
+        zoomScale
     );
 
     return { node: td, div, featureHandler };
@@ -52,7 +52,7 @@ export default function createCellResizer(
 interface DragAndDropContext {
     td: HTMLTableCellElement;
     isRTL: boolean;
-    sizeTransformer: SizeTransformer;
+    zoomScale: number;
     onStart: () => void;
 }
 
@@ -63,8 +63,8 @@ interface DragAndDropInitValue {
 }
 
 function onDragStart(context: DragAndDropContext, event: MouseEvent) {
-    const { td, isRTL, sizeTransformer, onStart } = context;
-    const vTable = new VTable(td, true /*normalizeSize*/, sizeTransformer);
+    const { td, isRTL, zoomScale, onStart } = context;
+    const vTable = new VTable(td, true /*normalizeSize*/, zoomScale);
     const rect = normalizeRect(td.getBoundingClientRect());
 
     if (rect) {
@@ -91,15 +91,14 @@ function onDraggingHorizontal(
     deltaX: number,
     deltaY: number
 ) {
-    const { td, sizeTransformer } = context;
+    const { td, zoomScale } = context;
     const { vTable } = initValue;
 
     vTable.table.removeAttribute('height');
     vTable.table.style.height = null;
     vTable.forEachCellOfCurrentRow(cell => {
         if (cell.td) {
-            cell.td.style.height =
-                cell.td == td ? `${sizeTransformer(cell.height) + deltaY}px` : null;
+            cell.td.style.height = cell.td == td ? `${cell.height / zoomScale + deltaY}px` : null;
         }
     });
 
@@ -114,10 +113,10 @@ function onDraggingVertical(
     deltaX: number,
     deltaY: number
 ) {
-    const { isRTL, sizeTransformer } = context;
+    const { isRTL, zoomScale } = context;
     const { vTable, nextCells, currentCells } = initValue;
 
-    if (!canResizeColumns(event.pageX, currentCells, nextCells, isRTL, sizeTransformer)) {
+    if (!canResizeColumns(event.pageX, currentCells, nextCells, isRTL, zoomScale)) {
         return false;
     }
 
@@ -139,7 +138,7 @@ function onDraggingVertical(
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
-            const newWidth = sizeTransformer(getHorizontalDistance(rect, event.pageX, !isRTL));
+            const newWidth = getHorizontalDistance(rect, event.pageX, !isRTL) / zoomScale;
             newWidthList.set(td, newWidth);
         }
     });
@@ -196,13 +195,13 @@ function canResizeColumns(
     currentCells: HTMLTableCellElement[],
     nextCells: HTMLTableCellElement[],
     isRTL: boolean,
-    sizeTransformer: SizeTransformer
+    zoomScale: number
 ) {
     for (let i = 0; i < currentCells.length; i++) {
         const td = currentCells[i];
         const rect = normalizeRect(td.getBoundingClientRect());
         if (rect) {
-            const width = sizeTransformer(getHorizontalDistance(rect, newPos, !isRTL));
+            const width = getHorizontalDistance(rect, newPos, !isRTL) / zoomScale;
             if (width < MIN_CELL_WIDTH) {
                 return false;
             }
@@ -216,7 +215,7 @@ function canResizeColumns(
             const rect = normalizeRect(td.getBoundingClientRect());
 
             if (rect) {
-                width = sizeTransformer(getHorizontalDistance(rect, newPos, isRTL));
+                width = getHorizontalDistance(rect, newPos, isRTL) / zoomScale;
             }
         }
 

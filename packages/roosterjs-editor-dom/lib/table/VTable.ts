@@ -69,12 +69,12 @@ export default class VTable {
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      * @param normalizeSize Whether table size needs to be normalized
-     * @param sizeTransformer A size transformer function used for normalize table size
+     * @param zoomScale When the table is under a zoomed container, pass in the zoom scale here
      */
     constructor(
         node: HTMLTableElement | HTMLTableCellElement,
         normalizeSize?: boolean,
-        sizeTransformer?: SizeTransformer
+        zoomScale?: number | SizeTransformer
     ) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
@@ -110,7 +110,7 @@ export default class VTable {
             });
             this.formatInfo = getTableFormatInfo(this.table);
             if (normalizeSize) {
-                this.normalizeSize(sizeTransformer);
+                this.normalizeSize(typeof zoomScale == 'number' ? n => n / zoomScale : zoomScale);
             }
         }
     }
@@ -549,7 +549,7 @@ export default class VTable {
     }
 
     /* normalize width/height for each cell in the table */
-    public normalizeTableCellSize(sizeTransformer?: SizeTransformer) {
+    public normalizeTableCellSize(zoomScale?: number | SizeTransformer) {
         // remove width/height for each row
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             row.removeAttribute('width');
@@ -563,10 +563,12 @@ export default class VTable {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.cells[i][j];
                 if (cell) {
+                    const func =
+                        typeof zoomScale == 'number' ? (n: number) => n / zoomScale : zoomScale;
                     setHTMLElementSizeInPx(
                         cell.td,
-                        sizeTransformer?.(cell.width) || cell.width,
-                        sizeTransformer?.(cell.height) || cell.height
+                        func?.(cell.width) || cell.width,
+                        func?.(cell.height) || cell.height
                     );
                 }
             }
