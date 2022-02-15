@@ -33,7 +33,7 @@ export interface EditorProps {
 export default function Editor(props: EditorProps) {
     const contentDiv = React.useRef<HTMLDivElement>();
     const editor = React.useRef<IEditor>();
-    const { scale, initState } = props;
+    const { scale, initState, plugins } = props;
     const {
         pluginList,
         contentEditFeatures,
@@ -43,6 +43,7 @@ export default function Editor(props: EditorProps) {
         defaultFormat,
         experimentalFeatures,
     } = initState;
+    const pluginKey = plugins.map(p => (p ? p.getName() : '')).join();
 
     const getLinkCallback = React.useCallback(
         (): ((url: string) => string) =>
@@ -86,14 +87,14 @@ export default function Editor(props: EditorProps) {
                 ? new ContextMenu(CONTEXT_MENU_DATA_PROVIDER)
                 : null,
         };
-        const plugins = [
+        const allPlugins = [
             ...Object.keys(editorInstanceToggleablePlugins).map(
                 (k: keyof EditorInstanceToggleablePlugins) => editorInstanceToggleablePlugins[k]
             ),
-            ...props.plugins,
+            ...plugins,
         ];
         const options: EditorOptions = {
-            plugins,
+            plugins: allPlugins,
             defaultFormat,
             getDarkColor,
             experimentalFeatures: experimentalFeatures,
@@ -111,7 +112,7 @@ export default function Editor(props: EditorProps) {
         contentEditFeatures,
         watermarkText,
         forcePreserveRatio,
-        props.plugins.length,
+        pluginKey,
         defaultFormat,
         experimentalFeatures,
         props.snapshotService,
