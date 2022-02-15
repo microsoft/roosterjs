@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.14% </span>
+                <span class="strong">10% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/14</span>
+                <span class='fraction'>1/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10% </span>
+                <span class="strong">16.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/10</span>
+                <span class='fraction'>1/6</span>
             </div>
         
             
@@ -83,20 +83,7 @@
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -109,26 +96,14 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { tableCellSelectionCommon } from './tableCellSelectionCommon';
-import { VCell } from 'roosterjs-editor-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { VCell } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
 &nbsp;
 /**
@@ -137,27 +112,16 @@ import { VTable } from 'roosterjs-editor-dom';
  * @param callback action to apply on each selected cell
  * @returns the amount of cells modified
  */
-export function <span class="fstat-no" title="function not covered" >forEachSelectedCell(</span>vTable: VTable, callback: (cell: VCell) =&gt; void): number {
-    let selectedCells = <span class="cstat-no" title="statement not covered" >0;</span>
-&nbsp;
+export function <span class="fstat-no" title="function not covered" >forEachSelectedCell(</span>vTable: VTable, callback: (cell: VCell) =&gt; void): void {
     const { lastCell<span class="cstat-no" title="statement not covered" >, f</span>irstCell<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >v</span>Table.selection;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    for (let y = <span class="cstat-no" title="statement not covered" >0;</span> y &lt; vTable.cells.length; y++) {</span>
-<span class="cstat-no" title="statement not covered" >        for (let x = <span class="cstat-no" title="statement not covered" >0;</span> x &lt; vTable.cells[y].length; x++) {</span>
-            let element = <span class="cstat-no" title="statement not covered" >vTable.cells[y][x].td as HTMLElement;</span>
-<span class="cstat-no" title="statement not covered" >            if (</span>
-                element?.classList.contains(tableCellSelectionCommon.TABLE_CELL_SELECTED) ||
-                (((y &gt;= firstCell.y &amp;&amp; y &lt;= lastCell.y) || (y &lt;= firstCell.y &amp;&amp; y &gt;= lastCell.y)) &amp;&amp;
-                    ((x &gt;= firstCell.x &amp;&amp; x &lt;= lastCell.x) ||
-                        (x &lt;= firstCell.x &amp;&amp; x &gt;= lastCell.x)))
-            ) {
-<span class="cstat-no" title="statement not covered" >                selectedCells += 1;</span>
+<span class="cstat-no" title="statement not covered" >    for (let y = <span class="cstat-no" title="statement not covered" >firstCell.y;</span> y &lt;= lastCell.y; y++) {</span>
+<span class="cstat-no" title="statement not covered" >        for (let x = <span class="cstat-no" title="statement not covered" >firstCell.x;</span> x &lt;= lastCell.x; x++) {</span>
+<span class="cstat-no" title="statement not covered" >            if (vTable.cells[y][x]?.td) {</span>
 <span class="cstat-no" title="statement not covered" >                callback(vTable.cells[y][x]);</span>
             }
         }
     }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    return selectedCells;</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -166,7 +130,7 @@ export function <span class="fstat-no" title="function not covered" >forEachSele
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Feb 15 2022 05:29:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 15 2022 14:23:38 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

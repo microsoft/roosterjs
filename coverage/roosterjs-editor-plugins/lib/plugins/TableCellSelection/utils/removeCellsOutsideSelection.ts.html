@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.52% </span>
+                <span class="strong">5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/21</span>
+                <span class='fraction'>1/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/16</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10.53% </span>
+                <span class="strong">5.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/19</span>
+                <span class='fraction'>1/17</span>
             </div>
         
             
@@ -96,11 +96,7 @@
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,26 +123,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { normalizeTableSelection } from './normalizeTableSelection';
-import { VCell } from 'roosterjs-editor-types';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { VCell } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
 &nbsp;
 /**
  * @internal
  * Remove the cells outside of the selection.
+ * @param vTable VTable to remove selection
  */
 export function <span class="fstat-no" title="function not covered" >removeCellsOutsideSelection(</span>vTable: VTable) {
-    const { firstCell<span class="cstat-no" title="statement not covered" >, l</span>astCell<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >n</span>ormalizeTableSelection(vTable.selection);</span>
+    const { firstCell<span class="cstat-no" title="statement not covered" >, l</span>astCell<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >v</span>Table.selection;</span>
     const rowsLength = <span class="cstat-no" title="statement not covered" >vTable.cells.length - 1;</span>
     const colIndex = <span class="cstat-no" title="statement not covered" >vTable.cells[rowsLength].length - 1;</span>
     const resultCells: VCell[][] = <span class="cstat-no" title="statement not covered" >[];</span>
@@ -163,11 +155,7 @@ export function <span class="fstat-no" title="function not covered" >removeCells
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    vTable.cells.forEach(<span class="fstat-no" title="function not covered" >(r</span>ow, y) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        row = row.filter(</span>
-<span class="fstat-no" title="function not covered" >            (_</span>, x) =&gt;
-<span class="cstat-no" title="statement not covered" >                ((y &gt;= firstY &amp;&amp; y &lt;= lastY) || (y &lt;= firstY &amp;&amp; y &gt;= lastY)) &amp;&amp;</span>
-                ((x &gt;= firstX &amp;&amp; x &lt;= lastX) || (x &lt;= firstX &amp;&amp; x &gt;= lastX))
-        );
+<span class="cstat-no" title="statement not covered" >        row = row.filter(<span class="fstat-no" title="function not covered" >(_</span>, x) =&gt; <span class="cstat-no" title="statement not covered" >y &gt;= firstY &amp;&amp; y &lt;= lastY &amp;&amp; x &gt;= firstX &amp;&amp; x &lt;= lastX);</span></span>
 <span class="cstat-no" title="statement not covered" >        if (row.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >            resultCells.push(row);</span>
         }
@@ -181,7 +169,7 @@ export function <span class="fstat-no" title="function not covered" >removeCells
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Feb 15 2022 05:29:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 15 2022 14:23:38 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
