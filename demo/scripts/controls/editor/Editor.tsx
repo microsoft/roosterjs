@@ -55,6 +55,10 @@ export default function Editor(props: EditorProps) {
     );
 
     React.useEffect(() => {
+        editor.current?.setZoomScale(scale);
+    }, [scale]);
+
+    React.useEffect(() => {
         const editorInstanceToggleablePlugins: EditorInstanceToggleablePlugins = {
             contentEdit: pluginList.contentEdit ? new ContentEdit(contentEditFeatures) : null,
             hyperlink: pluginList.hyperlink ? new HyperLink(getLinkCallback()) : null,
@@ -95,7 +99,7 @@ export default function Editor(props: EditorProps) {
             experimentalFeatures: experimentalFeatures,
             undoSnapshotService: props.snapshotService,
             trustedHTMLHandler: trustedHTMLHandler,
-            sizeTransformer: size => size / scale,
+            zoomScale: scale,
         };
         editor.current = new RoosterJsEditor(contentDiv.current, options);
         return () => {
@@ -107,7 +111,7 @@ export default function Editor(props: EditorProps) {
         contentEditFeatures,
         watermarkText,
         forcePreserveRatio,
-        props.plugins,
+        props.plugins.length,
         defaultFormat,
         experimentalFeatures,
         props.snapshotService,

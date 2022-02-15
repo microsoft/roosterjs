@@ -1,12 +1,7 @@
 import Disposable from '../../../pluginUtils/Disposable';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import {
-    CreateElementData,
-    IEditor,
-    SizeTransformer,
-    TableOperation,
-} from 'roosterjs-editor-types';
+import { CreateElementData, IEditor, TableOperation } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
@@ -62,7 +57,7 @@ export default function createTableInserter(
             div,
             td,
             isHorizontal,
-            editor.getSizeTransformer(),
+            editor.getZoomScale(),
             onInsert
         );
 
@@ -75,7 +70,7 @@ class TableInsertHandler implements Disposable {
         private div: HTMLDivElement,
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
-        private sizeTransformer: SizeTransformer,
+        private zoomScale: number,
         private onInsert: () => void
     ) {
         this.div.addEventListener('click', this.insertTd);
@@ -89,7 +84,7 @@ class TableInsertHandler implements Disposable {
     private insertTd = () => {
         let vtable = new VTable(this.td);
         if (!this.isHorizontal) {
-            vtable.normalizeTableCellSize(this.sizeTransformer);
+            vtable.normalizeTableCellSize(this.zoomScale);
 
             // Since adding new column will cause table width to change, we need to remove width properties
             vtable.table.removeAttribute('width');
