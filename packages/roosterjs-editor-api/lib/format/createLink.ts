@@ -12,7 +12,6 @@ function applyLinkPrefix(url: string): string {
     if (!url) {
         return url;
     }
-
     // Add link prefix per rule:
     // (a) if the url always starts with a URI scheme, leave it as it is
     // (b) if the url is an email address, xxx@... add mailto: prefix
@@ -62,6 +61,7 @@ export default function createLink(
         // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         let originalUrl = linkData ? linkData.originalUrl : url;
+        debugger;
 
         editor.addUndoSnapshot(() => {
             let range = editor.getSelectionRange();
@@ -83,6 +83,13 @@ export default function createLink(
             } else {
                 // the selection is not collapsed, use browser execCommand
                 editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
+                const traverser = editor.getSelectionTraverser();
+                let currentInline = traverser.getNextInlineElement();
+                while (currentInline) {
+                    const a = currentInline.getContainerNode();
+                    a.parentElement.removeChild(a);
+                    currentInline = traverser.getNextInlineElement();
+                }
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);
             }
