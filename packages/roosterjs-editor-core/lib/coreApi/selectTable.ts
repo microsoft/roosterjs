@@ -1,10 +1,9 @@
-import { getTagOfNode, toArray, VTable } from 'roosterjs-editor-dom';
+import { getStyles, getTagOfNode, setStyles, toArray, VTable } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     SelectionRangeTypes,
     TableSelection,
     SelectTable,
-    Coordinates,
 } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
@@ -25,7 +24,7 @@ export const selectTable: SelectTable = (
     table: HTMLTableElement,
     coordinates?: TableSelection
 ) => {
-    unselect(core.contentDiv.ownerDocument);
+    unselect(core);
 
     if (coordinates && table) {
         ensureUniqueId(table, TABLE_ID);
@@ -49,7 +48,6 @@ function buildCss(
     coordinates: TableSelection,
     contentDivSelector: string
 ): { css: string; ranges: Range[] } {
-    coordinates = normalizeTableSelection(coordinates, table);
     const tr1 = coordinates.firstCell.y;
     const td1 = coordinates.firstCell.x;
     const tr2 = coordinates.lastCell.y;
@@ -112,6 +110,9 @@ function buildCss(
                     } else if (!css.endsWith(',')) {
                         css += ',';
                     }
+
+                    removeImportant(row[cellIndex].td);
+
                     const selector = generateCssFromCell(
                         contentDivSelector,
                         table.id,
@@ -125,13 +126,13 @@ function buildCss(
                     lastSelected = table.querySelector(selector)!;
                 }
             }
+        }
 
-            if (firstSelected && lastSelected) {
-                const rowRange = new Range();
-                rowRange.setStartBefore(firstSelected);
-                rowRange.setEndAfter(lastSelected);
-                ranges.push(rowRange);
-            }
+        if (firstSelected && lastSelected) {
+            const rowRange = new Range();
+            rowRange.setStartBefore(firstSelected);
+            rowRange.setEndAfter(lastSelected);
+            ranges.push(rowRange);
         }
     });
 
@@ -156,40 +157,14 @@ function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSel
     return ranges;
 }
 
-function unselect(doc: Document) {
-    let styleElement = doc.getElementById(STYLE_ID + CONTENT_DIV_ID) as HTMLStyleElement;
+function unselect(core: EditorCore) {
+    const div = core.contentDiv;
+    let styleElement = div.ownerDocument.getElementById(STYLE_ID + div.id) as HTMLStyleElement;
     if (styleElement?.sheet?.cssRules) {
         while (styleElement.sheet.cssRules.length > 0) {
             styleElement.sheet.deleteRule(0);
         }
     }
-}
-
-/**
- * Make the first Cell of a table selection always be on top of the last cell.
- * @param input Table selection
- * @returns Table Selection where the first cell is always going to be first selected in the table
- * and the last cell always going to be last selected in the table.
- */
-function normalizeTableSelection(input: TableSelection, table: HTMLTableElement): TableSelection {
-    const { firstCell, lastCell } = input;
-
-    let newFirst = {
-        x: Math.min(firstCell.x, lastCell.x),
-        y: Math.min(firstCell.y, lastCell.y),
-    };
-    let newLast = {
-        x: Math.max(firstCell.x, lastCell.x),
-        y: Math.max(firstCell.y, lastCell.y),
-    };
-
-    const checkIfExists = (coord: Coordinates) => table.rows.item(coord.y).cells.item(coord.x);
-
-    if (!checkIfExists(newFirst) || !checkIfExists(newLast)) {
-        throw new Error('Table selection provided is not valid');
-    }
-
-    return { firstCell: newFirst, lastCell: newLast };
 }
 
 function ensureUniqueId(el: HTMLElement, idPrefix: string) {
@@ -228,4 +203,22 @@ function generateCssFromCell(
         index +
         ')'
     );
+}
+
+function removeImportant(cell: HTMLTableCellElement) {
+    if (cell) {
+        const styles = getStyles(cell);
+        let modifiedStyles = 0;
+        ['background-color', 'background'].forEach(style => {
+            if (styles[style]?.indexOf('!important') > -1) {
+                const index = styles[style].indexOf('!');
+                styles[style] = styles[style].substring(0, index);
+                modifiedStyles++;
+            }
+        });
+
+        if (modifiedStyles > 0) {
+            setStyles(cell, styles);
+        }
+    }
 }
