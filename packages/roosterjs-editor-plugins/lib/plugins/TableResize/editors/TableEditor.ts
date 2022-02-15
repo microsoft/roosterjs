@@ -1,8 +1,9 @@
 import createCellResizer from './CellResizer';
 import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
+import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { ChangeSource, IEditor, NodePosition } from 'roosterjs-editor-types';
+import { ChangeSource, IEditor, NodePosition, TableSelection } from 'roosterjs-editor-types';
 import { getComputedStyle, normalizeRect } from 'roosterjs-editor-dom';
 
 const INSERTER_HOVER_OFFSET = 5;
@@ -46,6 +47,9 @@ export default class TableEditor {
     // 5 - Resize whole table
     private tableResizer: TableEditFeature;
 
+    // 6 - Select whole table
+    private tableSelector: TableEditFeature;
+
     private isRTL: boolean;
     private start: NodePosition;
     private end: NodePosition;
@@ -63,6 +67,7 @@ export default class TableEditor {
             this.isRTL,
             this.onFinishEditing
         );
+        this.tableSelector = createTableSelector(table, sizeTransformer, this.onSelect);
         this.editor.addUndoSnapshot((start, end) => {
             this.start = start;
             this.end = end;
@@ -73,6 +78,7 @@ export default class TableEditor {
         this.disposeTableResizer();
         this.disposeCellResizers();
         this.disposeTableInserter();
+        this.disposeTableSelector();
     }
 
     onMouseMove(x: number, y: number) {
@@ -203,6 +209,13 @@ export default class TableEditor {
         }
     }
 
+    private disposeTableSelector() {
+        if (this.tableSelector) {
+            disposeTableEditFeature(this.tableSelector);
+            this.tableSelector = null;
+        }
+    }
+
     private onFinishEditing = (): false => {
         this.editor.select(this.start, this.end);
         this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
@@ -218,5 +231,25 @@ export default class TableEditor {
     private onInserted = () => {
         this.disposeTableResizer();
         this.onFinishEditing();
+    };
+
+    private onSelect = (table: HTMLTableElement) => {
+        this.editor.focus();
+        if (table) {
+            const rows = table.rows.length - 1;
+            const lastCellIndex = table.rows.item(rows).cells.length - 1;
+
+            const selection: TableSelection = {
+                firstCell: {
+                    x: 0,
+                    y: 0,
+                },
+                lastCell: {
+                    y: rows,
+                    x: lastCellIndex,
+                },
+            };
+            this.editor.select(table, selection);
+        }
     };
 }

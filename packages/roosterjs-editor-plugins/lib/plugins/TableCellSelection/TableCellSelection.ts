@@ -536,9 +536,7 @@ export default class TableCellSelection implements EditorPlugin {
 
     //#region utils
     private clearState() {
-        if (this.firstTable) {
-            this.editor.select(this.firstTable, null);
-        }
+        this.editor.select(null);
         this.vTable = null;
         this.firstTarget = null;
         this.lastTarget = null;
