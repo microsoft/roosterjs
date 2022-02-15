@@ -101,7 +101,6 @@ describe('createLink()', () => {
 
         // Assert
         let link = document.getElementsByTagName('a')[0];
-        console.log(link.outerHTML);
         expect(link.outerHTML).toBe('<a href="http://www.microsoft.com">Hello</a>');
     });
 });
