@@ -338,7 +338,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { KnownCreateElementDataIndex, SizeTransformer } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 &nbsp;
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -349,7 +349,7 @@ const MIN_CELL_HEIGHT = 20;
  */
 export default function <span class="fstat-no" title="function not covered" >createTableResizer(</span>
     table: HTMLTableElement,
-    sizeTransformer: SizeTransformer,
+    zoomScale: number,
     isRTL: boolean,
     onDragEnd: () =&gt; false
 ): TableEditFeature {
@@ -368,7 +368,7 @@ export default function <span class="fstat-no" title="function not covered" >cre
     const context: DragAndDropContext = <span class="cstat-no" title="statement not covered" >{</span>
         isRTL,
         table,
-        sizeTransformer,
+        zoomScale,
     };
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    setResizeDivPosition(context, div);</span>
@@ -382,7 +382,7 @@ export default function <span class="fstat-no" title="function not covered" >cre
             onDragging,
             onDragEnd,
         },
-        sizeTransformer
+        zoomScale
     );
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return { node: table, div, featureHandler };</span>
@@ -391,7 +391,7 @@ export default function <span class="fstat-no" title="function not covered" >cre
 interface DragAndDropContext {
     table: HTMLTableElement;
     isRTL: boolean;
-    sizeTransformer: SizeTransformer;
+    zoomScale: number;
 }
 &nbsp;
 interface DragAndDropInitValue {
@@ -402,7 +402,7 @@ interface DragAndDropInitValue {
 function <span class="fstat-no" title="function not covered" >onDragStart(</span>context: DragAndDropContext, event: MouseEvent) {
 <span class="cstat-no" title="statement not covered" >    return {</span>
         originalRect: context.table.getBoundingClientRect(),
-        vTable: new VTable(context.table, true /*normalizeTable*/, context.sizeTransformer),
+        vTable: new VTable(context.table, true /*normalizeTable*/, context.zoomScale),
     };
 }
 &nbsp;
@@ -413,10 +413,10 @@ function <span class="fstat-no" title="function not covered" >onDragging(</span>
     deltaX: number,
     deltaY: number
 ) {
-    const { isRTL, sizeTransformer } = <span class="cstat-no" title="statement not covered" >context;</span>
+    const { isRTL, zoomScale } = <span class="cstat-no" title="statement not covered" >context;</span>
     const { originalRect, vTable } = <span class="cstat-no" title="statement not covered" >initValue;</span>
-    const ratioX = <span class="cstat-no" title="statement not covered" >1.0 + (deltaX / sizeTransformer(originalRect.width)) * (isRTL ? -1 : 1);</span>
-    const ratioY = <span class="cstat-no" title="statement not covered" >1.0 + deltaY / sizeTransformer(originalRect.height);</span>
+    const ratioX = <span class="cstat-no" title="statement not covered" >1.0 + (deltaX / originalRect.width) * zoomScale * (isRTL ? -1 : 1);</span>
+    const ratioY = <span class="cstat-no" title="statement not covered" >1.0 + (deltaY / originalRect.height) * zoomScale;</span>
     const shouldResizeX = <span class="cstat-no" title="statement not covered" >Math.abs(ratioX - 1.0) &gt; 1e-3;</span>
     const shouldResizeY = <span class="cstat-no" title="statement not covered" >Math.abs(ratioY - 1.0) &gt; 1e-3;</span>
 &nbsp;
@@ -428,7 +428,7 @@ function <span class="fstat-no" title="function not covered" >onDragging(</span>
 <span class="cstat-no" title="statement not covered" >                    if (shouldResizeX) {</span>
                         // the width of some external table is fixed, we need to make it resizable
 <span class="cstat-no" title="statement not covered" >                        vTable.table.style.width = null;</span>
-                        const newWidth = <span class="cstat-no" title="statement not covered" >sizeTransformer(cell.width * ratioX);</span>
+                        const newWidth = <span class="cstat-no" title="statement not covered" >(cell.width * ratioX) / zoomScale;</span>
 <span class="cstat-no" title="statement not covered" >                        cell.td.style.boxSizing = 'border-box';</span>
 <span class="cstat-no" title="statement not covered" >                        if (newWidth &gt;= MIN_CELL_WIDTH) {</span>
 <span class="cstat-no" title="statement not covered" >                            cell.td.style.wordBreak = 'break-word';</span>
@@ -441,7 +441,7 @@ function <span class="fstat-no" title="function not covered" >onDragging(</span>
                         // the height of some external table is fixed, we need to make it resizable
 <span class="cstat-no" title="statement not covered" >                        vTable.table.style.height = null;</span>
 <span class="cstat-no" title="statement not covered" >                        if (j == 0) {</span>
-                            const newHeight = <span class="cstat-no" title="statement not covered" >sizeTransformer(cell.height * ratioY);</span>
+                            const newHeight = <span class="cstat-no" title="statement not covered" >(cell.height * ratioY) / zoomScale;</span>
 <span class="cstat-no" title="statement not covered" >                            if (newHeight &gt;= MIN_CELL_HEIGHT) {</span>
 <span class="cstat-no" title="statement not covered" >                                cell.td.style.height = `${newHeight}px`;</span>
                             }
@@ -478,7 +478,7 @@ function <span class="fstat-no" title="function not covered" >setResizeDivPositi
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Feb 16 2022 05:15:17 GMT+0000 (Coordinated Universal Time)
+                at Wed Feb 16 2022 05:28:36 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

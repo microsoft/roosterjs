@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.17% </span>
+                <span class="strong">75.42% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>227/298</span>
+                <span class='fraction'>227/301</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.12% </span>
+                <span class="strong">67.79% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>141/204</span>
+                <span class='fraction'>141/208</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.49% </span>
+                <span class="strong">82.05% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>32/37</span>
+                <span class='fraction'>32/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.98% </span>
+                <span class="strong">77.7% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>216/277</span>
+                <span class='fraction'>216/278</span>
             </div>
         
             
@@ -695,7 +695,9 @@
 <a name='L630'></a><a href='#L630'>630</a>
 <a name='L631'></a><a href='#L631'>631</a>
 <a name='L632'></a><a href='#L632'>632</a>
-<a name='L633'></a><a href='#L633'>633</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L633'></a><a href='#L633'>633</a>
+<a name='L634'></a><a href='#L634'>634</a>
+<a name='L635'></a><a href='#L635'>635</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1260,6 +1262,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1398,12 +1402,12 @@ export default class VTable {
      * Create a new instance of VTable object using HTML TABLE or TD node
      * @param node The HTML Table or TD node
      * @param normalizeSize Whether table size needs to be normalized
-     * @param sizeTransformer A size transformer function used for normalize table size
+     * @param zoomScale When the table is under a zoomed container, pass in the zoom scale here
      */
     constructor(
         node: HTMLTableElement | HTMLTableCellElement,
         normalizeSize?: boolean,
-        sizeTransformer?: SizeTransformer
+        zoomScale?: number | SizeTransformer
     ) {
         this.table = safeInstanceOf(node, 'HTMLTableElement') ? node : getTableFromTd(node);
         if (this.table) {
@@ -1439,7 +1443,7 @@ export default class VTable {
             });
             this.formatInfo = getTableFormatInfo(this.table);
             <span class="missing-if-branch" title="if path not taken" >I</span>if (normalizeSize) {
-<span class="cstat-no" title="statement not covered" >                this.normalizeSize(sizeTransformer);</span>
+<span class="cstat-no" title="statement not covered" >                this.normalizeSize(typeof zoomScale == 'number' ? <span class="fstat-no" title="function not covered" >n </span>=&gt; <span class="cstat-no" title="statement not covered" >n / zoomScale :</span> zoomScale);</span>
             }
         }
     }
@@ -1878,7 +1882,7 @@ export default class VTable {
     }
 &nbsp;
     /* normalize width/height for each cell in the table */
-<span class="fstat-no" title="function not covered" >    public n</span>ormalizeTableCellSize(sizeTransformer?: SizeTransformer) {
+<span class="fstat-no" title="function not covered" >    public n</span>ormalizeTableCellSize(zoomScale?: number | SizeTransformer) {
         // remove width/height for each row
 <span class="cstat-no" title="statement not covered" >        for (let i = <span class="cstat-no" title="statement not covered" >0,</span> row<span class="cstat-no" title="statement not covered" >; (</span>row = this.table.rows[i]); i++) {</span>
 <span class="cstat-no" title="statement not covered" >            row.removeAttribute('width');</span>
@@ -1892,10 +1896,12 @@ export default class VTable {
 <span class="cstat-no" title="statement not covered" >            for (let j = <span class="cstat-no" title="statement not covered" >0;</span> j &lt; this.cells[i].length; j++) {</span>
                 const cell = <span class="cstat-no" title="statement not covered" >this.cells[i][j];</span>
 <span class="cstat-no" title="statement not covered" >                if (cell) {</span>
+                    const func =
+<span class="cstat-no" title="statement not covered" >                        typeof zoomScale == 'number' ? <span class="fstat-no" title="function not covered" >(n</span>: number) =&gt; <span class="cstat-no" title="statement not covered" >n / zoomScale :</span> zoomScale;</span>
 <span class="cstat-no" title="statement not covered" >                    setHTMLElementSizeInPx(</span>
                         cell.td,
-                        sizeTransformer?.(cell.width) || cell.width,
-                        sizeTransformer?.(cell.height) || cell.height
+                        func?.(cell.width) || cell.width,
+                        func?.(cell.height) || cell.height
                     );
                 }
             }
@@ -1966,7 +1972,7 @@ function cloneNode&lt;T extends Node&gt;(node: T): T {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Feb 16 2022 05:15:17 GMT+0000 (Coordinated Universal Time)
+                at Wed Feb 16 2022 05:28:36 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -291,8 +291,7 @@
 <a name='L226'></a><a href='#L226'>226</a>
 <a name='L227'></a><a href='#L227'>227</a>
 <a name='L228'></a><a href='#L228'>228</a>
-<a name='L229'></a><a href='#L229'>229</a>
-<a name='L230'></a><a href='#L230'>230</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L229'></a><a href='#L229'>229</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -393,7 +392,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -525,7 +523,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { KnownCreateElementDataIndex, Rect, SizeTransformer } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex, Rect } from 'roosterjs-editor-types';
 &nbsp;
 const CELL_RESIZER_WIDTH = 4;
 const MIN_CELL_WIDTH = 30;
@@ -535,7 +533,7 @@ const MIN_CELL_WIDTH = 30;
  */
 export default function <span class="fstat-no" title="function not covered" >createCellResizer(</span>
     td: HTMLTableCellElement,
-    sizeTransformer: SizeTransformer,
+    zoomScale: number,
     isRTL: boolean,
     isHorizontal: boolean,
     onStart: () =&gt; void,
@@ -551,7 +549,7 @@ export default function <span class="fstat-no" title="function not covered" >cre
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    document.body.appendChild(div);</span>
 &nbsp;
-    const context: DragAndDropContext = <span class="cstat-no" title="statement not covered" >{ td, isRTL, sizeTransformer, onStart };</span>
+    const context: DragAndDropContext = <span class="cstat-no" title="statement not covered" >{ td, isRTL, zoomScale, onStart };</span>
     const setPosition = <span class="cstat-no" title="statement not covered" >isHorizontal ? setHorizontalPosition : setVerticalPosition;</span>
 <span class="cstat-no" title="statement not covered" >    setPosition(context, div);</span>
 &nbsp;
@@ -566,7 +564,7 @@ export default function <span class="fstat-no" title="function not covered" >cre
         context,
         setPosition,
         handler,
-        sizeTransformer
+        zoomScale
     );
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return { node: td, div, featureHandler };</span>
@@ -575,7 +573,7 @@ export default function <span class="fstat-no" title="function not covered" >cre
 interface DragAndDropContext {
     td: HTMLTableCellElement;
     isRTL: boolean;
-    sizeTransformer: SizeTransformer;
+    zoomScale: number;
     onStart: () =&gt; void;
 }
 &nbsp;
@@ -586,8 +584,8 @@ interface DragAndDropInitValue {
 }
 &nbsp;
 function <span class="fstat-no" title="function not covered" >onDragStart(</span>context: DragAndDropContext, event: MouseEvent) {
-    const { td, isRTL, sizeTransformer, onStart } = <span class="cstat-no" title="statement not covered" >context;</span>
-    const vTable = <span class="cstat-no" title="statement not covered" >new VTable(td, true /*normalizeSize*/, sizeTransformer);</span>
+    const { td, isRTL, zoomScale, onStart } = <span class="cstat-no" title="statement not covered" >context;</span>
+    const vTable = <span class="cstat-no" title="statement not covered" >new VTable(td, true /*normalizeSize*/, zoomScale);</span>
     const rect = <span class="cstat-no" title="statement not covered" >normalizeRect(td.getBoundingClientRect());</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (rect) {</span>
@@ -614,15 +612,14 @@ function <span class="fstat-no" title="function not covered" >onDraggingHorizont
     deltaX: number,
     deltaY: number
 ) {
-    const { td, sizeTransformer } = <span class="cstat-no" title="statement not covered" >context;</span>
+    const { td, zoomScale } = <span class="cstat-no" title="statement not covered" >context;</span>
     const { vTable } = <span class="cstat-no" title="statement not covered" >initValue;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    vTable.table.removeAttribute('height');</span>
 <span class="cstat-no" title="statement not covered" >    vTable.table.style.height = null;</span>
 <span class="cstat-no" title="statement not covered" >    vTable.forEachCellOfCurrentRow(<span class="fstat-no" title="function not covered" >cell </span>=&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        if (cell.td) {</span>
-<span class="cstat-no" title="statement not covered" >            cell.td.style.height =</span>
-                cell.td == td ? `${sizeTransformer(cell.height) + deltaY}px` : null;
+<span class="cstat-no" title="statement not covered" >            cell.td.style.height = cell.td == td ? `${cell.height / zoomScale + deltaY}px` : null;</span>
         }
     });
 &nbsp;
@@ -637,10 +634,10 @@ function <span class="fstat-no" title="function not covered" >onDraggingVertical
     deltaX: number,
     deltaY: number
 ) {
-    const { isRTL, sizeTransformer } = <span class="cstat-no" title="statement not covered" >context;</span>
+    const { isRTL, zoomScale } = <span class="cstat-no" title="statement not covered" >context;</span>
     const { vTable, nextCells, currentCells } = <span class="cstat-no" title="statement not covered" >initValue;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (!canResizeColumns(event.pageX, currentCells, nextCells, isRTL, sizeTransformer)) {</span>
+<span class="cstat-no" title="statement not covered" >    if (!canResizeColumns(event.pageX, currentCells, nextCells, isRTL, zoomScale)) {</span>
 <span class="cstat-no" title="statement not covered" >        return false;</span>
     }
 &nbsp;
@@ -662,7 +659,7 @@ function <span class="fstat-no" title="function not covered" >onDraggingVertical
 <span class="cstat-no" title="statement not covered" >            td.style.wordBreak = 'break-word';</span>
 <span class="cstat-no" title="statement not covered" >            td.style.whiteSpace = 'normal';</span>
 <span class="cstat-no" title="statement not covered" >            td.style.boxSizing = 'border-box';</span>
-            const newWidth = <span class="cstat-no" title="statement not covered" >sizeTransformer(getHorizontalDistance(rect, event.pageX, !isRTL));</span>
+            const newWidth = <span class="cstat-no" title="statement not covered" >getHorizontalDistance(rect, event.pageX, !isRTL) / zoomScale;</span>
 <span class="cstat-no" title="statement not covered" >            newWidthList.set(td, newWidth);</span>
         }
     });
@@ -719,13 +716,13 @@ function <span class="fstat-no" title="function not covered" >canResizeColumns(<
     currentCells: HTMLTableCellElement[],
     nextCells: HTMLTableCellElement[],
     isRTL: boolean,
-    sizeTransformer: SizeTransformer
+    zoomScale: number
 ) {
 <span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; currentCells.length; i++) {</span>
         const td = <span class="cstat-no" title="statement not covered" >currentCells[i];</span>
         const rect = <span class="cstat-no" title="statement not covered" >normalizeRect(td.getBoundingClientRect());</span>
 <span class="cstat-no" title="statement not covered" >        if (rect) {</span>
-            const width = <span class="cstat-no" title="statement not covered" >sizeTransformer(getHorizontalDistance(rect, newPos, !isRTL));</span>
+            const width = <span class="cstat-no" title="statement not covered" >getHorizontalDistance(rect, newPos, !isRTL) / zoomScale;</span>
 <span class="cstat-no" title="statement not covered" >            if (width &lt; MIN_CELL_WIDTH) {</span>
 <span class="cstat-no" title="statement not covered" >                return false;</span>
             }
@@ -739,7 +736,7 @@ function <span class="fstat-no" title="function not covered" >canResizeColumns(<
             const rect = <span class="cstat-no" title="statement not covered" >normalizeRect(td.getBoundingClientRect());</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (rect) {</span>
-<span class="cstat-no" title="statement not covered" >                width = sizeTransformer(getHorizontalDistance(rect, newPos, isRTL));</span>
+<span class="cstat-no" title="statement not covered" >                width = getHorizontalDistance(rect, newPos, isRTL) / zoomScale;</span>
             }
         }
 &nbsp;
@@ -757,7 +754,7 @@ function <span class="fstat-no" title="function not covered" >canResizeColumns(<
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Feb 16 2022 05:15:17 GMT+0000 (Coordinated Universal Time)
+                at Wed Feb 16 2022 05:28:36 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

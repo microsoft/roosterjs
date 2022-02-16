@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">13.16% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/40</span>
+                <span class='fraction'>5/38</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">13.16% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/40</span>
+                <span class='fraction'>5/38</span>
             </div>
         
             
@@ -142,11 +142,7 @@
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,7 +170,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -208,7 +203,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -229,7 +223,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
-import { SizeTransformer } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * @internal
@@ -254,10 +247,9 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; implements Di
         private <span class="cstat-no" title="statement not covered" >context: TContext,</span>
         private <span class="cstat-no" title="statement not covered" >onSubmit: (context: TContext, trigger: HTMLElement) =&gt; void,</span>
         private <span class="cstat-no" title="statement not covered" >handler: DragAndDropHandler&lt;TContext, TInitValue&gt;,</span>
-        private <span class="cstat-no" title="statement not covered" >sizeTransformer: SizeTransformer</span>
+        private <span class="cstat-no" title="statement not covered" >zoomScale: number</span>
     ) {
 <span class="cstat-no" title="statement not covered" >        trigger.addEventListener('mousedown', this.onMouseDown);</span>
-<span class="cstat-no" title="statement not covered" >        this.sizeTransformer = sizeTransformer;</span>
     }
 &nbsp;
     /**
@@ -292,9 +284,8 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; implements Di
 &nbsp;
     private <span class="cstat-no" title="statement not covered" >onMouseMove = <span class="fstat-no" title="function not covered" >(e</span>: MouseEvent) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        e.preventDefault();</span>
-        const sizeTransformer = <span class="cstat-no" title="statement not covered" >this.sizeTransformer;</span>
-        const deltaX = <span class="cstat-no" title="statement not covered" >sizeTransformer(e.pageX - this.initX);</span>
-        const deltaY = <span class="cstat-no" title="statement not covered" >sizeTransformer(e.pageY - this.initY);</span>
+        const deltaX = <span class="cstat-no" title="statement not covered" >(e.pageX - this.initX) / this.zoomScale;</span>
+        const deltaY = <span class="cstat-no" title="statement not covered" >(e.pageY - this.initY) / this.zoomScale;</span>
 <span class="cstat-no" title="statement not covered" >        if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {</span>
 <span class="cstat-no" title="statement not covered" >            this.onSubmit?.(this.context, this.trigger);</span>
         }
@@ -316,7 +307,7 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; implements Di
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Feb 16 2022 05:15:17 GMT+0000 (Coordinated Universal Time)
+                at Wed Feb 16 2022 05:28:36 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>EdgeLinkPreview | RoosterJs API Reference - v8.15.0</title>
+	<title>ZoomChangedEvent | RoosterJs API Reference - v8.15.0</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference - v8.15.0">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_editor_types.html">roosterjs-editor-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_types.edgelinkpreview.html">EdgeLinkPreview</a>
+					<a href="roosterjs_editor_types.zoomchangedevent.html">ZoomChangedEvent</a>
 				</li>
 			</ul>
-			<h1>Interface EdgeLinkPreview</h1>
+			<h1>Interface ZoomChangedEvent</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The link preview pasted info provided by Edge</p>
+						<p>Represents an event object triggered from Editor.setZoomScale() API.
+						Plugins can handle this event when they need to do something for zoom changing.</p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +78,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">EdgeLinkPreview</span>
+						<a href="roosterjs_editor_types.basepluginevent.html" class="tsd-signature-type" data-tsd-kind="Interface">BasePluginEvent</a><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.plugineventtype.html#zoomchanged" class="tsd-signature-type" data-tsd-kind="Enumeration member">ZoomChanged</a><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">ZoomChangedEvent</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -88,11 +94,10 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.edgelinkpreview.html#domain" class="tsd-kind-icon">domain</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.edgelinkpreview.html#preferred_format" class="tsd-kind-icon">preferred_<wbr>format</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.edgelinkpreview.html#title" class="tsd-kind-icon">title</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.edgelinkpreview.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.edgelinkpreview.html#url" class="tsd-kind-icon">url</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.zoomchangedevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.zoomchangedevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.zoomchangedevent.html#newzoomscale" class="tsd-kind-icon">new<wbr>Zoom<wbr>Scale</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.zoomchangedevent.html#oldzoomscale" class="tsd-kind-icon">old<wbr>Zoom<wbr>Scale</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,78 +105,75 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="domain" class="tsd-anchor"></a>
-					<h3>domain</h3>
-					<div class="tsd-signature tsd-kind-icon">domain<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="eventdatacache" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> event<wbr>Data<wbr>Cache</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Data<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventdatacache">eventDataCache</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts#L8">roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L17">roosterjs-editor-types/lib/event/BasePluginEvent.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Domain of the source page</p>
+							<p>An optional event cache.
+								This will be consumed by event cache API to store some expensive calculation result.
+							So that for the same event across plugins, the result doesn&#39;t need to be calculated again</p>
+						</div>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="eventtype" class="tsd-anchor"></a>
+					<h3>event<wbr>Type</h3>
+					<div class="tsd-signature tsd-kind-icon">event<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.plugineventtype.html#zoomchanged" class="tsd-signature-type" data-tsd-kind="Enumeration member">ZoomChanged</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventtype">eventType</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L10">roosterjs-editor-types/lib/event/BasePluginEvent.ts:10</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Type of this event</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="preferred_format" class="tsd-anchor"></a>
-					<h3>preferred_<wbr>format</h3>
-					<div class="tsd-signature tsd-kind-icon">preferred_<wbr>format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="newzoomscale" class="tsd-anchor"></a>
+					<h3>new<wbr>Zoom<wbr>Scale</h3>
+					<div class="tsd-signature tsd-kind-icon">new<wbr>Zoom<wbr>Scale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts#L13">roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/event/ZoomChangedEvent.ts#L18">roosterjs-editor-types/lib/event/ZoomChangedEvent.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Preferred paste format</p>
+							<p>Zoom scale value after this change</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="title" class="tsd-anchor"></a>
-					<h3>title</h3>
-					<div class="tsd-signature tsd-kind-icon">title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="oldzoomscale" class="tsd-anchor"></a>
+					<h3>old<wbr>Zoom<wbr>Scale</h3>
+					<div class="tsd-signature tsd-kind-icon">old<wbr>Zoom<wbr>Scale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts#L18">roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/event/ZoomChangedEvent.ts#L13">roosterjs-editor-types/lib/event/ZoomChangedEvent.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Title of the source page</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts#L23">roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts:23</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Type of the paste content</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="url" class="tsd-anchor"></a>
-					<h3>url</h3>
-					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/94bbff9/packages/roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts#L28">roosterjs-editor-types/lib/browser/EdgeLinkPreview.ts:28</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Url of the source page</p>
+							<p>Zoom scale value before this change</p>
 						</div>
 					</div>
 				</section>
@@ -211,22 +213,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_editor_types.edgelinkpreview.html" class="tsd-kind-icon">Edge<wbr>Link<wbr>Preview</a>
+						<a href="roosterjs_editor_types.zoomchangedevent.html" class="tsd-kind-icon">Zoom<wbr>Changed<wbr>Event</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.edgelinkpreview.html#domain" class="tsd-kind-icon">domain</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_types.zoomchangedevent.html#eventdatacache" class="tsd-kind-icon">event<wbr>Data<wbr>Cache</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_types.zoomchangedevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.edgelinkpreview.html#preferred_format" class="tsd-kind-icon">preferred_<wbr>format</a>
+								<a href="roosterjs_editor_types.zoomchangedevent.html#newzoomscale" class="tsd-kind-icon">new<wbr>Zoom<wbr>Scale</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.edgelinkpreview.html#title" class="tsd-kind-icon">title</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.edgelinkpreview.html#type" class="tsd-kind-icon">type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_editor_types.edgelinkpreview.html#url" class="tsd-kind-icon">url</a>
+								<a href="roosterjs_editor_types.zoomchangedevent.html#oldzoomscale" class="tsd-kind-icon">old<wbr>Zoom<wbr>Scale</a>
 							</li>
 						</ul>
 					</li>
