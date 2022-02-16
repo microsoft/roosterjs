@@ -4,7 +4,7 @@ import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
 import { ChangeSource, IEditor, NodePosition, TableSelection } from 'roosterjs-editor-types';
-import { getComputedStyle, normalizeRect } from 'roosterjs-editor-dom';
+import { getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 
 const INSERTER_HOVER_OFFSET = 5;
 
@@ -12,26 +12,28 @@ const INSERTER_HOVER_OFFSET = 5;
  * @internal
  *
  * A table has 5 hot areas to be resized/edited (take LTR example):
- *   [                ]
- *  +[      1         ]+--------------------+
- *  |[                ]|                    |
- * [ ]               [ ]                    |
- * [ ]               [ ]                    |
- * [2]               [3]                    |
- * [ ]               [ ]                    |
- * [ ][       4       ]|                    |
- *  +------------------+--------------------+
- *  |                  |                    |
- *  |                  |                    |
- *  |                  |                    |
- *  +------------------+--------------------+
- *                                           [5]
+ *
+ *   [6]  [                ]
+ *       +[      1         ]+--------------------+
+ *       |[                ]|                    |
+ *      [ ]               [ ]                    |
+ *      [ ]               [ ]                    |
+ *      [2]               [3]                    |
+ *      [ ]               [ ]                    |
+ *      [ ][       4       ]|                    |
+ *       +------------------+--------------------+
+ *       |                  |                    |
+ *       |                  |                    |
+ *       |                  |                    |
+ *       +------------------+--------------------+
+ *                                                [5]
  *
  * 1 - Hover area to show insert column button
  * 2 - Hover area to show insert row button
  * 3 - Hover area to show vertical resizing bar
  * 4 - Hover area to show horizontal resizing bar
  * 5 - Hover area to show whole table resize button
+ * 6 - Hover area to show whole table selector button
  *
  * When set a different current table or change current TD, we need to update these areas
  */
@@ -236,8 +238,15 @@ export default class TableEditor {
     private onSelect = (table: HTMLTableElement) => {
         this.editor.focus();
         if (table) {
-            const rows = table.rows.length - 1;
-            const lastCellIndex = table.rows.item(rows).cells.length - 1;
+            const vTable = new VTable(table);
+
+            const rows = vTable.cells.length - 1;
+            let lastCellIndex: number = 0;
+            vTable.cells[rows].forEach((cell, index) => {
+                if (cell.td) {
+                    lastCellIndex = index;
+                }
+            });
 
             const selection: TableSelection = {
                 firstCell: {
