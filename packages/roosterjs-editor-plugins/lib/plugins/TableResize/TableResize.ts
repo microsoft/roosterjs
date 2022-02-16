@@ -61,7 +61,8 @@ export default class TableResize implements EditorPlugin {
         }
 
         this.ensureTableRects();
-        const { pageX: x, pageY: y } = e;
+        const x = e.pageX - window.scrollX;
+        const y = e.pageY - window.scrollY;
         let currentTable: HTMLTableElement | null = null;
 
         for (let i = this.tableRectMap.length - 1; i >= 0; i--) {
