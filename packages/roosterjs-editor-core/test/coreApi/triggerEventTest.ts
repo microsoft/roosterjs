@@ -84,7 +84,7 @@ describe('triggerEvent', () => {
         const core = createEditorCore(div, {
             plugins: [createPlugin(onPluginEvent)],
         });
-        const event = createDefaultEvent(PluginEventType.EditorReady);
+        const event = createDefaultEvent(PluginEventType.KeyDown);
         core.lifecycle.shadowEditFragment = document.createDocumentFragment();
         triggerEvent(core, event, false);
         expect(onPluginEvent).not.toHaveBeenCalled();
@@ -105,9 +105,10 @@ describe('triggerEvent', () => {
 function createDefaultEvent(
     type:
         | PluginEventType.EditorReady
-        | PluginEventType.BeforeDispose = PluginEventType.BeforeDispose
+        | PluginEventType.BeforeDispose
+        | PluginEventType.KeyDown = PluginEventType.BeforeDispose
 ): PluginEvent {
-    return { eventType: type };
+    return <PluginEvent>(<any>{ eventType: type });
 }
 
 function createPlugin(onPluginEvent: any, willHandleEventExclusively?: any): EditorPlugin {

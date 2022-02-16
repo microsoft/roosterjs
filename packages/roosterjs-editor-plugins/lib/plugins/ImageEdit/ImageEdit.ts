@@ -548,7 +548,7 @@ export default class ImageEdit implements EditorPlugin {
                           },
                           this.updateWrapper,
                           dragAndDrop,
-                          this.editor.getSizeTransformer()
+                          this.editor.getZoomScale()
                       )
               )
             : [];

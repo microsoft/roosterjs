@@ -41,10 +41,15 @@ export default interface EditorCore extends PluginState {
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
 
+    /*
+     * Current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    zoomScale: number;
+
     /**
-     * A transformer function. It transform the size changes according to current situation.
-     * A typical scenario to use this function is when editor is located under a scaled container, so we need to
-     * calculate the scaled size change according to current zoom rate.
+     * @deprecated Use zoomScale instead
      */
     sizeTransformer: SizeTransformer;
 }

@@ -67,6 +67,7 @@ export {
     PluginEventFromTypeGeneric,
 } from './event/PluginEventData';
 export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEvent';
+export { default as ZoomChangedEvent } from './event/ZoomChangedEvent';
 
 // Interface
 export { default as BlockElement } from './interface/BlockElement';

@@ -110,4 +110,9 @@ export const enum PluginEventType {
      * before it is gone
      */
     BeforeSetContent = 20,
+
+    /**
+     * Zoom scale value is changed, triggered by Editor.setZoomScale() when set a different scale number
+     */
+    ZoomChanged = 21,
 }
