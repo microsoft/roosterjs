@@ -28,7 +28,7 @@ export default function extractClipboardEvent(
 ) {
     const dataTransfer =
         event.clipboardData ||
-        (<WindowForIE>(<unknown>(<Node>event.target).ownerDocument.defaultView)).clipboardData;
+        (<WindowForIE>(<unknown>(<Node>event.target).ownerDocument?.defaultView)).clipboardData;
 
     if (dataTransfer.items) {
         event.preventDefault();
