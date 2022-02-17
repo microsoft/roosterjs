@@ -37,7 +37,6 @@ const RIGHT_CLICK = 3;
  */
 export default class TableCellSelection implements EditorPlugin {
     private editor: IEditor;
-
     // State properties
     private lastTarget: Node;
     private firstTarget: Node;
@@ -94,14 +93,17 @@ export default class TableCellSelection implements EditorPlugin {
                 case PluginEventType.EnteredShadowEdit:
                     const selection = this.editor.getSelectionRangeEx();
                     if (selection.type == SelectionRangeTypes.TableSelection) {
+                        this.tableRange = selection.coordinates;
+                        this.firstTable = selection.table;
                         this.editor.select(selection.table, null);
                     }
                     break;
                 case PluginEventType.LeavingShadowEdit:
-                    if (this.vTable && this.tableRange) {
-                        const table = this.editor.queryElements('#' + this.vTable.table.id);
+                    if (this.firstTable && this.tableRange) {
+                        const table = this.editor.queryElements('#' + this.firstTable.id);
                         if (table.length == 1) {
-                            this.editor.select(table[0] as HTMLTableElement, this.tableRange);
+                            this.firstTable = table[0] as HTMLTableElement;
+                            this.editor.select(this.firstTable, this.tableRange);
                         }
                     }
                     break;
@@ -536,9 +538,7 @@ export default class TableCellSelection implements EditorPlugin {
 
     //#region utils
     private clearState() {
-        if (this.firstTable) {
-            this.editor.select(this.firstTable, null);
-        }
+        this.editor.select(null);
         this.vTable = null;
         this.firstTarget = null;
         this.lastTarget = null;
