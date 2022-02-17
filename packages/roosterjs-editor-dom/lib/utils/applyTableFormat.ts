@@ -276,7 +276,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
  */
 function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
     if (!format.hasHeaderRow) {
-        cells[0].forEach(cell => {
+        cells[0]?.forEach(cell => {
             if (cell.td) {
                 cell.td = changeElementTag(cell.td, TABLE_CELL_TAG_NAME) as HTMLTableCellElement;
                 cell.td.scope = '';
@@ -284,7 +284,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
         });
         return;
     }
-    cells[0].forEach(cell => {
+    cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
             cell.td.style.backgroundColor = format.headerRowColor;
             cell.td.style.borderRightColor = format.headerRowColor;

@@ -83,4 +83,23 @@ describe('createLink()', () => {
         let link = document.getElementsByTagName('a')[0];
         expect(link.outerHTML).toBe('<a href="http://www.example.com">this is my link</a>');
     });
+
+    it('Issue when selection is under another tag', () => {
+        editor.setContent(
+            '<div><span id="span1" style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);font-family:Calibri, Helvetica, sans-serif;display:inline !important">Hello<span style="box-sizing:border-box">&nbsp;</span></span><b style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);font-family:Calibri, Helvetica, sans-serif" id="span2">world<span style="box-sizing:border-box">&nbsp;</span></b><span style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);margin:0px;font-family:Calibri, Helvetica, sans-serif">🙂</span><span style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);font-family:Calibri, Helvetica, sans-serif;display:inline !important">&nbsp;this is a test</span><br></div><!--{"start":[0,0,0,0],"end":[0,0,0,0]}-->'
+        );
+        const anchor = document.getElementById('span1');
+        const focus = document.getElementById('span2');
+
+        const range = new Range();
+        range.setStart(anchor, 0);
+        range.setEnd(focus.firstChild, 5);
+
+        editor.select(range);
+        createLink(editor, 'www.microsoft.com', null, 'Hello');
+
+        // Assert
+        let link = document.getElementsByTagName('a')[0];
+        expect(link.outerHTML).toBe('<a href="http://www.microsoft.com">Hello</a>');
+    });
 });

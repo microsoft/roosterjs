@@ -43,7 +43,7 @@ const PREDEFINED_CSS_FOR_ELEMENT: PredefinedCssMap = {
  */
 export default function getPredefinedCssForElement(
     element: HTMLElement,
-    additionalPredefinedCssForElement?: PredefinedCssMap
+    additionalPredefinedCssForElement?: PredefinedCssMap | null
 ): StringMap {
     const tag = getTagOfNode(element);
     return PREDEFINED_CSS_FOR_ELEMENT[tag] || (additionalPredefinedCssForElement || {})[tag];
