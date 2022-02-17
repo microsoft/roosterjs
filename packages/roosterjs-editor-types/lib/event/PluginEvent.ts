@@ -8,6 +8,7 @@ import EditorReadyEvent from './EditorReadyEvent';
 import EntityOperationEvent from './EntityOperationEvent';
 import ExtractContentWithDomEvent from './ExtractContentWithDomEvent';
 import PendingFormatStateChangedEvent from './PendingFormatStateChangedEvent';
+import ZoomChangedEvent from './ZoomChangedEvent';
 import { EnterShadowEditEvent, LeaveShadowEditEvent } from './ShadowEditEvent';
 import { PluginDomEvent } from './PluginDomEvent';
 
@@ -27,4 +28,5 @@ export type PluginEvent =
     | EnterShadowEditEvent
     | LeaveShadowEditEvent
     | EditImageEvent
-    | BeforeSetContentEvent;
+    | BeforeSetContentEvent
+    | ZoomChangedEvent;

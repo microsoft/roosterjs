@@ -1,9 +1,10 @@
 import createCellResizer from './CellResizer';
 import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
+import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { ChangeSource, IEditor, NodePosition } from 'roosterjs-editor-types';
-import { getComputedStyle, normalizeRect } from 'roosterjs-editor-dom';
+import { ChangeSource, IEditor, NodePosition, TableSelection } from 'roosterjs-editor-types';
+import { getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
 
 const INSERTER_HOVER_OFFSET = 5;
 
@@ -11,26 +12,28 @@ const INSERTER_HOVER_OFFSET = 5;
  * @internal
  *
  * A table has 5 hot areas to be resized/edited (take LTR example):
- *   [                ]
- *  +[      1         ]+--------------------+
- *  |[                ]|                    |
- * [ ]               [ ]                    |
- * [ ]               [ ]                    |
- * [2]               [3]                    |
- * [ ]               [ ]                    |
- * [ ][       4       ]|                    |
- *  +------------------+--------------------+
- *  |                  |                    |
- *  |                  |                    |
- *  |                  |                    |
- *  +------------------+--------------------+
- *                                           [5]
+ *
+ *   [6]  [                ]
+ *       +[      1         ]+--------------------+
+ *       |[                ]|                    |
+ *      [ ]               [ ]                    |
+ *      [ ]               [ ]                    |
+ *      [2]               [3]                    |
+ *      [ ]               [ ]                    |
+ *      [ ][       4       ]|                    |
+ *       +------------------+--------------------+
+ *       |                  |                    |
+ *       |                  |                    |
+ *       |                  |                    |
+ *       +------------------+--------------------+
+ *                                                [5]
  *
  * 1 - Hover area to show insert column button
  * 2 - Hover area to show insert row button
  * 3 - Hover area to show vertical resizing bar
  * 4 - Hover area to show horizontal resizing bar
  * 5 - Hover area to show whole table resize button
+ * 6 - Hover area to show whole table selector button
  *
  * When set a different current table or change current TD, we need to update these areas
  */
@@ -46,6 +49,9 @@ export default class TableEditor {
     // 5 - Resize whole table
     private tableResizer: TableEditFeature;
 
+    // 6 - Select whole table
+    private tableSelector: TableEditFeature;
+
     private isRTL: boolean;
     private start: NodePosition;
     private end: NodePosition;
@@ -55,14 +61,14 @@ export default class TableEditor {
         public readonly table: HTMLTableElement,
         private onChanged: () => void
     ) {
-        const sizeTransformer = editor.getSizeTransformer();
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
             table,
-            sizeTransformer,
+            editor.getZoomScale(),
             this.isRTL,
             this.onFinishEditing
         );
+        this.tableSelector = createTableSelector(table, editor.getZoomScale(), this.onSelect);
         this.editor.addUndoSnapshot((start, end) => {
             this.start = start;
             this.end = end;
@@ -73,6 +79,7 @@ export default class TableEditor {
         this.disposeTableResizer();
         this.disposeCellResizers();
         this.disposeTableInserter();
+        this.disposeTableSelector();
     }
 
     onMouseMove(x: number, y: number) {
@@ -132,10 +139,10 @@ export default class TableEditor {
         }
 
         if (!this.horizontalResizer && td) {
-            const sizeTransformer = this.editor.getSizeTransformer();
+            const zoomScale = this.editor.getZoomScale();
             this.horizontalResizer = createCellResizer(
                 td,
-                sizeTransformer,
+                zoomScale,
                 this.isRTL,
                 true /*isHorizontal*/,
                 this.onStartCellResize,
@@ -143,7 +150,7 @@ export default class TableEditor {
             );
             this.verticalResizer = createCellResizer(
                 td,
-                sizeTransformer,
+                zoomScale,
                 this.isRTL,
                 false /*isHorizontal*/,
                 this.onStartCellResize,
@@ -203,6 +210,13 @@ export default class TableEditor {
         }
     }
 
+    private disposeTableSelector() {
+        if (this.tableSelector) {
+            disposeTableEditFeature(this.tableSelector);
+            this.tableSelector = null;
+        }
+    }
+
     private onFinishEditing = (): false => {
         this.editor.select(this.start, this.end);
         this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
@@ -218,5 +232,32 @@ export default class TableEditor {
     private onInserted = () => {
         this.disposeTableResizer();
         this.onFinishEditing();
+    };
+
+    private onSelect = (table: HTMLTableElement) => {
+        this.editor.focus();
+        if (table) {
+            const vTable = new VTable(table);
+
+            const rows = vTable.cells.length - 1;
+            let lastCellIndex: number = 0;
+            vTable.cells[rows].forEach((cell, index) => {
+                if (cell.td) {
+                    lastCellIndex = index;
+                }
+            });
+
+            const selection: TableSelection = {
+                firstCell: {
+                    x: 0,
+                    y: 0,
+                },
+                lastCell: {
+                    y: rows,
+                    x: lastCellIndex,
+                },
+            };
+            this.editor.select(table, selection);
+        }
     };
 }

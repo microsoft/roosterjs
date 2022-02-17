@@ -582,7 +582,22 @@ export default interface IEditor {
     getTrustedHTMLHandler(): TrustedHTMLHandler;
 
     /**
-     * Get a transformer function. It transform the size changes according to current situation.
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number;
+
+    /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    setZoomScale(scale: number): void;
+
+    /**
+     * @deprecated Use getZoomScale() instead
      */
     getSizeTransformer(): SizeTransformer;
 

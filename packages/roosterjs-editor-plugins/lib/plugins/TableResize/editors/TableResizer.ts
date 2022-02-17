@@ -1,7 +1,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { KnownCreateElementDataIndex, SizeTransformer } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -12,7 +12,7 @@ const MIN_CELL_HEIGHT = 20;
  */
 export default function createTableResizer(
     table: HTMLTableElement,
-    sizeTransformer: SizeTransformer,
+    zoomScale: number,
     isRTL: boolean,
     onDragEnd: () => false
 ): TableEditFeature {
@@ -31,7 +31,7 @@ export default function createTableResizer(
     const context: DragAndDropContext = {
         isRTL,
         table,
-        sizeTransformer,
+        zoomScale,
     };
 
     setResizeDivPosition(context, div);
@@ -45,7 +45,7 @@ export default function createTableResizer(
             onDragging,
             onDragEnd,
         },
-        sizeTransformer
+        zoomScale
     );
 
     return { node: table, div, featureHandler };
@@ -54,7 +54,7 @@ export default function createTableResizer(
 interface DragAndDropContext {
     table: HTMLTableElement;
     isRTL: boolean;
-    sizeTransformer: SizeTransformer;
+    zoomScale: number;
 }
 
 interface DragAndDropInitValue {
@@ -65,7 +65,7 @@ interface DragAndDropInitValue {
 function onDragStart(context: DragAndDropContext, event: MouseEvent) {
     return {
         originalRect: context.table.getBoundingClientRect(),
-        vTable: new VTable(context.table, true /*normalizeTable*/, context.sizeTransformer),
+        vTable: new VTable(context.table, true /*normalizeTable*/, context.zoomScale),
     };
 }
 
@@ -76,10 +76,10 @@ function onDragging(
     deltaX: number,
     deltaY: number
 ) {
-    const { isRTL, sizeTransformer } = context;
+    const { isRTL, zoomScale } = context;
     const { originalRect, vTable } = initValue;
-    const ratioX = 1.0 + (deltaX / sizeTransformer(originalRect.width)) * (isRTL ? -1 : 1);
-    const ratioY = 1.0 + deltaY / sizeTransformer(originalRect.height);
+    const ratioX = 1.0 + (deltaX / originalRect.width) * zoomScale * (isRTL ? -1 : 1);
+    const ratioY = 1.0 + (deltaY / originalRect.height) * zoomScale;
     const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
     const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
 
@@ -91,7 +91,7 @@ function onDragging(
                     if (shouldResizeX) {
                         // the width of some external table is fixed, we need to make it resizable
                         vTable.table.style.width = null;
-                        const newWidth = sizeTransformer(cell.width * ratioX);
+                        const newWidth = (cell.width * ratioX) / zoomScale;
                         cell.td.style.boxSizing = 'border-box';
                         if (newWidth >= MIN_CELL_WIDTH) {
                             cell.td.style.wordBreak = 'break-word';
@@ -104,7 +104,7 @@ function onDragging(
                         // the height of some external table is fixed, we need to make it resizable
                         vTable.table.style.height = null;
                         if (j == 0) {
-                            const newHeight = sizeTransformer(cell.height * ratioY);
+                            const newHeight = (cell.height * ratioY) / zoomScale;
                             if (newHeight >= MIN_CELL_HEIGHT) {
                                 cell.td.style.height = `${newHeight}px`;
                             }

@@ -1,6 +1,5 @@
 import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
-import { SizeTransformer } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -25,10 +24,9 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private context: TContext,
         private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
-        private sizeTransformer: SizeTransformer
+        private zoomScale: number
     ) {
         trigger.addEventListener('mousedown', this.onMouseDown);
-        this.sizeTransformer = sizeTransformer;
     }
 
     /**
@@ -63,9 +61,8 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
 
     private onMouseMove = (e: MouseEvent) => {
         e.preventDefault();
-        const sizeTransformer = this.sizeTransformer;
-        const deltaX = sizeTransformer(e.pageX - this.initX);
-        const deltaY = sizeTransformer(e.pageY - this.initY);
+        const deltaX = (e.pageX - this.initX) / this.zoomScale;
+        const deltaY = (e.pageY - this.initY) / this.zoomScale;
         if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {
             this.onSubmit?.(this.context, this.trigger);
         }
