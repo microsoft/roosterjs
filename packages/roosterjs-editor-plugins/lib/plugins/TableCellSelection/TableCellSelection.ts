@@ -37,7 +37,6 @@ const RIGHT_CLICK = 3;
  */
 export default class TableCellSelection implements EditorPlugin {
     private editor: IEditor;
-
     // State properties
     private lastTarget: Node;
     private firstTarget: Node;
