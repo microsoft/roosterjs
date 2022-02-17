@@ -14,9 +14,9 @@ const INHERITABLE_PROPERTIES = (
  * Get inheritable CSS style values from the given element
  * @param element The element to get style from
  */
-export default function getInheritableStyles(element: HTMLElement): StringMap {
+export default function getInheritableStyles(element: HTMLElement | null): StringMap {
     let win = element && element.ownerDocument && element.ownerDocument.defaultView;
-    let styles = win && win.getComputedStyle(element);
+    let styles = win && element && win.getComputedStyle(element);
     let result: StringMap = {};
     INHERITABLE_PROPERTIES.forEach(
         name => (result[name] = (styles && styles.getPropertyValue(name)) || '')
