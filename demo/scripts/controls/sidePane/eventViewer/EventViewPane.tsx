@@ -43,6 +43,7 @@ const EventTypeMap: { [key in PluginEventType]: string } = {
     [PluginEventType.LeavingShadowEdit]: 'LeavingShadowEdit',
     [PluginEventType.EditImage]: 'EditImage',
     [PluginEventType.BeforeSetContent]: 'BeforeSetContent',
+    [PluginEventType.ZoomChanged]: 'ZoomChanged',
 };
 
 const EntityOperationMap: { [key in EntityOperation]: string } = {
@@ -230,6 +231,13 @@ export default class EventViewPane extends React.Component<
                     <>
                         <span>new src={event.newSrc.substr(0, 100)}</span>
                     </>
+                );
+
+            case PluginEventType.ZoomChanged:
+                return (
+                    <span>
+                        Old value={event.oldZoomScale} New value={event.newZoomScale}
+                    </span>
                 );
 
             default:

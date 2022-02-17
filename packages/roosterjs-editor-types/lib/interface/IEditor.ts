@@ -6,6 +6,7 @@ import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
 import Region from './Region';
 import SelectionPath from './SelectionPath';
+import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
@@ -299,6 +300,13 @@ export default interface IEditor {
     select(path: SelectionPath): boolean;
 
     /**
+     * Select content using the Table Selection
+     * @param table to select
+     * @param coordinates first and last cell of the range
+     */
+    select(table: HTMLTableElement, coordinates: TableSelection): boolean;
+
+    /**
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     getFocusedPosition(): NodePosition;
@@ -574,7 +582,22 @@ export default interface IEditor {
     getTrustedHTMLHandler(): TrustedHTMLHandler;
 
     /**
-     * Get a transformer function. It transform the size changes according to current situation.
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number;
+
+    /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    setZoomScale(scale: number): void;
+
+    /**
+     * @deprecated Use getZoomScale() instead
      */
     getSizeTransformer(): SizeTransformer;
 

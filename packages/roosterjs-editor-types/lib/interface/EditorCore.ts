@@ -1,6 +1,7 @@
 import ClipboardData from './ClipboardData';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
+import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { DOMEventHandler } from '../type/domEventHandler';
@@ -11,6 +12,7 @@ import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
 import { SelectionRangeEx } from './SelectionRangeEx';
 import { SizeTransformer } from '../type/SizeTransformer';
+import { TableSelectionRange } from './SelectionRangeEx';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 
 /**
@@ -39,10 +41,15 @@ export default interface EditorCore extends PluginState {
      */
     readonly trustedHTMLHandler: TrustedHTMLHandler;
 
+    /*
+     * Current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using this property
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     */
+    zoomScale: number;
+
     /**
-     * A transformer function. It transform the size changes according to current situation.
-     * A typical scenario to use this function is when editor is located under a scaled container, so we need to
-     * calculate the scaled size change according to current zoom rate.
+     * @deprecated Use zoomScale instead
      */
     sizeTransformer: SizeTransformer;
 }
@@ -224,6 +231,20 @@ export type TransformColor = (
 export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcast: boolean) => void;
 
 /**
+ * Select a table and save data of the selected range
+ * @param core The EditorCore object
+ * @param table table to select
+ * @param coordinates first and last cell of the selection, if this parameter is null, instead of
+ * selecting, will unselect the table.
+ * @returns true if successful
+ */
+export type SelectTable = (
+    core: EditorCore,
+    table: HTMLTableElement,
+    coordinates?: TableSelection
+) => TableSelectionRange;
+
+/**
  * The interface for the map of core API.
  * Editor can call call API from this map under EditorCore object
  */
@@ -375,4 +396,15 @@ export interface CoreApiMap {
      * @param broadcast Set to true to skip the shouldHandleEventExclusively check
      */
     triggerEvent: TriggerEvent;
+
+    /**
+     * Select a table and save data of the selected range
+     * @param core The EditorCore object
+     * @param table table to select
+     * @param coordinates first and last cell of the selection, if this parameter is null, instead of
+     * selecting, will unselect the table.
+     * @param shouldAddStyles Whether need to update the style elements
+     * @returns true if successful
+     */
+    selectTable: SelectTable;
 }

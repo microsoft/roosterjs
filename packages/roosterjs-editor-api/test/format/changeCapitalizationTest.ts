@@ -207,7 +207,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('CapitalizeEachWord in table selection', () => {
+    xit('CapitalizeEachWord in table selection', () => {
         runTest(
             '<div id="divToTest">' + TestHelper.tableSelectionContents[0] + '</div>',
             Browser.isFirefox
@@ -217,7 +217,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Lowercase in table selection', () => {
+    xit('Lowercase in table selection', () => {
         runTest(
             '<div id="divToTest">' + TestHelper.tableSelectionContents[0] + '</div>',
             Browser.isFirefox
@@ -227,7 +227,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Sentence in table selection', () => {
+    xit('Sentence in table selection', () => {
         runTest(
             '<div id="divToTest">' + TestHelper.tableSelectionContents[0] + '</div>',
             Browser.isFirefox
@@ -237,7 +237,7 @@ describe('changeCapitalization()', () => {
         );
     });
 
-    it('Uppercase in table selection', () => {
+    xit('Uppercase in table selection', () => {
         runTest(
             '<div id="divToTest">' + TestHelper.tableSelectionContents[0] + '</div>',
             Browser.isFirefox

@@ -55,11 +55,10 @@ export default class TableEditor {
         public readonly table: HTMLTableElement,
         private onChanged: () => void
     ) {
-        const sizeTransformer = editor.getSizeTransformer();
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
             table,
-            sizeTransformer,
+            editor.getZoomScale(),
             this.isRTL,
             this.onFinishEditing
         );
@@ -132,10 +131,10 @@ export default class TableEditor {
         }
 
         if (!this.horizontalResizer && td) {
-            const sizeTransformer = this.editor.getSizeTransformer();
+            const zoomScale = this.editor.getZoomScale();
             this.horizontalResizer = createCellResizer(
                 td,
-                sizeTransformer,
+                zoomScale,
                 this.isRTL,
                 true /*isHorizontal*/,
                 this.onStartCellResize,
@@ -143,7 +142,7 @@ export default class TableEditor {
             );
             this.verticalResizer = createCellResizer(
                 td,
-                sizeTransformer,
+                zoomScale,
                 this.isRTL,
                 false /*isHorizontal*/,
                 this.onStartCellResize,
