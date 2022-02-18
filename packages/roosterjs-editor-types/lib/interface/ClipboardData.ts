@@ -19,7 +19,7 @@ export default interface ClipboardData {
      * When set to null, it means there's no HTML from clipboard event.
      * When set to undefined, it means there may be HTML in clipboard event, but fail to retrieve
      */
-    rawHtml: string;
+    rawHtml: string | null | undefined;
 
     /**
      * Link Preview information provided by Edge
@@ -29,7 +29,7 @@ export default interface ClipboardData {
     /**
      * Image file from clipboard event
      */
-    image: File;
+    image: File | null;
 
     /**
      * Html extracted from raw html string and remove content before and after fragment tag
@@ -44,7 +44,7 @@ export default interface ClipboardData {
     /**
      * BASE64 encoded data uri of the image if any
      */
-    imageDataUri?: string;
+    imageDataUri?: string | null;
 
     /**
      * Array of tag names of the first level child nodes

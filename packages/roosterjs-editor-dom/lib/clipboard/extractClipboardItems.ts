@@ -21,12 +21,12 @@ const CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s
 const OTHER_TEXT_TYPE = ContentTypePrefix.Text + '*';
 const EDGE_LINK_PREVIEW = 'link-preview';
 const ContentHandlers: {
-    [contentType: string]: (data: ClipboardData, value: string, type: string) => void;
+    [contentType: string]: (data: ClipboardData, value: string, type?: string) => void;
 } = {
     [ContentType.HTML]: (data, value) =>
         (data.rawHtml = Browser.isEdge ? workaroundForEdge(value) : value),
     [ContentType.PlainText]: (data, value) => (data.text = value),
-    [OTHER_TEXT_TYPE]: (data, value, type) => (data.customValues[type] = value),
+    [OTHER_TEXT_TYPE]: (data, value, type?) => !!type && (data.customValues[type] = value),
 };
 
 /**
@@ -67,10 +67,14 @@ export default function extractClipboardItems(
                 data.types.push(type);
                 data.image = item.getAsFile();
                 return new Promise<void>(resolve => {
-                    readFile(data.image, dataUrl => {
-                        data.imageDataUri = dataUrl;
+                    if (data.image) {
+                        readFile(data.image, dataUrl => {
+                            data.imageDataUri = dataUrl;
+                            resolve();
+                        });
+                    } else {
                         resolve();
-                    });
+                    }
                 });
             } else {
                 const customType = getAllowedCustomType(type, options?.allowedCustomPasteType);
@@ -116,10 +120,12 @@ function tryParseLinkPreview(data: ClipboardData, value: string) {
     } catch {}
 }
 
-function getAllowedCustomType(type: string, allowedCustomPasteType: string[]) {
-    let textType =
+function getAllowedCustomType(type: string, allowedCustomPasteType?: string[]) {
+    const textType =
         type.indexOf(ContentTypePrefix.Text) == 0
-            ? type.substr(ContentTypePrefix.Text.length)
+            ? type.substring(ContentTypePrefix.Text.length)
             : null;
-    return textType && allowedCustomPasteType?.indexOf(textType) >= 0 ? textType : null;
+    const index =
+        allowedCustomPasteType && textType ? allowedCustomPasteType.indexOf(textType) : -1;
+    return textType && index >= 0 ? textType : undefined;
 }
