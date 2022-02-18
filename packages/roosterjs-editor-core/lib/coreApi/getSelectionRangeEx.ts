@@ -42,7 +42,7 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                     shadowEditSelectionPath.end
                 );
 
-            return createNormalSelectionEx([shadowRange]);
+            return createNormalSelectionEx(shadowRange ? [shadowRange] : []);
         }
     } else {
         if (core.api.hasFocus(core)) {
