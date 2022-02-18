@@ -10,13 +10,7 @@ const {
     nodeModulesPath,
     rootPath,
 } = require('./common');
-const externalMap = new Map([
-    ['react', 'React'],
-    // ['office-ui-fabric-react', 'OfficeFabric'],
-    // [/^office-ui-fabric-react\/lib\/([^/]+)$/, 'OfficeFabric/$1'],
-    // [/^office-ui-fabric-react\/lib\/components\/([^/]+)$/, 'OfficeFabric/components/$1/$1'],
-    ...packages.map(p => [p, 'roosterjs']),
-]);
+const externalMap = new Map([['react', 'React'], ...packages.map(p => [p, 'roosterjs'])]);
 
 async function pack(isProduction, isAmd, filename) {
     const webpackConfig = {
