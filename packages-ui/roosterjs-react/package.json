@@ -1,0 +1,16 @@
+{
+    "name": "roosterjs-react",
+    "description": "React wrapper of roosterjs",
+    "dependencies": {
+        "roosterjs-editor-types": "",
+        "roosterjs-editor-dom": "",
+        "roosterjs-editor-core": "",
+        "roosterjs-editor-api": "",
+        "roosterjs-editor-plugins": "",
+        "roosterjs-color-utils": ""
+    },
+    "peerDependencies": {
+        "react": ">=16.0.0"
+    },
+    "main": "./lib/index.ts"
+}

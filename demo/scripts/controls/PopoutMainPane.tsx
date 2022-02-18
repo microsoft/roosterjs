@@ -5,7 +5,10 @@ import { getAllPluginArray, getPlugins } from './plugins';
 
 const styles = require('./MainPane.scss');
 
-export default function PopoutMainPane(props: {}) {
+export default function PopoutMainPane(props: {
+    content: string;
+    onDispose: (content: string) => void;
+}) {
     const plugins = getPlugins();
 
     return (
@@ -22,6 +25,8 @@ export default function PopoutMainPane(props: {}) {
                     className={styles.editor}
                     initState={plugins.editorOptions.getBuildInPluginState()}
                     snapshotService={plugins.snapshot.getSnapshotService()}
+                    content={props.content}
+                    onDispose={props.onDispose}
                 />
             </div>
         </div>

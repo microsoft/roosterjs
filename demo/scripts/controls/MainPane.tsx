@@ -31,6 +31,7 @@ class MainPane extends MainPaneBase {
             initState: getPlugins().editorOptions.getBuildInPluginState(),
             supportDarkMode: true,
             scale: 1,
+            content: '',
         };
     }
 
@@ -62,6 +63,8 @@ class MainPane extends MainPaneBase {
                                 className={styles.editor}
                                 initState={this.state.initState}
                                 snapshotService={plugins.snapshot.getSnapshotService()}
+                                content={this.state.content}
+                                onDispose={this.onEditorDispose}
                             />
 
                             {this.state.showSidePane ? (
@@ -145,7 +148,10 @@ class MainPane extends MainPaneBase {
         this.popoutRoot = win.document.getElementById(PopoutRoot);
 
         window.setTimeout(() => {
-            ReactDom.render(<PopoutMainPane />, this.popoutRoot);
+            ReactDom.render(
+                <PopoutMainPane content={this.state.content} onDispose={this.onEditorDispose} />,
+                this.popoutRoot
+            );
         }, 0);
     }
 
@@ -184,6 +190,12 @@ class MainPane extends MainPaneBase {
             showSidePane: false,
         });
         window.location.hash = '';
+    };
+
+    private onEditorDispose = (content: string) => {
+        this.setState({
+            content: content,
+        });
     };
 }
 

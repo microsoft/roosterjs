@@ -409,7 +409,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
     export: {
         title: 'Export',
         onClick: editor => {
-            let w = window.open();
+            let w = editor.getDocument().defaultView.open();
             w.document.write(trustedHTMLHandler(editor.getContent()));
         },
     },

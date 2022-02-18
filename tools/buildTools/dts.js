@@ -81,7 +81,7 @@ function parseFrom(from, currentFileName, baseDir, projDir) {
             importFileName = path.resolve(projDir, 'node_modules', from, 'lib/index.d.ts');
         }
         if (!fs.existsSync(importFileName)) {
-            err(`Can't resolve package name ${from} in file ${currentFileName}`);
+            err(`Can't resolve package name '${from}' in file '${currentFileName}'`);
         }
     }
     return importFileName;
@@ -364,6 +364,8 @@ function createQueue(rootPath, baseDir, root, additionalFiles) {
     return queue;
 }
 
+const ExcludedPaths = ['roosterjs-react'];
+
 function dts(isAmd) {
     mkdirp.sync(roosterJsDistPath);
 
@@ -371,6 +373,7 @@ function dts(isAmd) {
         .sync(path.relative(rootPath, path.join(distPath, '**', 'lib', '**', '*.d.ts')), {
             nocase: true,
         })
+        .filter(x => ExcludedPaths.every(p => x.indexOf(p) < 0))
         .map(x => path.relative(distPath, x));
     const dtsQueue = createQueue(rootPath, distPath, 'roosterjs/lib/index.d.ts', tsFiles);
     const filename = output(roosterJsDistPath, 'roosterjs', isAmd, dtsQueue);

@@ -9,6 +9,7 @@ export interface MainPaneBaseState {
     initState: BuildInPluginState;
     supportDarkMode: boolean;
     scale: number;
+    content: string;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {

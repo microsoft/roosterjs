@@ -3,11 +3,10 @@ import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EntityHydratingPlugin from './editor/EntityHydratingPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
-import MainPaneBase from './MainPaneBase';
 import RibbonPlugin from './ribbon/RibbonPlugin';
 import SidePanePlugin from './SidePanePlugin';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin } from 'roosterjs-editor-types';
 
 export default interface Plugins {
     ribbon: RibbonPlugin;
@@ -16,7 +15,6 @@ export default interface Plugins {
     editorOptions: EditorOptionsPlugin;
     eventView: EventViewPlugin;
     api: ApiPlaygroundPlugin;
-    bridge: Bridge;
     entityHydrating: EntityHydratingPlugin;
 }
 
@@ -31,7 +29,6 @@ export function getPlugins(): Plugins {
             editorOptions: new EditorOptionsPlugin(),
             eventView: new EventViewPlugin(),
             api: new ApiPlaygroundPlugin(),
-            bridge: new Bridge(),
             entityHydrating: new EntityHydratingPlugin(),
         };
     }
@@ -48,7 +45,6 @@ export function getAllPluginArray(includeSidePanePlugins: boolean): EditorPlugin
         includeSidePanePlugins && allPlugins.api,
         includeSidePanePlugins && allPlugins.snapshot,
         allPlugins.entityHydrating,
-        allPlugins.bridge,
     ];
 }
 
@@ -61,38 +57,4 @@ export function getSidePanePluginArray(): SidePanePlugin[] {
         allPlugins.eventView,
         allPlugins.api,
     ];
-}
-
-class Bridge implements EditorPlugin {
-    private editor: IEditor;
-    private isDark: boolean = undefined;
-    private content: string = undefined;
-
-    getName() {
-        return 'Bridge';
-    }
-
-    initialize(editor: IEditor) {
-        this.editor = editor;
-    }
-
-    dispose() {
-        this.editor = null;
-    }
-
-    onPluginEvent(e: PluginEvent) {
-        if (e.eventType == PluginEventType.EditorReady) {
-            if (this.isDark !== undefined) {
-                this.editor.setDarkModeState(
-                    this.isDark && MainPaneBase.getInstance().isDarkModeSupported()
-                );
-            }
-            if (this.content !== undefined) {
-                this.editor.setContent(this.content);
-            }
-        } else if (e.eventType == PluginEventType.BeforeDispose) {
-            this.isDark = this.editor.isDarkMode();
-            this.content = this.editor.getContent();
-        }
-    }
 }
