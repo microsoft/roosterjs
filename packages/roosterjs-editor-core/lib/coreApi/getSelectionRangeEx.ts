@@ -17,7 +17,7 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
     if (core.lifecycle.shadowEditFragment) {
         const { shadowEditTableSelectionPath, shadowEditSelectionPath } = core.lifecycle;
 
-        if (shadowEditTableSelectionPath) {
+        if (shadowEditTableSelectionPath?.length > 0) {
             const ranges = core.lifecycle.shadowEditTableSelectionPath.map(path =>
                 createRange(core.contentDiv, path.start, path.end)
             );
@@ -33,17 +33,17 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                 ) as HTMLTableElement,
                 coordinates: null,
             };
+        } else {
+            const shadowRange =
+                shadowEditSelectionPath &&
+                createRange(
+                    core.contentDiv,
+                    shadowEditSelectionPath.start,
+                    shadowEditSelectionPath.end
+                );
+
+            return createNormalSelectionEx([shadowRange]);
         }
-
-        const shadowRange =
-            shadowEditSelectionPath &&
-            createRange(
-                core.contentDiv,
-                shadowEditSelectionPath.start,
-                shadowEditSelectionPath.end
-            );
-
-        return createNormalSelectionEx([shadowRange]);
     } else {
         if (core.api.hasFocus(core)) {
             if (core.domEvent.tableSelectionRange) {
@@ -61,7 +61,9 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
 
         return (
             core.domEvent.tableSelectionRange ??
-            createNormalSelectionEx([core.domEvent.selectionRange])
+            createNormalSelectionEx(
+                core.domEvent.selectionRange ? [core.domEvent.selectionRange] : []
+            )
         );
     }
 };
