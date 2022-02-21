@@ -8,7 +8,6 @@ import {
 } from 'roosterjs-editor-types';
 
 const TABLE = 'TABLE';
-const LIST = 'LIST';
 const TEXT = 'TEXT';
 
 /**
@@ -18,91 +17,74 @@ const TEXT = 'TEXT';
  * Alignment.Center, Alignment.Left, Alignment.Right
  */
 export default function setAlignment(editor: IEditor, alignment: Alignment) {
-    let command = DocumentCommand.JustifyLeft;
-    let align = 'left';
     const element = editor.getElementAtCursor();
     const elementType = isListOrATableOrText(element);
-    console.log(elementType);
 
-    if (alignment == Alignment.Center) {
-        command = DocumentCommand.JustifyCenter;
-        align = 'center';
-    } else if (alignment == Alignment.Right) {
-        command = DocumentCommand.JustifyRight;
-        align = 'right';
-    }
     editor.addUndoSnapshot(() => {
-        alignElement(editor, element, elementType, alignment, command);
-        editor.queryElements(
-            '[align]',
-            QueryScope.OnSelection,
-            node => (node.style.textAlign = align)
+        alignElement(editor, element, elementType, alignment);
+        editor.queryElements('[align]', QueryScope.OnSelection, node =>
+            alignElement(editor, node, elementType, alignment, true /** addUndoSnapshot */)
         );
     }, ChangeSource.Format);
 }
 
+/**
+ * Check if the element at the cursor is a table or text element
+ * @param element
+ * @returns
+ */
 function isListOrATableOrText(element: HTMLElement) {
+    if (!element) {
+        return;
+    }
     const tag = element.tagName;
-    if (tag === 'LI' || tag === 'UL' || tag === 'OL') {
-        return LIST;
-    } else if (tag === 'TABLE') {
+    if (tag === 'TABLE') {
         return TABLE;
     } else {
         return TEXT;
     }
 }
 
+/**
+ * Align the element left, center and right
+ * @param editor
+ * @param element the element being aligned
+ * @param elementType type text or table
+ * @param alignment the alignment type
+ * @param addUndoSnapshot check if this function is being called by addUndoSnapshot
+ */
 function alignElement(
     editor: IEditor,
     element: HTMLElement,
     elementType: string,
     alignment: Alignment,
-    command: DocumentCommand
+    addUndoSnapshot?: boolean
 ) {
-    if (elementType === LIST) {
-        alignList(element, alignment);
-    } else if (elementType === TABLE) {
-        alignTable(element, alignment);
+    if (elementType === TABLE) {
+        alignTable(editor, element, alignment, addUndoSnapshot);
     } else {
-        alignText(editor, alignment);
+        alignText(editor, element, alignment, addUndoSnapshot);
     }
 }
 
-function alignList(element: HTMLElement, alignment: Alignment) {
-    if (alignment == Alignment.Center) {
-        if (element.tagName === 'LI') {
-            element.parentElement.parentElement.style.display = 'table';
-            element.parentElement.parentElement.style.margin = '0 auto';
-            element.parentElement.parentElement.style.float = '';
-            return;
-        }
-        element.parentElement.style.display = 'table';
-        element.parentElement.style.margin = '0 auto';
-        element.parentElement.style.float = '';
-    } else if (alignment == Alignment.Right) {
-        if (element.tagName === 'LI') {
-            element.parentElement.parentElement.style.display = '';
-            element.parentElement.parentElement.style.margin = '';
-            element.parentElement.parentElement.style.float = 'right';
-            return;
-        }
-        element.parentElement.style.display = '';
-        element.parentElement.style.margin = '';
-        element.parentElement.style.float = 'right';
-    } else {
-        if (element.tagName === 'LI') {
-            element.parentElement.parentElement.style.display = '';
-            element.parentElement.parentElement.style.margin = '';
-            element.parentElement.parentElement.style.float = 'left';
-            return;
-        }
-        element.parentElement.style.display = '';
-        element.parentElement.style.margin = '';
-        element.parentElement.style.float = 'left';
+/**
+ * Align text using the margins
+ * @param editor
+ * @param element
+ * @param alignment
+ * @param addUndoSnapshot
+ * @returns
+ */
+function alignTable(
+    editor: IEditor,
+    element: HTMLElement,
+    alignment: Alignment,
+    addUndoSnapshot?: boolean
+) {
+    if (addUndoSnapshot) {
+        editor.focus();
+        return;
     }
-}
-
-function alignTable(element: HTMLElement, alignment: Alignment) {
     if (alignment == Alignment.Center) {
         element.style.marginLeft = 'auto';
         element.style.marginRight = 'auto';
@@ -115,12 +97,32 @@ function alignTable(element: HTMLElement, alignment: Alignment) {
     }
 }
 
-function alignText(editor: IEditor, alignment: Alignment) {
+/**
+ * Align text using the text-align
+ * @param editor
+ * @param element
+ * @param alignment
+ * @param addUndoSnapshot
+ * @returns
+ */
+function alignText(
+    editor: IEditor,
+    element: HTMLElement,
+    alignment: Alignment,
+    addUndoSnapshot?: boolean
+) {
+    let align = 'left';
+    let command = DocumentCommand.JustifyLeft;
     if (alignment == Alignment.Center) {
-        execCommand(editor, DocumentCommand.JustifyCenter);
+        command = DocumentCommand.JustifyCenter;
+        align = 'center';
     } else if (alignment == Alignment.Right) {
-        execCommand(editor, DocumentCommand.JustifyRight);
+        command = DocumentCommand.JustifyRight;
+        align = 'right';
+    }
+    if (addUndoSnapshot) {
+        element.style.textAlign = align;
     } else {
-        execCommand(editor, DocumentCommand.JustifyLeft);
+        execCommand(editor, command);
     }
 }
