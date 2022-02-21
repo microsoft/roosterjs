@@ -9,7 +9,7 @@ import { VTable } from 'roosterjs-editor-dom';
  */
 export function getCellCoordinates(vTable: VTable, cellInput: Node): Coordinates {
     let result: Coordinates;
-    if (vTable.cells) {
+    if (vTable?.cells) {
         for (let indexY = 0; indexY < vTable.cells.length; indexY++) {
             for (let indexX = 0; indexX < vTable.cells[indexY].length; indexX++) {
                 if (cellInput == vTable.cells[indexY][indexX].td) {

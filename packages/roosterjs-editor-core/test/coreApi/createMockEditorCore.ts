@@ -16,5 +16,6 @@ export default function createMockEditorCore(
         ...getPluginState(createCorePlugins(contentDiv, options)),
         trustedHTMLHandler: (html: string) => html,
         sizeTransformer: x => x,
+        zoomScale: 1,
     };
 }

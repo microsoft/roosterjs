@@ -51,8 +51,7 @@ export default function execCommand(editor: IEditor, command: DocumentCommand) {
             });
 
             if (tempRange && selection.type == SelectionRangeTypes.TableSelection) {
-                tempRange.collapse();
-                editor.select(tempRange);
+                editor.select(selection.table, selection.coordinates);
             }
         }, ChangeSource.Format);
     }

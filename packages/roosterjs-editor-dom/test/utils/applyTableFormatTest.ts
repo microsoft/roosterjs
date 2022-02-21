@@ -28,7 +28,7 @@ describe('applyTableFormat', () => {
     div.innerHTML = table;
     let node = document.getElementById(id) as HTMLTableElement;
     let vTable = new VTable(node);
-    vTable.applyFormat(format);
+    vTable.applyFormat(format, false);
     applyTableFormat(node, vTable.cells, format);
     vTable.writeBack();
     itChromeOnly('should return a styled table CHROME', () => {

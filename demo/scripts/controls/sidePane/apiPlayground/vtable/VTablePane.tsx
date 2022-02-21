@@ -3,9 +3,11 @@ import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import ColorPicker from '../../../colorPicker/ColorPicker';
 import { editTable, formatTable } from 'roosterjs-editor-api';
+import { getDarkColor } from 'roosterjs-color-utils';
 import { getTagOfNode, VTable } from 'roosterjs-editor-dom';
 import {
     IEditor,
+    ModeIndependentColor,
     PositionType,
     TableBorderFormat,
     TableFormat,
@@ -25,8 +27,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.DEFAULT /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     DEFAULT_WITH_BACKGROUND_COLOR: (color, lightColor) =>
         createTableFormat(
@@ -39,8 +44,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.DEFAULT /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     GRID_WITHOUT_BORDER: (color, lightColor) =>
         createTableFormat(
@@ -53,8 +61,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.NO_SIDE_BORDERS /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     LIST: (color, lightColor) =>
         createTableFormat(
@@ -67,8 +78,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.DEFAULT /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     BANDED_ROWS_FIRST_COLUMN_NO_BORDER: (color, lightColor) =>
         createTableFormat(
@@ -81,8 +95,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     EXTERNAL: (color, lightColor) =>
         createTableFormat(
@@ -95,8 +112,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.LIST_WITH_SIDE_BORDERS /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     NO_HEADER_VERTICAL: (color, lightColor) =>
         createTableFormat(
@@ -109,8 +129,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.NO_HEADER_BORDERS /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     ESPECIAL_TYPE_1: (color, lightColor) =>
         createTableFormat(
@@ -123,8 +146,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.ESPECIAL_TYPE_1 /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     ESPECIAL_TYPE_2: (color, lightColor) =>
         createTableFormat(
@@ -137,8 +163,11 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** firstColumn */,
             TableBorderFormat.ESPECIAL_TYPE_2 /** tableBorderFormat */,
             null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorOdd */,
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
     ESPECIAL_TYPE_3: (color, lightColor) =>
         createTableFormat(
@@ -150,9 +179,12 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             false /** headerRow */,
             false /** firstColumn */,
             TableBorderFormat.ESPECIAL_TYPE_3 /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
+            {
+                lightModeColor: lightColor,
+                darkModeColor: getDarkColor(lightColor),
+            } /** bgColorEven */,
             null /** bgColorOdd */,
-            color /** headerRowColor */
+            { lightModeColor: color, darkModeColor: getDarkColor(color) } /** headerRowColor */
         ),
 };
 
@@ -578,7 +610,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                 onClick={() => {
                     formatTable(
                         editor,
-                        setHeaderRow(this.state.vtable.table),
+                        setHeaderRow(this.state.vtable.table, editor),
                         this.state.vtable.table
                     );
 
@@ -596,7 +628,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                 onClick={() => {
                     formatTable(
                         editor,
-                        setFirstColumn(this.state.vtable.table),
+                        setFirstColumn(this.state.vtable.table, editor),
                         this.state.vtable.table
                     );
 
@@ -613,7 +645,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                 onClick={() => {
                     formatTable(
                         editor,
-                        setBandedColumn(this.state.vtable.table),
+                        setBandedColumn(this.state.vtable.table, editor),
                         this.state.vtable.table
                     );
 
@@ -630,7 +662,7 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                 onClick={() => {
                     formatTable(
                         editor,
-                        setBandedRow(this.state.vtable.table),
+                        setBandedRow(this.state.vtable.table, editor),
                         this.state.vtable.table
                     );
 
@@ -659,13 +691,14 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
     }
 
     private onCustomizeFormat = () => {
+        const editor = this.props.getEditor();
         const format = createTableFormat(
             this.topBorderColor.current.value || undefined,
             this.bottomBorderColor.current.value || undefined,
             this.verticalBorderColor.current.value || undefined
         );
 
-        this.state.vtable.applyFormat(format);
+        this.state.vtable.applyFormat(format, editor.isDarkMode());
         this.forceUpdate();
     };
 
@@ -691,9 +724,9 @@ function createTableFormat(
     headerRow?: boolean,
     firstColumn?: boolean,
     borderFormat?: TableBorderFormat,
-    bgColorEven?: string,
-    bgColorOdd?: string,
-    headerRowColor?: string
+    bgColorEven?: string | ModeIndependentColor,
+    bgColorOdd?: string | ModeIndependentColor,
+    headerRowColor?: string | ModeIndependentColor
 ): TableFormat {
     return {
         topBorderColor: topBorder,
@@ -710,29 +743,29 @@ function createTableFormat(
     };
 }
 
-function setHeaderRow(table: HTMLTableElement): TableFormat {
-    const vtable = new VTable(table);
+function setHeaderRow(table: HTMLTableElement, editor: IEditor): TableFormat {
+    const vtable = new VTable(table, editor.isDarkMode());
     const format = vtable.formatInfo;
     format.hasHeaderRow = !format.hasHeaderRow;
     return format;
 }
 
-function setFirstColumn(table: HTMLTableElement): TableFormat {
-    const vtable = new VTable(table);
+function setFirstColumn(table: HTMLTableElement, editor: IEditor): TableFormat {
+    const vtable = new VTable(table, editor.isDarkMode());
     const format = vtable.formatInfo;
     format.hasFirstColumn = !format.hasFirstColumn;
     return format;
 }
 
-function setBandedColumn(table: HTMLTableElement): TableFormat {
-    const vtable = new VTable(table);
+function setBandedColumn(table: HTMLTableElement, editor: IEditor): TableFormat {
+    const vtable = new VTable(table, editor.isDarkMode());
     const format = vtable.formatInfo;
     format.hasBandedColumns = !format.hasBandedColumns;
     return format;
 }
 
-function setBandedRow(table: HTMLTableElement): TableFormat {
-    const vtable = new VTable(table);
+function setBandedRow(table: HTMLTableElement, editor: IEditor): TableFormat {
+    const vtable = new VTable(table, editor.isDarkMode());
     const format = vtable.formatInfo;
     format.hasBandedRows = !format.hasBandedRows;
     return format;

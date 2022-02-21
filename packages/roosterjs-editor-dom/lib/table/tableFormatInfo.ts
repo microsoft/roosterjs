@@ -61,8 +61,20 @@ function checkIfTableFormatIsValid(format: TableFormat) {
     return true;
 }
 
+function checkIfColorIsModeIndependentColor(color: any) {
+    if (color.lightModeColor && color.darkModeColor) {
+        return true;
+    }
+    return false;
+}
+
 function isAValidColor(color: any) {
-    if (color === null || color === undefined || typeof color === 'string') {
+    if (
+        color === null ||
+        color === undefined ||
+        typeof color === 'string' ||
+        checkIfColorIsModeIndependentColor(color)
+    ) {
         return true;
     }
     return false;

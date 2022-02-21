@@ -1,4 +1,5 @@
 import changeElementTag from './changeElementTag';
+import setColor from './setColor';
 import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
@@ -13,16 +14,17 @@ const CELL_SHADE = 'cellShade';
 export default function applyTableFormat(
     table: HTMLTableElement,
     cells: VCell[][],
-    format: Partial<TableFormat>
+    format: Partial<TableFormat>,
+    isDarkMode?: boolean
 ) {
     if (!format) {
         return;
     }
     table.style.borderCollapse = 'collapse';
     setBordersType(cells, format);
-    setColor(cells, format);
-    setFirstColumnFormat(cells, format);
-    setHeaderRowFormat(cells, format);
+    setCellColor(cells, format, isDarkMode);
+    setFirstColumnFormat(cells, format, isDarkMode);
+    setHeaderRowFormat(cells, format, isDarkMode);
 }
 
 /**
@@ -42,7 +44,7 @@ function hasCellShade(cell: VCell) {
  * Set color to the table
  * @param format the format that must be applied
  */
-function setColor(cells: VCell[][], format: TableFormat) {
+function setCellColor(cells: VCell[][], format: TableFormat, isDarkMode?: boolean) {
     const color = (index: number) => (index % 2 === 0 ? format.bgColorEven : format.bgColorOdd);
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
     const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven ? true : false;
@@ -51,11 +53,11 @@ function setColor(cells: VCell[][], format: TableFormat) {
             if (cell.td && !hasCellShade(cell)) {
                 if (hasBandedRows) {
                     const backgroundColor = color(index);
-                    cell.td.style.backgroundColor = backgroundColor || TRANSPARENT;
+                    setColor(cell.td, backgroundColor || TRANSPARENT, true, isDarkMode);
                 } else if (shouldColorWholeTable) {
-                    cell.td.style.backgroundColor = format.bgColorOdd || TRANSPARENT;
+                    setColor(cell.td, format.bgColorOdd || TRANSPARENT, true, isDarkMode);
                 } else {
-                    cell.td.style.backgroundColor = TRANSPARENT;
+                    setColor(cell.td, TRANSPARENT, true, isDarkMode);
                 }
             }
         });
@@ -65,7 +67,7 @@ function setColor(cells: VCell[][], format: TableFormat) {
             row.forEach((cell, index) => {
                 const backgroundColor = color(index);
                 if (cell.td && backgroundColor && !hasCellShade(cell)) {
-                    cell.td.style.backgroundColor = backgroundColor;
+                    setColor(cell.td, backgroundColor, true, isDarkMode);
                 }
             });
         });
@@ -237,7 +239,11 @@ function setBordersType(cells: VCell[][], format: TableFormat) {
  * @param format
  * @returns
  */
-function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
+function setFirstColumnFormat(
+    cells: VCell[][],
+    format: Partial<TableFormat>,
+    isDarkMode?: boolean
+) {
     if (!format.hasFirstColumn) {
         cells.forEach(row => {
             row.forEach((cell, cellIndex) => {
@@ -257,7 +263,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
             if (cell.td && cellIndex === 0) {
                 if (rowIndex !== 0) {
                     cell.td.style.borderTopColor = TRANSPARENT;
-                    cell.td.style.backgroundColor = TRANSPARENT;
+                    setColor(cell.td, TRANSPARENT, true, isDarkMode);
                 }
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
                     cell.td.style.borderBottomColor = TRANSPARENT;
@@ -274,7 +280,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
  * @param format
  * @returns
  */
-function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
+function setHeaderRowFormat(cells: VCell[][], format: TableFormat, isDarkMode?: boolean) {
     if (!format.hasHeaderRow) {
         cells[0].forEach(cell => {
             if (cell.td) {
@@ -284,12 +290,22 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
         });
         return;
     }
+
     cells[0].forEach(cell => {
         if (cell.td && format.headerRowColor) {
-            cell.td.style.backgroundColor = format.headerRowColor;
-            cell.td.style.borderRightColor = format.headerRowColor;
-            cell.td.style.borderLeftColor = format.headerRowColor;
-            cell.td.style.borderTopColor = format.headerRowColor;
+            setColor(cell.td, format.headerRowColor, true, isDarkMode);
+            cell.td.style.borderRightColor =
+                typeof format.headerRowColor === 'string'
+                    ? format.headerRowColor
+                    : format.headerRowColor.lightModeColor;
+            cell.td.style.borderLeftColor =
+                typeof format.headerRowColor === 'string'
+                    ? format.headerRowColor
+                    : format.headerRowColor.lightModeColor;
+            cell.td.style.borderTopColor =
+                typeof format.headerRowColor === 'string'
+                    ? format.headerRowColor
+                    : format.headerRowColor.lightModeColor;
             cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
             cell.td.scope = 'row';
         }

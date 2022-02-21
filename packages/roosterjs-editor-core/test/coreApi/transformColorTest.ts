@@ -57,7 +57,7 @@ describe('transformColor Dark to light', () => {
         const element = document.createElement('div');
         element.style.color = 'red';
         transformColor(core, element, true, null, ColorTransformDirection.DarkToLight);
-        expect(element.outerHTML).toBe('<div style=""></div>');
+        expect(element.outerHTML).toBe('<div style="color: red;"></div>');
     });
 
     it('has dataset, no style, no attr', () => {

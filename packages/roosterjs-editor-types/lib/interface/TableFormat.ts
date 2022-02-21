@@ -1,3 +1,4 @@
+import ModeIndependentColor from './ModeIndependentColor';
 import { TableBorderFormat } from '../enum/TableBorderFormat';
 
 /**
@@ -23,7 +24,7 @@ export default interface TableFormat {
     /**
      * Header row background color for even cells
      */
-    headerRowColor?: string | null;
+    headerRowColor?: string | ModeIndependentColor | null;
     /**
      * Set first column
      */
@@ -39,11 +40,11 @@ export default interface TableFormat {
     /**
      * Background color for even row or even columns
      */
-    bgColorEven?: string | null;
+    bgColorEven?: string | ModeIndependentColor | null;
     /**
      * Background color for odd row or odd columns
      */
-    bgColorOdd?: string | null;
+    bgColorOdd?: string | ModeIndependentColor | null;
     /**
      * Table Borders Type
      */

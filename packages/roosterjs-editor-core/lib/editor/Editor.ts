@@ -90,6 +90,8 @@ export default class Editor implements IEditor {
                 plugins.push(corePlugins[name]);
             }
         });
+
+        const zoomScale = options.zoomScale > 0 ? options.zoomScale : 1;
         this.core = {
             contentDiv,
             api: {
@@ -99,7 +101,8 @@ export default class Editor implements IEditor {
             plugins: plugins.filter(x => !!x),
             ...getPluginState(corePlugins),
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
-            sizeTransformer: options.sizeTransformer || ((size: number) => size),
+            zoomScale: zoomScale,
+            sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
         };
 
         // 3. Initialize plugins
@@ -406,6 +409,19 @@ export default class Editor implements IEditor {
     }
 
     public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
+        if (!!(<HTMLTableElement>arg1)?.rows) {
+            const selection = this.core.api.selectTable(this.core, arg1, arg2);
+            this.core.domEvent.tableSelectionRange = selection;
+            this.core.api.selectRange(
+                this.core,
+                createRange(new Position(<HTMLTableElement>arg1, PositionType.Begin))
+            );
+
+            return !!selection;
+        } else {
+            this.core.api.selectTable(this.core, null);
+        }
+
         let range = !arg1
             ? null
             : safeInstanceOf(arg1, 'Range')
@@ -866,10 +882,44 @@ export default class Editor implements IEditor {
     }
 
     /**
-     * Get a transformer function. It transform the size changes according to current situation.
+     * @deprecated Use getZoomScale() instead
      */
     getSizeTransformer(): SizeTransformer {
         return this.core.sizeTransformer;
+    }
+
+    /**
+     * Get current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @returns current zoom scale number
+     */
+    getZoomScale(): number {
+        return this.core.zoomScale;
+    }
+
+    /**
+     * Set current zoom scale, default value is 1
+     * When editor is put under a zoomed container, need to pass the zoom scale number using EditorOptions.zoomScale
+     * to let editor behave correctly especially for those mouse drag/drop behaviors
+     * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
+     */
+    setZoomScale(scale: number): void {
+        if (scale > 0 && scale <= 10) {
+            const oldValue = this.core.zoomScale;
+            this.core.zoomScale = scale;
+
+            if (oldValue != scale) {
+                this.triggerPluginEvent(
+                    PluginEventType.ZoomChanged,
+                    {
+                        oldZoomScale: oldValue,
+                        newZoomScale: scale,
+                    },
+                    true /*broadcast*/
+                );
+            }
+        }
     }
 
     //#endregion

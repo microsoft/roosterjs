@@ -6,6 +6,13 @@ import {
     TriggerEvent,
 } from 'roosterjs-editor-types';
 
+const allowedEventsInShadowEdit = [
+    PluginEventType.EditorReady,
+    PluginEventType.BeforeDispose,
+    PluginEventType.ExtractContentWithDom,
+    PluginEventType.ZoomChanged,
+];
+
 /**
  * @internal
  * Trigger a plugin event
@@ -20,7 +27,7 @@ export const triggerEvent: TriggerEvent = (
 ) => {
     if (
         (!core.lifecycle.shadowEditFragment ||
-            pluginEvent.eventType == PluginEventType.BeforeDispose) &&
+            allowedEventsInShadowEdit.indexOf(pluginEvent.eventType) >= 0) &&
         (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin)))
     ) {
         core.plugins.forEach(plugin => {

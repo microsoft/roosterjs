@@ -48,6 +48,7 @@ export default class TableResize implements EditorPlugin {
             case PluginEventType.Input:
             case PluginEventType.ContentChanged:
             case PluginEventType.Scroll:
+            case PluginEventType.ZoomChanged:
                 this.setTableEditor(null);
                 this.invalidateTableRects();
                 break;

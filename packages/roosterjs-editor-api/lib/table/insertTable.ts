@@ -36,7 +36,7 @@ export default function insertTable(
     editor.focus();
     editor.addUndoSnapshot(() => {
         let vtable = new VTable(table);
-        vtable.applyFormat(format);
+        vtable.applyFormat(format, editor.isDarkMode());
         vtable.writeBack();
         editor.insertNode(fragment);
         editor.runAsync(editor =>
