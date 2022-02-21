@@ -420,6 +420,7 @@ export default class Editor implements IEditor {
             return !!selection;
         } else {
             this.core.api.selectTable(this.core, null);
+            this.core.domEvent.tableSelectionRange = null;
         }
 
         let range = !arg1
