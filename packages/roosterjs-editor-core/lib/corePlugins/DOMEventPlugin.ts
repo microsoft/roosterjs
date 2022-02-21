@@ -144,11 +144,11 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     };
 
     private onFocus = () => {
+        const { table, coordinates } = this.state.tableSelectionRange || {};
         this.editor.select(this.state.selectionRange);
         this.state.selectionRange = null;
 
-        if (this.state.tableSelectionRange) {
-            const { table, coordinates } = this.state.tableSelectionRange;
+        if (table && coordinates) {
             this.editor.select(table, coordinates);
         }
     };
