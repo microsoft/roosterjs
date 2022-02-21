@@ -144,13 +144,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     };
 
     private onFocus = () => {
-        if (this.state.tableSelectionRange) {
-            const { table, coordinates } = this.state.tableSelectionRange;
-            this.editor.select(table, coordinates);
-        } else {
-            this.editor.select(this.state.selectionRange);
-            this.state.selectionRange = null;
-        }
+        this.editor.select(this.state.selectionRange);
+        this.state.selectionRange = null;
     };
     private onKeyDownDocument = (event: KeyboardEvent) => {
         if (event.which == Keys.TAB && !event.defaultPrevented) {
