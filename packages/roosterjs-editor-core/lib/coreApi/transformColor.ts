@@ -61,7 +61,7 @@ export const transformColor: TransformColor = (
 function transformToLightMode(element: HTMLElement) {
     ColorAttributeName.forEach(names => {
         // Reset color styles based on the content of the ogsc/ogsb data element.
-        // If those data properties are empty or do not exist, set them anyway to clear the content.
+        // If those data properties are empty or do not exist, ignore them.
         if (element.dataset[names[ColorAttributeEnum.CssDataSet]]) {
             element.style.setProperty(
                 names[ColorAttributeEnum.CssColor],

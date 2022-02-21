@@ -1,6 +1,11 @@
 import changeElementTag from './changeElementTag';
 import setColor from './setColor';
-import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
+import {
+    ModeIndependentColor,
+    TableBorderFormat,
+    TableFormat,
+    VCell,
+} from 'roosterjs-editor-types';
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';
@@ -276,6 +281,19 @@ function setFirstColumnFormat(
 }
 
 /**
+ * Set color of header how table according if the mode is light or dark
+ * @param color the color that must be applied
+ * @param isDarkMode if V table is be inserted in dark mode
+ * @returns the color of the header row table
+ */
+function setHeaderRowBorderColors(color: string | ModeIndependentColor, isDarkMode?: boolean) {
+    if (typeof color === 'string' || !color) {
+        return (color as string) || '';
+    }
+    return isDarkMode ? color.darkModeColor : color.lightModeColor;
+}
+
+/**
  * Apply custom design to the Header Row
  * @param format
  * @returns
@@ -293,18 +311,18 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat, isDarkMode?: 
     cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
             setColor(cell.td, format.headerRowColor, true, isDarkMode);
-            cell.td.style.borderRightColor =
-                typeof format.headerRowColor === 'string'
-                    ? format.headerRowColor
-                    : format.headerRowColor.lightModeColor;
-            cell.td.style.borderLeftColor =
-                typeof format.headerRowColor === 'string'
-                    ? format.headerRowColor
-                    : format.headerRowColor.lightModeColor;
-            cell.td.style.borderTopColor =
-                typeof format.headerRowColor === 'string'
-                    ? format.headerRowColor
-                    : format.headerRowColor.lightModeColor;
+            cell.td.style.borderRightColor = setHeaderRowBorderColors(
+                format.headerRowColor,
+                isDarkMode
+            );
+            cell.td.style.borderLeftColor = setHeaderRowBorderColors(
+                format.headerRowColor,
+                isDarkMode
+            );
+            cell.td.style.borderTopColor = setHeaderRowBorderColors(
+                format.headerRowColor,
+                isDarkMode
+            );
             cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
             cell.td.scope = 'row';
         }
