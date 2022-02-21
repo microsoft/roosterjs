@@ -83,6 +83,13 @@ export default function createLink(
             } else {
                 // the selection is not collapsed, use browser execCommand
                 editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
+                const traverser = editor.getSelectionTraverser();
+                let currentInline = traverser.getNextInlineElement();
+                while (currentInline) {
+                    const a = currentInline.getContainerNode();
+                    a.parentElement.removeChild(a);
+                    currentInline = traverser.getNextInlineElement();
+                }
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);
             }

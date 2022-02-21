@@ -8,5 +8,5 @@ import isModifierKey from './isModifierKey';
  * @param event The keyboard event object
  */
 export default function isCharacterValue(event: KeyboardEvent): boolean {
-    return !isModifierKey(event) && event.key && event.key.length == 1;
+    return !isModifierKey(event) && !!event.key && event.key.length == 1;
 }

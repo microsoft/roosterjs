@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { contains } from 'roosterjs-editor-dom';
 import { createLink } from 'roosterjs-editor-api';
 import { IEditor } from 'roosterjs-editor-types';
 
@@ -59,12 +60,32 @@ class InsertLink extends React.Component<InsertLinkProps, {}> {
 
 export default function renderInsertLinkDialog(editor: IEditor, onDismiss: () => void) {
     let a = editor.getElementAtCursor('a[href]') as HTMLAnchorElement;
+    let displayText = '';
+    if (a) {
+        const traverser = editor.getSelectionTraverser();
+        const range = editor.getSelectionRange();
+        let currentInline = traverser.currentInlineElement;
+        while (currentInline) {
+            const temp = currentInline.getContainerNode();
+            if (temp == range.startContainer && range.startContainer == range.endContainer) {
+                displayText += temp.textContent.substring(0, range.endOffset);
+            } else if (contains(temp, range.startContainer, true)) {
+                displayText += temp.textContent.substring(range.startOffset);
+            } else if (contains(temp, range.endContainer, true)) {
+                displayText += temp.textContent.substring(0, range.endOffset);
+            } else {
+                displayText += temp.textContent;
+            }
+            currentInline = traverser.getNextInlineElement();
+        }
+    }
+
     return (
         <InsertLink
             editor={editor}
             onDismiss={onDismiss}
             url={a ? a.href : ''}
-            displayText={a ? a.innerText : ''}
+            displayText={displayText}
         />
     );
 }

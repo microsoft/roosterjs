@@ -282,7 +282,7 @@ function setFirstColumnFormat(
  */
 function setHeaderRowFormat(cells: VCell[][], format: TableFormat, isDarkMode?: boolean) {
     if (!format.hasHeaderRow) {
-        cells[0].forEach(cell => {
+        cells[0]?.forEach(cell => {
             if (cell.td) {
                 cell.td = changeElementTag(cell.td, TABLE_CELL_TAG_NAME) as HTMLTableCellElement;
                 cell.td.scope = '';
@@ -290,8 +290,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat, isDarkMode?: 
         });
         return;
     }
-
-    cells[0].forEach(cell => {
+    cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
             setColor(cell.td, format.headerRowColor, true, isDarkMode);
             cell.td.style.borderRightColor =

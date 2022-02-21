@@ -71,8 +71,8 @@ export default interface HtmlSanitizerOptions {
      * Define a replacement tag name of unknown tags.
      * A star "*" means keep as it is, no replacement
      * Other valid string means replace the tag name with this string.
-     * Empty string, undefined or null means drop such elements and all its children
+     * Empty string, undefined means drop such elements and all its children
      * @default undefined
      */
-    unknownTagReplacement?: string;
+    unknownTagReplacement?: string | null;
 }
