@@ -3,6 +3,7 @@ import {
     Alignment,
     ChangeSource,
     DocumentCommand,
+    ExperimentalFeatures,
     IEditor,
     QueryScope,
 } from 'roosterjs-editor-types';
@@ -60,7 +61,7 @@ function alignElement(
     alignment: Alignment,
     addUndoSnapshot?: boolean
 ) {
-    if (elementType === TABLE) {
+    if (elementType === TABLE && editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment)) {
         alignTable(editor, element, alignment, addUndoSnapshot);
     } else {
         alignText(editor, element, alignment, addUndoSnapshot);

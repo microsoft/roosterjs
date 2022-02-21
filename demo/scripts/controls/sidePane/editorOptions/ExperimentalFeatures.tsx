@@ -15,6 +15,8 @@ const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
     [ExperimentalFeatures.AlwaysApplyDefaultFormat]: 'Apply the default format to all elements',
     [ExperimentalFeatures.ConvertSingleImageBody]:
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
+    [ExperimentalFeatures.TableAlignment]:
+        'Align table elements to left, center and right using setAlignment API',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<

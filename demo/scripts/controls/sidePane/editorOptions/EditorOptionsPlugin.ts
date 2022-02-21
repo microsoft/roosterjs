@@ -33,6 +33,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.ImageCrop,
         ExperimentalFeatures.AlwaysApplyDefaultFormat,
         ExperimentalFeatures.ConvertSingleImageBody,
+        ExperimentalFeatures.TableAlignment,
     ],
 };
 
