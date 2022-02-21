@@ -475,13 +475,8 @@ export default class TableCellSelection implements EditorPlugin {
 
             if (this.firstTable) {
                 this.tableSelection = true;
-                if (
-                    this.vTable?.table != this.firstTable &&
-                    safeInstanceOf(this.firstTarget, 'HTMLTableCellElement')
-                ) {
-                    this.vTable = new VTable(this.firstTarget);
-                }
 
+                this.vTable = this.vTable || new VTable(this.firstTable);
                 this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget);
                 this.tableRange.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
                 this.vTable.selection = this.tableRange;
@@ -496,8 +491,6 @@ export default class TableCellSelection implements EditorPlugin {
 
             this.vTable.selection = this.tableRange;
             this.selectTable();
-
-            this.tableRange = this.vTable.selection;
         }
     }
 
