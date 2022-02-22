@@ -31,6 +31,14 @@ export const selectTable: SelectTable = (
         ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
         const ranges = select(core, table, coordinates);
+
+        const tempRange = new Range();
+        tempRange.setStart(
+            table.rows.item(coordinates.firstCell.y).cells.item(coordinates.firstCell.x),
+            0
+        );
+        core.api.selectRange(core, tempRange);
+
         return {
             type: SelectionRangeTypes.TableSelection,
             ranges,

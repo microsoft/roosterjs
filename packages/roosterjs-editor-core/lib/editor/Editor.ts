@@ -412,10 +412,6 @@ export default class Editor implements IEditor {
         if (!!(<HTMLTableElement>arg1)?.rows) {
             const selection = this.core.api.selectTable(this.core, arg1, arg2);
             this.core.domEvent.tableSelectionRange = selection;
-            this.core.api.selectRange(
-                this.core,
-                createRange(new Position(<HTMLTableElement>arg1, PositionType.Begin))
-            );
 
             return !!selection;
         } else {
