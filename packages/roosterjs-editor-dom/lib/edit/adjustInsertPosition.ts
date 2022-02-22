@@ -16,8 +16,14 @@ import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import VTable from '../table/VTable';
 import wrap from '../utils/wrap';
-import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
+import {
+    InlineElement,
+    NodePosition,
+    NodeType,
+    PositionType,
+    QueryScope,
+} from 'roosterjs-editor-types';
 
 const adjustSteps: ((
     root: HTMLElement,
@@ -30,6 +36,7 @@ const adjustSteps: ((
     adjustInsertPositionForParagraph,
     adjustInsertPositionForVoidElement,
     adjustInsertPositionForMoveCursorOutOfALink,
+    adjustInsertPositionForImages,
 ];
 
 /**
@@ -236,8 +243,37 @@ function adjustInsertPositionForMoveCursorOutOfALink(
 }
 
 /**
+ * Adjust the position cursor position when a image is inserted to prevent it be inserted into another element.
+ */
+function adjustInsertPositionForImages(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition,
+    range: Range
+): NodePosition {
+    const isImage = nodeToInsert.nodeName === 'IMG' ? true : false;
+    if (range && range.collapsed && isImage) {
+        const searcher = new PositionContentSearcher(root, Position.getStart(range));
+        const inlineElementBefore = searcher.getInlineElementBefore();
+        const inlineElementAfter = searcher.getInlineElementAfter();
+        const containerNodeType = (inlineElement: InlineElement) =>
+            inlineElement.getContainerNode().nodeName;
+        const adjustedPosition = (inlineElement: InlineElement, positionType: PositionType) =>
+            containerNodeType(inlineElement) === '#text'
+                ? new Position(inlineElement.getContainerNode().parentElement, positionType)
+                : new Position(inlineElement.getContainerNode(), positionType);
+        if (inlineElementBefore) {
+            position = adjustedPosition(inlineElementBefore, PositionType.After);
+        } else if (inlineElementAfter) {
+            position = adjustedPosition(inlineElementAfter, PositionType.Before);
+        }
+    }
+    return position;
+}
+
+/**
  *
- * @param root the contentDiv of the ditor
+ * @param root the contentDiv of the editor
  * @param nodeToInsert the node to be inserted
  * @param position the position of the node to be inserted
  * @param range the range current or cached range of the editor
