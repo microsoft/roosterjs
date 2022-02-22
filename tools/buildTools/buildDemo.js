@@ -8,10 +8,13 @@ const {
     nodeModulesPath,
     packagesPath,
     deployPath,
+    distPath,
     roosterJsDistPath,
     packages,
     runNode,
     mainPackageJson,
+    packagesUiPath,
+    roosterJsUiDistPath,
 } = require('./common');
 
 async function buildDemoSite() {
@@ -32,7 +35,7 @@ async function buildDemoSite() {
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
-            modules: [sourcePath, packagesPath, nodeModulesPath],
+            modules: [sourcePath, packagesPath, packagesUiPath, nodeModulesPath],
         },
         module: {
             rules: [
@@ -71,6 +74,7 @@ async function buildDemoSite() {
             {
                 react: 'React',
                 'react-dom': 'ReactDOM',
+                'roosterjs-react': 'roosterjsReact',
             }
         ),
         stats: 'minimal',
@@ -94,14 +98,21 @@ async function buildDemoSite() {
                     path.resolve(distPathRoot, 'rooster-min.js.map')
                 );
                 fs.copyFileSync(
+                    path.resolve(roosterJsUiDistPath, 'rooster-react-min.js'),
+                    path.resolve(distPathRoot, 'rooster-react-min.js')
+                );
+                fs.copyFileSync(
+                    path.resolve(roosterJsUiDistPath, 'rooster-react-min.js.map'),
+                    path.resolve(distPathRoot, 'rooster-react-min.js.map')
+                );
+                fs.copyFileSync(
                     path.resolve(sourcePathRoot, 'index.html'),
                     path.resolve(distPathRoot, 'index.html')
                 );
-                var outputFilename = path.join(distPathRoot, filename);
+                var outputFilename = path.join(distPathRoot, 'version.js');
                 fs.writeFileSync(
                     outputFilename,
-                    `window.roosterJsVer = "v${mainPackageJson.version}";` +
-                        fs.readFileSync(outputFilename).toString()
+                    `window.roosterJsVer = "v${mainPackageJson.version}";`
                 );
                 resolve();
             }
