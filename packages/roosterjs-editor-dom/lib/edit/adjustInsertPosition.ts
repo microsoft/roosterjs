@@ -243,7 +243,7 @@ function adjustInsertPositionForMoveCursorOutOfALink(
 }
 
 /**
- * Adjust the position cursor position when a image is inserted to prevent it be inserted into another element.
+ * Adjust the cursor position when a image is inserted to prevent it be inserted into another element.
  */
 function adjustInsertPositionForImages(
     root: HTMLElement,
