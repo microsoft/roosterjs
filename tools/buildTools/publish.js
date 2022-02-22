@@ -3,13 +3,13 @@
 const path = require('path');
 const fs = require('fs');
 const exec = require('child_process').execSync;
-const { packages, distPath, readPackageJson } = require('./common');
+const { allPackages, distPath, readPackageJson } = require('./common');
 
 const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
 const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
 
 function publish(options) {
-    packages.forEach(packageName => {
+    allPackages.forEach(packageName => {
         const json = readPackageJson(packageName, false /*readFromSourceFolder*/);
         const localVersion = json.version;
         const versionMatch = VersionRegex.exec(localVersion);
@@ -20,7 +20,15 @@ function publish(options) {
             npmVersion = exec(`npm view ${packageName}@${tagname} version`).toString().trim();
         } catch (e) {}
 
-        if (localVersion != npmVersion) {
+        if (localVersion == '0.0.0') {
+            console.log(
+                `Skip publishing package ${packageName}, because version (${localVersion}) is not ready to publish`
+            );
+        } else if (localVersion == npmVersion) {
+            console.log(
+                `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
+            );
+        } else {
             let npmrcName = path.join(distPath, packageName, '.npmrc');
             if (options.token) {
                 const npmrc = `${NpmrcContent}${options.token}\n`;
@@ -42,10 +50,6 @@ function publish(options) {
                     fs.unlinkSync(npmrcName);
                 }
             }
-        } else {
-            console.log(
-                `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
-            );
         }
     });
 }

@@ -3,12 +3,19 @@
 const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
-const { packages, distPath, readPackageJson, mainPackageJson, err } = require('./common');
+const {
+    packages,
+    allPackages,
+    distPath,
+    readPackageJson,
+    mainPackageJson,
+    err,
+} = require('./common');
 
 function normalize() {
     const knownCustomizedPackages = {};
 
-    packages.forEach(packageName => {
+    allPackages.forEach(packageName => {
         const packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
 
         Object.keys(packageJson.dependencies).forEach(dep => {

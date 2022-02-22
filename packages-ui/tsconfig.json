@@ -1,9 +1,12 @@
 {
     "compilerOptions": {
+        "strict": false,
+        "jsx": "react",
         "target": "es5",
         "module": "commonjs",
         "outDir": "../dist",
         "sourceMap": true,
+        "inlineSources": true,
         "declaration": true,
         "removeComments": false,
         "noImplicitAny": true,
@@ -11,10 +14,10 @@
         "noUnusedLocals": true,
         "baseUrl": ".",
         "paths": {
-            "*": ["*"]
+            "*": ["*", "../dist/*"]
         },
         "rootDir": ".",
         "lib": ["es6", "dom"]
     },
-    "include": ["**/*.ts"]
+    "include": ["**/*.ts", "**/*.tsx"]
 }
