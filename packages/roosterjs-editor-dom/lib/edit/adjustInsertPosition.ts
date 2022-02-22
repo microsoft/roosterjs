@@ -256,10 +256,8 @@ function adjustInsertPositionForImages(
         const searcher = new PositionContentSearcher(root, Position.getStart(range));
         const inlineElementBefore = searcher.getInlineElementBefore();
         const inlineElementAfter = searcher.getInlineElementAfter();
-        const containerNodeType = (inlineElement: InlineElement) =>
-            inlineElement.getContainerNode().nodeName;
         const adjustedPosition = (inlineElement: InlineElement, positionType: PositionType) =>
-            containerNodeType(inlineElement) === '#text'
+            inlineElement.getContainerNode().nodeName === '#text'
                 ? new Position(inlineElement.getContainerNode().parentElement, positionType)
                 : new Position(inlineElement.getContainerNode(), positionType);
         if (inlineElementBefore) {
