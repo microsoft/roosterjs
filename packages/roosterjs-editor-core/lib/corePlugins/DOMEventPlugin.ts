@@ -144,7 +144,14 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     };
 
     private onFocus = () => {
-        this.editor.select(this.state.selectionRange);
+        const { table, coordinates } = this.state.tableSelectionRange || {};
+
+        if (table && coordinates) {
+            this.editor.select(table, coordinates);
+        } else {
+            this.editor.select(this.state.selectionRange);
+        }
+
         this.state.selectionRange = null;
     };
     private onKeyDownDocument = (event: KeyboardEvent) => {
