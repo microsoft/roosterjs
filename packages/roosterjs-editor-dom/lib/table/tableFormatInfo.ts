@@ -62,7 +62,7 @@ function checkIfTableFormatIsValid(format: TableFormat) {
 }
 
 function checkIfColorIsModeIndependentColor(color: any) {
-    if (color.lightModeColor && color.darkModeColor) {
+    if (typeof color === 'object' && color.lightModeColor && color.darkModeColor) {
         return true;
     }
     return false;

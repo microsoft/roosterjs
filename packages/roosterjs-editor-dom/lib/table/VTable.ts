@@ -1,4 +1,4 @@
-import applyTableFormat from '../utils/applyTableFormat';
+import applyTableFormat from './applyTableFormat';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -28,11 +28,6 @@ const DEFAULT_FORMAT: TableFormat = {
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
 };
-
-/**
- * Check if the VTable is being created in darkMode, if yes, apply the styles for darkMode
- */
-let isVTableInDarkMode: boolean;
 
 /**
  * A virtual table class, represent an HTML table, by expand all merged cells to each separated cells
@@ -69,6 +64,11 @@ export default class VTable {
     formatInfo: TableFormat;
 
     private trs: HTMLTableRowElement[] = [];
+
+    /**
+     * Check if the VTable is being created in darkMode, if yes, apply the styles for darkMode
+     */
+    private isVTableInDarkMode: boolean;
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
@@ -138,7 +138,7 @@ export default class VTable {
             });
             if (this.formatInfo) {
                 saveTableInfo(this.table, this.formatInfo);
-                applyTableFormat(this.table, this.cells, this.formatInfo, isVTableInDarkMode);
+                applyTableFormat(this.table, this.cells, this.formatInfo, this.isVTableInDarkMode);
             }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
@@ -153,13 +153,13 @@ export default class VTable {
         if (!this.table) {
             return;
         }
-        isVTableInDarkMode = isDarkMode;
+        this.isVTableInDarkMode = isDarkMode;
         this.formatInfo = { ...DEFAULT_FORMAT, ...(this.formatInfo || {}), ...(format || {}) };
         this.deleteCellShadeDataset(this.cells);
     }
 
     /**
-     * Remove the cellshade dataset to apply a new style format at the cell.
+     * Remove the cellShade dataset to apply a new style format at the cell.
      * @param cells
      */
     private deleteCellShadeDataset(cells: VCell[][]) {

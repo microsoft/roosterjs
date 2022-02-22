@@ -3,6 +3,6 @@
         "strict": true
     },
     "extends": "../../../tsconfig.json",
-    "include": ["./**/*.ts"],
+    "include": ["./**/*.ts", "../table/applyTableFormat.ts"],
     "references": [{ "path": "../../../roosterjs-editor-types/tsconfig.child.json" }]
 }

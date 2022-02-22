@@ -8,45 +8,45 @@ export default interface TableFormat {
     /**
      * Top border color for each row
      */
-    topBorderColor?: string | null;
+    topBorderColor: string | null;
     /**
      * Bottom border color for each row
      */
-    bottomBorderColor?: string | null;
+    bottomBorderColor: string | null;
     /**
      * Vertical border color for each row
      */
-    verticalBorderColor?: string | null;
+    verticalBorderColor: string | null;
     /**
      * Set header row
      */
-    hasHeaderRow?: boolean;
+    hasHeaderRow: boolean;
     /**
      * Header row background color for even cells
      */
-    headerRowColor?: string | ModeIndependentColor | null;
+    headerRowColor: string | ModeIndependentColor | null;
     /**
      * Set first column
      */
-    hasFirstColumn?: boolean;
+    hasFirstColumn: boolean;
     /**
      * Set banded columns
      */
-    hasBandedColumns?: boolean;
+    hasBandedColumns: boolean;
     /**
      * Set banded rows
      */
-    hasBandedRows?: boolean;
+    hasBandedRows: boolean;
     /**
      * Background color for even row or even columns
      */
-    bgColorEven?: string | ModeIndependentColor | null;
+    bgColorEven: string | ModeIndependentColor | null;
     /**
      * Background color for odd row or odd columns
      */
-    bgColorOdd?: string | ModeIndependentColor | null;
+    bgColorOdd: string | ModeIndependentColor | null;
     /**
      * Table Borders Type
      */
-    tableBorderFormat?: TableBorderFormat;
+    tableBorderFormat: TableBorderFormat;
 }

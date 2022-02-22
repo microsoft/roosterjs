@@ -1,4 +1,4 @@
-import applyTableFormat from '../../lib/utils/applyTableFormat';
+import applyTableFormat from '../../lib/table/applyTableFormat';
 import VTable from '../../lib/table/VTable';
 import { itChromeOnly } from '../DomTestHelper';
 import { TableFormat } from 'roosterjs-editor-types';

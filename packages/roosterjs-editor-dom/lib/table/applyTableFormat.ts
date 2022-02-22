@@ -1,5 +1,5 @@
-import changeElementTag from './changeElementTag';
-import setColor from './setColor';
+import changeElementTag from '../utils/changeElementTag';
+import setColor from '../utils/setColor';
 import {
     ModeIndependentColor,
     TableBorderFormat,
@@ -19,7 +19,7 @@ const CELL_SHADE = 'cellShade';
 export default function applyTableFormat(
     table: HTMLTableElement,
     cells: VCell[][],
-    format: Partial<TableFormat>,
+    format: Required<TableFormat>,
     isDarkMode?: boolean
 ) {
     if (!format) {
@@ -286,11 +286,11 @@ function setFirstColumnFormat(
  * @param isDarkMode if V table is be inserted in dark mode
  * @returns the color of the header row table
  */
-function setHeaderRowBorderColors(color: string | ModeIndependentColor, isDarkMode?: boolean) {
+function setHeaderRowBorderColors(color: string | ModeIndependentColor) {
     if (typeof color === 'string' || !color) {
         return (color as string) || '';
     }
-    return isDarkMode ? color.darkModeColor : color.lightModeColor;
+    return color.lightModeColor;
 }
 
 /**
@@ -311,18 +311,9 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat, isDarkMode?: 
     cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
             setColor(cell.td, format.headerRowColor, true, isDarkMode);
-            cell.td.style.borderRightColor = setHeaderRowBorderColors(
-                format.headerRowColor,
-                isDarkMode
-            );
-            cell.td.style.borderLeftColor = setHeaderRowBorderColors(
-                format.headerRowColor,
-                isDarkMode
-            );
-            cell.td.style.borderTopColor = setHeaderRowBorderColors(
-                format.headerRowColor,
-                isDarkMode
-            );
+            cell.td.style.borderRightColor = setHeaderRowBorderColors(format.headerRowColor);
+            cell.td.style.borderLeftColor = setHeaderRowBorderColors(format.headerRowColor);
+            cell.td.style.borderTopColor = setHeaderRowBorderColors(format.headerRowColor);
             cell.td = changeElementTag(cell.td, TABLE_HEADER_TAG_NAME) as HTMLTableCellElement;
             cell.td.scope = 'row';
         }
