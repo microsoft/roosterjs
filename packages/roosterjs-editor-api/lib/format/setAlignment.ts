@@ -1,4 +1,5 @@
 import execCommand from '../utils/execCommand';
+import { VTable } from 'roosterjs-editor-dom';
 import {
     Alignment,
     ChangeSource,
@@ -6,6 +7,8 @@ import {
     ExperimentalFeatures,
     IEditor,
     QueryScope,
+    SelectionRangeTypes,
+    TableSelectionRange,
 } from 'roosterjs-editor-types';
 
 const TABLE = 'TABLE';
@@ -38,11 +41,17 @@ function isATableOrText(element: HTMLElement, editor: IEditor) {
     if (!element) {
         return;
     }
-    const tag = element.tagName;
-    if (tag === TABLE && editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment)) {
-        return TABLE;
-    } else {
+    const selection = editor.getSelectionRangeEx();
+    const selectionType = selection.type;
+    if (selection && selectionType === SelectionRangeTypes.Normal) {
         return TEXT;
+    } else if (
+        editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
+        selection &&
+        selectionType === SelectionRangeTypes.TableSelection &&
+        isWholeTableSelected(selection)
+    ) {
+        return TABLE;
     }
 }
 
@@ -62,7 +71,7 @@ function alignElement(
     addUndoSnapshot?: boolean
 ) {
     if (elementType === TABLE) {
-        alignTable(editor, element, alignment, addUndoSnapshot);
+        alignTable(editor, element, alignment);
     } else {
         alignText(editor, element, alignment, addUndoSnapshot);
     }
@@ -76,16 +85,7 @@ function alignElement(
  * @param addUndoSnapshot
  * @returns
  */
-function alignTable(
-    editor: IEditor,
-    element: HTMLElement,
-    alignment: Alignment,
-    addUndoSnapshot?: boolean
-) {
-    if (addUndoSnapshot) {
-        editor.focus();
-        return;
-    }
+function alignTable(editor: IEditor, element: HTMLElement, alignment: Alignment) {
     if (alignment == Alignment.Center) {
         element.style.marginLeft = 'auto';
         element.style.marginRight = 'auto';
@@ -126,4 +126,21 @@ function alignText(
     } else {
         execCommand(editor, command);
     }
+}
+
+/**
+ * Check if the whole table is selected
+ * @param selection
+ * @returns
+ */
+function isWholeTableSelected(selection: TableSelectionRange) {
+    const vTable = new VTable(selection.table);
+    const { firstCell, lastCell } = selection.coordinates;
+    const rowsLength = vTable.cells.length - 1;
+    const colIndex = vTable.cells[rowsLength].length - 1;
+    const firstX = firstCell.x;
+    const firstY = firstCell.y;
+    const lastX = lastCell.x;
+    const lastY = lastCell.y;
+    return firstX == 0 && firstY == 0 && lastX == colIndex && lastY == rowsLength;
 }
