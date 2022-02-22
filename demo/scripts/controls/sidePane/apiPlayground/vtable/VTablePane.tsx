@@ -744,28 +744,28 @@ function createTableFormat(
 }
 
 function setHeaderRow(table: HTMLTableElement, editor: IEditor): TableFormat {
-    const vtable = new VTable(table, editor.isDarkMode());
+    const vtable = new VTable(table);
     const format = vtable.formatInfo;
     format.hasHeaderRow = !format.hasHeaderRow;
     return format;
 }
 
 function setFirstColumn(table: HTMLTableElement, editor: IEditor): TableFormat {
-    const vtable = new VTable(table, editor.isDarkMode());
+    const vtable = new VTable(table);
     const format = vtable.formatInfo;
     format.hasFirstColumn = !format.hasFirstColumn;
     return format;
 }
 
 function setBandedColumn(table: HTMLTableElement, editor: IEditor): TableFormat {
-    const vtable = new VTable(table, editor.isDarkMode());
+    const vtable = new VTable(table);
     const format = vtable.formatInfo;
     format.hasBandedColumns = !format.hasBandedColumns;
     return format;
 }
 
 function setBandedRow(table: HTMLTableElement, editor: IEditor): TableFormat {
-    const vtable = new VTable(table, editor.isDarkMode());
+    const vtable = new VTable(table);
     const format = vtable.formatInfo;
     format.hasBandedRows = !format.hasBandedRows;
     return format;
