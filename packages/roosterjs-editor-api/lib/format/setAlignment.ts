@@ -19,7 +19,7 @@ const TEXT = 'TEXT';
  */
 export default function setAlignment(editor: IEditor, alignment: Alignment) {
     const element = editor.getElementAtCursor();
-    const elementType = isListOrATableOrText(element);
+    const elementType = isATableOrText(element, editor);
 
     editor.addUndoSnapshot(() => {
         alignElement(editor, element, elementType, alignment);
@@ -34,12 +34,12 @@ export default function setAlignment(editor: IEditor, alignment: Alignment) {
  * @param element
  * @returns
  */
-function isListOrATableOrText(element: HTMLElement) {
+function isATableOrText(element: HTMLElement, editor: IEditor) {
     if (!element) {
         return;
     }
     const tag = element.tagName;
-    if (tag === 'TABLE') {
+    if (tag === TABLE && editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment)) {
         return TABLE;
     } else {
         return TEXT;
@@ -61,7 +61,7 @@ function alignElement(
     alignment: Alignment,
     addUndoSnapshot?: boolean
 ) {
-    if (elementType === TABLE && editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment)) {
+    if (elementType === TABLE) {
         alignTable(editor, element, alignment, addUndoSnapshot);
     } else {
         alignText(editor, element, alignment, addUndoSnapshot);
