@@ -386,12 +386,12 @@ function dts(isAmd) {
 
 module.exports = {
     dtsCommonJs: {
-        message: `Generating type definition file for CommonJs}...`,
+        message: `Generating type definition file for CommonJs...`,
         callback: () => dts(false /*isAmd*/),
         enabled: options => options.dts,
     },
     dtsAmd: {
-        message: `Generating type definition file for AMD}...`,
+        message: `Generating type definition file for AMD...`,
         callback: () => dts(true /*isAmd*/),
         enabled: options => options.dts,
     },

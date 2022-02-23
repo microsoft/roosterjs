@@ -14,6 +14,7 @@ const nodeModulesPath = path.join(rootPath, 'node_modules');
 const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
+const roosterJsUiDistPath = path.join(distPath, 'roosterjs-react/dist');
 const deployPath = path.join(distPath, 'deploy');
 
 function collectPackages(startPath) {
@@ -56,6 +57,7 @@ function collectPackages(startPath) {
 
 const packages = collectPackages(packagesPath);
 const packagesUI = collectPackages(packagesUiPath);
+const allPackages = packages.concat(packagesUI);
 
 function runNode(command, cwd, stdio) {
     exec('node ' + command, {
@@ -98,11 +100,13 @@ module.exports = {
     typescriptPath,
     distPath,
     roosterJsDistPath,
+    roosterJsUiDistPath,
     deployPath,
     runNode,
     err,
     packages,
     packagesUI,
+    allPackages,
     readPackageJson,
     mainPackageJson,
     findPackageRoot,

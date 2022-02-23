@@ -3,12 +3,10 @@
 const path = require('path');
 const fs = require('fs');
 const {
-    rootPath,
     packagesPath,
     packagesUiPath,
     nodeModulesPath,
-    packages,
-    packagesUI,
+    allPackages,
     distPath,
     runNode,
 } = require('./common');
@@ -33,7 +31,7 @@ function buildAmd() {
         packagesPath
     );
 
-    packages.concat(packagesUI).forEach(packageName => {
+    allPackages.forEach(packageName => {
         const packagePath = path.join(distPath, packageName);
         fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
     });

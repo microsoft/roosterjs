@@ -21,7 +21,7 @@ describe('getSelectionRangeEx', () => {
         document.body.appendChild(input);
         input.focus();
         const selection = getSelectionRangeEx(core);
-        expect(selection.ranges[0]).toBeNull();
+        expect(selection.ranges.length).toBe(0);
         document.body.removeChild(input);
     });
 

@@ -12,5 +12,6 @@
     "peerDependencies": {
         "react": ">=16.0.0"
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "version": "0.0.0"
 }

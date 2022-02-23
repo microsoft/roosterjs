@@ -14,6 +14,7 @@ const {
     runNode,
     mainPackageJson,
     packagesUiPath,
+    roosterJsUiDistPath,
 } = require('./common');
 
 async function buildDemoSite() {
@@ -97,11 +98,11 @@ async function buildDemoSite() {
                     path.resolve(distPathRoot, 'rooster-min.js.map')
                 );
                 fs.copyFileSync(
-                    path.resolve(distPath, 'roosterjs-react', 'dist', 'rooster-react-min.js'),
+                    path.resolve(roosterJsUiDistPath, 'rooster-react-min.js'),
                     path.resolve(distPathRoot, 'rooster-react-min.js')
                 );
                 fs.copyFileSync(
-                    path.resolve(distPath, 'roosterjs-react', 'dist', 'rooster-react-min.js.map'),
+                    path.resolve(roosterJsUiDistPath, 'rooster-react-min.js.map'),
                     path.resolve(distPathRoot, 'rooster-react-min.js.map')
                 );
                 fs.copyFileSync(

@@ -2,14 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const {
-    packagesPath,
-    packages,
-    packagesUI,
-    readPackageJson,
-    findPackageRoot,
-    err,
-} = require('./common');
+const { allPackages, readPackageJson, findPackageRoot, err } = require('./common');
 
 function getPossibleNames(dir, objectName) {
     return [
@@ -69,23 +62,21 @@ function processFile(dir, filename, files, packageDependencies, peerDependencies
 }
 
 function checkDependency() {
-    [packagesUI, packages].forEach(start => {
-        start.forEach(packageName => {
-            const packageRoot = findPackageRoot(packageName);
+    allPackages.forEach(packageName => {
+        const packageRoot = findPackageRoot(packageName);
 
-            var packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
-            var dependencies = Object.keys(packageJson.dependencies);
-            var peerDependencies = packageJson.peerDependencies
-                ? Object.keys(packageJson.peerDependencies)
-                : [];
-            processFile(
-                packageRoot,
-                path.join(packageName, 'lib/index'),
-                [],
-                dependencies,
-                peerDependencies
-            );
-        });
+        var packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
+        var dependencies = Object.keys(packageJson.dependencies);
+        var peerDependencies = packageJson.peerDependencies
+            ? Object.keys(packageJson.peerDependencies)
+            : [];
+        processFile(
+            packageRoot,
+            path.join(packageName, 'lib/index'),
+            [],
+            dependencies,
+            peerDependencies
+        );
     });
 }
 
