@@ -30,20 +30,26 @@ function normalize() {
             } else if (!packageJson.dependencies[dep]) {
                 err('there is a missing dependency in the main package.json: ' + dep);
             }
-
-            packageJson.typings = './lib/index.d.ts';
-            packageJson.main = './lib/index.js';
-            packageJson.license = 'MIT';
-            packageJson.repository = {
-                type: 'git',
-                url: 'https://github.com/Microsoft/roosterjs',
-            };
-
-            const targetPackagePath = path.join(distPath, packageName);
-            const targetFileName = path.join(targetPackagePath, 'package.json');
-            mkdirp.sync(targetPackagePath);
-            fs.writeFileSync(targetFileName, JSON.stringify(packageJson, null, 4));
         });
+
+        if (packageJson.version) {
+            knownCustomizedPackages[packageName] = packageJson.version;
+        } else {
+            packageJson.version = mainPackageJson.version;
+        }
+
+        packageJson.typings = './lib/index.d.ts';
+        packageJson.main = './lib/index.js';
+        packageJson.license = 'MIT';
+        packageJson.repository = {
+            type: 'git',
+            url: 'https://github.com/Microsoft/roosterjs',
+        };
+
+        const targetPackagePath = path.join(distPath, packageName);
+        const targetFileName = path.join(targetPackagePath, 'package.json');
+        mkdirp.sync(targetPackagePath);
+        fs.writeFileSync(targetFileName, JSON.stringify(packageJson, null, 4));
     });
 }
 

@@ -12,7 +12,6 @@ const normalizeStep = require('./buildTools/normalize');
 const buildAmdStep = require('./buildTools/buildAmd');
 const buildCommonJsStep = require('./buildTools/buildCommonJs');
 const pack = require('./buildTools/pack');
-const packUi = require('./buildTools/packUi');
 const dts = require('./buildTools/dts');
 const buildDemoStep = require('./buildTools/buildDemo');
 const buildDocumentStep = require('./buildTools/buildDocument');
