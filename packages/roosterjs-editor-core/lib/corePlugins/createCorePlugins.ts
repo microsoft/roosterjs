@@ -1,3 +1,4 @@
+import ColorChangedEventPlugin from './ColorChangedEventPlugin';
 import CopyPastePlugin from './CopyPastePlugin';
 import DOMEventPlugin from './DOMEventPlugin';
 import EditPlugin from './EditPlugin';
@@ -41,6 +42,8 @@ export default function createCorePlugins(
         copyPaste: map.copyPaste || new CopyPastePlugin(options),
         entity: map.entity || new EntityPlugin(),
         lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),
+        colorChangedEvent:
+            map.colorChangedEvent || new ColorChangedEventPlugin(options, contentDiv),
     };
 }
 
@@ -58,5 +61,6 @@ export function getPluginState(corePlugins: CorePlugins): PluginState {
         undo: corePlugins.undo.getState(),
         entity: corePlugins.entity.getState(),
         copyPaste: corePlugins.copyPaste.getState(),
+        colorChangedEvent: corePlugins.colorChangedEvent.getState(),
     };
 }

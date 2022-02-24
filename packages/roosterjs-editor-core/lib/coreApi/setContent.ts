@@ -1,3 +1,4 @@
+import ColorChangedEvent from 'roosterjs-editor-types/lib/event/ColorChangedEvent';
 import { setHtmlWithSelectionPath } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -37,13 +38,15 @@ export const setContent: SetContent = (
     }
 
     // Convert content even if it hasn't changed.
-    core.api.transformColor(
-        core,
-        core.contentDiv,
-        false /*includeSelf*/,
-        null /*callback*/,
-        ColorTransformDirection.LightToDark
-    );
+
+    const event: ColorChangedEvent = {
+        eventType: PluginEventType.ColorChanged,
+        rootNode: core.contentDiv,
+        includeSelf: false,
+        callback: null,
+        direction: ColorTransformDirection.LightToDark,
+    };
+    core.api.triggerEvent(core, event, false);
 
     if (triggerContentChangedEvent && (contentChanged || core.lifecycle.isDarkMode)) {
         core.api.triggerEvent(

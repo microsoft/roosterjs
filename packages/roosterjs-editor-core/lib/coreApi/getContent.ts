@@ -1,3 +1,4 @@
+import ColorChangedEvent from 'roosterjs-editor-types/lib/event/ColorChangedEvent';
 import {
     ColorTransformDirection,
     EditorCore,
@@ -48,13 +49,14 @@ export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): 
         const range = path && createRange(clonedRoot, path.start, path.end);
 
         if (core.lifecycle.isDarkMode) {
-            core.api.transformColor(
-                core,
-                clonedRoot,
-                false /*includeSelf*/,
-                null /*callback*/,
-                ColorTransformDirection.DarkToLight
-            );
+            const event: ColorChangedEvent = {
+                eventType: PluginEventType.ColorChanged,
+                rootNode: clonedRoot,
+                includeSelf: false,
+                callback: null,
+                direction: ColorTransformDirection.DarkToLight,
+            };
+            core.api.triggerEvent(core, event, false);
         }
 
         if (triggerExtractContentEvent) {

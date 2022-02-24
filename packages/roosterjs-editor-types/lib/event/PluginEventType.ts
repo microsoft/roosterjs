@@ -115,4 +115,9 @@ export const enum PluginEventType {
      * Zoom scale value is changed, triggered by Editor.setZoomScale() when set a different scale number
      */
     ZoomChanged = 21,
+
+    /**
+     * A element has their color changed by format event
+     */
+    ColorChanged = 22,
 }

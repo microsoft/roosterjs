@@ -2,6 +2,7 @@ import BeforeCutCopyEvent from './BeforeCutCopyEvent';
 import BeforeDisposeEvent from './BeforeDisposeEvent';
 import BeforePasteEvent from './BeforePasteEvent';
 import BeforeSetContentEvent from './BeforeSetContentEvent';
+import ColorChangedEvent from './ColorChangedEvent';
 import ContentChangedEvent from './ContentChangedEvent';
 import EditImageEvent from './EditImageEvent';
 import EditorReadyEvent from './EditorReadyEvent';
@@ -29,4 +30,5 @@ export type PluginEvent =
     | LeaveShadowEditEvent
     | EditImageEvent
     | BeforeSetContentEvent
-    | ZoomChangedEvent;
+    | ZoomChangedEvent
+    | ColorChangedEvent;

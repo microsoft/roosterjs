@@ -7,6 +7,7 @@ import LifecyclePluginState from '../corePluginState/LifecyclePluginState';
 import PendingFormatStatePluginState from '../corePluginState/PendingFormatStatePluginState';
 import PluginWithState from './PluginWithState';
 import UndoPluginState from '../corePluginState/UndoPluginState';
+import { ColorChangedEventPluginState } from '..';
 
 /**
  * An interface for editor core plugins.
@@ -64,6 +65,11 @@ export default interface CorePlugins {
      * Lifecycle plugin handles editor initialization and disposing
      */
     readonly lifecycle: PluginWithState<LifecyclePluginState>;
+
+    /**
+     * ColorChangedEvent plugin handles editor color changes
+     */
+    readonly colorChangedEvent: PluginWithState<ColorChangedEventPluginState>;
 }
 
 /**

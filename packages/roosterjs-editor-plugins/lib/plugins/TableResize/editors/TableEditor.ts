@@ -68,6 +68,7 @@ export default class TableEditor {
             this.isRTL,
             this.onFinishEditing
         );
+
         this.tableSelector = createTableSelector(table, editor.getZoomScale(), this.onSelect);
         this.editor.addUndoSnapshot((start, end) => {
             this.start = start;

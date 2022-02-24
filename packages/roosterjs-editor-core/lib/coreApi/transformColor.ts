@@ -61,12 +61,14 @@ export const transformColor: TransformColor = (
 function transformToLightMode(element: HTMLElement) {
     ColorAttributeName.forEach(names => {
         // Reset color styles based on the content of the ogsc/ogsb data element.
-        // If those data properties are empty or do not exist, set them anyway to clear the content.
-        element.style.setProperty(
-            names[ColorAttributeEnum.CssColor],
-            getValueOrDefault(element.dataset[names[ColorAttributeEnum.CssDataSet]], '')
-        );
-        delete element.dataset[names[ColorAttributeEnum.CssDataSet]];
+
+        if (element.dataset[names[ColorAttributeEnum.CssDataSet]]) {
+            element.style.setProperty(
+                names[ColorAttributeEnum.CssColor],
+                getValueOrDefault(element.dataset[names[ColorAttributeEnum.CssDataSet]], '')
+            );
+            delete element.dataset[names[ColorAttributeEnum.CssDataSet]];
+        }
 
         // Some elements might have set attribute colors. We need to reset these as well.
         const value = element.dataset[names[ColorAttributeEnum.HtmlDataSet]];

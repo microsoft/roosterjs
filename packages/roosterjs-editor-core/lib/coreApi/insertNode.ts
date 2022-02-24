@@ -1,3 +1,4 @@
+import ColorChangedEvent from 'roosterjs-editor-types/lib/event/ColorChangedEvent';
 import {
     BlockElement,
     ContentPosition,
@@ -7,6 +8,7 @@ import {
     InsertOption,
     NodeType,
     PositionType,
+    PluginEventType,
 } from 'roosterjs-editor-types';
 import {
     createRange,
@@ -65,11 +67,11 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
         return true;
     }
 
-    core.api.transformColor(
-        core,
-        node,
-        true /*includeSelf*/,
-        () => {
+    const event: ColorChangedEvent = {
+        eventType: PluginEventType.ColorChanged,
+        rootNode: node,
+        includeSelf: true,
+        callback: () => {
             switch (option.position) {
                 case ContentPosition.Begin:
                 case ContentPosition.End: {
@@ -171,8 +173,10 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     break;
             }
         },
-        ColorTransformDirection.LightToDark
-    );
+        direction: ColorTransformDirection.LightToDark,
+    };
+
+    core.api.triggerEvent(core, event, false);
 
     return true;
 };
