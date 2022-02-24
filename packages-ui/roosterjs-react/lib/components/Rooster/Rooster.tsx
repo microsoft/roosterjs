@@ -35,10 +35,10 @@ export default function Rooster(props: RoosterProps) {
     }, [inDarkMode]);
 
     React.useEffect(() => {
-        editor.current?.setZoomScale(zoomScale);
+        editor.current.setZoomScale(zoomScale);
     }, [zoomScale]);
 
-    return <div ref={editorDiv} tabIndex={0} {...domAttributes}></div>;
+    return <div ref={editorDiv} tabIndex={0} {...(domAttributes || {})}></div>;
 }
 
 function defaultEditorCreator(div: HTMLDivElement, options: EditorOptions) {
