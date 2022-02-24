@@ -24,14 +24,13 @@ async function buildDemoSite() {
 
     runNode(typescriptPath + ' --noEmit ', sourcePath);
 
-    const distPathRoot = path.join(deployPath);
     const filename = 'demo.js';
     const webpackConfig = {
         entry: path.join(sourcePath, 'index.ts'),
         devtool: 'source-map',
         output: {
             filename,
-            path: distPathRoot,
+            path: deployPath,
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
@@ -91,25 +90,25 @@ async function buildDemoSite() {
             } else {
                 fs.copyFileSync(
                     path.resolve(roosterJsDistPath, 'rooster-min.js'),
-                    path.resolve(distPathRoot, 'rooster-min.js')
+                    path.resolve(deployPath, 'rooster-min.js')
                 );
                 fs.copyFileSync(
                     path.resolve(roosterJsDistPath, 'rooster-min.js.map'),
-                    path.resolve(distPathRoot, 'rooster-min.js.map')
+                    path.resolve(deployPath, 'rooster-min.js.map')
                 );
                 fs.copyFileSync(
                     path.resolve(roosterJsUiDistPath, 'rooster-react-min.js'),
-                    path.resolve(distPathRoot, 'rooster-react-min.js')
+                    path.resolve(deployPath, 'rooster-react-min.js')
                 );
                 fs.copyFileSync(
                     path.resolve(roosterJsUiDistPath, 'rooster-react-min.js.map'),
-                    path.resolve(distPathRoot, 'rooster-react-min.js.map')
+                    path.resolve(deployPath, 'rooster-react-min.js.map')
                 );
                 fs.copyFileSync(
                     path.resolve(sourcePathRoot, 'index.html'),
-                    path.resolve(distPathRoot, 'index.html')
+                    path.resolve(deployPath, 'index.html')
                 );
-                var outputFilename = path.join(distPathRoot, 'version.js');
+                var outputFilename = path.join(deployPath, 'version.js');
                 fs.writeFileSync(
                     outputFilename,
                     `window.roosterJsVer = "v${mainPackageJson.version}";`

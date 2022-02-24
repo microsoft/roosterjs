@@ -33,6 +33,8 @@ const allTasks = [
     pack.amdProductionUi,
     dts.dtsCommonJs,
     dts.dtsAmd,
+    dts.dtsCommonJsUi,
+    dts.dtsAmdUi,
     buildDemoStep,
     buildDocumentStep,
     publishStep,
