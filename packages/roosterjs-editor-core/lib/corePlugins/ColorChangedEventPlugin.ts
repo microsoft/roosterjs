@@ -91,6 +91,8 @@ export default class ColorChangedEventPlugin
      */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType === PluginEventType.ColorChanged) {
+            const table = this.editor.getElementAtCursor('TABLE');
+            console.log(table);
             const rootNode = event.rootNode || this.state.contentDiv;
             const direction =
                 event.direction || this.state.isDarkMode
