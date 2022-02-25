@@ -12,11 +12,14 @@ const {
     nodeModulesPath,
     runNode,
     err,
+    packages,
+    roosterJsUiDistPath,
+    packagesUI,
 } = require('./common');
 
 const namePlaceholder = '__NAME__';
 const regExportFrom = /export([^;]+)from\s+'([^']+)';/gm;
-const regImportFrom = /import[^;]+from\s+'([^']+)';/gm;
+const regImportFrom = /import\s+([^;]*)\s+from\s+'([^']+)';/gm;
 const singleLineComment = /\/\/[^\n]*\n/g;
 const multiLineComment = /(^\/\*(\*(?!\/)|[^*])*\*\/\s*)/m;
 
@@ -70,12 +73,12 @@ function parseExports(exports) {
     }
 }
 
-function parseFrom(from, currentFileName, baseDir, projDir) {
+function parseFrom(from, currentFileName, baseDir, projDir, externalPackages) {
     var importFileName;
     if (from[0] == '.') {
         var currentPath = path.dirname(currentFileName);
         importFileName = path.resolve(currentPath, from + '.d.ts');
-    } else {
+    } else if ((externalPackages || []).indexOf(from) < 0) {
         importFileName = path.resolve(baseDir, from, 'lib/index.d.ts');
         if (!fs.existsSync(importFileName)) {
             importFileName = path.resolve(projDir, 'node_modules', from, 'lib/index.d.ts');
@@ -222,16 +225,37 @@ function parseExportFrom(content, currentFileName, queue, baseDir, projDir) {
     return content.replace(regExportFrom, '');
 }
 
-function parseImportFrom(content, currentFileName, queue, baseDir, projDir) {
+function parseImportFrom(content, currentFileName, queue, baseDir, projDir, externalPackages) {
     var matches;
+    let newContent = content;
     while ((matches = regImportFrom.exec(content))) {
-        var fromFileName = parseFrom(matches[1].trim(), currentFileName, baseDir, projDir);
-        enqueue(queue, fromFileName);
+        var fromFileName = parseFrom(
+            matches[2].trim(),
+            currentFileName,
+            baseDir,
+            projDir,
+            externalPackages
+        );
+
+        if (fromFileName) {
+            enqueue(queue, fromFileName);
+        } else {
+            const imports = matches[1]
+                .split(',')
+                .map(x => x.replace('{', '').replace('}', '').trim())
+                .filter(x => !!x);
+            imports.forEach(x => {
+                newContent = newContent.replace(
+                    new RegExp(`(\\W|^)(${x})(\\W|$)`, 'gm'),
+                    '$1roosterjs.$2$3'
+                );
+            });
+        }
     }
-    return content.replace(regImportFrom, '');
+    return newContent.replace(regImportFrom, '');
 }
 
-function process(baseDir, queue, index, projDir) {
+function process(baseDir, queue, index, projDir, externalPackages) {
     var item = queue[index];
     var currentFileName = item.filename;
     var file = fs.readFileSync(currentFileName);
@@ -241,7 +265,7 @@ function process(baseDir, queue, index, projDir) {
     content = parseExportFrom(content, currentFileName, queue, baseDir, projDir);
 
     // 2. Remove imports
-    content = parseImportFrom(content, currentFileName, queue, baseDir, projDir);
+    content = parseImportFrom(content, currentFileName, queue, baseDir, projDir, externalPackages);
 
     // 3. Parse all the public elements
     content = [parseClasses, parseFunctions, parseEnum, parseType, parseConst, parseExport].reduce(
@@ -264,7 +288,7 @@ function publicElement(element) {
     });
 }
 
-function output(targetDir, library, isAmd, queue) {
+function generateDts(library, isAmd, queue) {
     var version = JSON.stringify(mainPackageJson.version).replace(/"/g, '');
     var content = '';
     content += `// Type definitions for roosterjs (Version ${version})\r\n`;
@@ -340,59 +364,96 @@ function output(targetDir, library, isAmd, queue) {
         }
     }
 
-    var filename = `${path.resolve(targetDir, 'rooster')}${isAmd ? '-amd' : ''}.d.ts`;
-    fs.writeFileSync(filename, content);
-    return filename;
+    return content;
 }
 
-function createQueue(rootPath, baseDir, root, additionalFiles) {
+function createQueue(rootPath, baseDir, root, additionalFiles, externalPackages) {
     var queue = [];
     var i = 0;
 
     // First part, process exported members
     enqueue(queue, path.join(baseDir, root));
     for (; i < queue.length; i++) {
-        process(baseDir, queue, i, rootPath);
+        process(baseDir, queue, i, rootPath, externalPackages);
     }
 
     // Second part, process "local exported" members (exported from a file, but not exported from index)
     (additionalFiles || []).forEach(f => enqueue(queue, path.join(baseDir, f)));
     for (; i < queue.length; i++) {
-        process(baseDir, queue, i, rootPath);
+        process(baseDir, queue, i, rootPath, externalPackages);
     }
 
     return queue;
 }
 
-const ExcludedPaths = ['roosterjs-react'];
+function dts(isAmd, isUi) {
+    const targetPath = isUi ? roosterJsUiDistPath : roosterJsDistPath;
+    const targetPackages = isUi ? packagesUI : packages;
+    const startFileName = isUi ? 'roosterjs-react/lib/index.d.ts' : 'roosterjs/lib/index.d.ts';
+    const libraryName = isUi ? 'roosterjsReact' : 'roosterjs';
+    const targetFileName = isUi ? 'rooster-react' : 'rooster';
+    const externalPackages = isUi ? packages : [];
 
-function dts(isAmd) {
-    mkdirp.sync(roosterJsDistPath);
+    mkdirp.sync(targetPath);
 
-    const tsFiles = glob
-        .sync(path.relative(rootPath, path.join(distPath, '**', 'lib', '**', '*.d.ts')), {
-            nocase: true,
-        })
-        .filter(x => ExcludedPaths.every(p => x.indexOf(p) < 0))
-        .map(x => path.relative(distPath, x));
-    const dtsQueue = createQueue(rootPath, distPath, 'roosterjs/lib/index.d.ts', tsFiles);
-    const filename = output(roosterJsDistPath, 'roosterjs', isAmd, dtsQueue);
+    let tsFiles = [];
+
+    targetPackages.forEach(packageName => {
+        tsFiles = tsFiles.concat(
+            glob
+                .sync(
+                    path.relative(rootPath, path.join(distPath, packageName, 'lib', '**', '*.d.ts'))
+                )
+                .map(x => path.relative(distPath, x))
+        );
+    });
+
+    const dtsQueue = createQueue(rootPath, distPath, startFileName, tsFiles, externalPackages);
+    const dtsContent = generateDts(libraryName, isAmd, dtsQueue);
+    const fileName = `${targetFileName}${isAmd ? '-amd' : ''}.d.ts`;
+    const fullFileName = path.join(targetPath, fileName);
+
+    if (isUi) {
+        const roosterjsDtsFileName = `rooster${isAmd ? '-amd' : ''}.d.ts`;
+        fs.copyFileSync(
+            path.join(roosterJsDistPath, roosterjsDtsFileName),
+            path.join(targetPath, roosterjsDtsFileName)
+        );
+        fs.writeFileSync(
+            fullFileName,
+            `/// <reference path="./rooster${
+                isAmd ? '-amd' : ''
+            }" />\n/// <reference types="react" />\n\n` + dtsContent
+        );
+    } else {
+        fs.writeFileSync(fullFileName, dtsContent);
+    }
 
     if (!isAmd) {
         const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
-        runNode(typescriptPath + ' ' + filename + ' --noEmit', rootPath);
+        runNode(typescriptPath + ' ' + fullFileName + ' --noEmit', rootPath);
     }
 }
 
 module.exports = {
     dtsCommonJs: {
-        message: `Generating type definition file for CommonJs...`,
-        callback: () => dts(false /*isAmd*/),
+        message: `Generating type definition file (rooster.d.ts) for CommonJs...`,
+        callback: () => dts(false /*isAmd*/, false /*isUi*/),
         enabled: options => options.dts,
     },
     dtsAmd: {
-        message: `Generating type definition file for AMD...`,
-        callback: () => dts(true /*isAmd*/),
+        message: `Generating type definition file (rooster-amd.d.ts) for AMD...`,
+        callback: () => dts(true /*isAmd*/, false /*isUi*/),
+        enabled: options => options.dts,
+    },
+    dtsCommonJsUi: {
+        message: `Generating type definition file (rooster-react.d.ts) for CommonJs...`,
+        callback: () => dts(false /*isAmd*/, true /*isUi*/),
+        enabled: options => options.dts,
+    },
+    dtsAmdUi: {
+        message: `Generating type definition file (rooster-react-amd.d.ts) for AMD...`,
+        callback: () => dts(true /*isAmd*/, true /*isUi*/),
         enabled: options => options.dts,
     },
 };

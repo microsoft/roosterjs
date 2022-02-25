@@ -1,6 +1,6 @@
 import * as React from 'react';
 import BuildInPluginState from './BuildInPluginState';
-import SidePane from './sidePane/SidePane';
+import { EditorOptions, IEditor } from 'roosterjs-editor-types';
 
 export interface MainPaneBaseState {
     showSidePane: boolean;
@@ -9,10 +9,12 @@ export interface MainPaneBaseState {
     initState: BuildInPluginState;
     supportDarkMode: boolean;
     scale: number;
+    isDarkMode: boolean;
+    content: string;
+    editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
-    protected sidePane: SidePane;
     private static instance: MainPaneBase;
 
     static getInstance() {
@@ -38,4 +40,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract popout(): void;
 
     abstract setScale(scale: number): void;
+
+    abstract toggleDarkMode(): void;
 }

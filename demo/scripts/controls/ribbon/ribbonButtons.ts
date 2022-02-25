@@ -320,9 +320,8 @@ const buttons: { [key: string]: RibbonButtonType } = {
     dark: {
         title: 'Dark Mode',
         image: require('../svg/moon.svg'),
-        onClick: editor => {
-            const isDark = !editor.isDarkMode();
-            editor.setDarkModeState(isDark);
+        onClick: () => {
+            MainPaneBase.getInstance().toggleDarkMode();
         },
         checked: (format, editor) => editor.isDarkMode(),
         isHidden: () => !MainPaneBase.getInstance().isDarkModeSupported(),
@@ -360,11 +359,10 @@ const buttons: { [key: string]: RibbonButtonType } = {
     zoom: {
         title: 'Zoom',
         image: require('../svg/zoom.svg'),
-        onClick: (editor, key) => {
+        onClick: (_, key) => {
             const scale = parseInt(key.substring(1)) / 100;
             MainPaneBase.getInstance().setScale(scale);
         },
-        isDisabled: editor => editor.getDocument().defaultView != window,
         dropDownItems: {
             z50: '50%',
             z75: '75%',
@@ -409,7 +407,7 @@ const buttons: { [key: string]: RibbonButtonType } = {
     export: {
         title: 'Export',
         onClick: editor => {
-            let w = window.open();
+            let w = editor.getDocument().defaultView.open();
             w.document.write(trustedHTMLHandler(editor.getContent()));
         },
     },
