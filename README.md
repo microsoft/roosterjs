@@ -18,7 +18,7 @@ Please see [here](https://github.com/microsoft/roosterjs/wiki/RoosterJs-8).
 
 ### Packages
 
-Rooster contains 6 packages.
+Rooster contains 6 basic packages.
 
 1. [roosterjs](https://microsoft.github.io/roosterjs/docs/modules/roosterjs.html):
    A facade of all Rooster code for those who want a quick start. Use the
@@ -43,6 +43,14 @@ Rooster contains 6 packages.
 
 6. [roosterjs-editor-types](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types.html):
    Defines public interfaces and enumerations.
+
+There are also some extension packages to provide additional functionalities.
+
+1. [roosterjs-color-utils](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_color_utils.html):
+   Provide color transformation utility to make editor work under dark mode.
+
+2. [roosterjs-react](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_react.html):
+   Provide a React wrapper of roosterjs so it can be easily used with React. (Under development)
 
 ### APIs
 
