@@ -39,8 +39,8 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
         ) {
             if (col < 0 || col >= vtable.cells[row].length) {
                 row += step;
-                if (row < 0) {
-                    editor.select(vtable.table, PositionType.Before);
+                if (row < 0 && vtable.cells[0][0]?.td) {
+                    editor.select(vtable.cells[0][0]?.td, PositionType.Begin);
                     break;
                 } else if (row >= vtable.cells.length) {
                     editTable(editor, TableOperation.InsertBelow);
