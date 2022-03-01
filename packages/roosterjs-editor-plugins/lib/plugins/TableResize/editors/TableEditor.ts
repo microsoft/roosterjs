@@ -4,7 +4,7 @@ import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
 import { ChangeSource, IEditor, NodePosition, TableSelection } from 'roosterjs-editor-types';
-import { getComputedStyle, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
 
 const INSERTER_HOVER_OFFSET = 5;
 
@@ -66,13 +66,10 @@ export default class TableEditor {
             table,
             editor.getZoomScale(),
             this.isRTL,
+            this.onStartTableResize,
             this.onFinishEditing
         );
         this.tableSelector = createTableSelector(table, editor.getZoomScale(), this.onSelect);
-        this.editor.addUndoSnapshot((start, end) => {
-            this.start = start;
-            this.end = end;
-        });
     }
 
     dispose() {
@@ -218,16 +215,32 @@ export default class TableEditor {
     }
 
     private onFinishEditing = (): false => {
+        this.editor.focus();
         this.editor.select(this.start, this.end);
         this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
-        this.editor.focus();
         this.onChanged();
         return false;
     };
 
+    private onStartTableResize = () => {
+        this.onStartResize();
+    };
+
     private onStartCellResize = () => {
         this.disposeTableResizer();
+        this.onStartResize();
     };
+
+    private onStartResize() {
+        const range = this.editor.getSelectionRange();
+
+        if (range) {
+            this.start = Position.getStart(range);
+            this.end = Position.getEnd(range);
+        }
+
+        this.editor.addUndoSnapshot();
+    }
 
     private onInserted = () => {
         this.disposeTableResizer();
