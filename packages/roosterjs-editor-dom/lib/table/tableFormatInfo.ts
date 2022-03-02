@@ -25,7 +25,7 @@ export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
     }
 }
 
-function checkIfTableFormatIsValid(format: TableFormat) {
+function checkIfTableFormatIsValid(format: TableFormat): format is Required<TableFormat> {
     if (!format) {
         return false;
     }
