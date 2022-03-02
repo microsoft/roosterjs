@@ -15,7 +15,7 @@ import {
 } from 'roosterjs-editor-types';
 
 const CELL_SHADE = 'cellShade';
-const DEFAULT_FORMAT: TableFormat = {
+const DEFAULT_FORMAT: Required<TableFormat> = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
     verticalBorderColor: '#ABABAB',
@@ -154,7 +154,7 @@ export default class VTable {
             ...DEFAULT_FORMAT,
             ...(this.formatInfo || {}),
             ...(format || {}),
-        } as Required<TableFormat>;
+        };
         this.deleteCellShadeDataset(this.cells);
     }
 
