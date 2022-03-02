@@ -1,3 +1,9 @@
 {
-    "include": ["../packages/**/*.ts", "../demo/scripts/**/*.ts", "../demo/scripts/**/*.tsx"]
+    "include": [
+        "../packages/**/*.ts",
+        "../packages-ui/**/*.ts",
+        "../packages-ui/**/*.tsx",
+        "../demo/scripts/**/*.ts",
+        "../demo/scripts/**/*.tsx"
+    ]
 }

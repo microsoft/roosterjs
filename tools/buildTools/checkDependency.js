@@ -2,14 +2,33 @@
 
 const path = require('path');
 const fs = require('fs');
-const { packagesPath, packages, readPackageJson, err } = require('./common');
+const { allPackages, readPackageJson, findPackageRoot, err } = require('./common');
 
-function processFile(dir, filename, files, packageDependencies) {
-    if (packageDependencies.indexOf(filename) >= 0) {
+function getPossibleNames(dir, objectName) {
+    return [
+        path.join(dir, objectName),
+        path.join(dir, objectName + '.ts'),
+        path.join(dir, objectName + '.tsx'),
+    ];
+}
+
+function processFile(dir, filename, files, packageDependencies, peerDependencies) {
+    if (packageDependencies.indexOf(filename) >= 0 || peerDependencies.indexOf(filename) >= 0) {
         return;
     }
 
-    const thisFilename = path.resolve(dir, !/\.ts.?$/.test(filename) ? filename + '.ts' : filename);
+    const thisFilename = getPossibleNames(dir, filename).filter(name => fs.existsSync(name))[0];
+
+    if (!thisFilename) {
+        err(
+            'Found dependency issue when processing file ' +
+                filename +
+                ' under ' +
+                dir +
+                ': File not found'
+        );
+    }
+
     const index = files.indexOf(thisFilename);
 
     if (index >= 0) {
@@ -27,7 +46,7 @@ function processFile(dir, filename, files, packageDependencies) {
         while ((match = reg.exec(content))) {
             var nextFile = match[1];
             if (nextFile) {
-                processFile(dir, nextFile, files.slice(), packageDependencies);
+                processFile(dir, nextFile, files.slice(), packageDependencies, peerDependencies);
             }
         }
     } catch (e) {
@@ -43,10 +62,21 @@ function processFile(dir, filename, files, packageDependencies) {
 }
 
 function checkDependency() {
-    packages.forEach(packageName => {
+    allPackages.forEach(packageName => {
+        const packageRoot = findPackageRoot(packageName);
+
         var packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
         var dependencies = Object.keys(packageJson.dependencies);
-        processFile(packagesPath, path.join(packageName, 'lib/index'), [], dependencies);
+        var peerDependencies = packageJson.peerDependencies
+            ? Object.keys(packageJson.peerDependencies)
+            : [];
+        processFile(
+            packageRoot,
+            path.join(packageName, 'lib/index'),
+            [],
+            dependencies,
+            peerDependencies
+        );
     });
 }
 

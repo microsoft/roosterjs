@@ -1,11 +1,11 @@
 'use strict';
 
 const path = require('path');
-const { rootPath, packagesPath, nodeModulesPath, runNode } = require('./common');
+const { rootPath, nodeModulesPath, runNode } = require('./common');
 
 function buildDocument() {
     const config = {
-        tsconfig: path.join(packagesPath, 'tsconfig.json'),
+        tsconfig: path.join(rootPath, 'tools', 'tsconfig.doc.json'),
     };
     let cmd = path.join(nodeModulesPath, 'typedoc/bin/typedoc');
 

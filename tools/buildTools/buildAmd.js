@@ -3,23 +3,35 @@
 const path = require('path');
 const fs = require('fs');
 const {
-    rootPath,
     packagesPath,
+    packagesUiPath,
     nodeModulesPath,
-    packages,
+    allPackages,
     distPath,
     runNode,
 } = require('./common');
 
 function buildAmd() {
     const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
-    const tsconfigPath = path.join(packagesPath, 'tsconfig.build.json');
+
     runNode(
-        typescriptPath + ` -p ${tsconfigPath} -t es5 --moduleResolution node -m amd`,
+        typescriptPath +
+            ` -p ${path.join(
+                packagesPath,
+                'tsconfig.build.json'
+            )} -t es5 --moduleResolution node -m amd`,
+        packagesPath
+    );
+    runNode(
+        typescriptPath +
+            ` -p ${path.join(
+                packagesUiPath,
+                'tsconfig.json'
+            )} -t es5 --moduleResolution node -m amd`,
         packagesPath
     );
 
-    packages.forEach(packageName => {
+    allPackages.forEach(packageName => {
         const packagePath = path.join(distPath, packageName);
         fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-amd`);
     });

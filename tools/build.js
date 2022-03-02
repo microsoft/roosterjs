@@ -27,8 +27,14 @@ const allTasks = [
     pack.commonJsProduction,
     pack.amdDebug,
     pack.amdProduction,
+    pack.commonJsDebugUi,
+    pack.commonJsProductionUi,
+    pack.amdDebugUi,
+    pack.amdProductionUi,
     dts.dtsCommonJs,
     dts.dtsAmd,
+    dts.dtsCommonJsUi,
+    dts.dtsAmdUi,
     buildDemoStep,
     buildDocumentStep,
     publishStep,
@@ -36,18 +42,18 @@ const allTasks = [
 
 // Commands
 const commands = [
+    'tslint', // Run tslint to check code style
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
-    'dts', // Generate type definition files (.d.ts)
-    'tslint', // Run tslint to check code style
     'normalize', // Normalize package.json files
+    'buildamd', // Build in AMD mode
+    'buildcommonjs', // Build in CommonJs mode
     'pack', // Run webpack to generate standalone .js files
     'packprod', // Run webpack to generate standalone .js files in production mode
+    'dts', // Generate type definition files (.d.ts)
     'builddemo', // Build the demo site
-    'buildcommonjs', // Build in CommonJs mode
-    'buildamd', // Build in AMD mode
-    'publish', // Publish roosterjs packages to npm
     'builddoc', // Build documents
+    'publish', // Publish roosterjs packages to npm
 ];
 
 class Runner {

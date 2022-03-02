@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "outDir": "dist",
+        "baseUrl": "..",
+        "jsx": "react",
+        "paths": {
+            "*": ["packages/*", "packages-ui/*"]
+        },
+        "rootDir": "..",
+        "lib": ["es6", "dom"]
+    },
+    "include": ["../packages/**/*.ts", "../packages-ui/**/*.ts", "../packages-ui/**/*.tsx"],
+    "typedocOptions": {
+        "entryPoints": [
+            "../packages/roosterjs-editor-types/lib/index.ts",
+            "../packages/roosterjs-editor-dom/lib/index.ts",
+            "../packages/roosterjs-editor-core/lib/index.ts",
+            "../packages/roosterjs-editor-api/lib/index.ts",
+            "../packages/roosterjs-editor-plugins/lib/index.ts",
+            "../packages/roosterjs-color-utils/lib/index.ts",
+            "../packages-ui/roosterjs-react/lib/index.ts",
+            "../packages/roosterjs/lib/index.ts"
+        ],
+        "plugin": ["typedoc-plugin-remove-references", "typedoc-plugin-external-module-map"],
+        "out": "../dist/deploy/docs",
+        "readme": "reference.md",
+        "name": "RoosterJs API Reference",
+        "excludeExternals": true,
+        "exclude": "../**/*.d.ts",
+        "excludePrivate": true,
+        "includeVersion": true,
+        "external-modulemap": ".*\\/(roosterjs[a-zA-Z0-9\\-]*)\\/lib\\/"
+    }
+}
