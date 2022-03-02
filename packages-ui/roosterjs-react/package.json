@@ -10,7 +10,8 @@
         "roosterjs-color-utils": ""
     },
     "peerDependencies": {
-        "react": ">=16.0.0"
+        "react": ">=16.0.0",
+        "@fluentui/react": ">=8.0.0"
     },
     "main": "./lib/index.ts",
     "version": "0.0.0"

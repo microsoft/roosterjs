@@ -12,8 +12,8 @@ function getPossibleNames(dir, objectName) {
     ];
 }
 
-function processFile(dir, filename, files, packageDependencies, peerDependencies) {
-    if (packageDependencies.indexOf(filename) >= 0 || peerDependencies.indexOf(filename) >= 0) {
+function processFile(dir, filename, files, externalDependencies) {
+    if (externalDependencies.some(d => d == filename || filename.indexOf(d + '/') == 0)) {
         return;
     }
 
@@ -46,7 +46,7 @@ function processFile(dir, filename, files, packageDependencies, peerDependencies
         while ((match = reg.exec(content))) {
             var nextFile = match[1];
             if (nextFile) {
-                processFile(dir, nextFile, files.slice(), packageDependencies, peerDependencies);
+                processFile(dir, nextFile, files.slice(), externalDependencies);
             }
         }
     } catch (e) {
@@ -74,8 +74,7 @@ function checkDependency() {
             packageRoot,
             path.join(packageName, 'lib/index'),
             [],
-            dependencies,
-            peerDependencies
+            dependencies.concat(peerDependencies)
         );
     });
 }

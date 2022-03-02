@@ -1,6 +1,13 @@
 const path = require('path');
 const devServerPort = 3000;
 
+const externalMap = new Map([
+    ['react', 'React'],
+    ['react-dom', 'ReactDOM'],
+    ['office-ui-fabric-react', 'FluentUIReact'],
+    [/^office-ui-fabric-react\/lib\/[^/]+$/, 'FluentUIReact'],
+]);
+
 module.exports = {
     entry: path.join(__dirname, './demo/scripts/index.ts'),
     devtool: 'source-map',
@@ -44,9 +51,16 @@ module.exports = {
             },
         ],
     },
-    externals: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
+    externals: function (context, request, callback) {
+        for (const [key, value] of externalMap) {
+            if (key instanceof RegExp && key.test(request)) {
+                return callback(null, request.replace(key, value));
+            } else if (request === key) {
+                return callback(null, value);
+            }
+        }
+
+        callback();
     },
     watch: true,
     stats: 'minimal',
