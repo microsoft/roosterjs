@@ -148,7 +148,11 @@ export default class VTable {
         if (!this.table) {
             return;
         }
-        this.formatInfo = { ...DEFAULT_FORMAT, ...(this.formatInfo || {}), ...(format || {}) };
+        this.formatInfo = {
+            ...DEFAULT_FORMAT,
+            ...(this.formatInfo || {}),
+            ...(format || {}),
+        };
         this.deleteCellShadeDataset(this.cells);
     }
 
