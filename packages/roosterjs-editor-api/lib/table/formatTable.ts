@@ -18,6 +18,9 @@ export default function formatTable(
             let vtable = new VTable(table);
             vtable.applyFormat(format);
             vtable.writeBack();
+
+            editor.replaceNode(vtable.table, vtable.table, true);
+
             editor.focus();
             editor.select(start, end);
         }, ChangeSource.Format);

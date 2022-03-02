@@ -102,7 +102,7 @@ function onDraggingHorizontal(
         }
     });
 
-    vTable.writeBack();
+    vTable.writeBack(true);
     return true;
 }
 
@@ -154,7 +154,7 @@ function onDraggingVertical(
         });
     }
 
-    vTable.writeBack();
+    vTable.writeBack(true);
     return true;
 }
 

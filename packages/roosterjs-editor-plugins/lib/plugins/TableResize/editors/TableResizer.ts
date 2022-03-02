@@ -116,7 +116,7 @@ function onDragging(
             }
         }
 
-        vTable.writeBack();
+        vTable.writeBack(true);
         return true;
     } else {
         return false;

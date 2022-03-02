@@ -53,13 +53,7 @@ export default function createTableInserter(
 
         document.body.appendChild(div);
 
-        const handler = new TableInsertHandler(
-            div,
-            td,
-            isHorizontal,
-            editor.getZoomScale(),
-            onInsert
-        );
+        const handler = new TableInsertHandler(div, td, isHorizontal, editor, onInsert);
 
         return { div, featureHandler: handler, node: td };
     }
@@ -70,7 +64,7 @@ class TableInsertHandler implements Disposable {
         private div: HTMLDivElement,
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
-        private zoomScale: number,
+        private editor: IEditor,
         private onInsert: () => void
     ) {
         this.div.addEventListener('click', this.insertTd);
@@ -79,12 +73,13 @@ class TableInsertHandler implements Disposable {
     dispose() {
         this.div.removeEventListener('click', this.insertTd);
         this.div = null;
+        this.editor = null;
     }
 
     private insertTd = () => {
         let vtable = new VTable(this.td);
         if (!this.isHorizontal) {
-            vtable.normalizeTableCellSize(this.zoomScale);
+            vtable.normalizeTableCellSize(this.editor.getZoomScale());
 
             // Since adding new column will cause table width to change, we need to remove width properties
             vtable.table.removeAttribute('width');
@@ -93,6 +88,7 @@ class TableInsertHandler implements Disposable {
 
         vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);
         vtable.writeBack();
+        this.editor.replaceNode(vtable.table, vtable.table, true);
 
         this.onInsert();
     };

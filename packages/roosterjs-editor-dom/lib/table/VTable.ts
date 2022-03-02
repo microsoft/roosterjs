@@ -117,8 +117,10 @@ export default class VTable {
 
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
+     * @param skipApplyFormat Do not reapply table format when write back.
+     * Only use this parameter when you are pretty sure there is no format or table structure change during the process.
      */
-    writeBack() {
+    writeBack(skipApplyFormat?: boolean) {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
@@ -131,7 +133,7 @@ export default class VTable {
                     }
                 });
             });
-            if (this.formatInfo) {
+            if (this.formatInfo && !skipApplyFormat) {
                 saveTableInfo(this.table, this.formatInfo);
                 applyTableFormat(this.table, this.cells, this.formatInfo as Required<TableFormat>);
             }

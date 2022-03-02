@@ -13,6 +13,9 @@ export default function editTable(editor: IEditor, operation: TableOperation) {
             let vtable = new VTable(td);
             vtable.edit(operation);
             vtable.writeBack();
+
+            editor.replaceNode(vtable.table, vtable.table, true);
+
             editor.focus();
 
             let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
