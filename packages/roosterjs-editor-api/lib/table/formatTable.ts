@@ -19,7 +19,8 @@ export default function formatTable(
             vtable.applyFormat(format);
             vtable.writeBack();
 
-            editor.replaceNode(vtable.table, vtable.table, true);
+            //Adding replaceNode to transform color when the theme is switched to dark.
+            editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);
 
             editor.focus();
             editor.select(start, end);

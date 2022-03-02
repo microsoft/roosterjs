@@ -9,7 +9,7 @@ const TABLE_STYLE_INFO = 'roosterTableInfo';
  * @param table The table that has the info
  */
 export function getTableFormatInfo(table: HTMLTableElement) {
-    const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]) as TableFormat;
+    const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]) as Required<TableFormat>;
     return checkIfTableFormatIsValid(obj) ? obj : null;
 }
 

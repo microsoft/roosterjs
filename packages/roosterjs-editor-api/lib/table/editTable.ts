@@ -14,10 +14,9 @@ export default function editTable(editor: IEditor, operation: TableOperation) {
             vtable.edit(operation);
             vtable.writeBack();
 
-            editor.replaceNode(vtable.table, vtable.table, true);
-
+            //Adding replaceNode to transform color when the theme is switched to dark.
+            editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);
             editor.focus();
-
             let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
             editor.select(
                 vtable.getCell(cellToSelect.newRow, cellToSelect.newCol).td,

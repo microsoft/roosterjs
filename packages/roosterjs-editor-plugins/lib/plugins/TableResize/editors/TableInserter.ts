@@ -88,7 +88,8 @@ class TableInsertHandler implements Disposable {
 
         vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);
         vtable.writeBack();
-        this.editor.replaceNode(vtable.table, vtable.table, true);
+        //Adding replaceNode to transform color when the theme is switched to dark.
+        this.editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);
 
         this.onInsert();
     };

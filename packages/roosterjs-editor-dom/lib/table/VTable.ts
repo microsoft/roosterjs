@@ -61,7 +61,7 @@ export default class VTable {
     /**
      * Current format of the table
      */
-    formatInfo: TableFormat;
+    formatInfo: Required<TableFormat>;
 
     private trs: HTMLTableRowElement[] = [];
 
@@ -135,7 +135,7 @@ export default class VTable {
             });
             if (this.formatInfo && !skipApplyFormat) {
                 saveTableInfo(this.table, this.formatInfo);
-                applyTableFormat(this.table, this.cells, this.formatInfo as Required<TableFormat>);
+                applyTableFormat(this.table, this.cells, this.formatInfo);
             }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
@@ -154,7 +154,7 @@ export default class VTable {
             ...DEFAULT_FORMAT,
             ...(this.formatInfo || {}),
             ...(format || {}),
-        };
+        } as Required<TableFormat>;
         this.deleteCellShadeDataset(this.cells);
     }
 
