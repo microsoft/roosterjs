@@ -4,8 +4,8 @@ const devServerPort = 3000;
 const externalMap = new Map([
     ['react', 'React'],
     ['react-dom', 'ReactDOM'],
-    ['office-ui-fabric-react', 'FluentUIReact'],
-    [/^office-ui-fabric-react\/lib\/[^/]+$/, 'FluentUIReact'],
+    [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
+    [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
 ]);
 
 module.exports = {
