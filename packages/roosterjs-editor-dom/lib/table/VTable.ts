@@ -1,4 +1,4 @@
-import applyTableFormat from '../utils/applyTableFormat';
+import applyTableFormat from './applyTableFormat';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -133,7 +133,7 @@ export default class VTable {
             });
             if (this.formatInfo) {
                 saveTableInfo(this.table, this.formatInfo);
-                applyTableFormat(this.table, this.cells, this.formatInfo);
+                applyTableFormat(this.table, this.cells, this.formatInfo as Required<TableFormat>);
             }
         } else if (this.table) {
             this.table.parentNode.removeChild(this.table);
@@ -153,7 +153,7 @@ export default class VTable {
     }
 
     /**
-     * Remove the cellshade dataset to apply a new style format at the cell.
+     * Remove the cellShade dataset to apply a new style format at the cell.
      * @param cells
      */
     private deleteCellShadeDataset(cells: VCell[][]) {
