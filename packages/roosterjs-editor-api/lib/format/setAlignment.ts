@@ -18,17 +18,15 @@ import {
  * Alignment.Center, Alignment.Left, Alignment.Right
  */
 export default function setAlignment(editor: IEditor, alignment: Alignment) {
-    const element = editor.getElementAtCursor();
     const selection = editor.getSelectionRangeEx();
-    const selectionType = selection.type;
+    const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
     editor.addUndoSnapshot(() => {
         if (
             editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
-            selection &&
-            selectionType === SelectionRangeTypes.TableSelection &&
+            isATable &&
             isWholeTableSelected(selection)
         ) {
-            alignTable(editor, element, alignment);
+            alignTable(selection, alignment);
         } else {
             alignText(editor, alignment);
         }
@@ -43,16 +41,17 @@ export default function setAlignment(editor: IEditor, alignment: Alignment) {
  * @param addUndoSnapshot
  * @returns
  */
-function alignTable(editor: IEditor, element: HTMLElement, alignment: Alignment) {
+function alignTable(selection: TableSelectionRange, alignment: Alignment) {
+    const table = selection.table;
     if (alignment == Alignment.Center) {
-        element.style.marginLeft = 'auto';
-        element.style.marginRight = 'auto';
+        table.style.marginLeft = 'auto';
+        table.style.marginRight = 'auto';
     } else if (alignment == Alignment.Right) {
-        element.style.marginLeft = 'auto';
-        element.style.marginRight = '';
+        table.style.marginLeft = 'auto';
+        table.style.marginRight = '';
     } else {
-        element.style.marginLeft = '';
-        element.style.marginRight = 'auto';
+        table.style.marginLeft = '';
+        table.style.marginRight = 'auto';
     }
 }
 
@@ -82,6 +81,9 @@ function alignText(editor: IEditor, alignment: Alignment) {
  * @returns
  */
 function isWholeTableSelected(selection: TableSelectionRange) {
+    if (!selection) {
+        return false;
+    }
     const vTable = new VTable(selection.table);
     const { firstCell, lastCell } = selection.coordinates;
     const rowsLength = vTable.cells.length - 1;
