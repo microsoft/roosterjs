@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.11% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.29% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/7</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -100,11 +100,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-yes">288x</span>
+<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -113,7 +113,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Coordinates } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
@@ -124,13 +124,13 @@ import { VTable } from 'roosterjs-editor-dom';
  * @param cellInput The cell the to find the coordinates
  * @returns Coordinates of the cell, null if not found
  */
-export function <span class="fstat-no" title="function not covered" >getCellCoordinates(</span>vTable: VTable, cellInput: Node): Coordinates {
+export function getCellCoordinates(vTable: VTable, cellInput: Node): Coordinates {
     let result: Coordinates;
-<span class="cstat-no" title="statement not covered" >    if (vTable?.cells) {</span>
-<span class="cstat-no" title="statement not covered" >        for (let indexY = <span class="cstat-no" title="statement not covered" >0;</span> indexY &lt; vTable.cells.length; indexY++) {</span>
-<span class="cstat-no" title="statement not covered" >            for (let indexX = <span class="cstat-no" title="statement not covered" >0;</span> indexX &lt; vTable.cells[indexY].length; indexX++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (cellInput == vTable.cells[indexY][indexX].td) {</span>
-<span class="cstat-no" title="statement not covered" >                    result = {</span>
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (vTable<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells) {
+        for (let indexY = 0; indexY &lt; vTable.cells.length; indexY++) {
+            for (let indexX = 0; indexX &lt; vTable.cells[indexY].length; indexX++) {
+                if (cellInput == vTable.cells[indexY][indexX].td) {
+                    result = {
                         x: indexX,
                         y: indexY,
                     };
@@ -139,7 +139,7 @@ export function <span class="fstat-no" title="function not covered" >getCellCoor
         }
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return result;</span>
+    return result;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -148,7 +148,7 @@ export function <span class="fstat-no" title="function not covered" >getCellCoor
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Mar 02 2022 17:53:04 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 02 2022 22:30:17 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
