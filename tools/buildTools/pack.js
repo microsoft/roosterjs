@@ -14,6 +14,7 @@ const {
 
 const externalMap = new Map([
     ['react', 'React'],
+    ['react-dom', 'ReactDOM'],
     ['office-ui-fabric-react', 'FluentUIReact'],
     [/^office-ui-fabric-react\/lib\/[^/]+$/, 'FluentUIReact'],
     ...packages.map(p => [p, 'roosterjs']),
