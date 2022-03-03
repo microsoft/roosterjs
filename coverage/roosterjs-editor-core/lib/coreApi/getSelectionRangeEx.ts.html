@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>24/26</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.57% </span>
+                <span class="strong">78.38% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/37</span>
+                <span class='fraction'>29/37</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/22</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
@@ -159,11 +159,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">282x</span>
-<span class="cline-any cline-yes">282x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">287x</span>
+<span class="cline-any cline-yes">287x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,26 +181,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">281x</span>
-<span class="cline-any cline-yes">275x</span>
+<span class="cline-any cline-yes">285x</span>
+<span class="cline-any cline-yes">279x</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">251x</span>
-<span class="cline-any cline-yes">251x</span>
-<span class="cline-any cline-yes">251x</span>
-<span class="cline-any cline-yes">251x</span>
-<span class="cline-any cline-yes">251x</span>
+<span class="cline-any cline-yes">255x</span>
+<span class="cline-any cline-yes">255x</span>
+<span class="cline-any cline-yes">255x</span>
+<span class="cline-any cline-yes">255x</span>
+<span class="cline-any cline-yes">255x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -215,7 +215,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">257x</span>
+<span class="cline-any cline-yes">262x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -223,7 +223,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">258x</span>
+<span class="cline-any cline-yes">263x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { contains, createRange, findClosestElementAncestor } from 'roosterjs-editor-dom';
 import {
@@ -244,7 +244,7 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) =&gt;
     if (core.lifecycle.shadowEditFragment) {
         const { shadowEditTableSelectionPath, shadowEditSelectionPath } = core.lifecycle;
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (shadowEditTableSelectionPath<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength &gt; 0) {
+        if (shadowEditTableSelectionPath<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength &gt; 0) {
             const ranges = core.lifecycle.shadowEditTableSelectionPath.map(path =&gt;
                 createRange(core.contentDiv, path.start, path.end)
             );
@@ -262,14 +262,14 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) =&gt;
             };
         } else {
             const shadowRange =
-<span class="cstat-no" title="statement not covered" >                shadowEditSelectionPath &amp;&amp;</span>
+                shadowEditSelectionPath &amp;&amp;
                 createRange(
                     core.contentDiv,
                     shadowEditSelectionPath.start,
                     shadowEditSelectionPath.end
                 );
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            return createNormalSelectionEx(shadowRange ? [shadowRange] : []);</span>
+            return createNormalSelectionEx(shadowRange ? [shadowRange] : <span class="branch-1 cbranch-no" title="branch not covered" >[])</span>;
         }
     } else {
         if (core.api.hasFocus(core)) {
@@ -313,7 +313,7 @@ function checkAllCollapsed(ranges: Range[]): boolean {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Mar 03 2022 19:53:21 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 03 2022 20:22:18 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
