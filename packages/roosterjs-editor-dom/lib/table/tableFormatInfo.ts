@@ -9,7 +9,7 @@ const TABLE_STYLE_INFO = 'roosterTableInfo';
  * @param table The table that has the info
  */
 export function getTableFormatInfo(table: HTMLTableElement) {
-    const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]) as Required<TableFormat>;
+    const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]);
     return checkIfTableFormatIsValid(obj) ? obj : null;
 }
 
@@ -25,7 +25,7 @@ export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
     }
 }
 
-function checkIfTableFormatIsValid(format: TableFormat): format is Required<TableFormat> {
+function checkIfTableFormatIsValid(format: any): format is Required<TableFormat> {
     if (!format) {
         return false;
     }
