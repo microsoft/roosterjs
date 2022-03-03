@@ -12,7 +12,13 @@ const {
     rootPath,
 } = require('./common');
 
-const externalMap = new Map([['react', 'React'], ...packages.map(p => [p, 'roosterjs'])]);
+const externalMap = new Map([
+    ['react', 'React'],
+    ['react-dom', 'ReactDOM'],
+    [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
+    [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
+    ...packages.map(p => [p, 'roosterjs']),
+]);
 
 async function pack(isProduction, isAmd, isUi, filename) {
     const webpackConfig = {

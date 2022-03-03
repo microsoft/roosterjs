@@ -14,6 +14,7 @@ export default function createTableResizer(
     table: HTMLTableElement,
     zoomScale: number,
     isRTL: boolean,
+    onStart: () => void,
     onDragEnd: () => false
 ): TableEditFeature {
     const document = table.ownerDocument;
@@ -32,6 +33,7 @@ export default function createTableResizer(
         isRTL,
         table,
         zoomScale,
+        onStart,
     };
 
     setResizeDivPosition(context, div);
@@ -55,6 +57,7 @@ interface DragAndDropContext {
     table: HTMLTableElement;
     isRTL: boolean;
     zoomScale: number;
+    onStart: () => void;
 }
 
 interface DragAndDropInitValue {
@@ -62,7 +65,9 @@ interface DragAndDropInitValue {
     vTable: VTable;
 }
 
-function onDragStart(context: DragAndDropContext, event: MouseEvent) {
+function onDragStart(context: DragAndDropContext) {
+    context.onStart();
+
     return {
         originalRect: context.table.getBoundingClientRect(),
         vTable: new VTable(context.table, true /*normalizeTable*/, context.zoomScale),
