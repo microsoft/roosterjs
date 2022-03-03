@@ -95,6 +95,7 @@ export default class TableCellSelection implements EditorPlugin {
                     if (selection.type == SelectionRangeTypes.TableSelection) {
                         this.tableRange = selection.coordinates;
                         this.firstTable = selection.table;
+                        this.tableSelection = true;
                         this.editor.select(selection.table, null);
                     }
                     break;
