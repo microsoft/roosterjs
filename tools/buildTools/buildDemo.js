@@ -8,7 +8,6 @@ const {
     nodeModulesPath,
     packagesPath,
     deployPath,
-    distPath,
     roosterJsDistPath,
     packages,
     runNode,
@@ -16,6 +15,16 @@ const {
     packagesUiPath,
     roosterJsUiDistPath,
 } = require('./common');
+
+const externalMap = new Map([
+    ...packages.map(p => [p, 'roosterjs']),
+    [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
+    [/^rosterjs-react\/.*$/, 'roosterjsReact'],
+    ['react', 'React'],
+    ['react-dom', 'ReactDOM'],
+    [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
+    [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
+]);
 
 async function buildDemoSite() {
     const sourcePathRoot = path.join(rootPath, 'demo');
@@ -65,17 +74,17 @@ async function buildDemoSite() {
                 },
             ],
         },
-        externals: packages.reduce(
-            (externals, packageName) => {
-                externals[packageName] = 'roosterjs';
-                return externals;
-            },
-            {
-                react: 'React',
-                'react-dom': 'ReactDOM',
-                'roosterjs-react': 'roosterjsReact',
+        externals: function (_, request, callback) {
+            for (const [key, value] of externalMap) {
+                if (key instanceof RegExp && key.test(request)) {
+                    return callback(null, request.replace(key, value));
+                } else if (request === key) {
+                    return callback(null, value);
+                }
             }
-        ),
+
+            callback();
+        },
         stats: 'minimal',
         mode: 'production',
         optimization: {
