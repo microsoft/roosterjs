@@ -70,36 +70,36 @@ describe('TableCellSelectionPlugin |', () => {
         simulateMouseEvent('mousemove', target2);
     }
 
+    function runTest(
+        content: string,
+        expectRangeCallback?: () => Range[] | undefined,
+        expectedSelectionType?: SelectionRangeTypes
+    ) {
+        //Arrange
+        editor.setContent(content);
+        const target = document.getElementById(targetId);
+        const target2 = document.getElementById(targetId2);
+
+        //Act
+        editor.focus();
+        initTableSelection(target);
+        simulateMouseEvent('mousemove', target2);
+
+        //Assert
+        simulateMouseEvent('mouseup', target2);
+        const selection = editor.getSelectionRangeEx();
+        if (expectRangeCallback) {
+            expect(selection.ranges).toEqual(expectRangeCallback());
+        }
+        expect(selection.type).toBe(expectedSelectionType);
+        expect(selection.areAllCollapsed).toBe(false);
+    }
+
     it('getName', () => {
         expect(tableCellSelection.getName()).toBe('TableCellSelection');
     });
 
     describe('Mouse Events |', () => {
-        function runTest(
-            content: string,
-            expectRangeCallback?: () => Range[] | undefined,
-            expectedSelectionType?: SelectionRangeTypes
-        ) {
-            //Arrange
-            editor.setContent(content);
-            const target = document.getElementById(targetId);
-            const target2 = document.getElementById(targetId2);
-
-            //Act
-            editor.focus();
-            initTableSelection(target);
-            simulateMouseEvent('mousemove', target2);
-
-            //Assert
-            simulateMouseEvent('mouseup', target2);
-            const selection = editor.getSelectionRangeEx();
-            if (expectRangeCallback) {
-                expect(selection.ranges).toEqual(expectRangeCallback());
-            }
-            expect(selection.type).toBe(expectedSelectionType);
-            expect(selection.areAllCollapsed).toBe(false);
-        }
-
         it('Should not convert to Table Selection', () => {
             //Arrange
             editor.setContent(
@@ -431,7 +431,7 @@ describe('TableCellSelectionPlugin |', () => {
     });
 
     describe('ShadowEdit Event |', () => {
-        it('Selection using Keyboard RIGHT', () => {
+        it('Shadow Edit on Table Selection', () => {
             //Arrange
             editor.setContent(
                 `<div><table cellspacing="0" cellpadding="1"><tbody><tr style="background-color: rgb(255, 255, 255);"><td id=${targetId} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td  style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td id=${targetId2} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);">`
@@ -457,6 +457,21 @@ describe('TableCellSelectionPlugin |', () => {
             expect(selection.type).toEqual(SelectionRangeTypes.TableSelection);
             expect(selection.areAllCollapsed).toBe(false);
             expect(selection.ranges.length).toBe(3);
+        });
+
+        it('Shadow Edit after performing a selection that starts inside of a table and end outside of a table', () => {
+            runTest(
+                `<div><table cellpadding="1" cellspacing="0"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td id='${targetId}' style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><table cellpadding="1" cellspacing="0"><tbody><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);" id="init"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171);"><br></td></tr></tbody></table><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr></tbody></table></div><div><br></div><div><br></div><div><br></div><div id='${targetId2}'>asdsad</div>`,
+                undefined,
+                SelectionRangeTypes.Normal
+            );
+            editor.startShadowEdit();
+            let selection = editor.getSelectionRangeEx();
+            expect(selection.type).toBe(SelectionRangeTypes.Normal);
+
+            editor.stopShadowEdit();
+            selection = editor.getSelectionRangeEx();
+            expect(selection.type).toBe(SelectionRangeTypes.Normal);
         });
     });
 });
