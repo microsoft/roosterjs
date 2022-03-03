@@ -95,11 +95,12 @@ export default class TableCellSelection implements EditorPlugin {
                     if (selection.type == SelectionRangeTypes.TableSelection) {
                         this.tableRange = selection.coordinates;
                         this.firstTable = selection.table;
+                        this.tableSelection = true;
                         this.editor.select(selection.table, null);
                     }
                     break;
                 case PluginEventType.LeavingShadowEdit:
-                    if (this.firstTable && this.tableRange) {
+                    if (this.firstTable && this.tableSelection && this.tableRange) {
                         const table = this.editor.queryElements('#' + this.firstTable.id);
                         if (table.length == 1) {
                             this.firstTable = table[0] as HTMLTableElement;
@@ -267,6 +268,7 @@ export default class TableCellSelection implements EditorPlugin {
 
                 const sel = this.editor.getDocument().defaultView.getSelection();
                 const { anchorNode, anchorOffset } = sel;
+                this.editor.select(sel.getRangeAt(0));
                 sel.setBaseAndExtent(anchorNode, anchorOffset, position.node, position.offset);
                 this.lastTarget = position.node;
                 event.rawEvent.preventDefault();

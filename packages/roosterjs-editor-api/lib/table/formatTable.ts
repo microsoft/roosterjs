@@ -18,6 +18,10 @@ export default function formatTable(
             let vtable = new VTable(table);
             vtable.applyFormat(format);
             vtable.writeBack();
+
+            //Adding replaceNode to transform color when the theme is switched to dark.
+            editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);
+
             editor.focus();
             editor.select(start, end);
         }, ChangeSource.Format);

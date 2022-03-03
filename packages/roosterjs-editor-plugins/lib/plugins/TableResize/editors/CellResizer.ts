@@ -102,7 +102,8 @@ function onDraggingHorizontal(
         }
     });
 
-    vTable.writeBack();
+    // To avoid apply format styles when the table is being resizing, the skipApplyFormat is set to true.
+    vTable.writeBack(true /**skipApplyFormat*/);
     return true;
 }
 
@@ -152,7 +153,8 @@ function onDraggingVertical(
         });
     }
 
-    vTable.writeBack();
+    // To avoid apply format styles when the table is being resizing, the skipApplyFormat is set to true.
+    vTable.writeBack(true /**skipApplyFormat*/);
     return true;
 }
 

@@ -1,5 +1,10 @@
 import { createRange, getSelectionPath, moveChildNodes } from 'roosterjs-editor-dom';
-import { EditorCore, PluginEventType, SwitchShadowEdit } from 'roosterjs-editor-types';
+import {
+    EditorCore,
+    PluginEventType,
+    SelectionRangeTypes,
+    SwitchShadowEdit,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -16,7 +21,8 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
 
             shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
             shadowEditTableSelectionPath =
-                selection && selection.ranges.map(range => getSelectionPath(contentDiv, range));
+                selection?.type == SelectionRangeTypes.TableSelection &&
+                selection.ranges.map(range => getSelectionPath(contentDiv, range));
             shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
 
             moveChildNodes(shadowEditFragment, contentDiv);

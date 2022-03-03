@@ -1,4 +1,4 @@
-import applyTableFormat from '../utils/applyTableFormat';
+import applyTableFormat from './applyTableFormat';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -15,7 +15,7 @@ import {
 } from 'roosterjs-editor-types';
 
 const CELL_SHADE = 'cellShade';
-const DEFAULT_FORMAT: TableFormat = {
+const DEFAULT_FORMAT: Required<TableFormat> = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
     verticalBorderColor: '#ABABAB',
@@ -61,7 +61,7 @@ export default class VTable {
     /**
      * Current format of the table
      */
-    formatInfo: TableFormat;
+    formatInfo: Required<TableFormat>;
 
     private trs: HTMLTableRowElement[] = [];
 
@@ -117,8 +117,10 @@ export default class VTable {
 
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
+     * @param skipApplyFormat Do not reapply table format when write back.
+     * Only use this parameter when you are pretty sure there is no format or table structure change during the process.
      */
-    writeBack() {
+    writeBack(skipApplyFormat?: boolean) {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
@@ -131,7 +133,7 @@ export default class VTable {
                     }
                 });
             });
-            if (this.formatInfo) {
+            if (this.formatInfo && !skipApplyFormat) {
                 saveTableInfo(this.table, this.formatInfo);
                 applyTableFormat(this.table, this.cells, this.formatInfo);
             }
@@ -148,12 +150,16 @@ export default class VTable {
         if (!this.table) {
             return;
         }
-        this.formatInfo = { ...DEFAULT_FORMAT, ...(this.formatInfo || {}), ...(format || {}) };
+        this.formatInfo = {
+            ...DEFAULT_FORMAT,
+            ...(this.formatInfo || {}),
+            ...(format || {}),
+        };
         this.deleteCellShadeDataset(this.cells);
     }
 
     /**
-     * Remove the cellshade dataset to apply a new style format at the cell.
+     * Remove the cellShade dataset to apply a new style format at the cell.
      * @param cells
      */
     private deleteCellShadeDataset(cells: VCell[][]) {

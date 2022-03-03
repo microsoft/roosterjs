@@ -41,7 +41,7 @@ describe('getTableFormatInfo', () => {
     it('should return the info of a table ', () => {
         const table = createTable(format);
         const tableInfo = getTableFormatInfo(table);
-        expect(tableInfo).toEqual(JSON.parse(expectedTableInfo) as TableFormat);
+        expect(tableInfo).toEqual(JSON.parse(expectedTableInfo) as Required<TableFormat>);
         removeTable();
     });
 });
