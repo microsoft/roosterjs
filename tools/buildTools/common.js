@@ -6,6 +6,7 @@ const glob = require('glob');
 const fs = require('fs');
 const assign = require('object-assign');
 const toposort = require('toposort');
+const webpack = require('webpack');
 
 const rootPath = path.join(__dirname, '../..');
 const packagesPath = path.join(rootPath, 'packages');
@@ -92,6 +93,45 @@ function readPackageJson(packageName, readFromSourceFolder) {
 
 const mainPackageJson = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json')));
 
+async function runWebPack(config) {
+    return new Promise((resolve, reject) => {
+        webpack(config).run((err, result) => {
+            const compileErrors = result?.compilation?.errors || [];
+
+            if (compileErrors.length > 0) {
+                reject(compileErrors);
+            } else if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
+function getWebpackExternalCallback(externalLibraryPairs) {
+    const externalMap = new Map([
+        ['react', 'React'],
+        ['react-dom', 'ReactDOM'],
+        [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
+        [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
+        ...packages.map(p => [p, 'roosterjs']),
+        ...externalLibraryPairs,
+    ]);
+
+    return (_, request, callback) => {
+        for (const [key, value] of externalMap) {
+            if (key instanceof RegExp && key.test(request)) {
+                return callback(null, request.replace(key, value));
+            } else if (request === key) {
+                return callback(null, value);
+            }
+        }
+
+        callback();
+    };
+}
+
 module.exports = {
     rootPath,
     packagesPath,
@@ -110,4 +150,6 @@ module.exports = {
     readPackageJson,
     mainPackageJson,
     findPackageRoot,
+    runWebPack,
+    getWebpackExternalCallback,
 };
