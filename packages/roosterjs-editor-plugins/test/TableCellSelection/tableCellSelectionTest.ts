@@ -1,3 +1,4 @@
+import { Browser } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import { IEditor } from 'roosterjs-editor-types';
 import { TableCellSelection } from '../../lib/TableCellSelection';
@@ -12,7 +13,7 @@ import {
 } from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
-describe('TableCellSelectionPlugin | ', () => {
+describe('TableCellSelectionPlugin |', () => {
     let editor: IEditor;
     let id = 'tableSelectionContainerId';
     let targetId = 'tableSelectionTestId';
@@ -32,6 +33,7 @@ describe('TableCellSelectionPlugin | ', () => {
                 fontSize: '11pt',
                 textColor: '#000000',
             },
+            corePluginOverride: {},
         };
 
         editor = new Editor(node as HTMLDivElement, options);
@@ -48,31 +50,6 @@ describe('TableCellSelectionPlugin | ', () => {
         const div = document.getElementById(id);
         div.parentNode.removeChild(div);
     });
-
-    function runTest(
-        content: string,
-        expectRangeCallback?: () => Range[] | undefined,
-        expectedSelectionType?: SelectionRangeTypes
-    ) {
-        //Arrange
-        editor.setContent(content);
-        const target = document.getElementById(targetId);
-        const target2 = document.getElementById(targetId2);
-
-        //Act
-        editor.focus();
-        initTableSelection(target);
-        simulateMouseEvent('mousemove', target2);
-
-        //Assert
-        simulateMouseEvent('mouseup', target2);
-        const selection = editor.getSelectionRangeEx();
-        if (expectRangeCallback) {
-            expect(selection.ranges).toEqual(expectRangeCallback());
-        }
-        expect(selection.type).toBe(expectedSelectionType);
-        expect(selection.areAllCollapsed).toBe(false);
-    }
 
     function initTableSelection(target: HTMLElement) {
         let target2 = target.nextElementSibling as HTMLElement;
@@ -97,7 +74,32 @@ describe('TableCellSelectionPlugin | ', () => {
         expect(tableCellSelection.getName()).toBe('TableCellSelection');
     });
 
-    describe(' Mouse Events |', () => {
+    describe('Mouse Events |', () => {
+        function runTest(
+            content: string,
+            expectRangeCallback?: () => Range[] | undefined,
+            expectedSelectionType?: SelectionRangeTypes
+        ) {
+            //Arrange
+            editor.setContent(content);
+            const target = document.getElementById(targetId);
+            const target2 = document.getElementById(targetId2);
+
+            //Act
+            editor.focus();
+            initTableSelection(target);
+            simulateMouseEvent('mousemove', target2);
+
+            //Assert
+            simulateMouseEvent('mouseup', target2);
+            const selection = editor.getSelectionRangeEx();
+            if (expectRangeCallback) {
+                expect(selection.ranges).toEqual(expectRangeCallback());
+            }
+            expect(selection.type).toBe(expectedSelectionType);
+            expect(selection.areAllCollapsed).toBe(false);
+        }
+
         it('Should not convert to Table Selection', () => {
             //Arrange
             editor.setContent(
@@ -254,9 +256,24 @@ describe('TableCellSelectionPlugin | ', () => {
             expect((<TableSelectionRange>selection).coordinates.firstCell).toEqual({ x: 0, y: 0 });
             expect((<TableSelectionRange>selection).coordinates.lastCell).toEqual({ x: 2, y: 0 });
         });
+
+        it('should not handle selectionInsideTableMouseMove on selecting text', () => {
+            editor.setContent(
+                '<div id="container"><h2 style="margin:0px 0px 10px;font-family:DauphinPlain;font-size:24px;line-height:24px;text-align:left;background-color:rgb(255, 255, 255)">What is Lorem Ipsum?</h2><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)"><strong style="margin:0px">Lorem Ipsum</strong><span>&nbsp;</span>is simply dummy text of the printing and typesetting industry. .</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">when an unknown printer took a galley of type and scrambled it to make a type&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">specimen book. It has survived not only five centuries, but also the leap into electronic</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">&nbsp;typesetting, remaining essentially unchanged. It was popularised in the 1960s with the</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">&nbsp;release of Letraset sheets containing Lorem Ipsum passages, and more recently with&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p><br></div>'
+            );
+            spyOn(tableCellSelection, 'selectionInsideTableMouseMove').and.callThrough();
+
+            const container = editor.getDocument().getElementById('container');
+            simulateMouseEvent('mousedown', container);
+            container.querySelectorAll('p').forEach(p => {
+                simulateMouseEvent('mousemove', p);
+            });
+
+            expect(tableCellSelection.selectionInsideTableMouseMove).toHaveBeenCalledTimes(0);
+        });
     });
 
-    describe(' Key Events |', () => {
+    describe('Key Events |', () => {
         function runKeyTest(
             which: number,
             expectInput: TableSelection,
@@ -264,7 +281,6 @@ describe('TableCellSelectionPlugin | ', () => {
             expectType?: SelectionRangeTypes
         ) {
             //Arrange
-            spyOn(tableCellSelection, 'selectTable').and.callThrough();
             editor.setContent(
                 `<div><table cellspacing="0" cellpadding="1"><tbody><tr style="background-color: rgb(255, 255, 255);"><td id=${targetId} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td  style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td id=${targetId2} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);">`
             );
@@ -414,19 +430,34 @@ describe('TableCellSelectionPlugin | ', () => {
         });
     });
 
-    it('should not handle selectionInsideTableMouseMove on selecting text', () => {
-        editor.setContent(
-            '<div id="container"><h2 style="margin:0px 0px 10px;font-family:DauphinPlain;font-size:24px;line-height:24px;text-align:left;background-color:rgb(255, 255, 255)">What is Lorem Ipsum?</h2><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)"><strong style="margin:0px">Lorem Ipsum</strong><span>&nbsp;</span>is simply dummy text of the printing and typesetting industry. .</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">when an unknown printer took a galley of type and scrambled it to make a type&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">specimen book. It has survived not only five centuries, but also the leap into electronic</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">&nbsp;typesetting, remaining essentially unchanged. It was popularised in the 1960s with the</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">&nbsp;release of Letraset sheets containing Lorem Ipsum passages, and more recently with&nbsp;</p><p style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p><br></div>'
-        );
-        spyOn(tableCellSelection, 'selectionInsideTableMouseMove').and.callThrough();
+    describe('ShadowEdit Event |', () => {
+        it('Selection using Keyboard RIGHT', () => {
+            //Arrange
+            editor.setContent(
+                `<div><table cellspacing="0" cellpadding="1"><tbody><tr style="background-color: rgb(255, 255, 255);"><td id=${targetId} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td  style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td id=${targetId2} style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td></tr><tr style="background-color: rgb(255, 255, 255);"><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);"><br></td><td style="width: 120px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: rgb(200, 150, 100);">`
+            );
+            const table = editor.queryElements('table')[0];
 
-        const container = editor.getDocument().getElementById('container');
-        simulateMouseEvent('mousedown', container);
-        container.querySelectorAll('p').forEach(p => {
-            simulateMouseEvent('mousemove', p);
+            editor.focus();
+            editor.select(table, {
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 3, y: 2 },
+            } as TableSelection);
+
+            editor.startShadowEdit();
+
+            let selection = editor.getSelectionRangeEx();
+            expect(selection.type).toEqual(SelectionRangeTypes.TableSelection);
+            expect(selection.areAllCollapsed).toBe(false);
+            expect(selection.ranges.length).toBe(3);
+
+            editor.stopShadowEdit();
+
+            selection = editor.getSelectionRangeEx();
+            expect(selection.type).toEqual(SelectionRangeTypes.TableSelection);
+            expect(selection.areAllCollapsed).toBe(false);
+            expect(selection.ranges.length).toBe(3);
         });
-
-        expect(tableCellSelection.selectionInsideTableMouseMove).toHaveBeenCalledTimes(0);
     });
 });
 
@@ -442,12 +473,27 @@ function simulateMouseEvent(type: string, target: HTMLElement, point?: { x: numb
     target.dispatchEvent(event);
 }
 
-function simulateKeyDownEvent(whichInput: number, shiftKey = true) {
-    return new KeyboardEvent('keydown', {
+function simulateKeyDownEvent(
+    whichInput: number,
+    shiftKey: boolean = true,
+    ctrlKey: boolean = false
+) {
+    const evt = new KeyboardEvent('keydown', {
         shiftKey,
         altKey: false,
-        ctrlKey: false,
+        ctrlKey,
         cancelable: true,
         which: whichInput,
     });
+
+    if (!Browser.isFirefox) {
+        //Chromium hack to add which to the event as there is a bug in Webkit
+        //https://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key/10520017#10520017
+        Object.defineProperty(evt, 'which', {
+            get: function () {
+                return whichInput;
+            },
+        });
+    }
+    return evt;
 }
