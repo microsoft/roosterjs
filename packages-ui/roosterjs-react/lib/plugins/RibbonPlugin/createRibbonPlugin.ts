@@ -6,7 +6,7 @@ import { getFormatState } from 'roosterjs-editor-api';
 /**
  * A plugin to connect format ribbon component and the editor
  */
-export default class RibbonPlugin implements IRibbonPlugin {
+class RibbonPlugin implements IRibbonPlugin {
     private editor: IEditor;
     private onFormatChanged: (formatState: FormatState) => void;
     private timer = 0;
@@ -70,11 +70,44 @@ export default class RibbonPlugin implements IRibbonPlugin {
 
     /**
      * When user clicks on a button, call this method to let the plugin to handle this click event
+     * @param button The button that is clicked
+     * @param key Key of child menu item that is clicked if any
      */
-    onButtonClick(button: RibbonButton) {
-        if (this.editor && button.onClick(this.editor)) {
-            this.updateFormat();
+    onButtonClick(button: RibbonButton, key?: string) {
+        if (this.editor) {
+            this.editor.stopShadowEdit();
+
+            if (button.onClick(this.editor, key)) {
+                this.updateFormat();
+            }
         }
+    }
+
+    /**
+     * Enter live preview state (shadow edit) of editor if there is a non-collapsed selection
+     * @param button The button that triggered this action
+     * @param key Key of the hovered button sub item
+     */
+    startLivePreview(button: RibbonButton, key: string) {
+        if (this.editor) {
+            const isInShadowEdit = this.editor.isInShadowEdit();
+
+            // If editor is already in shadow edit, no need to check again.
+            // And the check result may be incorrect because the content is changed from last shadow edit and the cached selection path won't apply
+            const range = !isInShadowEdit && this.editor.getSelectionRangeEx();
+
+            if (isInShadowEdit || (range && !range.areAllCollapsed)) {
+                this.editor.startShadowEdit();
+                button.onClick(this.editor, key);
+            }
+        }
+    }
+
+    /**
+     * Leave live preview state (shadow edit) of editor
+     */
+    stopLivePreview() {
+        this.editor?.stopShadowEdit();
     }
 
     private delayUpdate() {
@@ -96,4 +129,12 @@ export default class RibbonPlugin implements IRibbonPlugin {
             this.onFormatChanged(formatState);
         }
     }
+}
+
+/**
+ * Create a new instance of RibbonPlugin object
+ * @param delayUpdateTime The time to wait before refresh the button when user do some editing operation in editor
+ */
+export default function createRibbonPlugin(delayUpdateTime?: number): IRibbonPlugin {
+    return new RibbonPlugin(delayUpdateTime);
 }
