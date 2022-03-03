@@ -26,11 +26,17 @@ export default interface RibbonButton {
     unlocalizedText: string;
 
     /**
+     * A key-value map for child items.
+     * When click on a child item, onClick handler will be triggered with the key of the clicked child item passed in as the second parameter
+     */
+    dropDownItems?: Record<string, string>;
+
+    /**
      * Click handler of this button.
      * @param editor the editor instance
      * @returns True if a refresh of button state is needed. Otherwise, false or void
      */
-    onClick: (editor: IEditor) => void | boolean;
+    onClick: (editor: IEditor, key?: string) => void | boolean;
 
     /**
      * Get if the current button should be checked
@@ -49,10 +55,9 @@ export default interface RibbonButton {
     disabled?: (formatState: FormatState) => boolean;
 
     /**
-     * A custom render function. Use this property to override the default rendering behavior
+     * Whether live preview feature is enabled for this plugin.
+     * When live preview is enabled, hovering on a sub item will show the format result immediately in editor.
+     * This option needs dropDownItems to have values
      */
-    onRender?: (
-        item: any,
-        dismissMenu: (ev?: any, dismissAll?: boolean) => void
-    ) => React.ReactNode;
+    allowLivePreview?: boolean;
 }
