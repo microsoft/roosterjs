@@ -1,9 +1,9 @@
-import applyTableFormat from '../../lib/utils/applyTableFormat';
+import applyTableFormat from '../../lib/table/applyTableFormat';
 import VTable from '../../lib/table/VTable';
 import { itChromeOnly } from '../DomTestHelper';
 import { TableFormat } from 'roosterjs-editor-types';
 
-const format: TableFormat = {
+const format: Required<TableFormat> = {
     topBorderColor: '#0C64C0',
     bottomBorderColor: '#0C64C0',
     verticalBorderColor: '#0C64C0',
