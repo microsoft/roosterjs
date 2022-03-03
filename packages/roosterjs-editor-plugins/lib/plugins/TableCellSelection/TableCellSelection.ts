@@ -99,7 +99,7 @@ export default class TableCellSelection implements EditorPlugin {
                     }
                     break;
                 case PluginEventType.LeavingShadowEdit:
-                    if (this.firstTable && this.tableRange) {
+                    if (this.firstTable && this.tableSelection && this.tableRange) {
                         const table = this.editor.queryElements('#' + this.firstTable.id);
                         if (table.length == 1) {
                             this.firstTable = table[0] as HTMLTableElement;
