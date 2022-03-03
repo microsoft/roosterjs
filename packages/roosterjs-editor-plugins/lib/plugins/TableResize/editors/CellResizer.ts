@@ -62,7 +62,7 @@ interface DragAndDropInitValue {
     nextCells: HTMLTableCellElement[];
 }
 
-function onDragStart(context: DragAndDropContext, event: MouseEvent) {
+function onDragStart(context: DragAndDropContext) {
     const { td, isRTL, zoomScale, onStart } = context;
     const vTable = new VTable(td, true /*normalizeSize*/, zoomScale);
     const rect = normalizeRect(td.getBoundingClientRect());
@@ -102,16 +102,15 @@ function onDraggingHorizontal(
         }
     });
 
-    vTable.writeBack();
+    // To avoid apply format styles when the table is being resizing, the skipApplyFormat is set to true.
+    vTable.writeBack(true /**skipApplyFormat*/);
     return true;
 }
 
 function onDraggingVertical(
     context: DragAndDropContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue,
-    deltaX: number,
-    deltaY: number
+    initValue: DragAndDropInitValue
 ) {
     const { isRTL, zoomScale } = context;
     const { vTable, nextCells, currentCells } = initValue;
@@ -154,7 +153,8 @@ function onDraggingVertical(
         });
     }
 
-    vTable.writeBack();
+    // To avoid apply format styles when the table is being resizing, the skipApplyFormat is set to true.
+    vTable.writeBack(true /**skipApplyFormat*/);
     return true;
 }
 
