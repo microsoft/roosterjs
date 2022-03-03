@@ -267,6 +267,7 @@ export default class TableCellSelection implements EditorPlugin {
 
                 const sel = this.editor.getDocument().defaultView.getSelection();
                 const { anchorNode, anchorOffset } = sel;
+                this.editor.select(sel.getRangeAt(0));
                 sel.setBaseAndExtent(anchorNode, anchorOffset, position.node, position.offset);
                 this.lastTarget = position.node;
                 event.rawEvent.preventDefault();
