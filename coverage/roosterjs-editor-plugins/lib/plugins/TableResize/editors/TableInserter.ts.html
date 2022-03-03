@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.55% </span>
+                <span class="strong">76.47% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/49</span>
+                <span class='fraction'>39/51</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.55% </span>
+                <span class="strong">76.47% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>38/49</span>
+                <span class='fraction'>39/51</span>
             </div>
         
             
@@ -185,10 +185,7 @@
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
 <a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a>
-<a name='L124'></a><a href='#L124'>124</a>
-<a name='L125'></a><a href='#L125'>125</a>
-<a name='L126'></a><a href='#L126'>126</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -245,12 +242,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -266,6 +257,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -282,6 +274,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -368,13 +362,7 @@ export default function createTableInserter(
 &nbsp;
         document.body.appendChild(div);
 &nbsp;
-        const handler = new TableInsertHandler(
-            div,
-            td,
-            isHorizontal,
-            editor.getZoomScale(),
-            onInsert
-        );
+        const handler = new TableInsertHandler(div, td, isHorizontal, editor, onInsert);
 &nbsp;
         return { div, featureHandler: handler, node: td };
     }
@@ -385,7 +373,7 @@ class TableInsertHandler implements Disposable {
         private div: HTMLDivElement,
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
-        private zoomScale: number,
+        private editor: IEditor,
         private onInsert: () =&gt; void
     ) {
         this.div.addEventListener('click', this.insertTd);
@@ -394,12 +382,13 @@ class TableInsertHandler implements Disposable {
     dispose() {
         this.div.removeEventListener('click', this.insertTd);
         this.div = null;
+        this.editor = null;
     }
 &nbsp;
     private insertTd = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
         let vtable = <span class="cstat-no" title="statement not covered" >new VTable(this.td);</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.isHorizontal) {</span>
-<span class="cstat-no" title="statement not covered" >            vtable.normalizeTableCellSize(this.zoomScale);</span>
+<span class="cstat-no" title="statement not covered" >            vtable.normalizeTableCellSize(this.editor.getZoomScale());</span>
 &nbsp;
             // Since adding new column will cause table width to change, we need to remove width properties
 <span class="cstat-no" title="statement not covered" >            vtable.table.removeAttribute('width');</span>
@@ -408,6 +397,8 @@ class TableInsertHandler implements Disposable {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);</span>
 <span class="cstat-no" title="statement not covered" >        vtable.writeBack();</span>
+        //Adding replaceNode to transform color when the theme is switched to dark.
+<span class="cstat-no" title="statement not covered" >        this.editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        this.onInsert();</span>
     };
@@ -445,7 +436,7 @@ function getInsertElementData(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Mar 03 2022 05:50:28 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 03 2022 17:35:34 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

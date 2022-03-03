@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.79% </span>
+                <span class="strong">68.1% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>141/208</span>
+                <span class='fraction'>143/210</span>
             </div>
         
             
@@ -697,7 +697,13 @@
 <a name='L632'></a><a href='#L632'>632</a>
 <a name='L633'></a><a href='#L633'>633</a>
 <a name='L634'></a><a href='#L634'>634</a>
-<a name='L635'></a><a href='#L635'>635</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L635'></a><a href='#L635'>635</a>
+<a name='L636'></a><a href='#L636'>636</a>
+<a name='L637'></a><a href='#L637'>637</a>
+<a name='L638'></a><a href='#L638'>638</a>
+<a name='L639'></a><a href='#L639'>639</a>
+<a name='L640'></a><a href='#L640'>640</a>
+<a name='L641'></a><a href='#L641'>641</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -817,6 +823,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">238x</span>
 <span class="cline-any cline-yes">238x</span>
 <span class="cline-any cline-yes">222x</span>
@@ -848,6 +856,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1331,7 +1343,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">713x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import applyTableFormat from '../utils/applyTableFormat';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import applyTableFormat from './applyTableFormat';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -1348,7 +1360,7 @@ import {
 } from 'roosterjs-editor-types';
 &nbsp;
 const CELL_SHADE = 'cellShade';
-const DEFAULT_FORMAT: TableFormat = {
+const DEFAULT_FORMAT: Required&lt;TableFormat&gt; = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
     verticalBorderColor: '#ABABAB',
@@ -1394,7 +1406,7 @@ export default class VTable {
     /**
      * Current format of the table
      */
-    formatInfo: TableFormat;
+    formatInfo: Required&lt;TableFormat&gt;;
 &nbsp;
     private trs: HTMLTableRowElement[] = [];
 &nbsp;
@@ -1450,8 +1462,10 @@ export default class VTable {
 &nbsp;
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
+     * @param skipApplyFormat Do not reapply table format when write back.
+     * Only use this parameter when you are pretty sure there is no format or table structure change during the process.
      */
-    writeBack() {
+    writeBack(skipApplyFormat?: boolean) {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) =&gt; {
@@ -1464,7 +1478,7 @@ export default class VTable {
                     }
                 });
             });
-            if (this.formatInfo) {
+            if (this.formatInfo &amp;&amp; !skipApplyFormat) {
                 saveTableInfo(this.table, this.formatInfo);
                 applyTableFormat(this.table, this.cells, this.formatInfo);
             }
@@ -1481,12 +1495,16 @@ export default class VTable {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.table) {
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
-        this.formatInfo = { ...DEFAULT_FORMAT, ...(this.formatInfo || {}), ...(format || {}) };
+        this.formatInfo = {
+            ...DEFAULT_FORMAT,
+            ...(this.formatInfo || {}),
+            ...(format || {}),
+        };
         this.deleteCellShadeDataset(this.cells);
     }
 &nbsp;
     /**
-     * Remove the cellshade dataset to apply a new style format at the cell.
+     * Remove the cellShade dataset to apply a new style format at the cell.
      * @param cells
      */
     private deleteCellShadeDataset(cells: VCell[][]) {
@@ -1972,7 +1990,7 @@ function cloneNode&lt;T extends Node&gt;(node: T): T {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Mar 03 2022 05:50:28 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 03 2022 17:35:34 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-dom/lib/utils/applyTableFormat.ts</title>
+    <title>Code coverage report for roosterjs-editor-dom/lib/table/applyTableFormat.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-dom/lib/utils</a> applyTableFormat.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-dom/lib/table</a> applyTableFormat.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50.33% </span>
+                <span class="strong">50.65% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>77/153</span>
+                <span class='fraction'>78/154</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">50.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>76/152</span>
+                <span class='fraction'>77/153</span>
             </div>
         
             
@@ -365,7 +365,13 @@
 <a name='L300'></a><a href='#L300'>300</a>
 <a name='L301'></a><a href='#L301'>301</a>
 <a name='L302'></a><a href='#L302'>302</a>
-<a name='L303'></a><a href='#L303'>303</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -422,6 +428,10 @@
 <span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -667,7 +677,8 @@
 <span class="cline-any cline-yes">176x</span>
 <span class="cline-any cline-yes">176x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import changeElementTag from './changeElementTag';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import changeElementTag from '../utils/changeElementTag';
+import setColor from '../utils/setColor';
 import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
@@ -682,14 +693,14 @@ const CELL_SHADE = 'cellShade';
 export default function applyTableFormat(
     table: HTMLTableElement,
     cells: VCell[][],
-    format: Partial&lt;TableFormat&gt;
+    format: Required&lt;TableFormat&gt;
 ) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!format) {
 <span class="cstat-no" title="statement not covered" >        return;</span>
     }
     table.style.borderCollapse = 'collapse';
     setBordersType(cells, format);
-    setColor(cells, format);
+    setCellColor(cells, format);
     setFirstColumnFormat(cells, format);
     setHeaderRowFormat(cells, format);
 }
@@ -711,7 +722,7 @@ function hasCellShade(cell: VCell) {
  * Set color to the table
  * @param format the format that must be applied
  */
-function setColor(cells: VCell[][], format: TableFormat) {
+function setCellColor(cells: VCell[][], format: TableFormat) {
     const color = (index: number) =&gt; (index % 2 === 0 ? format.bgColorEven : format.bgColorOdd);
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
     const shouldColorWholeTable = !hasBandedRows &amp;&amp; bgColorOdd === bgColorEven ? <span class="branch-0 cbranch-no" title="branch not covered" >true </span>: false;
@@ -720,11 +731,15 @@ function setColor(cells: VCell[][], format: TableFormat) {
             <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; !hasCellShade(cell)) {
                 if (hasBandedRows) {
                     const backgroundColor = color(index);
-                    cell.td.style.backgroundColor = backgroundColor || TRANSPARENT;
+                    setColor(cell.td, backgroundColor || TRANSPARENT, true /** isBackgroundColor*/);
                 } else <span class="missing-if-branch" title="if path not taken" >I</span>if (shouldColorWholeTable) {
-<span class="cstat-no" title="statement not covered" >                    cell.td.style.backgroundColor = format.bgColorOdd || TRANSPARENT;</span>
+<span class="cstat-no" title="statement not covered" >                    setColor(</span>
+                        cell.td,
+                        format.bgColorOdd || TRANSPARENT,
+                        true /** isBackgroundColor*/
+                    );
                 } else {
-                    cell.td.style.backgroundColor = TRANSPARENT;
+                    setColor(cell.td, TRANSPARENT, true /** isBackgroundColor*/);
                 }
             }
         });
@@ -734,7 +749,7 @@ function setColor(cells: VCell[][], format: TableFormat) {
             row.forEach((cell, index) =&gt; {
                 const backgroundColor = color(index);
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; backgroundColor &amp;&amp; !hasCellShade(cell)) {
-                    cell.td.style.backgroundColor = backgroundColor;
+                    setColor(cell.td, backgroundColor, true /** isBackgroundColor*/);
                 }
             });
         });
@@ -926,7 +941,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial&lt;TableFormat&g
             <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; cellIndex === 0) {
                 if (rowIndex !== 0) {
                     cell.td.style.borderTopColor = TRANSPARENT;
-                    cell.td.style.backgroundColor = TRANSPARENT;
+                    setColor(cell.td, TRANSPARENT, true /** isBackgroundColor*/);
                 }
                 if (rowIndex !== cells.length - 1 &amp;&amp; rowIndex !== 0) {
                     cell.td.style.borderBottomColor = TRANSPARENT;
@@ -955,7 +970,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
     }
     cells[0]<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>orEach(cell =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; format.headerRowColor) {
-            cell.td.style.backgroundColor = format.headerRowColor;
+            setColor(cell.td, format.headerRowColor, true /** isBackgroundColor*/);
             cell.td.style.borderRightColor = format.headerRowColor;
             cell.td.style.borderLeftColor = format.headerRowColor;
             cell.td.style.borderTopColor = format.headerRowColor;
@@ -976,7 +991,7 @@ function getBorderStyle(style?: string | null) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Mar 03 2022 05:50:28 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 03 2022 17:35:34 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
