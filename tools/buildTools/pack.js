@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const webpack = require('webpack');
 const {
     packages,
     packagesPath,
@@ -10,15 +9,9 @@ const {
     nodeModulesPath,
     packagesUiPath,
     rootPath,
+    runWebPack,
+    getWebpackExternalCallback,
 } = require('./common');
-
-const externalMap = new Map([
-    ['react', 'React'],
-    ['react-dom', 'ReactDOM'],
-    [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
-    [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
-    ...packages.map(p => [p, 'roosterjs']),
-]);
 
 async function pack(isProduction, isAmd, isUi, filename) {
     const webpackConfig = {
@@ -52,19 +45,7 @@ async function pack(isProduction, isAmd, isUi, filename) {
                 },
             ],
         },
-        externals: isUi
-            ? function (_, request, callback) {
-                  for (const [key, value] of externalMap) {
-                      if (key instanceof RegExp && key.test(request)) {
-                          return callback(null, request.replace(key, value));
-                      } else if (request === key) {
-                          return callback(null, value);
-                      }
-                  }
-
-                  callback();
-              }
-            : undefined,
+        externals: isUi ? getWebpackExternalCallback([]) : undefined,
         stats: 'minimal',
         mode: isProduction ? 'production' : 'development',
         optimization: {
@@ -72,19 +53,7 @@ async function pack(isProduction, isAmd, isUi, filename) {
         },
     };
 
-    await new Promise((resolve, reject) => {
-        webpack(webpackConfig).run((err, result) => {
-            const compileErrors = result?.compilation?.errors || [];
-
-            if (compileErrors.length > 0) {
-                reject(compileErrors);
-            } else if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
-    });
+    await runWebPack(webpackConfig);
 }
 
 function createStep(isProduction, isAmd, isUi) {
