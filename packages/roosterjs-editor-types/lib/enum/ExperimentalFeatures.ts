@@ -55,4 +55,9 @@ export const enum ExperimentalFeatures {
      * Paste the Html instead of the Img when the Html Body only have one IMG Child node
      */
     ConvertSingleImageBody = 'ConvertSingleImageBody',
+
+    /**
+     * Align table elements to left, center and right using setAlignment API
+     */
+    TableAlignment = 'TableAlignment',
 }
