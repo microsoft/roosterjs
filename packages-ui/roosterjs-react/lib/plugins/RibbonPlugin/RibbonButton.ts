@@ -77,6 +77,13 @@ export default interface RibbonButton {
         onClick: (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>, item: any) => void
     ) => React.ReactNode;
 
+    /**
+     * CSS class name for drop down menu
+     */
     dropDownClassName?: string;
+
+    /**
+     * CSS class name for drop down menu item
+     */
     itemClassName?: string;
 }
