@@ -64,7 +64,6 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
         let hasFunctionKey = false;
         let features: GenericContentEditFeature<PluginEvent>[];
         let ctrlOrMeta = false;
-
         if (event.eventType == PluginEventType.KeyDown) {
             const rawEvent = event.rawEvent;
             const range = this.editor.getSelectionRange();

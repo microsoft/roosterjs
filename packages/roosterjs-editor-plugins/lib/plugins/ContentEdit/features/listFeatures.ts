@@ -157,7 +157,6 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
         return false;
     },
     handleEvent: (event, editor) => {
-        editor.insertContent('&nbsp;');
         event.rawEvent.preventDefault();
         editor.addUndoSnapshot(
             () => {

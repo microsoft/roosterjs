@@ -7,6 +7,7 @@ import { QuoteFeatures } from './features/quoteFeatures';
 import { ShortcutFeatures } from './features/shortcutFeatures';
 import { StructuredNodeFeatures } from './features/structuredNodeFeatures';
 import { TableFeatures } from './features/tableFeatures';
+import { TextFeatures } from './features/textFeatures';
 import {
     BuildInEditFeature,
     ContentEditFeatureSettings,
@@ -23,6 +24,7 @@ const allFeatures = {
     ...CursorFeatures,
     ...MarkdownFeatures,
     ...EntityFeatures,
+    ...TextFeatures,
 };
 
 /**

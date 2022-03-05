@@ -202,6 +202,28 @@ export interface TableFeatureSettings {
 }
 
 /**
+ * Settings for list features
+ */
+export interface TextFeatureSettings {
+    /**
+     * When press Tab in a list, indent current list item
+     * @default true
+     */
+    indentWhenTab: boolean;
+
+    /**
+     * When press Shift+Tab in a list, outdent current list item
+     * @default true
+     */
+    outdentWhenShiftTab: boolean;
+
+    /**
+     * When delete key is pressed before the first item, indent the correct list of numbers
+     */
+    moveToNextElement: boolean;
+}
+
+/**
  * A list to specify whether each of the listed content edit features is enabled
  */
 export default interface ContentEditFeatureSettings
