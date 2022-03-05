@@ -32,8 +32,16 @@ export default interface RibbonButton {
     dropDownItems?: Record<string, string>;
 
     /**
+     * Get the key of current selected item
+     * @param formatState The current formatState of editor
+     * @returns the key of selected item, it needs to be the same with the key in dropDownItems
+     */
+    selectedItem?: (formatState: FormatState) => string;
+
+    /**
      * Click handler of this button.
      * @param editor the editor instance
+     * @param key key of the button that is clicked
      * @returns True if a refresh of button state is needed. Otherwise, false or void
      */
     onClick: (editor: IEditor, key?: string) => void | boolean;
@@ -60,4 +68,15 @@ export default interface RibbonButton {
      * This option needs dropDownItems to have values
      */
     allowLivePreview?: boolean;
+
+    /**
+     * Custom render of drop down item
+     */
+    dropDownItemRender?: (
+        item: any,
+        onClick: (e: React.MouseEvent<Element> | React.KeyboardEvent<Element>, item: any) => void
+    ) => React.ReactNode;
+
+    dropDownClassName?: string;
+    itemClassName?: string;
 }

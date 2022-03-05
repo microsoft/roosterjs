@@ -1,0 +1,41 @@
+import MainPaneBase from '../MainPaneBase';
+import { RibbonButton } from 'roosterjs-react';
+
+const DropDownItems = {
+    'zoom50%': '50%',
+    'zoom75%': '75%',
+    'zoom100%': '100%',
+    'zoom150%': '150%',
+    'zoom200%': '200%',
+};
+
+const DropDownValues: { [key in keyof typeof DropDownItems]: number } = {
+    'zoom50%': 0.5,
+    'zoom75%': 0.75,
+    'zoom100%': 1,
+    'zoom150%': 1.5,
+    'zoom200%': 2,
+};
+
+/**
+ * "Zoom" button on the format ribbon
+ */
+export const zoom: RibbonButton = {
+    key: 'zoom',
+    unlocalizedText: 'Zoom',
+    iconName: 'ZoomIn',
+    dropDownItems: DropDownItems,
+    selectedItem: formatState =>
+        Object.keys(DropDownItems).filter(
+            (key: keyof typeof DropDownItems) => DropDownValues[key] == formatState.zoomScale
+        )[0],
+    onClick: (editor, key) => {
+        const zoomScale = DropDownValues[key as keyof typeof DropDownItems];
+        editor.setZoomScale(zoomScale);
+        editor.focus();
+
+        // Let main pane know this state change so that it can be persisted when pop out/pop in
+        MainPaneBase.getInstance().setScale(zoomScale);
+        return true;
+    },
+};

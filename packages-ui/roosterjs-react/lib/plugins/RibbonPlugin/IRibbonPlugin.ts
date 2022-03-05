@@ -13,7 +13,7 @@ export default interface IRibbonPlugin extends EditorPlugin {
     /**
      * When user clicks on a button, call this method to let the plugin to handle this click event
      * @param button The button that is clicked
-     * @key Key of child menu item that is clicked if any
+     * @param key Key of child menu item that is clicked if any
      */
     onButtonClick: (button: RibbonButton, key?: string) => void;
 

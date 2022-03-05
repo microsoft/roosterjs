@@ -16,6 +16,12 @@ export default interface RibbonProps {
     buttons: RibbonButton[];
 
     /**
+     * DOM attributes for the DIV tag of ribbon. All properties passed in from this property will be
+     * rendered as DOM attribute of the ribbon DIV node.
+     */
+    domAttributes?: React.HTMLAttributes<HTMLDivElement>;
+
+    /**
      * Whether this ribbon should be render from right to left or left to right
      */
     isRtl?: boolean;

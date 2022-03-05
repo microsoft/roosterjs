@@ -12,6 +12,7 @@ export const fontSize: RibbonButton = {
         map[size + 'pt'] = size.toString();
         return map;
     }, <Record<string, string>>{}),
+    selectedItem: formatState => formatState.fontSize,
     onClick: (editor, size) => {
         setFontSize(editor, size);
     },

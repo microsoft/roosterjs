@@ -5,7 +5,7 @@ import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
  */
 export const undo: RibbonButton = {
     key: 'undo',
-    unlocalizedText: 'undo',
+    unlocalizedText: 'Undo',
     iconName: 'undo',
     disabled: formatState => !formatState.canUndo,
     onClick: editor => {

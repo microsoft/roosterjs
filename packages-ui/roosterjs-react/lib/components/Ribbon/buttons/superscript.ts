@@ -1,5 +1,5 @@
 import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
-import { toggleSubscript } from 'roosterjs-editor-api';
+import { toggleSuperscript } from 'roosterjs-editor-api';
 
 /**
  * "Superscript" button on the format ribbon
@@ -10,7 +10,7 @@ export const superscript: RibbonButton = {
     iconName: 'Superscript',
     checked: formatState => formatState.isSuperscript,
     onClick: editor => {
-        toggleSubscript(editor);
+        toggleSuperscript(editor);
         return true;
     },
 };

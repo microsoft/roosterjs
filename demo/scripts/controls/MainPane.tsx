@@ -7,17 +7,21 @@ import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase from './MainPaneBase';
-import Ribbon from './ribbon/Ribbon';
-import RibbonPlugin from './ribbon/RibbonPlugin';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
+import { createRibbonPlugin, getAllButtons, IRibbonPlugin, Ribbon, Rooster } from 'roosterjs-react';
+import { darkMode } from './ribbonButtons/darkMode';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
+import { exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
-import { Rooster } from 'roosterjs-react';
+import { popout } from './ribbonButtons/popout';
+import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { UpdateContentPlugin, UpdateMode } from 'roosterjs-react/lib/plugins/UpdateContentPlugin';
+import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+import { zoom } from './ribbonButtons/zoom';
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
@@ -35,7 +39,7 @@ class MainPane extends MainPaneBase {
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private snapshotPlugin: SnapshotPlugin;
-    private ribbonPlugin: RibbonPlugin;
+    private ribbonPlugin: IRibbonPlugin;
     private updateContentPlugin: UpdateContentPlugin;
 
     private sidePane = React.createRef<SidePane>();
@@ -48,7 +52,7 @@ class MainPane extends MainPaneBase {
         this.eventViewPlugin = new EventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
-        this.ribbonPlugin = new RibbonPlugin();
+        this.ribbonPlugin = createRibbonPlugin();
         this.updateContentPlugin = new UpdateContentPlugin(
             UpdateMode.OnDispose | UpdateMode.OnInitialize,
             this.onUpdate
@@ -56,7 +60,7 @@ class MainPane extends MainPaneBase {
         this.state = {
             showSidePane: window.location.hash != '',
             showRibbon: true,
-            isPopoutShown: false,
+            popoutWindow: null,
             initState: this.editorOptionPlugin.getBuildInPluginState(),
             supportDarkMode: true,
             scale: 1,
@@ -70,9 +74,11 @@ class MainPane extends MainPaneBase {
         return (
             <div className={styles.mainPane}>
                 <TitleBar className={styles.noGrow} />
-                {this.state.showRibbon && !this.state.isPopoutShown && this.renderRibbon()}
+                {this.state.showRibbon &&
+                    !this.state.popoutWindow &&
+                    this.renderRibbon(false /*isPopout*/)}
                 <div className={styles.body}>
-                    {this.state.isPopoutShown ? this.renderPopout() : this.renderMainPane()}
+                    {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
                 </div>
             </div>
         );
@@ -115,23 +121,15 @@ class MainPane extends MainPaneBase {
         win.addEventListener('unload', () => {
             this.updateContentPlugin.forceUpdate();
 
-            if (this.popoutRoot) {
-                ReactDom.unmountComponentAtNode(this.popoutRoot);
-            }
-            window.setTimeout(() => {
-                this.setState({ isPopoutShown: false });
-            }, 100);
+            unregisterWindowForCss(win);
+            this.setState({ popoutWindow: null });
         });
 
-        let styles = document.getElementsByTagName('STYLE');
-        for (let i = 0; i < styles.length; i++) {
-            win.document.head.appendChild(styles[i].cloneNode(true));
-        }
+        registerWindowForCss(win);
 
         this.popoutRoot = win.document.getElementById(PopoutRoot);
-
         this.setState({
-            isPopoutShown: true,
+            popoutWindow: win,
         });
     }
 
@@ -184,28 +182,22 @@ class MainPane extends MainPaneBase {
         this.setState({ content });
     };
 
-    private renderRibbon() {
-        return (
-            <Ribbon
-                plugin={this.ribbonPlugin}
-                className={styles.noGrow}
-                ref={this.ribbonPlugin.refCallback}
-            />
-        );
+    private renderRibbon(isPopout: boolean) {
+        return <Ribbon buttons={this.getButtons(isPopout)} plugin={this.ribbonPlugin} />;
     }
 
     private renderPopout() {
         return (
-            <>
+            <WindowProvider window={this.state.popoutWindow}>
                 {this.renderSidePane(true /*fullWidth*/)}
                 {ReactDom.createPortal(
                     <div className={styles.mainPane}>
-                        {this.renderRibbon()}
+                        {this.renderRibbon(true /*isPopout*/)}
                         <div className={styles.body}>{this.renderEditor()}</div>
                     </div>,
                     this.popoutRoot
                 )}
-            </>
+            </WindowProvider>
         );
     }
 
@@ -293,7 +285,7 @@ class MainPane extends MainPaneBase {
     }
 
     private getPlugins() {
-        return this.state.showSidePane || this.state.isPopoutShown
+        return this.state.showSidePane || this.state.popoutWindow
             ? [this.ribbonPlugin, ...this.getSidePanePlugins(), this.updateContentPlugin]
             : [this.ribbonPlugin, this.updateContentPlugin];
     }
@@ -303,6 +295,16 @@ class MainPane extends MainPaneBase {
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
                 new Editor(div, options),
         });
+    }
+
+    private getButtons(isPopout: boolean) {
+        const buttons = getAllButtons().concat(darkMode, zoom, exportContent);
+
+        if (!isPopout) {
+            buttons.push(popout);
+        }
+
+        return buttons;
     }
 }
 

@@ -10,6 +10,7 @@ class RibbonPlugin implements IRibbonPlugin {
     private editor: IEditor;
     private onFormatChanged: (formatState: FormatState) => void;
     private timer = 0;
+    private formatState: FormatState;
 
     /**
      * Construct a new instance of RibbonPlugin object
@@ -47,6 +48,7 @@ class RibbonPlugin implements IRibbonPlugin {
         switch (event.eventType) {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
+            case PluginEventType.ZoomChanged:
                 this.updateFormat();
                 break;
 
@@ -125,8 +127,17 @@ class RibbonPlugin implements IRibbonPlugin {
 
     private updateFormat() {
         if (this.editor && this.onFormatChanged) {
-            const formatState = getFormatState(this.editor);
-            this.onFormatChanged(formatState);
+            const newFormatState = getFormatState(this.editor);
+
+            if (
+                !this.formatState ||
+                Object.keys(newFormatState).some(
+                    (key: keyof FormatState) => newFormatState[key] != this.formatState[key]
+                )
+            ) {
+                this.formatState = newFormatState;
+                this.onFormatChanged(newFormatState);
+            }
         }
     }
 }
