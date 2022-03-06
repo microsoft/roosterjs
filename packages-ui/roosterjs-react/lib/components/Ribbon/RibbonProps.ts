@@ -1,10 +1,11 @@
 import IRibbonPlugin from '../../plugins/RibbonPlugin/IRibbonPlugin';
 import RibbonButton from '../../plugins/RibbonPlugin/RibbonButton';
+import { ICommandBarProps } from '@fluentui/react/lib/CommandBar';
 
 /**
  * Properties of Ribbon component
  */
-export default interface RibbonProps {
+export default interface RibbonProps extends Partial<ICommandBarProps> {
     /**
      * The ribbon plugin used for connect editor and the ribbon
      */
@@ -14,11 +15,6 @@ export default interface RibbonProps {
      * Buttons in this ribbon
      */
     buttons: RibbonButton[];
-
-    /**
-     * Whether this ribbon should be render from right to left or left to right
-     */
-    isRtl?: boolean;
 
     /**
      * A dictionary of localized strings for all buttons.

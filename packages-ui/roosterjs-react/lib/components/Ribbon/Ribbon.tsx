@@ -15,7 +15,8 @@ import {
  * @returns The format ribbon component
  */
 export default function Ribbon(props: RibbonProps) {
-    const { plugin, buttons, strings, isRtl } = props;
+    const { plugin, buttons, strings, dir } = props;
+    const isRtl = dir == 'rtl';
     const [formatState, setFormatState] = React.useState<FormatState>(null);
 
     const onClick = React.useCallback(
@@ -79,7 +80,7 @@ export default function Ribbon(props: RibbonProps) {
         };
     }, [plugin]);
 
-    return <CommandBar items={commandBarItems} dir={isRtl ? 'rtl' : 'ltr'} />;
+    return <CommandBar items={commandBarItems} {...props} />;
 }
 
 function LivePreviewItem(props: {
