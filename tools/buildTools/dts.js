@@ -270,12 +270,7 @@ function parseImportFrom(content, currentFileName, queue, baseDir, projDir, exte
 function process(baseDir, queue, index, projDir, externalHandler) {
     var item = queue[index];
     var currentFileName = item.filename;
-    var file;
-    try {
-        file = fs.readFileSync(currentFileName);
-    } catch (e) {
-        debugger;
-    }
+    var file = fs.readFileSync(currentFileName);
     var content = file.toString();
 
     // 1. Process 'export ... from ...;'
