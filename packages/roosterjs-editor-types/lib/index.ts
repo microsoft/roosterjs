@@ -164,6 +164,7 @@ export {
     ShortcutFeatureSettings,
     StructuredNodeFeatureSettings,
     TableFeatureSettings,
+    TextFeatureSettings,
 } from './interface/ContentEditFeatureSettings';
 export { default as CustomReplacement } from './interface/CustomReplacement';
 export { default as UndoSnapshotsService } from './interface/UndoSnapshotsService';
