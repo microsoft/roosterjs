@@ -151,7 +151,7 @@ describe('Text Features |', () => {
                     const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
                     const range = new Range();
                     range.setStart(element.firstChild, 1);
-                    range.setEnd(element.firstChild, 2);
+                    range.setEnd(element.firstChild, 3);
                     editor.select(range);
                 },
                 '<div><span id="test">T<span>     </span>st</span></div>'
