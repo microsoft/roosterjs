@@ -17,6 +17,7 @@ const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
     [ExperimentalFeatures.TableAlignment]:
         'Align table elements to left, center and right using setAlignment API',
+    [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<

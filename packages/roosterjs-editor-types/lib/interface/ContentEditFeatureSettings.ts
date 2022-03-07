@@ -202,6 +202,21 @@ export interface TableFeatureSettings {
 }
 
 /**
+ * Settings for text features
+ */
+export interface TextFeatureSettings {
+    /**
+     * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled
+     * When press Tab:
+     *      If Whole Paragraph selected, indent paragraph,
+     *      If range is collapsed, add spaces
+     *      If range is not collapsed but not all the paragraph is selected, remove selection and add
+     *          spaces
+     */
+    indentWhenTabText: boolean;
+}
+
+/**
  * A list to specify whether each of the listed content edit features is enabled
  */
 export default interface ContentEditFeatureSettings

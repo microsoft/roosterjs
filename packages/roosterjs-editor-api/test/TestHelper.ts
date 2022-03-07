@@ -1,9 +1,13 @@
 import { Editor } from 'roosterjs-editor-core';
-import { EditorPlugin, NodeType } from 'roosterjs-editor-types';
+import { EditorPlugin, ExperimentalFeatures, NodeType } from 'roosterjs-editor-types';
 
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
-export function initEditor(id: string, plugins?: EditorPlugin[]) {
+export function initEditor(
+    id: string,
+    plugins?: EditorPlugin[],
+    experimentalFeatures?: ExperimentalFeatures[]
+) {
     let node = document.createElement('div');
     node.id = id;
     document.body.insertBefore(node, document.body.childNodes[0]);
@@ -11,6 +15,7 @@ export function initEditor(id: string, plugins?: EditorPlugin[]) {
     let editor = new Editor(node as HTMLDivElement, {
         plugins: plugins || [],
         defaultFormat: { textColor: 'black', fontFamily: 'arial', fontSize: '12pt' },
+        experimentalFeatures: experimentalFeatures || [],
     });
 
     return editor;
