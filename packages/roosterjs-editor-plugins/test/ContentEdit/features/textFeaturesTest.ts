@@ -114,7 +114,7 @@ describe('Text Features |', () => {
             //Assert
             expect(editor.getContent()).toBe(contentExpected);
         }
-        it('Handle event, text collapsed', () => {
+        TestHelper.itFirefoxOnly('Handle event, text collapsed', () => {
             runHandleTest(
                 TextFeatures.indentWhenTabText,
                 `<div id='${TEST_ELEMENT_ID}'></div>`,
@@ -128,35 +128,41 @@ describe('Text Features |', () => {
             );
         });
 
-        it('Should handle, range not collapsed and is selected from start to end', () => {
-            runHandleTest(
-                TextFeatures.indentWhenTabText,
-                `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
-                () => {
-                    const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
-                    const range = new Range();
-                    range.setStart(element, 0);
-                    range.setEnd(element, 1);
-                    editor.select(range);
-                },
-                '<blockquote style="margin-top:0;margin-bottom:0"><div id="test">Test</div></blockquote>'
-            );
-        });
+        TestHelper.itFirefoxOnly(
+            'Should handle, range not collapsed and is selected from start to end',
+            () => {
+                runHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const range = new Range();
+                        range.setStart(element, 0);
+                        range.setEnd(element, 1);
+                        editor.select(range);
+                    },
+                    '<blockquote style="margin-top:0;margin-bottom:0"><div id="test">Test</div></blockquote>'
+                );
+            }
+        );
 
-        it('Should handle, range not collapsed and is not selected from start to end', () => {
-            runHandleTest(
-                TextFeatures.indentWhenTabText,
-                `<div><span id='${TEST_ELEMENT_ID}'>Test</span></div>`,
-                () => {
-                    const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
-                    const range = new Range();
-                    range.setStart(element.firstChild, 1);
-                    range.setEnd(element.firstChild, 3);
-                    editor.select(range);
-                },
-                '<div><span id="test">T<span>     </span>st</span></div>'
-            );
-        });
+        TestHelper.itFirefoxOnly(
+            'Should handle, range not collapsed and is not selected from start to end',
+            () => {
+                runHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div><span id='${TEST_ELEMENT_ID}'>Test</span></div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const range = new Range();
+                        range.setStart(element.firstChild, 1);
+                        range.setEnd(element.firstChild, 3);
+                        editor.select(range);
+                    },
+                    '<div><span id="test">T<span>     </span>t</span></div>'
+                );
+            }
+        );
     });
 });
 
