@@ -156,7 +156,6 @@ export default class VTable {
             ...(this.formatInfo || {}),
             ...(format || {}),
         };
-        console.log(this.formatInfo.keepCellShade);
         if (!this.formatInfo.keepCellShade) {
             this.deleteCellShadeDataset(this.cells);
         }
