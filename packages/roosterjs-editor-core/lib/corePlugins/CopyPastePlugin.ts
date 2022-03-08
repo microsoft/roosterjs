@@ -99,7 +99,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             });
 
             this.editor.runAsync(editor => {
-                this.cleanUpAndRestoreSelection(tempDiv, originalRange);
+                this.cleanUpAndRestoreSelection(tempDiv, originalRange, !isCut /* isCopy */);
 
                 if (isCut) {
                     editor.addUndoSnapshot(() => {
@@ -128,7 +128,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     return this.getTempDiv();
                 },
                 removeTempDiv: div => {
-                    this.cleanUpAndRestoreSelection(div, range);
+                    this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
                 },
             }
         );
@@ -162,8 +162,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         return div;
     }
 
-    private cleanUpAndRestoreSelection(tempDiv: HTMLDivElement, range: Range) {
-        if (Browser.isAndroid) {
+    private cleanUpAndRestoreSelection(tempDiv: HTMLDivElement, range: Range, isCopy: boolean) {
+        if (isCopy && Browser.isAndroid) {
             range.collapse();
         }
 
