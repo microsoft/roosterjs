@@ -1,39 +1,88 @@
 import RibbonButton from '../../plugins/RibbonPlugin/RibbonButton';
-import { alignCenter } from './buttons/alignCenter';
-import { alignLeft } from './buttons/alignLeft';
-import { alignRight } from './buttons/alignRight';
-import { bold } from './buttons/bold';
-import { bulletedList } from './buttons/bulletedList';
-import { clearFormat } from './buttons/clearFormat';
-import { code } from './buttons/code';
-import { decreaseIndent } from './buttons/decreaseIndent';
-import { font } from './buttons/font';
-import { fontSize } from './buttons/fontSize';
-import { header } from './buttons/header';
-import { increaseIndent } from './buttons/increaseIndent';
-import { italic } from './buttons/italic';
-import { ltr } from './buttons/ltr';
-import { numberedList } from './buttons/numberedList';
-import { quote } from './buttons/quote';
-import { redo } from './buttons/redo';
-import { rtl } from './buttons/rtl';
-import { strikethrough } from './buttons/strikethrough';
-import { subscript } from './buttons/subscript';
-import { superscript } from './buttons/superscript';
-import { underline } from './buttons/underline';
-import { undo } from './buttons/undo';
+import { alignCenter, AlignLeftButtonStringKey } from './buttons/alignCenter';
+import { AlignCenterButtonStringKey, alignLeft } from './buttons/alignLeft';
+import { alignRight, AlignRightButtonStringKey } from './buttons/alignRight';
+import { backgroundColor, BackgroundColorButtonStringKey } from './buttons/backgroundColor';
+import { bold, BoldButtonStringKey } from './buttons/bold';
+import { bulletedList, BulletedListButtonStringKey } from './buttons/bulletedList';
+import { clearFormat, ClearFormatButtonStringKey } from './buttons/clearFormat';
+import { code, CodeButtonStringKey } from './buttons/code';
+import { decreaseFontSize, DecreaseFontSizeButtonStringKey } from './buttons/decreaseFontSize';
+import { decreaseIndent, DecreaseIndentButtonStringKey } from './buttons/decreaseIndent';
+import { font, FontButtonStringKey } from './buttons/font';
+import { fontSize, FontSizeButtonStringKey } from './buttons/fontSize';
+import { header, HeaderButtonStringKey } from './buttons/header';
+import { increaseFontSize, IncreaseFontSizeButtonStringKey } from './buttons/increaseFontSize';
+import { increaseIndent, IncreaseIndentButtonStringKey } from './buttons/increaseIndent';
+import { insertImage, InsertImageButtonStringKey } from './buttons/insertImage';
+import { insertLink, InsertLinkButtonStringKey } from './buttons/insertLink';
+import { insertTable, InsertTableButtonStringKey } from './buttons/insertTable';
+import { italic, ItalicButtonStringKey } from './buttons/italic';
+import { ltr, LtrButtonStringKey } from './buttons/ltr';
+import { numberedList, NumberedListButtonStringKey } from './buttons/numberedList';
+import { quote, QuoteButtonStringKey } from './buttons/quote';
+import { redo, RedoButtonStringKey } from './buttons/redo';
+import { removeLink, RemoveLinkButtonStringKey } from './buttons/removeLink';
+import { rtl, RtlButtonStringKey } from './buttons/rtl';
+import { strikethrough, StrikethroughButtonStringKey } from './buttons/strikethrough';
+import { subscript, SubscriptButtonStringKey } from './buttons/subscript';
+import { superscript, SuperscriptButtonStringKey } from './buttons/superscript';
+import { textColor, TextColorButtonStringKey } from './buttons/textColor';
+import { underline, UnderlineButtonStringKey } from './buttons/underline';
+import { undo, UndoButtonStringKey } from './buttons/undo';
+
+/**
+ * A public type for localized string keys of all buttons
+ */
+export type AllButtonsStringKey =
+    | AlignLeftButtonStringKey
+    | AlignCenterButtonStringKey
+    | AlignRightButtonStringKey
+    | BackgroundColorButtonStringKey
+    | BoldButtonStringKey
+    | BulletedListButtonStringKey
+    | ClearFormatButtonStringKey
+    | CodeButtonStringKey
+    | DecreaseFontSizeButtonStringKey
+    | DecreaseIndentButtonStringKey
+    | FontButtonStringKey
+    | FontSizeButtonStringKey
+    | HeaderButtonStringKey
+    | IncreaseFontSizeButtonStringKey
+    | IncreaseIndentButtonStringKey
+    | InsertImageButtonStringKey
+    | InsertLinkButtonStringKey
+    | InsertTableButtonStringKey
+    | ItalicButtonStringKey
+    | LtrButtonStringKey
+    | NumberedListButtonStringKey
+    | QuoteButtonStringKey
+    | RedoButtonStringKey
+    | RemoveLinkButtonStringKey
+    | RtlButtonStringKey
+    | StrikethroughButtonStringKey
+    | SubscriptButtonStringKey
+    | SuperscriptButtonStringKey
+    | TextColorButtonStringKey
+    | UnderlineButtonStringKey
+    | InsertTableButtonStringKey
+    | UndoButtonStringKey;
 
 /**
  * A shortcut to get all format buttons provided by roosterjs-react
  * @returns An array of all buttons
  */
-export default function getAllButtons(): RibbonButton[] {
+export default function getAllButtons(): RibbonButton<AllButtonsStringKey>[] {
     return [
         bold,
         italic,
         underline,
         font,
         fontSize,
+        increaseFontSize,
+        decreaseFontSize,
+        textColor,
+        backgroundColor,
         bulletedList,
         numberedList,
         decreaseIndent,
@@ -42,6 +91,10 @@ export default function getAllButtons(): RibbonButton[] {
         alignLeft,
         alignCenter,
         alignRight,
+        insertLink,
+        removeLink,
+        insertTable,
+        insertImage,
         superscript,
         subscript,
         strikethrough,

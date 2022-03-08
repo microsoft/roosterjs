@@ -1,11 +1,12 @@
 import IRibbonPlugin from '../../plugins/RibbonPlugin/IRibbonPlugin';
 import RibbonButton from '../../plugins/RibbonPlugin/RibbonButton';
 import { ICommandBarProps } from '@fluentui/react/lib/CommandBar';
+import { LocalizedStrings } from '../../utils/LocalizedStrings';
 
 /**
  * Properties of Ribbon component
  */
-export default interface RibbonProps extends Partial<ICommandBarProps> {
+export default interface RibbonProps<T extends string> extends Partial<ICommandBarProps> {
     /**
      * The ribbon plugin used for connect editor and the ribbon
      */
@@ -14,11 +15,11 @@ export default interface RibbonProps extends Partial<ICommandBarProps> {
     /**
      * Buttons in this ribbon
      */
-    buttons: RibbonButton[];
+    buttons: RibbonButton<T>[];
 
     /**
      * A dictionary of localized strings for all buttons.
      * Key of the dictionary is the key of each button, value will be the string or a function to return the string
      */
-    strings?: Record<string, string | (() => string)>;
+    strings?: Partial<LocalizedStrings<T>>;
 }
