@@ -65,7 +65,6 @@ export type AllButtonsStringKey =
     | SuperscriptButtonStringKey
     | TextColorButtonStringKey
     | UnderlineButtonStringKey
-    | InsertTableButtonStringKey
     | UndoButtonStringKey;
 
 /**
