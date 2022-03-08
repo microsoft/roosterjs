@@ -1,3 +1,4 @@
+import adaptFontColorToBackgroundColor from '../utils/adaptFontColorToBackgroundColor';
 import changeElementTag from '../utils/changeElementTag';
 import setColor from '../utils/setColor';
 import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
@@ -62,6 +63,7 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                 } else {
                     setColor(cell.td, TRANSPARENT, true /** isBackgroundColor*/);
                 }
+                adaptFontColorToBackgroundColor(cell.td);
             }
         });
     });
@@ -71,6 +73,7 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                 const backgroundColor = color(index);
                 if (cell.td && backgroundColor && !hasCellShade(cell)) {
                     setColor(cell.td, backgroundColor, true /** isBackgroundColor*/);
+                    adaptFontColorToBackgroundColor(cell.td);
                 }
             });
         });
@@ -292,6 +295,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
     cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
             setColor(cell.td, format.headerRowColor, true /** isBackgroundColor*/);
+            adaptFontColorToBackgroundColor(cell.td);
             cell.td.style.borderRightColor = format.headerRowColor;
             cell.td.style.borderLeftColor = format.headerRowColor;
             cell.td.style.borderTopColor = format.headerRowColor;

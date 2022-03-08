@@ -1,5 +1,5 @@
+import { adaptFontColorToBackgroundColor, safeInstanceOf, setColor } from 'roosterjs-editor-dom';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
-import { safeInstanceOf, setColor } from 'roosterjs-editor-dom';
 
 const TEMP_BACKGROUND_COLOR = 'originalBackgroundColor';
 const CELL_SHADE = 'cellShade';
@@ -16,6 +16,8 @@ export default function applyCellShading(editor: IEditor, color: string | ModeIn
         regions.forEach(region => {
             if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
                 setColor(region.rootNode, color, true /* isBackgroundColor */, editor.isDarkMode());
+                adaptFontColorToBackgroundColor(region.rootNode);
+
                 region.rootNode.dataset[CELL_SHADE] = 'true';
 
                 region.rootNode.dataset[TEMP_BACKGROUND_COLOR] =

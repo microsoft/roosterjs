@@ -442,8 +442,8 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                     {this.renderFormatTableButton(
                                         'List',
                                         PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.list](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
+                                            TABLE_COLORS.black,
+                                            `${TABLE_COLORS.black}20`
                                         ),
                                         editor
                                     )}
