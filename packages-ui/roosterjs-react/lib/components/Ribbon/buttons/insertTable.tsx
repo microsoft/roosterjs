@@ -4,7 +4,10 @@ import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { insertTable as insertTableApi } from 'roosterjs-editor-api';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 
+const MaxRows = 10;
+const MaxCols = 10;
 const classNames = mergeStyleSets({
     tableButton: {
         width: '15px',
@@ -67,13 +70,26 @@ function InsertTablePane(props: {
     const [col, setCol] = React.useState(1);
     const [row, setRow] = React.useState(1);
 
-    const onMouseEnter = React.useCallback(
-        (e: React.MouseEvent<HTMLButtonElement>) => {
-            const element = e.currentTarget as HTMLElement;
-            setCol(parseInt(element.dataset.col));
-            setRow(parseInt(element.dataset.row));
+    const updateSize = React.useCallback(
+        (t: EventTarget) => {
+            if (safeInstanceOf(t, 'HTMLElement')) {
+                const col = parseInt(t.dataset.col);
+                const row = parseInt(t.dataset.row);
+
+                if (col > 0 && col <= MaxCols && row > 0 && row <= MaxRows) {
+                    setCol(col);
+                    setRow(row);
+                }
+            }
         },
         [setCol, setRow]
+    );
+
+    const onMouseEnter = React.useCallback(
+        (e: React.MouseEvent<HTMLButtonElement>) => {
+            updateSize(e.target);
+        },
+        [updateSize]
     );
 
     const onClickButton = React.useCallback(
@@ -86,20 +102,23 @@ function InsertTablePane(props: {
         [row, col, onClick]
     );
 
-    const updateDimensionsToCell = React.useCallback(
-        (target: EventTarget) => {
-            const element = target as HTMLElement;
-            setCol(parseInt(element.dataset.col));
-            setRow(parseInt(element.dataset.row));
-        },
-        [setCol, setRow]
-    );
+    const ariaLabels = React.useMemo<string[][]>(() => {
+        const result: string[][] = [];
+        for (let i = 1; i <= MaxCols; i++) {
+            let col: string[] = [];
+            for (let j = 1; j <= MaxRows; j++) {
+                col[j] = formatText(item.text, i, j);
+            }
+            result[i] = col;
+        }
+        return result;
+    }, [item.text]);
 
     const items = React.useMemo(() => {
         const items: JSX.Element[] = [];
 
-        for (let i = 1; i <= 10; i++) {
-            for (let j = 1; j <= 10; j++) {
+        for (let i = 1; i <= MaxRows; i++) {
+            for (let j = 1; j <= MaxCols; j++) {
                 const key = `cell_${i}_${j}`;
                 const isSelected = j <= col && i <= row;
                 items.push(
@@ -114,6 +133,7 @@ function InsertTablePane(props: {
                         data-row={i}
                         data-is-focusable={true}
                         onMouseEnter={onMouseEnter}
+                        aria-label={ariaLabels[i][j]}
                     />
                 );
             }
@@ -122,7 +142,7 @@ function InsertTablePane(props: {
         return items;
     }, [col, row]);
 
-    const text = item.text.replace('{0}', col.toString()).replace('{1}', row.toString());
+    const text = formatText(item.text, row, col);
 
     return (
         <div className={classNames.tablePaneInner}>
@@ -130,11 +150,15 @@ function InsertTablePane(props: {
             <FocusZone
                 defaultActiveElement="cell_1_1"
                 direction={FocusZoneDirection.bidirectional}
-                onActiveElementChanged={updateDimensionsToCell}>
+                onActiveElementChanged={updateSize}>
                 {items}
             </FocusZone>
         </div>
     );
+}
+
+function formatText(text: string, row: number, col: number) {
+    return text.replace('{0}', col.toString()).replace('{1}', row.toString());
 }
 
 function createKey(row: number, col: number) {
