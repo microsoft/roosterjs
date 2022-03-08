@@ -13,10 +13,7 @@ export default function adaptFontColorToBackgroundColor(
     newFontColorInDark?: string,
     newFontColorInBright?: string
 ) {
-    if (
-        element.getElementsByTagName('span')[0] &&
-        element.getElementsByTagName('span')[0].style.color
-    ) {
+    if (element.hasChildNodes() && element.firstElementChild?.hasAttribute('style')) {
         return;
     }
     const backgroundColor = element.style.backgroundColor;
