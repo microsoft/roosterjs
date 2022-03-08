@@ -1,10 +1,15 @@
 import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
 
 /**
+ * Key of localized strings of Redo button
+ */
+export type RedoButtonStringKey = 'buttonNameRedo';
+
+/**
  * "Redo" button on the format ribbon
  */
-export const redo: RibbonButton = {
-    key: 'redo',
+export const redo: RibbonButton<RedoButtonStringKey> = {
+    key: 'buttonNameRedo',
     unlocalizedText: 'Redo',
     iconName: 'Redo',
     disabled: formatState => !formatState.canRedo,
