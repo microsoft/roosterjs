@@ -65,7 +65,7 @@ export default class ContentEditFeatures extends React.Component<ContentEditFeat
         const checked = this.props.state[id];
 
         return (
-            <tr>
+            <tr key={id}>
                 <td className={styles.checkboxColumn}>
                     <input
                         type="checkbox"
