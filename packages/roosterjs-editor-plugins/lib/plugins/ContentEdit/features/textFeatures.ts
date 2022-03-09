@@ -1,4 +1,4 @@
-import { contains, createRange, getTagOfNode, isBlockElement } from 'roosterjs-editor-dom';
+import { createRange, getTagOfNode } from 'roosterjs-editor-dom';
 import { setIndentation } from 'roosterjs-editor-api';
 import {
     BuildInEditFeature,
@@ -12,7 +12,6 @@ import {
     PositionType,
     ExperimentalFeatures,
     NodePosition,
-    NormalSelectionRange,
 } from 'roosterjs-editor-types';
 
 /**
@@ -35,7 +34,7 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
                 if (selection.areAllCollapsed) {
                     insertTab(editor, event);
                 } else {
-                    if (isWholeParagraphSelected(editor, selection)) {
+                    if (isWholeParagraphSelected(editor)) {
                         setIndentation(editor, Indentation.Increase);
                     } else {
                         const { ranges } = selection;
@@ -64,86 +63,64 @@ export const TextFeatures: Record<
     indentWhenTabText: IndentWhenTabText,
 };
 
-function isWholeParagraphSelected(editor: IEditor, selection: NormalSelectionRange): boolean {
+function isWholeParagraphSelected(editor: IEditor): boolean {
     const regions = editor.getSelectedRegions();
     let endPosition: NodePosition = null;
     let startPosition: NodePosition = null;
-    let isAtStart: boolean = false;
-    let isAtEnd: boolean = false;
-    let foundStart: boolean;
-    let foundEnd: boolean;
-
-    const range = selection.ranges[0];
-    let parentBlock: HTMLElement = getCommonBlock(range);
 
     regions.forEach(r => {
         endPosition = r.fullSelectionEnd;
         startPosition = startPosition || r.fullSelectionStart;
     });
 
-    const parentBlockChildren = Array.from(parentBlock.childNodes);
-    const startNode = startPosition.node;
-    const endNode = endPosition.node;
+    const isAtStart: boolean = checkIfIsAtStart(editor, startPosition, startPosition.node);
+    const isAtEnd: boolean = checkIfIsAtEnd(editor, endPosition, endPosition.node);
 
-    //Iterate the parent block children until we find the end
-    for (let index = 0; index < parentBlockChildren.length; index++) {
-        const child = parentBlockChildren[index];
-        const treatSameNodeAsContain = child.nodeType == Node.TEXT_NODE;
-
-        if (contains(child, startNode, treatSameNodeAsContain)) {
-            foundStart = true;
-            let tempChild = child.firstChild || child;
-            while (tempChild.firstChild) {
-                tempChild = tempChild.firstChild ?? null;
-            }
-
-            while (isEmptySpan(tempChild)) {
-                tempChild = tempChild.nextSibling;
-                if (!isEmptySpan(tempChild)) {
-                    while (tempChild.firstChild) {
-                        tempChild = tempChild.firstChild ?? null;
-                    }
-                }
-            }
-
-            if (tempChild == startNode && startPosition.offset == 0) {
-                isAtStart = true;
-            }
-        }
-
-        if (foundStart && contains(child, endNode, treatSameNodeAsContain)) {
-            foundEnd = true;
-            let lastChild = child.childNodes[child.childNodes.length - 1] || child;
-            while (getTagOfNode(lastChild) == 'BR' && lastChild.previousSibling) {
-                lastChild = lastChild.previousSibling;
-            }
-
-            if (contains(lastChild, endNode, lastChild.nodeType == Node.TEXT_NODE)) {
-                let tempChild = lastChild as ChildNode;
-                while (tempChild.lastChild) {
-                    tempChild = tempChild.lastChild ?? null;
-                }
-
-                if (tempChild == endPosition.node && endPosition.isAtEnd) {
-                    isAtEnd = true;
-                }
-            }
-        }
-
-        if (foundStart && foundEnd) {
-            break;
-        }
-    }
     return isAtEnd && isAtStart;
 }
 
-function getCommonBlock(range: Range) {
-    let parentBlock: Node = range.commonAncestorContainer;
+function checkIfIsAtEnd(editor: IEditor, endPosition: NodePosition, endNode: Node): boolean {
+    let isAtEnd: boolean;
+    let blockElement = editor.getBlockElementAtNode(endPosition.node).collapseToSingleElement();
 
-    while (!isBlockElement(parentBlock)) {
-        parentBlock = parentBlock.parentElement;
+    let tempChild = blockElement as ChildNode;
+    while (tempChild.lastChild) {
+        tempChild = tempChild.lastChild ?? null;
     }
-    return parentBlock;
+
+    if (tempChild == endPosition.node && endPosition.isAtEnd) {
+        isAtEnd = true;
+    }
+    return isAtEnd;
+}
+
+function checkIfIsAtStart(editor: IEditor, startPosition: NodePosition, startNode: Node): boolean {
+    let isAtStart: boolean;
+    const blockElement = editor.getBlockElementAtNode(startPosition.node).collapseToSingleElement();
+    let tempChild = blockElement.firstChild || blockElement;
+    while (tempChild.firstChild) {
+        tempChild = tempChild.firstChild ?? null;
+    }
+
+    tempChild = ignoreEmptySpans(tempChild);
+
+    if (tempChild == startNode && startPosition.offset == 0) {
+        isAtStart = true;
+    }
+    return isAtStart;
+}
+
+function ignoreEmptySpans(tempChild: ChildNode) {
+    while (isEmptySpan(tempChild)) {
+        tempChild = tempChild.nextSibling;
+        if (!isEmptySpan(tempChild)) {
+            while (tempChild.firstChild) {
+                tempChild = tempChild.firstChild;
+                ignoreEmptySpans(tempChild);
+            }
+        }
+    }
+    return tempChild;
 }
 
 function isEmptySpan(tempChild: ChildNode) {
