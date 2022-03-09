@@ -7,6 +7,7 @@ import EditorCode from './codes/EditorCode';
 import ExperimentalFeaturesPane from './ExperimentalFeatures';
 import MainPaneBase from '../../MainPaneBase';
 import Plugins from './Plugins';
+import ReactEditorCode from './codes/ReactEditorCode';
 
 const htmlStart =
     '<html>\n' +
@@ -26,6 +27,19 @@ const htmlEnd =
     '</body>\n' +
     '</html>';
 
+const htmlRoosterReact =
+    '<html>\n' +
+    '<body>\n' +
+    '<div id="root"></div>\n' +
+    '<script src="https://unpkg.com/react@16/umd/react.development.js"></script>\n' +
+    '<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>\n' +
+    '<script src="https://unpkg.com/@fluentui/react/dist/fluentui-react.js"></script>\n' +
+    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
+    '<script src="https://microsoft.github.io/roosterjs/rooster-react-min.js"></script>\n' +
+    '</body>\n' +
+    '</html>';
+
+const cssRoosterReact = '.editor { border: solid 1px black; width: 100%; height: 600px}';
 export default class OptionsPane extends React.Component<BuildInPluginProps, BuildInPluginState> {
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
@@ -40,7 +54,12 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
         return (
             <div>
                 <div>
-                    <button onClick={this.onExport}>Export to CodePen</button>
+                    <button onClick={this.onExportRooster}>Try roosterjs in CodePen</button>
+                </div>
+                <div>
+                    <button onClick={this.onExportRoosterReact}>
+                        Try roosterjs-react in CodePen
+                    </button>
                 </div>
                 <div>
                     <br />
@@ -156,12 +175,27 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
         }
     };
 
-    private onExport = () => {
+    private onExportRooster = () => {
         let editor = new EditorCode(this.state);
         let code = editor.getCode();
         let json = {
             title: 'RoosterJs',
             html: this.getHtml(),
+            head: '',
+            js: code,
+            js_pre_processor: 'typescript',
+        };
+        this.exportData.current.value = JSON.stringify(json);
+        this.exportForm.current.submit();
+    };
+
+    private onExportRoosterReact = () => {
+        let editor = new ReactEditorCode(this.state);
+        let code = editor.getCode();
+        let json = {
+            title: 'RoosterJs React',
+            html: htmlRoosterReact,
+            css: cssRoosterReact,
             head: '',
             js: code,
             js_pre_processor: 'typescript',
