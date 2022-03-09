@@ -1,3 +1,4 @@
+import adaptFontColorToBackgroundColor from './adaptFontColorToBackgroundColor';
 import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
@@ -11,19 +12,23 @@ export default function setColor(
     element: HTMLElement,
     color: string | ModeIndependentColor,
     isBackgroundColor: boolean,
-    isDarkMode?: boolean
+    isDarkMode?: boolean,
+    shouldAdaptTheFontColor?: boolean
 ) {
     const colorString = typeof color === 'string' ? color.trim() : '';
     const modeIndependentColor = typeof color === 'string' ? null : color;
 
     if (colorString || modeIndependentColor) {
+        const newColor = isDarkMode
+            ? modeIndependentColor?.darkModeColor
+            : modeIndependentColor?.lightModeColor;
         element.style.setProperty(
             isBackgroundColor ? 'background-color' : 'color',
-            (isDarkMode
-                ? modeIndependentColor?.darkModeColor
-                : modeIndependentColor?.lightModeColor) || colorString
+            newColor || colorString
         );
-
+        if (isBackgroundColor && shouldAdaptTheFontColor) {
+            adaptFontColorToBackgroundColor(element, newColor || colorString);
+        }
         if (element.dataset) {
             const dataSetName = isBackgroundColor
                 ? DarkModeDatasetNames.OriginalStyleBackgroundColor
