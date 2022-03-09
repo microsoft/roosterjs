@@ -131,4 +131,14 @@ export default interface FormatState
     extends PendableFormatState,
         ElementBasedFormatState,
         StyleBasedFormatState,
-        EditorUndoState {}
+        EditorUndoState {
+    /**
+     * Whether editor is in dark mode
+     */
+    isDarkMode?: boolean;
+
+    /**
+     * Current zoom scale of editor
+     */
+    zoomScale?: number;
+}

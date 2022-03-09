@@ -13,10 +13,15 @@ const headers = {
 };
 
 /**
+ * Key of localized strings of Header button
+ */
+export type HeaderButtonStringKey = 'buttonNameHeader';
+
+/**
  * "Header" button on the format ribbon
  */
-export const header: RibbonButton = {
-    key: 'header',
+export const header: RibbonButton<HeaderButtonStringKey> = {
+    key: 'buttonNameHeader',
     unlocalizedText: 'Header',
     iconName: 'Header1',
     dropDownItems: headers,

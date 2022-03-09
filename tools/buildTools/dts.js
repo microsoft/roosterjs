@@ -15,6 +15,7 @@ const {
     packages,
     roosterJsUiDistPath,
     packagesUI,
+    getWebpackExternalCallback,
 } = require('./common');
 
 const namePlaceholder = '__NAME__';
@@ -73,21 +74,32 @@ function parseExports(exports) {
     }
 }
 
-function parseFrom(from, currentFileName, baseDir, projDir, externalPackages) {
-    var importFileName;
-    if (from[0] == '.') {
+function defaultExternalHandler(_, __, callback) {
+    callback();
+}
+
+function parseFrom(from, currentFileName, baseDir, projDir, externalHandler) {
+    let importFileName;
+    let replacedName;
+    if (from.substr(0, 1) == '.') {
         var currentPath = path.dirname(currentFileName);
         importFileName = path.resolve(currentPath, from + '.d.ts');
-    } else if ((externalPackages || []).indexOf(from) < 0) {
-        importFileName = path.resolve(baseDir, from, 'lib/index.d.ts');
-        if (!fs.existsSync(importFileName)) {
-            importFileName = path.resolve(projDir, 'node_modules', from, 'lib/index.d.ts');
-        }
-        if (!fs.existsSync(importFileName)) {
-            err(`Can't resolve package name '${from}' in file '${currentFileName}'`);
-        }
+    } else {
+        (externalHandler || defaultExternalHandler)(null, from, (_, replacement) => {
+            if (replacement) {
+                replacedName = replacement;
+            } else {
+                importFileName = path.resolve(baseDir, from, 'lib/index.d.ts');
+                if (!fs.existsSync(importFileName)) {
+                    importFileName = path.resolve(projDir, 'node_modules', from, 'lib/index.d.ts');
+                }
+                if (!fs.existsSync(importFileName)) {
+                    err(`Can't resolve package name '${from}' in file '${currentFileName}'`);
+                }
+            }
+        });
     }
-    return importFileName;
+    return [importFileName, replacedName];
 }
 
 function parsePair(content, startIndex, open, close, startLevel, until) {
@@ -219,22 +231,22 @@ function parseExportFrom(content, currentFileName, queue, baseDir, projDir) {
     var matches;
     while ((matches = regExportFrom.exec(content))) {
         var exports = parseExports(matches[1].trim());
-        var fromFileName = parseFrom(matches[2].trim(), currentFileName, baseDir, projDir);
+        var [fromFileName] = parseFrom(matches[2].trim(), currentFileName, baseDir, projDir);
         enqueue(queue, fromFileName, exports);
     }
     return content.replace(regExportFrom, '');
 }
 
-function parseImportFrom(content, currentFileName, queue, baseDir, projDir, externalPackages) {
+function parseImportFrom(content, currentFileName, queue, baseDir, projDir, externalHandler) {
     var matches;
     let newContent = content;
     while ((matches = regImportFrom.exec(content))) {
-        var fromFileName = parseFrom(
+        var [fromFileName, replacedName] = parseFrom(
             matches[2].trim(),
             currentFileName,
             baseDir,
             projDir,
-            externalPackages
+            externalHandler
         );
 
         if (fromFileName) {
@@ -247,7 +259,7 @@ function parseImportFrom(content, currentFileName, queue, baseDir, projDir, exte
             imports.forEach(x => {
                 newContent = newContent.replace(
                     new RegExp(`(\\W|^)(${x})(\\W|$)`, 'gm'),
-                    '$1roosterjs.$2$3'
+                    '$1' + replacedName + '.$2$3'
                 );
             });
         }
@@ -255,7 +267,7 @@ function parseImportFrom(content, currentFileName, queue, baseDir, projDir, exte
     return newContent.replace(regImportFrom, '');
 }
 
-function process(baseDir, queue, index, projDir, externalPackages) {
+function process(baseDir, queue, index, projDir, externalHandler) {
     var item = queue[index];
     var currentFileName = item.filename;
     var file = fs.readFileSync(currentFileName);
@@ -265,7 +277,7 @@ function process(baseDir, queue, index, projDir, externalPackages) {
     content = parseExportFrom(content, currentFileName, queue, baseDir, projDir);
 
     // 2. Remove imports
-    content = parseImportFrom(content, currentFileName, queue, baseDir, projDir, externalPackages);
+    content = parseImportFrom(content, currentFileName, queue, baseDir, projDir, externalHandler);
 
     // 3. Parse all the public elements
     content = [parseClasses, parseFunctions, parseEnum, parseType, parseConst, parseExport].reduce(
@@ -367,20 +379,20 @@ function generateDts(library, isAmd, queue) {
     return content;
 }
 
-function createQueue(rootPath, baseDir, root, additionalFiles, externalPackages) {
+function createQueue(rootPath, baseDir, root, additionalFiles, externalHandler) {
     var queue = [];
     var i = 0;
 
     // First part, process exported members
     enqueue(queue, path.join(baseDir, root));
     for (; i < queue.length; i++) {
-        process(baseDir, queue, i, rootPath, externalPackages);
+        process(baseDir, queue, i, rootPath, externalHandler);
     }
 
     // Second part, process "local exported" members (exported from a file, but not exported from index)
     (additionalFiles || []).forEach(f => enqueue(queue, path.join(baseDir, f)));
     for (; i < queue.length; i++) {
-        process(baseDir, queue, i, rootPath, externalPackages);
+        process(baseDir, queue, i, rootPath, externalHandler);
     }
 
     return queue;
@@ -392,7 +404,7 @@ function dts(isAmd, isUi) {
     const startFileName = isUi ? 'roosterjs-react/lib/index.d.ts' : 'roosterjs/lib/index.d.ts';
     const libraryName = isUi ? 'roosterjsReact' : 'roosterjs';
     const targetFileName = isUi ? 'rooster-react' : 'rooster';
-    const externalPackages = isUi ? packages : [];
+    const externalHandler = isUi ? getWebpackExternalCallback([]) : undefined;
 
     mkdirp.sync(targetPath);
 
@@ -408,7 +420,7 @@ function dts(isAmd, isUi) {
         );
     });
 
-    const dtsQueue = createQueue(rootPath, distPath, startFileName, tsFiles, externalPackages);
+    const dtsQueue = createQueue(rootPath, distPath, startFileName, tsFiles, externalHandler);
     const dtsContent = generateDts(libraryName, isAmd, dtsQueue);
     const fileName = `${targetFileName}${isAmd ? '-amd' : ''}.d.ts`;
     const fullFileName = path.join(targetPath, fileName);
@@ -423,7 +435,9 @@ function dts(isAmd, isUi) {
             fullFileName,
             `/// <reference path="./rooster${
                 isAmd ? '-amd' : ''
-            }" />\n/// <reference types="react" />\n\n` + dtsContent
+            }" />\n/// <reference types="react" />\n\n` +
+                "import * as FluentUIReact from '@fluentui/react/dist/react';\n\n" +
+                dtsContent
         );
     } else {
         fs.writeFileSync(fullFileName, dtsContent);

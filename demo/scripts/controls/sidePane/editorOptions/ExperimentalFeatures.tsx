@@ -34,10 +34,10 @@ export default class ExperimentalFeaturesPane extends React.Component<
         );
     }
 
-    private renderFeature(name: ExperimentalFeatures): JSX.Element {
+    private renderFeature(name: keyof typeof FeatureNames): JSX.Element {
         let checked = this.props.state.indexOf(name) >= 0;
         return (
-            <div>
+            <div key={name}>
                 <input
                     type="checkbox"
                     checked={checked}
@@ -49,7 +49,7 @@ export default class ExperimentalFeaturesPane extends React.Component<
         );
     }
 
-    private onClick = (name: ExperimentalFeatures) => {
+    private onClick = (name: keyof typeof FeatureNames) => {
         this.props.resetState(state => {
             let checkbox = document.getElementById(name) as HTMLInputElement;
             let index = state.experimentalFeatures.indexOf(name);
