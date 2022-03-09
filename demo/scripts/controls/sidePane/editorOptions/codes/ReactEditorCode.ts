@@ -34,7 +34,10 @@ export default class ReactEditorCode extends CodeElement {
         let darkMode = this.darkMode.getCode();
         let code = "let root = document.getElementById('root');\n";
 
-        code += `let ${RibbonPluginVarName} = roosterjsReact.createRibbonPlugin();\n`;
+        if (this.ribbonButton) {
+            code += `let ${RibbonPluginVarName} = roosterjsReact.createRibbonPlugin();\n`;
+        }
+
         code += `let plugins = ${this.plugins.getCode()};\n`;
         code += defaultFormat ? `let defaultFormat: DefaultFormat = ${defaultFormat};\n` : '';
         code += 'let options: roosterjs.EditorOptions = {\n';
