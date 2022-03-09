@@ -1,13 +1,15 @@
 import { FormatState, IEditor } from 'roosterjs-editor-types';
+import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
+import { LocalizedStrings } from '../../utils/LocalizedStrings';
 
 /**
  * Represents a button on format ribbon
  */
-export default interface RibbonButton {
+export default interface RibbonButton<T extends string> {
     /**
      * key of this button, needs to be unique
      */
-    key: string;
+    key: T;
 
     /**
      * Name of button icon. See https://developer.microsoft.com/en-us/fluentui#/styles/web/icons for all icons
@@ -32,11 +34,19 @@ export default interface RibbonButton {
     dropDownItems?: Record<string, string>;
 
     /**
+     * Get the key of current selected item
+     * @param formatState The current formatState of editor
+     * @returns the key of selected item, it needs to be the same with the key in dropDownItems
+     */
+    selectedItem?: (formatState: FormatState) => string;
+
+    /**
      * Click handler of this button.
      * @param editor the editor instance
+     * @param key key of the button that is clicked
      * @returns True if a refresh of button state is needed. Otherwise, false or void
      */
-    onClick: (editor: IEditor, key?: string) => void | boolean;
+    onClick: (editor: IEditor, key: string, strings: LocalizedStrings<T>) => void | boolean;
 
     /**
      * Get if the current button should be checked
@@ -60,4 +70,27 @@ export default interface RibbonButton {
      * This option needs dropDownItems to have values
      */
     allowLivePreview?: boolean;
+
+    /**
+     * Custom render of drop down item
+     * @param item This menu item
+     * @param onClick click handler of this menu item
+     */
+    dropDownItemRender?: (
+        item: IContextualMenuItem,
+        onClick: (
+            e: React.MouseEvent<Element> | React.KeyboardEvent<Element>,
+            item: IContextualMenuItem
+        ) => void
+    ) => React.ReactNode;
+
+    /**
+     * CSS class name for drop down menu
+     */
+    dropDownClassName?: string;
+
+    /**
+     * CSS class name for drop down menu item
+     */
+    itemClassName?: string;
 }

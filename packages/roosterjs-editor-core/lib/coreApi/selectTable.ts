@@ -13,6 +13,7 @@ import {
     TableSelection,
     SelectTable,
     PositionType,
+    Coordinates,
 } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
@@ -35,7 +36,7 @@ export const selectTable: SelectTable = (
 ) => {
     unselect(core);
 
-    if (coordinates && table) {
+    if (areValidCoordinates(coordinates) && table) {
         ensureUniqueId(table, TABLE_ID);
         ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
@@ -202,6 +203,7 @@ function ensureUniqueId(el: HTMLElement, idPrefix: string) {
         el.id = idPrefix + cont;
     }
 }
+
 function generateCssFromCell(
     contentDivSelector: string,
     tableId: string,
@@ -241,4 +243,21 @@ function removeImportant(cell: HTMLTableCellElement) {
             setStyles(cell, styles);
         }
     }
+}
+
+function areValidCoordinates(input: TableSelection) {
+    if (input) {
+        const { firstCell, lastCell } = input || {};
+        if (firstCell && lastCell) {
+            const handler = (coordinate: Coordinates) =>
+                isValidCoordinate(coordinate.x) && isValidCoordinate(coordinate.y);
+            return handler(firstCell) && handler(lastCell);
+        }
+    }
+
+    return false;
+}
+
+function isValidCoordinate(input: number) {
+    return (!!input || input == 0) && input > -1;
 }

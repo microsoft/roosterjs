@@ -2,10 +2,15 @@ import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
 import { toggleUnderline } from 'roosterjs-editor-api';
 
 /**
+ * Key of localized strings of Underline button
+ */
+export type UnderlineButtonStringKey = 'buttonNameUnderline';
+
+/**
  * "Underline" button on the format ribbon
  */
-export const underline: RibbonButton = {
-    key: 'underline',
+export const underline: RibbonButton<UnderlineButtonStringKey> = {
+    key: 'buttonNameUnderline',
     unlocalizedText: 'Underline',
     iconName: 'Underline',
     checked: formatState => formatState.isUnderline,

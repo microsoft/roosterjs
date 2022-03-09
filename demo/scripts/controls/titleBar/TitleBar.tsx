@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 const styles = require('./TitleBar.scss');
-const github = require('../svg/iconmonstr-github-1.svg');
+const github = require('./iconmonstr-github-1.svg');
 
 interface WindowHack extends Window {
     roosterJsVer: string;
