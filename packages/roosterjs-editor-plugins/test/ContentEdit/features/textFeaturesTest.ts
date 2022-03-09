@@ -129,7 +129,7 @@ describe('Text Features |', () => {
         });
 
         TestHelper.itFirefoxOnly(
-            'Should handle, range not collapsed and is selected from start to end',
+            'Handle, range not collapsed and is selected from start to end',
             () => {
                 runHandleTest(
                     TextFeatures.indentWhenTabText,
@@ -147,7 +147,26 @@ describe('Text Features |', () => {
         );
 
         TestHelper.itFirefoxOnly(
-            'Should handle, range not collapsed and is not selected from start to end',
+            'Handle, range not collapsed and is selected from start to end',
+            () => {
+                runHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID)
+                            .firstChild;
+                        const range = new Range();
+                        range.setStart(element, 0);
+                        range.setEnd(element, 4);
+                        editor.select(range);
+                    },
+                    '<blockquote style="margin-top:0;margin-bottom:0"><div id="test">Test</div></blockquote>'
+                );
+            }
+        );
+
+        TestHelper.itFirefoxOnly(
+            'Handle, range not collapsed and is not selected from start to end',
             () => {
                 runHandleTest(
                     TextFeatures.indentWhenTabText,

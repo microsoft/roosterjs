@@ -1,4 +1,4 @@
-import { createRange } from 'roosterjs-editor-dom';
+import { contains, createRange, getTagOfNode, isBlockElement } from 'roosterjs-editor-dom';
 import { setIndentation } from 'roosterjs-editor-api';
 import {
     BuildInEditFeature,
@@ -11,6 +11,8 @@ import {
     ContentPosition,
     PositionType,
     ExperimentalFeatures,
+    NodePosition,
+    NormalSelectionRange,
 } from 'roosterjs-editor-types';
 
 /**
@@ -33,18 +35,15 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
                 if (selection.areAllCollapsed) {
                     insertTab(editor, event);
                 } else {
-                    const regions = editor.getSelectedRegions();
-                    let isAtEnd: boolean = false;
-                    let isAtStart: boolean = null;
-                    regions.forEach(r => {
-                        isAtEnd = r.fullSelectionEnd.isAtEnd;
-                        isAtStart = isAtStart || r.fullSelectionStart.offset == 0;
-                    });
-
-                    if (isAtEnd && isAtStart) {
+                    if (isWholeParagraphSelected(editor, selection)) {
                         setIndentation(editor, Indentation.Increase);
                     } else {
-                        selection.ranges.forEach(range => range.deleteContents());
+                        const { ranges } = selection;
+                        const range = ranges[0];
+                        const tempRange = createRange(range.startContainer, range.startOffset);
+
+                        ranges.forEach(range => range.deleteContents());
+                        editor.select(tempRange);
                         insertTab(editor, event);
                     }
                 }
@@ -64,6 +63,98 @@ export const TextFeatures: Record<
 > = {
     indentWhenTabText: IndentWhenTabText,
 };
+
+function isWholeParagraphSelected(editor: IEditor, selection: NormalSelectionRange): boolean {
+    const regions = editor.getSelectedRegions();
+    let endPosition: NodePosition = null;
+    let startPosition: NodePosition = null;
+    let isAtStart: boolean = false;
+    let isAtEnd: boolean = false;
+    let foundStart: boolean;
+    let foundEnd: boolean;
+
+    const range = selection.ranges[0];
+    let parentBlock: HTMLElement = getCommonBlock(range);
+
+    regions.forEach(r => {
+        endPosition = r.fullSelectionEnd;
+        startPosition = startPosition || r.fullSelectionStart;
+    });
+
+    const parentBlockChildren = Array.from(
+        parentBlock.children.length > 0 ? parentBlock.children : parentBlock.childNodes
+    );
+    const startNode = startPosition.node;
+    const endNode = endPosition.node;
+
+    //Iterate the parent block children until we find the end
+    for (let index = 0; index < parentBlockChildren.length; index++) {
+        const child = parentBlockChildren[index];
+        const treatSameNodeAsContain = child.nodeType == Node.TEXT_NODE;
+
+        if (contains(child, startNode, treatSameNodeAsContain)) {
+            foundStart = true;
+            let tempChild = child.firstChild || child;
+            while (tempChild.firstChild) {
+                tempChild = tempChild.firstChild ?? null;
+            }
+
+            while (isEmptySpan(tempChild)) {
+                tempChild = tempChild.nextSibling;
+                if (!isEmptySpan(tempChild)) {
+                    while (tempChild.firstChild) {
+                        tempChild = tempChild.firstChild ?? null;
+                    }
+                }
+            }
+
+            if (tempChild == startNode && startPosition.offset == 0) {
+                isAtStart = true;
+            }
+        }
+
+        if (foundStart && contains(child, endNode, treatSameNodeAsContain)) {
+            foundEnd = true;
+            let lastChild = child.childNodes[child.childNodes.length - 1] || child;
+            while (getTagOfNode(lastChild) == 'BR' && lastChild.previousSibling) {
+                lastChild = lastChild.previousSibling;
+            }
+
+            if (contains(lastChild, endNode, treatSameNodeAsContain)) {
+                let tempChild = lastChild as ChildNode;
+                while (tempChild.lastChild) {
+                    tempChild = tempChild.lastChild ?? null;
+                }
+
+                if (tempChild == endPosition.node && endPosition.isAtEnd) {
+                    isAtEnd = true;
+                }
+            }
+        }
+
+        if (foundStart && foundEnd) {
+            break;
+        }
+    }
+    return isAtEnd && isAtStart;
+}
+
+function getCommonBlock(range: Range) {
+    let parentBlock: Node = range.commonAncestorContainer;
+
+    while (!isBlockElement(parentBlock)) {
+        parentBlock = parentBlock.parentElement;
+    }
+    return parentBlock;
+}
+
+function isEmptySpan(tempChild: ChildNode) {
+    return (
+        getTagOfNode(tempChild) == 'SPAN' &&
+        (!tempChild.firstChild ||
+            (getTagOfNode(tempChild.firstChild) == 'BR' && !tempChild.firstChild.nextSibling))
+    );
+}
 
 function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
     const span = editor.getDocument().createElement('span');
