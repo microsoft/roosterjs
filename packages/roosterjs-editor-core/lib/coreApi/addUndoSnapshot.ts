@@ -1,5 +1,4 @@
 import { Position } from 'roosterjs-editor-dom';
-// import { getSelectionPath, getTagOfNode, Position, queryElements } from 'roosterjs-editor-dom';
 import {
     AddUndoSnapshot,
     ChangeSource,
@@ -8,9 +7,6 @@ import {
     NodePosition,
     PluginEventType,
     GetContentMode,
-    // SelectionRangeTypes,
-    // SelectionPath,
-    // TableSelection,
 } from 'roosterjs-editor-types';
 
 /**
@@ -85,73 +81,3 @@ export const addUndoSnapshot: AddUndoSnapshot = (
         }
     }
 };
-
-// interface SnapshotSelectionBase<T extends SelectionRangeTypes> {
-//     type: T;
-// }
-
-// interface NormalSnapshotSelection extends SnapshotSelectionBase<SelectionRangeTypes.Normal> {
-//     path: SelectionPath;
-// }
-
-// interface TableSnapshotSelection extends SnapshotSelectionBase<SelectionRangeTypes.TableSelection> {
-//     tableId: string;
-//     coordinates: TableSelection;
-// }
-
-// interface UndoSnapshot {
-//     html: string;
-//     isDarkMode: boolean;
-//     selection: NormalSnapshotSelection | TableSnapshotSelection | undefined;
-// }
-
-// function createUndoSnapshot(core: EditorCore): UndoSnapshot {
-//     const rangeEx = core.api.getSelectionRangeEx(core);
-//     const normalRange = rangeEx.type == SelectionRangeTypes.Normal && rangeEx.ranges[0];
-//     const { startContainer, endContainer, startOffset, endOffset } = normalRange || {};
-//     let isDOMChanged = false;
-
-//     queryElements(core.contentDiv, 'table', table => {
-//         let tbody: HTMLTableSectionElement | null = null;
-
-//         for (let child = table.firstChild; child; child = child.nextSibling) {
-//             if (getTagOfNode(child) == 'TR') {
-//                 if (!tbody) {
-//                     tbody = table.ownerDocument.createElement('tbody');
-//                     table.insertBefore(tbody, child);
-//                 }
-
-//                 tbody.appendChild(child);
-//                 child = tbody;
-
-//                 isDOMChanged = true;
-//             } else {
-//                 tbody = null;
-//             }
-//         }
-//     });
-
-//     if (normalRange && isDOMChanged) {
-//         try {
-//             normalRange.setStart(startContainer, startOffset);
-//             normalRange.setEnd(endContainer, endOffset);
-//         } catch {}
-//     }
-
-//     return {
-//         html: core.contentDiv.innerHTML,
-//         isDarkMode: core.lifecycle.isDarkMode,
-//         selection: normalRange
-//             ? {
-//                   type: SelectionRangeTypes.Normal,
-//                   path: getSelectionPath(core.contentDiv, normalRange),
-//               }
-//             : rangeEx.type == SelectionRangeTypes.TableSelection
-//             ? {
-//                   type: SelectionRangeTypes.TableSelection,
-//                   tableId: rangeEx.table.id,
-//                   coordinates: rangeEx.coordinates,
-//               }
-//             : undefined,
-//     };
-// }
