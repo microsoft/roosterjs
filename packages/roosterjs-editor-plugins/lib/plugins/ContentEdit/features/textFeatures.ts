@@ -81,9 +81,7 @@ function isWholeParagraphSelected(editor: IEditor, selection: NormalSelectionRan
         startPosition = startPosition || r.fullSelectionStart;
     });
 
-    const parentBlockChildren = Array.from(
-        parentBlock.children.length > 0 ? parentBlock.children : parentBlock.childNodes
-    );
+    const parentBlockChildren = Array.from(parentBlock.childNodes);
     const startNode = startPosition.node;
     const endNode = endPosition.node;
 
@@ -120,7 +118,7 @@ function isWholeParagraphSelected(editor: IEditor, selection: NormalSelectionRan
                 lastChild = lastChild.previousSibling;
             }
 
-            if (contains(lastChild, endNode, treatSameNodeAsContain)) {
+            if (contains(lastChild, endNode, lastChild.nodeType == Node.TEXT_NODE)) {
                 let tempChild = lastChild as ChildNode;
                 while (tempChild.lastChild) {
                     tempChild = tempChild.lastChild ?? null;
