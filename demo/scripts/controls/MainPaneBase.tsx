@@ -5,7 +5,7 @@ import { EditorOptions, IEditor } from 'roosterjs-editor-types';
 export interface MainPaneBaseState {
     showSidePane: boolean;
     showRibbon: boolean;
-    isPopoutShown: boolean;
+    popoutWindow: Window;
     initState: BuildInPluginState;
     supportDarkMode: boolean;
     scale: number;
