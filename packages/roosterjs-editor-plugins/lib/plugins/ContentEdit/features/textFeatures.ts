@@ -73,13 +73,13 @@ function isWholeParagraphSelected(editor: IEditor): boolean {
         startPosition = startPosition || r.fullSelectionStart;
     });
 
-    const isAtStart: boolean = checkIfIsAtStart(editor, startPosition, startPosition.node);
-    const isAtEnd: boolean = checkIfIsAtEnd(editor, endPosition, endPosition.node);
+    const isAtStart: boolean = checkIfIsAtStart(editor, startPosition);
+    const isAtEnd: boolean = checkIfIsAtEnd(editor, endPosition);
 
     return isAtEnd && isAtStart;
 }
 
-function checkIfIsAtEnd(editor: IEditor, endPosition: NodePosition, endNode: Node): boolean {
+function checkIfIsAtEnd(editor: IEditor, endPosition: NodePosition): boolean {
     let isAtEnd: boolean;
     let blockElement = editor.getBlockElementAtNode(endPosition.node).collapseToSingleElement();
 
@@ -94,7 +94,7 @@ function checkIfIsAtEnd(editor: IEditor, endPosition: NodePosition, endNode: Nod
     return isAtEnd;
 }
 
-function checkIfIsAtStart(editor: IEditor, startPosition: NodePosition, startNode: Node): boolean {
+function checkIfIsAtStart(editor: IEditor, startPosition: NodePosition): boolean {
     let isAtStart: boolean;
     const blockElement = editor.getBlockElementAtNode(startPosition.node).collapseToSingleElement();
     let tempChild = blockElement.firstChild || blockElement;
@@ -104,7 +104,7 @@ function checkIfIsAtStart(editor: IEditor, startPosition: NodePosition, startNod
 
     tempChild = ignoreEmptySpans(tempChild);
 
-    if (tempChild == startNode && startPosition.offset == 0) {
+    if (tempChild == startPosition.node && startPosition.offset == 0) {
         isAtStart = true;
     }
     return isAtStart;
