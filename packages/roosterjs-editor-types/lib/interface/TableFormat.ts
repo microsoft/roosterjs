@@ -48,4 +48,8 @@ export default interface TableFormat {
      * Table Borders Type
      */
     tableBorderFormat?: TableBorderFormat;
+    /**
+     * If true, the new format will not overlay cells that has color applied
+     */
+    keepCellShade?: boolean;
 }
