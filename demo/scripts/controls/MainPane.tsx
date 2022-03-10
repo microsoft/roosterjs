@@ -23,8 +23,9 @@ import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
 import {
     AllButtonsStringKey,
     createRibbonPlugin,
+    createUpdateContentPlugin,
     getAllButtons,
-    IRibbonPlugin,
+    RibbonPlugin,
     Ribbon,
     RibbonButton,
     Rooster,
@@ -55,7 +56,7 @@ class MainPane extends MainPaneBase {
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private snapshotPlugin: SnapshotPlugin;
-    private ribbonPlugin: IRibbonPlugin;
+    private ribbonPlugin: RibbonPlugin;
     private updateContentPlugin: UpdateContentPlugin;
 
     private sidePane = React.createRef<SidePane>();
@@ -69,7 +70,7 @@ class MainPane extends MainPaneBase {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
-        this.updateContentPlugin = new UpdateContentPlugin(
+        this.updateContentPlugin = createUpdateContentPlugin(
             UpdateMode.OnDispose | UpdateMode.OnInitialize,
             this.onUpdate
         );
