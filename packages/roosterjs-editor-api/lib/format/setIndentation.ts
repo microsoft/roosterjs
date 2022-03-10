@@ -40,6 +40,15 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
 
             if (vList) {
                 blockGroups.push([]);
+
+                if (blocks.length == 1 && vList.getListItemIndex(startNode) == 0) {
+                    const list = editor.getElementAtCursor('OL,UL', startNode);
+                    const block = editor.getBlockElementAtNode(list);
+
+                    handler(region, [block]);
+                    return;
+                }
+
                 while (blocks[i + 1] && vList.contains(blocks[i + 1].getStartNode())) {
                     i++;
                 }
