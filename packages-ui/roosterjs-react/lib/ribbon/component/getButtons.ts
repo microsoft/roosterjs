@@ -106,6 +106,7 @@ export const AllButtonKeys = [
 
 /**
  * A shortcut to get all format buttons provided by roosterjs-react
+ * @param keyOrButtons An array of buttons or known button key. Default value is all known buttons provided by roosterjs-react
  * @returns An array of all buttons
  */
 export default function getButtons<StringKey extends string = null>(
