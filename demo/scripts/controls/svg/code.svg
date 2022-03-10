@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
- <g>
-  <line id="svg_1" y2="16.5" x2="7" y1="10" x1="13" stroke-width="1" stroke="#000" fill="none"/>
-  <line id="svg_2" y2="16.5" x2="7" y1="23" x1="13" stroke-width="1" stroke="#000" fill="none"/>
-  <line id="svg_3" y2="16.5" x2="26" y1="10" x1="20" stroke-width="1" stroke="#000" fill="none"/>
-  <line id="svg_4" y2="16.5" x2="26" y1="23" x1="20" stroke-width="1" stroke="#000" fill="none"/>
- </g>
-</svg>
