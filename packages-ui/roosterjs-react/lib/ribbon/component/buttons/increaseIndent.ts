@@ -11,6 +11,7 @@ export const increaseIndent: RibbonButton<IncreaseIndentButtonStringKey> = {
     key: 'buttonNameIncreaseIndent',
     unlocalizedText: 'Increase indent',
     iconName: 'IncreaseIndentLegacy',
+    flipWhenRtl: true,
     onClick: editor => {
         setIndentation(editor, Indentation.Increase);
     },

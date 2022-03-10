@@ -32,6 +32,7 @@ export default interface BuildInPluginState {
     supportDarkMode: boolean;
     experimentalFeatures: ExperimentalFeatures[];
     forcePreserveRatio: boolean;
+    isRtl: boolean;
 }
 
 export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}
