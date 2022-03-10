@@ -54,6 +54,32 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
+ * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled
+ * If Whole Paragraph selected, outdent paragraph on Tab press
+ */
+const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.TAB],
+    shouldHandleEvent: (event, editor) => {
+        const selection = editor.getSelectionRangeEx();
+
+        return (
+            editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures) &&
+            selection.type == SelectionRangeTypes.Normal &&
+            !selection.areAllCollapsed &&
+            event.rawEvent.shiftKey &&
+            editor.getElementAtCursor('blockquote', null, event) &&
+            !editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event) &&
+            isWholeParagraphSelected(editor)
+        );
+    },
+    handleEvent: (event, editor) => {
+        editor.addUndoSnapshot(() => setIndentation(editor, Indentation.Decrease));
+
+        event.rawEvent.preventDefault();
+    },
+};
+
+/**
  * @internal
  */
 export const TextFeatures: Record<
@@ -61,6 +87,7 @@ export const TextFeatures: Record<
     BuildInEditFeature<PluginKeyboardEvent>
 > = {
     indentWhenTabText: IndentWhenTabText,
+    outdentWhenTabText: OutdentWhenTabText,
 };
 
 function isWholeParagraphSelected(editor: IEditor): boolean {

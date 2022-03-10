@@ -27,111 +27,80 @@ describe('Text Features |', () => {
         editor.dispose();
     });
 
-    describe('Should handle event |', () => {
-        function runShouldHandleTest(
-            feature: BuildInEditFeature<PluginKeyboardEvent>,
-            content: string,
-            selectCallback: () => void,
-            shouldHandleExpect: boolean
-        ) {
-            //Arrange
-            const keyboardEvent: PluginKeyboardEvent = {
-                eventType: PluginEventType.KeyDown,
-                rawEvent: simulateKeyDownEvent(Keys.TAB),
-            };
-            editor.setContent(content);
-            selectCallback();
+    function runShouldHandleTest(
+        feature: BuildInEditFeature<PluginKeyboardEvent>,
+        content: string,
+        selectCallback: () => void,
+        shouldHandleExpect: boolean
+    ) {
+        //Arrange
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: simulateKeyDownEvent(Keys.TAB, feature == TextFeatures.outdentWhenTabText),
+        };
+        editor.setContent(content);
+        selectCallback();
 
-            //Act
-            const result = feature.shouldHandleEvent(keyboardEvent, editor, false);
+        //Act
+        const result = feature.shouldHandleEvent(keyboardEvent, editor, false);
 
-            //Assert
-            expect(!!result).toBe(shouldHandleExpect);
-        }
+        //Assert
+        expect(!!result).toBe(shouldHandleExpect);
+    }
 
-        it('Should handle, text collapsed', () => {
-            runShouldHandleTest(
-                TextFeatures.indentWhenTabText,
-                `<div id='${TEST_ELEMENT_ID}'></div>`,
-                () => {
-                    const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
-                    const range = new Range();
-                    range.setStart(element, 0);
-                    editor.select(range);
-                },
-                true
-            );
-        });
+    function runHandleTest(
+        feature: BuildInEditFeature<PluginKeyboardEvent>,
+        content: string,
+        selectCallback: () => void,
+        contentExpected: string
+    ) {
+        //Arrange
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: simulateKeyDownEvent(Keys.TAB, feature == TextFeatures.outdentWhenTabText),
+        };
+        editor.setContent(content);
+        selectCallback();
 
-        it('Should handle, range not collapsed', () => {
-            runShouldHandleTest(
-                TextFeatures.indentWhenTabText,
-                `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
-                () => {
-                    const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
-                    const range = new Range();
-                    range.setStart(element, 0);
-                    range.setEnd(element, 1);
-                    editor.select(range);
-                },
-                true
-            );
-        });
+        //Act
+        feature.handleEvent(keyboardEvent, editor);
 
-        it('Should not handle, in a list', () => {
-            runShouldHandleTest(
-                TextFeatures.indentWhenTabText,
-                `<div> <ol> <li id='${TEST_ELEMENT_ID}'>sad </li></ol> </div>`,
-                () => {
-                    const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
-                    const range = new Range();
-                    range.setStart(element, 0);
-                    editor.select(range);
-                },
-                false
-            );
-        });
-    });
+        //Assert
+        expect(editor.getContent()).toBe(contentExpected);
+    }
+    describe('indentWhenTabText |', () => {
+        describe('Should handle event |', () => {
+            it('Should handle, text collapsed', () => {
+                runShouldHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div id='${TEST_ELEMENT_ID}'></div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const range = new Range();
+                        range.setStart(element, 0);
+                        editor.select(range);
+                    },
+                    true
+                );
+            });
 
-    describe('Handle event |', () => {
-        function runHandleTest(
-            feature: BuildInEditFeature<PluginKeyboardEvent>,
-            content: string,
-            selectCallback: () => void,
-            contentExpected: string
-        ) {
-            //Arrange
-            const keyboardEvent: PluginKeyboardEvent = {
-                eventType: PluginEventType.KeyDown,
-                rawEvent: simulateKeyDownEvent(Keys.TAB),
-            };
-            editor.setContent(content);
-            selectCallback();
+            it('Should not handle, Feature is not enabled', () => {
+                editor = TestHelper.initEditor(TEST_ID, null);
+                runShouldHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div id='${TEST_ELEMENT_ID}'></div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const range = new Range();
+                        range.setStart(element, 0);
+                        editor.select(range);
+                    },
+                    false
+                );
+            });
 
-            //Act
-            feature.handleEvent(keyboardEvent, editor);
-
-            //Assert
-            expect(editor.getContent()).toBe(contentExpected);
-        }
-        TestHelper.itFirefoxOnly('Handle event, text collapsed', () => {
-            runHandleTest(
-                TextFeatures.indentWhenTabText,
-                `<div id='${TEST_ELEMENT_ID}'></div>`,
-                () => {
-                    const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
-                    const range = new Range();
-                    range.setStart(element, 0);
-                    editor.select(range);
-                },
-                '<div id="test"><span>      </span></div>'
-            );
-        });
-
-        TestHelper.itFirefoxOnly(
-            'Handle, range not collapsed and is selected from start to end',
-            () => {
-                runHandleTest(
+            it('Should handle, range not collapsed', () => {
+                runShouldHandleTest(
                     TextFeatures.indentWhenTabText,
                     `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
                     () => {
@@ -141,47 +110,183 @@ describe('Text Features |', () => {
                         range.setEnd(element, 1);
                         editor.select(range);
                     },
-                    '<blockquote style="margin-top:0;margin-bottom:0"><div id="test">Test</div></blockquote>'
+                    true
                 );
-            }
-        );
+            });
 
-        TestHelper.itFirefoxOnly(
-            'Handle, range not collapsed and is selected from start to end',
-            () => {
-                runHandleTest(
+            it('Should not handle, in a list', () => {
+                runShouldHandleTest(
                     TextFeatures.indentWhenTabText,
-                    `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
-                    () => {
-                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID)
-                            .firstChild;
-                        const range = new Range();
-                        range.setStart(element, 0);
-                        range.setEnd(element, 4);
-                        editor.select(range);
-                    },
-                    '<blockquote style="margin-top:0;margin-bottom:0"><div id="test">Test</div></blockquote>'
-                );
-            }
-        );
-
-        TestHelper.itFirefoxOnly(
-            'Handle, range not collapsed and is not selected from start to end',
-            () => {
-                runHandleTest(
-                    TextFeatures.indentWhenTabText,
-                    `<div><span id='${TEST_ELEMENT_ID}'>Test</span></div>`,
+                    `<div> <ol> <li id='${TEST_ELEMENT_ID}'>sad </li></ol> </div>`,
                     () => {
                         const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
                         const range = new Range();
-                        range.setStart(element.firstChild, 1);
-                        range.setEnd(element.firstChild, 3);
+                        range.setStart(element, 0);
                         editor.select(range);
                     },
-                    '<div><span id="test">T<span>     </span>t</span></div>'
+                    false
                 );
-            }
-        );
+            });
+        });
+
+        describe('Handle event |', () => {
+            TestHelper.itFirefoxOnly('Handle event, text collapsed', () => {
+                runHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div id='${TEST_ELEMENT_ID}'></div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const range = new Range();
+                        range.setStart(element, 0);
+                        editor.select(range);
+                    },
+                    '<div id="test"><span>      </span></div>'
+                );
+            });
+
+            TestHelper.itFirefoxOnly(
+                'Handle, range not collapsed and is selected from start to end',
+                () => {
+                    runHandleTest(
+                        TextFeatures.indentWhenTabText,
+                        `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
+                        () => {
+                            const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                            const range = new Range();
+                            range.setStart(element, 0);
+                            range.setEnd(element, 1);
+                            editor.select(range);
+                        },
+                        '<blockquote style="margin-top:0;margin-bottom:0"><div id="test">Test</div></blockquote>'
+                    );
+                }
+            );
+
+            TestHelper.itFirefoxOnly(
+                'Handle, range not collapsed and is selected from start to end',
+                () => {
+                    runHandleTest(
+                        TextFeatures.indentWhenTabText,
+                        `<div id='${TEST_ELEMENT_ID}'>Test</div>`,
+                        () => {
+                            const element = editor.getDocument().getElementById(TEST_ELEMENT_ID)
+                                .firstChild;
+                            const range = new Range();
+                            range.setStart(element, 0);
+                            range.setEnd(element, 4);
+                            editor.select(range);
+                        },
+                        '<blockquote style="margin-top:0;margin-bottom:0"><div id="test">Test</div></blockquote>'
+                    );
+                }
+            );
+
+            TestHelper.itFirefoxOnly(
+                'Handle, range not collapsed and is not selected from start to end',
+                () => {
+                    runHandleTest(
+                        TextFeatures.indentWhenTabText,
+                        `<div><span id='${TEST_ELEMENT_ID}'>Test</span></div>`,
+                        () => {
+                            const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                            const range = new Range();
+                            range.setStart(element.firstChild, 1);
+                            range.setEnd(element.firstChild, 3);
+                            editor.select(range);
+                        },
+                        '<div><span id="test">T<span>     </span>t</span></div>'
+                    );
+                }
+            );
+        });
+    });
+
+    describe('OutdentWhenTabText |', () => {
+        describe('Should Handle Event |', () => {
+            it('Should handle event, all paragraph selected', () => {
+                runShouldHandleTest(
+                    TextFeatures.outdentWhenTabText,
+                    '<div><blockquote><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p></blockquote><br></div>',
+                    () => {
+                        const p1 = editor.getDocument().getElementById('p1');
+                        const p2 = editor.getDocument().getElementById('p2');
+                        const range = new Range();
+                        range.setStart(p1.firstChild, 0);
+                        range.setEnd(p2.firstChild, 25);
+
+                        editor.select(range);
+                    },
+                    true
+                );
+            });
+
+            it('Should not handle event, all paragraph selected but not under blockquote', () => {
+                runShouldHandleTest(
+                    TextFeatures.outdentWhenTabText,
+                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>',
+                    () => {
+                        const p1 = editor.getDocument().getElementById('p1');
+                        const p2 = editor.getDocument().getElementById('p2');
+                        const range = new Range();
+                        range.setStart(p1.firstChild, 0);
+                        range.setEnd(p2.firstChild, 25);
+
+                        editor.select(range);
+                    },
+                    false
+                );
+            });
+
+            it('Should not handle, Feature is not enabled', () => {
+                editor = TestHelper.initEditor(TEST_ID, null);
+                runShouldHandleTest(
+                    TextFeatures.outdentWhenTabText,
+                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>',
+                    () => {
+                        const element = editor.getDocument().getElementById('p1');
+                        const range = new Range();
+                        range.setStart(element, 0);
+                        editor.select(range);
+                    },
+                    false
+                );
+            });
+
+            it('Should handle event, not all paragraph selected', () => {
+                runShouldHandleTest(
+                    TextFeatures.outdentWhenTabText,
+                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>',
+                    () => {
+                        const p1 = editor.getDocument().getElementById('p1');
+                        const p2 = editor.getDocument().getElementById('p2');
+                        const range = new Range();
+                        range.setStart(p1.firstChild, 0);
+                        range.setEnd(p2.firstChild, 24);
+
+                        editor.select(range);
+                    },
+                    false
+                );
+            });
+        });
+        describe('Handle Event |', () => {
+            it('Handle Event when all paragraph selected', () => {
+                runHandleTest(
+                    TextFeatures.outdentWhenTabText,
+                    '<div><blockquote><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p></blockquote><br></div>',
+                    () => {
+                        const p1 = editor.getDocument().getElementById('p1');
+                        const p2 = editor.getDocument().getElementById('p2');
+                        const range = new Range();
+                        range.setStart(p1.firstChild, 0);
+                        range.setEnd(p2.firstChild, 25);
+
+                        editor.select(range);
+                    },
+                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>'
+                );
+            });
+        });
     });
 });
 
