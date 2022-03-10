@@ -1,5 +1,6 @@
 import * as React from 'react';
 import RoosterProps from '../type/RoosterProps';
+import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, IEditor } from 'roosterjs-editor-types';
 
@@ -12,11 +13,10 @@ export default function Rooster(props: RoosterProps) {
     const editorDiv = React.useRef<HTMLDivElement>(null);
     const editor = React.useRef<IEditor>(null);
 
-    const { domAttributes, editorOptions, focusOnInit, editorCreator } = props;
-    const { zoomScale, inDarkMode } = editorOptions || {};
+    const { focusOnInit, editorCreator, zoomScale, inDarkMode } = props;
 
     React.useEffect(() => {
-        editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, editorOptions);
+        editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);
 
         if (focusOnInit) {
             editor.current.focus();
@@ -38,7 +38,8 @@ export default function Rooster(props: RoosterProps) {
         editor.current.setZoomScale(zoomScale);
     }, [zoomScale]);
 
-    return <div ref={editorDiv} tabIndex={0} {...(domAttributes || {})}></div>;
+    const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);
+    return <div ref={editorDiv} tabIndex={0} {...(divProps || {})}></div>;
 }
 
 function defaultEditorCreator(div: HTMLDivElement, options: EditorOptions) {

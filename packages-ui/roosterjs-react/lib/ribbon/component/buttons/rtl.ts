@@ -1,13 +1,10 @@
 import RibbonButton from '../../type/RibbonButton';
 import { Direction } from 'roosterjs-editor-types';
+import { RtlButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { setDirection } from 'roosterjs-editor-api';
 
 /**
- * Key of localized strings of Right to left button
- */
-export type RtlButtonStringKey = 'buttonNameRtl';
-
-/**
+ * @internal
  * "Right to left" button on the format ribbon
  */
 export const rtl: RibbonButton<RtlButtonStringKey> = {

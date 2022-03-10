@@ -45,48 +45,49 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
     const commandBarItems = React.useMemo((): ICommandBarItemProps[] => {
         return buttons.map(
             (button): ICommandBarItemProps => {
-                const selectedItem = formatState && button.selectedItem?.(formatState);
-                const dropDownItems = button.dropDownItems;
+                const selectedItem =
+                    formatState && button.dropDownMenu?.getSelectedItemKey?.(formatState);
+                const dropDownMenu = button.dropDownMenu;
 
                 const result: ICommandBarItemProps = {
                     key: button.key,
                     data: button,
                     iconProps: {
-                        iconName:
-                            isRtl && button.rtlIconName ? button.rtlIconName : button.iconName,
+                        iconName: button.iconName,
                     },
                     iconOnly: true,
                     text: getLocalizedString(strings, button.key, button.unlocalizedText),
                     canCheck: true,
-                    checked: (formatState && button.checked?.(formatState)) || false,
-                    disabled: (formatState && button.disabled?.(formatState)) || false,
+                    checked: (formatState && button.isChecked?.(formatState)) || false,
+                    disabled: (formatState && button.isDisabled?.(formatState)) || false,
+                    ...(button.commandBarProperties || {}),
                 };
 
-                if (dropDownItems) {
+                if (dropDownMenu) {
                     result.subMenuProps = {
-                        className: button.dropDownClassName,
                         shouldFocusOnMount: true,
                         focusZoneProps: { direction: FocusZoneDirection.bidirectional },
                         onDismiss: onDismiss,
                         onItemClick: onClick,
-                        onRenderContextualMenuItem: button.allowLivePreview
+                        onRenderContextualMenuItem: dropDownMenu.allowLivePreview
                             ? (props, defaultRenderer) => (
                                   <div onMouseOver={e => onHover(button, props.key)}>
                                       {defaultRenderer(props)}
                                   </div>
                               )
                             : undefined,
-                        items: Object.keys(button.dropDownItems).map(key => ({
+                        items: Object.keys(dropDownMenu.items).map(key => ({
                             key: key,
-                            text: getLocalizedString(strings, key, dropDownItems[key]),
+                            text: getLocalizedString(strings, key, dropDownMenu.items[key]),
                             data: button,
-                            canCheck: !!button.selectedItem,
+                            canCheck: !!dropDownMenu.getSelectedItemKey,
                             checked: selectedItem == key || false,
-                            className: button.itemClassName,
-                            onRender: button.dropDownItemRender
-                                ? item => button.dropDownItemRender(item, onClick)
+                            className: dropDownMenu.itemClassName,
+                            onRender: dropDownMenu.itemRender
+                                ? item => dropDownMenu.itemRender(item, onClick)
                                 : undefined,
                         })),
+                        ...(dropDownMenu.commandBarSubMenuProperties || {}),
                     };
                 } else {
                     result.onClick = onClick;

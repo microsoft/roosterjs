@@ -1,19 +1,16 @@
 import RibbonButton from '../../type/RibbonButton';
+import { BoldButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleBold } from 'roosterjs-editor-api';
 
 /**
- * Key of localized strings of Bold button
- */
-export type BoldButtonStringKey = 'buttonNameBold';
-
-/**
+ * @internal
  * "Bold" button on the format ribbon
  */
 export const bold: RibbonButton<BoldButtonStringKey> = {
     key: 'buttonNameBold',
     unlocalizedText: 'Bold',
     iconName: 'Bold',
-    checked: formatState => formatState.isBold,
+    isChecked: formatState => formatState.isBold,
     onClick: editor => {
         toggleBold(editor);
         return true;

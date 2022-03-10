@@ -1,5 +1,6 @@
 import * as React from 'react';
-import RibbonButton from '../../type/RibbonButton';
+import RibbonButtonDropDown from '../../type/RibbonButtonDropDown';
+import { BackgroundColorKeys, TextColorKeys } from '../../type/RibbonButtonStringKeys';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { ModeIndependentColor } from 'roosterjs-editor-types';
 
@@ -43,64 +44,6 @@ const classNames = mergeStyleSets({
         borderColor: '#bebebe',
     },
 });
-
-/**
- * Localized string keys for text colors
- */
-type TextColorKeys =
-    | 'textColorLightBlue'
-    | 'textColorLightGreen'
-    | 'textColorLightYellow'
-    | 'textColorLightOrange'
-    | 'textColorLightRed'
-    | 'textColorLightPurple'
-    | 'textColorBlue'
-    | 'textColorGreen'
-    | 'textColorYellow'
-    | 'textColorOrange'
-    | 'textColorRed'
-    | 'textColorPurple'
-    | 'textColorDarkBlue'
-    | 'textColorDarkGreen'
-    | 'textColorDarkYellow'
-    | 'textColorDarkOrange'
-    | 'textColorDarkRed'
-    | 'textColorDarkPurple'
-    | 'textColorDarkerBlue'
-    | 'textColorDarkerGreen'
-    | 'textColorDarkerYellow'
-    | 'textColorDarkerOrange'
-    | 'textColorDarkerRed'
-    | 'textColorDarkerPurple'
-    | 'textColorWhite'
-    | 'textColorLightGray'
-    | 'textColorGray'
-    | 'textColorDarkGray'
-    | 'textColorDarkerGray'
-    | 'textColorBlack';
-
-/**
- * Localized string keys for background colors
- */
-type BackgroundColorKeys =
-    | 'backgroundColorCyan'
-    | 'backgroundColorGreen'
-    | 'backgroundColorYellow'
-    | 'backgroundColorOrange'
-    | 'backgroundColorRed'
-    | 'backgroundColorMagenta'
-    | 'backgroundColorLightCyan'
-    | 'backgroundColorLightGreen'
-    | 'backgroundColorLightYellow'
-    | 'backgroundColorLightOrange'
-    | 'backgroundColorLightRed'
-    | 'backgroundColorLightMagenta'
-    | 'backgroundColorWhite'
-    | 'backgroundColorLightGray'
-    | 'backgroundColorGray'
-    | 'backgroundColorDarkGray'
-    | 'backgroundColorDarkerGray'
-    | 'backgroundColorBlack';
 
 /**
  * @internal
@@ -176,39 +119,34 @@ const AllColors: { [key in AllColorKeys]: ModeIndependentColor } = {
  * @internal
  * Common part of a color picker button
  */
-const colorPicker: Pick<
-    RibbonButton<AllColorKeys>,
-    'dropDownClassName' | 'itemClassName' | 'dropDownItemRender' | 'allowLivePreview'
-> = {
-    dropDownClassName: classNames.colorPickerContainer,
-    itemClassName: classNames.colorMenuItem,
-    allowLivePreview: true,
-    dropDownItemRender: (item, onClick) => {
-        const key = item.key as AllColorKeys;
-        const buttonColor = AllColors[key].lightModeColor;
-        return (
-            <button onClick={e => onClick(e, item)} title={item.text}>
-                <div
-                    className={
-                        classNames.colorSquare +
-                        ' ' +
-                        (key == 'textColorWhite' || key == 'backgroundColorWhite'
-                            ? classNames.colorSquareBorderWhite
-                            : classNames.colorSquareBorder)
-                    }
-                    style={{
-                        backgroundColor: buttonColor,
-                    }}></div>
-            </button>
-        );
-    },
-};
+function getColorPickerDropDown(items: Record<string, string>): RibbonButtonDropDown {
+    return {
+        items,
+        itemClassName: classNames.colorMenuItem,
+        allowLivePreview: true,
+        itemRender: (item, onClick) => {
+            const key = item.key as AllColorKeys;
+            const buttonColor = AllColors[key].lightModeColor;
+            return (
+                <button onClick={e => onClick(e, item)} title={item.text}>
+                    <div
+                        className={
+                            classNames.colorSquare +
+                            ' ' +
+                            (key == 'textColorWhite' || key == 'backgroundColorWhite'
+                                ? classNames.colorSquareBorderWhite
+                                : classNames.colorSquareBorder)
+                        }
+                        style={{
+                            backgroundColor: buttonColor,
+                        }}></div>
+                </button>
+            );
+        },
+        commandBarSubMenuProperties: {
+            className: classNames.colorPickerContainer,
+        },
+    };
+}
 
-export {
-    TextColorKeys,
-    BackgroundColorKeys,
-    TextColors,
-    BackgroundColors,
-    colorPicker,
-    AllColorKeys,
-};
+export { TextColors, BackgroundColors, getColorPickerDropDown };
