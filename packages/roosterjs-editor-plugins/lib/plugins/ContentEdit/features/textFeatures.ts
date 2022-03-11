@@ -82,7 +82,7 @@ function isWholeParagraphSelected(editor: IEditor, range: Range): boolean {
 function checkIfIsAtBlockLimit(editor: IEditor, pos: NodePosition, start: boolean): boolean {
     let isAtLimit: boolean;
     let blockElement = editor.getBlockElementAtNode(pos.node).getEndNode();
-    const block = start ? blockElement.firstChild : blockElement.lastChild || blockElement;
+    const block = (start ? blockElement.firstChild : blockElement.lastChild) || blockElement;
 
     const tempChild = ignoreEmptyElement(block, start);
 
