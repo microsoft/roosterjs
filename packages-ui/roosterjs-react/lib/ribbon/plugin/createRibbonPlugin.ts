@@ -81,7 +81,9 @@ class RibbonPluginImpl implements RibbonPlugin {
         if (this.editor) {
             this.editor.stopShadowEdit();
 
-            if (button.onClick(this.editor, key, strings)) {
+            button.onClick(this.editor, key, strings);
+
+            if (button.isChecked || button.isDisabled || button.dropDownMenu?.getSelectedItemKey) {
                 this.updateFormat();
             }
         }

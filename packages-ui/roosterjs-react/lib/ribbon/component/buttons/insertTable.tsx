@@ -3,6 +3,7 @@ import RibbonButton from '../../type/RibbonButton';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { insertTable as insertTableApi } from 'roosterjs-editor-api';
+import { InsertTableButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 
@@ -35,28 +36,28 @@ const classNames = mergeStyleSets({
 });
 
 /**
- * Key of localized strings of Insert table button
- */
-export type InsertTableButtonStringKey = 'buttonNameInsertTable' | 'insertTablePane';
-
-/**
+ * @internal
  * "Insert table" button on the format ribbon
  */
 export const insertTable: RibbonButton<InsertTableButtonStringKey> = {
     key: 'buttonNameInsertTable',
     unlocalizedText: 'Insert table',
     iconName: 'Table',
-    dropDownItems: {
-        insertTablePane: '{0} x {1} table',
-    },
     onClick: (editor, key) => {
         const { row, col } = parseKey(key);
         insertTableApi(editor, col, row);
     },
-    dropDownItemRender: (item, onClick) => {
-        return <InsertTablePane item={item} onClick={onClick} />;
+    dropDownMenu: {
+        items: {
+            insertTablePane: '{0} x {1} table',
+        },
+        itemRender: (item, onClick) => {
+            return <InsertTablePane item={item} onClick={onClick} />;
+        },
+        commandBarSubMenuProperties: {
+            className: classNames.tablePane,
+        },
     },
-    dropDownClassName: classNames.tablePane,
 };
 
 function InsertTablePane(props: {

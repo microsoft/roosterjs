@@ -1,12 +1,9 @@
 import RibbonButton from '../../type/RibbonButton';
+import { CodeButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleCodeBlock } from 'roosterjs-editor-api';
 
 /**
- * Key of localized strings of Code button
- */
-export type CodeButtonStringKey = 'buttonNameCode';
-
-/**
+ * @internal
  * "Code" button on the format ribbon
  */
 export const code: RibbonButton<CodeButtonStringKey> = {

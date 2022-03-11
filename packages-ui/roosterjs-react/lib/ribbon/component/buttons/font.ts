@@ -1,4 +1,5 @@
 import RibbonButton from '../../type/RibbonButton';
+import { FontButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { setFontName } from 'roosterjs-editor-api';
 
 interface FontName {
@@ -146,27 +147,25 @@ const LowerCaseFontMap = FontNames.reduce((items, font) => {
 const FirstFontRegex = /^['"]?([^'",]+)/i;
 
 /**
- * Key of localized strings of Font button
- */
-export type FontButtonStringKey = 'buttonNameFont';
-
-/**
+ * @internal
  * "Font" button on the format ribbon
  */
 export const font: RibbonButton<FontButtonStringKey> = {
     key: 'buttonNameFont',
     unlocalizedText: 'Font',
     iconName: 'Font',
-    dropDownItems: DropDownItems,
-    selectedItem: formatState => {
-        const matches = formatState.fontName?.match(FirstFontRegex);
-        const firstName = matches?.[1]?.toLowerCase();
-        const selectedKey = (firstName && LowerCaseFontMap[firstName]) || '';
+    dropDownMenu: {
+        items: DropDownItems,
+        getSelectedItemKey: formatState => {
+            const matches = formatState.fontName?.match(FirstFontRegex);
+            const firstName = matches?.[1]?.toLowerCase();
+            const selectedKey = (firstName && LowerCaseFontMap[firstName]) || '';
 
-        return selectedKey;
+            return selectedKey;
+        },
+        allowLivePreview: true,
     },
     onClick: (editor, font) => {
         setFontName(editor, font);
     },
-    allowLivePreview: true,
 };

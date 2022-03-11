@@ -1,19 +1,16 @@
 import RibbonButton from '../../type/RibbonButton';
+import { NumberedListButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleNumbering } from 'roosterjs-editor-api';
 
 /**
- * Key of localized strings of Numbered list button
- */
-export type NumberedListButtonStringKey = 'buttonNameNumberedList';
-
-/**
+ * @internal
  * "Numbered list" button on the format ribbon
  */
 export const numberedList: RibbonButton<NumberedListButtonStringKey> = {
     key: 'buttonNameNumberedList',
     unlocalizedText: 'Numbered list',
     iconName: 'NumberedList',
-    checked: formatState => formatState.isNumbering,
+    isChecked: formatState => formatState.isNumbering,
     onClick: editor => {
         toggleNumbering(editor);
         return true;
