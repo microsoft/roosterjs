@@ -321,7 +321,6 @@ describe('Text Features |', () => {
         TestHelper.itFirefoxOnly(
             'Handle, range not collapsed and more than one block in selection',
             () => {
-                debugger;
                 runHandleTest(
                     TextFeatures.indentWhenTabText,
                     `<div><span id='${TEST_ELEMENT_ID}2'>Test</span></div><div><span id='${TEST_ELEMENT_ID}'>Test</span></div>`,
