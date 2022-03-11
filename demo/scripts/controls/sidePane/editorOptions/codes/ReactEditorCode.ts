@@ -49,8 +49,7 @@ export default class ReactEditorCode extends CodeElement {
         code += darkMode ? this.indent(`getDarkColor: ${darkMode},\n`) : '';
         code += '};\n';
 
-        code +=
-            'let editor = <roosterjsReact.Rooster domAttributes={{className: "editor"}} editorOptions={options} />;\n';
+        code += 'let editor = <roosterjsReact.Rooster className="editor" {...options} />;\n';
         let componentCode: string;
 
         if (this.ribbon && this.ribbonButton) {

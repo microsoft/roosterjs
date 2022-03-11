@@ -2,6 +2,7 @@ import RibbonButton from '../../type/RibbonButton';
 import { createElement } from 'roosterjs-editor-dom';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { insertImage as insertImageApi } from 'roosterjs-editor-api';
+import { InsertImageButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 const FileInput: CreateElementData = {
     tag: 'input',
@@ -13,11 +14,7 @@ const FileInput: CreateElementData = {
 };
 
 /**
- * Key of localized strings of Insert image button
- */
-export type InsertImageButtonStringKey = 'buttonNameInsertImage';
-
-/**
+ * @internal
  * "Insert image" button on the format ribbon
  */
 export const insertImage: RibbonButton<InsertImageButtonStringKey> = {

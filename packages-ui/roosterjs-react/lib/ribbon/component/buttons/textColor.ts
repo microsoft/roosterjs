@@ -1,6 +1,7 @@
 import RibbonButton from '../../type/RibbonButton';
-import { colorPicker, TextColorKeys, TextColors } from './colorPicker';
+import { getColorPickerDropDown, TextColors } from './colorPicker';
 import { setTextColor } from 'roosterjs-editor-api';
+import { TextColorButtonStringKey, TextColorKeys } from '../../type/RibbonButtonStringKeys';
 
 const TextColorDropDownItems: Record<TextColorKeys, string> = {
     textColorLightBlue: 'Light blue',
@@ -34,20 +35,16 @@ const TextColorDropDownItems: Record<TextColorKeys, string> = {
     textColorDarkerGray: 'Darker gray',
     textColorBlack: 'Black',
 };
-/**
- * Key of localized strings of Text color button
- */
-export type TextColorButtonStringKey = 'buttonNameTextColor' | TextColorKeys;
 
 /**
+ * @internal
  * "Text color" button on the format ribbon
  */
 export const textColor: RibbonButton<TextColorButtonStringKey> = {
-    ...colorPicker,
+    dropDownMenu: getColorPickerDropDown(TextColorDropDownItems),
     key: 'buttonNameTextColor',
     unlocalizedText: 'Text color',
     iconName: 'FontColor',
-    dropDownItems: TextColorDropDownItems,
     onClick: (editor, key: TextColorKeys) => {
         setTextColor(editor, TextColors[key]);
     },

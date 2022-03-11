@@ -1,6 +1,10 @@
 import RibbonButton from '../../type/RibbonButton';
-import { BackgroundColorKeys, BackgroundColors, colorPicker } from './colorPicker';
+import { BackgroundColors, getColorPickerDropDown } from './colorPicker';
 import { setBackgroundColor } from 'roosterjs-editor-api';
+import {
+    BackgroundColorKeys,
+    BackgroundColorButtonStringKey,
+} from '../../type/RibbonButtonStringKeys';
 
 const BackgroundColorDropDownItems: Record<BackgroundColorKeys, string> = {
     backgroundColorCyan: 'Cyan',
@@ -24,19 +28,14 @@ const BackgroundColorDropDownItems: Record<BackgroundColorKeys, string> = {
 };
 
 /**
- * Key of localized strings of Background color button
- */
-export type BackgroundColorButtonStringKey = 'buttonNameBackgroundColor';
-
-/**
+ * @internal
  * "Background color" button on the format ribbon
  */
 export const backgroundColor: RibbonButton<BackgroundColorButtonStringKey> = {
-    ...colorPicker,
+    dropDownMenu: getColorPickerDropDown(BackgroundColorDropDownItems),
     key: 'buttonNameBackgroundColor',
     unlocalizedText: 'Background color',
     iconName: 'FabricTextHighlight',
-    dropDownItems: BackgroundColorDropDownItems,
     onClick: (editor, key: BackgroundColorKeys) => {
         setBackgroundColor(editor, BackgroundColors[key]);
     },

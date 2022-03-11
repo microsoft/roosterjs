@@ -1,13 +1,10 @@
 import RibbonButton from '../../type/RibbonButton';
+import { AlignLeftButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { Alignment } from 'roosterjs-editor-types';
 import { setAlignment } from 'roosterjs-editor-api';
 
 /**
- * Key of localized strings of Align left button
- */
-export type AlignLeftButtonStringKey = 'buttonNameAlignLeft';
-
-/**
+ * @internal
  * "Align left" button on the format ribbon
  */
 export const alignLeft: RibbonButton<AlignLeftButtonStringKey> = {

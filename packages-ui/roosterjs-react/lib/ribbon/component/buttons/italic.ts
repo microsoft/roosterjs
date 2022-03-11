@@ -1,19 +1,16 @@
 import RibbonButton from '../../type/RibbonButton';
+import { ItalicButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleItalic } from 'roosterjs-editor-api';
 
 /**
- * Key of localized strings of Italic button
- */
-export type ItalicButtonStringKey = 'buttonNameItalic';
-
-/**
+ * @internal
  * "Italic" button on the format ribbon
  */
 export const italic: RibbonButton<ItalicButtonStringKey> = {
     key: 'buttonNameItalic',
     unlocalizedText: 'Italic',
     iconName: 'Italic',
-    checked: formatState => formatState.isItalic,
+    isChecked: formatState => formatState.isItalic,
     onClick: editor => {
         toggleItalic(editor);
         return true;

@@ -1,4 +1,5 @@
 import RibbonButton from '../../type/RibbonButton';
+import { HeaderButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleHeader } from 'roosterjs-editor-api';
 
 const headers = {
@@ -13,18 +14,19 @@ const headers = {
 };
 
 /**
- * Key of localized strings of Header button
- */
-export type HeaderButtonStringKey = 'buttonNameHeader';
-
-/**
+ * @internal
  * "Header" button on the format ribbon
  */
 export const header: RibbonButton<HeaderButtonStringKey> = {
     key: 'buttonNameHeader',
     unlocalizedText: 'Header',
     iconName: 'Header1',
-    dropDownItems: headers,
+    dropDownMenu: {
+        items: headers,
+        getSelectedItemKey: formatState => {
+            return formatState.headerLevel > 0 ? 'header' + formatState.headerLevel : 'noHeader';
+        },
+    },
     onClick: (editor, key) => {
         const index = Object.keys(headers).indexOf(key) + 1;
 

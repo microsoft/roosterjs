@@ -1,13 +1,10 @@
 import RibbonButton from '../../type/RibbonButton';
 import { changeFontSize } from 'roosterjs-editor-api';
 import { FontSizeChange } from 'roosterjs-editor-types';
+import { IncreaseFontSizeButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
- * Key of localized strings of Increase font size button
- */
-export type IncreaseFontSizeButtonStringKey = 'buttonNameIncreaseFontSize';
-
-/**
+ * @internal
  * "Increase font size" button on the format ribbon
  */
 export const increaseFontSize: RibbonButton<IncreaseFontSizeButtonStringKey> = {

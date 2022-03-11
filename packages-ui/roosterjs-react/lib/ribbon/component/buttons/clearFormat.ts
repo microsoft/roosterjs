@@ -1,12 +1,9 @@
 import RibbonButton from '../../type/RibbonButton';
 import { clearFormat as clearFormatApi } from 'roosterjs-editor-api';
+import { ClearFormatButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
- * Key of localized strings of Clear format button
- */
-export type ClearFormatButtonStringKey = 'buttonNameClearFormat';
-
-/**
+ * @internal
  * "Clear format" button on the format ribbon
  */
 export const clearFormat: RibbonButton<ClearFormatButtonStringKey> = {

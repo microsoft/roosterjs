@@ -5,25 +5,14 @@ import RibbonButton from '../../type/RibbonButton';
 import { createLink } from 'roosterjs-editor-api';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
-import { IEditor, QueryScope } from 'roosterjs-editor-types';
+import { IEditor, Keys, QueryScope } from 'roosterjs-editor-types';
+import { InsertLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import { LocalizedStrings } from '../../../common/type/LocalizedStrings';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import {
-    CancelButtonStringKey,
-    LocalizedStrings,
-    OkButtonStringKey,
-} from '../../../common/type/LocalizedStrings';
 
 /**
- * Key of localized strings of Insert link button
- */
-export type InsertLinkButtonStringKey =
-    | 'buttonNameInsertLink'
-    | 'insertLinkTitle'
-    | OkButtonStringKey
-    | CancelButtonStringKey;
-
-/**
+ * @internal
  * "Insert link" button on the format ribbon
  */
 export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
@@ -116,6 +105,15 @@ function InsertLinkDialog(props: {
         setIsChanged(true);
     }, [setUrl, url, displayText, setDisplayText, setIsChanged]);
 
+    const onKeyPress = React.useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.which == Keys.ENTER) {
+                onOk();
+            }
+        },
+        [onOk]
+    );
+
     return (
         <WindowProvider window={editor.getDocument().defaultView}>
             <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
@@ -130,6 +128,7 @@ function InsertLinkDialog(props: {
                             className={classNames.linkInput}
                             value={url}
                             onChange={onUrlChanged}
+                            onKeyPress={onKeyPress}
                             autoFocus={true}
                         />
                     </div>
@@ -143,6 +142,7 @@ function InsertLinkDialog(props: {
                             className={classNames.linkInput}
                             value={displayText}
                             onChange={onDisplayTextChanged}
+                            onKeyPress={onKeyPress}
                         />
                     </div>
                 </div>
