@@ -16,6 +16,7 @@ export default class ReactEditorCode extends CodeElement {
     private ribbonButton: RibbonButtonCode;
     private experimentalFeatures: ExperimentalFeaturesCode;
     private darkMode: DarkModeCode;
+    private isRtl: boolean;
 
     constructor(state: BuildInPluginState) {
         super();
@@ -26,6 +27,7 @@ export default class ReactEditorCode extends CodeElement {
         this.defaultFormat = new DefaultFormatCode(state.defaultFormat);
         this.experimentalFeatures = new ExperimentalFeaturesCode(state.experimentalFeatures);
         this.darkMode = new DarkModeCode(state.supportDarkMode);
+        this.isRtl = state.isRtl;
     }
 
     getCode() {
@@ -49,7 +51,9 @@ export default class ReactEditorCode extends CodeElement {
         code += darkMode ? this.indent(`getDarkColor: ${darkMode},\n`) : '';
         code += '};\n';
 
-        code += 'let editor = <roosterjsReact.Rooster className="editor" {...options} />;\n';
+        code += `let editor = <roosterjsReact.Rooster className="editor" {...options} ${
+            this.isRtl ? 'dir="rtl" ' : ''
+        }/>;\n`;
         let componentCode: string;
 
         if (this.ribbon && this.ribbonButton) {

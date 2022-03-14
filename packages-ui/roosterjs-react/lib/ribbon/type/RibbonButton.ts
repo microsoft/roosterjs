@@ -18,6 +18,11 @@ export default interface RibbonButton<T extends string> {
     iconName: string;
 
     /**
+     * True if we need to flip the icon when render in Right-to-left page
+     */
+    flipWhenRtl?: boolean;
+
+    /**
      * Text of the button. This text is not localized. To show a localized text, pass a dictionary to Ribbon component via RibbonProps.strings.
      */
     unlocalizedText: string;

@@ -12,6 +12,7 @@ export interface MainPaneBaseState {
     isDarkMode: boolean;
     content: string;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
+    isRtl: boolean;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
@@ -42,4 +43,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract setScale(scale: number): void;
 
     abstract toggleDarkMode(): void;
+
+    abstract setPageDirection(isRtl: boolean): void;
 }

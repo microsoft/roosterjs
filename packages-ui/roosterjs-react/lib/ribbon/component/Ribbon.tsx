@@ -5,13 +5,17 @@ import RibbonProps from '../type/RibbonProps';
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
 import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { FormatState } from 'roosterjs-editor-types';
-import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
+import { IContextualMenuItem, IContextualMenuItemProps } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 
 const ribbonClassName = mergeStyles({
     '& .ms-CommandBar': {
         padding: '0px',
     },
+});
+
+const rtlIcon = mergeStyles({
+    transform: 'scaleX(-1)',
 });
 
 /**
@@ -42,6 +46,16 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
         plugin.stopLivePreview();
     }, [plugin]);
 
+    const flipIcon = React.useCallback(
+        (
+            props?: IContextualMenuItemProps,
+            defaultRender?: (props?: IContextualMenuItemProps) => JSX.Element | null
+        ): JSX.Element | null => {
+            return <span className={rtlIcon}>{defaultRender(props)}</span>;
+        },
+        []
+    );
+
     const commandBarItems = React.useMemo((): ICommandBarItemProps[] => {
         return buttons.map(
             (button): ICommandBarItemProps => {
@@ -55,6 +69,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                     iconProps: {
                         iconName: button.iconName,
                     },
+                    onRenderIcon: isRtl && button.flipWhenRtl ? flipIcon : undefined,
                     iconOnly: true,
                     text: getLocalizedString(strings, button.key, button.unlocalizedText),
                     canCheck: true,
