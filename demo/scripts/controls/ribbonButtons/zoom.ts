@@ -29,11 +29,13 @@ export const zoom: RibbonButton<ZoomButtonStringKey> = {
     key: 'buttonNameZoom',
     unlocalizedText: 'Zoom',
     iconName: 'ZoomIn',
-    dropDownItems: DropDownItems,
-    selectedItem: formatState =>
-        Object.keys(DropDownItems).filter(
-            (key: keyof typeof DropDownItems) => DropDownValues[key] == formatState.zoomScale
-        )[0],
+    dropDownMenu: {
+        items: DropDownItems,
+        getSelectedItemKey: formatState =>
+            Object.keys(DropDownItems).filter(
+                (key: keyof typeof DropDownItems) => DropDownValues[key] == formatState.zoomScale
+            )[0],
+    },
     onClick: (editor, key) => {
         const zoomScale = DropDownValues[key as keyof typeof DropDownItems];
         editor.setZoomScale(zoomScale);

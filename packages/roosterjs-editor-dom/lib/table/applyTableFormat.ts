@@ -260,7 +260,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
             if (cell.td && cellIndex === 0) {
-                if (rowIndex !== 0) {
+                if (rowIndex !== 0 && !hasCellShade(cell)) {
                     cell.td.style.borderTopColor = TRANSPARENT;
                     setColor(cell.td, TRANSPARENT, true /** isBackgroundColor*/);
                 }
@@ -291,7 +291,9 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
     }
     cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
-            setColor(cell.td, format.headerRowColor, true /** isBackgroundColor*/);
+            if (!hasCellShade(cell)) {
+                setColor(cell.td, format.headerRowColor, true /** isBackgroundColor*/);
+            }
             cell.td.style.borderRightColor = format.headerRowColor;
             cell.td.style.borderLeftColor = format.headerRowColor;
             cell.td.style.borderTopColor = format.headerRowColor;
