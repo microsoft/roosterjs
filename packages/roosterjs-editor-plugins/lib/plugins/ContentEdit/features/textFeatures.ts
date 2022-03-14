@@ -40,7 +40,7 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
                 } else {
                     const { ranges } = selection;
                     const range = ranges[0];
-                    if (shouldIndent(editor, range)) {
+                    if (shouldSetIndentation(editor, range)) {
                         setIndentation(editor, Indentation.Increase);
                     } else {
                         const tempRange = createRange(range.startContainer, range.startOffset);
@@ -63,17 +63,22 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
     shouldHandleEvent: (event, editor) => {
-        const selection = editor.getSelectionRangeEx();
-
-        return (
-            editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures) &&
-            selection.type == SelectionRangeTypes.Normal &&
-            !selection.areAllCollapsed &&
+        if (
             event.rawEvent.shiftKey &&
-            editor.getElementAtCursor('blockquote', null, event) &&
-            !editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event) &&
-            shouldIndent(editor, selection.ranges[0])
-        );
+            editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures)
+        ) {
+            const selection = editor.getSelectionRangeEx();
+
+            return (
+                selection.type == SelectionRangeTypes.Normal &&
+                !selection.areAllCollapsed &&
+                editor.getElementAtCursor('blockquote', null, event) &&
+                !editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event) &&
+                shouldSetIndentation(editor, selection.ranges[0])
+            );
+        }
+
+        return false;
     },
     handleEvent: (event, editor) => {
         editor.addUndoSnapshot(() => setIndentation(editor, Indentation.Decrease));
@@ -93,7 +98,7 @@ export const TextFeatures: Record<
     outdentWhenTabText: OutdentWhenTabText,
 };
 
-function shouldIndent(editor: IEditor, range: Range): boolean {
+function shouldSetIndentation(editor: IEditor, range: Range): boolean {
     let result: boolean = false;
 
     const startPosition: NodePosition = Position.getStart(range);
