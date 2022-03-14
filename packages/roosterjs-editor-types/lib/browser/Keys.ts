@@ -25,6 +25,7 @@ export const enum Keys {
     U = 85,
     Y = 89,
     Z = 90,
+    F10 = 121,
     COMMA = 188,
     DASH_UNDERSCORE = 189,
     PERIOD = 190,

@@ -1,4 +1,4 @@
-import { createRange, getTagOfNode } from 'roosterjs-editor-dom';
+import { cacheGetEventData, createRange, getTagOfNode, safeInstanceOf } from 'roosterjs-editor-dom';
 import { setIndentation } from 'roosterjs-editor-api';
 import {
     BuildInEditFeature,
@@ -13,6 +13,8 @@ import {
     ExperimentalFeatures,
     NodePosition,
 } from 'roosterjs-editor-types';
+
+const FOCUS_NEXT_ELEMENT_KEY = 'FocusNextElement';
 
 /**
  * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled
@@ -80,6 +82,36 @@ const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
+ * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled also,
+ *          Assign a getter function to the getCustomData With the Key: FocusNextElementKey, to retrieve the element that
+ *          Should be the next focus
+ * When press Alt + F10, move the focus to the next element provided by getCustom Data with Key: FocusNextElement
+ */
+const FocusNextElement: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.F10],
+    shouldHandleEvent: (event, editor) => {
+        return (
+            editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures) &&
+            event.rawEvent.altKey &&
+            cacheGetEventData(event, FOCUS_NEXT_ELEMENT_KEY, () =>
+                editor.getCustomData(FOCUS_NEXT_ELEMENT_KEY)
+            )
+        );
+    },
+    handleEvent: (event, editor) => {
+        const element = cacheGetEventData(
+            event,
+            FOCUS_NEXT_ELEMENT_KEY,
+            editor.getCustomData(FOCUS_NEXT_ELEMENT_KEY)
+        );
+        if (safeInstanceOf(element, 'HTMLElement')) {
+            element.focus();
+        }
+    },
+    allowFunctionKeys: true,
+};
+
+/**
  * @internal
  */
 export const TextFeatures: Record<
@@ -88,6 +120,7 @@ export const TextFeatures: Record<
 > = {
     indentWhenTabText: IndentWhenTabText,
     outdentWhenTabText: OutdentWhenTabText,
+    focusNextElement: FocusNextElement,
 };
 
 function isWholeParagraphSelected(editor: IEditor): boolean {

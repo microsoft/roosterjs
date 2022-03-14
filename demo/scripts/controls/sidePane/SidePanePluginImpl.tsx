@@ -3,6 +3,8 @@ import SidePanePlugin from '../SidePanePlugin';
 import { IEditor } from 'roosterjs-editor-types';
 import { SidePaneElement, SidePaneElementProps } from './SidePaneElement';
 
+const FOCUS_NEXT_ELEMENT_KEY = 'FocusNextElement';
+
 interface SidePaneComponent<P extends SidePaneElementProps>
     extends React.Component<P, any>,
         SidePaneElement {}
@@ -26,6 +28,9 @@ export default abstract class SidePanePluginImpl<
 
     initialize(editor: IEditor) {
         this.editor = editor;
+        this.editor.getCustomData(FOCUS_NEXT_ELEMENT_KEY, () =>
+            editor.getDocument().querySelector('.side-pane-toggle')
+        );
     }
 
     dispose() {

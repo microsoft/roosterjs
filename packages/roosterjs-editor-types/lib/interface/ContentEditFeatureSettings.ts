@@ -221,6 +221,14 @@ export interface TextFeatureSettings {
      *      If Whole Paragraph selected, outdent paragraph
      */
     outdentWhenTabText: boolean;
+
+    /**
+     * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled also,
+     *          Assign a getter function to the getCustomData With the Key: FocusNextElementKey, to retrieve the element that
+     *          Should be the next focus
+     * When press Alt + F10, move the focus to the next element provided by getCustom Data with Key: FocusNextElement
+     */
+    focusNextElement: boolean;
 }
 
 /**
