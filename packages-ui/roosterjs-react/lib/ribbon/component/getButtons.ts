@@ -6,6 +6,7 @@ import { AllButtonStringKeys } from '../type/RibbonButtonStringKeys';
 import { backgroundColor } from './buttons/backgroundColor';
 import { bold } from './buttons/bold';
 import { bulletedList } from './buttons/bulletedList';
+import { cellShade } from './buttons/cellShade';
 import { clearFormat } from './buttons/clearFormat';
 import { code } from './buttons/code';
 import { decreaseFontSize } from './buttons/decreaseFontSize';
@@ -65,6 +66,7 @@ const KnownRibbonButtons: { [key in KnownRibbonButtonKey]: RibbonButton<AllButto
     [KnownRibbonButtonKey.Undo]: undo,
     [KnownRibbonButtonKey.Redo]: redo,
     [KnownRibbonButtonKey.ClearFormat]: clearFormat,
+    [KnownRibbonButtonKey.CellShade]: cellShade,
 };
 
 /**
@@ -102,6 +104,7 @@ export const AllButtonKeys = [
     KnownRibbonButtonKey.Undo,
     KnownRibbonButtonKey.Redo,
     KnownRibbonButtonKey.ClearFormat,
+    KnownRibbonButtonKey.CellShade,
 ];
 
 /**

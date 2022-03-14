@@ -1,26 +1,21 @@
-import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
+import RibbonButton from '../../type/RibbonButton';
 import { applyCellShading } from 'roosterjs-editor-api';
+import { BackgroundColorKeys, CellShadeButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import {
-    BackgroundColorKeys,
-    BackgroundColors,
-    colorPicker,
     BackgroundColorDropDownItems,
+    BackgroundColors,
+    getColorPickerDropDown,
 } from './colorPicker';
 
 /**
- * Key of localized strings of Cell Shade button
- */
-export type CellShadeButtonStringKey = 'buttonNameCellShade';
-
-/**
+ * @internal
  * "Cell Shade" button on the format ribbon
  */
 export const cellShade: RibbonButton<CellShadeButtonStringKey> = {
-    ...colorPicker,
     key: 'buttonNameCellShade',
     unlocalizedText: 'CellShade',
     iconName: 'Color',
-    dropDownItems: BackgroundColorDropDownItems,
+    dropDownMenu: getColorPickerDropDown(BackgroundColorDropDownItems),
     onClick: (editor, key: BackgroundColorKeys) => {
         applyCellShading(editor, BackgroundColors[key]);
     },

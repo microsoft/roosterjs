@@ -1,4 +1,4 @@
-import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
+import RibbonButton from '../../type/RibbonButton';
 import { IEditor } from 'roosterjs-editor-types';
 import { setBackgroundColor } from 'roosterjs-editor-api';
 import {
