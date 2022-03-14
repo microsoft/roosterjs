@@ -16,7 +16,7 @@ import {
 export default class PluginsCode extends CodeElement {
     private plugins: CodeElement[];
 
-    constructor(private state: BuildInPluginState) {
+    constructor(private state: BuildInPluginState, private additionalPlugins?: string[]) {
         super();
 
         let pluginList = state.pluginList;
@@ -37,6 +37,10 @@ export default class PluginsCode extends CodeElement {
     getCode() {
         let code = '[\n';
         code += this.indent(this.plugins.map(plugin => plugin.getCode() + ',\n').join(''));
+
+        if (this.additionalPlugins) {
+            code += this.indent(this.additionalPlugins.map(p => p + ',\n').join(''));
+        }
         code += ']';
         return code;
     }

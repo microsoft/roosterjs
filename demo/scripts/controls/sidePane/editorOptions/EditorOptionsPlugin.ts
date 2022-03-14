@@ -36,6 +36,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.TableAlignment,
     ],
+    isRtl: false,
 };
 
 export default class EditorOptionsPlugin extends SidePanePluginImpl<

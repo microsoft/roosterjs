@@ -1,5 +1,11 @@
-import { cacheGetEventData, createRange, getTagOfNode, safeInstanceOf } from 'roosterjs-editor-dom';
 import { setIndentation } from 'roosterjs-editor-api';
+import {
+    cacheGetEventData,
+    createRange,
+    safeInstanceOf,
+    Position,
+    queryElements,
+} from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
     IEditor,
@@ -12,9 +18,11 @@ import {
     PositionType,
     ExperimentalFeatures,
     NodePosition,
+    QueryScope,
 } from 'roosterjs-editor-types';
 
 const FOCUS_NEXT_ELEMENT_KEY = 'FocusNextElement';
+const TAB_SPACES = 6;
 
 /**
  * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled
@@ -22,6 +30,7 @@ const FOCUS_NEXT_ELEMENT_KEY = 'FocusNextElement';
  *      If Whole Paragraph selected, indent paragraph,
  *      If range is collapsed, add tab spaces
  *      If range is not collapsed but not all the paragraph is selected, replace selection with Tab spaces
+ *      If there are more than one block in the selection, indent all selection
  */
 const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
@@ -36,13 +45,12 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
                 if (selection.areAllCollapsed) {
                     insertTab(editor, event);
                 } else {
-                    if (isWholeParagraphSelected(editor)) {
+                    const { ranges } = selection;
+                    const range = ranges[0];
+                    if (shouldIndent(editor, range)) {
                         setIndentation(editor, Indentation.Increase);
                     } else {
-                        const { ranges } = selection;
-                        const range = ranges[0];
                         const tempRange = createRange(range.startContainer, range.startOffset);
-
                         ranges.forEach(range => range.deleteContents());
                         editor.select(tempRange);
                         insertTab(editor, event);
@@ -71,7 +79,7 @@ const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
             event.rawEvent.shiftKey &&
             editor.getElementAtCursor('blockquote', null, event) &&
             !editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event) &&
-            isWholeParagraphSelected(editor)
+            shouldIndent(editor, selection.ranges[0])
         );
     },
     handleEvent: (event, editor) => {
@@ -123,71 +131,43 @@ export const TextFeatures: Record<
     focusNextElement: FocusNextElement,
 };
 
-function isWholeParagraphSelected(editor: IEditor): boolean {
-    const regions = editor.getSelectedRegions();
-    let endPosition: NodePosition = null;
-    let startPosition: NodePosition = null;
+function shouldIndent(editor: IEditor, range: Range): boolean {
+    let result: boolean = false;
 
-    regions.forEach(r => {
-        endPosition = r.fullSelectionEnd;
-        startPosition = startPosition || r.fullSelectionStart;
-    });
+    const startPosition: NodePosition = Position.getStart(range);
+    const endPosition: NodePosition = Position.getEnd(range);
+    const firstBlock = editor.getBlockElementAtNode(startPosition.node);
+    const lastBlock = editor.getBlockElementAtNode(endPosition.node);
 
-    const isAtStart: boolean = checkIfIsAtStart(editor, startPosition, startPosition.node);
-    const isAtEnd: boolean = checkIfIsAtEnd(editor, endPosition, endPosition.node);
+    if (!firstBlock.equals(lastBlock)) {
+        //If the selections has more than one block, we indent all the blocks in the selection
+        return true;
+    } else {
+        //We only indent a single block if all the block is selected.
+        const blockStart = new Position(firstBlock.getStartNode(), PositionType.Begin);
+        const blockEnd = new Position(firstBlock.getEndNode(), PositionType.End);
 
-    return isAtEnd && isAtStart;
-}
+        const rangeBefore = createRange(blockStart, Position.getStart(range));
+        const rangeAfter = createRange(Position.getEnd(range), blockEnd);
 
-function checkIfIsAtEnd(editor: IEditor, endPosition: NodePosition, endNode: Node): boolean {
-    let isAtEnd: boolean;
-    let blockElement = editor.getBlockElementAtNode(endPosition.node).collapseToSingleElement();
-
-    let tempChild = blockElement as ChildNode;
-    while (tempChild.lastChild) {
-        tempChild = tempChild.lastChild ?? null;
-    }
-
-    if (tempChild == endPosition.node && endPosition.isAtEnd) {
-        isAtEnd = true;
-    }
-    return isAtEnd;
-}
-
-function checkIfIsAtStart(editor: IEditor, startPosition: NodePosition, startNode: Node): boolean {
-    let isAtStart: boolean;
-    const blockElement = editor.getBlockElementAtNode(startPosition.node).collapseToSingleElement();
-    let tempChild = blockElement.firstChild || blockElement;
-    while (tempChild.firstChild) {
-        tempChild = tempChild.firstChild ?? null;
-    }
-
-    tempChild = ignoreEmptySpans(tempChild);
-
-    if (tempChild == startNode && startPosition.offset == 0) {
-        isAtStart = true;
-    }
-    return isAtStart;
-}
-
-function ignoreEmptySpans(tempChild: ChildNode) {
-    while (isEmptySpan(tempChild)) {
-        tempChild = tempChild.nextSibling;
-        if (!isEmptySpan(tempChild)) {
-            while (tempChild.firstChild) {
-                tempChild = tempChild.firstChild;
-                ignoreEmptySpans(tempChild);
-            }
+        if (!result && isRangeEmpty(rangeBefore) && isRangeEmpty(rangeAfter)) {
+            result = true;
         }
+
+        return result;
     }
-    return tempChild;
 }
 
-function isEmptySpan(tempChild: ChildNode) {
+function isRangeEmpty(range: Range) {
     return (
-        getTagOfNode(tempChild) == 'SPAN' &&
-        (!tempChild.firstChild ||
-            (getTagOfNode(tempChild.firstChild) == 'BR' && !tempChild.firstChild.nextSibling))
+        range.toString() == '' &&
+        queryElements(
+            range.commonAncestorContainer as ParentNode,
+            'img,table,ul,ol',
+            null,
+            QueryScope.InSelection,
+            range
+        ).length == 0
     );
 }
 
@@ -196,7 +176,7 @@ function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
     let searcher = editor.getContentSearcherOfCursor(event);
     const charsBefore = searcher.getSubStringBefore(Number.MAX_SAFE_INTEGER);
 
-    const numberOfChars = 6 - (charsBefore.length % 6);
+    const numberOfChars = TAB_SPACES - (charsBefore.length % TAB_SPACES);
 
     let textContent = '';
     for (let index = 0; index < numberOfChars; index++) {

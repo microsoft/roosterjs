@@ -13,7 +13,7 @@ export const darkMode: RibbonButton<DarkModeButtonStringKey> = {
     key: 'buttonNameDarkMode',
     unlocalizedText: 'Dark Mode',
     iconName: 'ClearNight',
-    checked: formatState => formatState.isDarkMode,
+    isChecked: formatState => formatState.isDarkMode,
     onClick: editor => {
         editor.setDarkModeState(!editor.isDarkMode());
         editor.focus();
