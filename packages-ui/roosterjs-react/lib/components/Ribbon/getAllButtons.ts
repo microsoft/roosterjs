@@ -5,7 +5,7 @@ import { alignRight, AlignRightButtonStringKey } from './buttons/alignRight';
 import { backgroundColor, BackgroundColorButtonStringKey } from './buttons/backgroundColor';
 import { bold, BoldButtonStringKey } from './buttons/bold';
 import { bulletedList, BulletedListButtonStringKey } from './buttons/bulletedList';
-import { cellShade, CellShadeButtonStringKey } from './buttons/cellShading';
+import { cellShade, CellShadeButtonStringKey } from './buttons/cellShade';
 import { clearFormat, ClearFormatButtonStringKey } from './buttons/clearFormat';
 import { code, CodeButtonStringKey } from './buttons/code';
 import { decreaseFontSize, DecreaseFontSizeButtonStringKey } from './buttons/decreaseFontSize';

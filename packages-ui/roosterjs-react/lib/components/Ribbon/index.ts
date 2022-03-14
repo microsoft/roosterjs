@@ -33,3 +33,4 @@ export { undo, UndoButtonStringKey } from './buttons/undo';
 export { redo, RedoButtonStringKey } from './buttons/redo';
 export { clearFormat, ClearFormatButtonStringKey } from './buttons/clearFormat';
 export { TextColorKeys, BackgroundColorKeys } from './buttons/colorPicker';
+export { cellShade, CellShadeButtonStringKey } from './buttons/cellShade';

@@ -3,6 +3,10 @@ import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { ModeIndependentColor } from 'roosterjs-editor-types';
 
+/**
+ * @internal
+ * List of colors in drop down list
+ */
 export const BackgroundColorDropDownItems: Record<BackgroundColorKeys, string> = {
     backgroundColorCyan: 'Cyan',
     backgroundColorGreen: 'Green',
