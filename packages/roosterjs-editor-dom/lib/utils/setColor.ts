@@ -2,6 +2,11 @@ import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-typ
 
 const WHITE = '#ffffff';
 const BLACK = '#000000';
+const enum ColorTones {
+    BRIGHT,
+    DARK,
+    NONE,
+}
 
 //Using the HSL (hue, saturation and lightness) representation for RGB color values, if the value of the lightness is less than 20, the color is dark
 const DARK_COLORS_LIGHTNESS = 20;
@@ -32,7 +37,6 @@ export default function setColor(
                 ? modeIndependentColor?.darkModeColor
                 : modeIndependentColor?.lightModeColor) || colorString
         );
-        adaptFontColorToBackgroundColor(element, isBackgroundColor && shouldAdaptTheFontColor);
         if (element.dataset) {
             const dataSetName = isBackgroundColor
                 ? DarkModeDatasetNames.OriginalStyleBackgroundColor
@@ -43,6 +47,9 @@ export default function setColor(
                 element.dataset[dataSetName] = modeIndependentColor.lightModeColor;
             }
         }
+        if (isBackgroundColor && shouldAdaptTheFontColor) {
+            adaptFontColorToBackgroundColor(element);
+        }
     }
 }
 
@@ -51,29 +58,36 @@ export default function setColor(
  * @param element The element that contains text.
  * @param shouldAdaptTheFontColor if true it adapts the font color
  */
-function adaptFontColorToBackgroundColor(element: HTMLElement, shouldAdaptTheFontColor?: boolean) {
-    if (element.firstElementChild?.hasAttribute('style') || !shouldAdaptTheFontColor) {
+function adaptFontColorToBackgroundColor(element: HTMLElement, editorFontColor?: string) {
+    if (element.firstElementChild?.hasAttribute('style')) {
         return;
     }
     const backgroundColor = element.style.getPropertyValue('background-color');
     if (!backgroundColor) {
         return;
     }
-    if (isADarkOrBrightColor(backgroundColor) === true) {
-        element.style.color = WHITE;
-    } else if (isADarkOrBrightColor(backgroundColor) === false) {
-        element.style.color = BLACK;
+    const isADarkOrBrightOrNone = isADarkOrBrightColor(backgroundColor);
+    switch (isADarkOrBrightOrNone) {
+        case ColorTones.DARK:
+            element.style.color = WHITE;
+            break;
+        case ColorTones.BRIGHT:
+            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = WHITE;
+            element.style.color = BLACK;
+            break;
+        default:
+            element.style.color = '';
     }
 }
 
-function isADarkOrBrightColor(color: string): boolean | null {
+function isADarkOrBrightColor(color: string): ColorTones {
     let lightness = calculateLightness(color);
     if (lightness < DARK_COLORS_LIGHTNESS) {
-        return true;
+        return ColorTones.DARK;
     } else if (lightness > BRIGHT_COLORS_LIGHTNESS) {
-        return false;
+        return ColorTones.BRIGHT;
     }
-    return null;
+    return ColorTones.NONE;
 }
 
 /**
@@ -82,12 +96,14 @@ function isADarkOrBrightColor(color: string): boolean | null {
  * @returns
  */
 function calculateLightness(color: string) {
-    let [r, g, b] = color.match(/[\d\.]+/g) as RegExpMatchArray;
+    const regex = /^rgba?(([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(\s*,\s*[\d.]+)?)$/;
+    const rgb = color.replace(regex, 'rgb($1,$2,$3)');
+    let [r, g, b] = rgb.match(/[\d\.]+/g) as RegExpMatchArray;
     // Use the values of r,g,b to calculate the lightness in the HSl representation
     //First calculate the fraction of the light in each color, since in css the value of r,g,b is in the interval of [0,255], we have
     const red = parseInt(r) / 255;
     const green = parseInt(g) / 255;
     const blue = parseInt(b) / 255;
     //Then the lightness in the HSL representation is the average between maximum fraction of r,g,b and the minimum fraction
-    return (Math.max(red, green, blue) + Math.min(red, green, blue)) * (1 / 2) * 100;
+    return (Math.max(red, green, blue) + Math.min(red, green, blue)) * 50;
 }

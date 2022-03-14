@@ -5,6 +5,7 @@ import { alignRight, AlignRightButtonStringKey } from './buttons/alignRight';
 import { backgroundColor, BackgroundColorButtonStringKey } from './buttons/backgroundColor';
 import { bold, BoldButtonStringKey } from './buttons/bold';
 import { bulletedList, BulletedListButtonStringKey } from './buttons/bulletedList';
+import { cellShade, CellShadeButtonStringKey } from './buttons/cellShading';
 import { clearFormat, ClearFormatButtonStringKey } from './buttons/clearFormat';
 import { code, CodeButtonStringKey } from './buttons/code';
 import { decreaseFontSize, DecreaseFontSizeButtonStringKey } from './buttons/decreaseFontSize';
@@ -65,7 +66,8 @@ export type AllButtonsStringKey =
     | SuperscriptButtonStringKey
     | TextColorButtonStringKey
     | UnderlineButtonStringKey
-    | UndoButtonStringKey;
+    | UndoButtonStringKey
+    | CellShadeButtonStringKey;
 
 /**
  * A shortcut to get all format buttons provided by roosterjs-react
@@ -104,5 +106,6 @@ export default function getAllButtons(): RibbonButton<AllButtonsStringKey>[] {
         undo,
         redo,
         clearFormat,
+        cellShade,
     ];
 }

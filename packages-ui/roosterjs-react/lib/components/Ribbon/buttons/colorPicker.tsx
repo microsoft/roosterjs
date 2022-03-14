@@ -3,6 +3,27 @@ import RibbonButton from '../../../plugins/RibbonPlugin/RibbonButton';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { ModeIndependentColor } from 'roosterjs-editor-types';
 
+export const BackgroundColorDropDownItems: Record<BackgroundColorKeys, string> = {
+    backgroundColorCyan: 'Cyan',
+    backgroundColorGreen: 'Green',
+    backgroundColorYellow: 'Yellow',
+    backgroundColorOrange: 'Orange',
+    backgroundColorRed: 'Red',
+    backgroundColorMagenta: 'Magenta',
+    backgroundColorLightCyan: 'Light cyan',
+    backgroundColorLightGreen: 'Light green',
+    backgroundColorLightYellow: 'Light yellow',
+    backgroundColorLightOrange: 'Light orange',
+    backgroundColorLightRed: 'Light red',
+    backgroundColorLightMagenta: 'Light magenta',
+    backgroundColorWhite: 'White',
+    backgroundColorLightGray: 'Light gray',
+    backgroundColorGray: 'Gray',
+    backgroundColorDarkGray: 'Dark gray',
+    backgroundColorDarkerGray: 'Darker gray',
+    backgroundColorBlack: 'Black',
+};
+
 const classNames = mergeStyleSets({
     colorPickerContainer: {
         width: '192px',

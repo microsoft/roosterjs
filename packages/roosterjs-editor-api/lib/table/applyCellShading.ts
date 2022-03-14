@@ -11,7 +11,7 @@ const CELL_SHADE = 'cellShade';
  **/
 export default function applyCellShading(editor: IEditor, color: string | ModeIndependentColor) {
     editor.focus();
-    editor.addUndoSnapshot(() => {
+    editor.addUndoSnapshot((start, end) => {
         const regions = editor.getSelectedRegions();
         regions.forEach(region => {
             if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
