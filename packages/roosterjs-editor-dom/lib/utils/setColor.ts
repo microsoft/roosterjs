@@ -2,6 +2,7 @@ import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-typ
 
 const WHITE = '#ffffff';
 const BLACK = '#000000';
+const TRANSPARENT = 'transparent';
 const enum ColorTones {
     BRIGHT,
     DARK,
@@ -58,7 +59,7 @@ export default function setColor(
  * @param element The element that contains text.
  * @param shouldAdaptTheFontColor if true it adapts the font color
  */
-function adaptFontColorToBackgroundColor(element: HTMLElement, editorFontColor?: string) {
+function adaptFontColorToBackgroundColor(element: HTMLElement) {
     if (element.firstElementChild?.hasAttribute('style')) {
         return;
     }
@@ -81,6 +82,9 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, editorFontColor?:
 }
 
 function isADarkOrBrightColor(color: string): ColorTones {
+    if (color === TRANSPARENT) {
+        return ColorTones.NONE;
+    }
     let lightness = calculateLightness(color);
     if (lightness < DARK_COLORS_LIGHTNESS) {
         return ColorTones.DARK;
