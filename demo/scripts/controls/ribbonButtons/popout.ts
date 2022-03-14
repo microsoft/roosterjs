@@ -13,6 +13,7 @@ export const popout: RibbonButton<PopoutButtonStringKey> = {
     key: 'buttonNamePopout',
     unlocalizedText: 'Open in a separate window',
     iconName: 'OpenInNewWindow',
+    flipWhenRtl: true,
     onClick: _ => {
         MainPaneBase.getInstance().popout();
     },

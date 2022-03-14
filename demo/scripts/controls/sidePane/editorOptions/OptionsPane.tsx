@@ -45,6 +45,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
     private exportData = React.createRef<HTMLInputElement>();
     private showRibbon = React.createRef<HTMLInputElement>();
     private darkMode = React.createRef<HTMLInputElement>();
+    private rtl = React.createRef<HTMLInputElement>();
 
     constructor(props: BuildInPluginProps) {
         super(props);
@@ -120,6 +121,16 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                     />
                     <label htmlFor="darkMode">Support dark mode</label>
                 </div>
+                <div>
+                    <input
+                        id="pageRtl"
+                        type="checkbox"
+                        checked={this.state.isRtl}
+                        onChange={this.onToggleDirection}
+                        ref={this.rtl}
+                    />
+                    <label htmlFor="pageRtl">Show controls from right to left</label>
+                </div>
                 <hr />
                 <details>
                     <summary>
@@ -163,6 +174,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
             supportDarkMode: this.state.supportDarkMode,
+            isRtl: this.state.isRtl,
         };
 
         if (callback) {
@@ -218,6 +230,14 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             supportDarkMode,
         });
         MainPaneBase.getInstance().setIsDarkModeSupported(supportDarkMode);
+    };
+
+    private onToggleDirection = () => {
+        let isRtl = this.rtl.current.checked;
+        this.setState({
+            isRtl: isRtl,
+        });
+        MainPaneBase.getInstance().setPageDirection(isRtl);
     };
 
     private getHtml() {

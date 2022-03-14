@@ -95,6 +95,7 @@ class MainPane extends MainPaneBase {
             isDarkMode: false,
             content: '',
             editorCreator: null,
+            isRtl: false,
         };
     }
 
@@ -173,6 +174,15 @@ class MainPane extends MainPaneBase {
         });
     }
 
+    setPageDirection(isRtl: boolean): void {
+        this.setState({ isRtl: isRtl });
+        [window, this.state.popoutWindow].forEach(win => {
+            if (win) {
+                win.document.body.dir = isRtl ? 'rtl' : 'ltr';
+            }
+        });
+    }
+
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
         document.addEventListener('mousemove', this.onMouseMove, true);
         document.addEventListener('mouseup', this.onMouseUp, true);
@@ -215,6 +225,7 @@ class MainPane extends MainPaneBase {
             <Ribbon
                 buttons={isPopout ? this.popoutWindowbuttons : this.mainWindowbuttons}
                 plugin={this.ribbonPlugin}
+                dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
         );
     }
@@ -267,7 +278,7 @@ class MainPane extends MainPaneBase {
         const allPlugins = getToggleablePlugins(this.state.initState).concat(this.getPlugins());
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
-            transformOrigin: 'left top',
+            transformOrigin: this.state.isRtl ? 'right top' : 'left top',
             height: `calc(${100 / this.state.scale}%)`,
             width: `calc(${100 / this.state.scale}%)`,
         };
@@ -287,6 +298,7 @@ class MainPane extends MainPaneBase {
                         zoomScale={this.state.scale}
                         initialContent={this.state.content}
                         editorCreator={this.state.editorCreator}
+                        dir={this.state.isRtl ? 'rtl' : 'ltr'}
                     />
                 </div>
             </div>
