@@ -21,15 +21,17 @@ import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
 import {
-    AllButtonsStringKey,
+    AllButtonStringKeys,
     createRibbonPlugin,
-    getAllButtons,
-    IRibbonPlugin,
+    createUpdateContentPlugin,
+    getButtons,
+    RibbonPlugin,
     Ribbon,
     RibbonButton,
     Rooster,
     UpdateContentPlugin,
     UpdateMode,
+    AllButtonKeys,
 } from 'roosterjs-react';
 
 const styles = require('./MainPane.scss');
@@ -40,7 +42,7 @@ const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
 type RibbonStringKeys =
-    | AllButtonsStringKey
+    | AllButtonStringKeys
     | DarkModeButtonStringKey
     | ZoomButtonStringKey
     | ExportButtonStringKey
@@ -55,8 +57,10 @@ class MainPane extends MainPaneBase {
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private snapshotPlugin: SnapshotPlugin;
-    private ribbonPlugin: IRibbonPlugin;
+    private ribbonPlugin: RibbonPlugin;
     private updateContentPlugin: UpdateContentPlugin;
+    private mainWindowbuttons: RibbonButton<RibbonStringKeys>[];
+    private popoutWindowbuttons: RibbonButton<RibbonStringKeys>[];
 
     private sidePane = React.createRef<SidePane>();
 
@@ -69,10 +73,18 @@ class MainPane extends MainPaneBase {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
-        this.updateContentPlugin = new UpdateContentPlugin(
+        this.updateContentPlugin = createUpdateContentPlugin(
             UpdateMode.OnDispose | UpdateMode.OnInitialize,
             this.onUpdate
         );
+        this.mainWindowbuttons = getButtons([
+            ...AllButtonKeys,
+            darkMode,
+            zoom,
+            exportContent,
+            popout,
+        ]);
+        this.popoutWindowbuttons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
             showSidePane: window.location.hash != '',
             showRibbon: true,
@@ -83,6 +95,7 @@ class MainPane extends MainPaneBase {
             isDarkMode: false,
             content: '',
             editorCreator: null,
+            isRtl: false,
         };
     }
 
@@ -161,6 +174,15 @@ class MainPane extends MainPaneBase {
         });
     }
 
+    setPageDirection(isRtl: boolean): void {
+        this.setState({ isRtl: isRtl });
+        [window, this.state.popoutWindow].forEach(win => {
+            if (win) {
+                win.document.body.dir = isRtl ? 'rtl' : 'ltr';
+            }
+        });
+    }
+
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
         document.addEventListener('mousemove', this.onMouseMove, true);
         document.addEventListener('mouseup', this.onMouseUp, true);
@@ -199,7 +221,13 @@ class MainPane extends MainPaneBase {
     };
 
     private renderRibbon(isPopout: boolean) {
-        return <Ribbon buttons={this.getButtons(isPopout)} plugin={this.ribbonPlugin} />;
+        return (
+            <Ribbon
+                buttons={isPopout ? this.popoutWindowbuttons : this.mainWindowbuttons}
+                plugin={this.ribbonPlugin}
+                dir={this.state.isRtl ? 'rtl' : 'ltr'}
+            />
+        );
     }
 
     private renderPopout() {
@@ -250,7 +278,7 @@ class MainPane extends MainPaneBase {
         const allPlugins = getToggleablePlugins(this.state.initState).concat(this.getPlugins());
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
-            transformOrigin: 'left top',
+            transformOrigin: this.state.isRtl ? 'right top' : 'left top',
             height: `calc(${100 / this.state.scale}%)`,
             width: `calc(${100 / this.state.scale}%)`,
         };
@@ -259,19 +287,18 @@ class MainPane extends MainPaneBase {
             <div className={styles.editorContainer}>
                 <div style={editorStyles}>
                     <Rooster
-                        domAttributes={{ className: styles.editor }}
-                        editorOptions={{
-                            plugins: allPlugins,
-                            defaultFormat: this.state.initState.defaultFormat,
-                            inDarkMode: this.state.isDarkMode,
-                            getDarkColor: getDarkColor,
-                            experimentalFeatures: this.state.initState.experimentalFeatures,
-                            undoSnapshotService: this.snapshotPlugin.getSnapshotService(),
-                            trustedHTMLHandler: trustedHTMLHandler,
-                            zoomScale: this.state.scale,
-                            initialContent: this.state.content,
-                        }}
+                        className={styles.editor}
+                        plugins={allPlugins}
+                        defaultFormat={this.state.initState.defaultFormat}
+                        inDarkMode={this.state.isDarkMode}
+                        getDarkColor={getDarkColor}
+                        experimentalFeatures={this.state.initState.experimentalFeatures}
+                        undoSnapshotService={this.snapshotPlugin.getSnapshotService()}
+                        trustedHTMLHandler={trustedHTMLHandler}
+                        zoomScale={this.state.scale}
+                        initialContent={this.state.content}
                         editorCreator={this.state.editorCreator}
+                        dir={this.state.isRtl ? 'rtl' : 'ltr'}
                     />
                 </div>
             </div>
@@ -311,17 +338,6 @@ class MainPane extends MainPaneBase {
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
                 new Editor(div, options),
         });
-    }
-
-    private getButtons(isPopout: boolean) {
-        const buttons: RibbonButton<RibbonStringKeys>[] = getAllButtons();
-        buttons.push(darkMode, zoom, exportContent);
-
-        if (!isPopout) {
-            buttons.push(popout);
-        }
-
-        return buttons;
     }
 }
 

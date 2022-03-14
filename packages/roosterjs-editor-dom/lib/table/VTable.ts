@@ -27,6 +27,7 @@ const DEFAULT_FORMAT: Required<TableFormat> = {
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
+    keepCellShade: false,
 };
 
 /**
@@ -155,7 +156,9 @@ export default class VTable {
             ...(this.formatInfo || {}),
             ...(format || {}),
         };
-        this.deleteCellShadeDataset(this.cells);
+        if (!this.formatInfo.keepCellShade) {
+            this.deleteCellShadeDataset(this.cells);
+        }
     }
 
     /**
