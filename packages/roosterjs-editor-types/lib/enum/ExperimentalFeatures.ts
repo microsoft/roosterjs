@@ -60,4 +60,9 @@ export const enum ExperimentalFeatures {
      * Align table elements to left, center and right using setAlignment API
      */
     TableAlignment = 'TableAlignment',
+
+    /**
+     * Provide additional Tab Key Features. Requires Text Features Content Editable Features
+     */
+    TabKeyTextFeatures = 'TabKeyTextFeatures',
 }

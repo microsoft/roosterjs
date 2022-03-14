@@ -707,19 +707,23 @@ function createTableFormat(
         headerRowColor: headerRowColor,
         hasFirstColumn: firstColumn,
         tableBorderFormat: borderFormat,
+        keepCellShade: false,
     };
 }
 
 function setHeaderRow(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
     const format = vtable.formatInfo;
+    format.keepCellShade = true;
     format.hasHeaderRow = !format.hasHeaderRow;
+
     return format;
 }
 
 function setFirstColumn(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
     const format = vtable.formatInfo;
+    format.keepCellShade = true;
     format.hasFirstColumn = !format.hasFirstColumn;
     return format;
 }
@@ -727,6 +731,7 @@ function setFirstColumn(table: HTMLTableElement): TableFormat {
 function setBandedColumn(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
     const format = vtable.formatInfo;
+    format.keepCellShade = true;
     format.hasBandedColumns = !format.hasBandedColumns;
     return format;
 }
@@ -734,6 +739,7 @@ function setBandedColumn(table: HTMLTableElement): TableFormat {
 function setBandedRow(table: HTMLTableElement): TableFormat {
     const vtable = new VTable(table);
     const format = vtable.formatInfo;
+    format.keepCellShade = true;
     format.hasBandedRows = !format.hasBandedRows;
     return format;
 }
