@@ -40,7 +40,7 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
                 } else {
                     const { ranges } = selection;
                     const range = ranges[0];
-                    if (shouldIndent(editor, range)) {
+                    if (shouldSetIndentation(editor, range)) {
                         setIndentation(editor, Indentation.Increase);
                     } else {
                         const tempRange = createRange(range.startContainer, range.startOffset);
@@ -57,6 +57,37 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
+ * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled
+ * If Whole Paragraph selected, outdent paragraph on Tab press
+ */
+const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.TAB],
+    shouldHandleEvent: (event, editor) => {
+        if (
+            event.rawEvent.shiftKey &&
+            editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures)
+        ) {
+            const selection = editor.getSelectionRangeEx();
+
+            return (
+                selection.type == SelectionRangeTypes.Normal &&
+                !selection.areAllCollapsed &&
+                editor.getElementAtCursor('blockquote', null, event) &&
+                !editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event) &&
+                shouldSetIndentation(editor, selection.ranges[0])
+            );
+        }
+
+        return false;
+    },
+    handleEvent: (event, editor) => {
+        editor.addUndoSnapshot(() => setIndentation(editor, Indentation.Decrease));
+
+        event.rawEvent.preventDefault();
+    },
+};
+
+/**
  * @internal
  */
 export const TextFeatures: Record<
@@ -64,9 +95,10 @@ export const TextFeatures: Record<
     BuildInEditFeature<PluginKeyboardEvent>
 > = {
     indentWhenTabText: IndentWhenTabText,
+    outdentWhenTabText: OutdentWhenTabText,
 };
 
-function shouldIndent(editor: IEditor, range: Range): boolean {
+function shouldSetIndentation(editor: IEditor, range: Range): boolean {
     let result: boolean = false;
 
     const startPosition: NodePosition = Position.getStart(range);
