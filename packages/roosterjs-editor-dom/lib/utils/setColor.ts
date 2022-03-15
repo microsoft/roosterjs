@@ -20,13 +20,16 @@ const BRIGHT_COLORS_LIGHTNESS = 80;
  * @param color The color to set, it can be a string of color name/value or a ModeIndependentColor object
  * @param isBackgroundColor Whether set background color or text color
  * @param isDarkMode Whether current mode is dark mode. @default false
+ * @param shouldAdaptTheFontColor Whether the font color needs to be adapted to be visible in a dark or bright background color. @default false
+ * @param defaultFontColor Set the default colors that needs to be set to the to be visible.
  */
 export default function setColor(
     element: HTMLElement,
     color: string | ModeIndependentColor,
     isBackgroundColor: boolean,
     isDarkMode?: boolean,
-    shouldAdaptTheFontColor?: boolean
+    shouldAdaptTheFontColor?: boolean,
+    defaultFontColor?: ModeIndependentColor
 ) {
     const colorString = typeof color === 'string' ? color.trim() : '';
     const modeIndependentColor = typeof color === 'string' ? null : color;
@@ -38,6 +41,7 @@ export default function setColor(
                 ? modeIndependentColor?.darkModeColor
                 : modeIndependentColor?.lightModeColor) || colorString
         );
+
         if (element.dataset) {
             const dataSetName = isBackgroundColor
                 ? DarkModeDatasetNames.OriginalStyleBackgroundColor
@@ -48,8 +52,9 @@ export default function setColor(
                 element.dataset[dataSetName] = modeIndependentColor.lightModeColor;
             }
         }
+
         if (isBackgroundColor && shouldAdaptTheFontColor) {
-            adaptFontColorToBackgroundColor(element);
+            adaptFontColorToBackgroundColor(element, defaultFontColor, isDarkMode);
         }
     }
 }
@@ -57,27 +62,37 @@ export default function setColor(
 /**
  * Change the font color to white or some other color, so the text can be visible with a darker background
  * @param element The element that contains text.
- * @param shouldAdaptTheFontColor if true it adapts the font color
  */
-function adaptFontColorToBackgroundColor(element: HTMLElement) {
+function adaptFontColorToBackgroundColor(
+    element: HTMLElement,
+    defaultFontColor?: ModeIndependentColor,
+    isDarkMode?: boolean
+) {
     if (element.firstElementChild?.hasAttribute('style')) {
         return;
     }
     const backgroundColor = element.style.getPropertyValue('background-color');
+
     if (!backgroundColor) {
         return;
     }
+
     const isADarkOrBrightOrNone = isADarkOrBrightColor(backgroundColor);
+
     switch (isADarkOrBrightOrNone) {
         case ColorTones.DARK:
-            element.style.color = WHITE;
+            element.style.color = defaultFontColor?.darkModeColor || WHITE;
             break;
         case ColorTones.BRIGHT:
-            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = WHITE;
-            element.style.color = BLACK;
+            //Save this value so transformColor can adjust the color when switch from dark to light mode
+            element.dataset[DarkModeDatasetNames.OriginalStyleColor] =
+                defaultFontColor?.darkModeColor || WHITE;
+            element.style.color = defaultFontColor?.lightModeColor || BLACK;
             break;
-        default:
-            element.style.color = '';
+    }
+
+    if (!isDarkMode) {
+        delete element.dataset[DarkModeDatasetNames.OriginalStyleColor];
     }
 }
 
@@ -85,24 +100,24 @@ function isADarkOrBrightColor(color: string): ColorTones {
     if (color === TRANSPARENT) {
         return ColorTones.NONE;
     }
+
     let lightness = calculateLightness(color);
     if (lightness < DARK_COLORS_LIGHTNESS) {
         return ColorTones.DARK;
     } else if (lightness > BRIGHT_COLORS_LIGHTNESS) {
         return ColorTones.BRIGHT;
     }
+
     return ColorTones.NONE;
 }
 
 /**
  * Calculate the lightness of HSL (hue, saturation and lightness) representation
- * @param color a RBG COLOR
+ * @param color a RBG or RGBA COLOR
  * @returns
  */
 function calculateLightness(color: string) {
-    const regex = /^rgba?(([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(\s*,\s*[\d.]+)?)$/;
-    const rgb = color.replace(regex, 'rgb($1,$2,$3)');
-    let [r, g, b] = rgb.match(/[\d\.]+/g) as RegExpMatchArray;
+    let [r, g, b] = color.match(/[\d\.]+/g) as RegExpMatchArray;
     // Use the values of r,g,b to calculate the lightness in the HSl representation
     //First calculate the fraction of the light in each color, since in css the value of r,g,b is in the interval of [0,255], we have
     const red = parseInt(r) / 255;
