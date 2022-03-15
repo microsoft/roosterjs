@@ -43,7 +43,10 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
                     i++;
                 }
 
-                if (vList.items[0]?.getNode() == startNode) {
+                if (
+                    vList.items[0]?.getNode() == startNode &&
+                    vList.getListItemIndex(startNode) == 1
+                ) {
                     const block = editor.getBlockElementAtNode(vList.rootList);
                     blockGroups.push([block]);
                 } else {

@@ -324,6 +324,22 @@ export default class VList {
         }
     }
 
+    /**
+     * Get the index of the List Item in the current List
+     * @param input List item to find in the root list
+     */
+    getListItemIndex(input: Node) {
+        if (this.items) {
+            for (let index = 0; index < this.items.length; index++) {
+                const child = this.items[index];
+                if (child.getNode() == input) {
+                    return index + getStart(this.rootList);
+                }
+            }
+        }
+        return -1;
+    }
+
     private findListItems(
         start: NodePosition,
         end: NodePosition,
