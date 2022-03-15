@@ -239,6 +239,7 @@ export default class VTable {
                 break;
 
             case TableOperation.DeleteRow:
+                console.log('chama???', this.selection);
                 this.forEachCellOfCurrentRow((cell, i) => {
                     let nextCell = this.getCell(this.row + 1, i);
                     if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {

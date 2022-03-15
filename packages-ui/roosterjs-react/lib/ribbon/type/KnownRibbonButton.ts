@@ -156,4 +156,9 @@ export const enum KnownRibbonButtonKey {
      * "ClearFormat" button on the format ribbon
      */
     ClearFormat,
+
+    /**
+     * "TableEditOperations" button on the format ribbon
+     */
+    TableEditOperations,
 }

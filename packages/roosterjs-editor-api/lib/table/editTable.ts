@@ -1,5 +1,11 @@
-import { ChangeSource, IEditor, PositionType, TableOperation } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    IEditor,
+    PositionType,
+    SelectionRangeTypes,
+    TableOperation,
+} from 'roosterjs-editor-types';
 
 /**
  * Edit table with given operation. If there is no table at cursor then no op.
@@ -13,6 +19,7 @@ export default function editTable(editor: IEditor, operation: TableOperation) {
             let vtable = new VTable(td);
             vtable.edit(operation);
             vtable.writeBack();
+            saveTableSelection(editor, vtable);
 
             //Adding replaceNode to transform color when the theme is switched to dark.
             editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);
@@ -50,4 +57,11 @@ function calculateCellToSelect(operation: TableOperation, currentRow: number, cu
         newRow,
         newCol,
     };
+}
+
+function saveTableSelection(editor: IEditor, vtable: VTable) {
+    const selection = editor.getSelectionRangeEx();
+    if (selection.type === SelectionRangeTypes.TableSelection) {
+        vtable.selection = selection.coordinates;
+    }
 }

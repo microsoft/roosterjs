@@ -37,6 +37,7 @@ export {
     ClearFormatButtonStringKey,
     TextColorKeys,
     BackgroundColorKeys,
+    TableEditOperationsStringKey,
     AllButtonStringKeys,
 } from './type/RibbonButtonStringKeys';
 

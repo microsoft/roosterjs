@@ -218,6 +218,11 @@ export type UnderlineButtonStringKey = 'buttonNameUnderline';
 export type UndoButtonStringKey = 'buttonNameUndo';
 
 /**
+ * Key of localized strings of Table Edit Operations button
+ */
+export type TableEditOperationsStringKey = 'buttonNameTableEditOperations';
+
+/**
  * A public type for localized string keys of all buttons
  */
 export type AllButtonStringKeys =
@@ -251,4 +256,5 @@ export type AllButtonStringKeys =
     | SuperscriptButtonStringKey
     | TextColorButtonStringKey
     | UnderlineButtonStringKey
-    | UndoButtonStringKey;
+    | UndoButtonStringKey
+    | TableEditOperationsStringKey;
