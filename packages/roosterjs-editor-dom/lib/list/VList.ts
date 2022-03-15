@@ -67,7 +67,7 @@ export default class VList {
      * Create a new instance of VList class
      * @param rootList The root list element, can be either OL or UL tag
      */
-    constructor(private rootList: HTMLOListElement | HTMLUListElement) {
+    constructor(public rootList: HTMLOListElement | HTMLUListElement) {
         if (!rootList) {
             throw new Error('rootList must not be null');
         }

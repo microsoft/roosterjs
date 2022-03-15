@@ -44,8 +44,7 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
                 }
 
                 if (vList.items[0]?.getNode() == startNode) {
-                    const list = editor.getElementAtCursor('OL,UL', startNode);
-                    const block = editor.getBlockElementAtNode(list);
+                    const block = editor.getBlockElementAtNode(vList.rootList);
                     blockGroups.push([block]);
                 } else {
                     vList.setIndentation(start, end, indentation);
