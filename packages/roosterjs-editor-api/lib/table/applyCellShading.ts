@@ -9,11 +9,7 @@ const CELL_SHADE = 'cellShade';
  * @param editor The editor instance
  * @param color One of two options:
  **/
-export default function applyCellShading(
-    editor: IEditor,
-    color: string | ModeIndependentColor,
-    defaultFontColor?: ModeIndependentColor
-) {
+export default function applyCellShading(editor: IEditor, color: string | ModeIndependentColor) {
     editor.focus();
     editor.addUndoSnapshot(() => {
         const regions = editor.getSelectedRegions();
@@ -24,8 +20,7 @@ export default function applyCellShading(
                     color,
                     true /* isBackgroundColor */,
                     editor.isDarkMode(),
-                    true /**shouldAdaptTheFontColor */,
-                    defaultFontColor
+                    true /**shouldAdaptTheFontColor */
                 );
 
                 region.rootNode.dataset[CELL_SHADE] = 'true';

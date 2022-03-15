@@ -28,8 +28,7 @@ export default function setColor(
     color: string | ModeIndependentColor,
     isBackgroundColor: boolean,
     isDarkMode?: boolean,
-    shouldAdaptTheFontColor?: boolean,
-    defaultFontColor?: ModeIndependentColor
+    shouldAdaptTheFontColor?: boolean
 ) {
     const colorString = typeof color === 'string' ? color.trim() : '';
     const modeIndependentColor = typeof color === 'string' ? null : color;
@@ -54,7 +53,7 @@ export default function setColor(
         }
 
         if (isBackgroundColor && shouldAdaptTheFontColor) {
-            adaptFontColorToBackgroundColor(element, defaultFontColor, isDarkMode);
+            adaptFontColorToBackgroundColor(element, isDarkMode);
         }
     }
 }
@@ -63,11 +62,7 @@ export default function setColor(
  * Change the font color to white or some other color, so the text can be visible with a darker background
  * @param element The element that contains text.
  */
-function adaptFontColorToBackgroundColor(
-    element: HTMLElement,
-    defaultFontColor?: ModeIndependentColor,
-    isDarkMode?: boolean
-) {
+function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: boolean) {
     if (element.firstElementChild?.hasAttribute('style')) {
         return;
     }
@@ -78,16 +73,15 @@ function adaptFontColorToBackgroundColor(
     }
 
     const isADarkOrBrightOrNone = isADarkOrBrightColor(backgroundColor);
-
+    const fontColorInDarkMode = element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor];
     switch (isADarkOrBrightOrNone) {
         case ColorTones.DARK:
-            element.style.color = defaultFontColor?.darkModeColor || WHITE;
+            element.style.color = WHITE;
             break;
         case ColorTones.BRIGHT:
             //Save this value so transformColor can adjust the color when switch from dark to light mode
-            element.dataset[DarkModeDatasetNames.OriginalStyleColor] =
-                defaultFontColor?.darkModeColor || WHITE;
-            element.style.color = defaultFontColor?.lightModeColor || BLACK;
+            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = WHITE;
+            element.style.color = fontColorInDarkMode || BLACK;
             break;
     }
 
