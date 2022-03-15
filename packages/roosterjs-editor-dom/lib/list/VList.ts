@@ -376,23 +376,6 @@ export default class VList {
             }
         });
     }
-
-    /**
-     * Get the index of the List Item in the current List
-     * @param input List item to find in the root list
-     */
-    getListItemIndex(input: Node) {
-        if (this.rootList?.children) {
-            const childNodes = this.rootList.childNodes;
-            for (let index = 0; index < childNodes.length; index++) {
-                const child = childNodes.item(index);
-                if (child == input) {
-                    return index;
-                }
-            }
-        }
-        return -1;
-    }
 }
 
 //Normalization
