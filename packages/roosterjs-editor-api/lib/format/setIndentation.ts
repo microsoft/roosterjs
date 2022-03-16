@@ -45,7 +45,7 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
 
                 if (
                     vList.items[0]?.getNode() == startNode &&
-                    vList.getListItemIndex(startNode) == 0 &&
+                    vList.getListItemIndex(startNode) == vList.getStart() &&
                     (indentation == Indentation.Increase ||
                         editor.getElementAtCursor('blockquote', startNode))
                 ) {

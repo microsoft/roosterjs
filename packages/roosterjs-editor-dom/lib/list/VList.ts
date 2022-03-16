@@ -149,7 +149,7 @@ export default class VList {
      * If there is no order list item, result will be undefined
      */
     getLastItemNumber(): number | undefined {
-        const start = getStart(this.rootList);
+        const start = this.getStart();
 
         return start === undefined
             ? start
@@ -175,7 +175,7 @@ export default class VList {
         const doc = this.rootList.ownerDocument;
         const listStack: Node[] = [doc.createDocumentFragment()];
         const placeholder = doc.createTextNode('');
-        let start = getStart(this.rootList) || 1;
+        let start = this.getStart() || 1;
         let lastList: Node;
 
         // Use a placeholder to hold the position since the root list may be moved into document fragment later
@@ -330,21 +330,28 @@ export default class VList {
      */
     getListItemIndex(input: Node) {
         if (this.items) {
-            const start = getStart(this.rootList) - 1;
+            let listIndex = this.getStart() - 1;
 
             for (let index = 0; index < this.items.length; index++) {
                 const child = this.items[index];
                 if (
-                    child.getLevel() == 1 &&
-                    !child.isDummy() &&
                     child.getListType() == ListType.Ordered &&
-                    child.getNode() == input
+                    child.getLevel() == 1 &&
+                    !child.isDummy()
                 ) {
-                    return index + start;
+                    listIndex++;
+                }
+
+                if (child.getNode() == input) {
+                    return listIndex;
                 }
             }
         }
         return -1;
+    }
+
+    getStart(): number | undefined {
+        return safeInstanceOf(this.rootList, 'HTMLOListElement') ? this.rootList.start : undefined;
     }
 
     private findListItems(
@@ -439,8 +446,4 @@ function moveLiToList(li: HTMLLIElement) {
 
         unwrap(li.parentNode);
     }
-}
-
-function getStart(list: HTMLOListElement | HTMLUListElement): number | undefined {
-    return safeInstanceOf(list, 'HTMLOListElement') ? list.start : undefined;
 }
