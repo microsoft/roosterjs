@@ -39,21 +39,23 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
             const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
 
             if (vList) {
-                blockGroups.push([]);
-
-                if (vList.getListItemIndex(startNode) == 0) {
-                    const list = editor.getElementAtCursor('OL,UL', startNode);
-                    const block = editor.getBlockElementAtNode(list);
-
-                    handler(region, [block]);
-                    return;
-                }
-
                 while (blocks[i + 1] && vList.contains(blocks[i + 1].getStartNode())) {
                     i++;
                 }
-                vList.setIndentation(start, end, indentation);
-                vList.writeBack();
+
+                if (
+                    vList.items[0]?.getNode() == startNode &&
+                    vList.getListItemIndex(startNode) == vList.getStart() &&
+                    (indentation == Indentation.Increase ||
+                        editor.getElementAtCursor('blockquote', startNode))
+                ) {
+                    const block = editor.getBlockElementAtNode(vList.rootList);
+                    blockGroups.push([block]);
+                } else {
+                    vList.setIndentation(start, end, indentation);
+                    vList.writeBack();
+                    blockGroups.push([]);
+                }
             } else {
                 blockGroups[blockGroups.length - 1].push(blocks[i]);
             }

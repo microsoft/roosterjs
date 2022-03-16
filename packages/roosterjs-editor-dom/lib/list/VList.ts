@@ -67,7 +67,7 @@ export default class VList {
      * Create a new instance of VList class
      * @param rootList The root list element, can be either OL or UL tag
      */
-    constructor(private rootList: HTMLOListElement | HTMLUListElement) {
+    constructor(public rootList: HTMLOListElement | HTMLUListElement) {
         if (!rootList) {
             throw new Error('rootList must not be null');
         }
@@ -149,7 +149,7 @@ export default class VList {
      * If there is no order list item, result will be undefined
      */
     getLastItemNumber(): number | undefined {
-        const start = getStart(this.rootList);
+        const start = this.getStart();
 
         return start === undefined
             ? start
@@ -175,7 +175,7 @@ export default class VList {
         const doc = this.rootList.ownerDocument;
         const listStack: Node[] = [doc.createDocumentFragment()];
         const placeholder = doc.createTextNode('');
-        let start = getStart(this.rootList) || 1;
+        let start = this.getStart() || 1;
         let lastList: Node;
 
         // Use a placeholder to hold the position since the root list may be moved into document fragment later
@@ -324,6 +324,40 @@ export default class VList {
         }
     }
 
+    /**
+     * Get the index of the List Item in the current List
+     * @param input List item to find in the root list
+     */
+    getListItemIndex(input: Node) {
+        if (this.items) {
+            let listIndex = this.getStart() - 1;
+
+            for (let index = 0; index < this.items.length; index++) {
+                const child = this.items[index];
+                if (
+                    child.getListType() == ListType.Ordered &&
+                    child.getLevel() == 1 &&
+                    !child.isDummy()
+                ) {
+                    listIndex++;
+                }
+
+                if (child.getNode() == input) {
+                    return listIndex;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Get the Start property of the root list of this VList
+     * @returns Start number of the list
+     */
+    getStart(): number | undefined {
+        return safeInstanceOf(this.rootList, 'HTMLOListElement') ? this.rootList.start : undefined;
+    }
+
     private findListItems(
         start: NodePosition,
         end: NodePosition,
@@ -433,8 +467,4 @@ function moveLiToList(li: HTMLLIElement) {
 
         unwrap(li.parentNode);
     }
-}
-
-function getStart(list: HTMLOListElement | HTMLUListElement): number | undefined {
-    return safeInstanceOf(list, 'HTMLOListElement') ? list.start : undefined;
 }
