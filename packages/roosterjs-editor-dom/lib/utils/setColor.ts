@@ -78,12 +78,12 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: bool
     switch (isADarkOrBrightOrNone) {
         case ColorTones.DARK:
             const colorDark = isDarkMode ? lightModeBackgroundColor : WHITE;
-            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = colorDark;
+            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = WHITE;
             setColor(element, colorDark, false);
             break;
         case ColorTones.BRIGHT:
             const colorBright = isDarkMode ? lightModeBackgroundColor : BLACK;
-            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = colorBright;
+            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = BLACK;
             setColor(element, colorBright, false);
             break;
     }
