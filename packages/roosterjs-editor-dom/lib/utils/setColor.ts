@@ -67,21 +67,24 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: bool
         return;
     }
     const backgroundColor = element.style.getPropertyValue('background-color');
-
-    if (!backgroundColor) {
+    const lightModeBackgroundColor = isDarkMode
+        ? element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] ||
+          element.dataset[DarkModeDatasetNames.OriginalAttributeBackgroundColor]
+        : backgroundColor;
+    if (!lightModeBackgroundColor || lightModeBackgroundColor === TRANSPARENT) {
         return;
     }
-
-    const isADarkOrBrightOrNone = isADarkOrBrightColor(backgroundColor);
-    const fontColorInDarkMode = element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor];
+    const isADarkOrBrightOrNone = isADarkOrBrightColor(lightModeBackgroundColor!);
     switch (isADarkOrBrightOrNone) {
         case ColorTones.DARK:
-            element.style.color = WHITE;
+            const colorDark = isDarkMode ? lightModeBackgroundColor : WHITE;
+            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = colorDark;
+            setColor(element, colorDark, false);
             break;
         case ColorTones.BRIGHT:
-            //Save this value so transformColor can adjust the color when switch from dark to light mode
-            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = WHITE;
-            element.style.color = fontColorInDarkMode || BLACK;
+            const colorBright = isDarkMode ? lightModeBackgroundColor : BLACK;
+            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = colorBright;
+            setColor(element, colorBright, false);
             break;
     }
 
@@ -91,10 +94,6 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: bool
 }
 
 function isADarkOrBrightColor(color: string): ColorTones {
-    if (color === TRANSPARENT) {
-        return ColorTones.NONE;
-    }
-
     let lightness = calculateLightness(color);
     if (lightness < DARK_COLORS_LIGHTNESS) {
         return ColorTones.DARK;
@@ -111,12 +110,41 @@ function isADarkOrBrightColor(color: string): ColorTones {
  * @returns
  */
 function calculateLightness(color: string) {
-    let [r, g, b] = color.match(/[\d\.]+/g) as RegExpMatchArray;
+    let r: number;
+    let g: number;
+    let b: number;
+
+    if (color.includes('#')) {
+        [r, g, b] = getColorsFromHEX(color);
+    } else {
+        [r, g, b] = getColorsFromRGB(color);
+    }
     // Use the values of r,g,b to calculate the lightness in the HSl representation
     //First calculate the fraction of the light in each color, since in css the value of r,g,b is in the interval of [0,255], we have
-    const red = parseInt(r) / 255;
-    const green = parseInt(g) / 255;
-    const blue = parseInt(b) / 255;
+    const red = r / 255;
+    const green = g / 255;
+    const blue = b / 255;
     //Then the lightness in the HSL representation is the average between maximum fraction of r,g,b and the minimum fraction
     return (Math.max(red, green, blue) + Math.min(red, green, blue)) * 50;
+}
+
+function getColorsFromHEX(color: string) {
+    if (color.length === 4) {
+        color = color.replace(/(.)/g, '$1$1');
+    }
+    const colors = color.replace('#', '');
+    let r = parseInt(colors.substr(0, 2), 16);
+    let g = parseInt(colors.substr(2, 2), 16);
+    let b = parseInt(colors.substr(4, 2), 16);
+    return [r, g, b];
+}
+
+function getColorsFromRGB(color: string) {
+    const colors = color.match(
+        /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
+    ) as RegExpMatchArray;
+    let r = parseInt(colors[1]);
+    let g = parseInt(colors[2]);
+    let b = parseInt(colors[3]);
+    return [r, g, b];
 }
