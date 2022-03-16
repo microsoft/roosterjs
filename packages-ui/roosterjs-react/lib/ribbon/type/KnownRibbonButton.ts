@@ -156,9 +156,4 @@ export const enum KnownRibbonButtonKey {
      * "ClearFormat" button on the format ribbon
      */
     ClearFormat,
-
-    /**
-     * "CellShade" button on the format ribbon
-     */
-    CellShade,
 }

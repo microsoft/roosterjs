@@ -52,13 +52,7 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
             if (cell.td && !hasCellShade(cell)) {
                 if (hasBandedRows) {
                     const backgroundColor = color(index);
-                    setColor(
-                        cell.td,
-                        backgroundColor || TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        false /**isDarkMode*/,
-                        true /**shouldAdaptTheFontColor */
-                    );
+                    setColor(cell.td, backgroundColor || TRANSPARENT, true /** isBackgroundColor*/);
                 } else if (shouldColorWholeTable) {
                     setColor(
                         cell.td,
@@ -76,13 +70,7 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
             row.forEach((cell, index) => {
                 const backgroundColor = color(index);
                 if (cell.td && backgroundColor && !hasCellShade(cell)) {
-                    setColor(
-                        cell.td,
-                        backgroundColor,
-                        true /** isBackgroundColor*/,
-                        false /**isDarkMode*/,
-                        true /**shouldAdaptTheFontColor */
-                    );
+                    setColor(cell.td, backgroundColor, true /** isBackgroundColor*/);
                 }
             });
         });
@@ -274,13 +262,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
             if (cell.td && cellIndex === 0) {
                 if (rowIndex !== 0 && !hasCellShade(cell)) {
                     cell.td.style.borderTopColor = TRANSPARENT;
-                    setColor(
-                        cell.td,
-                        TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        false /**isDarkMode*/,
-                        true /**shouldAdaptTheFontColor */
-                    );
+                    setColor(cell.td, TRANSPARENT, true /** isBackgroundColor*/);
                 }
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
                     cell.td.style.borderBottomColor = TRANSPARENT;
@@ -310,13 +292,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
     cells[0]?.forEach(cell => {
         if (cell.td && format.headerRowColor) {
             if (!hasCellShade(cell)) {
-                setColor(
-                    cell.td,
-                    format.headerRowColor,
-                    true /** isBackgroundColor*/,
-                    false /**isDarkMode*/,
-                    true /**shouldAdaptTheFontColor */
-                );
+                setColor(cell.td, format.headerRowColor, true /** isBackgroundColor*/);
             }
             cell.td.style.borderRightColor = format.headerRowColor;
             cell.td.style.borderLeftColor = format.headerRowColor;
