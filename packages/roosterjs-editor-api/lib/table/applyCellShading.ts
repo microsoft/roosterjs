@@ -15,13 +15,7 @@ export default function applyCellShading(editor: IEditor, color: string | ModeIn
         const regions = editor.getSelectedRegions();
         regions.forEach(region => {
             if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
-                setColor(
-                    region.rootNode,
-                    color,
-                    true /* isBackgroundColor */,
-                    editor.isDarkMode(),
-                    true /** shouldAdaptFontColor */
-                );
+                setColor(region.rootNode, color, true /* isBackgroundColor */, editor.isDarkMode());
                 region.rootNode.dataset[CELL_SHADE] = 'true';
 
                 region.rootNode.dataset[TEMP_BACKGROUND_COLOR] =
