@@ -330,10 +330,17 @@ export default class VList {
      */
     getListItemIndex(input: Node) {
         if (this.items) {
+            const start = getStart(this.rootList) - 1;
+
             for (let index = 0; index < this.items.length; index++) {
                 const child = this.items[index];
-                if (child.getNode() == input) {
-                    return index + getStart(this.rootList);
+                if (
+                    child.getLevel() == 1 &&
+                    !child.isDummy() &&
+                    child.getListType() == ListType.Ordered &&
+                    child.getNode() == input
+                ) {
+                    return index + start;
                 }
             }
         }
