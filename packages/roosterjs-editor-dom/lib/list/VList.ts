@@ -350,6 +350,10 @@ export default class VList {
         return -1;
     }
 
+    /**
+     * Get the Start property of the root list of this VList
+     * @returns Start number of the list
+     */
     getStart(): number | undefined {
         return safeInstanceOf(this.rootList, 'HTMLOListElement') ? this.rootList.start : undefined;
     }
