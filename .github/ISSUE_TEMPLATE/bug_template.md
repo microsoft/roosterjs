@@ -21,7 +21,7 @@ Describe the steps to reproduce the bug. If possible send a video, a gif or a im
  - Type in editor.
  - Select the text
  - Click in underline
- - Nothinh happened
+ - Nothing happened
 
 #### Expected Result:
 - Text is underlined
