@@ -10,7 +10,6 @@ export interface MainPaneBaseState {
     supportDarkMode: boolean;
     scale: number;
     isDarkMode: boolean;
-    content: string;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
     isRtl: boolean;
 }

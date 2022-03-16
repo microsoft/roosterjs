@@ -59,8 +59,10 @@ class MainPane extends MainPaneBase {
     private snapshotPlugin: SnapshotPlugin;
     private ribbonPlugin: RibbonPlugin;
     private updateContentPlugin: UpdateContentPlugin;
-    private mainWindowbuttons: RibbonButton<RibbonStringKeys>[];
-    private popoutWindowbuttons: RibbonButton<RibbonStringKeys>[];
+    private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
+    private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
+
+    private content: string = '';
 
     private sidePane = React.createRef<SidePane>();
 
@@ -73,18 +75,15 @@ class MainPane extends MainPaneBase {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
-        this.updateContentPlugin = createUpdateContentPlugin(
-            UpdateMode.OnDispose | UpdateMode.OnInitialize,
-            this.onUpdate
-        );
-        this.mainWindowbuttons = getButtons([
+        this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
+        this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
             darkMode,
             zoom,
             exportContent,
             popout,
         ]);
-        this.popoutWindowbuttons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
+        this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
             showSidePane: window.location.hash != '',
             showRibbon: true,
@@ -93,7 +92,6 @@ class MainPane extends MainPaneBase {
             supportDarkMode: true,
             scale: 1,
             isDarkMode: false,
-            content: '',
             editorCreator: null,
             isRtl: false,
         };
@@ -147,7 +145,7 @@ class MainPane extends MainPaneBase {
 
         const win = window.open(POPOUT_URL, POPOUT_TARGET, POPOUT_FEATURES);
         win.document.write(trustedHTMLHandler(POPOUT_HTML));
-        win.addEventListener('unload', () => {
+        win.addEventListener('beforeunload', () => {
             this.updateContentPlugin.forceUpdate();
 
             unregisterWindowForCss(win);
@@ -217,13 +215,13 @@ class MainPane extends MainPaneBase {
     };
 
     private onUpdate = (content: string) => {
-        this.setState({ content });
+        this.content = content;
     };
 
     private renderRibbon(isPopout: boolean) {
         return (
             <Ribbon
-                buttons={isPopout ? this.popoutWindowbuttons : this.mainWindowbuttons}
+                buttons={isPopout ? this.popoutWindowButtons : this.mainWindowButtons}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
             />
@@ -283,6 +281,8 @@ class MainPane extends MainPaneBase {
             width: `calc(${100 / this.state.scale}%)`,
         };
 
+        this.updateContentPlugin.forceUpdate();
+
         return (
             <div className={styles.editorContainer}>
                 <div style={editorStyles}>
@@ -296,7 +296,7 @@ class MainPane extends MainPaneBase {
                         undoSnapshotService={this.snapshotPlugin.getSnapshotService()}
                         trustedHTMLHandler={trustedHTMLHandler}
                         zoomScale={this.state.scale}
-                        initialContent={this.state.content}
+                        initialContent={this.content}
                         editorCreator={this.state.editorCreator}
                         dir={this.state.isRtl ? 'rtl' : 'ltr'}
                     />
