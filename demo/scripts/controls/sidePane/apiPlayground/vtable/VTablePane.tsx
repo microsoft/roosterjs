@@ -247,292 +247,301 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                             style={{
                                 border: 'solid 1px black',
                             }}>
-                            {this.state.vtable.cells.map(row => (
-                                <tr>
-                                    {row.map(cell => (
-                                        <td>
-                                            <TableCell
-                                                cell={cell}
-                                                editor={editor}
-                                                isCurrent={currentTd == cell.td}
-                                                onClickCell={this.onClickCell}
-                                            />
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
+                            <tbody>
+                                {this.state.vtable.cells.map((row, rowIndex) => (
+                                    <tr key={'row' + rowIndex}>
+                                        {row.map((cell, cellIndex) => (
+                                            <td key={'cell' + cellIndex}>
+                                                <TableCell
+                                                    cell={cell}
+                                                    editor={editor}
+                                                    isCurrent={currentTd == cell.td}
+                                                    onClickCell={this.onClickCell}
+                                                />
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
                         </table>
                         <table>
-                            <tr>
-                                <th colSpan={2}>Edit Table</th>
-                            </tr>
-                            <tr>
-                                <td>Insert</td>
-                                <td>
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Above',
-                                        TableOperation.InsertAbove
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Below',
-                                        TableOperation.InsertBelow
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Left',
-                                        TableOperation.InsertLeft
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Right',
-                                        TableOperation.InsertRight
-                                    )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Delete</td>
-                                <td>
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Table',
-                                        TableOperation.DeleteTable
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Column',
-                                        TableOperation.DeleteColumn
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Row',
-                                        TableOperation.DeleteRow
-                                    )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Merge</td>
-                                <td>
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Above',
-                                        TableOperation.MergeAbove
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Below',
-                                        TableOperation.MergeBelow
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Left',
-                                        TableOperation.MergeLeft
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Right',
-                                        TableOperation.MergeRight
-                                    )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Split</td>
-                                <td>
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Horizontally',
-                                        TableOperation.SplitHorizontally
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Vertically',
-                                        TableOperation.SplitVertically
-                                    )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Align</td>
-                                <td>
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Left',
-                                        TableOperation.AlignLeft
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Center',
-                                        TableOperation.AlignCenter
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Right',
-                                        TableOperation.AlignRight
-                                    )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Align Cell</td>
-                                <td>
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Left',
-                                        TableOperation.AlignCellLeft
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Center',
-                                        TableOperation.AlignCellCenter
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Right',
-                                        TableOperation.AlignCellRight
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Top',
-                                        TableOperation.AlignCellTop
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Middle',
-                                        TableOperation.AlignCellMiddle
-                                    )}
-                                    {this.renderEditTableButton(
-                                        editor,
-                                        'Bottom',
-                                        TableOperation.AlignCellBottom
-                                    )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th colSpan={2}>Format Table</th>
-                            </tr>
-                            <tr>
-                                <td>State:</td>
-                                <td>
-                                    {this.renderSetHeaderRowButton(editor)}
-                                    {this.renderSetFirstColumnButton(editor)}
-                                    {this.renderSetBandedColumnButton(editor)}
-                                    {this.renderSetBandedRowButton(editor)}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Predefined:</td>
-                                <td>
-                                    {this.renderFormatTableButton(
-                                        'Default',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.default](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
+                            <tbody>
+                                <tr>
+                                    <th colSpan={2}>Edit Table</th>
+                                </tr>
+                                <tr>
+                                    <td>Insert</td>
+                                    <td>
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Above',
+                                            TableOperation.InsertAbove
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Below',
+                                            TableOperation.InsertBelow
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Left',
+                                            TableOperation.InsertLeft
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Right',
+                                            TableOperation.InsertRight
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Delete</td>
+                                    <td>
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Table',
+                                            TableOperation.DeleteTable
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Column',
+                                            TableOperation.DeleteColumn
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Row',
+                                            TableOperation.DeleteRow
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Merge</td>
+                                    <td>
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Above',
+                                            TableOperation.MergeAbove
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Below',
+                                            TableOperation.MergeBelow
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Left',
+                                            TableOperation.MergeLeft
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Right',
+                                            TableOperation.MergeRight
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Split</td>
+                                    <td>
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Horizontally',
+                                            TableOperation.SplitHorizontally
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Vertically',
+                                            TableOperation.SplitVertically
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Align</td>
+                                    <td>
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Left',
+                                            TableOperation.AlignLeft
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Center',
+                                            TableOperation.AlignCenter
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Right',
+                                            TableOperation.AlignRight
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Align Cell</td>
+                                    <td>
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Left',
+                                            TableOperation.AlignCellLeft
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Center',
+                                            TableOperation.AlignCellCenter
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Right',
+                                            TableOperation.AlignCellRight
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Top',
+                                            TableOperation.AlignCellTop
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Middle',
+                                            TableOperation.AlignCellMiddle
+                                        )}
+                                        {this.renderEditTableButton(
+                                            editor,
+                                            'Bottom',
+                                            TableOperation.AlignCellBottom
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th colSpan={2}>Format Table</th>
+                                </tr>
+                                <tr>
+                                    <td>State:</td>
+                                    <td>
+                                        {this.renderSetHeaderRowButton(editor)}
+                                        {this.renderSetFirstColumnButton(editor)}
+                                        {this.renderSetBandedColumnButton(editor)}
+                                        {this.renderSetBandedRowButton(editor)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Predefined:</td>
+                                    <td>
+                                        {this.renderFormatTableButton(
+                                            'Default',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.default](
+                                                TABLE_COLORS.blue,
+                                                `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
 
-                                    {this.renderFormatTableButton(
-                                        'Grid without border',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.gridWithoutBorder](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
+                                        {this.renderFormatTableButton(
+                                            'Grid without border',
+                                            PREDEFINED_STYLES[
+                                                PREDEFINED_STYLES_KEYS.gridWithoutBorder
+                                            ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
+                                            editor
+                                        )}
 
-                                    {this.renderFormatTableButton(
-                                        'List',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.list](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Banded Row and first column and no border',
-                                        PREDEFINED_STYLES[
-                                            PREDEFINED_STYLES_KEYS.bandedRowsFirstColumnNoBorder
-                                        ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Default with background color',
-                                        PREDEFINED_STYLES[
-                                            PREDEFINED_STYLES_KEYS.defaultWithBackgroundColor
-                                        ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'External',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.external](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'No Header Vertical',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.noHeader](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Especial type 1',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType1](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Especial type 2',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType2](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                    {this.renderFormatTableButton(
-                                        'Especial type 3',
-                                        PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType3](
-                                            TABLE_COLORS.blue,
-                                            `${TABLE_COLORS.blue}20`
-                                        ),
-                                        editor
-                                    )}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th colSpan={2} className={styles.buttonRow}>
-                                    Customized Colors:
-                                </th>
-                            </tr>
-                            <CustomizeFormatRow text="BackgroundColor" inputRef={this.bgColor} />
-                            <CustomizeFormatRow text="Top border" inputRef={this.topBorderColor} />
-                            <CustomizeFormatRow
-                                text="Bottom border"
-                                inputRef={this.bottomBorderColor}
-                            />
-                            <CustomizeFormatRow
-                                text="Vertical border"
-                                inputRef={this.verticalBorderColor}
-                            />
+                                        {this.renderFormatTableButton(
+                                            'List',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.list](
+                                                TABLE_COLORS.blue,
+                                                `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'Banded Row and first column and no border',
+                                            PREDEFINED_STYLES[
+                                                PREDEFINED_STYLES_KEYS.bandedRowsFirstColumnNoBorder
+                                            ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'Default with background color',
+                                            PREDEFINED_STYLES[
+                                                PREDEFINED_STYLES_KEYS.defaultWithBackgroundColor
+                                            ](TABLE_COLORS.blue, `${TABLE_COLORS.blue}20`),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'External',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.external](
+                                                TABLE_COLORS.blue,
+                                                `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'No Header Vertical',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.noHeader](
+                                                TABLE_COLORS.blue,
+                                                `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'Especial type 1',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType1](
+                                                TABLE_COLORS.blue,
+                                                `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'Especial type 2',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType2](
+                                                TABLE_COLORS.blue,
+                                                `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'Especial type 3',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType3](
+                                                TABLE_COLORS.blue,
+                                                `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th colSpan={2} className={styles.buttonRow}>
+                                        Customized Colors:
+                                    </th>
+                                </tr>
+                                <CustomizeFormatRow
+                                    text="BackgroundColor"
+                                    inputRef={this.bgColor}
+                                />
+                                <CustomizeFormatRow
+                                    text="Top border"
+                                    inputRef={this.topBorderColor}
+                                />
+                                <CustomizeFormatRow
+                                    text="Bottom border"
+                                    inputRef={this.bottomBorderColor}
+                                />
+                                <CustomizeFormatRow
+                                    text="Vertical border"
+                                    inputRef={this.verticalBorderColor}
+                                />
 
-                            <tr>
-                                <td
-                                    colSpan={2}
-                                    className={styles.buttonRow}
-                                    onClick={this.onCustomizeFormat}>
-                                    <button className={styles.button}>Apply Format</button>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td
+                                        colSpan={2}
+                                        className={styles.buttonRow}
+                                        onClick={this.onCustomizeFormat}>
+                                        <button className={styles.button}>Apply Format</button>
+                                    </td>
+                                </tr>
 
-                            <tr>
-                                <th colSpan={2} className={styles.buttonRow}>
-                                    Style Info:
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th colSpan={2} className={styles.buttonRow}>
+                                        Style Info:
+                                    </th>
+                                </tr>
+                            </tbody>
                         </table>
                         <button onClick={this.onWriteBack}>Write back</button>
                     </>
