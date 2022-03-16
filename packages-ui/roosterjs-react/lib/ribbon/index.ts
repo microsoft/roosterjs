@@ -38,6 +38,7 @@ export {
     TextColorKeys,
     BackgroundColorKeys,
     AllButtonStringKeys,
+    CellShadeButtonStringKey,
 } from './type/RibbonButtonStringKeys';
 
 export { default as Ribbon } from './component/Ribbon';
