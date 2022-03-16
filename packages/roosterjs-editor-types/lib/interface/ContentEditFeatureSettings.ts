@@ -214,6 +214,13 @@ export interface TextFeatureSettings {
      *          spaces
      */
     indentWhenTabText: boolean;
+
+    /**
+     * Requires @see ExperimentalFeatures.TabKeyTextFeatures to be enabled
+     * When press Tab:
+     *      If Whole Paragraph selected, outdent paragraph
+     */
+    outdentWhenTabText: boolean;
 }
 
 /**
