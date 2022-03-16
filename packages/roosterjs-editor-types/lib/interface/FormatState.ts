@@ -72,6 +72,11 @@ export interface ElementBasedFormatState {
      * Header level (0-6, 0 means no header)
      */
     headerLevel?: number;
+
+    /**
+     * Whether the cursor is in table
+     */
+    isInTable?: boolean;
 }
 
 /**
