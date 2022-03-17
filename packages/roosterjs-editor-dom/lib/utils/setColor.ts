@@ -2,6 +2,7 @@ import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-typ
 
 const WHITE = '#ffffff';
 const GRAY = '#333333';
+const BLACK = '#000000';
 const TRANSPARENT = 'transparent';
 const enum ColorTones {
     BRIGHT,
@@ -86,7 +87,7 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: bool
             break;
         case ColorTones.BRIGHT:
             const fontForLight: ModeIndependentColor = {
-                lightModeColor: GRAY,
+                lightModeColor: BLACK,
                 darkModeColor: WHITE,
             };
             setColor(element, fontForLight, false /*isBackground*/, isDarkMode);
