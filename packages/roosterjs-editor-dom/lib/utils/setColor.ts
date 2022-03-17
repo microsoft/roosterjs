@@ -92,10 +92,6 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: bool
             setColor(element, fontForLight, false /*isBackground*/, isDarkMode);
             break;
     }
-
-    if (!isDarkMode) {
-        delete element.dataset[DarkModeDatasetNames.OriginalStyleColor];
-    }
 }
 
 function isADarkOrBrightColor(color: string): ColorTones {
