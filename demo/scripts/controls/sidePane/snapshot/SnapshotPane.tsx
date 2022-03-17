@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { Snapshot } from 'roosterjs-editor-types';
 
 const styles = require('./SnapshotPane.scss');
 
 export interface SnapshotPaneProps {
-    onTakeSnapshot: () => string;
-    onRestoreSnapshot: (snapshot: string) => void;
+    onTakeSnapshot: () => Snapshot;
+    onRestoreSnapshot: (snapshot: Snapshot) => void;
     onMove: (moveStep: number) => void;
 }
 
 export interface SnapshotPaneState {
-    snapshots: string[];
+    snapshots: Snapshot[];
     currentIndex: number;
     autoCompleteIndex: number;
 }
@@ -37,7 +38,13 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
                 <h3>Selected Snapshot</h3>
                 <div className={styles.buttons}>
                     <button onClick={this.takeSnapshot}>{'Take snapshot'}</button>{' '}
-                    <button onClick={() => this.props.onRestoreSnapshot(this.textarea.value)}>
+                    <button
+                        onClick={() =>
+                            this.props.onRestoreSnapshot({
+                                html: this.textarea.value,
+                                metadata: null,
+                            })
+                        }>
                         {'Restore snapshot'}
                     </button>
                 </div>
@@ -50,7 +57,7 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
         );
     }
 
-    updateSnapshots(snapshots: string[], currentIndex: number, autoCompleteIndex: number) {
+    updateSnapshots(snapshots: Snapshot[], currentIndex: number, autoCompleteIndex: number) {
         this.setState({
             snapshots,
             currentIndex,
@@ -58,15 +65,22 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
         });
     }
 
+    snapshotToString(snapshot: Snapshot) {
+        return (
+            snapshot.html + (snapshot.metadata ? `<!--${JSON.stringify(snapshot.metadata)}-->` : '')
+        );
+    }
+
     private takeSnapshot = () => {
-        this.setSnapshot(this.props.onTakeSnapshot());
+        const snapshot = this.props.onTakeSnapshot();
+        this.setSnapshot(this.snapshotToString(snapshot));
     };
 
     private setSnapshot = (snapshot: string) => {
         this.textarea.value = snapshot;
     };
 
-    private renderItem = (snapshot: string, index: number) => {
+    private renderItem = (snapshot: Snapshot, index: number) => {
         let className = '';
         if (index == this.state.currentIndex) {
             className += ' ' + styles.current;
@@ -74,13 +88,15 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
         if (index == this.state.autoCompleteIndex) {
             className += ' ' + styles.autoComplete;
         }
+
+        const snapshotStr = this.snapshotToString(snapshot);
         return (
             <pre
                 className={className}
                 key={index}
-                onClick={() => this.setSnapshot(snapshot)}
+                onClick={() => this.setSnapshot(snapshotStr)}
                 onDoubleClick={() => this.props.onMove(index - this.state.currentIndex)}>
-                {(snapshot || '<EMPTY SNAPSHOT>').substr(0, 1000)}
+                {(snapshotStr || '<EMPTY SNAPSHOT>').substring(0, 1000)}
             </pre>
         );
     };
