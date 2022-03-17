@@ -1,7 +1,7 @@
 import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
 
 const WHITE = '#ffffff';
-const BLACK = '#000000';
+const GRAY = '#333333';
 const TRANSPARENT = 'transparent';
 const enum ColorTones {
     BRIGHT,
@@ -67,24 +67,29 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: bool
         return;
     }
     const backgroundColor = element.style.getPropertyValue('background-color');
-    const lightModeBackgroundColor = isDarkMode
-        ? element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] ||
-          element.dataset[DarkModeDatasetNames.OriginalAttributeBackgroundColor]
-        : backgroundColor;
+    const lightModeBackgroundColor =
+        (isDarkMode &&
+            (element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] ||
+                element.dataset[DarkModeDatasetNames.OriginalAttributeBackgroundColor])) ||
+        backgroundColor;
     if (!lightModeBackgroundColor || lightModeBackgroundColor === TRANSPARENT) {
         return;
     }
     const isADarkOrBrightOrNone = isADarkOrBrightColor(lightModeBackgroundColor!);
     switch (isADarkOrBrightOrNone) {
         case ColorTones.DARK:
-            const colorDark = isDarkMode ? lightModeBackgroundColor : WHITE;
-            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = WHITE;
-            setColor(element, colorDark, false);
+            const fontForDark: ModeIndependentColor = {
+                lightModeColor: WHITE,
+                darkModeColor: GRAY,
+            };
+            setColor(element, fontForDark, false /*isBackground*/, isDarkMode);
             break;
         case ColorTones.BRIGHT:
-            const colorBright = isDarkMode ? lightModeBackgroundColor : BLACK;
-            element.dataset[DarkModeDatasetNames.OriginalStyleColor] = BLACK;
-            setColor(element, colorBright, false);
+            const fontForLight: ModeIndependentColor = {
+                lightModeColor: GRAY,
+                darkModeColor: WHITE,
+            };
+            setColor(element, fontForLight, false /*isBackground*/, isDarkMode);
             break;
     }
 
@@ -114,7 +119,7 @@ function calculateLightness(color: string) {
     let g: number;
     let b: number;
 
-    if (color.includes('#')) {
+    if (color.substring(0, 1) == '#') {
         [r, g, b] = getColorsFromHEX(color);
     } else {
         [r, g, b] = getColorsFromRGB(color);
