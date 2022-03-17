@@ -135,6 +135,14 @@ export default class TableCellSelection implements EditorPlugin {
                         this.handleScrollEvent();
                     }
                     break;
+                case PluginEventType.BeforeSetContent:
+                    if (this.tableRange) {
+                        this.tableRange = null;
+                        this.firstTable = null;
+                        this.tableSelection = false;
+                        this.editor.select(null);
+                    }
+                    break;
             }
         }
     }

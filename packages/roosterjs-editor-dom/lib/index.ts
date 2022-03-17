@@ -77,9 +77,12 @@ export {
 } from './selection/setHtmlWithSelectionPath';
 export { default as addRangeToSelection } from './selection/addRangeToSelection';
 
-export { default as addSnapshot } from './snapshots/addSnapshot';
+export { default as addSnapshot, addSnapshotV2 } from './snapshots/addSnapshot';
 export { default as canMoveCurrentSnapshot } from './snapshots/canMoveCurrentSnapshot';
-export { default as clearProceedingSnapshots } from './snapshots/clearProceedingSnapshots';
+export {
+    default as clearProceedingSnapshots,
+    clearProceedingSnapshotsV2,
+} from './snapshots/clearProceedingSnapshots';
 export {
     default as moveCurrentSnapshot,
     moveCurrentSnapsnot,
