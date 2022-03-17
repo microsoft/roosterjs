@@ -39,6 +39,7 @@ export {
     BackgroundColorKeys,
     TableEditOperationsStringKey,
     AllButtonStringKeys,
+    CellShadeButtonStringKey,
 } from './type/RibbonButtonStringKeys';
 
 export { default as Ribbon } from './component/Ribbon';

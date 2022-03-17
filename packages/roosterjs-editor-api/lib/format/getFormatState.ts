@@ -28,10 +28,10 @@ export function getElementBasedFormatState(
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
         headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
-
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
+        isInTable: !!editor.queryElements('table', QueryScope.OnSelection)[0],
     };
 }
 
