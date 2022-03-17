@@ -187,6 +187,10 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
+        const firstSelectedRow = this.selection.firstCell.y;
+        const lastSelectedRow = this.selection.lastCell.y;
+        const firstSelectedColumn = this.selection.firstCell.x;
+        const lastSelectedColumn = this.selection.lastCell.x;
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -239,24 +243,28 @@ export default class VTable {
                 break;
 
             case TableOperation.DeleteRow:
-                console.log('chama???', this.selection);
-                this.forEachCellOfCurrentRow((cell, i) => {
-                    let nextCell = this.getCell(this.row + 1, i);
-                    if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
-                        nextCell.td = cell.td;
-                    }
-                });
-                this.cells.splice(this.row, 1);
+                for (let i = firstSelectedRow - 1; i < lastSelectedRow; i++) {
+                    this.forEachCellOfRow(i, (cell, i) => {
+                        let nextCell = this.getCell(i + 1, i);
+                        if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
+                            nextCell.td = cell.td;
+                        }
+                    });
+                    this.cells.splice(i, 1);
+                }
                 break;
 
             case TableOperation.DeleteColumn:
-                this.forEachCellOfCurrentColumn((cell, row, i) => {
-                    let nextCell = this.getCell(i, this.col + 1);
-                    if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
-                        nextCell.td = cell.td;
-                    }
-                    row.splice(this.col, 1);
-                });
+                for (let j = firstSelectedColumn; j < lastSelectedColumn + 1; j++) {
+                    this.forEachCellOfColumn(j, (cell, row, i) => {
+                        let nextCell = this.getCell(i, j + 1);
+                        if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
+                            nextCell.td = cell.td;
+                        }
+                        row.splice(i, 1);
+                    });
+                }
+
                 break;
 
             case TableOperation.MergeAbove:

@@ -15,11 +15,11 @@ import {
 export default function editTable(editor: IEditor, operation: TableOperation) {
     let td = editor.getElementAtCursor('TD,TH') as HTMLTableCellElement;
     if (td) {
-        editor.addUndoSnapshot((start, end) => {
+        editor.addUndoSnapshot(() => {
             let vtable = new VTable(td);
+            saveTableSelection(editor, vtable);
             vtable.edit(operation);
             vtable.writeBack();
-            saveTableSelection(editor, vtable);
 
             //Adding replaceNode to transform color when the theme is switched to dark.
             editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);
