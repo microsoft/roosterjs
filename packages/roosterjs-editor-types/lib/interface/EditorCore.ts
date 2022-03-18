@@ -213,13 +213,16 @@ export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
  * @param includeSelf True to transform the root node as well, otherwise false
  * @param callback The callback function to invoke before do color transformation
  * @param direction To specify the transform direction, light to dark, or dark to light
+ * @param forceTransform By default this function will only work when editor core is in dark mode.
+ * Pass true to this value to force do color transformation even editor core is in light mode
  */
 export type TransformColor = (
     core: EditorCore,
     rootNode: Node,
     includeSelf: boolean,
     callback: () => void,
-    direction: ColorTransformDirection
+    direction: ColorTransformDirection,
+    forceTransform?: boolean
 ) => void;
 
 /**
@@ -386,6 +389,8 @@ export interface CoreApiMap {
      * @param includeSelf True to transform the root node as well, otherwise false
      * @param callback The callback function to invoke before do color transformation
      * @param direction To specify the transform direction, light to dark, or dark to light
+     * @param forceTransform By default this function will only work when editor core is in dark mode.
+     * Pass true to this value to force do color transformation even editor core is in light mode
      */
     transformColor: TransformColor;
 

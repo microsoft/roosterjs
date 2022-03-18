@@ -242,7 +242,8 @@ export default class TableEditor {
         this.editor.addUndoSnapshot();
     }
 
-    private onInserted = () => {
+    private onInserted = (table: HTMLTableElement) => {
+        this.editor.transformToDarkColor(table);
         this.disposeTableResizer();
         this.onFinishEditing();
     };

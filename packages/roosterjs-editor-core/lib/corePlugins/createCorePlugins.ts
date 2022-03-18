@@ -4,6 +4,7 @@ import EditPlugin from './EditPlugin';
 import EntityPlugin from './EntityPlugin';
 import LifecyclePlugin from './LifecyclePlugin';
 import MouseUpPlugin from './MouseUpPlugin';
+import NormalizeTablePlugin from './NormalizeTablePlugin';
 import PendingFormatStatePlugin from './PendingFormatStatePlugin';
 import TypeInContainerPlugin from './TypeInContainerPlugin';
 import UndoPlugin from './UndoPlugin';
@@ -40,6 +41,7 @@ export default function createCorePlugins(
         mouseUp: map.mouseUp || new MouseUpPlugin(),
         copyPaste: map.copyPaste || new CopyPastePlugin(options),
         entity: map.entity || new EntityPlugin(),
+        normalizeTable: map.normalizeTable || new NormalizeTablePlugin(),
         lifecycle: map.lifecycle || new LifecyclePlugin(options, contentDiv),
     };
 }
