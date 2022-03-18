@@ -187,6 +187,20 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
+        const handler = (
+            cell: VCell,
+            rowIndex: number,
+            colIndex: number,
+            handlingColumns?: boolean
+        ) => {
+            let nextCell = handlingColumns
+                ? this.getCell(rowIndex + 1, colIndex)
+                : this.getCell(rowIndex, colIndex + 1);
+            const spanCheck = handlingColumns ? nextCell.spanLeft : nextCell.spanAbove;
+            if (cell.td && cell.td.rowSpan > 1 && spanCheck) {
+                nextCell.td = cell.td;
+            }
+        };
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -240,37 +254,36 @@ export default class VTable {
 
             case TableOperation.DeleteRow:
                 if (this.selection) {
-                    // const { firstCell, lastCell } = this.selection;
-                    // for (let i = firstCell.y; i < lastCell.y; i++) {
-                    //     console.log(i);
-                    //     // this.forEachCellOfRow(i, (cell, j) => {
-                    //     //     // let nextCell = this.getCell(i + 1, j);
-                    //     //     if (cell.td && cell.td.rowSpan > 1) {
-                    //     //         // nextCell.td = cell.td;
-                    //     //         cell.td.textContent = `${i}`;
-                    //     //     }
-                    //     // });
-                    //     // //this.cells.splice(i, 1);
-                    // }
+                    const { firstCell, lastCell } = this.selection;
+                    for (let rowIndex = firstCell.y; rowIndex <= lastCell.y; rowIndex++) {
+                        this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) =>
+                            handler(cell, rowIndex, i)
+                        );
+                    }
+                    this.cells.splice(firstCell.y, lastCell.y - firstCell.y + 1);
                 } else {
                     this.forEachCellOfCurrentRow((cell, i) => {
-                        let nextCell = this.getCell(this.row + 1, i);
-                        if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
-                            nextCell.td = cell.td;
-                        }
+                        handler(cell, this.row, i);
                     });
                     this.cells.splice(this.row, 1);
-                    break;
+                }
+                break;
+            case TableOperation.DeleteColumn:
+                if (this.selection) {
+                    const { firstCell, lastCell } = this.selection;
+                    for (let colIndex = firstCell.x; colIndex <= lastCell.x; colIndex++) {
+                        this.forEachCellOfColumn(colIndex, (cell, row, i) => {
+                            handler(cell, i, colIndex, true /** handlingColumns */);
+                            row.splice(colIndex, lastCell.x - colIndex + 1);
+                        });
+                    }
+                } else {
+                    this.forEachCellOfCurrentColumn((cell, row, i) => {
+                        handler(cell, i, this.col, true /** handlingColumns */);
+                        row.splice(this.col, 1);
+                    });
                 }
 
-            case TableOperation.DeleteColumn:
-                this.forEachCellOfCurrentColumn((cell, row, i) => {
-                    let nextCell = this.getCell(i, this.col + 1);
-                    if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
-                        nextCell.td = cell.td;
-                    }
-                    row.splice(this.col, 1);
-                });
                 break;
 
             case TableOperation.MergeAbove:
