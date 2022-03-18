@@ -187,20 +187,7 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
-        const handler = (
-            cell: VCell,
-            rowIndex: number,
-            colIndex: number,
-            handlingColumns?: boolean
-        ) => {
-            let nextCell = handlingColumns
-                ? this.getCell(rowIndex + 1, colIndex)
-                : this.getCell(rowIndex, colIndex + 1);
-            const spanCheck = handlingColumns ? nextCell.spanLeft : nextCell.spanAbove;
-            if (cell.td && cell.td.rowSpan > 1 && spanCheck) {
-                nextCell.td = cell.td;
-            }
-        };
+
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -253,34 +240,47 @@ export default class VTable {
                 break;
 
             case TableOperation.DeleteRow:
+                const deleteRowHandler = (cell: VCell, i: number, rowIndex: number) => {
+                    let nextCell = this.getCell(rowIndex + 1, i);
+                    if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
+                        nextCell.td = cell.td;
+                    }
+                };
                 if (this.selection) {
                     const { firstCell, lastCell } = this.selection;
                     for (let rowIndex = firstCell.y; rowIndex <= lastCell.y; rowIndex++) {
-                        this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) =>
-                            handler(cell, rowIndex, i)
-                        );
+                        this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) => {
+                            deleteRowHandler(cell, i, rowIndex);
+                        });
                     }
                     this.cells.splice(firstCell.y, lastCell.y - firstCell.y + 1);
                 } else {
                     this.forEachCellOfCurrentRow((cell, i) => {
-                        handler(cell, this.row, i);
+                        deleteRowHandler(cell, i, this.row);
                     });
                     this.cells.splice(this.row, 1);
                 }
                 break;
             case TableOperation.DeleteColumn:
+                const deleteColumnsHandler = (cell: VCell, i: number, colIndex: number) => {
+                    let nextCell = this.getCell(i, colIndex + 1);
+                    if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
+                        nextCell.td = cell.td;
+                    }
+                };
                 if (this.selection) {
                     const { firstCell, lastCell } = this.selection;
+                    let deletedColumns = 0;
                     for (let colIndex = firstCell.x; colIndex <= lastCell.x; colIndex++) {
                         this.forEachCellOfColumn(colIndex, (cell, row, i) => {
-                            handler(cell, i, colIndex, true /** handlingColumns */);
-                            row.splice(colIndex, 1);
+                            deleteColumnsHandler(cell, i, colIndex);
+                            row.splice(colIndex - deletedColumns, 1);
                         });
-                        this.cells.splice(colIndex, 1);
+                        deletedColumns++;
                     }
                 } else {
                     this.forEachCellOfCurrentColumn((cell, row, i) => {
-                        handler(cell, i, this.col, true /** handlingColumns */);
+                        deleteColumnsHandler(cell, i, this.col);
                         row.splice(this.col, 1);
                     });
                 }
