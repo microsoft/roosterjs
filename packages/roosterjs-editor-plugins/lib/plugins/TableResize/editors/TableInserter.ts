@@ -16,7 +16,7 @@ export default function createTableInserter(
     td: HTMLTableCellElement,
     isRTL: boolean,
     isHorizontal: boolean,
-    onInsert: () => void
+    onInsert: (table: HTMLTableElement) => void
 ): TableEditFeature {
     const table = editor.getElementAtCursor('table', td);
     const tdRect = normalizeRect(td.getBoundingClientRect());
@@ -65,7 +65,7 @@ class TableInsertHandler implements Disposable {
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
         private editor: IEditor,
-        private onInsert: () => void
+        private onInsert: (table: HTMLTableElement) => void
     ) {
         this.div.addEventListener('click', this.insertTd);
     }
@@ -88,10 +88,8 @@ class TableInsertHandler implements Disposable {
 
         vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);
         vtable.writeBack();
-        //Adding replaceNode to transform color when the theme is switched to dark.
-        this.editor.replaceNode(vtable.table, vtable.table, true /**transformColorForDarkMode*/);
 
-        this.onInsert();
+        this.onInsert(vtable.table);
     };
 }
 
