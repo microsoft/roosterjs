@@ -52,6 +52,7 @@ describe('Editor', () => {
             'MouseUp',
             'CopyPaste',
             'Entity',
+            'NormalizeTable',
             'Lifecycle',
         ]);
 
@@ -158,6 +159,7 @@ describe('Editor', () => {
             'test mouse up',
             'CopyPaste',
             'Entity',
+            'NormalizeTable',
             'Lifecycle',
         ]);
 
