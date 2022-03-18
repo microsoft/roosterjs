@@ -274,7 +274,7 @@ export default class VTable {
                     for (let colIndex = firstCell.x; colIndex <= lastCell.x; colIndex++) {
                         this.forEachCellOfColumn(colIndex, (cell, row, i) => {
                             handler(cell, i, colIndex, true /** handlingColumns */);
-                            row.splice(colIndex, lastCell.x - colIndex + 1);
+                            row.splice(colIndex, 1);
                         });
                     }
                 } else {
