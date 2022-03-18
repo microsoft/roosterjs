@@ -4,6 +4,7 @@ import NodePosition from './NodePosition';
 import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ColorTransformDirection } from '../enum/ColorTransformDirection';
+import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
@@ -196,7 +197,8 @@ export type SelectRange = (core: EditorCore, range: Range, skipSameRange?: boole
 export type SetContent = (
     core: EditorCore,
     content: string,
-    triggerContentChangedEvent: boolean
+    triggerContentChangedEvent: boolean,
+    metadata?: ContentMetadata
 ) => void;
 
 /**

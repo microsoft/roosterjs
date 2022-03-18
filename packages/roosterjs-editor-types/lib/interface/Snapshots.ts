@@ -1,11 +1,11 @@
 /**
  * Represents a data structure of snapshots, this is usually used for undo snapshots
  */
-export default interface Snapshots {
+export default interface Snapshots<T = string> {
     /**
      * The snapshot array
      */
-    snapshots: string[];
+    snapshots: T[];
 
     /**
      * Size of all snapshots

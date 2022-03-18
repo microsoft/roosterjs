@@ -1,13 +1,21 @@
 import createRange from './createRange';
-import { NodeType, SelectionPath, TrustedHTMLHandler } from 'roosterjs-editor-types';
-
-const LastCommentRegex = /<!--([^-]+)-->$/;
+import safeInstanceOf from '../utils/safeInstanceOf';
+import {
+    ContentMetadata,
+    SelectionRangeTypes,
+    TrustedHTMLHandler,
+    NormalContentMetadata,
+    TableContentMetadata,
+    Coordinates,
+} from 'roosterjs-editor-types';
 
 /**
- * Restore inner Html of a root element from given html string. If the string contains selection path,
+ * @deprecated Use setHtmlWithMetadata instead
+ * Restore inner HTML of a root element from given html string. If the string contains selection path,
  * remove the selection path and return a range represented by the path
  * @param root The root element
- * @param html The html to restore
+ * @param html The HTML to restore
+ * @param trustedHTMLHandler An optional trusted HTML handler to convert HTML string to security string
  * @returns A selection range if the html contains a valid selection path, otherwise null
  */
 export default function setHtmlWithSelectionPath(
@@ -15,41 +23,90 @@ export default function setHtmlWithSelectionPath(
     html: string,
     trustedHTMLHandler?: TrustedHTMLHandler
 ): Range | null {
+    const metadata = setHtmlWithMetadata(rootNode, html, trustedHTMLHandler);
+    return metadata?.type == SelectionRangeTypes.Normal
+        ? createRange(rootNode, metadata.start, metadata.end)
+        : null;
+}
+
+/**
+ * Restore inner HTML of a root element from given html string. If the string contains metadata,
+ * remove it from DOM tree and return the metadata
+ * @param root The root element
+ * @param html The HTML to restore
+ * @param trustedHTMLHandler An optional trusted HTML handler to convert HTML string to security string
+ * @returns Content metadata if any, or undefined
+ */
+export function setHtmlWithMetadata(
+    rootNode: HTMLElement,
+    html: string,
+    trustedHTMLHandler?: TrustedHTMLHandler
+): ContentMetadata | undefined {
     if (!rootNode) {
-        return null;
+        return undefined;
     }
 
     html = html || '';
-    const lastComment = LastCommentRegex.exec(html);
     rootNode.innerHTML = trustedHTMLHandler?.(html) || html;
-    const path = getSelectionPath(rootNode, lastComment?.[1] || '');
 
-    return path && createRange(rootNode, path.start, path.end);
-}
+    const potentialMetadataComment = rootNode.lastChild;
 
-function getSelectionPath(root: HTMLElement, alternativeComment: string): SelectionPath | null {
-    let pathCommentValue: string = '';
-    let pathCommentNode: Node | null = null;
-    let path: SelectionPath | null = null;
-    if (root.lastChild?.nodeType == NodeType.Comment) {
-        pathCommentNode = root.lastChild;
-        pathCommentValue = pathCommentNode.nodeValue || '';
-    } else {
-        pathCommentValue = alternativeComment;
-    }
-
-    if (pathCommentValue) {
+    if (safeInstanceOf(potentialMetadataComment, 'Comment')) {
         try {
-            path = JSON.parse(pathCommentValue) as SelectionPath;
-            if (path && path.start?.length > 0 && path.end?.length > 0) {
-                if (pathCommentNode) {
-                    root.removeChild(pathCommentNode);
-                }
-            } else {
-                path = null;
+            const obj = JSON.parse(potentialMetadataComment.nodeValue || '');
+
+            if (isContentMetadata(obj)) {
+                rootNode.removeChild(potentialMetadataComment);
+                return obj;
             }
         } catch {}
     }
 
-    return path;
+    return undefined;
+}
+
+function isContentMetadata(obj: any): obj is ContentMetadata {
+    if (!obj || typeof obj != 'object') {
+        return false;
+    }
+
+    switch (obj.type || SelectionRangeTypes.Normal) {
+        case SelectionRangeTypes.Normal:
+            const regularMetadata = obj as NormalContentMetadata;
+            if (isNumberArray(regularMetadata.start) && isNumberArray(regularMetadata.end)) {
+                obj.type = SelectionRangeTypes.Normal;
+                obj.isDarkMode = !!obj.isDarkMode;
+                return true;
+            }
+            break;
+
+        case SelectionRangeTypes.TableSelection:
+            const tableMetadata = obj as TableContentMetadata;
+            if (
+                typeof tableMetadata.tableId == 'string' &&
+                !!tableMetadata.tableId &&
+                isCoordinates(tableMetadata.firstCell) &&
+                isCoordinates(tableMetadata.lastCell)
+            ) {
+                obj.isDarkMode = !!obj.isDarkMode;
+                return true;
+            }
+            break;
+    }
+
+    return false;
+}
+
+function isNumberArray(obj: any): obj is number[] {
+    return obj && Array.isArray(obj) && obj.every(o => typeof o == 'number');
+}
+
+function isCoordinates(obj: any): obj is Coordinates {
+    const coordinates = obj as Coordinates;
+    return (
+        coordinates &&
+        typeof coordinates == 'object' &&
+        typeof coordinates.x == 'number' &&
+        typeof coordinates.y == 'number'
+    );
 }
