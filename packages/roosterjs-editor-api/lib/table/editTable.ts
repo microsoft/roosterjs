@@ -60,7 +60,7 @@ function calculateCellToSelect(operation: TableOperation, currentRow: number, cu
 
 function saveTableSelection(editor: IEditor, vtable: VTable) {
     const selection = editor.getSelectionRangeEx();
-    if (selection.type === SelectionRangeTypes.TableSelection) {
+    if (selection && selection.type === SelectionRangeTypes.TableSelection) {
         vtable.selection = selection.coordinates;
     }
 }
