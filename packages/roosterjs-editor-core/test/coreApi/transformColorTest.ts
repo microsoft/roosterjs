@@ -30,6 +30,14 @@ describe('transformColor Dark to light', () => {
         expect(element.outerHTML).toBe('<div data-ogsc="#123456"></div>');
     });
 
+    it('light mode still need to transform when force transform', () => {
+        const core = createEditorCore(div, { inDarkMode: false });
+        const element = document.createElement('div');
+        element.dataset.ogsc = '#123456';
+        transformColor(core, element, true, null, ColorTransformDirection.DarkToLight, true);
+        expect(element.outerHTML).toBe('<div style="color: rgb(18, 52, 86);"></div>');
+    });
+
     it('callback must be called', () => {
         const core = createEditorCore(div, { inDarkMode: false });
         const callback = jasmine.createSpy('callback');
@@ -162,6 +170,16 @@ describe('transformColor Light to dark', () => {
         element.style.color = 'rgb(18, 52, 86)';
         transformColor(core, element, true, null, ColorTransformDirection.LightToDark);
         expect(element.outerHTML).toBe('<div style="color: rgb(18, 52, 86);"></div>');
+    });
+
+    it('light mode still need to transform when force transform', () => {
+        const core = createEditorCore(div, { inDarkMode: false });
+        const element = document.createElement('div');
+        element.style.color = 'rgb(18, 52, 86)';
+        transformColor(core, element, true, null, ColorTransformDirection.LightToDark, true);
+        expect(element.outerHTML).toBe(
+            '<div style="color: rgb(18, 52, 86) !important;" data-ogsc="rgb(18, 52, 86)"></div>'
+        );
     });
 
     it('single element, no transform function', () => {

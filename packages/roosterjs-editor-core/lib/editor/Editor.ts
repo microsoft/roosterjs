@@ -814,16 +814,24 @@ export default class Editor implements IEditor {
      * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
      */
     public setDarkModeState(nextDarkMode?: boolean) {
-        if (this.isDarkMode() == nextDarkMode) {
+        if (this.isDarkMode() == !!nextDarkMode) {
             return;
         }
 
-        const currentContent = this.getContent(GetContentMode.CleanHTML);
+        this.core.api.transformColor(
+            this.core,
+            this.core.contentDiv,
+            false /*includeSelf*/,
+            null /*callback*/,
+            nextDarkMode
+                ? ColorTransformDirection.LightToDark
+                : ColorTransformDirection.DarkToLight,
+            true /*forceTransform*/
+        );
 
         this.triggerContentChangedEvent(
             nextDarkMode ? ChangeSource.SwitchToDarkMode : ChangeSource.SwitchToLightMode
         );
-        this.setContent(currentContent);
     }
 
     /**
@@ -832,6 +840,20 @@ export default class Editor implements IEditor {
      */
     public isDarkMode(): boolean {
         return this.core.lifecycle.isDarkMode;
+    }
+
+    /**
+     * Transform the given node and all its child nodes to dark mode color if editor is in dark mode
+     * @param node The node to transform
+     */
+    public transformToDarkColor(node: Node) {
+        this.core.api.transformColor(
+            this.core,
+            node,
+            true /*includeSelf*/,
+            null /*callback*/,
+            ColorTransformDirection.LightToDark
+        );
     }
 
     /**

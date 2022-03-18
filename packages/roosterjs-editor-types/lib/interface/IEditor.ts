@@ -548,6 +548,12 @@ export default interface IEditor {
     isDarkMode(): boolean;
 
     /**
+     * Transform the given node and all its child nodes to dark mode color if editor is in dark mode
+     * @param node The node to transform
+     */
+    transformToDarkColor(node: Node): void;
+
+    /**
      * Make the editor in "Shadow Edit" mode.
      * In Shadow Edit mode, all format change will finally be ignored.
      * This can be used for building a live preview feature for format button, to allow user
