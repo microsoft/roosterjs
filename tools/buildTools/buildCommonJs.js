@@ -9,7 +9,7 @@ const {
     distPath,
     packagesPath,
     packagesUiPath,
-    packages,
+    allPackages,
 } = require('./common');
 
 function buildCommonJs() {
@@ -18,7 +18,7 @@ function buildCommonJs() {
     runNode(typescriptPath + ` --build`, packagesPath);
     runNode(typescriptPath, packagesUiPath);
 
-    packages.forEach(packageName => {
+    allPackages.forEach(packageName => {
         const copy = fileName => {
             const source = path.join(rootPath, fileName);
             const target = path.join(distPath, packageName, fileName);
