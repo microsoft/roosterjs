@@ -34,7 +34,7 @@ There are also some extension packages to provide additional functionalities.
    Provide color transformation utility to make editor work under dark mode.
 
 2. [roosterjs-react](modules/roosterjs_react.html):
-   Provide a React wrapper of roosterjs so it can be easily used with React. (Under development)
+   Provide a React wrapper of roosterjs so it can be easily used with React.
 
 ## See also
 
