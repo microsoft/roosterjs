@@ -31,7 +31,7 @@ import { BlockElement } from 'roosterjs-editor-types';
  * @param rootNode Root node of the scope, the block element will be inside of this node
  * @param node The node to get BlockElement start from
  */
-export default function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement {
+export default function getBlockElementAtNode(rootNode: Node, node: Node): BlockElement | null {
     if (!contains(rootNode, node)) {
         return null;
     }
@@ -40,7 +40,9 @@ export default function getBlockElementAtNode(rootNode: Node, node: Node): Block
     // NOTE: this container block could be just the rootNode,
     // which cannot be used to create block element. We will special case handle it later on
     let containerBlockNode = StartEndBlockElement.getBlockContext(node);
-    if (containerBlockNode == node) {
+    if (!containerBlockNode) {
+        return null;
+    } else if (containerBlockNode == node) {
         return new NodeBlockElement(containerBlockNode);
     }
 
@@ -71,7 +73,7 @@ export default function getBlockElementAtNode(rootNode: Node, node: Node): Block
                     headNode = tailNode = parentNode;
                 }
                 break;
-            } else if (parentNode != rootNode) {
+            } else if (parentNode && parentNode != rootNode) {
                 // Continue collapsing to parent
                 headNode = tailNode = parentNode;
             } else {
@@ -102,8 +104,8 @@ function findHeadTailLeafNode(node: Node, containerBlockNode: Node, isTail: bool
     }
 
     while (result) {
-        let sibling = node;
-        while (!(sibling = isTail ? node.nextSibling : node.previousSibling)) {
+        let sibling: Node | null = node;
+        while (node.parentNode && !(sibling = isTail ? node.nextSibling : node.previousSibling)) {
             node = node.parentNode;
             if (node == containerBlockNode) {
                 return result;
