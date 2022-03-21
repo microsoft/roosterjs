@@ -8,8 +8,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
- * Wrapper for MathNapkinContentEditFeature that provides an API for updating the
- * content edit feature
+ * A plugin that solves mathematical operations on the editor
  */
 export default class MathNapkinPlugin implements EditorPlugin {
     private editor: IEditor;
@@ -47,16 +46,11 @@ export default class MathNapkinPlugin implements EditorPlugin {
             return;
         }
 
-        // Exit early on input events that do not insert a replacement's final character.
-        if (!event.rawEvent.data) {
-            return;
-        }
-
-        // Get the matching replacement
         const range = this.editor.getSelectionRange();
         if (range == null) {
             return;
         }
+
         const searcher = this.editor.getContentSearcherOfCursor(event);
         let stringToSearch: string;
         let equal: string;
