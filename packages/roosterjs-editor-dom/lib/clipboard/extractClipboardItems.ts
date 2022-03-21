@@ -49,7 +49,7 @@ export default function extractClipboardItems(
         types: [],
         text: '',
         image: null,
-        file: null,
+        files: [],
         rawHtml: null,
         customValues: {},
     };
@@ -77,10 +77,13 @@ export default function extractClipboardItems(
                         resolve();
                     }
                 });
-            } else if (!data.file && item.kind == 'file') {
-                data.types.push(type);
+            } else if (item.kind == 'file') {
                 return new Promise<void>(resolve => {
-                    data.file = item.getAsFile();
+                    const file = item.getAsFile();
+                    if (!!file) {
+                        data.types.push(type);
+                        data.files.push(file);
+                    }
                     resolve();
                 });
             } else {

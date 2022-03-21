@@ -46,7 +46,7 @@ describe('extractClipboardItems', () => {
             types: [],
             text: '',
             image: null,
-            file: null,
+            files: [],
             rawHtml: null,
             customValues: {},
         });
@@ -58,7 +58,7 @@ describe('extractClipboardItems', () => {
             types: [],
             text: '',
             image: null,
-            file: null,
+            files: [],
             rawHtml: null,
             customValues: {},
         });
@@ -71,7 +71,7 @@ describe('extractClipboardItems', () => {
             types: ['text/html'],
             text: '',
             image: null,
-            file: null,
+            files: [],
             rawHtml: html,
             customValues: {},
         });
@@ -84,7 +84,7 @@ describe('extractClipboardItems', () => {
             types: ['text/plain'],
             text: text,
             image: null,
-            file: null,
+            files: [],
             rawHtml: null,
             customValues: {},
         });
@@ -99,7 +99,7 @@ describe('extractClipboardItems', () => {
             types: [type],
             text: '',
             image: file,
-            file: null,
+            files: [],
             imageDataUri: `data:${type};base64,${stringValue}`,
             rawHtml: null,
             customValues: {},
@@ -115,7 +115,7 @@ describe('extractClipboardItems', () => {
             types: [type],
             text: '',
             image: null,
-            file: file,
+            files: [file],
             imageDataUri: '',
             rawHtml: null,
             customValues: {},
@@ -141,7 +141,7 @@ describe('extractClipboardItems', () => {
             types: ['text/html', 'text/plain', imageType],
             text: text,
             image: imageFile,
-            file: pdfFile,
+            files: [pdfFile],
             imageDataUri: `data:${imageType};base64,${stringValue1}`,
             rawHtml: html,
             customValues: {},
@@ -175,10 +175,10 @@ describe('extractClipboardItems', () => {
             createFileItem(pdfType, file4),
         ]);
         expect(clipboardData).toEqual({
-            types: ['text/html', 'text/plain', imageType],
+            types: ['text/html', 'text/plain', imageType, textType, pdfType],
             text: text,
             image: file1,
-            file: file3,
+            files: [file3, file4],
             imageDataUri: `data:${imageType};base64,${stringValue1}`,
             rawHtml: html,
             customValues: {},
@@ -197,7 +197,7 @@ describe('extractClipboardItems', () => {
             types: ['text/html', 'text/plain'],
             text: text,
             image: null,
-            file: null,
+            files: [],
             rawHtml: html,
             customValues: {},
         });
@@ -220,7 +220,7 @@ describe('extractClipboardItems', () => {
             types: ['text/html', 'text/plain', customType],
             text: text,
             image: null,
-            file: null,
+            files: [],
             rawHtml: html,
             customValues: {
                 known: customInput,
@@ -252,7 +252,7 @@ describe('extractClipboardItems', () => {
             types: ['text/html', 'text/plain', customType],
             text: text,
             image: null,
-            file: null,
+            files: [],
             rawHtml: html,
             customValues: {
                 ['link-preview']: customValue,
@@ -268,7 +268,7 @@ describe('extractClipboardItems', () => {
             types: [],
             text: '',
             image: null,
-            file: null,
+            files: [],
             rawHtml: null,
             customValues: {},
         });
