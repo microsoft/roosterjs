@@ -49,6 +49,7 @@ export default function extractClipboardItems(
         types: [],
         text: '',
         image: null,
+        file: null,
         rawHtml: null,
         customValues: {},
     };
@@ -75,6 +76,12 @@ export default function extractClipboardItems(
                     } else {
                         resolve();
                     }
+                });
+            } else if (!data.file && item.kind == 'file') {
+                data.types.push(type);
+                return new Promise<void>(resolve => {
+                    data.file = item.getAsFile();
+                    resolve();
                 });
             } else {
                 const customType = getAllowedCustomType(type, options?.allowedCustomPasteType);

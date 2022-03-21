@@ -27,6 +27,7 @@ export default function extractClipboardItemsForIE(
         types: dataTransfer.types ? toArray(dataTransfer.types) : [],
         text: dataTransfer.getData('text'),
         image: null,
+        file: null,
         rawHtml: null,
         customValues: {},
     };

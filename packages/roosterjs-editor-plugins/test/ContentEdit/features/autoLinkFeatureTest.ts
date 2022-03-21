@@ -156,6 +156,7 @@ describe('Auto Link ShouldHandle On Paste', () => {
         const clipboard: ClipboardData = {
             customValues: null,
             image: null,
+            file: null,
             rawHtml: null,
             text: clipboardText,
             types: [],

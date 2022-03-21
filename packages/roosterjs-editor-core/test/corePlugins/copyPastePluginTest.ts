@@ -72,6 +72,7 @@ describe('CopyPastePlugin paste', () => {
             rawHtml: '',
             text: '',
             image: null,
+            file: null,
             types: [],
             customValues: {},
         };
