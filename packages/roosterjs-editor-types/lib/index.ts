@@ -145,6 +145,7 @@ export {
     EnsureTypeInContainer,
     Focus,
     GetContent,
+    GetSelection,
     GetSelectionRange,
     GetSelectionRangeEx,
     GetStyleBasedFormatState,

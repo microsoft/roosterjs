@@ -426,6 +426,10 @@ export default interface IEditor {
      */
     getDocument(): Document;
 
+    getSelection(): Selection;
+
+    getDocumentRoot(): DocumentOrShadowRoot;
+
     /**
      * Get the scroll container of the editor
      */

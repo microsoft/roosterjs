@@ -6,6 +6,7 @@ import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
 import { getContent } from './getContent';
 import { getPendableFormatState } from './getPendableFormatState';
+import { getSelection } from './getSelection';
 import { getSelectionRange } from './getSelectionRange';
 import { getSelectionRangeEx } from './getSelectionRangeEx';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
@@ -29,6 +30,7 @@ export const coreApiMap: CoreApiMap = {
     ensureTypeInContainer,
     focus,
     getContent,
+    getSelection,
     getSelectionRange,
     getSelectionRangeEx,
     getStyleBasedFormatState,

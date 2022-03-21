@@ -20,6 +20,7 @@ export default function Rooster(props: RoosterProps) {
             editorDiv.current.shadowRoot ||
             editorDiv.current.attachShadow({
                 mode: 'open',
+                delegatesFocus: true,
             });
         const div =
             (root.firstChild as HTMLDivElement) ||

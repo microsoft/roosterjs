@@ -50,7 +50,7 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                 return core.domEvent.tableSelectionRange;
             }
 
-            let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
+            let selection = core.api.getSelection(core);
             if (!result && selection && selection.rangeCount > 0) {
                 let range = selection.getRangeAt(0);
                 if (contains(core.contentDiv, range)) {

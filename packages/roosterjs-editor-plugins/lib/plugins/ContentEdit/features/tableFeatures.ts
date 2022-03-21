@@ -71,7 +71,7 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
         const isUp = event.rawEvent.which == Keys.UP;
         const step = isUp ? -1 : 1;
         const hasShiftKey = event.rawEvent.shiftKey;
-        const selection = editor.getDocument().defaultView?.getSelection();
+        const selection = editor.getSelection();
         let targetTd: HTMLTableCellElement = null;
 
         if (selection) {
@@ -106,7 +106,7 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
                                       newPos.isAtEnd ? PositionType.After : PositionType.Before
                                   )
                                 : newPos;
-                        const selection = editor.getDocument().defaultView?.getSelection();
+                        const selection = editor.getSelection();
                         selection?.setBaseAndExtent(
                             anchorNode,
                             anchorOffset,

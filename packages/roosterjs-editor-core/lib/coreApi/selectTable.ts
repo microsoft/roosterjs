@@ -14,6 +14,7 @@ import {
     SelectTable,
     PositionType,
     Coordinates,
+    NodeType,
 } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
@@ -170,7 +171,12 @@ function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSel
     let styleElement = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
     if (!styleElement) {
         styleElement = doc.createElement('style');
-        doc.head.appendChild(styleElement);
+
+        if (((core.documentRoot as any) as Node).nodeType == NodeType.Document) {
+            doc.head.appendChild(styleElement);
+        } else {
+            ((core.documentRoot as any) as ShadowRoot).appendChild(styleElement);
+        }
         styleElement.id = STYLE_ID + core.contentDiv.id;
     }
     styleElement.sheet.insertRule(css);

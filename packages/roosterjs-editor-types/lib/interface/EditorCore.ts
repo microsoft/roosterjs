@@ -130,6 +130,15 @@ export type Focus = (core: EditorCore) => void;
 export type GetContent = (core: EditorCore, mode: GetContentMode) => string;
 
 /**
+ * Get current selection object from editor.
+ * Normally this should be the same with window.getSelection(), but for the following case they will be different:
+ * 1. Editor is in a different window
+ * 2. Editor is under shadow DOM
+ * @param core The EditorCore object
+ */
+export type GetSelection = (core: EditorCore) => Selection;
+
+/**
  * Get current or cached selection range
  * @param core The EditorCore object
  * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
@@ -311,6 +320,15 @@ export interface CoreApiMap {
      * @returns HTML string representing current editor content
      */
     getContent: GetContent;
+
+    /**
+     * Get current selection object from editor.
+     * Normally this should be the same with window.getSelection(), but for the following case they will be different:
+     * 1. Editor is in a different window
+     * 2. Editor is under shadow DOM
+     * @param core The EditorCore object
+     */
+    getSelection: GetSelection;
 
     /**
      * Get current or cached selection range

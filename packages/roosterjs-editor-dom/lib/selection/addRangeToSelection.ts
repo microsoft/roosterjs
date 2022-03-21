@@ -6,9 +6,18 @@ import { Browser } from '../utils/Browser';
  * @param skipSameRange When set to true, do nothing if the given range is the same with current selection,
  * otherwise it will always remove current selection range and set to the given one.
  * This parameter is always treat as true in Edge to avoid some weird runtime exception.
+ * @param selection Target selection object
  */
-export default function addRangeToSelection(range: Range, skipSameRange?: boolean) {
-    const selection = range?.commonAncestorContainer?.ownerDocument?.defaultView?.getSelection();
+export default function addRangeToSelection(
+    range: Range,
+    skipSameRange?: boolean,
+    selection?: Selection
+) {
+    selection =
+        selection ||
+        range?.commonAncestorContainer?.ownerDocument?.defaultView?.getSelection() ||
+        undefined;
+
     if (selection) {
         let needAddRange = true;
 
