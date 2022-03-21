@@ -23,6 +23,7 @@ import {
     InsertOption,
     IPositionContentSearcher,
     NodePosition,
+    NodeType,
     PendableFormatState,
     PluginEvent,
     PluginEventData,
@@ -91,6 +92,20 @@ export default class Editor implements IEditor {
             }
         });
 
+        let node: Node = contentDiv.parentNode;
+
+        while (
+            node &&
+            node.nodeType != NodeType.Document &&
+            node.nodeType != NodeType.DocumentFragment
+        ) {
+            node = node.parentNode;
+        }
+
+        if (!node) {
+            throw new Error('contentDiv must be put into a document');
+        }
+
         const zoomScale = options.zoomScale > 0 ? options.zoomScale : 1;
         this.core = {
             contentDiv,
@@ -103,6 +118,7 @@ export default class Editor implements IEditor {
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
             zoomScale: zoomScale,
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
+            documentRoot: (node as any) as DocumentOrShadowRoot,
         };
 
         // 3. Initialize plugins

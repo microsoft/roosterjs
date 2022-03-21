@@ -53,6 +53,12 @@ export default interface EditorCore extends PluginState {
      * @deprecated Use zoomScale instead
      */
     sizeTransformer: SizeTransformer;
+
+    /**
+     * Document root of editor.
+     * When editor is under sahdow DOM, the value will be this shadow root, otherwise value will be document of editor
+     */
+    documentRoot: DocumentOrShadowRoot;
 }
 
 /**

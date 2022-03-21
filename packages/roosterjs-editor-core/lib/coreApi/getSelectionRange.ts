@@ -26,7 +26,7 @@ export const getSelectionRange: GetSelectionRange = (
         return result;
     } else {
         if (!tryGetFromCache || core.api.hasFocus(core)) {
-            let selection = core.contentDiv.ownerDocument.defaultView?.getSelection();
+            let selection = (core.documentRoot as Document).getSelection();
             if (selection && selection.rangeCount > 0) {
                 let range = selection.getRangeAt(0);
                 if (contains(core.contentDiv, range)) {

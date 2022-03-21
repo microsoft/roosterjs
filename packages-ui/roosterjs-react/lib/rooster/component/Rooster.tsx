@@ -16,7 +16,21 @@ export default function Rooster(props: RoosterProps) {
     const { focusOnInit, editorCreator, zoomScale, inDarkMode } = props;
 
     React.useEffect(() => {
-        editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);
+        const root =
+            editorDiv.current.shadowRoot ||
+            editorDiv.current.attachShadow({
+                mode: 'open',
+            });
+        const div =
+            (root.firstChild as HTMLDivElement) ||
+            editorDiv.current.ownerDocument.createElement('div');
+        div.style.width = '100%';
+        div.style.height = '100%';
+        div.style.outline = 'none';
+        div.tabIndex = 0;
+        root.appendChild(div);
+
+        editor.current = (editorCreator || defaultEditorCreator)(div, props);
 
         if (focusOnInit) {
             editor.current.focus();
@@ -28,7 +42,7 @@ export default function Rooster(props: RoosterProps) {
                 editor.current = null;
             }
         };
-    }, [editorCreator]);
+    }, [editorCreator, editorDiv.current]);
 
     React.useEffect(() => {
         editor.current.setDarkModeState(!!inDarkMode);
