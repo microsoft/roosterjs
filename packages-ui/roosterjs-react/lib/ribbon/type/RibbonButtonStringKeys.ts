@@ -163,6 +163,11 @@ export type ItalicButtonStringKey = 'buttonNameItalic';
 export type LtrButtonStringKey = 'buttonNameLtr';
 
 /**
+ * Key of localized strings of More commands (overflow) button
+ */
+export type MoreCommandsButtonStringKey = 'buttonNameMoreCommands';
+
+/**
  * Key of localized strings of Numbered list button
  */
 export type NumberedListButtonStringKey = 'buttonNameNumberedList';
@@ -246,6 +251,7 @@ export type AllButtonStringKeys =
     | InsertTableButtonStringKey
     | ItalicButtonStringKey
     | LtrButtonStringKey
+    | MoreCommandsButtonStringKey
     | NumberedListButtonStringKey
     | QuoteButtonStringKey
     | RedoButtonStringKey
