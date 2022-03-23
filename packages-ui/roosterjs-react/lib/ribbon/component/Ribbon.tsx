@@ -7,6 +7,7 @@ import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { FormatState } from 'roosterjs-editor-types';
 import { IContextualMenuItem, IContextualMenuItemProps } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
+import { moreCommands } from './buttons/moreCommands';
 
 const ribbonClassName = mergeStyles({
     '& .ms-CommandBar': {
@@ -72,6 +73,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                     onRenderIcon: isRtl && button.flipWhenRtl ? flipIcon : undefined,
                     iconOnly: true,
                     text: getLocalizedString(strings, button.key, button.unlocalizedText),
+                    ariaLabel: getLocalizedString(strings, button.key, button.unlocalizedText),
                     canCheck: true,
                     checked: (formatState && button.isChecked?.(formatState)) || false,
                     disabled: (formatState && button.isDisabled?.(formatState)) || false,
@@ -121,11 +123,20 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
         };
     }, [plugin]);
 
+    const moreCommandsBtn = moreCommands as RibbonButton<T>;
+
     return (
         <CommandBar
             items={commandBarItems}
             {...props}
             className={ribbonClassName + ' ' + (props?.className || '')}
+            overflowButtonProps={{
+                ariaLabel: getLocalizedString(
+                    strings,
+                    moreCommandsBtn.key,
+                    moreCommandsBtn.unlocalizedText
+                ),
+            }}
         />
     );
 }
