@@ -34,7 +34,7 @@ export default interface ClipboardData {
     /**
      * General file from clipboard event
      */
-    files: File[];
+    files?: File[];
 
     /**
      * Html extracted from raw html string and remove content before and after fragment tag

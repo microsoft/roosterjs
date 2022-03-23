@@ -82,7 +82,7 @@ export default function extractClipboardItems(
                     const file = item.getAsFile();
                     if (!!file) {
                         data.types.push(type);
-                        data.files.push(file);
+                        data.files!.push(file);
                     }
                     resolve();
                 });
