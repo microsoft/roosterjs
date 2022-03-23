@@ -106,7 +106,7 @@ export type DecreaseFontSizeButtonStringKey = 'buttonNameDecreaseFontSize';
 /**
  * Key of localized strings of Decrease indent size button
  */
-export type DecreaseIndentButtonStringKey = 'buttonNameDecreaseIntent';
+export type DecreaseIndentButtonStringKey = 'buttonNameDecreaseIndent';
 
 /**
  * Key of localized strings of Font button
@@ -178,7 +178,7 @@ export type QuoteButtonStringKey = 'buttonNameQuote';
 export type RedoButtonStringKey = 'buttonNameRedo';
 
 /**
- * Key of localized strings of REmove link button
+ * Key of localized strings of Remove link button
  */
 export type RemoveLinkButtonStringKey = 'buttonNameRemoveLink';
 
@@ -218,7 +218,7 @@ export type UnderlineButtonStringKey = 'buttonNameUnderline';
 export type UndoButtonStringKey = 'buttonNameUndo';
 
 /**
- * Key of localized strings of Cell Shade button
+ * Key of localized strings of Cell shade button
  */
 export type CellShadeButtonStringKey = 'buttonNameCellShade';
 
