@@ -122,6 +122,49 @@ describe('extractClipboardItems', () => {
         });
     });
 
+    it('input with null file', async () => {
+        const type = 'application/pdf';
+        const transferItem: DataTransferItem = {
+            kind: 'file',
+            type,
+            getAsFile: () => null,
+            getAsString: throwError,
+            webkitGetAsEntry: throwError,
+        };
+        const clipboardData = await extractClipboardItems([transferItem]);
+        expect(clipboardData).toEqual({
+            types: [],
+            text: '',
+            image: null,
+            files: [],
+            imageDataUri: '',
+            rawHtml: null,
+            customValues: {},
+        });
+    });
+
+    it('input with multiple files', async () => {
+        const stringValue1 = 'AAAABBBBCCCC';
+        const stringValue2 = 'DDDDEEEEFFFF';
+        const pdfType = 'application/pdf';
+        const textType = 'text/plain';
+        const pdfFile = createFile(pdfType, 'document.pdf', stringValue1);
+        const textFile = createFile(textType, 'hello.txt', stringValue2);
+        const clipboardData = await extractClipboardItems([
+            createFileItem(pdfType, pdfFile),
+            createFileItem(textType, textFile),
+        ]);
+        expect(clipboardData).toEqual({
+            types: [pdfType, textType],
+            text: '',
+            image: null,
+            files: [pdfFile, textFile],
+            imageDataUri: '',
+            rawHtml: null,
+            customValues: {},
+        });
+    });
+
     it('input with text,html,image,file', async () => {
         const text = 'This is a text';
         const html = '<div>html</div>';
