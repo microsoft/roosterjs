@@ -192,25 +192,7 @@ export default class VTable {
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
                 break;
             case TableOperation.InsertBelow:
-                let newRow = this.row + this.countSpanAbove(this.row, this.col);
-                this.cells.splice(
-                    newRow,
-                    0,
-                    this.cells[newRow - 1].map((cell, colIndex) => {
-                        let nextCell = this.getCell(newRow, colIndex);
-                        if (nextCell.spanAbove) {
-                            return cloneCell(nextCell);
-                        } else if (cell.spanLeft) {
-                            let newCell = cloneCell(cell);
-                            newCell.spanAbove = false;
-                            return newCell;
-                        } else {
-                            return {
-                                td: cloneNode(this.getTd(this.row, colIndex)),
-                            };
-                        }
-                    })
-                );
+                this.insertBelow();
                 break;
 
             case TableOperation.InsertLeft:
@@ -219,23 +201,7 @@ export default class VTable {
                 });
                 break;
             case TableOperation.InsertRight:
-                let newCol = this.col + this.countSpanLeft(this.row, this.col);
-                this.forEachCellOfColumn(newCol - 1, (cell, row, i) => {
-                    let nextCell = this.getCell(i, newCol);
-                    let newCell: VCell;
-                    if (nextCell.spanLeft) {
-                        newCell = cloneCell(nextCell);
-                    } else if (cell.spanAbove) {
-                        newCell = cloneCell(cell);
-                        newCell.spanLeft = false;
-                    } else {
-                        newCell = {
-                            td: cloneNode(this.getTd(i, this.col)),
-                        };
-                    }
-
-                    row.splice(newCol, 0, newCell);
-                });
+                this.insertRight();
                 break;
 
             case TableOperation.DeleteRow:
@@ -373,7 +339,103 @@ export default class VTable {
             case TableOperation.AlignCellBottom:
                 style.verticalAlign = 'bottom';
                 break;
+            case TableOperation.AutoSum:
+                if (this.selection) {
+                    const { firstCell, lastCell } = this.selection;
+                    if (firstCell.y === lastCell.y) {
+                        let sumRowValue = 0;
+                        let rowSize;
+                        this.forEachCellOfRow(firstCell.y, (cell, i) => {
+                            const cellContent = cell.td.textContent.replace(',', '');
+                            const cellValue =
+                                i <= lastCell.x && i >= firstCell.x ? parseFloat(cellContent) : 0;
+                            if (!isNaN(cellValue)) {
+                                sumRowValue = sumRowValue + cellValue;
+                            }
+                            rowSize = i;
+                        });
+
+                        if (lastCell.x === rowSize) {
+                            const newRowCell =
+                                lastCell.x + this.countSpanAbove(lastCell.x, lastCell.y);
+                            this.insertRight(newRowCell);
+                        }
+
+                        this.getCell(
+                            firstCell.y,
+                            lastCell.x + 1
+                        ).td.textContent = sumRowValue.toString();
+                    } else if (firstCell.x === lastCell.x) {
+                        let sumColumnValue = 0;
+                        let columnSize;
+                        this.forEachCellOfColumn(firstCell.x, (cell, row, i) => {
+                            const cellContent = cell.td.textContent.replace(',', '');
+                            const cellValue =
+                                i <= lastCell.y && i >= firstCell.y ? parseFloat(cellContent) : 0;
+                            if (!isNaN(cellValue)) {
+                                sumColumnValue = sumColumnValue + cellValue;
+                            }
+                            columnSize = i;
+                        });
+                        if (lastCell.y === columnSize) {
+                            const newColumnCell =
+                                lastCell.y + this.countSpanLeft(lastCell.x, lastCell.y);
+                            this.insertBelow(newColumnCell);
+                        }
+                        this.getCell(
+                            lastCell.y + 1,
+                            firstCell.x
+                        ).td.textContent = sumColumnValue.toString();
+                    }
+                }
+                break;
         }
+    }
+
+    insertBelow(newRow?: number) {
+        if (!newRow) {
+            newRow = this.row + this.countSpanAbove(this.row, this.col);
+        }
+        this.cells.splice(
+            newRow,
+            0,
+            this.cells[newRow - 1].map((cell, colIndex) => {
+                let nextCell = this.getCell(newRow, colIndex);
+                if (nextCell.spanAbove) {
+                    return cloneCell(nextCell);
+                } else if (cell.spanLeft) {
+                    let newCell = cloneCell(cell);
+                    newCell.spanAbove = false;
+                    return newCell;
+                } else {
+                    return {
+                        td: cloneNode(this.getTd(this.row, colIndex)),
+                    };
+                }
+            })
+        );
+    }
+
+    insertRight(newCol?: number) {
+        if (!newCol) {
+            newCol = this.col + this.countSpanLeft(this.row, this.col);
+        }
+        this.forEachCellOfColumn(newCol - 1, (cell, row, i) => {
+            let nextCell = this.getCell(i, newCol);
+            let newCell: VCell;
+            if (nextCell.spanLeft) {
+                newCell = cloneCell(nextCell);
+            } else if (cell.spanAbove) {
+                newCell = cloneCell(cell);
+                newCell.spanLeft = false;
+            } else {
+                newCell = {
+                    td: cloneNode(this.getTd(i, this.col)),
+                };
+            }
+
+            row.splice(newCol, 0, newCell);
+        });
     }
 
     /**

@@ -111,4 +111,9 @@ export const enum TableOperation {
      * Align current table cell at the bottom
      */
     AlignCellBottom,
+
+    /**
+     * Sum the values of the selected row or column
+     */
+    AutoSum,
 }

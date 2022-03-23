@@ -223,6 +223,11 @@ export type UndoButtonStringKey = 'buttonNameUndo';
 export type CellShadeButtonStringKey = 'buttonNameCellShade';
 
 /**
+ * Key of localized strings of Cell Shade button
+ */
+export type TableAutoSumButtonStringKey = 'buttonNameTableAutoSum';
+
+/**
  * A public type for localized string keys of all buttons
  */
 export type AllButtonStringKeys =
@@ -257,4 +262,5 @@ export type AllButtonStringKeys =
     | TextColorButtonStringKey
     | UnderlineButtonStringKey
     | UndoButtonStringKey
-    | CellShadeButtonStringKey;
+    | CellShadeButtonStringKey
+    | TableAutoSumButtonStringKey;
