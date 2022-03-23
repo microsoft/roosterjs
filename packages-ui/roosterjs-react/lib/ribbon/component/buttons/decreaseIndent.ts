@@ -8,7 +8,7 @@ import { setIndentation } from 'roosterjs-editor-api';
  * "Decrease indent" button on the format ribbon
  */
 export const decreaseIndent: RibbonButton<DecreaseIndentButtonStringKey> = {
-    key: 'buttonNameDecreaseIntent',
+    key: 'buttonNameDecreaseIndent',
     unlocalizedText: 'Decrease indent',
     iconName: 'DecreaseIndentLegacy',
     flipWhenRtl: true,
