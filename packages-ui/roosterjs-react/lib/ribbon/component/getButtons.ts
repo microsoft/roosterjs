@@ -10,6 +10,7 @@ import { clearFormat } from './buttons/clearFormat';
 import { code } from './buttons/code';
 import { decreaseFontSize } from './buttons/decreaseFontSize';
 import { decreaseIndent } from './buttons/decreaseIndent';
+import { disableTableAutoSum } from './buttons/disableTableAutoSum';
 import { font } from './buttons/font';
 import { fontSize } from './buttons/fontSize';
 import { header } from './buttons/header';
@@ -67,6 +68,7 @@ const KnownRibbonButtons: { [key in KnownRibbonButtonKey]: RibbonButton<AllButto
     [KnownRibbonButtonKey.Redo]: redo,
     [KnownRibbonButtonKey.ClearFormat]: clearFormat,
     [KnownRibbonButtonKey.TableAutoSum]: tableAutoSum,
+    [KnownRibbonButtonKey.TableDisableAutoSum]: disableTableAutoSum,
 };
 
 /**
@@ -105,6 +107,7 @@ export const AllButtonKeys = [
     KnownRibbonButtonKey.Redo,
     KnownRibbonButtonKey.ClearFormat,
     KnownRibbonButtonKey.TableAutoSum,
+    KnownRibbonButtonKey.TableDisableAutoSum,
 ];
 
 /**

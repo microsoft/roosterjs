@@ -6,7 +6,9 @@ import toArray from '../utils/toArray';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 
 import {
+    Coordinates,
     SizeTransformer,
+    TableAutoSumProperties,
     TableBorderFormat,
     TableFormat,
     TableOperation,
@@ -343,53 +345,96 @@ export default class VTable {
                 if (this.selection) {
                     const { firstCell, lastCell } = this.selection;
                     if (firstCell.y === lastCell.y) {
-                        let sumRowValue = 0;
-                        let rowSize;
-                        this.forEachCellOfRow(firstCell.y, (cell, i) => {
-                            const cellContent = cell.td.textContent.replace(',', '');
-                            const cellValue =
-                                i <= lastCell.x && i >= firstCell.x ? parseFloat(cellContent) : 0;
-                            if (!isNaN(cellValue)) {
-                                sumRowValue = sumRowValue + cellValue;
-                            }
-                            rowSize = i;
-                        });
-
-                        if (lastCell.x === rowSize) {
-                            const newRowCell =
-                                lastCell.x + this.countSpanAbove(lastCell.x, lastCell.y);
-                            this.insertRight(newRowCell);
-                        }
-
-                        this.getCell(
-                            firstCell.y,
-                            lastCell.x + 1
-                        ).td.textContent = sumRowValue.toString();
+                        this.autoSumRows(firstCell, lastCell);
                     } else if (firstCell.x === lastCell.x) {
-                        let sumColumnValue = 0;
-                        let columnSize;
-                        this.forEachCellOfColumn(firstCell.x, (cell, row, i) => {
-                            const cellContent = cell.td.textContent.replace(',', '');
-                            const cellValue =
-                                i <= lastCell.y && i >= firstCell.y ? parseFloat(cellContent) : 0;
-                            if (!isNaN(cellValue)) {
-                                sumColumnValue = sumColumnValue + cellValue;
-                            }
-                            columnSize = i;
-                        });
-                        if (lastCell.y === columnSize) {
-                            const newColumnCell =
-                                lastCell.y + this.countSpanLeft(lastCell.x, lastCell.y);
-                            this.insertBelow(newColumnCell);
-                        }
-                        this.getCell(
-                            lastCell.y + 1,
-                            firstCell.x
-                        ).td.textContent = sumColumnValue.toString();
+                        this.autoSumColumns(firstCell, lastCell);
                     }
                 }
                 break;
+            case TableOperation.DisableAutoSum:
+                if (
+                    currentCell.td.dataset[TableAutoSumProperties.AutoSumRowId] ||
+                    currentCell.td.dataset[TableAutoSumProperties.AutoSumTotalRowId]
+                ) {
+                    this.forEachCellOfCurrentRow((cell, i) => {
+                        if (cell.td.dataset[TableAutoSumProperties.AutoSumRowId]) {
+                            delete cell.td.dataset[TableAutoSumProperties.AutoSumRowId];
+                        }
+                        if (cell.td.dataset[TableAutoSumProperties.AutoSumTotalRowId]) {
+                            delete cell.td.dataset[TableAutoSumProperties.AutoSumTotalRowId];
+                        }
+                    });
+                }
+
+                if (
+                    currentCell.td.dataset[TableAutoSumProperties.AutoSumColumnId] ||
+                    currentCell.td.dataset[TableAutoSumProperties.AutoSumColumnId]
+                ) {
+                    this.forEachCellOfCurrentColumn((cell, row, i) => {
+                        if (cell.td.dataset[TableAutoSumProperties.AutoSumColumnId]) {
+                            delete cell.td.dataset[TableAutoSumProperties.AutoSumColumnId];
+                        }
+                        if (cell.td.dataset[TableAutoSumProperties.AutoSumColumnId]) {
+                            delete cell.td.dataset[TableAutoSumProperties.AutoSumColumnId];
+                        }
+                    });
+                }
+                break;
         }
+    }
+
+    autoSumRows(firstCell: Coordinates, lastCell: Coordinates) {
+        let sumRowValue = 0;
+        let rowSize;
+        this.forEachCellOfRow(firstCell.y, (cell, i) => {
+            const cellContent = parseFloat(cell.td.textContent.replace(',', ''));
+            const cellValue = isNaN(cellContent) ? 0 : cellContent;
+            if (i <= lastCell.x && i >= firstCell.x) {
+                sumRowValue = sumRowValue + cellValue;
+                cell.td.dataset[
+                    TableAutoSumProperties.AutoSumRowId
+                ] = `${firstCell.y}:${lastCell.y}`;
+            }
+            delete cell.td.dataset[TableAutoSumProperties.AutoSumTotalRowId];
+            rowSize = i;
+        });
+        if (lastCell.x === rowSize) {
+            const newRowCell = lastCell.x + this.countSpanAbove(lastCell.x, lastCell.y);
+            this.insertRight(newRowCell);
+        }
+        const totalRowCell = this.getCell(firstCell.y, lastCell.x + 1);
+        totalRowCell.td.textContent = sumRowValue.toString();
+        delete totalRowCell.td.dataset[TableAutoSumProperties.AutoSumRowId];
+        totalRowCell.td.dataset[
+            TableAutoSumProperties.AutoSumTotalRowId
+        ] = `${firstCell.y}:${lastCell.y}`;
+    }
+
+    autoSumColumns(firstCell: Coordinates, lastCell: Coordinates) {
+        let sumColumnValue = 0;
+        let columnSize;
+        this.forEachCellOfColumn(firstCell.x, (cell, row, i) => {
+            const cellContent = parseFloat(cell.td.textContent.replace(',', ''));
+            const cellValue = isNaN(cellContent) ? 0 : cellContent;
+            if (i <= lastCell.y && i >= firstCell.y) {
+                sumColumnValue = sumColumnValue + cellValue;
+                cell.td.dataset[
+                    TableAutoSumProperties.AutoSumColumnId
+                ] = `${firstCell.x}:${lastCell.x}`;
+            }
+            delete cell.td.dataset[TableAutoSumProperties.AutoSumTotalColumnId];
+            columnSize = i;
+        });
+        if (lastCell.y === columnSize) {
+            const newColumnCell = lastCell.y + this.countSpanLeft(lastCell.y, lastCell.x);
+            this.insertBelow(newColumnCell);
+        }
+        const totalColumnCell = this.getCell(lastCell.y + 1, firstCell.x);
+        totalColumnCell.td.textContent = sumColumnValue.toString();
+        delete totalColumnCell.td.dataset[TableAutoSumProperties.AutoSumColumnId];
+        totalColumnCell.td.dataset[
+            TableAutoSumProperties.AutoSumTotalColumnId
+        ] = `${firstCell.x}:${lastCell.x}`;
     }
 
     insertBelow(newRow?: number) {

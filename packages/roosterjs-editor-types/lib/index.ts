@@ -30,6 +30,7 @@ export { ImageEditOperation } from './enum/ImageEditOperation';
 export { ClearFormatMode } from './enum/ClearFormatMode';
 export { KnownCreateElementDataIndex } from './enum/KnownCreateElementDataIndex';
 export { TableBorderFormat } from './enum/TableBorderFormat';
+export { TableAutoSumProperties } from './enum/TableAutoSumProperties';
 
 // Event
 export { default as BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';

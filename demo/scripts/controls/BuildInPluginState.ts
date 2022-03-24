@@ -20,6 +20,7 @@ export interface BuildInPluginList {
     pickerPlugin: boolean;
     resetList: boolean;
     contextMenu: boolean;
+    tableAutoSum: boolean;
 }
 
 export default interface BuildInPluginState {

@@ -11,6 +11,7 @@ import { EditorPlugin } from 'roosterjs-editor-types';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
+import { TableAutoSum as TableAutoSumPlugin } from 'roosterjs-editor-plugins/lib/TableAutoSum';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
@@ -46,6 +47,7 @@ const PluginCreators: {
     customReplace: _ => new CustomReplacePlugin(),
     resetList: _ => new ResetListPlugin(),
     contextMenu: _ => new ContextMenu(CONTEXT_MENU_DATA_PROVIDER),
+    tableAutoSum: _ => new TableAutoSumPlugin(),
 };
 
 export default function getToggleablePlugins(initState: BuildInPluginState) {

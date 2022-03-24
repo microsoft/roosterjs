@@ -1,15 +1,15 @@
 import RibbonButton from '../../type/RibbonButton';
+import { DisableTableAutoSumButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { editTable } from 'roosterjs-editor-api';
 import { FormatState, TableOperation } from 'roosterjs-editor-types';
-import { TableAutoSumButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal
  * "Sum table row" button on the format ribbon
  */
-export const tableAutoSum: RibbonButton<TableAutoSumButtonStringKey> = {
-    key: 'buttonNameTableAutoSum',
-    unlocalizedText: 'Table Auto Sum',
+export const disableTableAutoSum: RibbonButton<DisableTableAutoSumButtonStringKey> = {
+    key: 'buttonNameDisableTableAutoSum',
+    unlocalizedText: 'Disable table auto sum',
     iconName: 'TableComputed',
     isDisabled: (format: FormatState) => {
         if (format.isInTable) {
@@ -18,6 +18,6 @@ export const tableAutoSum: RibbonButton<TableAutoSumButtonStringKey> = {
         return true;
     },
     onClick: editor => {
-        editTable(editor, TableOperation.AutoSum);
+        editTable(editor, TableOperation.DisableAutoSum);
     },
 };

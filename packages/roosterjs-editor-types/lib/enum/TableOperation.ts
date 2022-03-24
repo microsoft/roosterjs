@@ -116,4 +116,9 @@ export const enum TableOperation {
      * Sum the values of the selected row or column
      */
     AutoSum,
+
+    /**
+     * Disable AutoSum
+     */
+    DisableAutoSum,
 }

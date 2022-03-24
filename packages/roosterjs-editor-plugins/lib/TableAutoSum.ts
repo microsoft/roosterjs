@@ -1,1 +1,1 @@
-export * from './plugins/TableAutoSum';
+export * from './plugins/TableAutoSum/index';

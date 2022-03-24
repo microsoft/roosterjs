@@ -161,4 +161,9 @@ export const enum KnownRibbonButtonKey {
      * "ClearFormat" button on the format ribbon
      */
     TableAutoSum,
+
+    /**
+     * "ClearFormat" button on the format ribbon
+     */
+    TableDisableAutoSum,
 }
