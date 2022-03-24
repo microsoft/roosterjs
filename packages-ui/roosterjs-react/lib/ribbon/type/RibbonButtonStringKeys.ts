@@ -106,7 +106,7 @@ export type DecreaseFontSizeButtonStringKey = 'buttonNameDecreaseFontSize';
 /**
  * Key of localized strings of Decrease indent size button
  */
-export type DecreaseIndentButtonStringKey = 'buttonNameDecreaseIntent';
+export type DecreaseIndentButtonStringKey = 'buttonNameDecreaseIndent';
 
 /**
  * Key of localized strings of Font button
@@ -163,6 +163,11 @@ export type ItalicButtonStringKey = 'buttonNameItalic';
 export type LtrButtonStringKey = 'buttonNameLtr';
 
 /**
+ * Key of localized strings of More commands (overflow) button
+ */
+export type MoreCommandsButtonStringKey = 'buttonNameMoreCommands';
+
+/**
  * Key of localized strings of Numbered list button
  */
 export type NumberedListButtonStringKey = 'buttonNameNumberedList';
@@ -178,7 +183,7 @@ export type QuoteButtonStringKey = 'buttonNameQuote';
 export type RedoButtonStringKey = 'buttonNameRedo';
 
 /**
- * Key of localized strings of REmove link button
+ * Key of localized strings of Remove link button
  */
 export type RemoveLinkButtonStringKey = 'buttonNameRemoveLink';
 
@@ -218,7 +223,7 @@ export type UnderlineButtonStringKey = 'buttonNameUnderline';
 export type UndoButtonStringKey = 'buttonNameUndo';
 
 /**
- * Key of localized strings of Cell Shade button
+ * Key of localized strings of Cell shade button
  */
 export type CellShadeButtonStringKey = 'buttonNameCellShade';
 
@@ -246,6 +251,7 @@ export type AllButtonStringKeys =
     | InsertTableButtonStringKey
     | ItalicButtonStringKey
     | LtrButtonStringKey
+    | MoreCommandsButtonStringKey
     | NumberedListButtonStringKey
     | QuoteButtonStringKey
     | RedoButtonStringKey
