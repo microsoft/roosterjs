@@ -15,6 +15,7 @@ export {
     BackgroundColorButtonStringKey,
     BulletedListButtonStringKey,
     NumberedListButtonStringKey,
+    MoreCommandsButtonStringKey,
     DecreaseIndentButtonStringKey,
     IncreaseIndentButtonStringKey,
     QuoteButtonStringKey,
