@@ -266,7 +266,7 @@ export default class TableCellSelection implements EditorPlugin {
                         : PositionType.After
                 );
 
-                const sel = this.editor.getDocument().defaultView.getSelection();
+                const sel = this.editor.getDocumentOrShadowRoot().getSelection();
                 const { anchorNode, anchorOffset } = sel;
                 this.editor.select(sel.getRangeAt(0));
                 sel.setBaseAndExtent(anchorNode, anchorOffset, position.node, position.offset);
@@ -311,7 +311,7 @@ export default class TableCellSelection implements EditorPlugin {
                     this.lastTarget = this.vTable.getCell(lastCell.y, lastCell.x).td;
 
                     if (this.firstTarget && this.lastTarget) {
-                        const selection = this.editor.getDocument().defaultView.getSelection();
+                        const selection = this.editor.getDocumentOrShadowRoot().getSelection();
                         selection.setBaseAndExtent(this.firstTarget, 0, this.lastTarget, 0);
                         this.selectTable();
                     }
@@ -320,18 +320,20 @@ export default class TableCellSelection implements EditorPlugin {
                 }
             }
         }
-        this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+        this.editor
+            .getDocumentOrShadowRoot()
+            .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
         if (which == LEFT_CLICK && !shiftKey) {
             this.clearState();
             this.editor
-                .getDocument()
+                .getDocumentOrShadowRoot()
                 .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
             this.startedSelection = true;
         }
 
         if (which == LEFT_CLICK && shiftKey) {
             this.editor.runAsync(editor => {
-                const sel = editor.getDocument().defaultView.getSelection();
+                const sel = editor.getDocumentOrShadowRoot().getSelection();
                 const first = getCellAtCursor(editor, sel.anchorNode);
                 const last = getCellAtCursor(editor, sel.focusNode);
                 const firstTable = getTableAtCursor(editor, first);
@@ -499,8 +501,12 @@ export default class TableCellSelection implements EditorPlugin {
     private removeMouseUpEventListener(): void {
         if (this.startedSelection) {
             this.startedSelection = false;
-            this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
-            this.editor.getDocument().removeEventListener('mousemove', this.onMouseMove, true);
+            this.editor
+                .getDocumentOrShadowRoot()
+                .removeEventListener('mouseup', this.onMouseUp, true);
+            this.editor
+                .getDocumentOrShadowRoot()
+                .removeEventListener('mousemove', this.onMouseMove, true);
         }
     }
     //#endregion
@@ -723,7 +729,7 @@ function updateSelection(
     end?: Node,
     endOffset?: number
 ) {
-    const selection = editor.getDocument().defaultView.getSelection();
+    const selection = editor.getDocumentOrShadowRoot().getSelection();
     end = end || start;
     endOffset = endOffset || offset;
     selection.setBaseAndExtent(start, offset, end, endOffset);

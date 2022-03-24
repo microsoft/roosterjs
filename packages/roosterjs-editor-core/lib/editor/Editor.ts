@@ -1,3 +1,4 @@
+import getDocumentOrShadowRoot from './getDocumentOrShadowRoot';
 import { coreApiMap } from '../coreApi/coreApiMap';
 import createCorePlugins, {
     getPluginState,
@@ -23,7 +24,6 @@ import {
     InsertOption,
     IPositionContentSearcher,
     NodePosition,
-    NodeType,
     PendableFormatState,
     PluginEvent,
     PluginEventData,
@@ -60,7 +60,10 @@ import {
     isPositionAtBeginningOf,
     arrayPush,
     toArray,
+    ensureUniqueId,
 } from 'roosterjs-editor-dom';
+
+const CONTENT_DIV_ID = 'contentDiv_';
 
 /**
  * RoosterJs core editor class
@@ -81,6 +84,14 @@ export default class Editor implements IEditor {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
+        const documentOrShadowRoot = getDocumentOrShadowRoot(contentDiv);
+
+        if (!documentOrShadowRoot) {
+            throw new Error('contentDiv must be put under document or a shadow root');
+        }
+
+        ensureUniqueId(contentDiv, CONTENT_DIV_ID, documentOrShadowRoot);
+
         // 2. Store options values to local variables
         const corePlugins = createCorePlugins(contentDiv, options);
         const plugins: EditorPlugin[] = [];
@@ -91,20 +102,6 @@ export default class Editor implements IEditor {
                 plugins.push(corePlugins[name]);
             }
         });
-
-        let node: Node = contentDiv.parentNode;
-
-        while (
-            node &&
-            node.nodeType != NodeType.Document &&
-            node.nodeType != NodeType.DocumentFragment
-        ) {
-            node = node.parentNode;
-        }
-
-        if (!node) {
-            throw new Error('contentDiv must be put into a document');
-        }
 
         const zoomScale = options.zoomScale > 0 ? options.zoomScale : 1;
         this.core = {
@@ -118,7 +115,7 @@ export default class Editor implements IEditor {
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
             zoomScale: zoomScale,
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
-            documentRoot: (node as any) as DocumentOrShadowRoot,
+            documentOrShadowRoot: documentOrShadowRoot,
         };
 
         // 3. Initialize plugins
@@ -138,6 +135,9 @@ export default class Editor implements IEditor {
             this.core.plugins[i].dispose();
         }
 
+        if (this.core.documentOrShadowRoot.dispose) {
+            this.core.documentOrShadowRoot.dispose();
+        }
         this.core = null;
     }
 
@@ -453,7 +453,7 @@ export default class Editor implements IEditor {
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     public getFocusedPosition(): NodePosition {
-        let sel = this.getDocument().defaultView?.getSelection();
+        let sel = this.core.documentOrShadowRoot.getSelection();
         if (this.contains(sel && sel.focusNode)) {
             return new Position(sel.focusNode, sel.focusOffset);
         }
@@ -629,6 +629,14 @@ export default class Editor implements IEditor {
      */
     public getDocument(): Document {
         return this.core.contentDiv.ownerDocument;
+    }
+
+    /**
+     * Get document or shadow root of editor
+     * @returns Document or shadow root of editor
+     */
+    public getDocumentOrShadowRoot() {
+        return this.core.documentOrShadowRoot;
     }
 
     /**

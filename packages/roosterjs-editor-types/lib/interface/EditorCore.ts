@@ -1,4 +1,5 @@
 import ClipboardData from './ClipboardData';
+import DocumentOrShadowRoot from '../browser/DocumentOrShadowRoot';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import TableSelection from './TableSelection';
@@ -56,9 +57,9 @@ export default interface EditorCore extends PluginState {
 
     /**
      * Document root of editor.
-     * When editor is under sahdow DOM, the value will be this shadow root, otherwise value will be document of editor
+     * When editor is under shadow DOM, the value will be this shadow root, otherwise value will be document of editor
      */
-    documentRoot: DocumentOrShadowRoot;
+    documentOrShadowRoot: DocumentOrShadowRoot;
 }
 
 /**

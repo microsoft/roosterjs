@@ -6,6 +6,7 @@ export { default as EdgeLinkPreview } from './browser/EdgeLinkPreview';
 export { Keys } from './browser/Keys';
 export { NodeType } from './browser/NodeType';
 export { ContentTypePrefix, ContentType } from './browser/ContentType';
+export { default as DocumentOrShadowRoot } from './browser/DocumentOrShadowRoot';
 
 // Enum
 export { Alignment } from './enum/Alignment';

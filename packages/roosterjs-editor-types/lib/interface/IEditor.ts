@@ -1,6 +1,7 @@
 import BlockElement from './BlockElement';
 import ClipboardData from './ClipboardData';
 import DefaultFormat from './DefaultFormat';
+import DocumentOrShadowRoot from '../browser/DocumentOrShadowRoot';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
@@ -425,6 +426,11 @@ export default interface IEditor {
      * @returns The HTML document which contains this editor
      */
     getDocument(): Document;
+
+    /**
+     * Get document or shadow root of editor
+     */
+    getDocumentOrShadowRoot(): DocumentOrShadowRoot;
 
     /**
      * Get the scroll container of the editor

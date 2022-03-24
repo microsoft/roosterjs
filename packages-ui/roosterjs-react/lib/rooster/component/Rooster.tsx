@@ -31,6 +31,7 @@ export default function Rooster(props: RoosterProps) {
         root.appendChild(div);
 
         editor.current = (editorCreator || defaultEditorCreator)(div, props);
+        // editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);
 
         if (focusOnInit) {
             editor.current.focus();

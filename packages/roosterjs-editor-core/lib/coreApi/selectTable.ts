@@ -1,8 +1,11 @@
 import {
+    createElement,
     createRange,
+    ensureUniqueId,
     getStyles,
     getTagOfNode,
     Position,
+    safeInstanceOf,
     setStyles,
     toArray,
     VTable,
@@ -17,7 +20,6 @@ import {
 } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
-const CONTENT_DIV_ID = 'contentDiv_';
 const STYLE_ID = 'tableStyle';
 
 /**
@@ -37,8 +39,7 @@ export const selectTable: SelectTable = (
     unselect(core);
 
     if (areValidCoordinates(coordinates) && table) {
-        ensureUniqueId(table, TABLE_ID);
-        ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
+        ensureUniqueId(table, TABLE_ID, core.documentOrShadowRoot);
 
         const ranges = select(core, table, coordinates);
 
@@ -163,44 +164,39 @@ function buildCss(
 }
 
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
-    const doc = core.contentDiv.ownerDocument;
+    const doc = core.documentOrShadowRoot;
     const contentDivSelector = '#' + core.contentDiv.id;
+    const styleId = getStyleId(core);
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
 
-    let styleElement = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
+    let styleElement = doc.getElementById(styleId) as HTMLStyleElement;
+
     if (!styleElement) {
-        styleElement = doc.createElement('style');
-        doc.head.appendChild(styleElement);
-        styleElement.id = STYLE_ID + core.contentDiv.id;
+        styleElement = createElement(
+            { tag: 'style', attributes: { id: styleId } },
+            core.contentDiv.ownerDocument
+        ) as HTMLStyleElement;
+
+        if (safeInstanceOf(doc, 'Document')) {
+            doc.head.appendChild(styleElement);
+        } else {
+            doc.appendChild(styleElement);
+        }
     }
+
     styleElement.sheet.insertRule(css);
 
     return ranges;
 }
 
 function unselect(core: EditorCore) {
-    const div = core.contentDiv;
-    let styleElement = div.ownerDocument.getElementById(STYLE_ID + div.id) as HTMLStyleElement;
+    const styleId = getStyleId(core);
+    const styleElement = core.documentOrShadowRoot.getElementById(styleId) as HTMLStyleElement;
+
     if (styleElement?.sheet?.cssRules) {
         while (styleElement.sheet.cssRules.length > 0) {
             styleElement.sheet.deleteRule(0);
         }
-    }
-}
-
-function ensureUniqueId(el: HTMLElement, idPrefix: string) {
-    if (el && !el.id) {
-        const doc = el.ownerDocument;
-        const getElement = (doc: Document) => doc.getElementById(idPrefix + cont);
-        let cont = 0;
-        //Ensure that there are no elements with the same ID
-        let element = getElement(doc);
-        while (element) {
-            element = getElement(doc);
-            cont++;
-        }
-
-        el.id = idPrefix + cont;
     }
 }
 
@@ -260,4 +256,8 @@ function areValidCoordinates(input: TableSelection) {
 
 function isValidCoordinate(input: number) {
     return (!!input || input == 0) && input > -1;
+}
+
+function getStyleId(core: EditorCore) {
+    return STYLE_ID + core.contentDiv.id;
 }
