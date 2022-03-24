@@ -39,6 +39,8 @@ export {
     BackgroundColorKeys,
     AllButtonStringKeys,
     CellShadeButtonStringKey,
+    TableAutoSumButtonStringKey,
+    DisableTableAutoSumButtonStringKey,
 } from './type/RibbonButtonStringKeys';
 
 export { default as Ribbon } from './component/Ribbon';

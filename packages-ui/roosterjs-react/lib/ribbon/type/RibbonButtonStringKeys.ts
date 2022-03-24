@@ -226,6 +226,7 @@ export type CellShadeButtonStringKey = 'buttonNameCellShade';
  * Key of localized strings of Cell Shade button
  */
 export type TableAutoSumButtonStringKey = 'buttonNameTableAutoSum';
+
 /**
  * Key of localized strings of Cell Shade button
  */
