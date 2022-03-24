@@ -146,4 +146,9 @@ export default interface FormatState
      * Current zoom scale of editor
      */
     zoomScale?: number;
+
+    /**
+     * Whether editor has auto sum active
+     */
+    isAutoSumActive?: boolean;
 }

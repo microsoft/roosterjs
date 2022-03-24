@@ -5,6 +5,7 @@ import {
     IEditor,
     PluginEvent,
     QueryScope,
+    TableAutoSumProperties,
 } from 'roosterjs-editor-types';
 
 /**
@@ -35,6 +36,20 @@ export function getElementBasedFormatState(
     };
 }
 
+function isAutoSumActive(editor: IEditor): boolean {
+    const cell = editor.getElementAtCursor('TD,TH');
+    if (
+        !cell ||
+        (!cell.dataset[TableAutoSumProperties.AutoSumRowId] &&
+            !cell.dataset[TableAutoSumProperties.AutoSumTotalRowId] &&
+            !cell.dataset[TableAutoSumProperties.AutoSumColumnId] &&
+            !cell.dataset[TableAutoSumProperties.AutoSumTotalColumnId])
+    ) {
+        return false;
+    }
+    return true;
+}
+
 /**
  * Get format state at cursor
  * A format state is a collection of all format related states, e.g.,
@@ -53,5 +68,6 @@ export default function getFormatState(editor: IEditor, event?: PluginEvent): Fo
         ...editor.getUndoState(),
         isDarkMode: editor.isDarkMode(),
         zoomScale: editor.getZoomScale(),
+        isAutoSumActive: isAutoSumActive(editor),
     };
 }
