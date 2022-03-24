@@ -38,6 +38,7 @@ import {
     SizeTransformer,
     StyleBasedFormatState,
     TrustedHTMLHandler,
+    RoosterDocumentOrShadowRoot,
 } from 'roosterjs-editor-types';
 import {
     cacheGetEventData,
@@ -635,7 +636,7 @@ export default class Editor implements IEditor {
      * Get document or shadow root of editor
      * @returns Document or shadow root of editor
      */
-    public getDocumentOrShadowRoot() {
+    public getDocumentOrShadowRoot(): RoosterDocumentOrShadowRoot {
         return this.core.documentOrShadowRoot;
     }
 

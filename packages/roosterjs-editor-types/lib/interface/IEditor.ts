@@ -1,11 +1,11 @@
 import BlockElement from './BlockElement';
 import ClipboardData from './ClipboardData';
 import DefaultFormat from './DefaultFormat';
-import DocumentOrShadowRoot from '../browser/DocumentOrShadowRoot';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
 import Region from './Region';
+import RoosterDocumentOrShadowRoot from '../browser/RoosterDocumentOrShadowRoot';
 import SelectionPath from './SelectionPath';
 import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
@@ -430,7 +430,7 @@ export default interface IEditor {
     /**
      * Get document or shadow root of editor
      */
-    getDocumentOrShadowRoot(): DocumentOrShadowRoot;
+    getDocumentOrShadowRoot(): RoosterDocumentOrShadowRoot;
 
     /**
      * Get the scroll container of the editor

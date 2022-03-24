@@ -1,4 +1,4 @@
-import { DocumentOrShadowRoot } from 'roosterjs-editor-types';
+import { RoosterDocumentOrShadowRoot } from 'roosterjs-editor-types';
 
 /**
  * Ensure the given element has a unique id in its scope
@@ -8,10 +8,10 @@ import { DocumentOrShadowRoot } from 'roosterjs-editor-types';
 export default function ensureUniqueId(
     el: HTMLElement,
     idPrefix: string,
-    documentOrShadowRoot: DocumentOrShadowRoot
+    documentOrShadowRoot: RoosterDocumentOrShadowRoot
 ) {
     if (el && !el.id) {
-        const getElement = (documentOrShadowRoot: DocumentOrShadowRoot | null) =>
+        const getElement = (documentOrShadowRoot: RoosterDocumentOrShadowRoot | null) =>
             documentOrShadowRoot?.getElementById(idPrefix + cont);
         let cont = 0;
         //Ensure that there are no elements with the same ID

@@ -1,13 +1,16 @@
 import { Browser, safeInstanceOf } from 'roosterjs-editor-dom';
-import { DocumentOrShadowRoot } from 'roosterjs-editor-types';
+import { RoosterDocumentOrShadowRoot } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Get the document or shadow root of a given node
  * @param node The node to check
  * @returns Either the document object or shadow root of the given node,
  * or null if node is not under any document or shadow root
  */
-export default function getDocumentOrShadowRoot(node: Node | null): DocumentOrShadowRoot | null {
+export default function getDocumentOrShadowRoot(
+    node: Node | null
+): RoosterDocumentOrShadowRoot | null {
     let result: Node | null = node;
 
     while (result) {
@@ -21,7 +24,7 @@ export default function getDocumentOrShadowRoot(node: Node | null): DocumentOrSh
     return null;
 }
 
-interface InternalDocumentOrShadowRoot extends DocumentOrShadowRoot {
+interface InternalDocumentOrShadowRoot extends RoosterDocumentOrShadowRoot {
     selection: Selection | null;
     processing?: boolean;
 }
@@ -29,13 +32,13 @@ interface InternalDocumentOrShadowRoot extends DocumentOrShadowRoot {
 function createDocumentOrShadowRoot(
     source: Document | ShadowRoot,
     window: Window | undefined | null
-): DocumentOrShadowRoot | null {
+): RoosterDocumentOrShadowRoot | null {
     if (isDocumentOrShadowRoot(source)) {
         // Chrome, Edge
         return source;
     } else if (window?.getSelection && Browser.isFirefox) {
         // Firefox
-        const result = (source as any) as DocumentOrShadowRoot;
+        const result = (source as any) as RoosterDocumentOrShadowRoot;
         result.getSelection = () => window.getSelection();
         result.dispose = () => {
             result.getSelection = undefined!;
@@ -106,28 +109,28 @@ function createDocumentOrShadowRoot(
     }
 }
 
-function isDocumentOrShadowRoot(source: any): source is DocumentOrShadowRoot {
-    return !!((source as any) as DocumentOrShadowRoot).getSelection;
+function isDocumentOrShadowRoot(source: any): source is RoosterDocumentOrShadowRoot {
+    return !!((source as any) as RoosterDocumentOrShadowRoot).getSelection;
 }
 
 class ShadowSelection implements Selection {
-    private _ranges: Range[];
+    private ranges: Range[];
 
     constructor() {
-        this._ranges = [];
+        this.ranges = [];
     }
 
     getRangeAt(index: number) {
-        return this._ranges[index];
+        return this.ranges[index];
     }
 
     addRange(range: Range) {
-        this._ranges.push(range);
-        this.rangeCount = this._ranges.length;
+        this.ranges.push(range);
+        this.rangeCount = this.ranges.length;
     }
 
     removeAllRanges() {
-        this._ranges = [];
+        this.ranges = [];
         this.rangeCount = 0;
     }
 
