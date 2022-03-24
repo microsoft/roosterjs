@@ -608,6 +608,11 @@ export default interface IEditor {
     getSizeTransformer(): SizeTransformer;
 
     //#endregion
+
+    /**
+     * return if the AutoSum is active;
+     */
+    isAutoSumActive(): boolean;
 }
 
 // Temporarily put these interfaces here to workaround circular dependency issue

@@ -36,6 +36,7 @@ import {
     SelectionRangeEx,
     SizeTransformer,
     StyleBasedFormatState,
+    TableAutoSumProperties,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import {
@@ -774,6 +775,23 @@ export default class Editor implements IEditor {
             array.push(feature);
             this.core.edit.features[key] = array;
         });
+    }
+
+    /**
+     * Return if the auto sum feature is active
+     */
+    public isAutoSumActive(): boolean {
+        const cell = this.getElementAtCursor('TD,TH');
+        if (
+            !cell ||
+            (!cell.dataset[TableAutoSumProperties.AutoSumRowId] &&
+                !cell.dataset[TableAutoSumProperties.AutoSumTotalRowId] &&
+                !cell.dataset[TableAutoSumProperties.AutoSumColumnId] &&
+                !cell.dataset[TableAutoSumProperties.AutoSumTotalColumnId])
+        ) {
+            return false;
+        }
+        return true;
     }
 
     /**
