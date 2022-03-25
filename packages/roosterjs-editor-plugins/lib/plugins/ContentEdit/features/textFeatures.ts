@@ -139,7 +139,7 @@ function isRangeEmpty(range: Range) {
 }
 
 function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
-    const span = editor.getDocument().createElement('span');
+    const span = editor.getEditorHost().createElement('span');
     let searcher = editor.getContentSearcherOfCursor(event);
     const charsBefore = searcher.getSubStringBefore(Number.MAX_SAFE_INTEGER);
 

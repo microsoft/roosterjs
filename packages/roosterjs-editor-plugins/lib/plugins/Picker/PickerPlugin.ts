@@ -283,7 +283,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
             return hasMatched;
         });
-        return createRange(startPos, endPos) || this.editor.getDocument().createRange();
+        return createRange(startPos, endPos) || this.editor.getEditorHost().createRange();
     }
 
     private shouldHandleKeyUpEvent(event: PluginKeyboardEvent) {
@@ -344,7 +344,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
                         let searcher = this.editor.getContentSearcherOfCursor(event);
-                        let rangeNode = this.editor.getDocument().createRange();
+                        let rangeNode = this.editor.getEditorHost().createRange();
                         let nodeBeforeCursor = searcher.getInlineElementBefore().getContainerNode();
                         let rangeStartSuccessfullySet = this.setRangeStart(
                             rangeNode,

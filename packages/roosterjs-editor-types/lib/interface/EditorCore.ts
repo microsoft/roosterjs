@@ -1,4 +1,5 @@
 import ClipboardData from './ClipboardData';
+import EditorHost from '../browser/EditorHost';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import TableSelection from './TableSelection';
@@ -53,6 +54,12 @@ export default interface EditorCore extends PluginState {
      * @deprecated Use zoomScale instead
      */
     sizeTransformer: SizeTransformer;
+
+    /**
+     * Host of editor.
+     * When editor is under shadow DOM, the value will be this shadow root, otherwise value will be document of editor
+     */
+    host: EditorHost;
 }
 
 /**

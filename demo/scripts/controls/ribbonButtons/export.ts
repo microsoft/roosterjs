@@ -15,7 +15,7 @@ export const exportContent: RibbonButton<ExportButtonStringKey> = {
     iconName: 'Export',
     flipWhenRtl: true,
     onClick: editor => {
-        const win = editor.getDocument().defaultView.open();
+        const win = editor.getEditorHost().defaultView.open();
         win.document.write(trustedHTMLHandler(editor.getContent()));
     },
 };

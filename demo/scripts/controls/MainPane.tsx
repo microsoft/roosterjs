@@ -10,9 +10,10 @@ import MainPaneBase from './MainPaneBase';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
+import { createElement } from 'roosterjs-editor-dom';
+import { CreateElementData, EditorOptions } from 'roosterjs-editor-types';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
@@ -40,6 +41,13 @@ const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Page PopOu
 const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
+const EDITOR_DIV_DATA: CreateElementData = {
+    tag: 'div',
+    attributes: {
+        tabIndex: '0',
+    },
+    style: 'width:100%;height:100%;outline:none',
+};
 
 type RibbonStringKeys =
     | AllButtonStringKeys
@@ -94,6 +102,7 @@ class MainPane extends MainPaneBase {
             isDarkMode: false,
             editorCreator: null,
             isRtl: false,
+            useShadowDOM: false,
         };
     }
 
@@ -179,6 +188,13 @@ class MainPane extends MainPaneBase {
                 win.document.body.dir = isRtl ? 'rtl' : 'ltr';
             }
         });
+    }
+
+    setUseShadowDOM(useShadowDOM: boolean): void {
+        this.setState({
+            useShadowDOM,
+        });
+        this.resetEditor();
     }
 
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
@@ -335,8 +351,21 @@ class MainPane extends MainPaneBase {
 
     private resetEditor() {
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new Editor(div, options),
+            editorCreator: (div: HTMLDivElement, options: EditorOptions) => {
+                let editorDiv = createElement(EDITOR_DIV_DATA, div.ownerDocument) as HTMLDivElement;
+                while (div.firstChild) {
+                    div.removeChild(div.firstChild);
+                }
+                div.appendChild(editorDiv);
+
+                if (this.state.useShadowDOM) {
+                    const shadowRoot = editorDiv.attachShadow({ mode: 'closed' });
+                    editorDiv = createElement(EDITOR_DIV_DATA, div.ownerDocument) as HTMLDivElement;
+                    shadowRoot.appendChild(editorDiv);
+                }
+
+                return new Editor(editorDiv, options);
+            },
         });
     }
 }

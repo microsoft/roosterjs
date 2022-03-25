@@ -44,7 +44,7 @@ export default function applyInlineStyle(
                 // Create a new text node to hold the selection.
                 // Some content is needed to position selection into the span
                 // for here, we inject ZWS - zero width space
-                node = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
+                node = editor.getEditorHost().createTextNode(ZERO_WIDTH_SPACE);
                 range.insertNode(node);
             }
 

@@ -102,7 +102,7 @@ function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: IEditor): boole
 }
 
 function autoLink(event: PluginEvent, editor: IEditor) {
-    let anchor = editor.getDocument().createElement('a');
+    let anchor = editor.getEditorHost().createElement('a');
     let linkData = cacheGetLinkData(event, editor);
     // Need to get searcher before we enter the async callback since the callback can happen when cursor is moved to next line
     // and at that time a new searcher won't be able to find the link text to replace

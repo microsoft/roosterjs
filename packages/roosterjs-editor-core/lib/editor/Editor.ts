@@ -1,3 +1,4 @@
+import createEditorHost from './createEditorHost';
 import { coreApiMap } from '../coreApi/coreApiMap';
 import createCorePlugins, {
     getPluginState,
@@ -12,6 +13,7 @@ import {
     DefaultFormat,
     DOMEventHandler,
     EditorCore,
+    EditorHost,
     EditorOptions,
     EditorPlugin,
     EditorUndoState,
@@ -103,6 +105,7 @@ export default class Editor implements IEditor {
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
             zoomScale: zoomScale,
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
+            host: createEditorHost(contentDiv),
         };
 
         // 3. Initialize plugins
@@ -122,6 +125,7 @@ export default class Editor implements IEditor {
             this.core.plugins[i].dispose();
         }
 
+        this.core.host.dispose();
         this.core = null;
     }
 
@@ -287,7 +291,7 @@ export default class Editor implements IEditor {
      */
     public insertContent(content: string, option?: InsertOption) {
         if (content) {
-            const doc = this.getDocument();
+            const doc = this.getEditorHost();
             const body = new DOMParser().parseFromString(
                 this.core.trustedHTMLHandler(content),
                 'text/html'
@@ -437,7 +441,7 @@ export default class Editor implements IEditor {
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     public getFocusedPosition(): NodePosition {
-        let sel = this.getDocument().defaultView?.getSelection();
+        let sel = this.core.host.getSelection();
         if (this.contains(sel && sel.focusNode)) {
             return new Position(sel.focusNode, sel.focusOffset);
         }
@@ -608,11 +612,20 @@ export default class Editor implements IEditor {
     //#region Misc
 
     /**
+     * @deprecated Use IEditor.getEditorHost() instead
      * Get document which contains this editor
      * @returns The HTML document which contains this editor
      */
     public getDocument(): Document {
         return this.core.contentDiv.ownerDocument;
+    }
+
+    /**
+     * Get the host object of editor. In most time we can use EditorHost instead of a document
+     * @returns The HTML document which contains this editor
+     */
+    getEditorHost(): EditorHost {
+        return this.core.host;
     }
 
     /**

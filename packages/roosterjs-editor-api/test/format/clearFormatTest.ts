@@ -19,7 +19,7 @@ describe('clearFormat()', () => {
     });
 
     it('triggers the removeformat command in document', () => {
-        let document = editor.getDocument();
+        let document = editor.getEditorHost();
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(document, 'execCommand').and.callThrough();
 

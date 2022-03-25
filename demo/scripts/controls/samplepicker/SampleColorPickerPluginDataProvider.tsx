@@ -60,15 +60,15 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
         this.editor = editor;
         this.updateToQuery('', 0);
 
-        const document = this.editor.getDocument();
-        this.mountPoint = document.createElement('section');
-        document.body.appendChild(this.mountPoint);
+        const host = this.editor.getEditorHost();
+        this.mountPoint = host.createElement('section');
+        host.body.appendChild(this.mountPoint);
     }
 
     // Function called when the plugin is disposed for the data provider to do any cleanup.
     onDispose(): void {
         if (this.mountPoint) {
-            this.editor.getDocument().body.removeChild(this.mountPoint);
+            this.editor.getEditorHost().body.removeChild(this.mountPoint);
         }
         this.mountPoint = null;
     }
@@ -119,7 +119,7 @@ export default class SampleColorPickerPluginDataProvider implements PickerDataPr
     }
 
     private insertColor = (color: string) => {
-        const span = this.editor.getDocument().createElement('span');
+        const span = this.editor.getEditorHost().createElement('span');
         span.innerText = '⬤';
         span.style.color = color;
         this.insertNodeCallback(span);

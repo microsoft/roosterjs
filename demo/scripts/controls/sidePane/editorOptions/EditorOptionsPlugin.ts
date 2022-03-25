@@ -37,6 +37,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.TableAlignment,
     ],
     isRtl: false,
+    useShadowDOM: false,
 };
 
 export default class EditorOptionsPlugin extends SidePanePluginImpl<

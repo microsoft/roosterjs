@@ -16,7 +16,7 @@ export default function insertTable(
     rows: number,
     format?: TableFormat
 ) {
-    let document = editor.getDocument();
+    let document = editor.getEditorHost();
     let fragment = document.createDocumentFragment();
     let table = document.createElement('table') as HTMLTableElement;
     fragment.appendChild(table);

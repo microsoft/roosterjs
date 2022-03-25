@@ -17,11 +17,11 @@ export default function toggleHeader(editor: IEditor, level: number) {
         let wrapped = false;
         editor.queryElements('H1,H2,H3,H4,H5,H6', QueryScope.OnSelection, header => {
             if (!wrapped) {
-                editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, '<DIV>');
+                editor.getEditorHost().execCommand(DocumentCommand.FormatBlock, false, '<DIV>');
                 wrapped = true;
             }
 
-            const div = editor.getDocument().createElement('div');
+            const div = editor.getEditorHost().createElement('div');
             moveChildNodes(div, header);
             editor.replaceNode(header, div);
         });
@@ -39,7 +39,7 @@ export default function toggleHeader(editor: IEditor, level: number) {
                 sanitizer.sanitize(element);
                 blockElement = traverser.getNextBlockElement();
             }
-            editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
+            editor.getEditorHost().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
         }
     }, ChangeSource.Format);
 }

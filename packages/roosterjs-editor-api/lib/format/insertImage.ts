@@ -30,7 +30,7 @@ export default function insertImage(editor: IEditor, imageFile: File | string): 
 
 function insertImageWithSrc(editor: IEditor, src: string) {
     editor.addUndoSnapshot(() => {
-        const image = editor.getDocument().createElement('img');
+        const image = editor.getEditorHost().createElement('img');
         image.src = src;
         image.style.maxWidth = '100%';
         editor.insertNode(image);

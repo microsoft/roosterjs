@@ -99,9 +99,9 @@ export default class ContextMenu<T> implements EditorPlugin {
         if (!this.container) {
             this.container = createElement(
                 KnownCreateElementDataIndex.ContextMenuWrapper,
-                this.editor.getDocument()
+                this.editor.getEditorHost()
             ) as HTMLElement;
-            this.editor.getDocument().body.appendChild(this.container);
+            this.editor.getEditorHost().body.appendChild(this.container);
         }
         this.container.style.left = x + 'px';
         this.container.style.top = y + 'px';

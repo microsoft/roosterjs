@@ -140,7 +140,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             () => {
                 const tempDiv = createElement(
                     KnownCreateElementDataIndex.CopyPasteTempDiv,
-                    this.editor.getDocument()
+                    this.editor.getEditorHost()
                 ) as HTMLDivElement;
                 this.editor.insertNode(tempDiv, {
                     position: ContentPosition.Outside,

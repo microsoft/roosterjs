@@ -24,7 +24,7 @@ export const selectRange: SelectRange = (
     skipSameRange?: boolean
 ) => {
     if (!core.lifecycle.shadowEditSelectionPath && contains(core.contentDiv, range)) {
-        addRangeToSelection(range, skipSameRange);
+        addRangeToSelection(range, skipSameRange, core.host.getSelection());
 
         if (!hasFocus(core)) {
             core.domEvent.selectionRange = range;

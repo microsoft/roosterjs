@@ -41,7 +41,7 @@ export default class MouseUpPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
             this.editor
-                .getDocument()
+                .getEditorHost()
                 .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
             this.mouseUpEventListerAdded = true;
             this.mouseDownX = event.rawEvent.pageX;
@@ -51,7 +51,7 @@ export default class MouseUpPlugin implements EditorPlugin {
     private removeMouseUpEventListener() {
         if (this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
-            this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
+            this.editor.getEditorHost().removeEventListener('mouseup', this.onMouseUp, true);
         }
     }
 

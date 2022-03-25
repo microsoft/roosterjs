@@ -60,7 +60,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     initialize(editor: IEditor) {
         this.editor = editor;
 
-        const document = this.editor.getDocument();
+        const document = this.editor.getEditorHost();
         const eventHandlers: Record<string, DOMEventHandler> = {
             // 1. Keyboard event
             keypress: this.getEventHandler(PluginEventType.KeyPress),
@@ -111,7 +111,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
      * Dispose this plugin
      */
     dispose() {
-        const document = this.editor.getDocument();
+        const document = this.editor.getEditorHost();
         if (Browser.isSafari) {
             document.removeEventListener(
                 'mousedown',

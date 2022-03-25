@@ -9,6 +9,7 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     EditorCore,
+    EditorHost,
     SelectionRangeTypes,
     TableSelection,
     SelectTable,
@@ -37,8 +38,8 @@ export const selectTable: SelectTable = (
     unselect(core);
 
     if (areValidCoordinates(coordinates) && table) {
-        ensureUniqueId(table, TABLE_ID);
-        ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
+        ensureUniqueId(table, TABLE_ID, core.host);
+        ensureUniqueId(core.contentDiv, CONTENT_DIV_ID, core.host);
 
         const ranges = select(core, table, coordinates);
 
@@ -163,14 +164,14 @@ function buildCss(
 }
 
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
-    const doc = core.contentDiv.ownerDocument;
+    const doc = core.host;
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
 
     let styleElement = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
     if (!styleElement) {
         styleElement = doc.createElement('style');
-        doc.head.appendChild(styleElement);
+        doc.appendStyleElement(styleElement);
         styleElement.id = STYLE_ID + core.contentDiv.id;
     }
     styleElement.sheet.insertRule(css);
@@ -180,7 +181,7 @@ function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSel
 
 function unselect(core: EditorCore) {
     const div = core.contentDiv;
-    let styleElement = div.ownerDocument.getElementById(STYLE_ID + div.id) as HTMLStyleElement;
+    const styleElement = core.host.getElementById(STYLE_ID + div.id) as HTMLStyleElement;
     if (styleElement?.sheet?.cssRules) {
         while (styleElement.sheet.cssRules.length > 0) {
             styleElement.sheet.deleteRule(0);
@@ -188,10 +189,9 @@ function unselect(core: EditorCore) {
     }
 }
 
-function ensureUniqueId(el: HTMLElement, idPrefix: string) {
+function ensureUniqueId(el: HTMLElement, idPrefix: string, doc: EditorHost) {
     if (el && !el.id) {
-        const doc = el.ownerDocument;
-        const getElement = (doc: Document) => doc.getElementById(idPrefix + cont);
+        const getElement = (host: EditorHost) => host.getElementById(idPrefix + cont);
         let cont = 0;
         //Ensure that there are no elements with the same ID
         let element = getElement(doc);

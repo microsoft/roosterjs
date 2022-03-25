@@ -75,14 +75,16 @@ export default function createLink(
                     // Change text content if it is specified
                     updateAnchorDisplayText(anchor, displayText);
                 } else {
-                    anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
+                    anchor = editor.getEditorHost().createElement('A') as HTMLAnchorElement;
                     anchor.textContent = displayText || originalUrl;
                     anchor.href = normalizedUrl;
                     editor.insertNode(anchor);
                 }
             } else {
                 // the selection is not collapsed, use browser execCommand
-                editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
+                editor
+                    .getEditorHost()
+                    .execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
                 const traverser = editor.getSelectionTraverser();
                 let currentInline = traverser.getNextInlineElement();
                 while (currentInline) {

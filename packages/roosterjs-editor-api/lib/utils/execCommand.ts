@@ -20,7 +20,7 @@ import {
 export default function execCommand(editor: IEditor, command: DocumentCommand) {
     editor.focus();
 
-    let formatter = () => editor.getDocument().execCommand(command, false, null);
+    let formatter = () => editor.getEditorHost().execCommand(command, false, null);
 
     let selection = editor.getSelectionRangeEx();
     if (selection && selection.areAllCollapsed) {

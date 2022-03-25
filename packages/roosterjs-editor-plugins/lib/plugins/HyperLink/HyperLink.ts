@@ -140,7 +140,7 @@ export default class HyperLink implements EditorPlugin {
                 ) {
                     try {
                         const target = this.target || '_blank';
-                        const window = this.editor.getDocument().defaultView;
+                        const window = this.editor.getEditorHost().defaultView;
                         window.open(href, target);
                     } catch {}
                 }

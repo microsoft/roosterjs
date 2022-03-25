@@ -46,6 +46,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
     private showRibbon = React.createRef<HTMLInputElement>();
     private darkMode = React.createRef<HTMLInputElement>();
     private rtl = React.createRef<HTMLInputElement>();
+    private useShadowDOM = React.createRef<HTMLInputElement>();
 
     constructor(props: BuildInPluginProps) {
         super(props);
@@ -131,6 +132,16 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                     />
                     <label htmlFor="pageRtl">Show controls from right to left</label>
                 </div>
+                <div>
+                    <input
+                        id="useShadowDOM"
+                        type="checkbox"
+                        checked={this.state.useShadowDOM}
+                        onChange={this.onToggleShadowDOM}
+                        ref={this.useShadowDOM}
+                    />
+                    <label htmlFor="useShadowDOM">Use Shadow DOM</label>
+                </div>
                 <hr />
                 <details>
                     <summary>
@@ -175,6 +186,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             forcePreserveRatio: this.state.forcePreserveRatio,
             supportDarkMode: this.state.supportDarkMode,
             isRtl: this.state.isRtl,
+            useShadowDOM: this.state.useShadowDOM,
         };
 
         if (callback) {
@@ -238,6 +250,14 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             isRtl: isRtl,
         });
         MainPaneBase.getInstance().setPageDirection(isRtl);
+    };
+
+    private onToggleShadowDOM = () => {
+        let useShadowDOM = this.useShadowDOM.current.checked;
+        this.setState({
+            useShadowDOM: useShadowDOM,
+        });
+        MainPaneBase.getInstance().setUseShadowDOM(useShadowDOM);
     };
 
     private getHtml() {

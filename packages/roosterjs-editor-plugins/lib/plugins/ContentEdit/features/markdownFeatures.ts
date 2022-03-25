@@ -104,13 +104,13 @@ function handleMarkdownEvent(
                 range.setEnd(range.endContainer, range.endOffset + 1);
 
                 // extract content and put it into a new element.
-                const elementToWrap = editor.getDocument().createElement(elementTag);
+                const elementToWrap = editor.getEditorHost().createElement(elementTag);
                 elementToWrap.appendChild(textContentRange.extractContents());
                 range.deleteContents();
 
                 // ZWS here ensures we don't end up inside the newly created node.
                 const nonPrintedSpaceTextNode = editor
-                    .getDocument()
+                    .getEditorHost()
                     .createTextNode(ZERO_WIDTH_SPACE);
                 range.insertNode(nonPrintedSpaceTextNode);
                 range.insertNode(elementToWrap);

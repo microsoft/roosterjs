@@ -189,7 +189,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         Object.keys(COMMANDS).forEach(command => {
             // Catch any possible exception since this should not block the initialization of editor
             try {
-                this.editor.getDocument().execCommand(command, false, COMMANDS[command]);
+                this.editor.getEditorHost().execCommand(command, false, COMMANDS[command]);
             } catch {}
         });
     }

@@ -76,7 +76,7 @@ const EnterBeforeReadonlyEntityFeature: BuildInEditFeature<PluginKeyboardEvent> 
 
         const range = editor.getSelectionRange();
         const node = Position.getEnd(range).normalize().node;
-        const br = editor.getDocument().createElement('BR');
+        const br = editor.getEditorHost().createElement('BR');
         node.parentNode.insertBefore(br, node.nextSibling);
 
         const block = editor.getBlockElementAtNode(node);

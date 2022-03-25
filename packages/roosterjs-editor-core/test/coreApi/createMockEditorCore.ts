@@ -17,5 +17,6 @@ export default function createMockEditorCore(
         trustedHTMLHandler: (html: string) => html,
         sizeTransformer: x => x,
         zoomScale: 1,
+        host: <any>document,
     };
 }

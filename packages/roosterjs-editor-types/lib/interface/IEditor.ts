@@ -1,6 +1,7 @@
 import BlockElement from './BlockElement';
 import ClipboardData from './ClipboardData';
 import DefaultFormat from './DefaultFormat';
+import EditorHost from '../browser/EditorHost';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
@@ -421,10 +422,17 @@ export default interface IEditor {
     //#region Misc
 
     /**
+     * @deprecated Use IEditor.getEditorHost() instead
      * Get document which contains this editor
      * @returns The HTML document which contains this editor
      */
     getDocument(): Document;
+
+    /**
+     * Get the host object of editor. In most time we can use EditorHost instead of a document
+     * @returns The HTML document which contains this editor
+     */
+    getEditorHost(): EditorHost;
 
     /**
      * Get the scroll container of the editor

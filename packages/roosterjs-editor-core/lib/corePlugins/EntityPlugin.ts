@@ -319,7 +319,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
     private handleNewEntity(entity: Entity) {
         const { wrapper } = entity;
-        const fragment = this.editor.getDocument().createDocumentFragment();
+        const fragment = this.editor.getEditorHost().createDocumentFragment();
         const cache = this.state.shadowEntityCache[entity.id];
         delete this.state.shadowEntityCache[entity.id];
 
@@ -424,7 +424,7 @@ const workaroundSelectionIssueForIE = Browser.isIE
                           tag: 'button',
                           style: 'overflow:hidden;position:fixed;width:0;height:0;top:-1000px',
                       },
-                      editor.getDocument()
+                      editor.getEditorHost()
                   ) as HTMLElement;
                   button.onblur = () => {
                       button.style.display = 'none';

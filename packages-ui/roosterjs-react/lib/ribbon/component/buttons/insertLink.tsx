@@ -20,7 +20,7 @@ export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
     unlocalizedText: 'Insert link',
     iconName: 'Link',
     onClick: (editor, _, strings) => {
-        const doc = editor.getDocument();
+        const doc = editor.getEditorHost();
         let div = doc.createElement('div');
         doc.body.appendChild(div);
         const onDismiss = () => {
@@ -115,7 +115,7 @@ function InsertLinkDialog(props: {
     );
 
     return (
-        <WindowProvider window={editor.getDocument().defaultView}>
+        <WindowProvider window={editor.getEditorHost().defaultView}>
             <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
                 <div>
                     <div>
