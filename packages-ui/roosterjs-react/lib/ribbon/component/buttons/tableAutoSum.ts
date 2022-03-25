@@ -11,6 +11,12 @@ export const tableAutoSum: RibbonButton<TableAutoSumButtonStringKey> = {
     key: 'buttonNameTableAutoSum',
     unlocalizedText: 'Table Auto Sum',
     iconName: 'TableComputed',
+    isChecked: (format: FormatState) => {
+        if (format.isAutoSumActive) {
+            return true;
+        }
+        return false;
+    },
     isDisabled: (format: FormatState) => {
         if (format.isInTable) {
             return false;
@@ -18,6 +24,10 @@ export const tableAutoSum: RibbonButton<TableAutoSumButtonStringKey> = {
         return true;
     },
     onClick: editor => {
-        editTable(editor, TableOperation.AutoSum);
+        if (editor.isAutoSumActive()) {
+            editTable(editor, TableOperation.DisableAutoSum);
+        } else {
+            editTable(editor, TableOperation.AutoSum);
+        }
     },
 };

@@ -77,6 +77,11 @@ export interface ElementBasedFormatState {
      * Whether the cursor is in table
      */
     isInTable?: boolean;
+
+    /**
+     * Whether the cursor is in table
+     */
+    isAutoSumActive?: boolean;
 }
 
 /**

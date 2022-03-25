@@ -32,6 +32,7 @@ export function getElementBasedFormatState(
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
         isInTable: !!editor.queryElements('table', QueryScope.OnSelection)[0],
+        isAutoSumActive: editor.isAutoSumActive(),
     };
 }
 

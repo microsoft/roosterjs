@@ -374,8 +374,8 @@ export default class VTable {
                         if (cell.td.dataset[TableAutoSumProperties.AutoSumColumnId]) {
                             delete cell.td.dataset[TableAutoSumProperties.AutoSumColumnId];
                         }
-                        if (cell.td.dataset[TableAutoSumProperties.AutoSumColumnId]) {
-                            delete cell.td.dataset[TableAutoSumProperties.AutoSumColumnId];
+                        if (cell.td.dataset[TableAutoSumProperties.AutoSumTotalColumnId]) {
+                            delete cell.td.dataset[TableAutoSumProperties.AutoSumTotalColumnId];
                         }
                     });
                 }

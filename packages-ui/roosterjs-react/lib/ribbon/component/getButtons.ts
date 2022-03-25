@@ -29,6 +29,7 @@ import { rtl } from './buttons/rtl';
 import { strikethrough } from './buttons/strikethrough';
 import { subscript } from './buttons/subscript';
 import { superscript } from './buttons/superscript';
+import { tableAutoSum } from './buttons/tableAutoSum';
 import { textColor } from './buttons/textColor';
 import { underline } from './buttons/underline';
 import { undo } from './buttons/undo';
@@ -42,6 +43,7 @@ const KnownRibbonButtons: { [key in KnownRibbonButtonKey]: RibbonButton<AllButto
     [KnownRibbonButtonKey.IncreaseFontSize]: increaseFontSize,
     [KnownRibbonButtonKey.DecreaseFontSize]: decreaseFontSize,
     [KnownRibbonButtonKey.TextColor]: textColor,
+    [KnownRibbonButtonKey.TableAutoSum]: tableAutoSum,
     [KnownRibbonButtonKey.BackgroundColor]: backgroundColor,
     [KnownRibbonButtonKey.BulletedList]: bulletedList,
     [KnownRibbonButtonKey.NumberedList]: numberedList,
@@ -80,6 +82,7 @@ export const AllButtonKeys = [
     KnownRibbonButtonKey.DecreaseFontSize,
     KnownRibbonButtonKey.TextColor,
     KnownRibbonButtonKey.BackgroundColor,
+    KnownRibbonButtonKey.TableAutoSum,
     KnownRibbonButtonKey.BulletedList,
     KnownRibbonButtonKey.NumberedList,
     KnownRibbonButtonKey.DecreaseIndent,
