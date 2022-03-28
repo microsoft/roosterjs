@@ -199,6 +199,8 @@ export interface TableFeatureSettings {
      * @default true for Chrome and safari, false for other browsers since they already have correct behavior
      */
     upDownInTable: boolean;
+
+    indentTableOnTab: boolean;
 }
 
 /**

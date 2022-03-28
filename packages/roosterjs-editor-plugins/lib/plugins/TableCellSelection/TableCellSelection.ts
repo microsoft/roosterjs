@@ -46,6 +46,7 @@ export default class TableCellSelection implements EditorPlugin {
     private vTable: VTable;
     private firstTable: HTMLTableElement;
     private targetTable: HTMLElement;
+    private preventKeyUp: boolean;
 
     constructor() {
         this.lastTarget = null;
@@ -200,8 +201,9 @@ export default class TableCellSelection implements EditorPlugin {
      * @param event the plugin event
      */
     private handleKeyDownEvent(event: PluginKeyDownEvent) {
-        const { shiftKey, ctrlKey, metaKey, which } = event.rawEvent;
-        if ((shiftKey && (ctrlKey || metaKey)) || which == Keys.SHIFT) {
+        const { shiftKey, ctrlKey, metaKey, which, defaultPrevented } = event.rawEvent;
+        if ((shiftKey && (ctrlKey || metaKey)) || which == Keys.SHIFT || defaultPrevented) {
+            this.preventKeyUp = defaultPrevented;
             return;
         }
 
@@ -240,9 +242,10 @@ export default class TableCellSelection implements EditorPlugin {
 
     private handleKeyUpEvent(event: PluginKeyUpEvent) {
         const { shiftKey, which } = event.rawEvent;
-        if (!shiftKey && which != Keys.SHIFT && this.firstTarget) {
+        if (!shiftKey && which != Keys.SHIFT && this.firstTarget && !this.preventKeyUp) {
             this.clearState();
         }
+        this.preventKeyUp = false;
     }
 
     private handleKeySelectionInsideTable(event: PluginKeyDownEvent) {

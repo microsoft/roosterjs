@@ -1,5 +1,5 @@
 import execCommand from '../utils/execCommand';
-import { VTable } from 'roosterjs-editor-dom';
+import { isWholeTableSelected, VTable } from 'roosterjs-editor-dom';
 import {
     Alignment,
     ChangeSource,
@@ -24,7 +24,7 @@ export default function setAlignment(editor: IEditor, alignment: Alignment) {
         if (
             editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
             isATable &&
-            isWholeTableSelected(selection)
+            isWholeTableSelected(new VTable(selection.table), selection.coordinates)
         ) {
             alignTable(selection, alignment);
         } else {
@@ -73,24 +73,4 @@ function alignText(editor: IEditor, alignment: Alignment) {
     }
     execCommand(editor, command);
     editor.queryElements('[align]', QueryScope.OnSelection, node => (node.style.textAlign = align));
-}
-
-/**
- * Check if the whole table is selected
- * @param selection
- * @returns
- */
-function isWholeTableSelected(selection: TableSelectionRange) {
-    if (!selection) {
-        return false;
-    }
-    const vTable = new VTable(selection.table);
-    const { firstCell, lastCell } = selection.coordinates;
-    const rowsLength = vTable.cells.length - 1;
-    const colIndex = vTable.cells[rowsLength].length - 1;
-    const firstX = firstCell.x;
-    const firstY = firstCell.y;
-    const lastX = lastCell.x;
-    const lastY = lastCell.y;
-    return firstX == 0 && firstY == 0 && lastX == colIndex && lastY == rowsLength;
 }

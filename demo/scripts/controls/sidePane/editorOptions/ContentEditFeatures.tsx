@@ -36,6 +36,7 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     markdownInlineCode: 'Markdown style Code blocks',
     maintainListChainWhenDelete:
         'Maintain the list of number in the right order after press delete before the first item',
+    indentTableOnTab: '',
 };
 
 export interface ContentEditFeaturessProps {
