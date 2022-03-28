@@ -187,7 +187,6 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
-        let mergedWithSelection: boolean;
 
         switch (operation) {
             case TableOperation.InsertAbove:
@@ -262,60 +261,56 @@ export default class VTable {
 
             case TableOperation.MergeAbove:
             case TableOperation.MergeBelow:
-                mergedWithSelection = this.mergeWithSelection();
-                if (mergedWithSelection) {
-                    return;
-                }
-                let rowStep = operation == TableOperation.MergeAbove ? -1 : 1;
-                for (
-                    let rowIndex = this.row + rowStep;
-                    rowIndex >= 0 && rowIndex < this.cells.length;
-                    rowIndex += rowStep
-                ) {
-                    let cell = this.getCell(rowIndex, this.col);
-                    if (cell.td && !cell.spanAbove) {
-                        let aboveCell = rowIndex < this.row ? cell : currentCell;
-                        let belowCell = rowIndex < this.row ? currentCell : cell;
-                        if (aboveCell.td.colSpan == belowCell.td.colSpan) {
-                            moveChildNodes(
-                                aboveCell.td,
-                                belowCell.td,
-                                true /*keepExistingChildren*/
-                            );
-                            belowCell.td = null;
-                            belowCell.spanAbove = true;
+                if (!this.mergedWithSelection()) {
+                    let rowStep = operation == TableOperation.MergeAbove ? -1 : 1;
+                    for (
+                        let rowIndex = this.row + rowStep;
+                        rowIndex >= 0 && rowIndex < this.cells.length;
+                        rowIndex += rowStep
+                    ) {
+                        let cell = this.getCell(rowIndex, this.col);
+                        if (cell.td && !cell.spanAbove) {
+                            let aboveCell = rowIndex < this.row ? cell : currentCell;
+                            let belowCell = rowIndex < this.row ? currentCell : cell;
+                            if (aboveCell.td.colSpan == belowCell.td.colSpan) {
+                                moveChildNodes(
+                                    aboveCell.td,
+                                    belowCell.td,
+                                    true /*keepExistingChildren*/
+                                );
+                                belowCell.td = null;
+                                belowCell.spanAbove = true;
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
                 break;
 
             case TableOperation.MergeLeft:
             case TableOperation.MergeRight:
-                mergedWithSelection = this.mergeWithSelection();
-                if (mergedWithSelection) {
-                    return;
-                }
-                let colStep = operation == TableOperation.MergeLeft ? -1 : 1;
-                for (
-                    let colIndex = this.col + colStep;
-                    colIndex >= 0 && colIndex < this.cells[this.row].length;
-                    colIndex += colStep
-                ) {
-                    let cell = this.getCell(this.row, colIndex);
-                    if (cell.td && !cell.spanLeft) {
-                        let leftCell = colIndex < this.col ? cell : currentCell;
-                        let rightCell = colIndex < this.col ? currentCell : cell;
-                        if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
-                            moveChildNodes(
-                                leftCell.td,
-                                rightCell.td,
-                                true /*keepExistingChildren*/
-                            );
-                            rightCell.td = null;
-                            rightCell.spanLeft = true;
+                if (!this.mergedWithSelection()) {
+                    let colStep = operation == TableOperation.MergeLeft ? -1 : 1;
+                    for (
+                        let colIndex = this.col + colStep;
+                        colIndex >= 0 && colIndex < this.cells[this.row].length;
+                        colIndex += colStep
+                    ) {
+                        let cell = this.getCell(this.row, colIndex);
+                        if (cell.td && !cell.spanLeft) {
+                            let leftCell = colIndex < this.col ? cell : currentCell;
+                            let rightCell = colIndex < this.col ? currentCell : cell;
+                            if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
+                                moveChildNodes(
+                                    leftCell.td,
+                                    rightCell.td,
+                                    true /*keepExistingChildren*/
+                                );
+                                rightCell.td = null;
+                                rightCell.spanLeft = true;
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
                 break;
@@ -384,33 +379,6 @@ export default class VTable {
                 style.verticalAlign = 'bottom';
                 break;
         }
-    }
-    mergeWithSelection(): boolean {
-        let mergedCells = 0;
-        if (this.selection?.firstCell && this.selection?.lastCell) {
-            const { x, y } = this.selection.firstCell;
-            const { x: lastX, y: lastY } = this.selection.lastCell;
-
-            const firstCell = this.cells[y][x];
-            for (let colIndex = x; colIndex <= lastX; colIndex++) {
-                for (let rowIndex = y; rowIndex <= lastY; rowIndex++) {
-                    const cell = this.cells[rowIndex][colIndex];
-                    if (cell.td != firstCell.td) {
-                        if (colIndex > x) {
-                            cell.td = null;
-                            cell.spanLeft = true;
-                        }
-
-                        if (rowIndex > y) {
-                            cell.td = null;
-                            cell.spanAbove = true;
-                        }
-                    }
-                    mergedCells++;
-                }
-            }
-        }
-        return mergedCells > 0;
     }
 
     /**
@@ -633,6 +601,34 @@ export default class VTable {
             sizeTransformer?.(rect.width) || rect.width,
             sizeTransformer?.(rect.height) || rect.height
         );
+    }
+
+    private mergedWithSelection(): boolean {
+        let mergedCells = 0;
+        if (this.selection?.firstCell && this.selection?.lastCell) {
+            const { x, y } = this.selection.firstCell;
+            const { x: lastX, y: lastY } = this.selection.lastCell;
+
+            const firstCell = this.cells[y][x];
+            for (let colIndex = x; colIndex <= lastX; colIndex++) {
+                for (let rowIndex = y; rowIndex <= lastY; rowIndex++) {
+                    const cell = this.cells[rowIndex][colIndex];
+                    if (cell.td != firstCell.td) {
+                        if (colIndex > x) {
+                            cell.td = null;
+                            cell.spanLeft = true;
+                        }
+
+                        if (rowIndex > y) {
+                            cell.td = null;
+                            cell.spanAbove = true;
+                        }
+                    }
+                    mergedCells++;
+                }
+            }
+        }
+        return mergedCells > 0;
     }
 }
 
