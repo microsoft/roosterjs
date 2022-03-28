@@ -18,10 +18,15 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
 
     const snapshot = core.undo.snapshotsService.move(step);
 
-    if (snapshot != null) {
+    if (snapshot && snapshot.html != null) {
         try {
             core.undo.isRestoring = true;
-            core.api.setContent(core, snapshot, true /*triggerContentChangedEvent*/);
+            core.api.setContent(
+                core,
+                snapshot.html,
+                true /*triggerContentChangedEvent*/,
+                snapshot.metadata
+            );
         } finally {
             core.undo.isRestoring = false;
         }

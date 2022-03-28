@@ -1,6 +1,12 @@
+import * as createRange from 'roosterjs-editor-dom/lib/selection/createRange';
 import createEditorCore from './createMockEditorCore';
-import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { setContent } from '../../lib/coreApi/setContent';
+import {
+    ChangeSource,
+    ContentMetadata,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 describe('setContent', () => {
     let div: HTMLDivElement;
@@ -94,6 +100,105 @@ describe('setContent', () => {
                 source: ChangeSource.SetContent,
             },
             false
+        );
+    });
+});
+
+describe('setContent and metadata', () => {
+    let div: HTMLDivElement;
+    beforeEach(() => {
+        div = document.createElement('div');
+        document.body.appendChild(div);
+    });
+
+    afterEach(() => {
+        document.body.removeChild(div);
+        div = null;
+    });
+
+    const selectionPath = { start: [1], end: [2] };
+    const htmlContent = '<div>test</div>';
+
+    function runNormalMetadataTest(newContent: string, metadata: ContentMetadata) {
+        const triggerEvent = jasmine.createSpy('triggerEvent');
+        const selectRange = jasmine.createSpy('selectRange');
+        const transformColor = jasmine.createSpy('transformColor');
+        const core = createEditorCore(div, {
+            coreApiOverride: { triggerEvent, selectRange },
+            inDarkMode: true,
+        });
+        const range = <any>{};
+        div.innerHTML = 'test';
+
+        spyOn(createRange, 'default').and.returnValue(range);
+
+        setContent(core, newContent, true, metadata);
+
+        expect(div.innerHTML).toBe(htmlContent);
+        expect(triggerEvent).toHaveBeenCalledTimes(2);
+        expect(triggerEvent).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: PluginEventType.BeforeSetContent,
+                newContent: newContent,
+            },
+            true
+        );
+        expect(triggerEvent).toHaveBeenCalledWith(
+            core,
+            {
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SetContent,
+            },
+            false
+        );
+        expect(<any>createRange.default).toHaveBeenCalledWith(
+            div,
+            selectionPath.start,
+            selectionPath.end
+        );
+        expect(selectRange).toHaveBeenCalledWith(core, range);
+        expect(transformColor).not.toHaveBeenCalled();
+    }
+
+    it('setContent with metadata - standalone metadata', () => {
+        runNormalMetadataTest(htmlContent, {
+            type: SelectionRangeTypes.Normal,
+            isDarkMode: false,
+            ...selectionPath,
+        });
+    });
+
+    it('setContent with metadata - embedded metadata', () => {
+        runNormalMetadataTest(
+            htmlContent +
+                '<!--' +
+                JSON.stringify({
+                    type: SelectionRangeTypes.Normal,
+                    isDarkMode: false,
+                    ...selectionPath,
+                }) +
+                '-->',
+            undefined
+        );
+    });
+
+    it('setContent with metadata - both', () => {
+        runNormalMetadataTest(
+            htmlContent +
+                '<!--' +
+                JSON.stringify({
+                    type: SelectionRangeTypes.Normal,
+                    isDarkMode: true,
+                    start: [0],
+                    end: [0],
+                }) +
+                '-->',
+            {
+                type: SelectionRangeTypes.Normal,
+                isDarkMode: false,
+                ...selectionPath,
+            }
         );
     });
 });

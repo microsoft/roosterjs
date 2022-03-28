@@ -1,4 +1,4 @@
-import { Position } from 'roosterjs-editor-dom';
+import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import {
     AddUndoSnapshot,
     ChangeSource,
@@ -6,7 +6,8 @@ import {
     EditorCore,
     NodePosition,
     PluginEventType,
-    GetContentMode,
+    SelectionRangeTypes,
+    ContentMetadata,
 } from 'roosterjs-editor-types';
 
 /**
@@ -26,19 +27,12 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 ) => {
     const undoState = core.undo;
     const isNested = undoState.isNested;
-    const isShadowEdit = !!core.lifecycle.shadowEditFragment;
     let data: any;
 
     if (!isNested) {
         undoState.isNested = true;
 
-        if (!isShadowEdit) {
-            undoState.snapshotsService.addSnapshot(
-                core.api.getContent(core, GetContentMode.RawHTMLWithSelection),
-                canUndoByBackspace
-            );
-            undoState.hasNewContent = false;
-        }
+        addUndoSnapshotInternal(core, canUndoByBackspace);
     }
 
     try {
@@ -49,12 +43,8 @@ export const addUndoSnapshot: AddUndoSnapshot = (
                 range && Position.getEnd(range).normalize()
             );
 
-            if (!isNested && !isShadowEdit) {
-                undoState.snapshotsService.addSnapshot(
-                    core.api.getContent(core, GetContentMode.RawHTMLWithSelection),
-                    false /*isAutoCompleteSnapshot*/
-                );
-                undoState.hasNewContent = false;
+            if (!isNested) {
+                addUndoSnapshotInternal(core, false /*isAutoCompleteSnapshot*/);
             }
         }
     } finally {
@@ -81,3 +71,34 @@ export const addUndoSnapshot: AddUndoSnapshot = (
         }
     }
 };
+
+function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) {
+    if (!core.lifecycle.shadowEditFragment) {
+        const rangeEx = core.api.getSelectionRangeEx(core);
+        const isDarkMode = core.lifecycle.isDarkMode;
+        const metadata: ContentMetadata =
+            rangeEx?.type == SelectionRangeTypes.TableSelection
+                ? {
+                      type: SelectionRangeTypes.TableSelection,
+                      tableId: rangeEx.table.id,
+                      isDarkMode,
+                      ...rangeEx.coordinates,
+                  }
+                : {
+                      type: SelectionRangeTypes.Normal,
+                      isDarkMode,
+                      start: [],
+                      end: [],
+                      ...(getSelectionPath(core.contentDiv, rangeEx.ranges[0]) || {}),
+                  };
+
+        core.undo.snapshotsService.addSnapshot(
+            {
+                html: core.contentDiv.innerHTML,
+                metadata,
+            },
+            canUndoByBackspace
+        );
+        core.undo.hasNewContent = false;
+    }
+}

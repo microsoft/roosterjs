@@ -1,7 +1,13 @@
+import * as getSelectionPath from 'roosterjs-editor-dom/lib/selection/getSelectionPath';
 import createEditorCore from './createMockEditorCore';
 import { addUndoSnapshot } from '../../lib/coreApi/addUndoSnapshot';
-import { PluginEventType, UndoSnapshotsService } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
+import {
+    PluginEventType,
+    Snapshot,
+    UndoSnapshotsService,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 describe('addUndoSnapshot', () => {
     let div: HTMLDivElement;
@@ -20,15 +26,37 @@ describe('addUndoSnapshot', () => {
         spyOn(core.undo.snapshotsService, 'addSnapshot');
         div.innerHTML = 'test';
         addUndoSnapshot(core, null, null, false);
-        expect(core.undo.snapshotsService.addSnapshot).toHaveBeenCalledWith('test', false);
+        expect(core.undo.snapshotsService.addSnapshot).toHaveBeenCalledWith(
+            {
+                html: 'test',
+                metadata: {
+                    type: 0,
+                    isDarkMode: false,
+                    start: [],
+                    end: [],
+                },
+            },
+            false
+        );
     });
 
     it('null input, verify snapshot is added', () => {
         const core = createEditorCore(div, {});
         core.undo.snapshotsService = createUndoSnapshotService(jasmine.createSpy());
-        core.api.getContent = jasmine.createSpy().and.returnValue('test1');
+        div.innerHTML = 'test1';
         addUndoSnapshot(core, null, null, false);
-        expect(core.undo.snapshotsService.addSnapshot).toHaveBeenCalledWith('test1', false);
+        expect(core.undo.snapshotsService.addSnapshot).toHaveBeenCalledWith(
+            {
+                html: 'test1',
+                metadata: {
+                    type: 0,
+                    isDarkMode: false,
+                    start: [],
+                    end: [],
+                },
+            },
+            false
+        );
     });
 
     it('undo with callback', () => {
@@ -36,9 +64,9 @@ describe('addUndoSnapshot', () => {
         const core = createEditorCore(div, {
             coreApiOverride: {
                 getSelectionRange: () => range,
-                getContent: () => 'result 1',
             },
         });
+        div.innerHTML = 'result 1';
         core.undo = {
             snapshotsService: createUndoSnapshotService(jasmine.createSpy()),
             isRestoring: false,
@@ -53,7 +81,7 @@ describe('addUndoSnapshot', () => {
                 expect(pos1.equalTo(Position.getStart(range).normalize())).toBeTruthy();
                 expect(pos2.equalTo(Position.getEnd(range).normalize())).toBeTruthy();
                 expect(core.undo.isNested).toBeTruthy();
-                core.api.getContent = jasmine.createSpy().and.returnValue('result 2');
+                div.innerHTML = 'result 2';
             },
             null,
             false
@@ -63,8 +91,14 @@ describe('addUndoSnapshot', () => {
         const snapshot1 = (<jasmine.Spy>core.undo.snapshotsService.addSnapshot).calls.argsFor(0)[0];
         const snapshot2 = (<jasmine.Spy>core.undo.snapshotsService.addSnapshot).calls.argsFor(1)[0];
 
-        expect(snapshot1).toBe('result 1');
-        expect(snapshot2).toBe('result 2');
+        expect(snapshot1).toEqual({
+            html: 'result 1',
+            metadata: { type: 0, isDarkMode: false, start: [], end: [] },
+        });
+        expect(snapshot2).toEqual({
+            html: 'result 2',
+            metadata: { type: 0, isDarkMode: false, start: [], end: [] },
+        });
         expect(core.undo.isNested).toBeFalsy();
     });
 
@@ -165,14 +199,13 @@ describe('addUndoSnapshot', () => {
             },
         });
 
-        let content = 'test 1';
-        spyOn(core.api, 'getContent').and.callFake(() => content);
+        div.innerHTML = 'test 1';
 
         expect(core.undo.snapshotsService.canUndoAutoComplete()).toBeFalsy();
         addUndoSnapshot(
             core,
             () => {
-                content = 'test 2';
+                div.innerHTML = 'test 2';
             },
             null,
             true
@@ -207,9 +240,101 @@ describe('addUndoSnapshot', () => {
         expect(triggerEvent).not.toHaveBeenCalled();
         expect(addSnapshot).not.toHaveBeenCalled();
     });
+
+    it('Add undo snapshot in dark mode', () => {
+        const core = createEditorCore(div, {
+            inDarkMode: true,
+        });
+        const addSnapshot = jasmine.createSpy('addSnapshot');
+        core.undo.snapshotsService = createUndoSnapshotService(addSnapshot);
+
+        addUndoSnapshot(core, null, '', false);
+        expect(addSnapshot).toHaveBeenCalledWith(
+            {
+                html: '',
+                metadata: {
+                    type: SelectionRangeTypes.Normal,
+                    isDarkMode: true,
+                    start: [],
+                    end: [],
+                },
+            },
+            false
+        );
+    });
+
+    it('Add undo snapshot with normal selection', () => {
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                getSelectionRangeEx: () =>
+                    <any>{
+                        type: SelectionRangeTypes.Normal,
+                        isDarkMode: false,
+                        ranges: [{}],
+                    },
+            },
+        });
+        const addSnapshot = jasmine.createSpy('addSnapshot');
+        const selectionPath = {
+            start: [1],
+            end: [2],
+        };
+        core.undo.snapshotsService = createUndoSnapshotService(addSnapshot);
+
+        spyOn(getSelectionPath, 'default').and.returnValue(selectionPath);
+
+        addUndoSnapshot(core, null, '', false);
+        expect(addSnapshot).toHaveBeenCalledWith(
+            {
+                html: '',
+                metadata: {
+                    type: SelectionRangeTypes.Normal,
+                    isDarkMode: false,
+                    ...selectionPath,
+                },
+            },
+            false
+        );
+    });
+
+    it('Add undo snapshot with table selection', () => {
+        const coordinates = {
+            firstCell: { x: 1, y: 2 },
+            lastCell: { x: 3, y: 4 },
+        };
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                getSelectionRangeEx: () =>
+                    <any>{
+                        type: SelectionRangeTypes.TableSelection,
+                        table: {
+                            id: 'tableId',
+                        },
+                        isDarkMode: false,
+                        coordinates,
+                    },
+            },
+        });
+        const addSnapshot = jasmine.createSpy('addSnapshot');
+        core.undo.snapshotsService = createUndoSnapshotService(addSnapshot);
+
+        addUndoSnapshot(core, null, '', false);
+        expect(addSnapshot).toHaveBeenCalledWith(
+            {
+                html: '',
+                metadata: {
+                    type: SelectionRangeTypes.TableSelection,
+                    tableId: 'tableId',
+                    isDarkMode: false,
+                    ...coordinates,
+                },
+            },
+            false
+        );
+    });
 });
 
-function createUndoSnapshotService(addSnapshot: any): UndoSnapshotsService {
+function createUndoSnapshotService(addSnapshot: any): UndoSnapshotsService<Snapshot> {
     return {
         canMove: null,
         move: null,

@@ -6,12 +6,14 @@ import {
     PluginEventType,
     PluginWithState,
     UndoPluginState,
+    ChangeSource,
+    Snapshot,
     UndoSnapshotsService,
 } from 'roosterjs-editor-types';
 import {
-    addSnapshot,
+    addSnapshotV2,
     canMoveCurrentSnapshot,
-    clearProceedingSnapshots,
+    clearProceedingSnapshotsV2,
     createSnapshots,
     isCtrlOrMetaPressed,
     moveCurrentSnapshot,
@@ -37,7 +39,10 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
      */
     constructor(options: EditorOptions) {
         this.state = {
-            snapshotsService: options.undoSnapshotService || createUndoSnapshots(),
+            snapshotsService:
+                options.undoMetadataSnapshotService ||
+                createUndoSnapshotServiceBridge(options.undoSnapshotService) ||
+                createUndoSnapshots(),
             isRestoring: false,
             hasNewContent: false,
             isNested: false,
@@ -116,7 +121,13 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 this.addUndoSnapshot();
                 break;
             case PluginEventType.ContentChanged:
-                if (!this.state.isRestoring) {
+                if (
+                    !(
+                        this.state.isRestoring ||
+                        event.source == ChangeSource.SwitchToDarkMode ||
+                        event.source == ChangeSource.SwitchToLightMode
+                    )
+                ) {
                     this.clearRedoForInput();
                 }
                 break;
@@ -206,15 +217,34 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 }
 
-function createUndoSnapshots(): UndoSnapshotsService {
-    const snapshots = createSnapshots(MAX_SIZE_LIMIT);
+function createUndoSnapshots(): UndoSnapshotsService<Snapshot> {
+    const snapshots = createSnapshots<Snapshot>(MAX_SIZE_LIMIT);
 
     return {
         canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),
-        move: (delta: number): string => moveCurrentSnapshot(snapshots, delta),
-        addSnapshot: (snapshot: string, isAutoCompleteSnapshot: boolean) =>
-            addSnapshot(snapshots, snapshot, isAutoCompleteSnapshot),
-        clearRedo: () => clearProceedingSnapshots(snapshots),
+        move: (delta: number): Snapshot => moveCurrentSnapshot(snapshots, delta),
+        addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =>
+            addSnapshotV2(snapshots, snapshot, isAutoCompleteSnapshot),
+        clearRedo: () => clearProceedingSnapshotsV2(snapshots),
         canUndoAutoComplete: () => canUndoAutoComplete(snapshots),
     };
+}
+
+function createUndoSnapshotServiceBridge(
+    service: UndoSnapshotsService<string> | undefined
+): UndoSnapshotsService<Snapshot> | undefined {
+    return service
+        ? {
+              canMove: (delta: number) => service.canMove(delta),
+              move: (delta: number): Snapshot => ({ html: service.move(delta), metadata: null }),
+              addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =>
+                  service.addSnapshot(
+                      snapshot.html +
+                          (snapshot.metadata ? `<!--${JSON.stringify(snapshot.metadata)}-->` : ''),
+                      isAutoCompleteSnapshot
+                  ),
+              clearRedo: () => service.clearRedo(),
+              canUndoAutoComplete: () => service.canUndoAutoComplete(),
+          }
+        : undefined;
 }

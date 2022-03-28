@@ -135,6 +135,14 @@ export default class TableCellSelection implements EditorPlugin {
                         this.handleScrollEvent();
                     }
                     break;
+                case PluginEventType.BeforeSetContent:
+                    if (this.tableRange) {
+                        this.tableRange = null;
+                        this.firstTable = null;
+                        this.tableSelection = false;
+                        this.editor.select(null);
+                    }
+                    break;
             }
         }
     }
@@ -320,13 +328,18 @@ export default class TableCellSelection implements EditorPlugin {
                 }
             }
         }
-        this.editor.getDocument().addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
         if (which == LEFT_CLICK && !shiftKey) {
             this.clearState();
-            this.editor
-                .getDocument()
-                .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
-            this.startedSelection = true;
+
+            if (getTableAtCursor(this.editor, event.rawEvent.target)) {
+                this.editor
+                    .getDocument()
+                    .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
+                this.editor
+                    .getDocument()
+                    .addEventListener('mousemove', this.onMouseMove, true /*setCapture*/);
+                this.startedSelection = true;
+            }
         }
 
         if (which == LEFT_CLICK && shiftKey) {
@@ -736,9 +749,9 @@ function getCellAtCursor(editor: IEditor, node: Node) {
     return node as HTMLElement;
 }
 
-function getTableAtCursor(editor: IEditor, node: Node) {
+function getTableAtCursor(editor: IEditor, node: Node | EventTarget) {
     if (editor) {
-        return editor.getElementAtCursor('table', node);
+        return editor.getElementAtCursor('table', node as Node);
     }
     return null;
 }

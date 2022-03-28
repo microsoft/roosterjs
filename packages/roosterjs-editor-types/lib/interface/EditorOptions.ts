@@ -1,6 +1,7 @@
 import CorePlugins from './CorePlugins';
 import DefaultFormat from './DefaultFormat';
 import EditorPlugin from './EditorPlugin';
+import Snapshot from './Snapshot';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
@@ -27,9 +28,16 @@ export default interface EditorOptions {
     defaultFormat?: DefaultFormat;
 
     /**
+     * @deprecated Use undoMetadataSnapshotService instead
      * Undo snapshot service. Use this parameter to customize the undo snapshot service.
      */
-    undoSnapshotService?: UndoSnapshotsService;
+    undoSnapshotService?: UndoSnapshotsService<string>;
+
+    /**
+     * Undo snapshot service based on content metadata. Use this parameter to customize the undo snapshot service.
+     * When this property is set, value of undoSnapshotService will be ignored.
+     */
+    undoMetadataSnapshotService?: UndoSnapshotsService<Snapshot>;
 
     /**
      * Initial HTML content
