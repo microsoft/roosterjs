@@ -187,61 +187,73 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
-
+        const firstRow = this.selection ? this.selection.firstCell.y : this.row;
+        const lastRow = this.selection ? this.selection.lastCell.y : this.row;
+        const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
+        const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
         switch (operation) {
             case TableOperation.InsertAbove:
-                this.cells.splice(this.row, 0, currentRow.map(cloneCell));
+                for (let i = firstRow; i <= lastRow; i++) {
+                    this.cells.splice(firstRow, 0, currentRow.map(cloneCell));
+                }
                 break;
             case TableOperation.InsertBelow:
-                let newRow = this.row + this.countSpanAbove(this.row, this.col);
-                this.cells.splice(
-                    newRow,
-                    0,
-                    this.cells[newRow - 1].map((cell, colIndex) => {
-                        let nextCell = this.getCell(newRow, colIndex);
-                        if (nextCell.spanAbove) {
-                            return cloneCell(nextCell);
-                        } else if (cell.spanLeft) {
-                            let newCell = cloneCell(cell);
-                            newCell.spanAbove = false;
-                            return newCell;
-                        } else {
-                            return {
-                                td: cloneNode(this.getTd(this.row, colIndex)),
-                            };
-                        }
-                    })
-                );
+                for (let i = firstRow; i <= lastRow; i++) {
+                    let newRow = lastRow + this.countSpanAbove(lastRow, this.col);
+                    this.cells.splice(
+                        newRow,
+                        0,
+                        this.cells[newRow - 1].map((cell, colIndex) => {
+                            let nextCell = this.getCell(newRow, colIndex);
+                            if (nextCell.spanAbove) {
+                                return cloneCell(nextCell);
+                            } else if (cell.spanLeft) {
+                                let newCell = cloneCell(cell);
+                                newCell.spanAbove = false;
+                                return newCell;
+                            } else {
+                                return {
+                                    td: cloneNode(this.getTd(this.row, colIndex)),
+                                };
+                            }
+                        })
+                    );
+                }
+
                 break;
 
             case TableOperation.InsertLeft:
-                this.forEachCellOfCurrentColumn((cell, row) => {
-                    row.splice(this.col, 0, cloneCell(cell));
-                });
+                for (let i = firstColumn; i <= lastColumn; i++) {
+                    this.forEachCellOfCurrentColumn((cell, row) => {
+                        row.splice(i, 0, cloneCell(cell));
+                    });
+                }
+
                 break;
             case TableOperation.InsertRight:
-                let newCol = this.col + this.countSpanLeft(this.row, this.col);
-                this.forEachCellOfColumn(newCol - 1, (cell, row, i) => {
-                    let nextCell = this.getCell(i, newCol);
-                    let newCell: VCell;
-                    if (nextCell.spanLeft) {
-                        newCell = cloneCell(nextCell);
-                    } else if (cell.spanAbove) {
-                        newCell = cloneCell(cell);
-                        newCell.spanLeft = false;
-                    } else {
-                        newCell = {
-                            td: cloneNode(this.getTd(i, this.col)),
-                        };
-                    }
+                for (let i = firstColumn; i <= lastColumn; i++) {
+                    let newCol = lastColumn + this.countSpanLeft(this.row, lastColumn);
+                    this.forEachCellOfColumn(newCol - 1, (cell, row, i) => {
+                        let nextCell = this.getCell(i, newCol);
+                        let newCell: VCell;
+                        if (nextCell.spanLeft) {
+                            newCell = cloneCell(nextCell);
+                        } else if (cell.spanAbove) {
+                            newCell = cloneCell(cell);
+                            newCell.spanLeft = false;
+                        } else {
+                            newCell = {
+                                td: cloneNode(this.getTd(i, this.col)),
+                            };
+                        }
 
-                    row.splice(newCol, 0, newCell);
-                });
+                        row.splice(newCol, 0, newCell);
+                    });
+                }
+
                 break;
 
             case TableOperation.DeleteRow:
-                const firstRow = this.selection ? this.selection.firstCell.y : this.row;
-                const lastRow = this.selection ? this.selection.lastCell.y : this.row;
                 for (let rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
                     this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) => {
                         let nextCell = this.getCell(rowIndex + 1, i);
@@ -257,8 +269,6 @@ export default class VTable {
 
                 break;
             case TableOperation.DeleteColumn:
-                const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
-                const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
                 let deletedColumns = 0;
                 for (let colIndex = firstColumn; colIndex <= lastColumn; colIndex++) {
                     this.forEachCellOfColumn(colIndex, (cell, row, i) => {
