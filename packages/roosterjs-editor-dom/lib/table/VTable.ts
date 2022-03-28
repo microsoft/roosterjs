@@ -187,7 +187,10 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
-
+        const firstRow = this.selection ? this.selection.firstCell.y : this.row;
+        const lastRow = this.selection ? this.selection.lastCell.y : this.row;
+        const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
+        const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -240,8 +243,6 @@ export default class VTable {
                 break;
 
             case TableOperation.DeleteRow:
-                const firstRow = this.selection ? this.selection.firstCell.y : this.row;
-                const lastRow = this.selection ? this.selection.lastCell.y : this.row;
                 for (let rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
                     this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) => {
                         let nextCell = this.getCell(rowIndex + 1, i);
@@ -257,8 +258,6 @@ export default class VTable {
 
                 break;
             case TableOperation.DeleteColumn:
-                const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
-                const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
                 let deletedColumns = 0;
                 for (let colIndex = firstColumn; colIndex <= lastColumn; colIndex++) {
                     this.forEachCellOfColumn(colIndex, (cell, row, i) => {
@@ -273,7 +272,6 @@ export default class VTable {
                     });
                     deletedColumns++;
                 }
-
                 break;
 
             case TableOperation.MergeAbove:
