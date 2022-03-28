@@ -59,7 +59,7 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * IndentTableOnTab edit feature, provides the ability to indent the table if it is all selected.
+ * IndentTableOnTab edit feature, provides the ability to indent the table if it is all cells are selected.
  */
 const IndentTableOnTab: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],

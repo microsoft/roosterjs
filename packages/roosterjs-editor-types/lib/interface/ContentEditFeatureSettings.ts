@@ -200,6 +200,9 @@ export interface TableFeatureSettings {
      */
     upDownInTable: boolean;
 
+    /**
+     * IndentTableOnTab edit feature, provides the ability to indent the table if it is all cells are selected.
+     */
     indentTableOnTab: boolean;
 }
 
