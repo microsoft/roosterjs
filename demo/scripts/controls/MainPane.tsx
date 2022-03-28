@@ -17,6 +17,7 @@ import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
+import { tableEdit, TableEditOperationsStringKey } from './ribbonButtons/tableEditOperations';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
@@ -46,7 +47,8 @@ type RibbonStringKeys =
     | DarkModeButtonStringKey
     | ZoomButtonStringKey
     | ExportButtonStringKey
-    | PopoutButtonStringKey;
+    | PopoutButtonStringKey
+    | TableEditOperationsStringKey;
 
 class MainPane extends MainPaneBase {
     private mouseX: number;
@@ -82,6 +84,7 @@ class MainPane extends MainPaneBase {
             zoom,
             exportContent,
             popout,
+            tableEdit,
         ]);
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
