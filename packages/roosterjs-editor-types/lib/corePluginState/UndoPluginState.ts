@@ -1,4 +1,5 @@
 import NodePosition from '../interface/NodePosition';
+import Snapshot from '../interface/Snapshot';
 import UndoSnapshotsService from '../interface/UndoSnapshotsService';
 
 /**
@@ -8,7 +9,7 @@ export default interface UndoPluginState {
     /**
      * Snapshot service for undo, it helps handle snapshot add, remove and retrieve
      */
-    snapshotsService: UndoSnapshotsService;
+    snapshotsService: UndoSnapshotsService<Snapshot>;
 
     /**
      * Whether restoring of undo snapshot is in progress.

@@ -105,6 +105,13 @@ export { default as Region } from './interface/Region';
 export { default as RegionBase } from './interface/RegionBase';
 export { default as SelectionPath } from './interface/SelectionPath';
 export { default as Snapshots } from './interface/Snapshots';
+export {
+    ContentMetadataBase,
+    NormalContentMetadata,
+    TableContentMetadata,
+    ContentMetadata,
+} from './interface/ContentMetadata';
+export { default as Snapshot } from './interface/Snapshot';
 export { default as TableFormat } from './interface/TableFormat';
 export { default as TableSelection } from './interface/TableSelection';
 export { default as Coordinates } from './interface/Coordinates';

@@ -1,9 +1,12 @@
-import { setHtmlWithSelectionPath } from 'roosterjs-editor-dom';
+import { createRange, queryElements } from 'roosterjs-editor-dom';
+import { setHtmlWithMetadata } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ColorTransformDirection,
+    ContentMetadata,
     EditorCore,
     PluginEventType,
+    SelectionRangeTypes,
     SetContent,
 } from 'roosterjs-editor-types';
 
@@ -18,7 +21,8 @@ import {
 export const setContent: SetContent = (
     core: EditorCore,
     content: string,
-    triggerContentChangedEvent: boolean
+    triggerContentChangedEvent: boolean,
+    metadata?: ContentMetadata
 ) => {
     let contentChanged = false;
     if (core.contentDiv.innerHTML != content) {
@@ -31,21 +35,32 @@ export const setContent: SetContent = (
             true /*broadcast*/
         );
 
-        const range = setHtmlWithSelectionPath(core.contentDiv, content, core.trustedHTMLHandler);
-        core.api.selectRange(core, range);
+        const metadataFromContent = setHtmlWithMetadata(
+            core.contentDiv,
+            content,
+            core.trustedHTMLHandler
+        );
+
+        metadata = metadata || metadataFromContent;
+        selectContentMetadata(core, metadata);
         contentChanged = true;
     }
 
-    // Convert content even if it hasn't changed.
-    core.api.transformColor(
-        core,
-        core.contentDiv,
-        false /*includeSelf*/,
-        null /*callback*/,
-        ColorTransformDirection.LightToDark
-    );
+    const isDarkMode = core.lifecycle.isDarkMode;
 
-    if (triggerContentChangedEvent && (contentChanged || core.lifecycle.isDarkMode)) {
+    if ((!metadata && isDarkMode) || (metadata && !!metadata.isDarkMode != !!isDarkMode)) {
+        core.api.transformColor(
+            core,
+            core.contentDiv,
+            false /*includeSelf*/,
+            null /*callback*/,
+            isDarkMode ? ColorTransformDirection.LightToDark : ColorTransformDirection.DarkToLight,
+            true /*forceTransform*/
+        );
+        contentChanged = true;
+    }
+
+    if (triggerContentChangedEvent && contentChanged) {
         core.api.triggerEvent(
             core,
             {
@@ -56,3 +71,22 @@ export const setContent: SetContent = (
         );
     }
 };
+
+function selectContentMetadata(core: EditorCore, metadata: ContentMetadata | undefined) {
+    switch (metadata?.type) {
+        case SelectionRangeTypes.Normal:
+            const range = createRange(core.contentDiv, metadata.start, metadata.end);
+            core.api.selectRange(core, range);
+            break;
+        case SelectionRangeTypes.TableSelection:
+            const table = queryElements(
+                core.contentDiv,
+                '#' + metadata.tableId
+            )[0] as HTMLTableElement;
+
+            if (table) {
+                core.api.selectTable(core, table, metadata);
+            }
+            break;
+    }
+}

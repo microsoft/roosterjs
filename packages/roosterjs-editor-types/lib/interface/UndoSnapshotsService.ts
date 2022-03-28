@@ -1,7 +1,7 @@
 /**
  * Represent an interface to provide functionalities for Undo Snapshots
  */
-export default interface UndoSnapshotsService {
+export default interface UndoSnapshotsService<T = string> {
     /**
      * Check whether can move current undo snapshot with the given step
      * @param step The step to check, can be positive, negative or 0
@@ -14,13 +14,13 @@ export default interface UndoSnapshotsService {
      * @param step The step to move
      * @returns If can move with the given step, returns the snapshot after move, otherwise null
      */
-    move(step: number): string;
+    move(step: number): T;
 
     /**
      * Add a new undo snapshot
      * @param snapshot The snapshot to add
      */
-    addSnapshot(snapshot: string, isAutoCompleteSnapshot: boolean): void;
+    addSnapshot(snapshot: T, isAutoCompleteSnapshot: boolean): void;
 
     /**
      * Clear all undo snapshots after the current one

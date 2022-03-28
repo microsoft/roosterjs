@@ -32,6 +32,11 @@ export default interface ClipboardData {
     image: File | null;
 
     /**
+     * General file from clipboard event
+     */
+    files?: File[];
+
+    /**
      * Html extracted from raw html string and remove content before and after fragment tag
      */
     html?: string;

@@ -492,7 +492,7 @@ describe('sanitizeHtml with unknown/disabled tags, replace with SPAN', () => {
     });
 
     it('Make sure all allowed tags are really allowed', () => {
-        const allowTags = 'H1,H2,H3,H4,H5,H6,P,ABBR,ADDRESS,B,BDI,BDO,BLOCKQUOTE,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TEMPLATE,TIME,TT,U,VAR,XMP,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,MAP,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'
+        const allowTags = 'H1,H2,H3,H4,H5,H6,P,ABBR,ADDRESS,B,BDI,BDO,BLOCKQUOTE,CITE,CODE,DEL,DFN,EM,FONT,I,INS,KBD,MARK,METER,PRE,PROGRESS,Q,RP,RT,RUBY,S,SAMP,SMALL,STRIKE,STRONG,SUB,SUP,TIME,TT,U,VAR,XMP,TEXTAREA,BUTTON,SELECT,OPTGROUP,OPTION,LABEL,FIELDSET,LEGEND,DATALIST,OUTPUT,MAP,CANVAS,FIGCAPTION,FIGURE,PICTURE,A,NAV,UL,OL,LI,DIR,UL,DL,DT,DD,MENU,MENUITEM,DIV,SPAN,HEADER,FOOTER,MAIN,SECTION,ARTICLE,ASIDE,DETAILS,DIALOG,SUMMARY,DATA'
             .toLowerCase()
             .split(',');
 
@@ -519,7 +519,7 @@ describe('sanitizeHtml with unknown/disabled tags, replace with SPAN', () => {
     });
 
     it('Make sure disallowed tags are really removed', () => {
-        const disallowedTags = 'applet,audio,iframe,noscript,object,script,slot,style,title,video'.split(
+        const disallowedTags = 'applet,audio,iframe,noscript,object,script,slot,style,template,title,video'.split(
             ','
         );
         disallowedTags.forEach(tag => {
