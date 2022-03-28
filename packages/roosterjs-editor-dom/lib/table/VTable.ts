@@ -240,49 +240,38 @@ export default class VTable {
                 break;
 
             case TableOperation.DeleteRow:
-                const deleteRowHandler = (cell: VCell, i: number, rowIndex: number) => {
-                    let nextCell = this.getCell(rowIndex + 1, i);
-                    if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
-                        nextCell.td = cell.td;
-                    }
-                };
-                if (this.selection) {
-                    const { firstCell, lastCell } = this.selection;
-                    for (let rowIndex = firstCell.y; rowIndex <= lastCell.y; rowIndex++) {
-                        this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) => {
-                            deleteRowHandler(cell, i, rowIndex);
-                        });
-                    }
-                    this.cells.splice(firstCell.y, lastCell.y - firstCell.y + 1);
-                } else {
-                    this.forEachCellOfCurrentRow((cell, i) => {
-                        deleteRowHandler(cell, i, this.row);
+                const firstRow = this.selection ? this.selection.firstCell.y : this.row;
+                const lastRow = this.selection ? this.selection.lastCell.y : this.row;
+                for (let rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
+                    this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) => {
+                        let nextCell = this.getCell(rowIndex + 1, i);
+                        if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
+                            nextCell.td = cell.td;
+                        }
                     });
-                    this.cells.splice(this.row, 1);
                 }
+                const removedRows = this.selection
+                    ? this.selection.lastCell.y - this.selection.firstCell.y
+                    : 0;
+                this.cells.splice(firstRow, removedRows + 1);
+
                 break;
             case TableOperation.DeleteColumn:
-                const deleteColumnsHandler = (cell: VCell, i: number, colIndex: number) => {
-                    let nextCell = this.getCell(i, colIndex + 1);
-                    if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
-                        nextCell.td = cell.td;
-                    }
-                };
-                if (this.selection) {
-                    const { firstCell, lastCell } = this.selection;
-                    let deletedColumns = 0;
-                    for (let colIndex = firstCell.x; colIndex <= lastCell.x; colIndex++) {
-                        this.forEachCellOfColumn(colIndex, (cell, row, i) => {
-                            deleteColumnsHandler(cell, i, colIndex);
-                            row.splice(colIndex - deletedColumns, 1);
-                        });
-                        deletedColumns++;
-                    }
-                } else {
-                    this.forEachCellOfCurrentColumn((cell, row, i) => {
-                        deleteColumnsHandler(cell, i, this.col);
-                        row.splice(this.col, 1);
+                const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
+                const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
+                let deletedColumns = 0;
+                for (let colIndex = firstColumn; colIndex <= lastColumn; colIndex++) {
+                    this.forEachCellOfColumn(colIndex, (cell, row, i) => {
+                        let nextCell = this.getCell(i, colIndex + 1);
+                        if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
+                            nextCell.td = cell.td;
+                        }
+                        const removedColumns = this.selection
+                            ? colIndex - deletedColumns
+                            : this.col;
+                        row.splice(removedColumns, 1);
                     });
+                    deletedColumns++;
                 }
 
                 break;

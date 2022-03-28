@@ -218,11 +218,6 @@ export type UnderlineButtonStringKey = 'buttonNameUnderline';
 export type UndoButtonStringKey = 'buttonNameUndo';
 
 /**
- * Key of localized strings of Table Edit Operations button
- */
-export type TableEditOperationsStringKey = 'buttonNameTableEditOperations';
-
-/**
  * Key of localized strings of Cell Shade button
  */
 export type CellShadeButtonStringKey = 'buttonNameCellShade';
@@ -262,5 +257,4 @@ export type AllButtonStringKeys =
     | TextColorButtonStringKey
     | UnderlineButtonStringKey
     | UndoButtonStringKey
-    | TableEditOperationsStringKey
     | CellShadeButtonStringKey;

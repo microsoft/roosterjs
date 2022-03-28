@@ -1,9 +1,13 @@
-import RibbonButton from '../../type/RibbonButton';
 import { editTable } from 'roosterjs-editor-api';
-import { IEditor, TableOperation } from 'roosterjs-editor-types';
-import { TableEditOperationsStringKey } from '../../type/RibbonButtonStringKeys';
+import { FormatState, IEditor, TableOperation } from 'roosterjs-editor-types';
+import { RibbonButton } from 'roosterjs-react';
 
 type TableEditOperationsKey = 'deleteTable' | 'deleteRow' | 'deleteColumn';
+
+/**
+ * Key of localized strings of Table Edit Operations button
+ */
+export type TableEditOperationsStringKey = 'buttonNameTableEditOperations';
 
 const tableEditOperationsLabel: Record<TableEditOperationsKey, string> = {
     deleteTable: 'Delete Table',
@@ -27,6 +31,9 @@ export const tableEdit: RibbonButton<TableEditOperationsStringKey> = {
     iconName: 'DeleteTable',
     dropDownMenu: {
         items: tableEditOperationsLabel,
+    },
+    isDisabled: (format: FormatState) => {
+        return format.isInTable ? false : true;
     },
     onClick: (editor, key: TableEditOperationsKey) => {
         editTableOperation(editor, tableEditOperations[key]);
