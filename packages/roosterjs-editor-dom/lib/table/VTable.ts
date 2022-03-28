@@ -187,6 +187,10 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
+        const firstRow = this.selection ? this.selection.firstCell.y : this.row;
+        const lastRow = this.selection ? this.selection.lastCell.y : this.row;
+        const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
+        const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -239,23 +243,35 @@ export default class VTable {
                 break;
 
             case TableOperation.DeleteRow:
-                this.forEachCellOfCurrentRow((cell, i) => {
-                    let nextCell = this.getCell(this.row + 1, i);
-                    if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
-                        nextCell.td = cell.td;
-                    }
-                });
-                this.cells.splice(this.row, 1);
-                break;
+                for (let rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
+                    this.forEachCellOfRow(rowIndex, (cell: VCell, i: number) => {
+                        let nextCell = this.getCell(rowIndex + 1, i);
+                        if (cell.td && cell.td.rowSpan > 1 && nextCell.spanAbove) {
+                            nextCell.td = cell.td;
+                        }
+                    });
+                }
+                const removedRows = this.selection
+                    ? this.selection.lastCell.y - this.selection.firstCell.y
+                    : 0;
+                this.cells.splice(firstRow, removedRows + 1);
 
+                break;
             case TableOperation.DeleteColumn:
-                this.forEachCellOfCurrentColumn((cell, row, i) => {
-                    let nextCell = this.getCell(i, this.col + 1);
-                    if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
-                        nextCell.td = cell.td;
-                    }
-                    row.splice(this.col, 1);
-                });
+                let deletedColumns = 0;
+                for (let colIndex = firstColumn; colIndex <= lastColumn; colIndex++) {
+                    this.forEachCellOfColumn(colIndex, (cell, row, i) => {
+                        let nextCell = this.getCell(i, colIndex + 1);
+                        if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
+                            nextCell.td = cell.td;
+                        }
+                        const removedColumns = this.selection
+                            ? colIndex - deletedColumns
+                            : this.col;
+                        row.splice(removedColumns, 1);
+                    });
+                    deletedColumns++;
+                }
                 break;
 
             case TableOperation.MergeAbove:
