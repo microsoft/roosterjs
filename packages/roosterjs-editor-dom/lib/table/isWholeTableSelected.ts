@@ -3,8 +3,8 @@ import { TableSelection } from 'roosterjs-editor-types';
 
 /**
  * Check if the whole table is selected
- * @param vTable VTable to check whether if all cells are selected
- * @param selection Table Selection to check if is selecting all table
+ * @param vTable VTable to check whether all cells are selected
+ * @param selection Table selection with first cell selected and last cell selected coordinates.
  * @returns
  */
 export default function isWholeTableSelected(vTable: VTable, selection: TableSelection) {
