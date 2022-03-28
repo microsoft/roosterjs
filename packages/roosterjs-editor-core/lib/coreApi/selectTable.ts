@@ -1,18 +1,9 @@
-import {
-    createRange,
-    getStyles,
-    getTagOfNode,
-    Position,
-    setStyles,
-    toArray,
-    VTable,
-} from 'roosterjs-editor-dom';
+import { getStyles, getTagOfNode, setStyles, toArray, VTable } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     SelectionRangeTypes,
     TableSelection,
     SelectTable,
-    PositionType,
     Coordinates,
 } from 'roosterjs-editor-types';
 
@@ -41,16 +32,6 @@ export const selectTable: SelectTable = (
         ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
         const ranges = select(core, table, coordinates);
-
-        core.api.selectRange(
-            core,
-            createRange(
-                new Position(
-                    table.rows.item(coordinates.firstCell.y).cells.item(coordinates.firstCell.x),
-                    PositionType.Begin
-                )
-            )
-        );
 
         return {
             type: SelectionRangeTypes.TableSelection,

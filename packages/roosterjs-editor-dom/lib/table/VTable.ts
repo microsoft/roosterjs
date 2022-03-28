@@ -187,6 +187,8 @@ export default class VTable {
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
         let { style } = currentCell.td;
+        let mergedWithSelection: boolean;
+
         switch (operation) {
             case TableOperation.InsertAbove:
                 this.cells.splice(this.row, 0, currentRow.map(cloneCell));
@@ -260,6 +262,10 @@ export default class VTable {
 
             case TableOperation.MergeAbove:
             case TableOperation.MergeBelow:
+                mergedWithSelection = this.mergeWithSelection();
+                if (mergedWithSelection) {
+                    return;
+                }
                 let rowStep = operation == TableOperation.MergeAbove ? -1 : 1;
                 for (
                     let rowIndex = this.row + rowStep;
@@ -286,6 +292,10 @@ export default class VTable {
 
             case TableOperation.MergeLeft:
             case TableOperation.MergeRight:
+                mergedWithSelection = this.mergeWithSelection();
+                if (mergedWithSelection) {
+                    return;
+                }
                 let colStep = operation == TableOperation.MergeLeft ? -1 : 1;
                 for (
                     let colIndex = this.col + colStep;
@@ -374,6 +384,33 @@ export default class VTable {
                 style.verticalAlign = 'bottom';
                 break;
         }
+    }
+    mergeWithSelection(): boolean {
+        let mergedCells = 0;
+        if (this.selection?.firstCell && this.selection?.lastCell) {
+            const { x, y } = this.selection.firstCell;
+            const { x: lastX, y: lastY } = this.selection.lastCell;
+
+            const firstCell = this.cells[y][x];
+            for (let colIndex = x; colIndex <= lastX; colIndex++) {
+                for (let rowIndex = y; rowIndex <= lastY; rowIndex++) {
+                    const cell = this.cells[rowIndex][colIndex];
+                    if (cell.td != firstCell.td) {
+                        if (colIndex > x) {
+                            cell.td = null;
+                            cell.spanLeft = true;
+                        }
+
+                        if (rowIndex > y) {
+                            cell.td = null;
+                            cell.spanAbove = true;
+                        }
+                    }
+                    mergedCells++;
+                }
+            }
+        }
+        return mergedCells > 0;
     }
 
     /**

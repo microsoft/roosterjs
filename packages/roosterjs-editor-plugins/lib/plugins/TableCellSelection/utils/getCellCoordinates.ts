@@ -12,7 +12,7 @@ export function getCellCoordinates(vTable: VTable, cellInput: Node): Coordinates
     if (vTable?.cells) {
         for (let indexY = 0; indexY < vTable.cells.length; indexY++) {
             for (let indexX = 0; indexX < vTable.cells[indexY].length; indexX++) {
-                if (cellInput == vTable.cells[indexY][indexX].td) {
+                if (cellInput == vTable.cells[indexY][indexX]?.td) {
                     result = {
                         x: indexX,
                         y: indexY,
