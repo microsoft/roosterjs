@@ -283,7 +283,6 @@ export default class VTable {
                     });
                     deletedColumns++;
                 }
-
                 break;
 
             case TableOperation.MergeAbove:
