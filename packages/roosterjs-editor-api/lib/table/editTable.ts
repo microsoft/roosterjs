@@ -1,5 +1,11 @@
-import { ChangeSource, IEditor, PositionType, TableOperation } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    IEditor,
+    PositionType,
+    SelectionRangeTypes,
+    TableOperation,
+} from 'roosterjs-editor-types';
 
 /**
  * Edit table with given operation. If there is no table at cursor then no op.
@@ -11,6 +17,7 @@ export default function editTable(editor: IEditor, operation: TableOperation) {
     if (td) {
         editor.addUndoSnapshot(() => {
             let vtable = new VTable(td);
+            saveTableSelection(editor, vtable);
             vtable.edit(operation);
             vtable.writeBack();
 
@@ -49,4 +56,11 @@ function calculateCellToSelect(operation: TableOperation, currentRow: number, cu
         newRow,
         newCol,
     };
+}
+
+function saveTableSelection(editor: IEditor, vtable: VTable) {
+    const selection = editor.getSelectionRangeEx();
+    if (selection && selection.type === SelectionRangeTypes.TableSelection) {
+        vtable.selection = selection.coordinates;
+    }
 }

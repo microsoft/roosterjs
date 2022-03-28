@@ -173,6 +173,7 @@ function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSel
         doc.head.appendChild(styleElement);
         styleElement.id = STYLE_ID + core.contentDiv.id;
     }
+
     styleElement.sheet.insertRule(css);
 
     return ranges;
