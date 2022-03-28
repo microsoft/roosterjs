@@ -59,7 +59,7 @@
 					<a href="roosterjs_editor_types.undosnapshotsservice.html">UndoSnapshotsService</a>
 				</li>
 			</ul>
-			<h1>Interface UndoSnapshotsService</h1>
+			<h1>Interface UndoSnapshotsService&lt;T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -72,6 +72,14 @@
 						<p>Represent an interface to provide functionalities for Undo Snapshots</p>
 					</div>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T = <span class="tsd-signature-type">string</span></h4>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
@@ -104,13 +112,13 @@
 					<a name="addsnapshot" class="tsd-anchor"></a>
 					<h3>add<wbr>Snapshot</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Snapshot<span class="tsd-signature-symbol">(</span>snapshot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, isAutoCompleteSnapshot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Snapshot<span class="tsd-signature-symbol">(</span>snapshot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, isAutoCompleteSnapshot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8908284/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L23">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2de72e5/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L23">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:23</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -121,7 +129,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>snapshot: <span class="tsd-signature-type">string</span></h5>
+									<h5>snapshot: <span class="tsd-signature-type">T</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The snapshot to add</p>
 									</div>
@@ -144,7 +152,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8908284/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L10">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2de72e5/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L10">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -176,7 +184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8908284/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L33">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2de72e5/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L33">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -198,7 +206,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8908284/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L28">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2de72e5/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L28">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:28</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -214,13 +222,13 @@
 					<a name="move" class="tsd-anchor"></a>
 					<h3>move</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">move<span class="tsd-signature-symbol">(</span>step<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">move<span class="tsd-signature-symbol">(</span>step<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8908284/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L17">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2de72e5/packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts#L17">packages/roosterjs-editor-types/lib/interface/UndoSnapshotsService.ts:17</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -237,7 +245,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
 							<p>If can move with the given step, returns the snapshot after move, otherwise null</p>
 						</li>
 					</ul>
@@ -280,7 +288,7 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
+					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="roosterjs_editor_types.undosnapshotsservice.html" class="tsd-kind-icon">Undo<wbr>Snapshots<wbr>Service</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
