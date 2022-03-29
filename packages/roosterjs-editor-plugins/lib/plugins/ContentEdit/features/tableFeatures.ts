@@ -1,4 +1,4 @@
-import { editTable } from 'roosterjs-editor-api';
+import { editTable, setIndentation } from 'roosterjs-editor-api';
 import {
     BuildInEditFeature,
     IEditor,
@@ -9,6 +9,9 @@ import {
     TableFeatureSettings,
     TableOperation,
     PluginKeyboardEvent,
+    SelectionRangeTypes,
+    TableSelectionRange,
+    Indentation,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -16,6 +19,7 @@ import {
     contains,
     getTagOfNode,
     isVoidHtmlElement,
+    isWholeTableSelected,
     Position,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -25,18 +29,14 @@ import {
  */
 const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
-    shouldHandleEvent: cacheGetTableCell,
+    shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
+        cacheGetTableCell(event, editor) && !cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) => {
         let shift = event.rawEvent.shiftKey;
         let td = cacheGetTableCell(event, editor);
-        for (
-            let vtable = new VTable(td),
-                step = shift ? -1 : 1,
-                row = vtable.row,
-                col = vtable.col + step;
-            ;
-            col += step
-        ) {
+        let vtable = cacheVTable(event, td);
+
+        for (let step = shift ? -1 : 1, row = vtable.row, col = vtable.col + step; ; col += step) {
             if (col < 0 || col >= vtable.cells[row].length) {
                 row += step;
                 if (row < 0) {
@@ -59,12 +59,40 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
+ * IndentTableOnTab edit feature, provides the ability to indent the table if it is all cells are selected.
+ */
+const IndentTableOnTab: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.TAB],
+    shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
+        cacheGetTableCell(event, editor) && cacheIsWholeTableSelected(event, editor),
+    handleEvent: (event, editor) => {
+        event.rawEvent.preventDefault();
+
+        editor.addUndoSnapshot(() => {
+            let shift = event.rawEvent.shiftKey;
+            let selection = editor.getSelectionRangeEx() as TableSelectionRange;
+            let td = cacheGetTableCell(event, editor);
+            let vtable = cacheVTable(event, td);
+
+            if (shift && editor.getElementAtCursor('blockquote', vtable.table, event)) {
+                setIndentation(editor, Indentation.Decrease);
+            } else if (!shift) {
+                setIndentation(editor, Indentation.Increase);
+            }
+
+            editor.select(selection.table, selection.coordinates);
+        });
+    },
+};
+
+/**
  * UpDownInTable edit feature, provides the ability to jump to cell above/below when user press UP/DOWN
  * in table
  */
 const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.UP, Keys.DOWN],
-    shouldHandleEvent: cacheGetTableCell,
+    shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
+        cacheGetTableCell(event, editor) && !cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) => {
         const td = cacheGetTableCell(event, editor);
         const vtable = new VTable(td);
@@ -133,6 +161,24 @@ function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellEl
     });
 }
 
+function cacheIsWholeTableSelected(event: PluginEvent, editor: IEditor) {
+    return cacheGetEventData(event, 'WHOLE_TABLE_SELECTED_FOR_FEATURES', () => {
+        const td = cacheGetTableCell(event, editor);
+        let vtable = cacheVTable(event, td);
+        let selection = editor.getSelectionRangeEx();
+        return (
+            selection.type == SelectionRangeTypes.TableSelection &&
+            isWholeTableSelected(vtable, selection.coordinates)
+        );
+    });
+}
+
+function cacheVTable(event: PluginEvent, td: HTMLTableCellElement) {
+    return cacheGetEventData(event, 'VTABLE_FOR_TABLE_FEATURES', () => {
+        return new VTable(td);
+    });
+}
+
 /**
  * @internal
  */
@@ -142,4 +188,5 @@ export const TableFeatures: Record<
 > = {
     tabInTable: TabInTable,
     upDownInTable: UpDownInTable,
+    indentTableOnTab: IndentTableOnTab,
 };
