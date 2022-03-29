@@ -5,6 +5,6 @@ import { NodeType } from 'roosterjs-editor-types';
  * @param node The node to get tag of
  * @returns Tag name in upper case if the given node is an Element, or empty string otherwise
  */
-export default function getTagOfNode(node: Node): string {
+export default function getTagOfNode(node: Node | null): string {
     return node && node.nodeType == NodeType.Element ? (<Element>node).tagName.toUpperCase() : '';
 }
