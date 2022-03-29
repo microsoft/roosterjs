@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.11% </span>
+                <span class="strong">91.49% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>41/45</span>
+                <span class='fraction'>43/47</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.92% </span>
+                <span class="strong">76.47% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>20/26</span>
+                <span class='fraction'>26/34</span>
             </div>
         
             
@@ -184,7 +184,9 @@
 <a name='L119'></a><a href='#L119'>119</a>
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,8 +202,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">123x</span>
-<span class="cline-any cline-yes">123x</span>
-<span class="cline-any cline-yes">123x</span>
+<span class="cline-any cline-yes">132x</span>
+<span class="cline-any cline-yes">157x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -265,6 +267,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -321,8 +325,8 @@ import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibl
 export default class PartialInlineElement implements InlineElement {
     constructor(
         private inlineElement: InlineElement,
-        private start?: NodePosition,
-        private end?: NodePosition
+        private start: NodePosition | null = null,
+        private end: NodePosition | null = null
     ) {}
 &nbsp;
     /**
@@ -372,15 +376,17 @@ export default class PartialInlineElement implements InlineElement {
     /**
      * Get next partial inline element if it is not at the end boundary yet
      */
-    public get nextInlineElement(): PartialInlineElement {
-        return this.end &amp;&amp; new PartialInlineElement(this.inlineElement, this.end, null);
+    public get nextInlineElement(): PartialInlineElement | null {
+        return this.end ? new PartialInlineElement(this.inlineElement, this.end) : null;
     }
 &nbsp;
     /**
      * Get previous partial inline element if it is not at the begin boundary yet
      */
-    public get previousInlineElement(): PartialInlineElement {
-        return this.start &amp;&amp; new PartialInlineElement(this.inlineElement, null, this.start);
+    public get previousInlineElement(): PartialInlineElement | null {
+        return this.start
+            ? new PartialInlineElement(this.inlineElement, undefined, this.start)
+            : null;
     }
 &nbsp;
     /**
@@ -410,8 +416,8 @@ export default class PartialInlineElement implements InlineElement {
      * apply style
      */
     public applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) =&gt; any) {
-        let from = this.getStartPosition().normalize();
-        let to = this.getEndPosition().normalize();
+        let from: NodePosition | null = this.getStartPosition().normalize();
+        let to: NodePosition | null = this.getEndPosition().normalize();
         let container = this.getContainerNode();
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (from.isAtEnd) {
@@ -423,7 +429,7 @@ export default class PartialInlineElement implements InlineElement {
 <span class="cstat-no" title="statement not covered" >            to = previousNode ? new Position(previousNode, PositionType.End) : null;</span>
         }
 &nbsp;
-        applyTextStyle(container, styler, from, to);
+        applyTextStyle(container, styler, from || <span class="branch-1 cbranch-no" title="branch not covered" >undefined,</span> to || <span class="branch-1 cbranch-no" title="branch not covered" >undefined)</span>;
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -433,7 +439,7 @@ export default class PartialInlineElement implements InlineElement {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Mar 29 2022 17:17:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Mar 29 2022 20:29:21 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

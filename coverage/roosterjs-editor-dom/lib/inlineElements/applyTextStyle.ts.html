@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>40/40</span>
+                <span class='fraction'>43/43</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">94.87% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>31/31</span>
+                <span class='fraction'>37/39</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/39</span>
+                <span class='fraction'>42/42</span>
             </div>
         
             
@@ -152,7 +152,14 @@
 <a name='L87'></a><a href='#L87'>87</a>
 <a name='L88'></a><a href='#L88'>88</a>
 <a name='L89'></a><a href='#L89'>89</a>
-<a name='L90'></a><a href='#L90'>90</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -176,6 +183,8 @@
 <span class="cline-any cline-yes">216x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-yes">131x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">131x</span>
 <span class="cline-any cline-yes">145x</span>
@@ -187,6 +196,10 @@
 <span class="cline-any cline-yes">145x</span>
 <span class="cline-any cline-yes">142x</span>
 <span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">142x</span>
@@ -207,6 +220,7 @@
 <span class="cline-any cline-yes">137x</span>
 <span class="cline-any cline-yes">118x</span>
 <span class="cline-any cline-yes">118x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -255,8 +269,8 @@ const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
  * Apply style using a styler function to the given container node in the given range
  * @param container The container node to apply style to
  * @param styler The styler function
- * @param from From position
- * @param to To position
+ * @param fromPosition From position
+ * @param toPosition To position
  */
 export default function applyTextStyle(
     container: Node,
@@ -265,23 +279,29 @@ export default function applyTextStyle(
     to: NodePosition = new Position(container, PositionType.End).normalize()
 ) {
     let formatNodes: Node[] = [];
+    let fromPosition: NodePosition | null = from;
+    let toPosition: NodePosition | null = to;
 &nbsp;
-    while (from &amp;&amp; to &amp;&amp; to.isAfter(from)) {
-        let formatNode = from.node;
+    while (fromPosition &amp;&amp; toPosition &amp;&amp; toPosition.isAfter(fromPosition)) {
+        let formatNode = fromPosition.node;
         let parentTag = getTagOfNode(formatNode.parentNode);
 &nbsp;
         // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
         let nextNode = getNextLeafSibling(container, formatNode);
 &nbsp;
         if (formatNode.nodeType == NodeType.Text &amp;&amp; ['TR', 'TABLE'].indexOf(parentTag) &lt; 0) {
-            if (formatNode == to.node &amp;&amp; !to.isAtEnd) {
-                formatNode = splitTextNode(&lt;Text&gt;formatNode, to.offset, true /*returnFirstPart*/);
-            }
-&nbsp;
-            if (from.offset &gt; 0) {
+            if (formatNode == toPosition.node &amp;&amp; !toPosition.isAtEnd) {
                 formatNode = splitTextNode(
                     &lt;Text&gt;formatNode,
-                    from.offset,
+                    toPosition.offset,
+                    true /*returnFirstPart*/
+                );
+            }
+&nbsp;
+            if (fromPosition.offset &gt; 0) {
+                formatNode = splitTextNode(
+                    &lt;Text&gt;formatNode,
+                    fromPosition.offset,
                     false /*returnFirstPart*/
                 );
             }
@@ -289,15 +309,16 @@ export default function applyTextStyle(
             formatNodes.push(formatNode);
         }
 &nbsp;
-        from = nextNode &amp;&amp; new Position(nextNode, PositionType.Begin);
+        fromPosition = nextNode &amp;&amp; new Position(nextNode, PositionType.Begin);
     }
 &nbsp;
     if (formatNodes.length &gt; 0) {
         if (formatNodes.every(node =&gt; node.parentNode == formatNodes[0].parentNode)) {
-            let newNode = formatNodes.shift();
+            let newNode = formatNodes.shift()!;
             formatNodes.forEach(node =&gt; {
-                newNode.nodeValue += node.nodeValue;
-                node.parentNode.removeChild(node);
+                const newNodeValue = (newNode.nodeValue || '') + (node.nodeValue || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>;
+                newNode.nodeValue = newNodeValue;
+                node.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>emoveChild(node);
             });
             formatNodes = [newNode];
         }
@@ -337,7 +358,7 @@ function callStylerWithInnerNode(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Mar 29 2022 17:17:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Mar 29 2022 20:29:21 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
