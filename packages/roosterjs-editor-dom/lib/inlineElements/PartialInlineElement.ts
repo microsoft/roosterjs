@@ -14,8 +14,8 @@ import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibl
 export default class PartialInlineElement implements InlineElement {
     constructor(
         private inlineElement: InlineElement,
-        private start?: NodePosition,
-        private end?: NodePosition
+        private start: NodePosition | null = null,
+        private end: NodePosition | null = null
     ) {}
 
     /**
