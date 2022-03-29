@@ -296,7 +296,7 @@ class MainPane extends MainPaneBase {
                         inDarkMode={this.state.isDarkMode}
                         getDarkColor={getDarkColor}
                         experimentalFeatures={this.state.initState.experimentalFeatures}
-                        undoSnapshotService={this.snapshotPlugin.getSnapshotService()}
+                        undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
                         trustedHTMLHandler={trustedHTMLHandler}
                         zoomScale={this.state.scale}
                         initialContent={this.content}
