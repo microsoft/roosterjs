@@ -14,8 +14,8 @@ import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeA
 export default class SelectionScoper implements TraversingScoper {
     private start: NodePosition;
     private end: NodePosition;
-    private startBlock: BlockElement;
-    private startInline: InlineElement;
+    private startBlock: BlockElement | null = null;
+    private startInline: InlineElement | null = null;
 
     /**
      * Create a new instance of SelectionScoper class
@@ -30,7 +30,7 @@ export default class SelectionScoper implements TraversingScoper {
     /**
      * Provide a start block as the first block after the cursor
      */
-    public getStartBlockElement(): BlockElement {
+    public getStartBlockElement(): BlockElement | null {
         if (!this.startBlock) {
             this.startBlock = getBlockElementAtNode(this.rootNode, this.start.node);
         }
@@ -41,7 +41,7 @@ export default class SelectionScoper implements TraversingScoper {
     /**
      * Provide a start inline as the first inline after the cursor
      */
-    public getStartInlineElement(): InlineElement {
+    public getStartInlineElement(): InlineElement | null {
         if (!this.startInline) {
             this.startInline = this.trimInlineElement(
                 getInlineElementAfter(this.rootNode, this.start)
@@ -62,7 +62,7 @@ export default class SelectionScoper implements TraversingScoper {
         let inScope = false;
         let selStartBlock = this.getStartBlockElement();
         if (this.start.equalTo(this.end)) {
-            inScope = selStartBlock && selStartBlock.equals(block);
+            inScope = !!selStartBlock && selStartBlock.equals(block);
         } else {
             let selEndBlock = getBlockElementAtNode(this.rootNode, this.end.node);
 
@@ -71,8 +71,8 @@ export default class SelectionScoper implements TraversingScoper {
             // 2) The end of selection falls on the block
             // 3) the block falls in-between selection start and end
             inScope =
-                selStartBlock &&
-                selEndBlock &&
+                !!selStartBlock &&
+                !!selEndBlock &&
                 (block.equals(selStartBlock) ||
                     block.equals(selEndBlock) ||
                     (block.isAfter(selStartBlock) && selEndBlock.isAfter(block)));
@@ -86,7 +86,7 @@ export default class SelectionScoper implements TraversingScoper {
      * otherwise return a partial that represents the portion that falls in the selection
      * @param inline The InlineElement to check
      */
-    public trimInlineElement(inline: InlineElement): InlineElement {
+    public trimInlineElement(inline: InlineElement | null): InlineElement | null {
         if (!inline || this.start.equalTo(this.end)) {
             return null;
         }
@@ -115,7 +115,11 @@ export default class SelectionScoper implements TraversingScoper {
         return start.isAfter(end) || start.equalTo(end)
             ? null
             : startPartial || endPartial
-            ? new PartialInlineElement(inline, startPartial && start, endPartial && end)
+            ? new PartialInlineElement(
+                  inline,
+                  startPartial ? start : undefined,
+                  endPartial ? end : undefined
+              )
             : inline;
     }
 }
