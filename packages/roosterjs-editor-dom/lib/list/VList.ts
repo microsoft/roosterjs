@@ -334,11 +334,7 @@ export default class VList {
 
             for (let index = 0; index < this.items.length; index++) {
                 const child = this.items[index];
-                if (
-                    child.getListType() == ListType.Ordered &&
-                    child.getLevel() == 1 &&
-                    !child.isDummy()
-                ) {
+                if (child.getLevel() == 1 && !child.isDummy()) {
                     listIndex++;
                 }
 
@@ -355,7 +351,7 @@ export default class VList {
      * @returns Start number of the list
      */
     getStart(): number | undefined {
-        return safeInstanceOf(this.rootList, 'HTMLOListElement') ? this.rootList.start : undefined;
+        return safeInstanceOf(this.rootList, 'HTMLOListElement') ? this.rootList.start : 1;
     }
 
     private findListItems(
