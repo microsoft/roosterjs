@@ -17,6 +17,8 @@ import {
     ExperimentalFeatures,
     PluginWithState,
     KnownCreateElementDataIndex,
+    SelectionRangeEx,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
 /**
@@ -78,7 +80,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         const selection = this.editor.getSelectionRangeEx();
 
         if (selection && !selection.areAllCollapsed) {
-            const originalRange = selection.ranges[0];
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
             const newRange = setHtmlWithSelectionPath(
@@ -99,7 +100,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             });
 
             this.editor.runAsync(editor => {
-                this.cleanUpAndRestoreSelection(tempDiv, originalRange, !isCut /* isCopy */);
+                this.cleanUpAndRestoreSelection(tempDiv, selection, !isCut /* isCopy */);
 
                 if (isCut) {
                     editor.addUndoSnapshot(() => {
@@ -162,16 +163,38 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         return div;
     }
 
-    private cleanUpAndRestoreSelection(tempDiv: HTMLDivElement, range: Range, isCopy: boolean) {
-        if (isCopy && Browser.isAndroid) {
-            range.collapse();
+    private cleanUpAndRestoreSelection(
+        tempDiv: HTMLDivElement,
+        range: Range | SelectionRangeEx,
+        isCopy: boolean
+    ) {
+        if (!!(<SelectionRangeEx>range)?.type) {
+            const selection = <SelectionRangeEx>range;
+            switch (selection.type) {
+                case SelectionRangeTypes.TableSelection:
+                    this.editor.select(selection.table, selection.coordinates);
+                    break;
+                case SelectionRangeTypes.Normal:
+                    const range = selection.ranges?.[0];
+                    this.restoreRange(range, isCopy);
+                    break;
+            }
+        } else {
+            this.restoreRange(<Range>range, isCopy);
         }
-
-        this.editor.select(range);
 
         tempDiv.style.backgroundColor = '';
         tempDiv.style.color = '';
         tempDiv.style.display = 'none';
         moveChildNodes(tempDiv);
+    }
+
+    private restoreRange(range: Range, isCopy: boolean) {
+        if (range) {
+            if (isCopy && Browser.isAndroid) {
+                range.collapse();
+            }
+            this.editor.select(range);
+        }
     }
 }

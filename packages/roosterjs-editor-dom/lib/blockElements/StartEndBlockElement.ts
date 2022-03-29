@@ -22,11 +22,12 @@ const STRUCTURE_NODE_TAGS = ['TD', 'TH', 'LI', 'BLOCKQUOTE'];
 export default class StartEndBlockElement implements BlockElement {
     constructor(private rootNode: Node, private startNode: Node, private endNode: Node) {}
 
-    static getBlockContext(node: Node): HTMLElement {
-        while (node && !isBlockElement(node)) {
-            node = node.parentNode;
+    static getBlockContext(node: Node): HTMLElement | null {
+        let currentNode: Node | null = node;
+        while (currentNode && !isBlockElement(currentNode)) {
+            currentNode = currentNode.parentNode;
         }
-        return node as HTMLElement;
+        return currentNode as HTMLElement;
     }
 
     /**
@@ -35,12 +36,10 @@ export default class StartEndBlockElement implements BlockElement {
      * If the content nodes are included in root node with other nodes, split root node
      */
     public collapseToSingleElement(): HTMLElement {
-        let nodes = collapseNodes(
-            StartEndBlockElement.getBlockContext(this.startNode),
-            this.startNode,
-            this.endNode,
-            true /*canSplitParent*/
-        );
+        const nodeContext = StartEndBlockElement.getBlockContext(this.startNode);
+        let nodes = nodeContext
+            ? collapseNodes(nodeContext, this.startNode, this.endNode, true /*canSplitParent*/)
+            : [];
         let blockContext = StartEndBlockElement.getBlockContext(this.startNode);
         while (
             nodes[0] &&
