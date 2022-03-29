@@ -177,10 +177,12 @@ export default class TableCellSelection implements EditorPlugin {
         if (selection.type == SelectionRangeTypes.TableSelection) {
             const clonedTable = event.clonedRoot.querySelector('table#' + selection.table.id);
             if (clonedTable) {
+                this.tableRange = selection.coordinates;
                 const clonedVTable = new VTable(clonedTable as HTMLTableElement);
                 clonedVTable.selection = this.tableRange;
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
+                clonedVTable.table.id = '';
 
                 event.range.selectNode(clonedTable);
 
