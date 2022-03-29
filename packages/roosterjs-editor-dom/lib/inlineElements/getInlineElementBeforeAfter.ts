@@ -14,7 +14,7 @@ import { InlineElement, NodePosition, NodeType } from 'roosterjs-editor-types';
  * @param root Root node of current scope, use for create InlineElement
  * @param position The position to get InlineElement before
  */
-export function getInlineElementBefore(root: Node, position: NodePosition): InlineElement {
+export function getInlineElementBefore(root: Node, position: NodePosition): InlineElement | null {
     return getInlineElementBeforeAfter(root, position, false /*isAfter*/);
 }
 
@@ -28,7 +28,7 @@ export function getInlineElementBefore(root: Node, position: NodePosition): Inli
  * @param root Root node of current scope, use for create InlineElement
  * @param position The position to get InlineElement after
  */
-export function getInlineElementAfter(root: Node, position: NodePosition): InlineElement {
+export function getInlineElementAfter(root: Node, position: NodePosition): InlineElement | null {
     return getInlineElementBeforeAfter(root, position, true /*isAfter*/);
 }
 
@@ -41,7 +41,8 @@ export function getInlineElementBeforeAfter(root: Node, position: NodePosition, 
     }
 
     position = position.normalize();
-    let { node, offset, isAtEnd } = position;
+    let { offset, isAtEnd } = position;
+    let node: Node | null = position.node;
     let isPartial = false;
 
     if ((!isAfter && offset == 0 && !isAtEnd) || (isAfter && isAtEnd)) {
@@ -61,8 +62,8 @@ export function getInlineElementBeforeAfter(root: Node, position: NodePosition, 
 
     if (inlineElement && (isPartial || inlineElement.contains(position))) {
         inlineElement = isAfter
-            ? new PartialInlineElement(inlineElement, position, null)
-            : new PartialInlineElement(inlineElement, null, position);
+            ? new PartialInlineElement(inlineElement, position, undefined)
+            : new PartialInlineElement(inlineElement, undefined, position);
     }
 
     return inlineElement;

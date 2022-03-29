@@ -14,8 +14,8 @@ import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibl
 export default class PartialInlineElement implements InlineElement {
     constructor(
         private inlineElement: InlineElement,
-        private start?: NodePosition,
-        private end?: NodePosition
+        private start: NodePosition | null = null,
+        private end: NodePosition | null = null
     ) {}
 
     /**
@@ -65,15 +65,17 @@ export default class PartialInlineElement implements InlineElement {
     /**
      * Get next partial inline element if it is not at the end boundary yet
      */
-    public get nextInlineElement(): PartialInlineElement {
-        return this.end && new PartialInlineElement(this.inlineElement, this.end, null);
+    public get nextInlineElement(): PartialInlineElement | null {
+        return this.end ? new PartialInlineElement(this.inlineElement, this.end) : null;
     }
 
     /**
      * Get previous partial inline element if it is not at the begin boundary yet
      */
-    public get previousInlineElement(): PartialInlineElement {
-        return this.start && new PartialInlineElement(this.inlineElement, null, this.start);
+    public get previousInlineElement(): PartialInlineElement | null {
+        return this.start
+            ? new PartialInlineElement(this.inlineElement, undefined, this.start)
+            : null;
     }
 
     /**
@@ -103,8 +105,8 @@ export default class PartialInlineElement implements InlineElement {
      * apply style
      */
     public applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any) {
-        let from = this.getStartPosition().normalize();
-        let to = this.getEndPosition().normalize();
+        let from: NodePosition | null = this.getStartPosition().normalize();
+        let to: NodePosition | null = this.getEndPosition().normalize();
         let container = this.getContainerNode();
 
         if (from.isAtEnd) {
@@ -116,6 +118,6 @@ export default class PartialInlineElement implements InlineElement {
             to = previousNode ? new Position(previousNode, PositionType.End) : null;
         }
 
-        applyTextStyle(container, styler, from, to);
+        applyTextStyle(container, styler, from || undefined, to || undefined);
     }
 }
