@@ -23,9 +23,11 @@ export default class NodeInlineElement implements InlineElement {
      */
     public getTextContent(): string {
         // nodeValue is better way to retrieve content for a text. Others, just use textContent
-        return this.containerNode.nodeType == NodeType.Text
-            ? this.containerNode.nodeValue
-            : this.containerNode.textContent;
+        return (
+            (this.containerNode.nodeType == NodeType.Text
+                ? this.containerNode.nodeValue
+                : this.containerNode.textContent) || ''
+        );
     }
 
     /**

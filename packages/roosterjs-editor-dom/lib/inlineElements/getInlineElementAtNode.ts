@@ -11,7 +11,7 @@ import { BlockElement, InlineElement } from 'roosterjs-editor-types';
  * @param rootNode The root node of current scope
  * @param node The node to get InlineElement from
  */
-export default function getInlineElementAtNode(rootNode: Node, node: Node): InlineElement;
+export default function getInlineElementAtNode(rootNode: Node, node: Node | null): InlineElement;
 
 /**
  * Get the inline element at a node
@@ -20,13 +20,13 @@ export default function getInlineElementAtNode(rootNode: Node, node: Node): Inli
  */
 export default function getInlineElementAtNode(
     parentBlock: BlockElement,
-    node: Node
+    node: Node | null
 ): InlineElement;
 
 export default function getInlineElementAtNode(
     parent: Node | BlockElement,
-    node: Node
-): InlineElement {
+    node: Node | null
+): InlineElement | null {
     // An inline element has to be in a block element, get the block first and then resolve through the factory
     let parentBlock = safeInstanceOf(parent, 'Node') ? getBlockElementAtNode(parent, node) : parent;
     return node && parentBlock && resolveInlineElement(node, parentBlock);
@@ -47,7 +47,7 @@ function resolveInlineElement(node: Node, parentBlock: BlockElement): InlineElem
         nodeChain.push(parent);
     }
 
-    let inlineElement: InlineElement;
+    let inlineElement: InlineElement | undefined;
 
     for (let i = nodeChain.length - 1; i >= 0 && !inlineElement; i--) {
         let currentNode = nodeChain[i];
