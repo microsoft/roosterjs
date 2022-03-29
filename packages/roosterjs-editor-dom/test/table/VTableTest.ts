@@ -1,6 +1,6 @@
 import VTable from '../../lib/table/VTable';
 import { itFirefoxOnly } from '../DomTestHelper';
-import { TableFormat, TableOperation } from 'roosterjs-editor-types';
+import { TableFormat, TableOperation, TableSelection } from 'roosterjs-editor-types';
 
 describe('VTable.ctor', () => {
     function runTest(
@@ -348,12 +348,19 @@ describe('VTable.edit', () => {
     let complexTable =
         '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>';
 
-    function runTest(input: string, id: string, operation: TableOperation, expectedHtml: string) {
+    function runTest(
+        input: string,
+        id: string,
+        operation: TableOperation,
+        expectedHtml: string,
+        selection?: TableSelection
+    ) {
         let div = document.createElement('div');
         document.body.appendChild(div);
         div.innerHTML = input;
         let node = document.getElementById(id) as HTMLTableElement;
         let vTable = new VTable(node);
+        vTable.selection = selection;
         vTable.edit(operation);
         vTable.writeBack();
         const expectedDiv = document.createElement('div');
@@ -364,17 +371,25 @@ describe('VTable.edit', () => {
         document.body.removeChild(div);
     }
 
-    function runSimpleTableTestOnId1(operation: TableOperation, expectedHtml: string) {
-        runTest(simpleTable, 'id1', operation, expectedHtml);
+    function runSimpleTableTestOnId1(
+        operation: TableOperation,
+        expectedHtml: string,
+        selection?: TableSelection
+    ) {
+        runTest(simpleTable, 'id1', operation, expectedHtml, selection);
     }
 
     function runSimpleTableTestOnId2(operation: TableOperation, expectedHtml: string) {
         runTest(simpleTable, 'id2', operation, expectedHtml);
     }
 
-    function runComplexTableTest(operation: TableOperation, expectedResults: string[]) {
+    function runComplexTableTest(
+        operation: TableOperation,
+        expectedResults: string[],
+        selection?: TableSelection
+    ) {
         for (let i = 1; i <= 5; i++) {
-            runTest(complexTable, 'id' + i, operation, expectedResults[i - 1]);
+            runTest(complexTable, 'id' + i, operation, expectedResults[i - 1], selection);
         }
     }
 
@@ -393,7 +408,15 @@ describe('VTable.edit', () => {
         );
     });
 
-    it('Simple table, DeleteRow', () => {
+    it('Simple table, DeleteColumn with selection', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.DeleteColumn,
+            '<table><tr><td>2</td></tr><tr><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    it('Simple table, DeleteRow ', () => {
         runSimpleTableTestOnId1(
             TableOperation.DeleteRow,
             '<table><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -401,6 +424,14 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId2(
             TableOperation.DeleteRow,
             '<table><tr><td id="id1">1</td><td>2</td></tr></table>'
+        );
+    });
+
+    it('Simple table, DeleteRow with selection', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.DeleteRow,
+            '<table><tr><td>3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
         );
     });
 
@@ -562,6 +593,20 @@ describe('VTable.edit', () => {
         ]);
     });
 
+    it('Complex table, DeleteColumn with selection', () => {
+        runComplexTableTest(
+            TableOperation.DeleteColumn,
+            [
+                '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
+                '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
+                '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
+                '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
+                '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
     it('Complex table, DeleteRow', () => {
         runComplexTableTest(TableOperation.DeleteRow, [
             '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -570,6 +615,20 @@ describe('VTable.edit', () => {
             '<table><tr><td id="id1">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id5" colspan="2">5</td><td id="id4">4</td></tr></table>',
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4">4</td></tr></table>',
         ]);
+    });
+
+    it('Complex table, DeleteRow with selection', () => {
+        runComplexTableTest(
+            TableOperation.DeleteRow,
+            [
+                '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+        );
     });
 
     it('Complex table, DeleteTable', () => {
