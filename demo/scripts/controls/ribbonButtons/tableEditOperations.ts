@@ -2,7 +2,14 @@ import { editTable } from 'roosterjs-editor-api';
 import { FormatState, IEditor, TableOperation } from 'roosterjs-editor-types';
 import { RibbonButton } from 'roosterjs-react';
 
-type TableEditOperationsKey = 'deleteTable' | 'deleteRow' | 'deleteColumn';
+type TableEditOperationsKey =
+    | 'deleteTable'
+    | 'deleteRow'
+    | 'deleteColumn'
+    | 'insertAbove'
+    | 'insertBelow'
+    | 'insertLeft'
+    | 'insertRight';
 
 /**
  * Key of localized strings of Table Edit Operations button
@@ -10,12 +17,20 @@ type TableEditOperationsKey = 'deleteTable' | 'deleteRow' | 'deleteColumn';
 export type TableEditOperationsStringKey = 'buttonNameTableEditOperations';
 
 const tableEditOperationsLabel: Record<TableEditOperationsKey, string> = {
+    insertAbove: 'Insert Above',
+    insertBelow: 'Insert Below',
+    insertLeft: 'Insert Left',
+    insertRight: 'Insert Right',
     deleteTable: 'Delete Table',
     deleteRow: 'Delete Row',
     deleteColumn: 'Delete Column',
 };
 
 const tableEditOperations: Record<TableEditOperationsKey, TableOperation> = {
+    insertAbove: TableOperation.InsertAbove,
+    insertBelow: TableOperation.InsertBelow,
+    insertLeft: TableOperation.InsertLeft,
+    insertRight: TableOperation.InsertRight,
     deleteTable: TableOperation.DeleteTable,
     deleteRow: TableOperation.DeleteRow,
     deleteColumn: TableOperation.DeleteColumn,

@@ -451,6 +451,14 @@ describe('VTable.edit', () => {
         );
     });
 
+    it('Simple table, InsertAbove with selection', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.InsertAbove,
+            '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
     it('Simple table, InsertBelow', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertBelow,
@@ -459,6 +467,14 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId2(
             TableOperation.InsertBelow,
             '<table><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr><tr><td><br></td><td><br></td></tr></table>'
+        );
+    });
+
+    it('Simple table, InsertBelow with selection', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.InsertBelow,
+            '<table><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
     });
 
@@ -473,6 +489,14 @@ describe('VTable.edit', () => {
         );
     });
 
+    it('Simple table, InsertLeft with selection ', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.InsertLeft,
+            '<table><tr><td><br></td><td><br></td><td id="id1">1</td><td>2</td></tr><tr><td><br></td><td><br></td><td>3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+        );
+    });
+
     it('Simple table, InsertRight', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertRight,
@@ -481,6 +505,14 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId2(
             TableOperation.InsertRight,
             '<table><tr><td id="id1">1</td><td>2</td><td><br></td></tr><tr><td>3</td><td id="id2">4</td><td><br></td></tr></table>'
+        );
+    });
+
+    it('Simple table, InsertRight with selection', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.InsertRight,
+            '<table><tr><td id="id1">1</td><td>2</td><td><br></td><td><br></td></tr><tr><td>3</td><td id="id2">4</td><td><br></td><td><br></td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
         );
     });
 
@@ -645,6 +677,20 @@ describe('VTable.edit', () => {
         ]);
     });
 
+    it('Complex table, InsertAbove with selection', () => {
+        runComplexTableTest(
+            TableOperation.InsertAbove,
+            [
+                '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td colspan="2"><br></td></tr><tr><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
     it('Complex table, InsertBelow', () => {
         runComplexTableTest(TableOperation.InsertBelow, [
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="3">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -653,6 +699,20 @@ describe('VTable.edit', () => {
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr><tr><td colspan="2"><br></td><td><br></td></tr></table>',
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr><tr><td colspan="2"><br></td><td><br></td></tr></table>',
         ]);
+    });
+
+    it('Complex table, InsertBelow with selection', () => {
+        runComplexTableTest(
+            TableOperation.InsertBelow,
+            [
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr><tr><td colspan="2"><br></td><td><br></td></tr><tr><td colspan="2"><br></td><td><br></td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
     });
 
     it('Complex table, InsertLeft', () => {
@@ -665,6 +725,20 @@ describe('VTable.edit', () => {
         ]);
     });
 
+    it('Complex table, InsertLeft with selection', () => {
+        runComplexTableTest(
+            TableOperation.InsertLeft,
+            [
+                '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td rowspan="2"><br></td><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+        );
+    });
+
     it('Complex table, InsertRight', () => {
         runComplexTableTest(TableOperation.InsertRight, [
             '<table><tr><td id="id1" rowspan="2">1</td><td rowspan="2"><br></td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="3">5</td></tr></table>',
@@ -673,6 +747,20 @@ describe('VTable.edit', () => {
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="3">2</td></tr><tr><td id="id3">3</td><td><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td><td><br></td></tr></table>',
         ]);
+    });
+
+    it('Complex table, InsertRight with selection', () => {
+        runComplexTableTest(
+            TableOperation.InsertRight,
+            [
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="4">2</td></tr><tr><td id="id3">3</td><td><br></td><td><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td><td><br></td><td><br></td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="4">2</td></tr><tr><td id="id3">3</td><td><br></td><td><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td><td><br></td><td><br></td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="4">2</td></tr><tr><td id="id3">3</td><td><br></td><td><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td><td><br></td><td><br></td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+        );
     });
 
     it('Complex table, MergeAbove', () => {

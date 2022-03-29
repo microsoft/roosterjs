@@ -12,8 +12,8 @@ const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
  * Apply style using a styler function to the given container node in the given range
  * @param container The container node to apply style to
  * @param styler The styler function
- * @param from From position
- * @param to To position
+ * @param fromPosition From position
+ * @param toPosition To position
  */
 export default function applyTextStyle(
     container: Node,
@@ -22,23 +22,29 @@ export default function applyTextStyle(
     to: NodePosition = new Position(container, PositionType.End).normalize()
 ) {
     let formatNodes: Node[] = [];
+    let fromPosition: NodePosition | null = from;
+    let toPosition: NodePosition | null = to;
 
-    while (from && to && to.isAfter(from)) {
-        let formatNode = from.node;
+    while (fromPosition && toPosition && toPosition.isAfter(fromPosition)) {
+        let formatNode = fromPosition.node;
         let parentTag = getTagOfNode(formatNode.parentNode);
 
         // The code below modifies DOM. Need to get the next sibling first otherwise you won't be able to reliably get a good next sibling node
         let nextNode = getNextLeafSibling(container, formatNode);
 
         if (formatNode.nodeType == NodeType.Text && ['TR', 'TABLE'].indexOf(parentTag) < 0) {
-            if (formatNode == to.node && !to.isAtEnd) {
-                formatNode = splitTextNode(<Text>formatNode, to.offset, true /*returnFirstPart*/);
-            }
-
-            if (from.offset > 0) {
+            if (formatNode == toPosition.node && !toPosition.isAtEnd) {
                 formatNode = splitTextNode(
                     <Text>formatNode,
-                    from.offset,
+                    toPosition.offset,
+                    true /*returnFirstPart*/
+                );
+            }
+
+            if (fromPosition.offset > 0) {
+                formatNode = splitTextNode(
+                    <Text>formatNode,
+                    fromPosition.offset,
                     false /*returnFirstPart*/
                 );
             }
@@ -46,15 +52,16 @@ export default function applyTextStyle(
             formatNodes.push(formatNode);
         }
 
-        from = nextNode && new Position(nextNode, PositionType.Begin);
+        fromPosition = nextNode && new Position(nextNode, PositionType.Begin);
     }
 
     if (formatNodes.length > 0) {
         if (formatNodes.every(node => node.parentNode == formatNodes[0].parentNode)) {
-            let newNode = formatNodes.shift();
+            let newNode = formatNodes.shift()!;
             formatNodes.forEach(node => {
-                newNode.nodeValue += node.nodeValue;
-                node.parentNode.removeChild(node);
+                const newNodeValue = (newNode.nodeValue || '') + (node.nodeValue || '');
+                newNode.nodeValue = newNodeValue;
+                node.parentNode?.removeChild(node);
             });
             formatNodes = [newNode];
         }
