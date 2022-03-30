@@ -330,7 +330,7 @@ export default class VList {
      */
     getListItemIndex(input: Node) {
         if (this.items) {
-            let listIndex = this.getStart() - 1;
+            let listIndex = (this.getStart() || 1) - 1;
 
             for (let index = 0; index < this.items.length; index++) {
                 const child = this.items[index];
@@ -351,7 +351,7 @@ export default class VList {
      * @returns Start number of the list
      */
     getStart(): number | undefined {
-        return safeInstanceOf(this.rootList, 'HTMLOListElement') ? this.rootList.start : 1;
+        return safeInstanceOf(this.rootList, 'HTMLOListElement') ? this.rootList.start : undefined;
     }
 
     private findListItems(
