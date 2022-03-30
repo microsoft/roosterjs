@@ -155,5 +155,5 @@ function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
         range: createRange(span, PositionType.Begin),
         updateCursor: false,
     });
-    editor.select(createRange(span, PositionType.End));
+    editor.select(createRange(span, PositionType.After));
 }
