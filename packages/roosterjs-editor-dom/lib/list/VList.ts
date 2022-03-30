@@ -330,6 +330,7 @@ export default class VList {
      */
     getListItemIndex(input: Node) {
         if (this.items) {
+            debugger;
             let listIndex = (this.getStart() || 1) - 1;
 
             for (let index = 0; index < this.items.length; index++) {
