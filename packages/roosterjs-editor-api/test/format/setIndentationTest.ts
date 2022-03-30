@@ -1,13 +1,13 @@
 import * as TestHelper from '../TestHelper';
 import setIndentation from '../../lib/format/setIndentation';
-import { IEditor, Indentation } from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor, Indentation } from 'roosterjs-editor-types';
 
 describe('setIndentation()', () => {
     let testID = 'setImageAltText';
     let editor: IEditor;
 
     beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
+        editor = TestHelper.initEditor(testID, [], [ExperimentalFeatures.TabKeyTextFeatures]);
     });
 
     afterEach(() => {
@@ -41,20 +41,20 @@ describe('setIndentation()', () => {
                 editor.select(range);
             },
             Indentation.Increase,
-            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol><li><span id="test">Text</span></li></ol></blockquote></div>'
+            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol style="list-style-position: inside;"><li><span id="test">Text</span></li></ol></blockquote></div>'
         );
     });
 
     it('Outdent the first list item in a list', () => {
         runTest(
-            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol><li><span id="test">Text</span></li></ol></blockquote></div>',
+            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol style="list-style-position: inside;"><li><span id="test">Text</span></li></ol></blockquote></div>',
             () => {
                 const range = new Range();
                 range.setStart(editor.getDocument().getElementById('test'), 0);
                 editor.select(range);
             },
             Indentation.Decrease,
-            '<div><ol><li><span id="test">Text</span></li></ol></div>'
+            '<div><ol style="list-style-position: inside;"><li><span id="test">Text</span></li></ol></div>'
         );
     });
 });

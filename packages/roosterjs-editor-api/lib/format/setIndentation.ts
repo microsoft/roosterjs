@@ -1,6 +1,7 @@
 import blockFormat from '../utils/blockFormat';
 import {
     BlockElement,
+    ExperimentalFeatures,
     IEditor,
     Indentation,
     KnownCreateElementDataIndex,
@@ -16,6 +17,7 @@ import {
     splitBalancedNodeRange,
     toArray,
     unwrap,
+    VList,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -43,11 +45,20 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
                     i++;
                 }
 
+                const isTabKeyTextFeaturesEnabled = editor.isFeatureEnabled(
+                    ExperimentalFeatures.TabKeyTextFeatures
+                );
+
+                vList.setConfiguration({
+                    preventItemRemovalOnOutdent: isTabKeyTextFeaturesEnabled,
+                });
+
+                vList.rootList.style.listStylePosition = 'inside';
+
                 if (
-                    vList.items[0]?.getNode() == startNode &&
-                    vList.getListItemIndex(startNode) == vList.getStart() &&
-                    (indentation == Indentation.Increase ||
-                        editor.getElementAtCursor('blockquote', startNode))
+                    isTabKeyTextFeaturesEnabled &&
+                    isFirstItem(vList, startNode) &&
+                    shouldHandleWithBlockquotes(indentation, editor, startNode)
                 ) {
                     const block = editor.getBlockElementAtNode(vList.rootList);
                     blockGroups.push([block]);
@@ -88,4 +99,17 @@ function outdent(region: RegionBase, blocks: BlockElement[]) {
             }
         }
     });
+}
+
+function isFirstItem(vList: VList, startNode: Node) {
+    return (
+        vList.items[0]?.getNode() == startNode &&
+        vList.getListItemIndex(startNode) == vList.getStart()
+    );
+}
+
+function shouldHandleWithBlockquotes(indentation: Indentation, editor: IEditor, startNode: Node) {
+    return (
+        indentation == Indentation.Increase || editor.getElementAtCursor('blockquote', startNode)
+    );
 }

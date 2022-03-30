@@ -17,7 +17,12 @@ import {
     NodePosition,
     PositionType,
     NodeType,
+    VListBehaviorConfig,
 } from 'roosterjs-editor-types';
+
+const DEFAULT_VLIST_CONFIG: VListBehaviorConfig = {
+    preventItemRemovalOnOutdent: false,
+};
 
 /**
  * Represent a bullet or a numbering list
@@ -62,6 +67,7 @@ import {
  */
 export default class VList {
     public readonly items: VListItem[] = [];
+    private config: VListBehaviorConfig;
 
     /**
      * Create a new instance of VList class
@@ -131,6 +137,15 @@ export default class VList {
         queryElements(this.rootList, 'li', moveLiToList);
 
         this.populateItems(this.rootList);
+        this.config = DEFAULT_VLIST_CONFIG;
+    }
+
+    /**
+     * Overrides the configuration to be used for the current VList
+     * @param config Config to apply to the VList
+     */
+    setConfiguration(config: VListBehaviorConfig) {
+        this.config = config || DEFAULT_VLIST_CONFIG;
     }
 
     /**
@@ -262,13 +277,22 @@ export default class VList {
         indentation: Indentation,
         softOutdent?: boolean
     ) {
-        this.findListItems(start, end, item =>
+        let shouldAddMargin = false;
+        const preventItemRemoval = !!this.config?.preventItemRemovalOnOutdent;
+        this.findListItems(start, end, item => {
+            shouldAddMargin = shouldAddMargin || this.items.indexOf(item) == 0;
             indentation == Indentation.Decrease
                 ? softOutdent && !item.isDummy()
                     ? item.setIsDummy(true /*isDummy*/)
-                    : item.outdent()
-                : item.indent()
-        );
+                    : item.outdent(preventItemRemoval)
+                : item.indent();
+        });
+
+        if (shouldAddMargin && preventItemRemoval) {
+            for (let index = 0; index < this.items.length; index++) {
+                this.items[index].addNegativeMargins();
+            }
+        }
     }
 
     /**
