@@ -6,6 +6,7 @@ import {
     Indentation,
     KnownCreateElementDataIndex,
     RegionBase,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
@@ -14,10 +15,12 @@ import {
     getSelectedBlockElementsInRegion,
     getTagOfNode,
     isNodeInRegion,
+    isWholeTableSelected,
     splitBalancedNodeRange,
     toArray,
     unwrap,
     VList,
+    VTable,
     wrap,
 } from 'roosterjs-editor-dom';
 
@@ -32,48 +35,72 @@ import {
 export default function setIndentation(editor: IEditor, indentation: Indentation) {
     const handler = indentation == Indentation.Increase ? indent : outdent;
 
-    blockFormat(editor, (region, start, end) => {
-        const blocks = getSelectedBlockElementsInRegion(region, true /*createBlockIfEmpty*/);
-        const blockGroups: BlockElement[][] = [[]];
+    blockFormat(
+        editor,
+        (region, start, end) => {
+            const blocks = getSelectedBlockElementsInRegion(region, true /*createBlockIfEmpty*/);
+            const blockGroups: BlockElement[][] = [[]];
 
-        for (let i = 0; i < blocks.length; i++) {
-            const startNode = blocks[i].getStartNode();
-            const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
-
-            if (vList) {
-                while (blocks[i + 1] && vList.contains(blocks[i + 1].getStartNode())) {
-                    i++;
-                }
-
-                const isTabKeyTextFeaturesEnabled = editor.isFeatureEnabled(
-                    ExperimentalFeatures.TabKeyTextFeatures
+            for (let i = 0; i < blocks.length; i++) {
+                const startNode = blocks[i].getStartNode();
+                const vList = createVListFromRegion(
+                    region,
+                    true /*includeSiblingLists*/,
+                    startNode
                 );
 
-                vList.setConfiguration({
-                    preventItemRemovalOnOutdent: isTabKeyTextFeaturesEnabled,
-                });
+                if (vList) {
+                    while (blocks[i + 1] && vList.contains(blocks[i + 1].getStartNode())) {
+                        i++;
+                    }
 
-                vList.rootList.style.listStylePosition = 'inside';
+                    const isTabKeyTextFeaturesEnabled = editor.isFeatureEnabled(
+                        ExperimentalFeatures.TabKeyTextFeatures
+                    );
 
-                if (
-                    isTabKeyTextFeaturesEnabled &&
-                    isFirstItem(vList, startNode) &&
-                    shouldHandleWithBlockquotes(indentation, editor, startNode)
-                ) {
-                    const block = editor.getBlockElementAtNode(vList.rootList);
-                    blockGroups.push([block]);
+                    vList.setConfiguration({
+                        preventItemRemovalOnOutdent: isTabKeyTextFeaturesEnabled,
+                    });
+
+                    vList.rootList.style.listStylePosition = 'inside';
+
+                    if (
+                        isTabKeyTextFeaturesEnabled &&
+                        isFirstItem(vList, startNode) &&
+                        shouldHandleWithBlockquotes(indentation, editor, startNode)
+                    ) {
+                        const block = editor.getBlockElementAtNode(vList.rootList);
+                        blockGroups.push([block]);
+                    } else {
+                        vList.setIndentation(start, end, indentation);
+                        vList.writeBack();
+                        blockGroups.push([]);
+                    }
                 } else {
-                    vList.setIndentation(start, end, indentation);
-                    vList.writeBack();
-                    blockGroups.push([]);
+                    blockGroups[blockGroups.length - 1].push(blocks[i]);
                 }
-            } else {
-                blockGroups[blockGroups.length - 1].push(blocks[i]);
             }
-        }
 
-        blockGroups.forEach(group => handler(region, group));
-    });
+            blockGroups.forEach(group => handler(region, group));
+        },
+        () => {
+            const selection = editor.getSelectionRangeEx();
+            if (
+                selection.type == SelectionRangeTypes.TableSelection &&
+                isWholeTableSelected(new VTable(selection.table), selection.coordinates)
+            ) {
+                if (indentation == Indentation.Decrease) {
+                    const quote = editor.getElementAtCursor('blockquote', selection.table);
+                    unwrap(quote);
+                } else if (indentation == Indentation.Increase) {
+                    wrap(selection.table, KnownCreateElementDataIndex.BlockquoteWrapper);
+                }
+                return false;
+            }
+
+            return true;
+        }
+    );
 }
 
 function indent(region: RegionBase, blocks: BlockElement[]) {

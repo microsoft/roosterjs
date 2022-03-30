@@ -1,5 +1,5 @@
+import { isWholeTableSelected, VTable } from 'roosterjs-editor-dom';
 import { VCell } from 'roosterjs-editor-types';
-import { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -7,21 +7,17 @@ import { VTable } from 'roosterjs-editor-dom';
  * @param vTable VTable to remove selection
  */
 export function removeCellsOutsideSelection(vTable: VTable) {
+    if (isWholeTableSelected(vTable, vTable.selection)) {
+        return;
+    }
+
     const { firstCell, lastCell } = vTable.selection;
-    const rowsLength = vTable.cells.length - 1;
-    const colIndex = vTable.cells[rowsLength].length - 1;
     const resultCells: VCell[][] = [];
 
     const firstX = firstCell.x;
     const firstY = firstCell.y;
     const lastX = lastCell.x;
     const lastY = lastCell.y;
-
-    const selectedAllTable = firstX == 0 && firstY == 0 && lastX == colIndex && lastY == rowsLength;
-
-    if (selectedAllTable) {
-        return;
-    }
 
     vTable.cells.forEach((row, y) => {
         row = row.filter((_, x) => y >= firstY && y <= lastY && x >= firstX && x <= lastX);
