@@ -16,7 +16,7 @@ import { collapse } from '../utils/collapseNodes';
  * @param targetNode The node of target block element
  */
 export default function mergeBlocksInRegion(region: RegionBase, refNode: Node, targetNode: Node) {
-    let block: BlockElement;
+    let block: BlockElement | null;
 
     if (
         !isNodeInRegion(region, refNode) ||
@@ -37,8 +37,8 @@ export default function mergeBlocksInRegion(region: RegionBase, refNode: Node, t
     );
 
     // Copy styles of parent nodes into blockRoot
-    for (let node: Node = blockRoot; contains(commonContainer, node); ) {
-        const parent = node.parentNode;
+    for (let node: Node | null = blockRoot; contains(commonContainer, node); ) {
+        const parent: Node | null = node!.parentNode;
         if (safeInstanceOf(parent, 'HTMLElement')) {
             const styles = {
                 ...(getPredefinedCssForElement(parent) || {}),
@@ -50,17 +50,17 @@ export default function mergeBlocksInRegion(region: RegionBase, refNode: Node, t
         node = parent;
     }
 
-    let nodeToRemove: Node = null;
+    let nodeToRemove: Node | null = null;
     let nodeToMerge =
         blockRoot.childNodes.length == 1 && blockRoot.attributes.length == 0
-            ? blockRoot.firstChild
-            : changeElementTag(blockRoot, 'SPAN');
+            ? blockRoot.firstChild!
+            : changeElementTag(blockRoot, 'SPAN')!;
 
     // Remove empty node
     for (
-        let node: Node = nodeToMerge;
-        contains(commonContainer, node) && node.parentNode.childNodes.length == 1;
-        node = node.parentNode
+        let node: Node | null = nodeToMerge;
+        contains(commonContainer, node) && node.parentNode?.childNodes.length == 1;
+        node = node!.parentNode
     ) {
         // If the only child is the one which is about to be removed, this node should also be removed
         nodeToRemove = node.parentNode;
