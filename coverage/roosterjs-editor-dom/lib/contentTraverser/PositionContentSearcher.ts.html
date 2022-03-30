@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.5% </span>
+                <span class="strong">93.18% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>74/80</span>
+                <span class='fraction'>82/88</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.55% </span>
+                <span class="strong">75.44% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>41/55</span>
+                <span class='fraction'>43/57</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.15% </span>
+                <span class="strong">93.83% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>68/73</span>
+                <span class='fraction'>76/81</span>
             </div>
         
             
@@ -320,25 +320,25 @@
 <span class="cline-any cline-yes">91x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">91x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">91x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">91x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">91x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">91x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">91x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">91x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -414,8 +414,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
@@ -553,25 +553,25 @@ export default class PositionContentSearcher implements IPositionContentSearcher
     private text = '';
 &nbsp;
     // The cached word before position
-    private word: string;
+    private word: string = '';
 &nbsp;
     // The inline element before position
-    private inlineBefore: InlineElement;
+    private inlineBefore: InlineElement | null = null;
 &nbsp;
     // The inline element after position
-    private inlineAfter: InlineElement;
+    private inlineAfter: InlineElement | null = null;
 &nbsp;
     // The content traverser used to traverse backwards
-    private traverser: IContentTraverser;
+    private traverser: IContentTraverser | null = null;
 &nbsp;
     // Backward parsing has completed
-    private traversingComplete: boolean;
+    private traversingComplete: boolean = false;
 &nbsp;
     // All inline elements before position that have been read so far
     private inlineElements: InlineElement[] = [];
 &nbsp;
     // First non-text inline before position
-    private nearestNonTextInlineElement: InlineElement;
+    private nearestNonTextInlineElement: InlineElement | null = null;
 &nbsp;
     /**
      * Create a new CursorData instance
@@ -590,14 +590,14 @@ export default class PositionContentSearcher implements IPositionContentSearcher
             this.traverse(() =&gt; this.word);
         }
 &nbsp;
-        return this.word;
+        return this.word || '';
     }
 &nbsp;
     /**
      * Get the inline element before position
      * @returns The inlineElement before position
      */
-    public getInlineElementBefore(): InlineElement {
+    public getInlineElementBefore(): InlineElement | null {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.inlineBefore) {
             this.traverse(null);
         }
@@ -609,7 +609,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
      * Get the inline element after position
      * @returns The inline element after position
      */
-    public getInlineElementAfter(): InlineElement {
+    public getInlineElementAfter(): InlineElement | null {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.inlineAfter) {
             this.inlineAfter = ContentTraverser.createBlockTraverser(
                 this.rootNode,
@@ -642,13 +642,13 @@ export default class PositionContentSearcher implements IPositionContentSearcher
      * @param exactMatch Whether it is an exact match
      * @returns The range for the matched text, null if unable to find a match
      */
-    public getRangeFromText(text: string, exactMatch: boolean): Range {
+    public getRangeFromText(text: string, exactMatch: boolean): Range | null {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!text) {
 <span class="cstat-no" title="statement not covered" >            return null;</span>
         }
 &nbsp;
-        let startPosition: NodePosition;
-        let endPosition: NodePosition;
+        let startPosition: NodePosition | null = null;
+        let endPosition: NodePosition | null = null;
         let textIndex = text.length - 1;
 &nbsp;
         this.forEachTextInlineElement(textInline =&gt; {
@@ -701,7 +701,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
      * Get first non textual inline element before position
      * @returns First non textual inline element before position or null if no such element exists
      */
-    public getNearestNonTextInlineElement(): InlineElement {
+    public getNearestNonTextInlineElement(): InlineElement | null {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.nearestNonTextInlineElement) {
             this.traverse(<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >t</span>his.nearestNonTextInlineElement);</span>
         }
@@ -712,7 +712,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
     /**
      * Continue traversing backward till stop condition is met or begin of block is reached
      */
-    private traverse(callback: (inlineElement: InlineElement) =&gt; any) {
+    private traverse(callback: null | ((inlineElement: InlineElement) =&gt; any)) {
         this.traverser =
             this.traverser || ContentTraverser.createBlockTraverser(this.rootNode, this.position);
 &nbsp;
@@ -769,7 +769,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Mar 29 2022 22:52:27 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 30 2022 21:55:51 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

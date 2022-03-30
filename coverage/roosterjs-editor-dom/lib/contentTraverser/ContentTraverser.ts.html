@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.65% </span>
+                <span class="strong">95.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>66/69</span>
+                <span class='fraction'>68/71</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.59% </span>
+                <span class="strong">95.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>65/68</span>
+                <span class='fraction'>67/70</span>
             </div>
         
             
@@ -315,8 +315,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">453x</span>
+<span class="cline-any cline-yes">453x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -542,8 +542,8 @@ import {
  * the current inline element position
  */
 export default class ContentTraverser implements IContentTraverser {
-    private currentInline: InlineElement;
-    private currentBlock: BlockElement;
+    private currentInline: InlineElement | null = null;
+    private currentBlock: BlockElement | null = null;
 &nbsp;
     /**
      * Create a content traverser for the whole body of given root node
@@ -600,7 +600,7 @@ export default class ContentTraverser implements IContentTraverser {
     /**
      * Get current block
      */
-    public get currentBlockElement(): BlockElement {
+    public get currentBlockElement(): BlockElement | null {
         // Prepare currentBlock from the scoper
         if (!this.currentBlock) {
             this.currentBlock = this.scoper.getStartBlockElement();
@@ -612,18 +612,18 @@ export default class ContentTraverser implements IContentTraverser {
     /**
      * Get next block element
      */
-    public getNextBlockElement(): BlockElement {
+    public getNextBlockElement(): BlockElement | null {
         return this.getPreviousNextBlockElement(true /*isNext*/);
     }
 &nbsp;
     /**
      * Get previous block element
      */
-    public getPreviousBlockElement(): BlockElement {
+    public getPreviousBlockElement(): BlockElement | null {
         return this.getPreviousNextBlockElement(false /*isNext*/);
     }
 &nbsp;
-    private getPreviousNextBlockElement(isNext: boolean): BlockElement {
+    private getPreviousNextBlockElement(isNext: boolean): BlockElement | null {
         let current = this.currentBlockElement;
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!current) {
@@ -658,7 +658,7 @@ export default class ContentTraverser implements IContentTraverser {
     /**
      * Current inline element getter
      */
-    public get currentInlineElement(): InlineElement {
+    public get currentInlineElement(): InlineElement | null {
         // Retrieve a start inline from scoper
         if (!this.currentInline) {
             this.currentInline = this.scoper.getStartInlineElement();
@@ -670,20 +670,20 @@ export default class ContentTraverser implements IContentTraverser {
     /**
      * Get next inline element
      */
-    public getNextInlineElement(): InlineElement {
+    public getNextInlineElement(): InlineElement | null {
         return this.getPreviousNextInlineElement(true /*isNext*/);
     }
 &nbsp;
     /**
      * Get previous inline element
      */
-    public getPreviousInlineElement(): InlineElement {
+    public getPreviousInlineElement(): InlineElement | null {
         return this.getPreviousNextInlineElement(false /*isNext*/);
     }
 &nbsp;
-    private getPreviousNextInlineElement(isNext: boolean): InlineElement {
+    private getPreviousNextInlineElement(isNext: boolean): InlineElement | null {
         let current = this.currentInlineElement || this.currentInline;
-        let newInline: InlineElement;
+        let newInline: InlineElement | null;
 &nbsp;
         if (!current) {
             return null;
@@ -726,7 +726,7 @@ function getNextPreviousInlineElement(
     rootNode: Node,
     current: InlineElement,
     isNext: boolean
-): InlineElement {
+): InlineElement | null {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!current) {
 <span class="cstat-no" title="statement not covered" >        return null;</span>
     }
@@ -740,7 +740,7 @@ function getNextPreviousInlineElement(
     }
 &nbsp;
     // Get a leaf node after startNode and use that base to find next inline
-    let startNode = current.getContainerNode();
+    let startNode: Node | null = current.getContainerNode();
     startNode = getLeafSibling(rootNode, startNode, isNext);
     return getInlineElementAtNode(rootNode, startNode);
 }
@@ -751,7 +751,7 @@ function getNextPreviousInlineElement(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Mar 29 2022 22:52:27 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 30 2022 21:55:51 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
