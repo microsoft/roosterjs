@@ -8,30 +8,30 @@ export default interface IContentTraverser {
     /**
      * Get current block
      */
-    currentBlockElement: BlockElement;
+    currentBlockElement: BlockElement | null;
 
     /**
      * Get next block element
      */
-    getNextBlockElement(): BlockElement;
+    getNextBlockElement(): BlockElement | null;
 
     /**
      * Get previous block element
      */
-    getPreviousBlockElement(): BlockElement;
+    getPreviousBlockElement(): BlockElement | null;
 
     /**
      * Current inline element getter
      */
-    currentInlineElement: InlineElement;
+    currentInlineElement: InlineElement | null;
 
     /**
      * Get next inline element
      */
-    getNextInlineElement(): InlineElement;
+    getNextInlineElement(): InlineElement | null;
 
     /**
      * Get previous inline element
      */
-    getPreviousInlineElement(): InlineElement;
+    getPreviousInlineElement(): InlineElement | null;
 }

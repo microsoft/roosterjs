@@ -11,8 +11,8 @@ import { NodeType } from 'roosterjs-editor-types';
  * Otherwise false.
  */
 export default function contains(
-    container: Node | null,
-    contained: Node | null,
+    container: Node | null | undefined,
+    contained: Node | null | undefined,
     treatSameNodeAsContain?: boolean
 ): boolean;
 
@@ -22,11 +22,14 @@ export default function contains(
  * @param contained The range to check if it is inside container
  * @returns True if contained is inside container, otherwise false
  */
-export default function contains(container: Node | null, contained: Range | null): boolean;
+export default function contains(
+    container: Node | null | undefined,
+    contained: Range | null | undefined
+): boolean;
 
 export default function contains(
-    container: Node | null,
-    contained: Node | Range | null,
+    container: Node | null | undefined,
+    contained: Node | Range | null | undefined,
     treatSameNodeAsContain?: boolean
 ): boolean {
     if (!container || !contained) {
