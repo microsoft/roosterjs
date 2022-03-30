@@ -593,6 +593,18 @@ describe('VTable.edit', () => {
         );
     });
 
+    itFirefoxOnly('Simple table, AlignCellCenter', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellCenter,
+            '<table><tr><td id="id1" style="text-align: center;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+        );
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellCenter,
+            '<table><tr><td id="id1" style="text-align: center;">1</td><td>2</td></tr><tr><td style="text-align: center;">3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
     itFirefoxOnly('Simple table, AlignRight', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignRight,

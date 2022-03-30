@@ -186,7 +186,6 @@ export default class VTable {
 
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
-        let { style } = currentCell.td;
         const firstRow = this.selection ? this.selection.firstCell.y : this.row;
         const lastRow = this.selection ? this.selection.lastCell.y : this.row;
         const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
@@ -369,7 +368,6 @@ export default class VTable {
                     });
                 }
                 break;
-
             case TableOperation.AlignCenter:
                 this.table.style.marginLeft = 'auto';
                 this.table.style.marginRight = 'auto';
@@ -383,23 +381,82 @@ export default class VTable {
                 this.table.style.marginRight = '';
                 break;
             case TableOperation.AlignCellCenter:
-                style.textAlign = 'center';
+                this.setAlignmentToSelectedCells(
+                    firstRow,
+                    lastRow,
+                    firstColumn,
+                    lastColumn,
+                    'center'
+                );
                 break;
             case TableOperation.AlignCellLeft:
-                style.textAlign = 'left';
+                this.setAlignmentToSelectedCells(
+                    firstRow,
+                    lastRow,
+                    firstColumn,
+                    lastColumn,
+                    'left'
+                );
                 break;
             case TableOperation.AlignCellRight:
-                style.textAlign = 'right';
+                this.setAlignmentToSelectedCells(
+                    firstRow,
+                    lastRow,
+                    firstColumn,
+                    lastColumn,
+                    'right'
+                );
                 break;
             case TableOperation.AlignCellTop:
-                style.verticalAlign = 'top';
+                this.setAlignmentToSelectedCells(
+                    firstRow,
+                    lastRow,
+                    firstColumn,
+                    lastColumn,
+                    'top',
+                    true /** isVertical */
+                );
                 break;
             case TableOperation.AlignCellMiddle:
-                style.verticalAlign = 'middle';
+                this.setAlignmentToSelectedCells(
+                    firstRow,
+                    lastRow,
+                    firstColumn,
+                    lastColumn,
+                    'middle',
+                    true /** isVertical */
+                );
                 break;
             case TableOperation.AlignCellBottom:
-                style.verticalAlign = 'bottom';
+                this.setAlignmentToSelectedCells(
+                    firstRow,
+                    lastRow,
+                    firstColumn,
+                    lastColumn,
+                    'bottom',
+                    true /** isVertical */
+                );
                 break;
+        }
+    }
+
+    setAlignmentToSelectedCells(
+        firstRow: number,
+        lastRow: number,
+        firstColumn: number,
+        lastColumn: number,
+        alignmentType: string,
+        isVertical?: boolean
+    ) {
+        for (let i = firstRow; i <= lastRow; i++) {
+            for (let j = firstColumn; j <= lastColumn; j++) {
+                const cell = this.cells[i][j].td;
+                if (isVertical) {
+                    cell.style.verticalAlign = alignmentType;
+                } else {
+                    cell.style.textAlign = alignmentType;
+                }
+            }
         }
     }
 

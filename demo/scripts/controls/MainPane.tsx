@@ -34,6 +34,10 @@ import {
     UpdateMode,
     AllButtonKeys,
 } from 'roosterjs-react';
+import {
+    tableAlign,
+    TableAlignmentOperationsStringKey,
+} from './ribbonButtons/tableAlignmentOperations';
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
@@ -48,7 +52,8 @@ type RibbonStringKeys =
     | ZoomButtonStringKey
     | ExportButtonStringKey
     | PopoutButtonStringKey
-    | TableEditOperationsStringKey;
+    | TableEditOperationsStringKey
+    | TableAlignmentOperationsStringKey;
 
 class MainPane extends MainPaneBase {
     private mouseX: number;
@@ -85,6 +90,7 @@ class MainPane extends MainPaneBase {
             exportContent,
             popout,
             tableEdit,
+            tableAlign,
         ]);
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
