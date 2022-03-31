@@ -135,7 +135,7 @@ function outdent(region: RegionBase, blocks: BlockElement[]) {
 function isFirstItem(vList: VList, startNode: Node) {
     return (
         vList.items[0]?.getNode() == startNode &&
-        vList.getListItemIndex(startNode) == vList.getStart()
+        vList.getListItemIndex(startNode) == (vList.getStart() || 1)
     );
 }
 
