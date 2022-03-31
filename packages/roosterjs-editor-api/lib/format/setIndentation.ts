@@ -1,6 +1,7 @@
 import blockFormat from '../utils/blockFormat';
 import {
     BlockElement,
+    ExperimentalFeatures,
     IEditor,
     Indentation,
     KnownCreateElementDataIndex,
@@ -18,6 +19,7 @@ import {
     splitBalancedNodeRange,
     toArray,
     unwrap,
+    VList,
     VTable,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -52,16 +54,29 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
                         i++;
                     }
 
+                    const isTabKeyTextFeaturesEnabled = editor.isFeatureEnabled(
+                        ExperimentalFeatures.TabKeyTextFeatures
+                    );
+
+                    vList.rootList.style.listStylePosition = 'inside';
+
                     if (
-                        vList.items[0]?.getNode() == startNode &&
-                        vList.getListItemIndex(startNode) == (vList.getStart() || 1) &&
-                        (indentation == Indentation.Increase ||
-                            editor.getElementAtCursor('blockquote', startNode))
+                        isTabKeyTextFeaturesEnabled &&
+                        isFirstItem(vList, startNode) &&
+                        shouldHandleWithBlockquotes(indentation, editor, startNode)
                     ) {
                         const block = editor.getBlockElementAtNode(vList.rootList);
                         blockGroups.push([block]);
                     } else {
-                        vList.setIndentation(start, end, indentation);
+                        indentation == Indentation.Decrease
+                            ? vList.setIndentation(
+                                  start,
+                                  end,
+                                  indentation,
+                                  false /* softOutdent */,
+                                  isTabKeyTextFeaturesEnabled /* preventItemRemoval */
+                              )
+                            : vList.setIndentation(start, end, indentation);
                         vList.writeBack();
                         blockGroups.push([]);
                     }
@@ -115,4 +130,17 @@ function outdent(region: RegionBase, blocks: BlockElement[]) {
             }
         }
     });
+}
+
+function isFirstItem(vList: VList, startNode: Node) {
+    return (
+        vList.items[0]?.getNode() == startNode &&
+        vList.getListItemIndex(startNode) == (vList.getStart() || 1)
+    );
+}
+
+function shouldHandleWithBlockquotes(indentation: Indentation, editor: IEditor, startNode: Node) {
+    return (
+        indentation == Indentation.Increase || editor.getElementAtCursor('blockquote', startNode)
+    );
 }

@@ -248,27 +248,39 @@ export default class VList {
      * @param indentation Specify to outdent
      * @param softOutdent (Optional) True to make the item to by dummy (no bullet or number) if the item is not dummy,
      * otherwise outdent the item
+     * @param preventItemRemoval (Optional) True to prevent the indentation to remove the bullet when outdenting a first
+     * level list item, by default is false
      */
     setIndentation(
         start: NodePosition,
         end: NodePosition,
         indentation: Indentation.Decrease,
-        softOutdent?: boolean
+        softOutdent?: boolean,
+        preventItemRemoval?: boolean
     ): void;
 
     setIndentation(
         start: NodePosition,
         end: NodePosition,
         indentation: Indentation,
-        softOutdent?: boolean
+        softOutdent?: boolean,
+        preventItemRemoval: boolean = false
     ) {
-        this.findListItems(start, end, item =>
+        let shouldAddMargin = false;
+        this.findListItems(start, end, item => {
+            shouldAddMargin = shouldAddMargin || this.items.indexOf(item) == 0;
             indentation == Indentation.Decrease
                 ? softOutdent && !item.isDummy()
                     ? item.setIsDummy(true /*isDummy*/)
-                    : item.outdent()
-                : item.indent()
-        );
+                    : item.outdent(preventItemRemoval)
+                : item.indent();
+        });
+
+        if (shouldAddMargin && preventItemRemoval) {
+            for (let index = 0; index < this.items.length; index++) {
+                this.items[index].addNegativeMargins();
+            }
+        }
     }
 
     /**
