@@ -120,7 +120,8 @@ describe('Text Features |', () => {
                 feature: BuildInEditFeature<PluginKeyboardEvent>,
                 content: string,
                 selectCallback: () => void,
-                contentExpected: string
+                contentExpected: string,
+                additionalExpect?: () => void
             ) {
                 //Arrange
                 const keyboardEvent: PluginKeyboardEvent = {
@@ -135,6 +136,7 @@ describe('Text Features |', () => {
 
                 //Assert
                 expect(editor.getContent()).toBe(contentExpected);
+                additionalExpect?.();
             }
             TestHelper.itFirefoxOnly('Handle event, text collapsed', () => {
                 runHandleTest(
@@ -378,6 +380,29 @@ describe('Text Features |', () => {
                     );
                 }
             );
+
+            TestHelper.itFirefoxOnly('Handle, Insert Tab before a Anchor Element', () => {
+                runHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div id='${TEST_ELEMENT_ID}'>Test<a href='test'>TestAnchor</a></div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const range = new Range();
+                        range.setStart(element, 1);
+                        range.setEnd(element, 1);
+                        editor.select(range);
+                    },
+                    '<div id="test">Test<span>  </span><a href="test">TestAnchor</a></div>',
+                    () => {
+                        const range = editor.getSelectionRange();
+
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const expectedRange = new Range();
+                        expectedRange.setStart(element, 2);
+                        expect(range).toEqual(expectedRange);
+                    }
+                );
+            });
         });
     });
 
