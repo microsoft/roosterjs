@@ -326,6 +326,25 @@ export default class VList {
 
     /**
      * Get the index of the List Item in the current List
+     * If the root list is:
+     * Ordered list, the listIndex start count is going to be the start property of the OL - 1,
+     * @example For example if we want to find the index of Item 2 in the list below, the returned index is going to be 6
+     *  * ```html
+     * <ol start="5">
+     *   <li>item 1</li>
+     *   <li>item 2</li> <!-- Node to find -->
+     *   <li>item 3</li>
+     * </ol>
+     * ```
+     * Unordered list, the listIndex start count starts from 0
+     * @example For example if we want to find the index of Item 2 in the list below, the returned index is going to be 2
+     * ```html
+     * <ul>
+     *   <li>item 1</li>
+     *   <li>item 2</li> <!-- Node to find -->
+     *   <li>item 3</li>
+     * </ul>
+     * ```
      * @param input List item to find in the root list
      */
     getListItemIndex(input: Node) {
