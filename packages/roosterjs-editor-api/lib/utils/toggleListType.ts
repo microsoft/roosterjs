@@ -1,6 +1,6 @@
 import blockFormat from '../utils/blockFormat';
 import { createVListFromRegion, getBlockElementAtNode } from 'roosterjs-editor-dom';
-import { IEditor, ListType } from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor, ListType } from 'roosterjs-editor-types';
 
 /**
  * Toggle List Type at selection
@@ -38,6 +38,9 @@ export default function toggleListType(
 
         if (vList) {
             vList.changeListType(start, end, listType);
+            if (editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures)) {
+                vList.rootList.style.listStylePosition = 'inside';
+            }
             vList.writeBack();
         }
     });
