@@ -19,12 +19,12 @@ export default interface TraversingScoper {
     /**
      * Get the start block element
      */
-    getStartBlockElement: () => BlockElement;
+    getStartBlockElement: () => BlockElement | null;
 
     /**
      * Get the start inline element
      */
-    getStartInlineElement: () => InlineElement;
+    getStartInlineElement: () => InlineElement | null;
 
     /**
      * Check if the given block element is in this scope
@@ -34,5 +34,5 @@ export default interface TraversingScoper {
     /**
      * Trim the given inline element to match this scope
      */
-    trimInlineElement: (inlineElement: InlineElement) => InlineElement;
+    trimInlineElement: (inlineElement: InlineElement) => InlineElement | null;
 }

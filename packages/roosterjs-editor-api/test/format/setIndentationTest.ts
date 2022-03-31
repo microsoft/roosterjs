@@ -1,6 +1,6 @@
 import * as TestHelper from '../TestHelper';
 import setIndentation from '../../lib/format/setIndentation';
-import { IEditor, Indentation } from 'roosterjs-editor-types';
+import { IEditor, Indentation, TableSelection } from 'roosterjs-editor-types';
 
 describe('setIndentation()', () => {
     let testID = 'setImageAltText';
@@ -55,6 +55,51 @@ describe('setIndentation()', () => {
             },
             Indentation.Decrease,
             '<div><ol><li><span id="test">Text</span></li></ol></div>'
+        );
+    });
+
+    it('Outdent whole table selected, when no Blockquote wraping table', () => {
+        runTest(
+            '<table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>',
+            () => {
+                const table = editor.getDocument().getElementById('test') as HTMLTableElement;
+                editor.select(table, <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { y: 1, x: 1 },
+                });
+            },
+            Indentation.Decrease,
+            '<table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
+        );
+    });
+
+    it('Indent whole table selected', () => {
+        runTest(
+            '<table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>',
+            () => {
+                const table = editor.getDocument().getElementById('test') as HTMLTableElement;
+                editor.select(table, <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { y: 1, x: 1 },
+                });
+            },
+            Indentation.Increase,
+            '<blockquote style="margin-top:0;margin-bottom:0"><table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table></blockquote>'
+        );
+    });
+
+    it('Outdent whole table selected', () => {
+        runTest(
+            '<blockquote style="margin-top:0;margin-bottom:0"><table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table></blockquote>',
+            () => {
+                const table = editor.getDocument().getElementById('test') as HTMLTableElement;
+                editor.select(table, <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { y: 1, x: 1 },
+                });
+            },
+            Indentation.Decrease,
+            '<table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
         );
     });
 });

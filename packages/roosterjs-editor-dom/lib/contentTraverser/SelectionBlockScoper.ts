@@ -20,7 +20,7 @@ import {
  * This provides a scope for parsing from cursor position up to begin of the selection block
  */
 export default class SelectionBlockScoper implements TraversingScoper {
-    private block: BlockElement;
+    private block: BlockElement | null;
     private position: NodePosition;
 
     /**
@@ -42,7 +42,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
     /**
      * Get the start block element
      */
-    public getStartBlockElement(): BlockElement {
+    public getStartBlockElement(): BlockElement | null {
         return this.block;
     }
 
@@ -52,7 +52,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
      *  The reason why we choose the one before rather after is, when cursor is at the end of a paragraph,
      * the one after likely will point to inline in next paragraph which may be null if the cursor is at bottom of editor
      */
-    public getStartInlineElement(): InlineElement {
+    public getStartInlineElement(): InlineElement | null {
         if (this.block) {
             switch (this.startFrom) {
                 case ContentPosition.Begin:
@@ -88,7 +88,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
      * This is a block scoper, which is not like selection scoper where it may cut an inline element in half
      * A block scoper does not cut an inline in half
      */
-    public trimInlineElement(inlineElement: InlineElement): InlineElement {
+    public trimInlineElement(inlineElement: InlineElement): InlineElement | null {
         return this.block && inlineElement && this.block.contains(inlineElement.getContainerNode())
             ? inlineElement
             : null;
@@ -103,7 +103,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
 function getFirstLastInlineElementFromBlockElement(
     block: BlockElement,
     isFirst: boolean
-): InlineElement {
+): InlineElement | null {
     if (block instanceof NodeBlockElement) {
         let blockNode = block.getStartNode();
         return isFirst ? getFirstInlineElement(blockNode) : getLastInlineElement(blockNode);

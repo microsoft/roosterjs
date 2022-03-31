@@ -15,13 +15,13 @@ export default interface IPositionContentSearcher {
      * Get the inline element before position
      * @returns The inlineElement before position
      */
-    getInlineElementBefore(): InlineElement;
+    getInlineElementBefore(): InlineElement | null;
 
     /**
      * Get the inline element after position
      * @returns The inline element after position
      */
-    getInlineElementAfter(): InlineElement;
+    getInlineElementAfter(): InlineElement | null;
 
     /**
      * Get X number of chars before position
@@ -39,7 +39,7 @@ export default interface IPositionContentSearcher {
      * @param exactMatch Whether it is an exact match
      * @returns The range for the matched text, null if unable to find a match
      */
-    getRangeFromText(text: string, exactMatch: boolean): Range;
+    getRangeFromText(text: string, exactMatch: boolean): Range | null;
 
     /**
      * Get text section before position till stop condition is met.
@@ -55,5 +55,5 @@ export default interface IPositionContentSearcher {
      * Get first non textual inline element before position
      * @returns First non textual inline element before position or null if no such element exists
      */
-    getNearestNonTextInlineElement(): InlineElement;
+    getNearestNonTextInlineElement(): InlineElement | null;
 }

@@ -22,25 +22,25 @@ export default class PositionContentSearcher implements IPositionContentSearcher
     private text = '';
 
     // The cached word before position
-    private word: string;
+    private word: string = '';
 
     // The inline element before position
-    private inlineBefore: InlineElement;
+    private inlineBefore: InlineElement | null = null;
 
     // The inline element after position
-    private inlineAfter: InlineElement;
+    private inlineAfter: InlineElement | null = null;
 
     // The content traverser used to traverse backwards
-    private traverser: IContentTraverser;
+    private traverser: IContentTraverser | null = null;
 
     // Backward parsing has completed
-    private traversingComplete: boolean;
+    private traversingComplete: boolean = false;
 
     // All inline elements before position that have been read so far
     private inlineElements: InlineElement[] = [];
 
     // First non-text inline before position
-    private nearestNonTextInlineElement: InlineElement;
+    private nearestNonTextInlineElement: InlineElement | null = null;
 
     /**
      * Create a new CursorData instance
@@ -59,14 +59,14 @@ export default class PositionContentSearcher implements IPositionContentSearcher
             this.traverse(() => this.word);
         }
 
-        return this.word;
+        return this.word || '';
     }
 
     /**
      * Get the inline element before position
      * @returns The inlineElement before position
      */
-    public getInlineElementBefore(): InlineElement {
+    public getInlineElementBefore(): InlineElement | null {
         if (!this.inlineBefore) {
             this.traverse(null);
         }
@@ -78,7 +78,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
      * Get the inline element after position
      * @returns The inline element after position
      */
-    public getInlineElementAfter(): InlineElement {
+    public getInlineElementAfter(): InlineElement | null {
         if (!this.inlineAfter) {
             this.inlineAfter = ContentTraverser.createBlockTraverser(
                 this.rootNode,
@@ -111,13 +111,13 @@ export default class PositionContentSearcher implements IPositionContentSearcher
      * @param exactMatch Whether it is an exact match
      * @returns The range for the matched text, null if unable to find a match
      */
-    public getRangeFromText(text: string, exactMatch: boolean): Range {
+    public getRangeFromText(text: string, exactMatch: boolean): Range | null {
         if (!text) {
             return null;
         }
 
-        let startPosition: NodePosition;
-        let endPosition: NodePosition;
+        let startPosition: NodePosition | null = null;
+        let endPosition: NodePosition | null = null;
         let textIndex = text.length - 1;
 
         this.forEachTextInlineElement(textInline => {
@@ -170,7 +170,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
      * Get first non textual inline element before position
      * @returns First non textual inline element before position or null if no such element exists
      */
-    public getNearestNonTextInlineElement(): InlineElement {
+    public getNearestNonTextInlineElement(): InlineElement | null {
         if (!this.nearestNonTextInlineElement) {
             this.traverse(() => this.nearestNonTextInlineElement);
         }
@@ -181,7 +181,7 @@ export default class PositionContentSearcher implements IPositionContentSearcher
     /**
      * Continue traversing backward till stop condition is met or begin of block is reached
      */
-    private traverse(callback: (inlineElement: InlineElement) => any) {
+    private traverse(callback: null | ((inlineElement: InlineElement) => any)) {
         this.traverser =
             this.traverser || ContentTraverser.createBlockTraverser(this.rootNode, this.position);
 
