@@ -467,7 +467,7 @@ export default class VTable {
                     if (isVertical && cell) {
                         cell.style?.setProperty('vertical-align', alignmentType);
                     } else if (cell) {
-                        cell.style?.setProperty('text-align', 'alignmentType');
+                        cell.style?.setProperty('text-align', alignmentType);
                     }
                 }
             }
