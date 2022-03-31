@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.65% </span>
+                <span class="strong">98.72% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>73/74</span>
+                <span class='fraction'>77/78</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.31% </span>
+                <span class="strong">96.83% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>58/59</span>
+                <span class='fraction'>61/63</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.39% </span>
+                <span class="strong">98.48% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>61/62</span>
+                <span class='fraction'>65/66</span>
             </div>
         
             
@@ -296,7 +296,18 @@
 <a name='L231'></a><a href='#L231'>231</a>
 <a name='L232'></a><a href='#L232'>232</a>
 <a name='L233'></a><a href='#L233'>233</a>
-<a name='L234'></a><a href='#L234'>234</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L234'></a><a href='#L234'>234</a>
+<a name='L235'></a><a href='#L235'>235</a>
+<a name='L236'></a><a href='#L236'>236</a>
+<a name='L237'></a><a href='#L237'>237</a>
+<a name='L238'></a><a href='#L238'>238</a>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -350,7 +361,7 @@
 <span class="cline-any cline-yes">149x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">298x</span>
+<span class="cline-any cline-yes">234x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -477,6 +488,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">280x</span>
 <span class="cline-any cline-yes">215x</span>
+<span class="cline-any cline-yes">215x</span>
+<span class="cline-any cline-yes">215x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">65x</span>
@@ -484,6 +498,9 @@
 <span class="cline-any cline-yes">112x</span>
 <span class="cline-any cline-yes">112x</span>
 <span class="cline-any cline-yes">83x</span>
+<span class="cline-any cline-yes">83x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">112x</span>
@@ -495,6 +512,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">280x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -592,7 +614,7 @@ export default function getRegionsFromRange(
 export function getRegionCreator(
     fullRange: Range,
     skipTags: string[]
-): (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) =&gt; Region {
+): (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) =&gt; Region | null {
     const fullSelectionStart = Position.getStart(fullRange).normalize();
     const fullSelectionEnd = Position.getEnd(fullRange).normalize();
     return (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) =&gt; {
@@ -697,7 +719,7 @@ function buildBoundaryTree(root: HTMLElement, range: Range, type: RegionType): B
  * @param started Whether we have already hit the start node
  */
 function iterateNodes(
-    creator: (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) =&gt; Region,
+    creator: (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) =&gt; Region | null,
     boundary: Boundary,
     start: Node,
     end: Node,
@@ -709,14 +731,20 @@ function iterateNodes(
     let regions: Region[] = [];
 &nbsp;
     if (children.length == 0) {
-        regions.push(creator(innerNode));
+        const region = creator(innerNode);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (region) {
+            regions.push(region);
+        }
     } else {
         // Need to run one more time to add region after all children
         for (let i = 0; i &lt;= children.length &amp;&amp; !ended; i++) {
             const { outerNode, boundaries } = children[i] || {};
             const previousOuterNode = children[i - 1]?.outerNode;
             if (started) {
-                regions.push(creator(innerNode, previousOuterNode, outerNode));
+                const region = creator(innerNode, previousOuterNode, outerNode);
+                if (region) {
+                    regions.push(region);
+                }
             }
 &nbsp;
             boundaries?.forEach(child =&gt; {
@@ -742,7 +770,12 @@ function iterateNodes(
  * @param nodeAfter The boundary node after the region under root
  * @param skipTags Tags to skip
  */
-function areNodesValid(root: Node, nodeBefore: Node, nodeAfter: Node, skipTags: string[]) {
+function areNodesValid(
+    root: Node,
+    nodeBefore: Node | undefined,
+    nodeAfter: Node | undefined,
+    skipTags: string[]
+) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!root) {
 <span class="cstat-no" title="statement not covered" >        return false;</span>
     } else {
@@ -769,7 +802,7 @@ function areNodesValid(root: Node, nodeBefore: Node, nodeAfter: Node, skipTags: 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Mar 31 2022 22:31:05 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 31 2022 22:47:20 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
