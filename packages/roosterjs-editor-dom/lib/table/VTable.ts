@@ -451,10 +451,12 @@ export default class VTable {
         for (let i = firstRow; i <= lastRow; i++) {
             for (let j = firstColumn; j <= lastColumn; j++) {
                 const cell = this.cells[i][j].td;
-                if (isVertical) {
-                    cell.style.verticalAlign = alignmentType;
-                } else {
-                    cell.style.textAlign = alignmentType;
+                if (cell) {
+                    if (isVertical && cell) {
+                        cell.style.verticalAlign = alignmentType;
+                    } else {
+                        cell.style.textAlign = alignmentType;
+                    }
                 }
             }
         }
