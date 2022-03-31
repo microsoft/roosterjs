@@ -8,7 +8,7 @@ import { TableSelection } from 'roosterjs-editor-types';
  * @returns
  */
 export default function isWholeTableSelected(vTable: VTable, selection: TableSelection) {
-    if (!selection) {
+    if (!selection || !vTable.cells) {
         return false;
     }
     const { firstCell, lastCell } = selection;
