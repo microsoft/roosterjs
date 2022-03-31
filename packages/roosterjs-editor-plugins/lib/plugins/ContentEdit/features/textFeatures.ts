@@ -1,4 +1,4 @@
-import { createRange, Position, queryElements } from 'roosterjs-editor-dom';
+import { createRange, getTagOfNode, Position, queryElements } from 'roosterjs-editor-dom';
 import { setIndentation } from 'roosterjs-editor-api';
 import {
     BuildInEditFeature,
@@ -142,18 +142,27 @@ function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
     const span = editor.getDocument().createElement('span');
     let searcher = editor.getContentSearcherOfCursor(event);
     const charsBefore = searcher.getSubStringBefore(Number.MAX_SAFE_INTEGER);
-
     const numberOfChars = TAB_SPACES - (charsBefore.length % TAB_SPACES);
+    let span2: HTMLSpanElement;
 
     let textContent = '';
     for (let index = 0; index < numberOfChars; index++) {
         textContent += '&ensp;';
     }
     editor.insertNode(span);
+    if (span.nextElementSibling && getTagOfNode(span.nextElementSibling) == 'A') {
+        span2 = editor.getDocument().createElement('span');
+        span2.textContent = ' ';
+        editor.insertNode(span2);
+        editor.select(createRange(span2, PositionType.Before));
+    }
     editor.insertContent(textContent, {
         position: ContentPosition.Range,
         range: createRange(span, PositionType.Begin),
         updateCursor: false,
     });
     editor.select(createRange(span, PositionType.After));
+    if (span2) {
+        editor.deleteNode(span2);
+    }
 }
