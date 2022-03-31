@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.76% </span>
+                <span class="strong">84.4% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>86/98</span>
+                <span class='fraction'>92/109</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.77% </span>
+                <span class="strong">73.13% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>45/61</span>
+                <span class='fraction'>49/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.57% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>16/23</span>
+                <span class='fraction'>16/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.49% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>86/94</span>
+                <span class='fraction'>91/104</span>
             </div>
         
             
@@ -356,7 +356,25 @@
 <a name='L291'></a><a href='#L291'>291</a>
 <a name='L292'></a><a href='#L292'>292</a>
 <a name='L293'></a><a href='#L293'>293</a>
-<a name='L294'></a><a href='#L294'>294</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -370,6 +388,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -489,6 +509,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -498,10 +524,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">79x</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -663,6 +699,8 @@ import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
 &nbsp;
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 &nbsp;
+const MARGIN_BASE = '0in 0in 0in 0.5in';
+const NEGATIVE_MARGIN = '-.25in';
 /**
  * !!! Never directly create instance of this class. It should be created within VList class !!!
  *
@@ -781,6 +819,12 @@ export default class VListItem {
      * If this is not an list item, it will be no op
      */
     indent() {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (this.node.style.marginLeft == NEGATIVE_MARGIN) {
+<span class="cstat-no" title="statement not covered" >            this.node.style.margin = '';</span>
+<span class="cstat-no" title="statement not covered" >            this.node.style.marginLeft = '';</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
+&nbsp;
         const listType = this.getListType();
         if (listType != ListType.None) {
             this.listTypes.push(listType);
@@ -790,11 +834,21 @@ export default class VListItem {
     /**
      * Outdent this item
      * If this item is already not an list item, it will be no op
+     * @param preventItemRemoval Whether prevent the list item to be removed for the listItem by default false
      */
-    outdent() {
-        if (this.listTypes.length &gt; 1) {
+    outdent(preventItemRemoval: boolean = false) {
+        const expectedLength = preventItemRemoval ? <span class="branch-0 cbranch-no" title="branch not covered" >2 </span>: 1;
+        if (this.listTypes.length &gt; expectedLength) {
             this.listTypes.pop();
         }
+    }
+&nbsp;
+    /**
+     * Add negative margin to the List item
+     */
+<span class="fstat-no" title="function not covered" >    addNegativeMargins(</span>) {
+<span class="cstat-no" title="statement not covered" >        this.node.style.margin = MARGIN_BASE;</span>
+<span class="cstat-no" title="statement not covered" >        this.node.style.marginLeft = NEGATIVE_MARGIN;</span>
     }
 &nbsp;
     /**
@@ -949,7 +1003,7 @@ function getChildrenAndUnwrap(node: Node): Node[] {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Mar 31 2022 21:26:56 GMT+0000 (Coordinated Universal Time)
+                at Thu Mar 31 2022 22:31:05 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
