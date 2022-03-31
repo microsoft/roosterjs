@@ -5,7 +5,7 @@ export default interface VCell {
     /**
      * The table cell object. The value will be null if this is an expanded virtual cell
      */
-    td?: HTMLTableCellElement;
+    td?: HTMLTableCellElement | null;
 
     /**
      * Whether this cell is spanned from left
