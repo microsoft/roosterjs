@@ -164,7 +164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L64">packages/roosterjs-editor-dom/lib/list/VList.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L64">packages/roosterjs-editor-dom/lib/list/VList.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -194,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">items<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_dom.vlistitem.html" class="tsd-signature-type" data-tsd-kind="Class">VListItem</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L64">packages/roosterjs-editor-dom/lib/list/VList.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L64">packages/roosterjs-editor-dom/lib/list/VList.ts:64</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -218,7 +218,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L298">packages/roosterjs-editor-dom/lib/list/VList.ts:298</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L298">packages/roosterjs-editor-dom/lib/list/VList.ts:298</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -255,7 +255,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L282">packages/roosterjs-editor-dom/lib/list/VList.ts:282</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L282">packages/roosterjs-editor-dom/lib/list/VList.ts:282</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -300,7 +300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L140">packages/roosterjs-editor-dom/lib/list/VList.ts:140</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L140">packages/roosterjs-editor-dom/lib/list/VList.ts:140</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -331,7 +331,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L151">packages/roosterjs-editor-dom/lib/list/VList.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L151">packages/roosterjs-editor-dom/lib/list/VList.ts:151</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -354,21 +354,41 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L331">packages/roosterjs-editor-dom/lib/list/VList.ts:331</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L350">packages/roosterjs-editor-dom/lib/list/VList.ts:350</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the index of the List Item in the current List</p>
+									<p>Get the index of the List Item in the current List
+										If the root list is:
+									Ordered list, the listIndex start count is going to be the start property of the OL - 1,</p>
 								</div>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><p>For example if we want to find the index of Item 2 in the list below, the returned index is going to be 6</p>
+										<ul>
+											<li><pre><code class="language-html"><span style="color: #800000">&lt;ol</span><span style="color: #000000"> </span><span style="color: #FF0000">start</span><span style="color: #000000">=</span><span style="color: #0000FF">&quot;5&quot;</span><span style="color: #800000">&gt;</span>
+<span style="color: #800000">&lt;li&gt;</span><span style="color: #000000">item 1</span><span style="color: #800000">&lt;/li&gt;</span>
+<span style="color: #800000">&lt;li&gt;</span><span style="color: #000000">item 2</span><span style="color: #800000">&lt;/li&gt;</span><span style="color: #000000"> </span><span style="color: #008000">&lt;!-- Node to find --&gt;</span>
+<span style="color: #800000">&lt;li&gt;</span><span style="color: #000000">item 3</span><span style="color: #800000">&lt;/li&gt;</span>
+<span style="color: #800000">&lt;/ol&gt;</span>
+</code></pre>
+												Unordered list, the listIndex start count starts from 0
+												@example For example if we want to find the index of Item 2 in the list below, the returned index is going to be 2<pre><code class="language-html"><span style="color: #800000">&lt;ul&gt;</span>
+<span style="color: #800000">&lt;li&gt;</span><span style="color: #000000">item 1</span><span style="color: #800000">&lt;/li&gt;</span>
+<span style="color: #800000">&lt;li&gt;</span><span style="color: #000000">item 2</span><span style="color: #800000">&lt;/li&gt;</span><span style="color: #000000"> </span><span style="color: #008000">&lt;!-- Node to find --&gt;</span>
+<span style="color: #800000">&lt;li&gt;</span><span style="color: #000000">item 3</span><span style="color: #800000">&lt;/li&gt;</span>
+<span style="color: #800000">&lt;/ul&gt;</span>
+</code></pre>
+											@param input List item to find in the root list</li>
+										</ul>
+									</dd>
+								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>input: <span class="tsd-signature-type">Node</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>List item to find in the root list</p>
-									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -385,7 +405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L357">packages/roosterjs-editor-dom/lib/list/VList.ts:357</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L372">packages/roosterjs-editor-dom/lib/list/VList.ts:372</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -408,7 +428,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L319">packages/roosterjs-editor-dom/lib/list/VList.ts:319</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L319">packages/roosterjs-editor-dom/lib/list/VList.ts:319</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -446,7 +466,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L242">packages/roosterjs-editor-dom/lib/list/VList.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L242">packages/roosterjs-editor-dom/lib/list/VList.ts:242</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -480,7 +500,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L252">packages/roosterjs-editor-dom/lib/list/VList.ts:252</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L252">packages/roosterjs-editor-dom/lib/list/VList.ts:252</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -530,7 +550,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L222">packages/roosterjs-editor-dom/lib/list/VList.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L222">packages/roosterjs-editor-dom/lib/list/VList.ts:222</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -567,7 +587,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5526a2b/packages/roosterjs-editor-dom/lib/list/VList.ts#L170">packages/roosterjs-editor-dom/lib/list/VList.ts:170</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a1fa3e7/packages/roosterjs-editor-dom/lib/list/VList.ts#L170">packages/roosterjs-editor-dom/lib/list/VList.ts:170</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
