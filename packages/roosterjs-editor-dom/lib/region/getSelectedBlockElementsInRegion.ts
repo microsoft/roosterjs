@@ -49,8 +49,13 @@ export default function getSelectedBlockElementsInRegion(
             KnownCreateElementDataIndex.EmptyLine,
             regionBase.rootNode.ownerDocument
         );
-        regionBase.rootNode.appendChild(newNode);
-        blocks.push(getBlockElementAtNode(regionBase.rootNode, newNode));
+        regionBase.rootNode.appendChild(newNode!);
+
+        const block = getBlockElementAtNode(regionBase.rootNode, newNode);
+
+        if (block) {
+            blocks.push(block);
+        }
     }
 
     return blocks;
