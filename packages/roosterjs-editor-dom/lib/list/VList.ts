@@ -17,12 +17,7 @@ import {
     NodePosition,
     PositionType,
     NodeType,
-    VListBehaviorConfig,
 } from 'roosterjs-editor-types';
-
-const DEFAULT_VLIST_CONFIG: VListBehaviorConfig = {
-    preventItemRemovalOnOutdent: false,
-};
 
 /**
  * Represent a bullet or a numbering list
@@ -67,7 +62,6 @@ const DEFAULT_VLIST_CONFIG: VListBehaviorConfig = {
  */
 export default class VList {
     public readonly items: VListItem[] = [];
-    private config: VListBehaviorConfig;
 
     /**
      * Create a new instance of VList class
@@ -137,15 +131,6 @@ export default class VList {
         queryElements(this.rootList, 'li', moveLiToList);
 
         this.populateItems(this.rootList);
-        this.config = DEFAULT_VLIST_CONFIG;
-    }
-
-    /**
-     * Overrides the configuration to be used for the current VList
-     * @param config Config to apply to the VList
-     */
-    setConfiguration(config: VListBehaviorConfig) {
-        this.config = config || DEFAULT_VLIST_CONFIG;
     }
 
     /**
@@ -263,22 +248,25 @@ export default class VList {
      * @param indentation Specify to outdent
      * @param softOutdent (Optional) True to make the item to by dummy (no bullet or number) if the item is not dummy,
      * otherwise outdent the item
+     * @param preventItemRemoval (Optional) True to prevent the indentation to remove the bullet when outdenting a first
+     * level list item, by default is false
      */
     setIndentation(
         start: NodePosition,
         end: NodePosition,
         indentation: Indentation.Decrease,
-        softOutdent?: boolean
+        softOutdent?: boolean,
+        preventItemRemoval?: boolean
     ): void;
 
     setIndentation(
         start: NodePosition,
         end: NodePosition,
         indentation: Indentation,
-        softOutdent?: boolean
+        softOutdent?: boolean,
+        preventItemRemoval: boolean = false
     ) {
         let shouldAddMargin = false;
-        const preventItemRemoval = !!this.config?.preventItemRemovalOnOutdent;
         this.findListItems(start, end, item => {
             shouldAddMargin = shouldAddMargin || this.items.indexOf(item) == 0;
             indentation == Indentation.Decrease

@@ -187,7 +187,6 @@ export {
     SelectionRangeEx,
     SelectionRangeTypes,
 } from './interface/SelectionRangeEx';
-export { default as VListBehaviorConfig } from './interface/VListBehaviorConfig';
 
 // Core Plugin State
 export { default as DOMEventPluginState } from './corePluginState/DOMEventPluginState';

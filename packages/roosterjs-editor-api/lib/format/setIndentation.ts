@@ -58,10 +58,6 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
                         ExperimentalFeatures.TabKeyTextFeatures
                     );
 
-                    vList.setConfiguration({
-                        preventItemRemovalOnOutdent: isTabKeyTextFeaturesEnabled,
-                    });
-
                     vList.rootList.style.listStylePosition = 'inside';
 
                     if (
@@ -72,7 +68,15 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
                         const block = editor.getBlockElementAtNode(vList.rootList);
                         blockGroups.push([block]);
                     } else {
-                        vList.setIndentation(start, end, indentation);
+                        indentation == Indentation.Decrease
+                            ? vList.setIndentation(
+                                  start,
+                                  end,
+                                  indentation,
+                                  false /* softOutdent */,
+                                  isTabKeyTextFeaturesEnabled /* preventItemRemoval */
+                              )
+                            : vList.setIndentation(start, end, indentation);
                         vList.writeBack();
                         blockGroups.push([]);
                     }
