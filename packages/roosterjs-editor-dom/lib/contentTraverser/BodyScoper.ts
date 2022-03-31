@@ -11,7 +11,7 @@ import { getFirstInlineElement } from '../inlineElements/getFirstLastInlineEleme
  * provides a scope object for traversing the entire editor body starting from the beginning
  */
 export default class BodyScoper implements TraversingScoper {
-    private startNode: Node;
+    private startNode: Node | null;
 
     /**
      * Construct a new instance of BodyScoper class
@@ -19,13 +19,13 @@ export default class BodyScoper implements TraversingScoper {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
     constructor(public rootNode: Node, startNode?: Node) {
-        this.startNode = contains(rootNode, startNode) ? startNode : null;
+        this.startNode = contains(rootNode, startNode) ? startNode! : null;
     }
 
     /**
      * Get the start block element
      */
-    public getStartBlockElement(): BlockElement {
+    public getStartBlockElement(): BlockElement | null {
         return this.startNode
             ? getBlockElementAtNode(this.rootNode, this.startNode)
             : getFirstLastBlockElement(this.rootNode, true /*isFirst*/);
@@ -34,7 +34,7 @@ export default class BodyScoper implements TraversingScoper {
     /**
      * Get the start inline element
      */
-    public getStartInlineElement(): InlineElement {
+    public getStartInlineElement(): InlineElement | null {
         return this.startNode
             ? getInlineElementAtNode(this.rootNode, this.startNode)
             : getFirstInlineElement(this.rootNode);

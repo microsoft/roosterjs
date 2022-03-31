@@ -42,27 +42,27 @@ export default class VTable {
     /**
      * Virtual cells
      */
-    cells: VCell[][];
+    cells: VCell[][] | null = null;
 
     /**
      * Current row index
      */
-    row: number;
+    row: number | undefined;
 
     /**
      * Current column index
      */
-    col: number;
+    col: number | undefined;
 
     /**
      * Selected range of cells with the coordinates of the first and last cell selected.
      */
-    selection: TableSelection;
+    selection: TableSelection | null = null;
 
     /**
      * Current format of the table
      */
-    formatInfo: Required<TableFormat>;
+    formatInfo: Required<TableFormat> | null = null;
 
     private trs: HTMLTableRowElement[] = [];
 
@@ -86,7 +86,7 @@ export default class VTable {
                 this.trs[rowIndex % 2] = tr;
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
                     // Skip the cells which already initialized
-                    for (; this.cells[rowIndex][targetCol]; targetCol++) {}
+                    for (; this.cells![rowIndex][targetCol]; targetCol++) {}
                     let td = tr.cells[sourceCol];
 
                     if (td == currentTd) {
@@ -98,7 +98,7 @@ export default class VTable {
                         for (let rowSpan = 0; rowSpan < td.rowSpan; rowSpan++) {
                             const hasTd: boolean = colSpan + rowSpan == 0;
                             const rect = td.getBoundingClientRect();
-                            this.cells[rowIndex + rowSpan][targetCol] = {
+                            this.cells![rowIndex + rowSpan][targetCol] = {
                                 td: hasTd ? td : null,
                                 spanLeft: colSpan > 0,
                                 spanAbove: rowSpan > 0,
@@ -126,20 +126,23 @@ export default class VTable {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
                 let tr = cloneNode(this.trs[r % 2] || this.trs[0]);
-                this.table.appendChild(tr);
-                row.forEach((cell, c) => {
-                    if (cell.td) {
-                        this.recalculateSpans(r, c);
-                        tr.appendChild(cell.td);
-                    }
-                });
+
+                if (tr) {
+                    this.table.appendChild(tr);
+                    row.forEach((cell, c) => {
+                        if (cell.td) {
+                            this.recalculateSpans(r, c);
+                            tr!.appendChild(cell.td);
+                        }
+                    });
+                }
             });
             if (this.formatInfo && !skipApplyFormat) {
                 saveTableInfo(this.table, this.formatInfo);
                 applyTableFormat(this.table, this.cells, this.formatInfo);
             }
         } else if (this.table) {
-            this.table.parentNode.removeChild(this.table);
+            this.table.parentNode?.removeChild(this.table);
         }
     }
 
@@ -165,8 +168,8 @@ export default class VTable {
      * Remove the cellShade dataset to apply a new style format at the cell.
      * @param cells
      */
-    private deleteCellShadeDataset(cells: VCell[][]) {
-        cells.forEach(row => {
+    private deleteCellShadeDataset(cells: VCell[][] | null) {
+        cells?.forEach(row => {
             row.forEach(cell => {
                 if (cell.td && cell.td.dataset[CELL_SHADE]) {
                     delete cell.td.dataset[CELL_SHADE];
@@ -180,7 +183,7 @@ export default class VTable {
      * @param operation Table operation
      */
     edit(operation: TableOperation) {
-        if (!this.table) {
+        if (!this.table || !this.cells || this.row === undefined || this.col == undefined) {
             return;
         }
 
@@ -204,6 +207,7 @@ export default class VTable {
                         0,
                         this.cells[newRow - 1].map((cell, colIndex) => {
                             let nextCell = this.getCell(newRow, colIndex);
+
                             if (nextCell.spanAbove) {
                                 return cloneCell(nextCell);
                             } else if (cell.spanLeft) {
@@ -212,7 +216,7 @@ export default class VTable {
                                 return newCell;
                             } else {
                                 return {
-                                    td: cloneNode(this.getTd(this.row, colIndex)),
+                                    td: cloneNode(this.getTd(this.row!, colIndex)),
                                 };
                             }
                         })
@@ -242,7 +246,7 @@ export default class VTable {
                             newCell.spanLeft = false;
                         } else {
                             newCell = {
-                                td: cloneNode(this.getTd(i, this.col)),
+                                td: cloneNode(this.getTd(i, this.col!)),
                             };
                         }
 
@@ -277,7 +281,7 @@ export default class VTable {
                         }
                         const removedColumns = this.selection
                             ? colIndex - deletedColumns
-                            : this.col;
+                            : this.col!;
                         row.splice(removedColumns, 1);
                     });
                     deletedColumns++;
@@ -296,7 +300,11 @@ export default class VTable {
                     if (cell.td && !cell.spanAbove) {
                         let aboveCell = rowIndex < this.row ? cell : currentCell;
                         let belowCell = rowIndex < this.row ? currentCell : cell;
-                        if (aboveCell.td.colSpan == belowCell.td.colSpan) {
+                        if (
+                            aboveCell.td &&
+                            belowCell.td &&
+                            aboveCell.td.colSpan == belowCell.td.colSpan
+                        ) {
                             moveChildNodes(
                                 aboveCell.td,
                                 belowCell.td,
@@ -322,7 +330,11 @@ export default class VTable {
                     if (cell.td && !cell.spanLeft) {
                         let leftCell = colIndex < this.col ? cell : currentCell;
                         let rightCell = colIndex < this.col ? currentCell : cell;
-                        if (leftCell.td.rowSpan == rightCell.td.rowSpan) {
+                        if (
+                            leftCell.td &&
+                            rightCell.td &&
+                            leftCell.td.rowSpan == rightCell.td.rowSpan
+                        ) {
                             moveChildNodes(
                                 leftCell.td,
                                 rightCell.td,
@@ -341,7 +353,7 @@ export default class VTable {
                 break;
 
             case TableOperation.SplitVertically:
-                if (currentCell.td.rowSpan > 1) {
+                if (currentCell.td && currentCell.td.rowSpan > 1) {
                     this.getCell(this.row + 1, this.col).td = cloneNode(currentCell.td);
                 } else {
                     let splitRow = currentRow.map(cell => {
@@ -356,11 +368,11 @@ export default class VTable {
                 break;
 
             case TableOperation.SplitHorizontally:
-                if (currentCell.td.colSpan > 1) {
+                if (currentCell.td && currentCell.td.colSpan > 1) {
                     this.getCell(this.row, this.col + 1).td = cloneNode(currentCell.td);
                 } else {
                     this.forEachCellOfCurrentColumn((cell, row) => {
-                        row.splice(this.col + 1, 0, {
+                        row.splice(this.col! + 1, 0, {
                             td: row == currentRow ? cloneNode(cell.td) : null,
                             spanAbove: cell.spanAbove,
                             spanLeft: row != currentRow,
@@ -450,12 +462,12 @@ export default class VTable {
     ) {
         for (let i = firstRow; i <= lastRow; i++) {
             for (let j = firstColumn; j <= lastColumn; j++) {
-                const cell = this.cells[i][j].td;
-                if (cell) {
+                if (this.cells) {
+                    const cell = this.cells[i][j].td;
                     if (isVertical && cell) {
-                        cell.style.verticalAlign = alignmentType;
-                    } else {
-                        cell.style.textAlign = alignmentType;
+                        cell.style?.setProperty('vertical-align', alignmentType);
+                    } else if (cell) {
+                        cell.style?.setProperty('text-align', 'alignmentType');
                     }
                 }
             }
@@ -496,7 +508,7 @@ export default class VTable {
      */
     getCellsWithBorder(borderPos: number, getLeftCells: boolean): HTMLTableCellElement[] {
         const cells: HTMLTableCellElement[] = [];
-        for (let i = 0; i < this.cells.length; i++) {
+        for (let i = 0; this.cells && i < this.cells.length; i++) {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.getCell(i, j);
                 if (cell.td) {
@@ -547,7 +559,7 @@ export default class VTable {
     /**
      * Get current HTML table cell object. If the current table cell is a virtual expanded cell, return its root cell
      */
-    getCurrentTd(): HTMLTableCellElement {
+    getCurrentTd(): HTMLTableCellElement | null {
         return this.getTd(this.row, this.col);
     }
 
@@ -556,8 +568,8 @@ export default class VTable {
      * @param row row of the cell
      * @param col column of the cell
      */
-    getTd(row: number, col: number) {
-        if (this.cells) {
+    getTd(row: number | undefined, col: number | undefined) {
+        if (this.cells && row !== undefined && col !== undefined) {
             row = Math.min(this.cells.length - 1, row);
             col = this.cells[row] ? Math.min(this.cells[row].length - 1, col) : col;
             if (!isNaN(row) && !isNaN(col)) {
@@ -579,17 +591,21 @@ export default class VTable {
     }
 
     private forEachCellOfColumn(
-        col: number,
+        col: number | undefined,
         callback: (cell: VCell, row: VCell[], i: number) => any
     ) {
-        for (let i = 0; i < this.cells.length; i++) {
-            callback(this.getCell(i, col), this.cells[i], i);
+        if (col !== undefined) {
+            for (let i = 0; this.cells && i < this.cells.length; i++) {
+                callback(this.getCell(i, col), this.cells[i], i);
+            }
         }
     }
 
-    private forEachCellOfRow(row: number, callback: (cell: VCell, i: number) => any) {
-        for (let i = 0; i < this.cells[row].length; i++) {
-            callback(this.getCell(row, i), i);
+    private forEachCellOfRow(row: number | undefined, callback: (cell: VCell, i: number) => any) {
+        if (row !== undefined) {
+            for (let i = 0; this.cells && i < this.cells[row].length; i++) {
+                callback(this.getCell(row, i), i);
+            }
         }
     }
 
@@ -609,7 +625,7 @@ export default class VTable {
 
     private countSpanLeft(row: number, col: number) {
         let result = 1;
-        for (let i = col + 1; i < this.cells[row].length; i++) {
+        for (let i = col + 1; this.cells && i < this.cells[row].length; i++) {
             let cell = this.getCell(row, i);
             if (cell.td || !cell.spanLeft) {
                 break;
@@ -621,7 +637,7 @@ export default class VTable {
 
     private countSpanAbove(row: number, col: number) {
         let result = 1;
-        for (let i = row + 1; i < this.cells.length; i++) {
+        for (let i = row + 1; this.cells && i < this.cells.length; i++) {
             let cell = this.getCell(i, col);
             if (cell.td || !cell.spanAbove) {
                 break;
@@ -648,29 +664,32 @@ export default class VTable {
         // remove width/height for each row
         for (let i = 0, row; (row = this.table.rows[i]); i++) {
             row.removeAttribute('width');
-            row.style.width = null;
+            row.style.setProperty('width', null);
             row.removeAttribute('height');
-            row.style.height = null;
+            row.style.setProperty('height', null);
         }
 
         // set width/height for each cell
-        for (let i = 0; i < this.cells.length; i++) {
+        for (let i = 0; this.cells && i < this.cells.length; i++) {
             for (let j = 0; j < this.cells[i].length; j++) {
                 const cell = this.cells[i][j];
                 if (cell) {
                     const func =
                         typeof zoomScale == 'number' ? (n: number) => n / zoomScale : zoomScale;
+                    const width = cell.width || 0;
+                    const height = cell.height || 0;
+
                     setHTMLElementSizeInPx(
                         cell.td,
-                        func?.(cell.width) || cell.width,
-                        func?.(cell.height) || cell.height
+                        func?.(width) || width,
+                        func?.(height) || height
                     );
                 }
             }
         }
     }
 
-    private normalizeSize(sizeTransformer: SizeTransformer) {
+    private normalizeSize(sizeTransformer: SizeTransformer | undefined) {
         this.normalizeEmptyTableCells();
         this.normalizeTableCellSize(sizeTransformer);
 
@@ -685,7 +704,11 @@ export default class VTable {
     }
 }
 
-function setHTMLElementSizeInPx(element: HTMLElement, newWidth: number, newHeight: number) {
+function setHTMLElementSizeInPx(
+    element: HTMLElement | null | undefined,
+    newWidth: number,
+    newHeight: number
+) {
     if (!!element) {
         element.removeAttribute('width');
         element.removeAttribute('height');
@@ -696,7 +719,7 @@ function setHTMLElementSizeInPx(element: HTMLElement, newWidth: number, newHeigh
 }
 
 function getTableFromTd(td: HTMLTableCellElement) {
-    let result = <HTMLElement>td;
+    let result: Element | null = <HTMLElement>td;
     for (; result && result.tagName != 'TABLE'; result = result.parentElement) {}
     return <HTMLTableElement>result;
 }
@@ -717,12 +740,12 @@ function cloneCell(cell: VCell): VCell {
  * Clone a node without its children.
  * @param node The node to clone
  */
-function cloneNode<T extends Node>(node: T): T {
+function cloneNode<T extends Node>(node: T | null | undefined): T | null {
     let newNode = node ? <T>node.cloneNode(false /*deep*/) : null;
     if (safeInstanceOf(newNode, 'HTMLTableCellElement')) {
         newNode.removeAttribute('id');
         if (!newNode.firstChild) {
-            newNode.appendChild(node.ownerDocument.createElement('br'));
+            newNode.appendChild(node!.ownerDocument!.createElement('br'));
         }
     }
     return newNode;
