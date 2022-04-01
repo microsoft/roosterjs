@@ -310,8 +310,8 @@ export default class VTable {
             case TableOperation.MergeRight:
                 let colStep = operation == TableOperation.MergeLeft ? -1 : 1;
                 for (
-                    let colIndex = firstColumn + colStep;
-                    colIndex >= 0 && colIndex < this.cells[firstRow].length;
+                    let colIndex = this.col + colStep;
+                    colIndex >= 0 && colIndex < this.cells[this.col].length;
                     colIndex += colStep
                 ) {
                     let cell = this.getCell(this.row, colIndex);
