@@ -40,7 +40,7 @@ export default class Position implements NodePosition {
         offsetOrPosType: number = 0,
         private readonly isFromEndOfRange?: boolean
     ) {
-        if (nodeOrPosition && (<NodePosition>nodeOrPosition).node) {
+        if ((<NodePosition>nodeOrPosition).node) {
             this.node = (<NodePosition>nodeOrPosition).node;
             offsetOrPosType = (<NodePosition>nodeOrPosition).offset;
         } else {
@@ -171,9 +171,9 @@ function getIndexOfNode(node: Node | null): number {
 }
 
 function getEndOffset(node: Node): number {
-    if (node && node.nodeType == NodeType.Text) {
+    if (node.nodeType == NodeType.Text) {
         return node.nodeValue?.length || 0;
-    } else if (node && node.nodeType == NodeType.Element) {
+    } else if (node.nodeType == NodeType.Element) {
         return node.childNodes.length;
     } else {
         return 1;

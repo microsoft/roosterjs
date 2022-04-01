@@ -41,16 +41,19 @@ export const selectTable: SelectTable = (
         ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
         const ranges = select(core, table, coordinates);
-
-        core.api.selectRange(
-            core,
-            createRange(
-                new Position(
-                    table.rows.item(coordinates.firstCell.y).cells.item(coordinates.firstCell.x),
-                    PositionType.Begin
+        if (!isMergedCell(table, coordinates)) {
+            core.api.selectRange(
+                core,
+                createRange(
+                    new Position(
+                        table.rows
+                            .item(coordinates.firstCell.y)
+                            .cells.item(coordinates.firstCell.x),
+                        PositionType.Begin
+                    )
                 )
-            )
-        );
+            );
+        }
 
         return {
             type: SelectionRangeTypes.TableSelection,
@@ -261,4 +264,12 @@ function areValidCoordinates(input: TableSelection) {
 
 function isValidCoordinate(input: number) {
     return (!!input || input == 0) && input > -1;
+}
+
+function isMergedCell(table: HTMLTableElement, coordinates: TableSelection) {
+    const { firstCell } = coordinates;
+    if (table.rows.item(firstCell.y) && table.rows.item(firstCell.y).cells.item(firstCell.x)) {
+        return false;
+    }
+    return true;
 }

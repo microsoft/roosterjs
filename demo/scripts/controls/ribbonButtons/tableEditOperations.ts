@@ -12,7 +12,9 @@ type TableEditOperationsKey =
     | 'insertRight'
     | 'merge'
     | 'mergeAbove'
-    | 'mergeBelow';
+    | 'mergeBelow'
+    | 'mergeLeft'
+    | 'mergeRight';
 
 /**
  * Key of localized strings of Table Edit Operations button
@@ -30,6 +32,8 @@ const tableEditOperationsLabel: Record<TableEditOperationsKey, string> = {
     deleteColumn: 'Delete Column',
     mergeAbove: 'Merge Above',
     mergeBelow: 'Merge Below',
+    mergeLeft: 'Merge Left',
+    mergeRight: 'Merge Right',
 };
 
 const tableEditOperations: Record<TableEditOperationsKey, TableOperation> = {
@@ -43,6 +47,8 @@ const tableEditOperations: Record<TableEditOperationsKey, TableOperation> = {
     deleteColumn: TableOperation.DeleteColumn,
     mergeAbove: TableOperation.MergeAbove,
     mergeBelow: TableOperation.MergeBelow,
+    mergeLeft: TableOperation.MergeLeft,
+    mergeRight: TableOperation.MergeRight,
 };
 
 /**

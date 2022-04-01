@@ -300,19 +300,7 @@ export default class VTable {
                     if (cell.td && !cell.spanAbove) {
                         let aboveCell = rowIndex < this.row ? cell : currentCell;
                         let belowCell = rowIndex < this.row ? currentCell : cell;
-                        if (
-                            aboveCell.td &&
-                            belowCell.td &&
-                            aboveCell.td.colSpan == belowCell.td.colSpan
-                        ) {
-                            moveChildNodes(
-                                aboveCell.td,
-                                belowCell.td,
-                                true /*keepExistingChildren*/
-                            );
-                            belowCell.td = null;
-                            belowCell.spanAbove = true;
-                        }
+                        this.mergeCells(aboveCell, belowCell);
                         break;
                     }
                 }
@@ -322,27 +310,15 @@ export default class VTable {
             case TableOperation.MergeRight:
                 let colStep = operation == TableOperation.MergeLeft ? -1 : 1;
                 for (
-                    let colIndex = this.col + colStep;
-                    colIndex >= 0 && colIndex < this.cells[this.row].length;
+                    let colIndex = firstColumn + colStep;
+                    colIndex >= 0 && colIndex < this.cells[firstRow].length;
                     colIndex += colStep
                 ) {
                     let cell = this.getCell(this.row, colIndex);
                     if (cell.td && !cell.spanLeft) {
                         let leftCell = colIndex < this.col ? cell : currentCell;
                         let rightCell = colIndex < this.col ? currentCell : cell;
-                        if (
-                            leftCell.td &&
-                            rightCell.td &&
-                            leftCell.td.rowSpan == rightCell.td.rowSpan
-                        ) {
-                            moveChildNodes(
-                                leftCell.td,
-                                rightCell.td,
-                                true /*keepExistingChildren*/
-                            );
-                            rightCell.td = null;
-                            rightCell.spanLeft = true;
-                        }
+                        this.mergeCells(leftCell, rightCell, true /** horizontally */);
                         break;
                     }
                 }
@@ -353,25 +329,13 @@ export default class VTable {
                     for (let rowIndex = firstRow + 1; rowIndex <= lastRow; rowIndex++) {
                         let cell = this.getCell(firstRow, colIndex);
                         let nextCellBelow = this.getCell(rowIndex, colIndex);
-                        if (cell.td && !cell.spanAbove && nextCellBelow.td) {
-                            moveChildNodes(
-                                cell.td,
-                                nextCellBelow.td,
-                                true /*keepExistingChildren*/
-                            );
-                            nextCellBelow.td = null;
-                            nextCellBelow.spanAbove = true;
-                        }
+                        this.mergeCells(cell, nextCellBelow);
                     }
                 }
                 for (let colIndex = firstColumn + 1; colIndex <= lastColumn; colIndex++) {
                     let cell = this.getCell(firstRow, firstColumn);
                     let nextCellRight = this.getCell(firstRow, colIndex);
-                    if (cell.td && !cell.spanLeft && nextCellRight.td) {
-                        moveChildNodes(cell.td, nextCellRight.td, true /*keepExistingChildren*/);
-                        nextCellRight.td = null;
-                        nextCellRight.spanLeft = true;
-                    }
+                    this.mergeCells(cell, nextCellRight, true /** horizontally */);
                 }
 
                 break;
@@ -497,6 +461,21 @@ export default class VTable {
                         cell.style?.setProperty('text-align', alignmentType);
                     }
                 }
+            }
+        }
+    }
+
+    mergeCells(cell: VCell, nextCell: VCell, horizontally?: boolean) {
+        const checkSpans = horizontally
+            ? cell.td?.rowSpan === nextCell.td?.rowSpan && !cell.spanLeft
+            : cell.td?.colSpan === nextCell.td?.colSpan && !cell.spanAbove;
+        if (cell.td && nextCell.td && checkSpans) {
+            moveChildNodes(cell.td, nextCell.td, true /*keepExistingChildren*/);
+            nextCell.td = null;
+            if (horizontally) {
+                nextCell.spanLeft = true;
+            } else {
+                nextCell.spanAbove = true;
             }
         }
     }
