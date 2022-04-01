@@ -12,6 +12,8 @@ import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 
+const MARGIN_BASE = '0in 0in 0in 0.5in';
+const NEGATIVE_MARGIN = '-.25in';
 /**
  * !!! Never directly create instance of this class. It should be created within VList class !!!
  *
@@ -130,6 +132,12 @@ export default class VListItem {
      * If this is not an list item, it will be no op
      */
     indent() {
+        if (this.node.style.marginLeft == NEGATIVE_MARGIN) {
+            this.node.style.margin = '';
+            this.node.style.marginLeft = '';
+            return;
+        }
+
         const listType = this.getListType();
         if (listType != ListType.None) {
             this.listTypes.push(listType);
@@ -139,11 +147,21 @@ export default class VListItem {
     /**
      * Outdent this item
      * If this item is already not an list item, it will be no op
+     * @param preventItemRemoval Whether prevent the list item to be removed for the listItem by default false
      */
-    outdent() {
-        if (this.listTypes.length > 1) {
+    outdent(preventItemRemoval: boolean = false) {
+        const expectedLength = preventItemRemoval ? 2 : 1;
+        if (this.listTypes.length > expectedLength) {
             this.listTypes.pop();
         }
+    }
+
+    /**
+     * Add negative margin to the List item
+     */
+    addNegativeMargins() {
+        this.node.style.margin = MARGIN_BASE;
+        this.node.style.marginLeft = NEGATIVE_MARGIN;
     }
 
     /**

@@ -623,6 +623,78 @@ describe('VTable.edit', () => {
         );
     });
 
+    itFirefoxOnly('Simple table, AlignCellCenter', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellCenter,
+            '<table><tr><td id="id1" style="text-align: center;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+        );
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellCenter,
+            '<table><tr><td id="id1" style="text-align: center;">1</td><td>2</td></tr><tr><td style="text-align: center;">3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    itFirefoxOnly('Simple table, AlignCellRight', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellRight,
+            '<table><tr><td id="id1" style="text-align: right;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+        );
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellRight,
+            '<table><tr><td id="id1" style="text-align: right;">1</td><td>2</td></tr><tr><td style="text-align: right;">3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    itFirefoxOnly('Simple table, AlignCellLeft', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellLeft,
+            '<table><tr><td id="id1" style="text-align: left;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+        );
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellLeft,
+            '<table><tr><td id="id1" style="text-align: left;">1</td><td>2</td></tr><tr><td style="text-align: left;">3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    itFirefoxOnly('Simple table, AlignCellTop', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellTop,
+            '<table><tr><td id="id1" style="vertical-align: top;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+        );
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellTop,
+            '<table><tr><td id="id1" style="vertical-align: top;">1</td><td>2</td></tr><tr><td style="vertical-align: top;">3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    itFirefoxOnly('Simple table, AlignCellMiddle', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellMiddle,
+            '<table><tr><td id="id1" style="vertical-align: middle;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+        );
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellMiddle,
+            '<table><tr><td id="id1" style="vertical-align: middle;">1</td><td>2</td></tr><tr><td style="vertical-align: middle;">3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    itFirefoxOnly('Simple table, AlignCellBottom', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellBottom,
+            '<table><tr><td id="id1" style="vertical-align: bottom;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+        );
+        runSimpleTableTestOnId1(
+            TableOperation.AlignCellBottom,
+            '<table><tr><td id="id1" style="vertical-align: bottom;">1</td><td>2</td></tr><tr><td style="vertical-align: bottom;">3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
     it('Complex table, DeleteColumn', () => {
         runComplexTableTest(TableOperation.DeleteColumn, [
             '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
@@ -870,6 +942,80 @@ describe('VTable.edit', () => {
             '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
         ]);
+    });
+
+    itFirefoxOnly('Complex table, AlignCellCenter', () => {
+        runComplexTableTest(
+            TableOperation.AlignCellCenter,
+            [
+                '<table><tr><td id="id1" rowspan="2" style="text-align: center;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="text-align: center;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="text-align: center;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="text-align: center;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="text-align: center;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+    itFirefoxOnly('Complex table, AlignCellRight', () => {
+        runComplexTableTest(TableOperation.AlignCellRight, [
+            '<table><tr><td id="id1" rowspan="2" style="text-align: right;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2" style="text-align: right;">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3" style="text-align: right;">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2" style="text-align: right;">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2" style="text-align: right;">5</td></tr></table>',
+        ]);
+    });
+    itFirefoxOnly('Complex table, AlignCellLeft', () => {
+        runComplexTableTest(TableOperation.AlignCellLeft, [
+            '<table><tr><td id="id1" rowspan="2" style="text-align: left;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2" style="text-align: left;">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3" style="text-align: left;">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2" style="text-align: left;">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2" style="text-align: left;">5</td></tr></table>',
+        ]);
+    });
+
+    itFirefoxOnly('Complex table, AlignCellTop', () => {
+        runComplexTableTest(
+            TableOperation.AlignCellTop,
+            [
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    itFirefoxOnly('Complex table, AlignCellMiddle', () => {
+        runComplexTableTest(
+            TableOperation.AlignCellMiddle,
+            [
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
+    });
+
+    itFirefoxOnly('Complex table, AlignCellBottom', () => {
+        runComplexTableTest(
+            TableOperation.AlignCellBottom,
+            [
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+        );
     });
 });
 

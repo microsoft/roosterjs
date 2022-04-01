@@ -37,10 +37,10 @@ export default function getSelectionRangeInRegion(regionBase: RegionBase): Range
             const end = fullSelectionEnd.isAfter(regionEnd) ? regionEnd : fullSelectionEnd;
 
             return createRange(start, end);
-        } else {
-            return null;
         }
     }
+
+    return null;
 }
 
 function isRegion(regionBase: RegionBase): regionBase is Region {

@@ -61,7 +61,7 @@ export default function getRegionsFromRange(
 export function getRegionCreator(
     fullRange: Range,
     skipTags: string[]
-): (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) => Region {
+): (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) => Region | null {
     const fullSelectionStart = Position.getStart(fullRange).normalize();
     const fullSelectionEnd = Position.getEnd(fullRange).normalize();
     return (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) => {
@@ -166,7 +166,7 @@ function buildBoundaryTree(root: HTMLElement, range: Range, type: RegionType): B
  * @param started Whether we have already hit the start node
  */
 function iterateNodes(
-    creator: (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) => Region,
+    creator: (rootNode: HTMLElement, nodeBefore?: Node, nodeAfter?: Node) => Region | null,
     boundary: Boundary,
     start: Node,
     end: Node,
@@ -178,14 +178,20 @@ function iterateNodes(
     let regions: Region[] = [];
 
     if (children.length == 0) {
-        regions.push(creator(innerNode));
+        const region = creator(innerNode);
+        if (region) {
+            regions.push(region);
+        }
     } else {
         // Need to run one more time to add region after all children
         for (let i = 0; i <= children.length && !ended; i++) {
             const { outerNode, boundaries } = children[i] || {};
             const previousOuterNode = children[i - 1]?.outerNode;
             if (started) {
-                regions.push(creator(innerNode, previousOuterNode, outerNode));
+                const region = creator(innerNode, previousOuterNode, outerNode);
+                if (region) {
+                    regions.push(region);
+                }
             }
 
             boundaries?.forEach(child => {
@@ -211,7 +217,12 @@ function iterateNodes(
  * @param nodeAfter The boundary node after the region under root
  * @param skipTags Tags to skip
  */
-function areNodesValid(root: Node, nodeBefore: Node, nodeAfter: Node, skipTags: string[]) {
+function areNodesValid(
+    root: Node,
+    nodeBefore: Node | undefined,
+    nodeAfter: Node | undefined,
+    skipTags: string[]
+) {
     if (!root) {
         return false;
     } else {

@@ -13,7 +13,7 @@ import { DocumentPosition, NodeType, QueryScope } from 'roosterjs-editor-types';
 export default function queryElements(
     container: ParentNode,
     selector: string,
-    forEachCallback?: (node: HTMLElement) => any,
+    forEachCallback?: ((node: HTMLElement) => any) | null,
     scope: QueryScope = QueryScope.Body,
     range?: Range
 ): HTMLElement[] {
