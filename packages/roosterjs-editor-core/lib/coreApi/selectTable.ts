@@ -266,10 +266,7 @@ function isValidCoordinate(input: number) {
     return (!!input || input == 0) && input > -1;
 }
 
-function isMergedCell(table: HTMLTableElement, coordinates: TableSelection) {
+function isMergedCell(table: HTMLTableElement, coordinates: TableSelection): boolean {
     const { firstCell } = coordinates;
-    if (table.rows.item(firstCell.y) && table.rows.item(firstCell.y).cells.item(firstCell.x)) {
-        return false;
-    }
-    return true;
+    return !(table.rows.item(firstCell.y) && table.rows.item(firstCell.y).cells.item(firstCell.x));
 }
