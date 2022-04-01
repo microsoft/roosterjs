@@ -349,6 +349,33 @@ export default class VTable {
                 }
                 break;
 
+            case TableOperation.MergeCells:
+                for (let colIndex = firstColumn; colIndex <= lastColumn; colIndex++) {
+                    for (let rowIndex = firstRow + 1; rowIndex <= lastRow; rowIndex++) {
+                        let cell = this.getCell(firstRow, colIndex);
+                        let nextCellBelow = this.getCell(rowIndex, colIndex);
+                        if (cell.td && !cell.spanAbove && nextCellBelow.td) {
+                            moveChildNodes(
+                                cell.td,
+                                nextCellBelow.td,
+                                true /*keepExistingChildren*/
+                            );
+                            nextCellBelow.td = null;
+                            nextCellBelow.spanAbove = true;
+                        }
+                    }
+                }
+                for (let colIndex = firstColumn + 1; colIndex <= lastColumn; colIndex++) {
+                    let cell = this.getCell(firstRow, firstColumn);
+                    let nextCellRight = this.getCell(firstRow, colIndex);
+                    if (cell.td && !cell.spanLeft && nextCellRight.td) {
+                        moveChildNodes(cell.td, nextCellRight.td, true /*keepExistingChildren*/);
+                        nextCellRight.td = null;
+                        nextCellRight.spanLeft = true;
+                    }
+                }
+
+                break;
             case TableOperation.DeleteTable:
                 this.cells = null;
                 break;

@@ -58,6 +58,11 @@ export const enum TableOperation {
     MergeRight,
 
     /**
+     * Merge all selected cells
+     */
+    MergeCells,
+
+    /**
      * Split current table cell horizontally
      */
     SplitHorizontally,

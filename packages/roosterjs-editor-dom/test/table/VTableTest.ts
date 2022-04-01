@@ -560,6 +560,14 @@ describe('VTable.edit', () => {
         );
     });
 
+    it('Simple table, MergeCells', () => {
+        runSimpleTableTestOnId1(
+            TableOperation.MergeCells,
+            '<table><tr><td id="id1" colspan="2">12</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>',
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+        );
+    });
+
     it('Simple table, SplitHorizontally', () => {
         runSimpleTableTestOnId1(
             TableOperation.SplitHorizontally,
@@ -801,6 +809,20 @@ describe('VTable.edit', () => {
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
         ]);
+    });
+
+    it('Complex table, MergeCells', () => {
+        runComplexTableTest(
+            TableOperation.MergeCells,
+            [
+                '<table><tr><td id="id1" rowspan="2" colspan="3">12</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" colspan="3">12</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" colspan="3">12</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" colspan="3">12</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" colspan="3">12</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+            ],
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+        );
     });
 
     it('Complex table, SplitHorizontally', () => {
