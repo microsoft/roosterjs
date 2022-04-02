@@ -311,7 +311,7 @@ export default class VTable {
                 let colStep = operation == TableOperation.MergeLeft ? -1 : 1;
                 for (
                     let colIndex = this.col + colStep;
-                    colIndex >= 0 && colIndex < this.cells[this.col].length;
+                    colIndex >= 0 && colIndex < this.cells[this.row].length;
                     colIndex += colStep
                 ) {
                     let cell = this.getCell(this.row, colIndex);
