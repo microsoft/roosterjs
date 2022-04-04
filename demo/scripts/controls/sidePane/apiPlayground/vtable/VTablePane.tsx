@@ -154,6 +154,20 @@ const PREDEFINED_STYLES: Record<string, (color?: string, lightColor?: string) =>
             null /** bgColorOdd */,
             color /** headerRowColor */
         ),
+    CLEAR: (color, lightColor) =>
+        createTableFormat(
+            color /**topBorder */,
+            color /**bottomBorder */,
+            color /** verticalColors*/,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            false /** headerRow */,
+            false /** firstColumn */,
+            TableBorderFormat.ESPECIAL_TYPE_3 /** tableBorderFormat */,
+            lightColor /** bgColorEven */,
+            null /** bgColorOdd */,
+            color /** headerRowColor */
+        ),
 };
 
 const PREDEFINED_STYLES_KEYS = {
@@ -167,6 +181,7 @@ const PREDEFINED_STYLES_KEYS = {
     especialType1: 'ESPECIAL_TYPE_1',
     especialType2: 'ESPECIAL_TYPE_2',
     especialType3: 'ESPECIAL_TYPE_3',
+    clear: 'CLEAR',
 };
 
 const TABLE_COLORS: Record<string, string> = {
@@ -500,6 +515,13 @@ export default class VTablePane extends React.Component<ApiPaneProps, VTablePane
                                             PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.especialType3](
                                                 TABLE_COLORS.blue,
                                                 `${TABLE_COLORS.blue}20`
+                                            ),
+                                            editor
+                                        )}
+                                        {this.renderFormatTableButton(
+                                            'Clear',
+                                            PREDEFINED_STYLES[PREDEFINED_STYLES_KEYS.clear](
+                                                TABLE_COLORS.transparent
                                             ),
                                             editor
                                         )}

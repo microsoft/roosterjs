@@ -465,7 +465,7 @@ export default class VTable {
         }
     }
 
-    mergeCells(cell: VCell, nextCell: VCell, horizontally?: boolean) {
+    private mergeCells(cell: VCell, nextCell: VCell, horizontally?: boolean) {
         const checkSpans = horizontally
             ? cell.td?.rowSpan === nextCell.td?.rowSpan && !cell.spanLeft
             : cell.td?.colSpan === nextCell.td?.colSpan && !cell.spanAbove;
