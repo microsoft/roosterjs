@@ -46,13 +46,13 @@ function adjustInsertPositionForHyperLink(
     if (blockElement) {
         // Find the first <A> tag within current block which covers current selection
         // If there are more than one nested, let's handle the first one only since that is not a common scenario.
-        let anchor = queryElements(
+        let anchor: HTMLElement | null = queryElements(
             root,
             'a[href]',
             null /*forEachCallback*/,
             QueryScope.OnSelection,
             createRange(position)
-        ).filter((a: HTMLElement) => blockElement.contains(a))[0];
+        ).filter((a: HTMLElement) => blockElement!.contains(a))[0];
 
         // If this is about to insert node to an empty A tag, clear the A tag and reset position
         if (anchor && isNodeEmpty(anchor)) {
@@ -69,7 +69,7 @@ function adjustInsertPositionForHyperLink(
             (<ParentNode>(nodeToInsert as HTMLElement))?.querySelector('a[href]')
         ) {
             let normalizedPosition = position.normalize();
-            let parentNode = normalizedPosition.node.parentNode;
+            let parentNode = normalizedPosition.node.parentNode!;
             let nextNode =
                 normalizedPosition.node.nodeType == NodeType.Text
                     ? splitTextNode(
@@ -104,7 +104,7 @@ function adjustInsertPositionForStructuredNode(
     position: NodePosition,
     range: Range
 ): NodePosition {
-    let rootNodeToInsert = nodeToInsert;
+    let rootNodeToInsert: Node | null = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
         let rootNodes = toArray(rootNodeToInsert.childNodes).filter(
@@ -114,7 +114,8 @@ function adjustInsertPositionForStructuredNode(
     }
 
     let tag = getTagOfNode(rootNodeToInsert);
-    let hasBrNextToRoot = tag && getTagOfNode(rootNodeToInsert.nextSibling) == 'BR';
+    let hasBrNextToRoot =
+        tag && rootNodeToInsert && getTagOfNode(rootNodeToInsert.nextSibling) == 'BR';
     let listItem = findClosestElementAncestor(position.node, root, 'LI');
     let listNode = listItem && findClosestElementAncestor(listItem, root, 'OL,UL');
     let tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
@@ -122,24 +123,28 @@ function adjustInsertPositionForStructuredNode(
 
     if (tag == 'LI') {
         tag = listNode ? getTagOfNode(listNode) : 'UL';
-        rootNodeToInsert = wrap(rootNodeToInsert, tag);
+        rootNodeToInsert = wrap(rootNodeToInsert!, tag);
     }
 
-    if ((tag == 'OL' || tag == 'UL') && getTagOfNode(rootNodeToInsert.firstChild) == 'LI') {
-        let shouldInsertListAsText = !rootNodeToInsert.firstChild.nextSibling && !hasBrNextToRoot;
+    if (
+        (tag == 'OL' || tag == 'UL') &&
+        rootNodeToInsert &&
+        getTagOfNode(rootNodeToInsert.firstChild) == 'LI'
+    ) {
+        let shouldInsertListAsText = !rootNodeToInsert.firstChild!.nextSibling && !hasBrNextToRoot;
 
         if (hasBrNextToRoot && rootNodeToInsert.parentNode) {
-            safeRemove(rootNodeToInsert.nextSibling);
+            safeRemove(rootNodeToInsert.nextSibling!);
         }
 
         if (shouldInsertListAsText) {
-            unwrap(rootNodeToInsert.firstChild);
+            unwrap(rootNodeToInsert.firstChild!);
             unwrap(rootNodeToInsert);
         } else if (getTagOfNode(listNode) == tag) {
             unwrap(rootNodeToInsert);
             position = new Position(
-                listItem,
-                isPositionAtBeginningOf(position, listItem)
+                listItem!,
+                isPositionAtBeginningOf(position, listItem!)
                     ? PositionType.Before
                     : PositionType.After
             );
@@ -149,20 +154,21 @@ function adjustInsertPositionForStructuredNode(
         // current position is at beginning of a row, then merge these two tables
         let newTable = new VTable(<HTMLTableElement>rootNodeToInsert);
         let currentTable = new VTable(<HTMLTableCellElement>tdNode);
+
         if (
             currentTable.col == 0 &&
-            tdNode == currentTable.getCell(currentTable.row, 0).td &&
-            newTable.cells[0] &&
-            newTable.cells[0].length == currentTable.cells[0].length &&
+            tdNode == currentTable.getCell(currentTable.row || 0, 0).td &&
+            newTable.cells?.[0] &&
+            newTable.cells[0].length == currentTable.cells?.[0].length &&
             isPositionAtBeginningOf(position, tdNode)
         ) {
             if (
-                getTagOfNode(rootNodeToInsert.firstChild) == 'TBODY' &&
-                !rootNodeToInsert.firstChild.nextSibling
+                getTagOfNode(rootNodeToInsert!.firstChild) == 'TBODY' &&
+                !rootNodeToInsert!.firstChild?.nextSibling
             ) {
-                unwrap(rootNodeToInsert.firstChild);
+                unwrap(rootNodeToInsert!.firstChild!);
             }
-            unwrap(rootNodeToInsert);
+            unwrap(rootNodeToInsert!);
             position = new Position(trNode, PositionType.After);
         }
     }
