@@ -179,13 +179,16 @@ export default class VList {
         let lastList: Node;
 
         // Use a placeholder to hold the position since the root list may be moved into document fragment later
-        this.rootList.parentNode.replaceChild(placeholder, this.rootList);
+        this.rootList.parentNode!.replaceChild(placeholder, this.rootList);
 
         this.items.forEach(item => {
-            if (item.getNewListStart() && item.getNewListStart() != start) {
+            const newListStart = item.getNewListStart();
+
+            if (newListStart && newListStart != start) {
                 listStack.splice(1, listStack.length - 1);
-                start = item.getNewListStart();
+                start = newListStart;
             }
+
             item.writeBack(listStack, this.rootList);
             const topList = listStack[1];
 
@@ -207,11 +210,7 @@ export default class VList {
         });
 
         // Restore the content to the position of placeholder
-        placeholder.parentNode.replaceChild(listStack[0], placeholder);
-
-        // Set rootList to null to avoid this to be called again for the same VList, because
-        // after change the rootList may not be available any more (e.g. outdent all items).
-        this.rootList = null;
+        placeholder.parentNode!.replaceChild(listStack[0], placeholder);
     }
 
     /**
@@ -312,7 +311,7 @@ export default class VList {
 
         // Change DIV tag to SPAN. Otherwise we cannot create new list item by Enter key in Safari
         if (nodeTag == 'DIV') {
-            node = changeElementTag(<HTMLElement>node, 'LI');
+            node = changeElementTag(<HTMLElement>node, 'LI')!;
         } else if (nodeTag != 'LI') {
             node = wrap(node, 'LI');
         }
@@ -432,7 +431,7 @@ export default class VList {
 
             if (isListElement(item)) {
                 this.populateItems(item, newListTypes);
-            } else if (item.nodeType != NodeType.Text || item.nodeValue.trim() != '') {
+            } else if (item.nodeType != NodeType.Text || (item.nodeValue || '').trim() != '') {
                 this.items.push(new VListItem(item, ...newListTypes));
             }
         });
@@ -445,8 +444,8 @@ export default class VList {
 // e.g.
 // From: <ul><li>line 1</li>line 2</ul>
 // To:   <ul><li>line 1<div>line 2</div></li></ul>
-function moveChildNodesToLi(list: HTMLOListElement | HTMLUListElement) {
-    let currentItem: HTMLLIElement = null;
+function moveChildNodesToLi(list: HTMLElement) {
+    let currentItem: HTMLLIElement | null = null;
 
     toArray(list.childNodes).forEach(child => {
         if (getTagOfNode(child) == 'LI') {
@@ -463,10 +462,10 @@ function moveChildNodesToLi(list: HTMLOListElement | HTMLUListElement) {
 // e.g.
 // From: <ul><li>line 1<li>line 2</li>line 3</li></ul>
 // To:   <ul><li>line 1</li><li>line 2<div>line 3</div></li></ul>
-function moveLiToList(li: HTMLLIElement) {
+function moveLiToList(li: HTMLElement) {
     while (!isListElement(li.parentNode)) {
         splitParentNode(li, true /*splitBefore*/);
-        let furtherNodes: Node[] = toArray(li.parentNode.childNodes).slice(1);
+        let furtherNodes: Node[] = toArray(li.parentNode!.childNodes).slice(1);
 
         if (furtherNodes.length > 0) {
             if (!isBlockElement(furtherNodes[0])) {
@@ -475,6 +474,6 @@ function moveLiToList(li: HTMLLIElement) {
             furtherNodes.forEach(node => li.appendChild(node));
         }
 
-        unwrap(li.parentNode);
+        unwrap(li.parentNode!);
     }
 }

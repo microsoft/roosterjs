@@ -21,7 +21,7 @@ export interface SelectorToTypeMap {
 export default function getRootListNode<TSelector extends keyof SelectorToTypeMap>(
     region: RegionBase,
     selector: TSelector,
-    node: Node
+    node: Node | null
 ): SelectorToTypeMap[TSelector] {
     let list =
         region &&

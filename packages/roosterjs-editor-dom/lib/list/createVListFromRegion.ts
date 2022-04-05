@@ -31,7 +31,7 @@ export default function createVListFromRegion(
     region: Region,
     includeSiblingLists?: boolean,
     startNode?: Node
-): VList {
+): VList | null {
     if (!region) {
         return null;
     }
@@ -69,7 +69,7 @@ export default function createVListFromRegion(
             const newNode = createElement(
                 KnownCreateElementDataIndex.EmptyLine,
                 region.rootNode.ownerDocument
-            );
+            )!;
             region.rootNode.appendChild(newNode);
             nodes.push(newNode);
             region.fullSelectionStart = new Position(newNode, PositionType.Begin);
@@ -84,28 +84,32 @@ export default function createVListFromRegion(
         nodes = nodes.filter(node => !shouldSkipNode(node, true /*ignoreSpace*/));
     }
 
-    let vList: VList = null;
+    let vList: VList | null = null;
 
     if (nodes.length > 0) {
-        const firstNode = nodes.shift();
+        const firstNode = nodes.shift() || null;
         vList = isListElement(firstNode)
             ? new VList(firstNode)
-            : createVListFromItemNode(firstNode);
+            : firstNode
+            ? createVListFromItemNode(firstNode)
+            : null;
 
-        nodes.forEach(node => {
-            if (isListElement(node)) {
-                vList.mergeVList(new VList(node));
-            } else {
-                vList.appendItem(node, ListType.None);
-            }
-        });
+        if (vList) {
+            nodes.forEach(node => {
+                if (isListElement(node)) {
+                    vList!.mergeVList(new VList(node));
+                } else {
+                    vList!.appendItem(node, ListType.None);
+                }
+            });
+        }
     }
 
     return vList;
 }
 
 function tryIncludeSiblingNode(region: Region, nodes: Node[], isNext: boolean) {
-    let node = nodes[isNext ? nodes.length - 1 : 0];
+    let node: Node | null = nodes[isNext ? nodes.length - 1 : 0];
     node = getLeafSibling(region.rootNode, node, isNext, region.skipTags, true /*ignoreSpace*/);
     node = getRootListNode(region, ListSelector, node);
     if (isNodeInRegion(region, node) && isListElement(node)) {
@@ -129,7 +133,7 @@ function createVListFromItemNode(node: Node): VList {
     const nodeForItem = childNodes.length == 1 ? childNodes[0] : wrap(childNodes, 'SPAN');
 
     // Create a temporary OL root element for this list.
-    const listNode = node.ownerDocument.createElement('ol'); // Either OL or UL is ok here
+    const listNode = node.ownerDocument!.createElement('ol'); // Either OL or UL is ok here
     node.appendChild(listNode);
 
     // Create the VList and append items
