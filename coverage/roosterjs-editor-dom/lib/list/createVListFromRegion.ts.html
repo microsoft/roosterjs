@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>65/65</span>
+                <span class='fraction'>66/66</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.56% </span>
+                <span class="strong">91.49% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>40/41</span>
+                <span class='fraction'>43/47</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>64/64</span>
+                <span class='fraction'>65/65</span>
             </div>
         
             
@@ -203,7 +203,11 @@
 <a name='L138'></a><a href='#L138'>138</a>
 <a name='L139'></a><a href='#L139'>139</a>
 <a name='L140'></a><a href='#L140'>140</a>
-<a name='L141'></a><a href='#L141'>141</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -297,11 +301,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -376,7 +384,7 @@ export default function createVListFromRegion(
     region: Region,
     includeSiblingLists?: boolean,
     startNode?: Node
-): VList {
+): VList | null {
     if (!region) {
         return null;
     }
@@ -414,7 +422,7 @@ export default function createVListFromRegion(
             const newNode = createElement(
                 KnownCreateElementDataIndex.EmptyLine,
                 region.rootNode.ownerDocument
-            );
+            )!;
             region.rootNode.appendChild(newNode);
             nodes.push(newNode);
             region.fullSelectionStart = new Position(newNode, PositionType.Begin);
@@ -429,28 +437,32 @@ export default function createVListFromRegion(
         nodes = nodes.filter(node =&gt; !shouldSkipNode(node, true /*ignoreSpace*/));
     }
 &nbsp;
-    let vList: VList = null;
+    let vList: VList | null = null;
 &nbsp;
     if (nodes.length &gt; 0) {
-        const firstNode = nodes.shift();
+        const firstNode = nodes.shift() || <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
         vList = isListElement(firstNode)
             ? new VList(firstNode)
-            : createVListFromItemNode(firstNode);
+            : firstNode
+            ? createVListFromItemNode(firstNode)
+            : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
 &nbsp;
-        nodes.forEach(node =&gt; {
-            if (isListElement(node)) {
-                vList.mergeVList(new VList(node));
-            } else {
-                vList.appendItem(node, ListType.None);
-            }
-        });
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (vList) {
+            nodes.forEach(node =&gt; {
+                if (isListElement(node)) {
+                    vList!.mergeVList(new VList(node));
+                } else {
+                    vList!.appendItem(node, ListType.None);
+                }
+            });
+        }
     }
 &nbsp;
     return vList;
 }
 &nbsp;
 function tryIncludeSiblingNode(region: Region, nodes: Node[], isNext: boolean) {
-    let node = nodes[isNext ? nodes.length - 1 : 0];
+    let node: Node | null = nodes[isNext ? nodes.length - 1 : 0];
     node = getLeafSibling(region.rootNode, node, isNext, region.skipTags, true /*ignoreSpace*/);
     node = getRootListNode(region, ListSelector, node);
     if (isNodeInRegion(region, node) &amp;&amp; isListElement(node)) {
@@ -474,7 +486,7 @@ function createVListFromItemNode(node: Node): VList {
     const nodeForItem = childNodes.length == 1 ? childNodes[0] : wrap(childNodes, 'SPAN');
 &nbsp;
     // Create a temporary OL root element for this list.
-    const listNode = node.ownerDocument.createElement('ol'); // Either OL or UL is ok here
+    const listNode = node.ownerDocument!.createElement('ol'); // Either OL or UL is ok here
     node.appendChild(listNode);
 &nbsp;
     // Create the VList and append items
@@ -490,7 +502,7 @@ function createVListFromItemNode(node: Node): VList {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Apr 04 2022 17:06:26 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 05 2022 22:46:41 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

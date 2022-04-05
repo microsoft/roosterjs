@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.69% </span>
+                <span class="strong">96.03% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>146/151</span>
+                <span class='fraction'>145/151</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.39% </span>
+                <span class="strong">85.84% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>97/111</span>
+                <span class='fraction'>97/113</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.16% </span>
+                <span class="strong">96.45% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>137/141</span>
+                <span class='fraction'>136/141</span>
             </div>
         
             
@@ -542,8 +542,7 @@
 <a name='L477'></a><a href='#L477'>477</a>
 <a name='L478'></a><a href='#L478'>478</a>
 <a name='L479'></a><a href='#L479'>479</a>
-<a name='L480'></a><a href='#L480'>480</a>
-<a name='L481'></a><a href='#L481'>481</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L480'></a><a href='#L480'>480</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -712,9 +711,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">68x</span>
-<span class="cline-any cline-yes">68x</span>
-<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">53x</span>
@@ -728,8 +727,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-yes">114x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">114x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">114x</span>
 <span class="cline-any cline-yes">114x</span>
@@ -749,10 +751,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">114x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1193,8 +1191,8 @@ export default class VList {
      * After that, this VList becomes unavailable because we set this.rootList to null
      */
     writeBack() {
-        if (!this.rootList) {
-            throw new Error('rootList must not be null');
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.rootList) {
+<span class="cstat-no" title="statement not covered" >            throw new Error('rootList must not be null');</span>
         }
 &nbsp;
         const doc = this.rootList.ownerDocument;
@@ -1204,13 +1202,16 @@ export default class VList {
         let lastList: Node;
 &nbsp;
         // Use a placeholder to hold the position since the root list may be moved into document fragment later
-        this.rootList.parentNode.replaceChild(placeholder, this.rootList);
+        this.rootList.parentNode!.replaceChild(placeholder, this.rootList);
 &nbsp;
         this.items.forEach(item =&gt; {
-            if (item.getNewListStart() &amp;&amp; item.getNewListStart() != start) {
+            const newListStart = item.getNewListStart();
+&nbsp;
+            if (newListStart &amp;&amp; newListStart != start) {
                 listStack.splice(1, listStack.length - 1);
-                start = item.getNewListStart();
+                start = newListStart;
             }
+&nbsp;
             item.writeBack(listStack, this.rootList);
             const topList = listStack[1];
 &nbsp;
@@ -1232,11 +1233,7 @@ export default class VList {
         });
 &nbsp;
         // Restore the content to the position of placeholder
-        placeholder.parentNode.replaceChild(listStack[0], placeholder);
-&nbsp;
-        // Set rootList to null to avoid this to be called again for the same VList, because
-        // after change the rootList may not be available any more (e.g. outdent all items).
-        this.rootList = null;
+        placeholder.parentNode!.replaceChild(listStack[0], placeholder);
     }
 &nbsp;
     /**
@@ -1337,7 +1334,7 @@ export default class VList {
 &nbsp;
         // Change DIV tag to SPAN. Otherwise we cannot create new list item by Enter key in Safari
         if (nodeTag == 'DIV') {
-            node = changeElementTag(&lt;HTMLElement&gt;node, 'LI');
+            node = changeElementTag(&lt;HTMLElement&gt;node, 'LI')!;
         } else if (nodeTag != 'LI') {
             node = wrap(node, 'LI');
         }
@@ -1457,7 +1454,7 @@ export default class VList {
 &nbsp;
             if (isListElement(item)) {
                 this.populateItems(item, newListTypes);
-            } else if (item.nodeType != NodeType.Text || item.nodeValue.trim() != '') {
+            } else if (item.nodeType != NodeType.Text || (item.nodeValue || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.trim() != '') {
                 this.items.push(new VListItem(item, ...newListTypes));
             }
         });
@@ -1470,8 +1467,8 @@ export default class VList {
 // e.g.
 // From: &lt;ul&gt;&lt;li&gt;line 1&lt;/li&gt;line 2&lt;/ul&gt;
 // To:   &lt;ul&gt;&lt;li&gt;line 1&lt;div&gt;line 2&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;
-function moveChildNodesToLi(list: HTMLOListElement | HTMLUListElement) {
-    let currentItem: HTMLLIElement = null;
+function moveChildNodesToLi(list: HTMLElement) {
+    let currentItem: HTMLLIElement | null = null;
 &nbsp;
     toArray(list.childNodes).forEach(child =&gt; {
         if (getTagOfNode(child) == 'LI') {
@@ -1488,10 +1485,10 @@ function moveChildNodesToLi(list: HTMLOListElement | HTMLUListElement) {
 // e.g.
 // From: &lt;ul&gt;&lt;li&gt;line 1&lt;li&gt;line 2&lt;/li&gt;line 3&lt;/li&gt;&lt;/ul&gt;
 // To:   &lt;ul&gt;&lt;li&gt;line 1&lt;/li&gt;&lt;li&gt;line 2&lt;div&gt;line 3&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;
-function moveLiToList(li: HTMLLIElement) {
+function moveLiToList(li: HTMLElement) {
     while (!isListElement(li.parentNode)) {
         splitParentNode(li, true /*splitBefore*/);
-        let furtherNodes: Node[] = toArray(li.parentNode.childNodes).slice(1);
+        let furtherNodes: Node[] = toArray(li.parentNode!.childNodes).slice(1);
 &nbsp;
         if (furtherNodes.length &gt; 0) {
             if (!isBlockElement(furtherNodes[0])) {
@@ -1500,7 +1497,7 @@ function moveLiToList(li: HTMLLIElement) {
             furtherNodes.forEach(node =&gt; li.appendChild(node));
         }
 &nbsp;
-        unwrap(li.parentNode);
+        unwrap(li.parentNode!);
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -1510,7 +1507,7 @@ function moveLiToList(li: HTMLLIElement) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Apr 04 2022 17:06:26 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 05 2022 22:46:41 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
