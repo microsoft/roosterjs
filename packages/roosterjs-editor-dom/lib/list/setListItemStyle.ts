@@ -34,13 +34,13 @@ export default function setListItemStyle(element: HTMLLIElement, styles: string[
 function getInlineChildElementsStyle(element: HTMLElement) {
     const result: Record<string, string>[] = [];
     const contentTraverser = ContentTraverser.createBodyTraverser(element);
-    let currentInlineElement: InlineElement;
+    let currentInlineElement: InlineElement | null = null;
 
     while (contentTraverser.currentInlineElement != currentInlineElement) {
         currentInlineElement = contentTraverser.currentInlineElement;
-        let currentNode = currentInlineElement.getContainerNode();
+        let currentNode = currentInlineElement?.getContainerNode() || null;
 
-        currentNode = findClosestElementAncestor(currentNode);
+        currentNode = currentNode ? findClosestElementAncestor(currentNode) : null;
         if (safeInstanceOf(currentNode, 'HTMLElement')) {
             let childStyle = getStyles(currentNode);
             if (childStyle) {
