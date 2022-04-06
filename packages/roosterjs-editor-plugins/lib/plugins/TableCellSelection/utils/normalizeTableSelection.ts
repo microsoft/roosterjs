@@ -41,8 +41,6 @@ export default function normalizeTableSelection(vTable: VTable): TableSelection 
         if (coord.x >= rowsCells) {
             coord.x = rowsCells - 1;
         }
-
-        return coord;
     };
 
     fixCoordinates(newFirst);
