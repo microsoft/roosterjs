@@ -78,7 +78,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
     private onCutCopy(event: Event, isCut: boolean) {
         const selection = this.editor.getSelectionRangeEx();
-
         if (selection && !selection.areAllCollapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
@@ -168,7 +167,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         range: Range | SelectionRangeEx,
         isCopy: boolean
     ) {
-        if (!!(<SelectionRangeEx>range)?.type) {
+        if (!!(<SelectionRangeEx>range)?.type || (<SelectionRangeEx>range).type == 0) {
             const selection = <SelectionRangeEx>range;
             switch (selection.type) {
                 case SelectionRangeTypes.TableSelection:
