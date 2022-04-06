@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.46% </span>
+                <span class="strong">88.68% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>46/52</span>
+                <span class='fraction'>47/53</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.41% </span>
+                <span class="strong">77.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>27/34</span>
+                <span class='fraction'>31/40</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.23% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>41/47</span>
+                <span class='fraction'>42/48</span>
             </div>
         
             
@@ -179,7 +179,9 @@
 <a name='L114'></a><a href='#L114'>114</a>
 <a name='L115'></a><a href='#L115'>115</a>
 <a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -249,6 +251,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
@@ -312,7 +316,7 @@ import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
  * @param range The range to delete
  */
 export default function deleteSelectedContent(root: HTMLElement, range: Range) {
-    let nodeBefore: Node = null;
+    let nodeBefore: Node | null = null;
 &nbsp;
     // 1. TABLE and TR node in selected should be deleted. It is possible we don't detect them from step 2
     // since table cells will fall in to different regions
@@ -363,9 +367,11 @@ export default function deleteSelectedContent(root: HTMLElement, range: Range) {
     nodesToDelete.forEach(node =&gt; node.parentNode?.removeChild(node));
 &nbsp;
     // 4. Merge lines for each region, so that after we don't see extra line breaks
-    nodesPairToMerge.forEach(nodes =&gt;
-        mergeBlocksInRegion(nodes.region, nodes.beforeStart, nodes.afterEnd)
-    );
+    nodesPairToMerge.forEach(nodes =&gt; {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (nodes) {
+            mergeBlocksInRegion(nodes.region, nodes.beforeStart, nodes.afterEnd);
+        }
+    });
 &nbsp;
     return nodeBefore &amp;&amp; new Position(nodeBefore, PositionType.End);
 }
@@ -375,8 +381,8 @@ function ensureBeforeAndAfter(node: Node, offset: number, isStart: boolean) {
         const newNode = splitTextNode(node, offset, isStart);
         return isStart ? [newNode, node] : [node, newNode];
     } else {
-        let nodeBefore: Node = node.childNodes[offset - 1];
-        let nodeAfter: Node = node.childNodes[offset];
+        let nodeBefore: Node | null = node.childNodes[offset - 1];
+        let nodeAfter: Node | null = node.childNodes[offset];
 &nbsp;
         // Condition 1: node child nodes
         // ("I" means cursor; "o" means a DOM node, "[ ]" means a parent node)
@@ -396,8 +402,8 @@ function ensureBeforeAndAfter(node: Node, offset: number, isStart: boolean) {
         // [ o I ]  or [ I o]
         // need to add empty text node to convert to condition 3
         <span class="missing-if-branch" title="else path not taken" >E</span>if ((nodeBefore || nodeAfter) &amp;&amp; (!nodeBefore || <span class="branch-3 cbranch-no" title="branch not covered" >!nodeAfter)</span>) {
-            const emptyNode = node.ownerDocument.createTextNode('');
-            (nodeBefore || nodeAfter).parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>nsertBefore(emptyNode, nodeAfter);
+            const emptyNode = node.ownerDocument!.createTextNode('');
+            (nodeBefore || nodeAfter)<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>arentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>nsertBefore(emptyNode, nodeAfter);
             <span class="missing-if-branch" title="if path not taken" >I</span>if (nodeBefore) {
 <span class="cstat-no" title="statement not covered" >                nodeAfter = emptyNode;</span>
             } else {
@@ -408,7 +414,7 @@ function ensureBeforeAndAfter(node: Node, offset: number, isStart: boolean) {
         // Condition 3: Both nodeBefore and nodeAfter are not null
         // [o I o]
         // return the nodes
-        return [nodeBefore, nodeAfter];
+        return [nodeBefore!, nodeAfter!];
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -418,7 +424,7 @@ function ensureBeforeAndAfter(node: Node, offset: number, isStart: boolean) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Apr 06 2022 16:02:40 GMT+0000 (Coordinated Universal Time)
+                at Wed Apr 06 2022 16:34:11 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
