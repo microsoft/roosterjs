@@ -9,7 +9,7 @@ import { VTable } from 'roosterjs-editor-dom';
  * and the last cell always going to be last selected in the table.
  */
 export default function normalizeTableSelection(vTable: VTable): TableSelection {
-    let { firstCell, lastCell } = vTable?.selection || {};
+    const { firstCell, lastCell } = vTable?.selection || {};
     if (!vTable || !vTable.selection || !firstCell || !lastCell) {
         return null;
     }
