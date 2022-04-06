@@ -1,25 +1,8 @@
 {
     "compilerOptions": {
-        "strict": false
+        "strict": true
     },
     "extends": "../tsconfig.json",
-    "references": [
-        { "path": "../roosterjs-editor-types/tsconfig.child.json" },
-        { "path": "./lib/blockElements/tsconfig.child.json" },
-        { "path": "./lib/clipboard/tsconfig.child.json" },
-        { "path": "./lib/contentTraverser/tsconfig.child.json" },
-        { "path": "./lib/edit/tsconfig.child.json" },
-        { "path": "./lib/entity/tsconfig.child.json" },
-        { "path": "./lib/event/tsconfig.child.json" },
-        { "path": "./lib/htmlSanitizer/tsconfig.child.json" },
-        { "path": "./lib/inlineElements/tsconfig.child.json" },
-        { "path": "./lib/list/tsconfig.child.json" },
-        { "path": "./lib/region/tsconfig.child.json" },
-        { "path": "./lib/selection/tsconfig.child.json" },
-        { "path": "./lib/snapshots/tsconfig.child.json" },
-        { "path": "./lib/style/tsconfig.child.json" },
-        { "path": "./lib/table/tsconfig.child.json" },
-        { "path": "./lib/utils/tsconfig.child.json" }
-    ],
-    "include": ["./lib/index.ts"]
+    "include": ["./lib/**/*.ts"],
+    "references": [{ "path": "../roosterjs-editor-types/tsconfig.child.json" }]
 }
