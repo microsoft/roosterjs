@@ -113,6 +113,7 @@ export {
 } from './interface/ContentMetadata';
 export { default as Snapshot } from './interface/Snapshot';
 export { default as TableFormat } from './interface/TableFormat';
+export { default as TableResizeOptions } from './interface/TableResizeOptions';
 export { default as TableSelection } from './interface/TableSelection';
 export { default as Coordinates } from './interface/Coordinates';
 export { default as HtmlSanitizerOptions } from './interface/HtmlSanitizerOptions';

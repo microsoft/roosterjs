@@ -3,7 +3,13 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { ChangeSource, IEditor, NodePosition, TableSelection } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    IEditor,
+    NodePosition,
+    TableResizeOptions,
+    TableSelection,
+} from 'roosterjs-editor-types';
 import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
 
 const INSERTER_HOVER_OFFSET = 5;
@@ -59,17 +65,24 @@ export default class TableEditor {
     constructor(
         private editor: IEditor,
         public readonly table: HTMLTableElement,
-        private onChanged: () => void
+        private onChanged: () => void,
+        private options: TableResizeOptions
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
             table,
+            this.options.zIndex,
             editor.getZoomScale(),
             this.isRTL,
             this.onStartTableResize,
             this.onFinishEditing
         );
-        this.tableSelector = createTableSelector(table, editor.getZoomScale(), this.onSelect);
+        this.tableSelector = createTableSelector(
+            table,
+            this.options.zIndex,
+            editor.getZoomScale(),
+            this.onSelect
+        );
     }
 
     dispose() {
@@ -140,6 +153,7 @@ export default class TableEditor {
             this.horizontalResizer = createCellResizer(
                 td,
                 zoomScale,
+                this.options.zIndex,
                 this.isRTL,
                 true /*isHorizontal*/,
                 this.onStartCellResize,
@@ -148,6 +162,7 @@ export default class TableEditor {
             this.verticalResizer = createCellResizer(
                 td,
                 zoomScale,
+                this.options.zIndex,
                 this.isRTL,
                 false /*isHorizontal*/,
                 this.onStartCellResize,
@@ -166,6 +181,7 @@ export default class TableEditor {
             const newInserter = createTableInserter(
                 this.editor,
                 td,
+                this.options.zIndex,
                 this.isRTL,
                 isHorizontal,
                 this.onInserted

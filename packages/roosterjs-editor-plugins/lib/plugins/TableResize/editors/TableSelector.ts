@@ -11,6 +11,7 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
  */
 export default function createTableSelector(
     table: HTMLTableElement,
+    zIndex: number,
     zoomScale: number,
     onFinishDragging: (table: HTMLTableElement) => void
 ): TableEditorFeature {
@@ -23,6 +24,11 @@ export default function createTableSelector(
     div.id = TABLE_SELECTOR_ID;
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
+
+    if (zIndex !== undefined) {
+        div.style.zIndex = zIndex.toString();
+    }
+
     document.body.appendChild(div);
 
     const context: DragAndDropContext = {

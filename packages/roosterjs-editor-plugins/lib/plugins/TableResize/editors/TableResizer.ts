@@ -12,6 +12,7 @@ const MIN_CELL_HEIGHT = 20;
  */
 export default function createTableResizer(
     table: HTMLTableElement,
+    zIndex: number,
     zoomScale: number,
     isRTL: boolean,
     onStart: () => void,
@@ -27,6 +28,11 @@ export default function createTableResizer(
 
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
+
+    if (zIndex !== undefined) {
+        div.style.zIndex = zIndex.toString();
+    }
+
     document.body.appendChild(div);
 
     const context: DragAndDropContext = {

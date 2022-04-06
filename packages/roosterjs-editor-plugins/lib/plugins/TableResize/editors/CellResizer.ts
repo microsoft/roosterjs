@@ -13,6 +13,7 @@ const MIN_CELL_WIDTH = 30;
 export default function createCellResizer(
     td: HTMLTableCellElement,
     zoomScale: number,
+    zIndex: number,
     isRTL: boolean,
     isHorizontal: boolean,
     onStart: () => void,
@@ -25,6 +26,10 @@ export default function createCellResizer(
             : KnownCreateElementDataIndex.TableVerticalResizer,
         document
     ) as HTMLDivElement;
+
+    if (zIndex !== undefined) {
+        div.style.zIndex = zIndex.toString();
+    }
 
     document.body.appendChild(div);
 

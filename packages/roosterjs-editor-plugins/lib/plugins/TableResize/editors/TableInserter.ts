@@ -14,6 +14,7 @@ const INSERTER_BORDER_SIZE = 1;
 export default function createTableInserter(
     editor: IEditor,
     td: HTMLTableCellElement,
+    zIndex: number,
     isRTL: boolean,
     isHorizontal: boolean,
     onInsert: (table: HTMLTableElement) => void
@@ -34,6 +35,10 @@ export default function createTableInserter(
             ),
             document
         ) as HTMLDivElement;
+
+        if (zIndex !== undefined) {
+            div.style.zIndex = zIndex.toString();
+        }
 
         if (isHorizontal) {
             div.style.left = `${

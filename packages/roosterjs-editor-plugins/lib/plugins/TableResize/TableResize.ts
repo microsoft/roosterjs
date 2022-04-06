@@ -1,5 +1,12 @@
 import TableEditor from './editors/TableEditor';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType, Rect } from 'roosterjs-editor-types';
+import {
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    Rect,
+    TableResizeOptions,
+} from 'roosterjs-editor-types';
 import { normalizeRect } from 'roosterjs-editor-dom';
 
 const TABLE_RESIZER_LENGTH = 12;
@@ -9,9 +16,14 @@ const TABLE_RESIZER_LENGTH = 12;
  */
 export default class TableResize implements EditorPlugin {
     private editor: IEditor;
+    private options: TableResizeOptions;
     private onMouseMoveDisposer: () => void;
     private tableRectMap: { table: HTMLTableElement; rect: Rect }[] = null;
     private tableEditor: TableEditor;
+
+    constructor(options?: TableResizeOptions) {
+        this.options = options || {};
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -26,7 +38,9 @@ export default class TableResize implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.onMouseMoveDisposer = this.editor.addDomEventHandler({ mousemove: this.onMouseMove });
+        this.onMouseMoveDisposer = this.editor.addDomEventHandler({
+            mousemove: this.onMouseMove,
+        });
     }
 
     /**
@@ -92,7 +106,12 @@ export default class TableResize implements EditorPlugin {
         }
 
         if (!this.tableEditor && table) {
-            this.tableEditor = new TableEditor(this.editor, table, this.invalidateTableRects);
+            this.tableEditor = new TableEditor(
+                this.editor,
+                table,
+                this.invalidateTableRects,
+                this.options
+            );
         }
     }
 
