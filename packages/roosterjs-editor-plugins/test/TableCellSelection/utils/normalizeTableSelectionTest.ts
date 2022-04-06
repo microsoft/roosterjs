@@ -62,32 +62,6 @@ describe('normalize table selection |', () => {
         runTest(null, null);
     });
 
-    it('Normalize when provided out of bounds of a table 1', () => {
-        runTest(
-            <TableSelection>{
-                firstCell: { x: 0, y: 0 },
-                lastCell: { x: 5, y: 5 },
-            },
-            <TableSelection>{
-                firstCell: { x: 0, y: 0 },
-                lastCell: { x: 1, y: 1 },
-            }
-        );
-    });
-
-    it('Normalize when provided out of bounds of a table 2', () => {
-        runTest(
-            <TableSelection>{
-                firstCell: { x: -5, y: -5 },
-                lastCell: { x: 5, y: 5 },
-            },
-            <TableSelection>{
-                firstCell: { x: 0, y: 0 },
-                lastCell: { x: 1, y: 1 },
-            }
-        );
-    });
-
     it('Normalize 1', () => {
         runTest(
             <TableSelection>{
