@@ -114,6 +114,19 @@ describe('normalize table selection |', () => {
         );
     });
 
+    it('Normalize 2', () => {
+        runTest(
+            <TableSelection>{
+                firstCell: { x: null, y: null },
+                lastCell: { x: 0, y: 0 },
+            },
+            <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 0, y: 0 },
+            }
+        );
+    });
+
     it('VTable is null', () => {
         const vTable = <VTable>null;
         expect(normalizeTableSelection(vTable)).toEqual(null);
