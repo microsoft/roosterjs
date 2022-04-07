@@ -13,7 +13,6 @@
         "preserveConstEnums": false,
         "noUnusedLocals": true,
         "baseUrl": ".",
-        "allowJs": false,
         "paths": {
             "*": ["*", "../dist/*"]
         },
