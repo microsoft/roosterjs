@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.04% </span>
+                <span class="strong">80.94% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>295/364</span>
+                <span class='fraction'>293/362</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.09% </span>
+                <span class="strong">80.98% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>283/349</span>
+                <span class='fraction'>281/347</span>
             </div>
         
             
@@ -825,7 +825,14 @@
 <a name='L760'></a><a href='#L760'>760</a>
 <a name='L761'></a><a href='#L761'>761</a>
 <a name='L762'></a><a href='#L762'>762</a>
-<a name='L763'></a><a href='#L763'>763</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L763'></a><a href='#L763'>763</a>
+<a name='L764'></a><a href='#L764'>764</a>
+<a name='L765'></a><a href='#L765'>765</a>
+<a name='L766'></a><a href='#L766'>766</a>
+<a name='L767'></a><a href='#L767'>767</a>
+<a name='L768'></a><a href='#L768'>768</a>
+<a name='L769'></a><a href='#L769'>769</a>
+<a name='L770'></a><a href='#L770'>770</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1084,7 +1091,9 @@
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1325,7 +1334,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1335,6 +1346,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -1845,8 +1859,10 @@ export default class TableCellSelection implements EditorPlugin {
 &nbsp;
         updateSelection(this.editor, this.firstTarget, 0);
         this.vTable = this.vTable || <span class="branch-1 cbranch-no" title="branch not covered" >new VTable(this.firstTable as HTMLTableElement);</span>
-        this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget as Element);
-        this.tableRange.lastCell = this.getNextTD(event);
+        this.tableRange = {
+            firstCell: getCellCoordinates(this.vTable, this.firstTarget as Element),
+            lastCell: this.getNextTD(event),
+        };
 &nbsp;
         if (
             !this.tableRange.lastCell ||
@@ -2086,8 +2102,10 @@ export default class TableCellSelection implements EditorPlugin {
                 this.tableSelection = true;
 &nbsp;
                 this.vTable = this.vTable || new VTable(this.firstTable);
-                this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget);
-                this.tableRange.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
+                this.tableRange = {
+                    firstCell: getCellCoordinates(this.vTable, this.firstTarget),
+                    lastCell: getCellCoordinates(this.vTable, this.lastTarget),
+                };
                 this.vTable.selection = this.tableRange;
                 this.selectTable();
             }
@@ -2095,8 +2113,11 @@ export default class TableCellSelection implements EditorPlugin {
             event.preventDefault();
         } else if (this.lastTarget == this.firstTarget &amp;&amp; this.tableSelection) {
             this.vTable = new VTable(this.firstTable);
-            this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget);
-            this.tableRange.lastCell = this.tableRange.firstCell;
+            const cell = getCellCoordinates(this.vTable, this.firstTarget);
+            this.tableRange = {
+                firstCell: cell,
+                lastCell: cell,
+            };
 &nbsp;
             this.vTable.selection = this.tableRange;
             this.selectTable();
@@ -2356,7 +2377,7 @@ function getTableAtCursor(editor: IEditor, node: Node | EventTarget) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Apr 07 2022 23:44:02 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 12 2022 17:27:17 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
