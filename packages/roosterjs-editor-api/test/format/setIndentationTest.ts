@@ -41,7 +41,7 @@ describe('setIndentation()', () => {
                 editor.select(range);
             },
             Indentation.Increase,
-            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol style="list-style-position: inside;"><li><span id="test">Text</span></li></ol></blockquote></div>'
+            '<div><blockquote style="margin-top:0;margin-bottom:0"><ol><li><span id="test">Text</span></li></ol></blockquote></div>'
         );
     });
 
