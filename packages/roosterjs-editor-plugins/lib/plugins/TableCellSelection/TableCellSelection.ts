@@ -256,8 +256,10 @@ export default class TableCellSelection implements EditorPlugin {
 
         updateSelection(this.editor, this.firstTarget, 0);
         this.vTable = this.vTable || new VTable(this.firstTable as HTMLTableElement);
-        this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget as Element);
-        this.tableRange.lastCell = this.getNextTD(event);
+        this.tableRange = {
+            firstCell: getCellCoordinates(this.vTable, this.firstTarget as Element),
+            lastCell: this.getNextTD(event),
+        };
 
         if (
             !this.tableRange.lastCell ||
