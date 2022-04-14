@@ -1,7 +1,7 @@
 /**
  * Update mode for UpdateContentPlugins
  */
-export const enum UpdateMode {
+export enum UpdateMode {
     /**
      * Force update, triggered from UpdateContentPlugin.forceUpdate()
      */

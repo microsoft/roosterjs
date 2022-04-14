@@ -1,7 +1,7 @@
 /**
  * Define possible operations to an entity
  */
-export const enum EntityOperation {
+export enum EntityOperation {
     /**
      * Notify plugins that there is a new plugin was added into editor.
      * Plugin can handle this event to entity hydration.

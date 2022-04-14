@@ -2,7 +2,7 @@
  * The enum used for increase or decrease indentation of a block
  * Used by setIndentation API
  */
-export const enum Indentation {
+export enum Indentation {
     /**
      * Increase indentation
      */

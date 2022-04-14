@@ -4,7 +4,7 @@ const WHITE = '#ffffff';
 const GRAY = '#333333';
 const BLACK = '#000000';
 const TRANSPARENT = 'transparent';
-const enum ColorTones {
+enum ColorTones {
     BRIGHT,
     DARK,
     NONE,

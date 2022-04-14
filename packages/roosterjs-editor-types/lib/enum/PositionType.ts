@@ -1,7 +1,7 @@
 /**
  * Represent the type of a position
  */
-export const enum PositionType {
+export enum PositionType {
     /**
      * At the beginning of a node
      */

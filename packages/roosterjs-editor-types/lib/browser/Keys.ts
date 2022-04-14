@@ -1,7 +1,7 @@
 /**
  * Key numbers common used keys
  */
-export const enum Keys {
+export enum Keys {
     NULL = 0,
     BACKSPACE = 8,
     TAB = 9,

@@ -1,7 +1,7 @@
 /**
  * enum for setting block alignment, used by setAlignment API
  */
-export const enum Alignment {
+export enum Alignment {
     /**
      * Align left
      */

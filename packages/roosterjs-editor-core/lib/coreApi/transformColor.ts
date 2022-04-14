@@ -6,7 +6,7 @@ import {
     TransformColor,
 } from 'roosterjs-editor-types';
 
-const enum ColorAttributeEnum {
+enum ColorAttributeEnum {
     CssColor = 0,
     HtmlColor = 1,
     CssDataSet = 2,

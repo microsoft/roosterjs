@@ -1,7 +1,7 @@
 /**
  * Represents the strategy to clear the format of the current editor selection
  */
-export const enum ClearFormatMode {
+export enum ClearFormatMode {
     /**
      * Inline format. Remove text format.
      */

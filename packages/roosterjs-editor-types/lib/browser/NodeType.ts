@@ -3,7 +3,7 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
  * Values not listed here are deprecated.
  */
-export const enum NodeType {
+export enum NodeType {
     /**
      * An Element node such as &lt;p&gt; or &lt;div&gt;.
      */

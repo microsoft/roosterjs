@@ -1,7 +1,7 @@
 /**
  * Operations used by editTable() API
  */
-export const enum TableOperation {
+export enum TableOperation {
     /**
      * Insert a row above current row
      */

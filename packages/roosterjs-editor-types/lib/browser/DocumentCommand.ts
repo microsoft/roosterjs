@@ -2,7 +2,7 @@
  * Command strings for Document.execCommand() API
  * https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
  */
-export const enum DocumentCommand {
+export enum DocumentCommand {
     /**
      * Changes the browser auto-link behavior (Internet Explorer only)
      */

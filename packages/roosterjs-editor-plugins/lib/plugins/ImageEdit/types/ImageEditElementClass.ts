@@ -2,7 +2,7 @@
  * @internal
  * CSS class names for image editing elements
  */
-export const enum ImageEditElementClass {
+export enum ImageEditElementClass {
     /**
      * CSS class name for resize handle
      */

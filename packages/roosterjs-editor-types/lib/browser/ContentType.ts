@@ -1,7 +1,7 @@
 /**
  * Prefix of content types
  */
-export const enum ContentTypePrefix {
+export enum ContentTypePrefix {
     /**
      * Text type prefix
      */
@@ -16,7 +16,7 @@ export const enum ContentTypePrefix {
 /**
  * Known content types
  */
-export const enum ContentType {
+export enum ContentType {
     /**
      * Plain text content type
      */

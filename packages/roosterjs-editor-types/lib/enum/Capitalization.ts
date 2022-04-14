@@ -2,7 +2,7 @@
  * The enum used for controlling the capitalization of text.
  * Used by changeCapitalization API
  */
-export const enum Capitalization {
+export enum Capitalization {
     /**
      * Transforms the first character after punctuation mark followed by space
      * to uppercase and the rest of characters to lowercase.

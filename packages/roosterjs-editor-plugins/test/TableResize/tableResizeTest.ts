@@ -18,7 +18,7 @@ type Position = {
     y: number;
 };
 
-const enum ResizeState {
+enum ResizeState {
     None,
     Horizontal,
     Vertical,

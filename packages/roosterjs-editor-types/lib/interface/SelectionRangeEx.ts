@@ -43,7 +43,7 @@ export interface NormalSelectionRange extends SelectionRangeExBase<SelectionRang
 /**
  * Types of Selection Ranges that the SelectionRangeEx can return
  */
-export const enum SelectionRangeTypes {
+export enum SelectionRangeTypes {
     /**
      * Normal selection range provided by browser.
      */

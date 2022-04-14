@@ -1,7 +1,7 @@
 /**
  * Represents a mode number to indicate what kind of content to retrieve when call Editor.getContent()
  */
-export const enum GetContentMode {
+export enum GetContentMode {
     /**
      * The clean content without any temporary content only for editor.
      * This is the default value. Call to Editor.getContent() with trigger an ExtractContentWithDom event

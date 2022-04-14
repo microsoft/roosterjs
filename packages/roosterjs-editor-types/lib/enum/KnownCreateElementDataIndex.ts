@@ -1,7 +1,7 @@
 /**
  * Index of known CreateElementData used by createElement function
  */
-export const enum KnownCreateElementDataIndex {
+export enum KnownCreateElementDataIndex {
     /**
      * Set a none value to help createElement function ignore falsy value
      */

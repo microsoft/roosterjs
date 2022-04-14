@@ -1,7 +1,7 @@
 /**
  * Table format border
  */
-export const enum TableBorderFormat {
+export enum TableBorderFormat {
     /**
      * All border of the table are displayed
      *  __ __ __

@@ -16,7 +16,7 @@ const ALL_KEYS = [...ROTATE_CROP_KEYS, ...RESIZE_KEYS];
  * State of an edit info object for image editing.
  * It is returned by checkEditInfoState() function
  */
-export const enum ImageEditInfoState {
+export enum ImageEditInfoState {
     /**
      * Invalid edit info. It means the given edit info object is either null,
      * or not all its member are of correct type

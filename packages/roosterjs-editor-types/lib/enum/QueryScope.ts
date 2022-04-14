@@ -1,7 +1,7 @@
 /**
  * Query scope for queryElements() API
  */
-export const enum QueryScope {
+export enum QueryScope {
     /**
      * Query from the whole body of root node. This is default value.
      */

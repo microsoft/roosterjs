@@ -10,7 +10,7 @@ export interface ColorPickerProps {
     className?: string;
 }
 
-const enum Keys {
+enum Keys {
     PageUp = 33,
     PageDown = 34,
     End = 35,
