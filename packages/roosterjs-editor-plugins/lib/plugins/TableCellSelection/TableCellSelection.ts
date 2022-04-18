@@ -256,8 +256,10 @@ export default class TableCellSelection implements EditorPlugin {
 
         updateSelection(this.editor, this.firstTarget, 0);
         this.vTable = this.vTable || new VTable(this.firstTable as HTMLTableElement);
-        this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget as Element);
-        this.tableRange.lastCell = this.getNextTD(event);
+        this.tableRange = {
+            firstCell: getCellCoordinates(this.vTable, this.firstTarget as Element),
+            lastCell: this.getNextTD(event),
+        };
 
         if (
             !this.tableRange.lastCell ||
@@ -497,8 +499,10 @@ export default class TableCellSelection implements EditorPlugin {
                 this.tableSelection = true;
 
                 this.vTable = this.vTable || new VTable(this.firstTable);
-                this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget);
-                this.tableRange.lastCell = getCellCoordinates(this.vTable, this.lastTarget);
+                this.tableRange = {
+                    firstCell: getCellCoordinates(this.vTable, this.firstTarget),
+                    lastCell: getCellCoordinates(this.vTable, this.lastTarget),
+                };
                 this.vTable.selection = this.tableRange;
                 this.selectTable();
             }
@@ -506,8 +510,11 @@ export default class TableCellSelection implements EditorPlugin {
             event.preventDefault();
         } else if (this.lastTarget == this.firstTarget && this.tableSelection) {
             this.vTable = new VTable(this.firstTable);
-            this.tableRange.firstCell = getCellCoordinates(this.vTable, this.firstTarget);
-            this.tableRange.lastCell = this.tableRange.firstCell;
+            const cell = getCellCoordinates(this.vTable, this.firstTarget);
+            this.tableRange = {
+                firstCell: cell,
+                lastCell: cell,
+            };
 
             this.vTable.selection = this.tableRange;
             this.selectTable();

@@ -27,7 +27,7 @@ export default class VListItem {
     private listTypes: ListType[];
     private node: HTMLLIElement;
     private dummy: boolean;
-    private newListStart: number = undefined;
+    private newListStart: number | undefined = undefined;
 
     /**
      * Construct a new instance of VListItem class
@@ -232,7 +232,7 @@ export default class VListItem {
 
         // 3. Add current node into deepest list element
         listStack[listStack.length - 1].appendChild(this.node);
-        this.node.style.display = this.dummy ? 'block' : null;
+        this.node.style.setProperty('display', this.dummy ? 'block' : null);
 
         // 4. Inherit styles of the child element to the li, so we are able to apply the styles to the ::marker
         if (this.listTypes.length > 1) {
@@ -261,7 +261,7 @@ function createListElement(
     nextLevel: number,
     originalRoot?: HTMLOListElement | HTMLUListElement
 ): HTMLOListElement | HTMLUListElement {
-    const doc = newRoot.ownerDocument;
+    const doc = newRoot.ownerDocument!;
     let result: HTMLOListElement | HTMLUListElement;
 
     // Try to reuse the existing root element
@@ -286,7 +286,10 @@ function createListElement(
     }
 
     if (listType == ListType.Ordered && nextLevel > 1) {
-        result.style.listStyleType = orderListStyles[(nextLevel - 1) % orderListStyles.length];
+        result.style.setProperty(
+            'list-style-type',
+            orderListStyles[(nextLevel - 1) % orderListStyles.length]
+        );
     }
 
     return result;

@@ -58,8 +58,6 @@ export default function setIndentation(editor: IEditor, indentation: Indentation
                         ExperimentalFeatures.TabKeyTextFeatures
                     );
 
-                    vList.rootList.style.listStylePosition = 'inside';
-
                     if (
                         isTabKeyTextFeaturesEnabled &&
                         isFirstItem(vList, startNode) &&

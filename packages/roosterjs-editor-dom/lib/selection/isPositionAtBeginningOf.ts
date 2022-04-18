@@ -10,7 +10,7 @@ import { NodePosition } from 'roosterjs-editor-types';
  * @param targetNode The node to check
  * @returns True if position is at beginning of the node, otherwise false
  */
-export default function isPositionAtBeginningOf(position: NodePosition, targetNode: Node) {
+export default function isPositionAtBeginningOf(position: NodePosition, targetNode: Node | null) {
     if (position) {
         position = position.normalize();
         let node: Node | null = position.node;
