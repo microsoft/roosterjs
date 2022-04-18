@@ -16,7 +16,7 @@ function normalize() {
     const knownCustomizedPackages = {};
 
     allPackages.forEach(packageName => {
-        const packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
+        const [packageJson] = readPackageJson(packageName, true /*readFromSourceFolder*/);
 
         Object.keys(packageJson.dependencies).forEach(dep => {
             if (packageJson.dependencies[dep]) {
