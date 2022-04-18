@@ -22,7 +22,9 @@ export default class TableResize implements EditorPlugin {
 
     /**
      * Construct a new instance of TableResize plugin
-     * @param options
+     * @param onShowHelperElement An optional callback to allow customize helper element of table resizing.
+     * To customize the helper element, add this callback and change the attributes of elementData then it
+     * will be picked up by TableResize code
      */
     constructor(
         private onShowHelperElement?: (
