@@ -16,6 +16,10 @@ const MSO_COMMENT_CONTINUATION = 'mso-comment-continuation';
 const MSO_ELEMENT = 'mso-element';
 const MSO_ELEMENT_COMMENT_LIST = 'comment-list';
 
+/**
+ * @internal
+ * Remove comments when pasting Word content with comments.
+ */
 export function commentsRemoval(sanitizingOption: Required<HtmlSanitizerOptions>) {
     // 1st Step, Remove SPAN elements added after each comment.
     // Word adds multiple elemets for comments as SPAN elements.
