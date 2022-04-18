@@ -1,5 +1,5 @@
 import VTable from '../../lib/table/VTable';
-import { itChromeOnly, itFirefoxOnly } from '../DomTestHelper';
+import { itFirefoxOnly } from '../DomTestHelper';
 import { TableFormat, TableOperation, TableSelection } from 'roosterjs-editor-types';
 
 describe('VTable.ctor', () => {
@@ -489,7 +489,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itChromeOnly('Simple table, InsertLeft with selection ', () => {
+    it('Simple table, InsertLeft with selection ', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertLeft,
             '<table><tr><td><br></td><td><br></td><td id="id1">1</td><td>2</td></tr><tr><td><br></td><td><br></td><td>3</td><td id="id2">4</td></tr></table>',
@@ -757,20 +757,6 @@ describe('VTable.edit', () => {
         ]);
     });
 
-    itChromeOnly('Complex table, InsertAbove with selection', () => {
-        runComplexTableTest(
-            TableOperation.InsertAbove,
-            [
-                '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td colspan="2"><br></td></tr><tr><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-            ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
-        );
-    });
-
     it('Complex table, InsertBelow', () => {
         runComplexTableTest(TableOperation.InsertBelow, [
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="3">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -803,20 +789,6 @@ describe('VTable.edit', () => {
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="3">2</td></tr><tr><td id="id3">3</td><td rowspan="2"><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table><tr><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
         ]);
-    });
-
-    itChromeOnly('Complex table, InsertLeft with selection', () => {
-        runComplexTableTest(
-            TableOperation.InsertLeft,
-            [
-                '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td rowspan="2"><br></td><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
-            ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
-        );
     });
 
     it('Complex table, InsertRight', () => {
