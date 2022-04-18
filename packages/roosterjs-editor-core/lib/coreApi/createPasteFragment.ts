@@ -69,7 +69,7 @@ export const createPasteFragment: CreatePasteFragment = (
         clipboardData.htmlFirstLevelChildTags = [];
         doc?.body.normalize();
 
-        for (let i = 0; i < doc?.body.childNodes.length || 0; i++) {
+        for (let i = 0; i < doc?.body.childNodes.length; i++) {
             const node = doc?.body.childNodes.item(i);
             if (node.nodeType == Node.TEXT_NODE) {
                 const trimmedString = node.nodeValue.replace(/(\r\n|\r|\n)/gm, '').trim();
