@@ -1,4 +1,4 @@
-name: Publish smaller package
+name: Publish size optimized package
 on:
     push:
         branches:

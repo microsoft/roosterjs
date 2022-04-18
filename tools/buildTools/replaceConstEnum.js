@@ -36,7 +36,7 @@ function processPackage(p, parentPath) {
     const ver = json.version || mainPackageJson.version;
 
     if (/^\d+\.\d+\.\d+$/.test(ver)) {
-        json.version = ver + '-constenum.0';
+        json.version = ver + '-size-optimized.0';
         writeBack(JSON.stringify(json, null, 4));
 
         processDir(path.join(rootPath, parentPath, p, 'lib'));
