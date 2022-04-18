@@ -68,18 +68,20 @@ export const createPasteFragment: CreatePasteFragment = (
 
         clipboardData.htmlFirstLevelChildTags = [];
         doc?.body.normalize();
-        doc?.body.childNodes.forEach(node => {
+
+        for (let i = 0; i < doc?.body.childNodes.length || 0; i++) {
+            const node = doc?.body.childNodes.item(i);
             if (node.nodeType == Node.TEXT_NODE) {
                 const trimmedString = node.nodeValue.replace(/(\r\n|\r|\n)/gm, '').trim();
                 if (!trimmedString) {
-                    return;
+                    continue;
                 }
             }
             const nodeTag = getTagOfNode(node);
             if (node.nodeType != Node.COMMENT_NODE) {
                 clipboardData.htmlFirstLevelChildTags.push(nodeTag);
             }
-        });
+        }
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
         processStyles(doc, style => {
