@@ -109,7 +109,10 @@ export default class VTable {
                     }
                 }
             });
-            this.formatInfo = getTableFormatInfo(this.table);
+            this.formatInfo = {
+                ...DEFAULT_FORMAT,
+                ...(getTableFormatInfo(this.table) || {}),
+            };
             if (normalizeSize) {
                 this.normalizeSize(typeof zoomScale == 'number' ? n => n / zoomScale : zoomScale);
             }
@@ -155,8 +158,7 @@ export default class VTable {
             return;
         }
         this.formatInfo = {
-            ...DEFAULT_FORMAT,
-            ...(this.formatInfo || {}),
+            ...this.formatInfo!,
             ...(format || {}),
         };
         if (!this.formatInfo.keepCellShade) {

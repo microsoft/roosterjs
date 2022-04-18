@@ -1,5 +1,5 @@
 import VTable from '../../lib/table/VTable';
-import { itFirefoxOnly } from '../DomTestHelper';
+import { itChromeOnly, itFirefoxOnly } from '../DomTestHelper';
 import { TableFormat, TableOperation, TableSelection } from 'roosterjs-editor-types';
 
 describe('VTable.ctor', () => {
@@ -489,7 +489,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    it('Simple table, InsertLeft with selection ', () => {
+    itChromeOnly('Simple table, InsertLeft with selection ', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertLeft,
             '<table><tr><td><br></td><td><br></td><td id="id1">1</td><td>2</td></tr><tr><td><br></td><td><br></td><td>3</td><td id="id2">4</td></tr></table>',
@@ -757,7 +757,7 @@ describe('VTable.edit', () => {
         ]);
     });
 
-    it('Complex table, InsertAbove with selection', () => {
+    itChromeOnly('Complex table, InsertAbove with selection', () => {
         runComplexTableTest(
             TableOperation.InsertAbove,
             [
@@ -805,7 +805,7 @@ describe('VTable.edit', () => {
         ]);
     });
 
-    it('Complex table, InsertLeft with selection', () => {
+    itChromeOnly('Complex table, InsertLeft with selection', () => {
         runComplexTableTest(
             TableOperation.InsertLeft,
             [
