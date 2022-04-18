@@ -276,9 +276,6 @@ describe('VList.writeBack', () => {
 
         vList.writeBack();
         expect(div.innerHTML).toBe(expectedHtml);
-
-        // Write again on the same VList should throw
-        expect(() => vList.writeBack()).toThrow();
     }
 
     it('simple list, write back directly', () => {
@@ -1234,9 +1231,6 @@ describe('VList.split', () => {
         vList.split(separatorElement, startNumber);
         vList.writeBack();
         expect(div.innerHTML).toBe(expectedHtml);
-
-        // Write again on the same VList should throw
-        expect(() => vList.writeBack()).toThrow();
     }
 
     it('split List', () => {

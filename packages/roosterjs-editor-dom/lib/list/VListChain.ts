@@ -45,7 +45,7 @@ export default class VListChain {
                         chains.filter(c => c.canAppendToTail(list))[0] ||
                         new VListChain(region, (nameGenerator || createListChainName)());
                     const index = chains.indexOf(chain);
-                    const afterCurrentNode = currentNode && isNodeAfter(list, currentNode);
+                    const afterCurrentNode = !!currentNode && isNodeAfter(list, currentNode);
 
                     if (!afterCurrentNode) {
                         // Make sure current one is at the front if current block has not been met, so that
@@ -83,9 +83,9 @@ export default class VListChain {
      * @param container The container node to create list at
      * @param startNumber Start number of the new list
      */
-    createVListAtBlock(container: Node, startNumber: number): VList {
-        if (container) {
-            const list = container.ownerDocument.createElement('ol');
+    createVListAtBlock(container: Node, startNumber: number): VList | null {
+        if (container && container.parentNode) {
+            const list = container.ownerDocument!.createElement('ol');
 
             list.start = startNumber;
             this.applyChainName(list);
@@ -114,7 +114,7 @@ export default class VListChain {
 
             const vlist = new VList(list);
 
-            lastNumber = vlist.getLastItemNumber();
+            lastNumber = vlist.getLastItemNumber() || 0;
 
             delete list.dataset[CHAIN_DATASET_NAME];
             delete list.dataset[AFTER_CURSOR_DATASET_NAME];
@@ -144,7 +144,7 @@ export default class VListChain {
      */
     private append(list: HTMLOListElement, isAfterCurrentNode: boolean) {
         this.applyChainName(list);
-        this.lastNumber = new VList(list).getLastItemNumber();
+        this.lastNumber = new VList(list).getLastItemNumber() || 0;
 
         if (isAfterCurrentNode) {
             list.dataset[AFTER_CURSOR_DATASET_NAME] = 'true';
