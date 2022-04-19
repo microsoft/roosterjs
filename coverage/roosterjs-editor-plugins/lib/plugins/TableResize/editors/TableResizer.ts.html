@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.74% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/53</span>
+                <span class='fraction'>22/55</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">21.43% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/24</span>
+                <span class='fraction'>6/28</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.22% </span>
+                <span class="strong">41.51% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/51</span>
+                <span class='fraction'>22/53</span>
             </div>
         
             
@@ -205,7 +205,15 @@
 <a name='L140'></a><a href='#L140'>140</a>
 <a name='L141'></a><a href='#L141'>141</a>
 <a name='L142'></a><a href='#L142'>142</a>
-<a name='L143'></a><a href='#L143'>143</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -218,6 +226,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -231,6 +243,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -350,7 +366,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import { CreateElementData } from 'roosterjs-editor-types';
 &nbsp;
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -364,15 +380,23 @@ export default function createTableResizer(
     zoomScale: number,
     isRTL: boolean,
     onStart: () =&gt; void,
-    onDragEnd: () =&gt; false
+    onDragEnd: () =&gt; false,
+    onShowHelperElement: (
+        elementData: CreateElementData,
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) =&gt; void
 ): TableEditFeature {
     const document = table.ownerDocument;
-    const div = createElement(
-        isRTL
-            ?<span class="branch-0 cbranch-no" title="branch not covered" > KnownCreateElementDataIndex.TableResizerRTL</span>
-            : KnownCreateElementDataIndex.TableResizerLTR,
-        document
-    ) as HTMLDivElement;
+    const createElementData = {
+        tag: 'div',
+        style: `position: fixed; cursor: ${
+            isRTL ? <span class="branch-0 cbranch-no" title="branch not covered" >'ne' </span>: 'nw'
+        }-resize; user-select: none; border: 1px solid #808080`,
+    };
+&nbsp;
+<span class="branch-1 cbranch-no" title="branch not covered" >    onShowHelperElement?.(createElementData, 'TableResizer');</span>
+&nbsp;
+    const div = createElement(createElementData, document) as HTMLDivElement;
 &nbsp;
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
@@ -496,7 +520,7 @@ function setResizeDivPosition(context: DragAndDropContext, trigger: HTMLElement)
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Mon Apr 18 2022 22:01:22 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 19 2022 16:12:42 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
