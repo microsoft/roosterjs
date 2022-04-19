@@ -16,7 +16,11 @@ export default function createTableInserter(
     td: HTMLTableCellElement,
     isRTL: boolean,
     isHorizontal: boolean,
-    onInsert: (table: HTMLTableElement) => void
+    onInsert: (table: HTMLTableElement) => void,
+    onShowHelperElement: (
+        elementData: CreateElementData,
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) => void
 ): TableEditFeature {
     const table = editor.getElementAtCursor('table', td);
     const tdRect = normalizeRect(td.getBoundingClientRect());
@@ -25,15 +29,16 @@ export default function createTableInserter(
     // set inserter position
     if (tdRect && tableRect) {
         const document = td.ownerDocument;
-        const div = createElement(
-            getInsertElementData(
-                isHorizontal,
-                editor.isDarkMode(),
-                isRTL,
-                editor.getDefaultFormat().backgroundColor || 'white'
-            ),
-            document
-        ) as HTMLDivElement;
+        const createElementData = getInsertElementData(
+            isHorizontal,
+            editor.isDarkMode(),
+            isRTL,
+            editor.getDefaultFormat().backgroundColor || 'white'
+        );
+
+        onShowHelperElement?.(createElementData, 'TableInserter');
+
+        const div = createElement(createElementData, document) as HTMLDivElement;
 
         if (isHorizontal) {
             div.style.left = `${
