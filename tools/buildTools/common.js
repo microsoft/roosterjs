@@ -88,7 +88,10 @@ function readPackageJson(packageName, readFromSourceFolder) {
         'package.json'
     );
     const content = fs.readFileSync(packageJsonFilePath);
-    return JSON.parse(content);
+    const writeBack = content => {
+        fs.writeFileSync(packageJsonFilePath, content);
+    };
+    return [JSON.parse(content), writeBack];
 }
 
 const mainPackageJson = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json')));

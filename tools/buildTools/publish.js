@@ -10,7 +10,7 @@ const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com
 
 function publish(options) {
     allPackages.forEach(packageName => {
-        const json = readPackageJson(packageName, false /*readFromSourceFolder*/);
+        const [json] = readPackageJson(packageName, false /*readFromSourceFolder*/);
         const localVersion = json.version;
         const versionMatch = VersionRegex.exec(localVersion);
         const tagname = (versionMatch && versionMatch[2]) || 'latest';
