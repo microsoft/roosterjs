@@ -1,5 +1,5 @@
 import VTable from '../../lib/table/VTable';
-import { itFirefoxOnly } from '../DomTestHelper';
+import { itChromeOnly } from '../DomTestHelper';
 import { TableFormat, TableOperation, TableSelection } from 'roosterjs-editor-types';
 
 describe('VTable.ctor', () => {
@@ -590,7 +590,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignCenter', () => {
+    itChromeOnly('Simple table, AlignCenter', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCenter,
             '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -601,7 +601,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignRight', () => {
+    itChromeOnly('Simple table, AlignRight', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignRight,
             '<table style="margin-left: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -612,7 +612,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignLeft', () => {
+    itChromeOnly('Simple table, AlignLeft', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignLeft,
             '<table style="margin-right: auto;"><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -623,7 +623,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignCellCenter', () => {
+    itChromeOnly('Simple table, AlignCellCenter', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellCenter,
             '<table><tr><td id="id1" style="text-align: center;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -635,7 +635,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignCellRight', () => {
+    itChromeOnly('Simple table, AlignCellRight', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellRight,
             '<table><tr><td id="id1" style="text-align: right;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -647,7 +647,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignCellLeft', () => {
+    itChromeOnly('Simple table, AlignCellLeft', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellLeft,
             '<table><tr><td id="id1" style="text-align: left;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -659,7 +659,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignCellTop', () => {
+    itChromeOnly('Simple table, AlignCellTop', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellTop,
             '<table><tr><td id="id1" style="vertical-align: top;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -671,7 +671,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignCellMiddle', () => {
+    itChromeOnly('Simple table, AlignCellMiddle', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellMiddle,
             '<table><tr><td id="id1" style="vertical-align: middle;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -683,7 +683,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Simple table, AlignCellBottom', () => {
+    itChromeOnly('Simple table, AlignCellBottom', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellBottom,
             '<table><tr><td id="id1" style="vertical-align: bottom;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
@@ -916,7 +916,7 @@ describe('VTable.edit', () => {
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="3">4</td></tr><tr><td id="id5" colspan="2">5</td></tr><tr><td colspan="2"><br></td></tr></table>',
         ]);
     });
-    itFirefoxOnly('Complex table, AlignCenter', () => {
+    itChromeOnly('Complex table, AlignCenter', () => {
         runComplexTableTest(TableOperation.AlignCenter, [
             '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -925,7 +925,7 @@ describe('VTable.edit', () => {
             '<table style="margin-left: auto; margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
         ]);
     });
-    itFirefoxOnly('Complex table, AlignRight', () => {
+    itChromeOnly('Complex table, AlignRight', () => {
         runComplexTableTest(TableOperation.AlignRight, [
             '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -934,7 +934,7 @@ describe('VTable.edit', () => {
             '<table style="margin-left: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
         ]);
     });
-    itFirefoxOnly('Complex table, AlignLeft', () => {
+    itChromeOnly('Complex table, AlignLeft', () => {
         runComplexTableTest(TableOperation.AlignLeft, [
             '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table style="margin-right: auto;"><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -944,7 +944,7 @@ describe('VTable.edit', () => {
         ]);
     });
 
-    itFirefoxOnly('Complex table, AlignCellCenter', () => {
+    itChromeOnly('Complex table, AlignCellCenter', () => {
         runComplexTableTest(
             TableOperation.AlignCellCenter,
             [
@@ -957,7 +957,7 @@ describe('VTable.edit', () => {
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
     });
-    itFirefoxOnly('Complex table, AlignCellRight', () => {
+    itChromeOnly('Complex table, AlignCellRight', () => {
         runComplexTableTest(TableOperation.AlignCellRight, [
             '<table><tr><td id="id1" rowspan="2" style="text-align: right;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2" style="text-align: right;">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -966,7 +966,7 @@ describe('VTable.edit', () => {
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2" style="text-align: right;">5</td></tr></table>',
         ]);
     });
-    itFirefoxOnly('Complex table, AlignCellLeft', () => {
+    itChromeOnly('Complex table, AlignCellLeft', () => {
         runComplexTableTest(TableOperation.AlignCellLeft, [
             '<table><tr><td id="id1" rowspan="2" style="text-align: left;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2" style="text-align: left;">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
@@ -976,7 +976,7 @@ describe('VTable.edit', () => {
         ]);
     });
 
-    itFirefoxOnly('Complex table, AlignCellTop', () => {
+    itChromeOnly('Complex table, AlignCellTop', () => {
         runComplexTableTest(
             TableOperation.AlignCellTop,
             [
@@ -990,7 +990,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Complex table, AlignCellMiddle', () => {
+    itChromeOnly('Complex table, AlignCellMiddle', () => {
         runComplexTableTest(
             TableOperation.AlignCellMiddle,
             [
@@ -1004,7 +1004,7 @@ describe('VTable.edit', () => {
         );
     });
 
-    itFirefoxOnly('Complex table, AlignCellBottom', () => {
+    itChromeOnly('Complex table, AlignCellBottom', () => {
         runComplexTableTest(
             TableOperation.AlignCellBottom,
             [

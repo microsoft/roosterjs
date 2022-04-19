@@ -30,21 +30,21 @@ describe('setAlignment()', () => {
     it('triggers the alignleft in a table', () => {
         runningTestInTable(
             Alignment.Left,
-            '<table id="tableSelected0" style="margin-right: auto;"><tbody><tr><td></td></tr></tbody></table>'
+            '<table id="tableSelected0" data-roosterjs-table="true" style="margin-right: auto;"><tbody><tr><td></td></tr></tbody></table>'
         );
     });
 
     it('triggers the aligncenter in a table', () => {
         runningTestInTable(
             Alignment.Center,
-            '<table id="tableSelected0" style="margin-left: auto; margin-right: auto;"><tbody><tr><td></td></tr></tbody></table>'
+            '<table id="tableSelected0" data-roosterjs-table="true" style="margin-left: auto; margin-right: auto;"><tbody><tr><td></td></tr></tbody></table>'
         );
     });
 
     it('triggers the alignright in a table', () => {
         runningTestInTable(
             Alignment.Right,
-            '<table id="tableSelected0" style="margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
+            '<table id="tableSelected0" data-roosterjs-table="true" style="margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
         );
     });
 

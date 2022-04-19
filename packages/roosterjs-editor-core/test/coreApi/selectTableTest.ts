@@ -57,7 +57,7 @@ describe('selectTable |', () => {
         });
 
         expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
+            '<div id="contentDiv_0"><div><table id="tableSelected0" data-roosterjs-table="true"><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
         );
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
@@ -80,7 +80,7 @@ describe('selectTable |', () => {
         });
 
         expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
+            '<div id="contentDiv_0"><div><table id="tableSelected0" data-roosterjs-table="true"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
         );
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
@@ -104,7 +104,7 @@ describe('selectTable |', () => {
         });
 
         expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
+            '<div id="contentDiv_0"><div><table id="tableSelected0" data-roosterjs-table="true"><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
         );
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
@@ -127,7 +127,7 @@ describe('selectTable |', () => {
         });
 
         expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
+            '<div id="contentDiv_0"><div><table id="tableSelected0" data-roosterjs-table="true"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
         );
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
@@ -150,7 +150,7 @@ describe('selectTable |', () => {
         });
 
         expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
+            '<div id="contentDiv_0"><div><table id="tableSelected0" data-roosterjs-table="true"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
         );
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;

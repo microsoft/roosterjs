@@ -15,6 +15,7 @@ import {
 } from 'roosterjs-editor-types';
 
 const CELL_SHADE = 'cellShade';
+const ROOSTER_TABLE = 'roosterjsTable';
 const DEFAULT_FORMAT: Required<TableFormat> = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
@@ -109,7 +110,14 @@ export default class VTable {
                     }
                 }
             });
-            this.formatInfo = getTableFormatInfo(this.table);
+            this.formatInfo =
+                this.table.dataset[ROOSTER_TABLE] && !getTableFormatInfo(this.table)
+                    ? DEFAULT_FORMAT
+                    : getTableFormatInfo(this.table);
+            if (!this.table.dataset[ROOSTER_TABLE]) {
+                this.table.dataset[ROOSTER_TABLE] = 'true';
+            }
+
             if (normalizeSize) {
                 this.normalizeSize(typeof zoomScale == 'number' ? n => n / zoomScale : zoomScale);
             }
