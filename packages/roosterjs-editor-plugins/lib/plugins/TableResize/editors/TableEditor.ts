@@ -3,8 +3,14 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { ChangeSource, IEditor, NodePosition, TableSelection } from 'roosterjs-editor-types';
 import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    IEditor,
+    NodePosition,
+    TableSelection,
+    CreateElementData,
+} from 'roosterjs-editor-types';
 
 const INSERTER_HOVER_OFFSET = 5;
 
@@ -59,7 +65,11 @@ export default class TableEditor {
     constructor(
         private editor: IEditor,
         public readonly table: HTMLTableElement,
-        private onChanged: () => void
+        private onChanged: () => void,
+        private onShowHelperElement?: (
+            elementData: CreateElementData,
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        ) => void
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
@@ -67,9 +77,15 @@ export default class TableEditor {
             editor.getZoomScale(),
             this.isRTL,
             this.onStartTableResize,
-            this.onFinishEditing
+            this.onFinishEditing,
+            this.onShowHelperElement
         );
-        this.tableSelector = createTableSelector(table, editor.getZoomScale(), this.onSelect);
+        this.tableSelector = createTableSelector(
+            table,
+            editor.getZoomScale(),
+            this.onSelect,
+            this.onShowHelperElement
+        );
     }
 
     dispose() {
@@ -143,7 +159,8 @@ export default class TableEditor {
                 this.isRTL,
                 true /*isHorizontal*/,
                 this.onStartCellResize,
-                this.onFinishEditing
+                this.onFinishEditing,
+                this.onShowHelperElement
             );
             this.verticalResizer = createCellResizer(
                 td,
@@ -151,7 +168,8 @@ export default class TableEditor {
                 this.isRTL,
                 false /*isHorizontal*/,
                 this.onStartCellResize,
-                this.onFinishEditing
+                this.onFinishEditing,
+                this.onShowHelperElement
             );
         }
     }
@@ -168,7 +186,8 @@ export default class TableEditor {
                 td,
                 this.isRTL,
                 isHorizontal,
-                this.onInserted
+                this.onInserted,
+                this.onShowHelperElement
             );
             if (isHorizontal) {
                 this.horizontalInserter = newInserter;

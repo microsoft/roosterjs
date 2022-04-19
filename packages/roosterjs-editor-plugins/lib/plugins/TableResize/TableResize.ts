@@ -1,6 +1,13 @@
 import TableEditor from './editors/TableEditor';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType, Rect } from 'roosterjs-editor-types';
 import { normalizeRect } from 'roosterjs-editor-dom';
+import {
+    CreateElementData,
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    Rect,
+} from 'roosterjs-editor-types';
 
 const TABLE_RESIZER_LENGTH = 12;
 
@@ -12,6 +19,19 @@ export default class TableResize implements EditorPlugin {
     private onMouseMoveDisposer: () => void;
     private tableRectMap: { table: HTMLTableElement; rect: Rect }[] = null;
     private tableEditor: TableEditor;
+
+    /**
+     * Construct a new instance of TableResize plugin
+     * @param onShowHelperElement An optional callback to allow customize helper element of table resizing.
+     * To customize the helper element, add this callback and change the attributes of elementData then it
+     * will be picked up by TableResize code
+     */
+    constructor(
+        private onShowHelperElement?: (
+            elementData: CreateElementData,
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        ) => void
+    ) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -92,7 +112,12 @@ export default class TableResize implements EditorPlugin {
         }
 
         if (!this.tableEditor && table) {
-            this.tableEditor = new TableEditor(this.editor, table, this.invalidateTableRects);
+            this.tableEditor = new TableEditor(
+                this.editor,
+                table,
+                this.invalidateTableRects,
+                this.onShowHelperElement
+            );
         }
     }
 

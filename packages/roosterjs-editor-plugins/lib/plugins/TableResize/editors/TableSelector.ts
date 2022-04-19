@@ -1,7 +1,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
 import { createElement, normalizeRect } from 'roosterjs-editor-dom';
-import { KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import { CreateElementData } from 'roosterjs-editor-types';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -12,13 +12,21 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
 export default function createTableSelector(
     table: HTMLTableElement,
     zoomScale: number,
-    onFinishDragging: (table: HTMLTableElement) => void
+    onFinishDragging: (table: HTMLTableElement) => void,
+    onShowHelperElement: (
+        elementData: CreateElementData,
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) => void
 ): TableEditorFeature {
     const document = table.ownerDocument;
-    const div = createElement(
-        KnownCreateElementDataIndex.TableSelector,
-        document
-    ) as HTMLDivElement;
+    const createElementData = {
+        tag: 'div',
+        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+    };
+
+    onShowHelperElement?.(createElementData, 'TableSelector');
+
+    const div = createElement(createElementData, document) as HTMLDivElement;
 
     div.id = TABLE_SELECTOR_ID;
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
