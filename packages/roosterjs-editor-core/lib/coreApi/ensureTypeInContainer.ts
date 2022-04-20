@@ -10,6 +10,7 @@ import {
     applyFormat,
     createElement,
     createRange,
+    findClosestElementAncestor,
     getBlockElementAtNode,
     isNodeEmpty,
     Position,
@@ -26,7 +27,12 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
     position: NodePosition,
     keyboardEvent?: KeyboardEvent
 ) => {
+    const table = findClosestElementAncestor(position.node, core.contentDiv, 'table');
+    if (table) {
+        position = new Position(table.querySelector('td,th'), PositionType.Begin);
+    }
     position = position.normalize();
+
     const block = getBlockElementAtNode(core.contentDiv, position.node);
     let formatNode: HTMLElement;
 
