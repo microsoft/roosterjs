@@ -1,4 +1,4 @@
-import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
+import { ElementCallbackMap } from 'roosterjs-editor-types';
 import {
     chainSanitizerCallback,
     changeElementTag,
@@ -11,18 +11,17 @@ const MSO_COMMENT_REFERENCE = 'mso-comment-reference';
 const MSO_COMMENT_ANCHOR_HREF_REGEX = /#_msocom_/;
 const MSO_SPECIAL_CHARACTER = 'mso-special-character';
 const MSO_SPECIAL_CHARACTER_COMMENT = 'comment';
-
 const MSO_COMMENT_CONTINUATION = 'mso-comment-continuation';
 const MSO_ELEMENT = 'mso-element';
 const MSO_ELEMENT_COMMENT_LIST = 'comment-list';
 
 /**
  * @internal
- * Remove comments when pasting Word content with comments.
+ * Removes comments when pasting Word content.
  */
-export function commentsRemoval(sanitizingOption: Required<HtmlSanitizerOptions>) {
+export default function commentsRemoval(elementCallbacks: ElementCallbackMap) {
     // 1st Step, Remove SPAN elements added after each comment.
-    // Word adds multiple elemets for comments as SPAN elements.
+    // Word adds multiple elements for comments as SPAN elements.
     // In this step we remove these elements:
     // Structure as of 4/18/2022
     // 1.   <span style="mso-special-character:comment">&nbsp;</span>
@@ -34,35 +33,33 @@ export function commentsRemoval(sanitizingOption: Required<HtmlSanitizerOptions>
     //              </span>
     //          </span>
     //      </span>
-    chainSanitizerCallback(sanitizingOption.elementCallbacks, 'SPAN', element => {
+    chainSanitizerCallback(elementCallbacks, 'SPAN', element => {
         const styles = getStyles(element);
-        if (styles[MSO_SPECIAL_CHARACTER] == MSO_SPECIAL_CHARACTER_COMMENT) {
-            element.parentElement?.removeChild(element);
-        }
-        if (!!styles[MSO_COMMENT_CONTINUATION]) {
+        if (
+            styles[MSO_SPECIAL_CHARACTER] == MSO_SPECIAL_CHARACTER_COMMENT ||
+            !!styles[MSO_COMMENT_CONTINUATION]
+        ) {
             element.parentElement?.removeChild(element);
         }
         return true;
     });
 
-    // 2nd Step, Modify elements.
+    // 2nd Step, Modify Anchor elements.
     // 1.   When the element was selected to add a comment in Word, the selection is converted to
     //      an anchor element, so we change the tag to span.
     // 2.   Word also adds some Anchor elements with the following structure:
     //      Structure as of 4/18/2022
     //      <a href="#_msocom_{number}">[SS3]</a>
     //      In this step we remove this Anchor elements.
-    chainSanitizerCallback(sanitizingOption.elementCallbacks, 'A', element => {
+    chainSanitizerCallback(elementCallbacks, 'A', element => {
         const styles = getStyles(element);
         if (!!styles[MSO_COMMENT_REFERENCE]) {
             changeElementTag(element, 'span');
-        }
-
-        if (
+        } else if (
             safeInstanceOf(element, 'HTMLAnchorElement') &&
             MSO_COMMENT_ANCHOR_HREF_REGEX.test(element.href)
         ) {
-            element.parentElement.removeChild(element);
+            element.parentElement?.removeChild(element);
         }
         return true;
     });
@@ -79,7 +76,7 @@ export function commentsRemoval(sanitizingOption: Required<HtmlSanitizerOptions>
     //   <div style="mso-element:comment"> ... </div>
     //   </div>
     // </div>
-    chainSanitizerCallback(sanitizingOption.elementCallbacks, 'DIV', element => {
+    chainSanitizerCallback(elementCallbacks, 'DIV', element => {
         const styles = getStyles(element);
         if (styles[MSO_ELEMENT] == MSO_ELEMENT_COMMENT_LIST) {
             moveChildNodes(element);
