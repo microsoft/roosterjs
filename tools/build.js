@@ -16,7 +16,9 @@ const dts = require('./buildTools/dts');
 const buildDemoStep = require('./buildTools/buildDemo');
 const buildDocumentStep = require('./buildTools/buildDocument');
 const publishStep = require('./buildTools/publish');
+const replaceConstEnum = require('./buildTools/replaceConstEnum');
 const allTasks = [
+    replaceConstEnum,
     tslintStep,
     checkDependencyStep,
     cleanStep,
@@ -42,6 +44,7 @@ const allTasks = [
 
 // Commands
 const commands = [
+    'replaceConstEnum', // Replace enum with const enum
     'tslint', // Run tslint to check code style
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
