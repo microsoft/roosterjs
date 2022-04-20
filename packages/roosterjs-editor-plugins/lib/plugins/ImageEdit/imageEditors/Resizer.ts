@@ -5,10 +5,18 @@ import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 
+const enum HandleTypes {
+    SquareHandles,
+    CircularHandlesCorner,
+    CircularHandlesSideHorizontal,
+    CircularHandlesCornerVertical,
+}
 const RESIZE_HANDLE_SIZE = 10;
 const RESIZE_SIDE_HANDLE_WIDTH = 6;
 const RESIZE_SIDE_HANDLE_HEIGHT = 16;
 const RESIZE_HANDLE_MARGIN = 3;
+// The biggest area of image with 4 handles
+const MAX_SMALL_SIZE_IMAGE = 10000;
 const Xs: X[] = ['w', '', 'e'];
 const Ys: Y[] = ['s', '', 'n'];
 
@@ -110,10 +118,8 @@ export function doubleCheckResize(
  * Get HTML for resize handles at the corners
  */
 export function getCornerResizeHTML({
-    editInfo: editInfo,
     borderColor: resizeBorderColor,
-
-    circularHandlers: circularHandlers,
+    circularHandles: circularHandles,
 }: ImageHtmlOptions): CreateElementData[] {
     const result: CreateElementData[] = [];
 
@@ -121,7 +127,14 @@ export function getCornerResizeHTML({
         Ys.forEach(y =>
             result.push(
                 (x == '') == (y == '')
-                    ? getResizeHandleHTML(x, y, resizeBorderColor, circularHandlers)
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          circularHandles
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles
+                      )
                     : null
             )
         )
@@ -140,13 +153,19 @@ function imageArea(width: number, height: number): number {
 export function getSideResizeHTML({
     editInfo: editInfo,
     borderColor: resizeBorderColor,
-    sizeAdaptiveHandlers: sizeAdaptiveHandlers,
-    circularHandlers: circularHandlers,
+    sizeAdaptiveHandles: sizeAdaptiveHandles,
+    circularHandles: circularHandles,
 }: ImageHtmlOptions): CreateElementData[] {
     const { widthPx, heightPx } = editInfo;
-    if (sizeAdaptiveHandlers && widthPx && heightPx && imageArea(widthPx, heightPx) < 10000) {
-        return;
+    if (
+        sizeAdaptiveHandles &&
+        widthPx &&
+        heightPx &&
+        imageArea(widthPx, heightPx) < MAX_SMALL_SIZE_IMAGE
+    ) {
+        return null;
     }
+
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y =>
@@ -156,8 +175,11 @@ export function getSideResizeHTML({
                           x,
                           y,
                           resizeBorderColor,
-                          circularHandlers,
-                          true /** isSideHandlers */
+                          !circularHandles
+                              ? HandleTypes.SquareHandles
+                              : y
+                              ? HandleTypes.CircularHandlesCornerVertical
+                              : HandleTypes.CircularHandlesSideHorizontal
                       )
                     : null
             )
@@ -170,8 +192,7 @@ function getResizeHandleHTML(
     x: X,
     y: Y,
     borderColor: string,
-    circularHandlers?: boolean,
-    isSideHandlers?: boolean
+    handleTypes: HandleTypes
 ): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
@@ -189,14 +210,11 @@ function getResizeHandleHTML(
               children: [
                   {
                       tag: 'div',
-                      style: setHandlerStyle(
-                          circularHandlers,
-                          isSideHandlers,
-                          y,
-                          borderColor,
+                      style: setHandleStyle[handleTypes](
                           direction,
                           topOrBottom,
-                          leftOrRight
+                          leftOrRight,
+                          borderColor
                       ),
                       className: ImageEditElementClass.ResizeHandle,
                       dataset: { x, y },
@@ -205,22 +223,16 @@ function getResizeHandleHTML(
           };
 }
 
-function setHandlerStyle(
-    circularHandlers: boolean,
-    isSideHandlers: boolean,
-    y: string,
-    borderColor: string,
-    direction: string,
-    topOrBottom: string,
-    leftOrRight: string
-) {
-    if (!circularHandlers) {
-        return `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;`;
-    } else if (!isSideHandlers) {
-        return `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;z-index:1;border: 2px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`;
-    } else if (!y) {
-        return `position:relative;width:${RESIZE_SIDE_HANDLE_WIDTH}px;height:${RESIZE_SIDE_HANDLE_HEIGHT}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`;
-    } else {
-        return `position:relative;width:${RESIZE_SIDE_HANDLE_HEIGHT}px;height:${RESIZE_SIDE_HANDLE_WIDTH}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`;
-    }
-}
+const setHandleStyle: Record<
+    HandleTypes,
+    (direction: string, topOrBottom: string, leftOrRight: string, borderColor: string) => string
+> = {
+    0: (direction, leftOrRight, topOrBottom, borderColor) =>
+        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;`,
+    1: (direction, leftOrRight, topOrBottom) =>
+        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;z-index:1;border: 2px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+    2: (direction, leftOrRight, topOrBottom) =>
+        `position:relative;width:${RESIZE_SIDE_HANDLE_WIDTH}px;height:${RESIZE_SIDE_HANDLE_HEIGHT}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+    3: (direction, leftOrRight, topOrBottom) =>
+        `position:relative;width:${RESIZE_SIDE_HANDLE_HEIGHT}px;height:${RESIZE_SIDE_HANDLE_WIDTH}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+};

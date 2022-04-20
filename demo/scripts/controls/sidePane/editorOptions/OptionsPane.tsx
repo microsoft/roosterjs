@@ -173,6 +173,8 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             defaultFormat: { ...this.state.defaultFormat },
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
+            sizeAdaptiveImageHandles: this.state.sizeAdaptiveImageHandles,
+            circularImageHandles: this.state.circularImageHandles,
             supportDarkMode: this.state.supportDarkMode,
             isRtl: this.state.isRtl,
         };

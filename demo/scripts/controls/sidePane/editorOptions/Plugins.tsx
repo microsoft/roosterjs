@@ -14,6 +14,8 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
     private linkTitle = React.createRef<HTMLInputElement>();
     private watermarkText = React.createRef<HTMLInputElement>();
     private forcePreserveRatio = React.createRef<HTMLInputElement>();
+    private sizeAdaptiveImageHandles = React.createRef<HTMLInputElement>();
+    private circularImageHandles = React.createRef<HTMLInputElement>();
 
     render() {
         return (
@@ -51,6 +53,26 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                             this.forcePreserveRatio,
                             this.props.state.forcePreserveRatio,
                             (state, value) => (state.forcePreserveRatio = value)
+                        )
+                    )}
+                    {this.renderPluginItem(
+                        'imageEdit',
+                        'Image Edit Plugin',
+                        this.renderCheckBox(
+                            'Size Adaptive Image Handles',
+                            this.sizeAdaptiveImageHandles,
+                            this.props.state.sizeAdaptiveImageHandles,
+                            (state, value) => (state.sizeAdaptiveImageHandles = value)
+                        )
+                    )}
+                    {this.renderPluginItem(
+                        'imageEdit',
+                        'Image Edit Plugin',
+                        this.renderCheckBox(
+                            'Circular Image Handles',
+                            this.circularImageHandles,
+                            this.props.state.circularImageHandles,
+                            (state, value) => (state.circularImageHandles = value)
                         )
                     )}
                     {this.renderPluginItem('cutPasteListChain', 'CutPasteListChainPlugin')}

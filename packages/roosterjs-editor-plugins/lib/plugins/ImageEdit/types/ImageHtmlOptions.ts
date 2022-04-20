@@ -33,10 +33,10 @@ export default interface ImageHtmlOptions {
      * 4 handlers: 50x50px or bigger
      * 1 handler: smaller than 50x50px
      */
-    sizeAdaptiveHandlers?: boolean;
+    sizeAdaptiveHandles?: boolean;
 
     /**
      * The handlers should have circular borders
      */
-    circularHandlers?: boolean;
+    circularHandles?: boolean;
 }

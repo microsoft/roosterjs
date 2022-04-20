@@ -32,6 +32,8 @@ export default interface BuildInPluginState {
     supportDarkMode: boolean;
     experimentalFeatures: ExperimentalFeatures[];
     forcePreserveRatio: boolean;
+    sizeAdaptiveImageHandles: boolean;
+    circularImageHandles: boolean;
     isRtl: boolean;
 }
 

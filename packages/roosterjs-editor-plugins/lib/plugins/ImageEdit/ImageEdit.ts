@@ -74,8 +74,8 @@ const DefaultOptions: Required<ImageEditOptions> = {
     minRotateDeg: 5,
     imageSelector: 'img',
     rotateIconHTML: null,
-    sizeAdaptiveHandlers: false,
-    circularHandlers: false,
+    sizeAdaptiveHandles: false,
+    circularHandles: false,
 };
 
 /**
@@ -371,8 +371,8 @@ export default class ImageEdit implements EditorPlugin {
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
-            sizeAdaptiveHandlers: this.options.sizeAdaptiveHandlers,
-            circularHandlers: this.options.circularHandlers,
+            sizeAdaptiveHandles: this.options.sizeAdaptiveHandles,
+            circularHandles: this.options.circularHandles,
         };
         const htmlData: CreateElementData[] = [];
 
