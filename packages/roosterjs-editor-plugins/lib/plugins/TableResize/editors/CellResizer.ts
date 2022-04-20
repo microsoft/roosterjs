@@ -2,7 +2,7 @@ import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { KnownCreateElementDataIndex, Rect } from 'roosterjs-editor-types';
+import { CreateElementData, Rect } from 'roosterjs-editor-types';
 
 const CELL_RESIZER_WIDTH = 4;
 const MIN_CELL_WIDTH = 30;
@@ -16,15 +16,21 @@ export default function createCellResizer(
     isRTL: boolean,
     isHorizontal: boolean,
     onStart: () => void,
-    onEnd: () => false
+    onEnd: () => false,
+    onShowHelperElement: (
+        elementData: CreateElementData,
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) => void
 ): TableEditFeature {
     const document = td.ownerDocument;
-    const div = createElement(
-        isHorizontal
-            ? KnownCreateElementDataIndex.TableHorizontalResizer
-            : KnownCreateElementDataIndex.TableVerticalResizer,
-        document
-    ) as HTMLDivElement;
+    const createElementData = {
+        tag: 'div',
+        style: `position: fixed; cursor: ${isHorizontal ? 'row' : 'col'}-resize; user-select: none`,
+    };
+
+    onShowHelperElement?.(createElementData, 'CellResizer');
+
+    const div = createElement(createElementData, document) as HTMLDivElement;
 
     document.body.appendChild(div);
 
