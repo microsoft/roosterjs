@@ -74,6 +74,8 @@ const DefaultOptions: Required<ImageEditOptions> = {
     minRotateDeg: 5,
     imageSelector: 'img',
     rotateIconHTML: null,
+    sizeAdaptiveHandlers: false,
+    circularHandlers: false,
 };
 
 /**
@@ -363,11 +365,14 @@ export default class ImageEdit implements EditorPlugin {
 
         // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
         const options: ImageHtmlOptions = {
+            editInfo: this.editInfo,
             borderColor: this.options.borderColor,
             rotateIconHTML: this.options.rotateIconHTML,
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
+            sizeAdaptiveHandlers: this.options.sizeAdaptiveHandlers,
+            circularHandlers: this.options.circularHandlers,
         };
         const htmlData: CreateElementData[] = [];
 
@@ -381,6 +386,7 @@ export default class ImageEdit implements EditorPlugin {
 
         htmlData.forEach(data => {
             const element = createElement(data, this.image.ownerDocument);
+
             if (element) {
                 wrapper.appendChild(element);
             }

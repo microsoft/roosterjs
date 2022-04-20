@@ -5,7 +5,9 @@ import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 
-const RESIZE_HANDLE_SIZE = 7;
+const RESIZE_HANDLE_SIZE = 10;
+const RESIZE_SIDE_HANDLE_WIDTH = 6;
+const RESIZE_SIDE_HANDLE_HEIGHT = 16;
 const RESIZE_HANDLE_MARGIN = 3;
 const Xs: X[] = ['w', '', 'e'];
 const Ys: Y[] = ['s', '', 'n'];
@@ -108,17 +110,27 @@ export function doubleCheckResize(
  * Get HTML for resize handles at the corners
  */
 export function getCornerResizeHTML({
+    editInfo: editInfo,
     borderColor: resizeBorderColor,
+
+    circularHandlers: circularHandlers,
 }: ImageHtmlOptions): CreateElementData[] {
     const result: CreateElementData[] = [];
+
     Xs.forEach(x =>
         Ys.forEach(y =>
             result.push(
-                (x == '') == (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : null
+                (x == '') == (y == '')
+                    ? getResizeHandleHTML(x, y, resizeBorderColor, circularHandlers)
+                    : null
             )
         )
     );
     return result;
+}
+
+function imageArea(width: number, height: number): number {
+    return width * height;
 }
 
 /**
@@ -126,30 +138,50 @@ export function getCornerResizeHTML({
  * Get HTML for resize handles on the sides
  */
 export function getSideResizeHTML({
+    editInfo: editInfo,
     borderColor: resizeBorderColor,
+    sizeAdaptiveHandlers: sizeAdaptiveHandlers,
+    circularHandlers: circularHandlers,
 }: ImageHtmlOptions): CreateElementData[] {
+    const { widthPx, heightPx } = editInfo;
+    if (sizeAdaptiveHandlers && widthPx && heightPx && imageArea(widthPx, heightPx) < 10000) {
+        return;
+    }
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y =>
             result.push(
-                (x == '') != (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : null
+                (x == '') != (y == '')
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          circularHandlers,
+                          true /** isSideHandlers */
+                      )
+                    : null
             )
         )
     );
     return result;
 }
 
-function getResizeHandleHTML(x: X, y: Y, borderColor: string): CreateElementData {
+function getResizeHandleHTML(
+    x: X,
+    y: Y,
+    borderColor: string,
+    circularHandlers?: boolean,
+    isSideHandlers?: boolean
+): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
     const leftOrRightValue = x == '' ? '50%' : '0px';
     const topOrBottomValue = y == '' ? '50%' : '0px';
     const direction = y + x;
-
     return x == '' && y == ''
         ? {
               tag: 'div',
-              style: `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${borderColor};pointer-events:none`,
+              style: `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 2px ${borderColor};pointer-events:none;`,
           }
         : {
               tag: 'div',
@@ -157,10 +189,38 @@ function getResizeHandleHTML(x: X, y: Y, borderColor: string): CreateElementData
               children: [
                   {
                       tag: 'div',
-                      style: `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px`,
+                      style: setHandlerStyle(
+                          circularHandlers,
+                          isSideHandlers,
+                          y,
+                          borderColor,
+                          direction,
+                          topOrBottom,
+                          leftOrRight
+                      ),
                       className: ImageEditElementClass.ResizeHandle,
                       dataset: { x, y },
                   },
               ],
           };
+}
+
+function setHandlerStyle(
+    circularHandlers: boolean,
+    isSideHandlers: boolean,
+    y: string,
+    borderColor: string,
+    direction: string,
+    topOrBottom: string,
+    leftOrRight: string
+) {
+    if (!circularHandlers) {
+        return `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;`;
+    } else if (!isSideHandlers) {
+        return `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;z-index:1;border: 2px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`;
+    } else if (!y) {
+        return `position:relative;width:${RESIZE_SIDE_HANDLE_WIDTH}px;height:${RESIZE_SIDE_HANDLE_HEIGHT}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`;
+    } else {
+        return `position:relative;width:${RESIZE_SIDE_HANDLE_HEIGHT}px;height:${RESIZE_SIDE_HANDLE_WIDTH}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`;
+    }
 }
