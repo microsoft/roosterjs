@@ -1,4 +1,4 @@
-import convertPastedContentFromWordOnline from '../../lib/plugins/Paste/officeOnlineConverter/convertPastedContentFromWordOnline';
+import convertPastedContentFromWordOnline from '../../../lib/plugins/Paste/officeOnlineConverter/convertPastedContentFromWordOnline';
 
 describe('wordOnlineHandler', () => {
     function runTest(html: string, expectedInnerHtml: string) {
