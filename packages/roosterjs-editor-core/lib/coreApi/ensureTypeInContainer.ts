@@ -28,8 +28,9 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
     keyboardEvent?: KeyboardEvent
 ) => {
     const table = findClosestElementAncestor(position.node, core.contentDiv, 'table');
-    if (table) {
-        position = new Position(table.querySelector('td,th'), PositionType.Begin);
+    let td: HTMLElement;
+    if (table && (td = table.querySelector('td,th'))) {
+        position = new Position(td, PositionType.Begin);
     }
     position = position.normalize();
 
