@@ -30,4 +30,16 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
             processNodeConvert(wordConverter);
         }
     }
+
+    // If the List style contains marginBottom = 0in, the space after the list is going to be too narrow.
+    // Remove this style so the list displays correctly.
+    ['OL', 'UL'].forEach(tag => {
+        chainSanitizerCallback(sanitizingOption.elementCallbacks, tag, element => {
+            if (element.style.marginBottom == '0in') {
+                element.style.marginBottom = '';
+            }
+
+            return true;
+        });
+    });
 }
