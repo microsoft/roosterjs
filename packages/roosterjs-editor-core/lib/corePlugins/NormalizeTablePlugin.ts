@@ -133,6 +133,11 @@ function normalizeTables(tables: HTMLTableElement[]) {
                         tbody = child as HTMLTableSectionElement;
                     }
                     break;
+                case 'COLGROUP':
+                    if (table.tHead) {
+                        table.tHead.prepend(child);
+                    }
+                    break;
                 default:
                     tbody = null;
                     break;
