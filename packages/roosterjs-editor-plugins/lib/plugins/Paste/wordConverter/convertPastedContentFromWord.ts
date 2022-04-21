@@ -1,3 +1,4 @@
+import commentsRemoval from './commentsRemoval';
 import { BeforePasteEvent } from 'roosterjs-editor-types';
 import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
 import { createWordConverter } from './wordConverter';
@@ -30,4 +31,6 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
             processNodeConvert(wordConverter);
         }
     }
+
+    commentsRemoval(sanitizingOption.elementCallbacks);
 }

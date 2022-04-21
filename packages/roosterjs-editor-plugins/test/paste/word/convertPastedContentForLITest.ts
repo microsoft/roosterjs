@@ -1,5 +1,5 @@
 import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
-import convertPastedContentForLI from '../../lib/plugins/Paste/commonConverter/convertPastedContentForLI';
+import convertPastedContentForLI from '../../../lib/plugins/Paste/commonConverter/convertPastedContentForLI';
 
 describe('convertPastedContentForLi', () => {
     function runTest(source: string, expected: string) {
