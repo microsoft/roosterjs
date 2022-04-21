@@ -75,7 +75,7 @@ describe('convertPastedContentFromWord', () => {
         runTest(source, '<ul><li></li><li></li></ul>');
     });
 
-    it('Do Remove Bottom Margin = 1in | UL', () => {
+    it('Do Not Remove Bottom Margin = 1in | UL', () => {
         let source = '<UL style="margin-bottom: 1in"><li></li><li></li></UL>';
         runTest(source, '<ul style="margin-bottom:1in"><li></li><li></li></ul>');
     });
