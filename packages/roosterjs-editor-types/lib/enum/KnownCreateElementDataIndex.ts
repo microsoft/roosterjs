@@ -1,7 +1,7 @@
 /**
  * Index of known CreateElementData used by createElement function
  */
-export const enum KnownCreateElementDataIndex {
+export /*--const--*/ enum KnownCreateElementDataIndex {
     /**
      * Set a none value to help createElement function ignore falsy value
      */
@@ -38,14 +38,27 @@ export const enum KnownCreateElementDataIndex {
     ImageEditWrapper = 6,
 
     /**
-     * Table resizer elements
+     * @deprecated
      */
     TableHorizontalResizer = 7,
-    TableVerticalResizer = 8,
-    TableResizerLTR = 9,
-    TableResizerRTL = 10,
+
     /**
-     * Table Selector element
+     * @deprecated
+     */
+    TableVerticalResizer = 8,
+
+    /**
+     * @deprecated
+     */
+    TableResizerLTR = 9,
+
+    /**
+     * @deprecated
+     */
+    TableResizerRTL = 10,
+
+    /**
+     * @deprecated
      */
     TableSelector = 11,
 }
