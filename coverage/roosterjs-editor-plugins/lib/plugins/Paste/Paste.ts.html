@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.77% </span>
+                <span class="strong">55.56% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/52</span>
+                <span class='fraction'>30/54</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.9% </span>
+                <span class="strong">6.45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/29</span>
+                <span class='fraction'>2/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.43% </span>
+                <span class="strong">62.5% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/7</span>
+                <span class='fraction'>5/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.9% </span>
+                <span class="strong">54.72% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/51</span>
+                <span class='fraction'>29/53</span>
             </div>
         
             
@@ -183,7 +183,14 @@
 <a name='L118'></a><a href='#L118'>118</a>
 <a name='L119'></a><a href='#L119'>119</a>
 <a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -201,6 +208,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -303,6 +311,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import convertPasteContentForSingleImage from './imageConverter/convertPasteContentForSingleImage';
 import convertPastedContentForLI from './commonConverter/convertPastedContentForLI';
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
@@ -323,6 +337,7 @@ import convertPastedContentFromWordOnline, {
 &nbsp;
 const WORD_ATTRIBUTE_NAME = 'xmlns:w';
 const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
+const WORD_PROG_ID = 'Word.Document';
 const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 const PROG_ID_NAME = 'ProgId';
@@ -379,7 +394,7 @@ export default class Paste implements EditorPlugin {
             const trustedHTMLHandler = <span class="cstat-no" title="statement not covered" >this.editor.getTrustedHTMLHandler();</span>
             let wacListElements<span class="cstat-no" title="statement not covered" >: Node[];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {</span>
+<span class="cstat-no" title="statement not covered" >            if (isWordDocument(htmlAttributes)) {</span>
                 // Handle HTML copied from Word
 <span class="cstat-no" title="statement not covered" >                convertPastedContentFromWord(event);</span>
             } else <span class="cstat-no" title="statement not covered" >if (</span>
@@ -423,6 +438,12 @@ export default class Paste implements EditorPlugin {
         }
     }
 }
+function <span class="fstat-no" title="function not covered" >isWordDocument(</span>htmlAttributes: Record&lt;string, string&gt;) {
+<span class="cstat-no" title="statement not covered" >    return (</span>
+        htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
+        htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
+    );
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -430,7 +451,7 @@ export default class Paste implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Apr 20 2022 17:16:40 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 21 2022 21:53:50 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
