@@ -28,6 +28,10 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
         this.updateStateFromHash();
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('hashchange', this.updateStateFromHash);
+    }
+
     render() {
         let className = (this.props.className || '') + ' ' + styles.sidePane;
         return (
@@ -75,9 +79,7 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
         let isCurrent = this.state.currentPane == plugin;
         return (
             <div key={title} className={isCurrent ? styles.activePane : styles.inactivePane}>
-                <div className={styles.title} onClick={() => this.updateHash(plugin.getName())}>
-                    {title}
-                </div>
+                <div className={styles.title}>{title}</div>
                 <div className={styles.bodyContainer}>
                     <div className={styles.body}>{plugin.renderSidePane(this.updateHash)}</div>
                 </div>
