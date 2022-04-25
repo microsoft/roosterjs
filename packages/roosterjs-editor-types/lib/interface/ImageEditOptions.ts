@@ -46,16 +46,4 @@ export default interface ImageEditOptions {
      * @default A predefined SVG icon
      */
     rotateIconHTML?: string;
-
-    /**
-     * Adapt handles number to the image size
-     * 8 handlers: 100x100px or bigger
-     * 4 handlers: smaller than 100x100px
-     */
-    sizeAdaptiveHandles?: boolean;
-
-    /**
-     * The handlers should have circular borders
-     */
-    circularHandles?: boolean;
 }

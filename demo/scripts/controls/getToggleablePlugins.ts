@@ -32,8 +32,6 @@ const PluginCreators: {
     imageEdit: initState =>
         new ImageEditPlugin({
             preserveRatio: initState.forcePreserveRatio,
-            sizeAdaptiveHandles: initState.sizeAdaptiveImageHandles,
-            circularHandles: initState.circularImageHandles,
         }),
     cutPasteListChain: _ => new CutPasteListChain(),
     tableCellSelection: _ => new TableCellSelection(),

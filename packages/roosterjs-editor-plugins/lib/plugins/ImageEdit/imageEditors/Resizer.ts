@@ -15,8 +15,6 @@ const RESIZE_HANDLE_SIZE = 10;
 const RESIZE_SIDE_HANDLE_WIDTH = 6;
 const RESIZE_SIDE_HANDLE_HEIGHT = 16;
 const RESIZE_HANDLE_MARGIN = 3;
-// The biggest area of image with 4 handles
-const MAX_SMALL_SIZE_IMAGE = 10000;
 const Xs: X[] = ['w', '', 'e'];
 const Ys: Y[] = ['s', '', 'n'];
 
@@ -119,7 +117,7 @@ export function doubleCheckResize(
  */
 export function getCornerResizeHTML({
     borderColor: resizeBorderColor,
-    circularHandles: circularHandles,
+    handlesExperimentalFeatures: handlesExperimentalFeatures,
 }: ImageHtmlOptions): CreateElementData[] {
     const result: CreateElementData[] = [];
 
@@ -131,7 +129,7 @@ export function getCornerResizeHTML({
                           x,
                           y,
                           resizeBorderColor,
-                          circularHandles
+                          handlesExperimentalFeatures
                               ? HandleTypes.CircularHandlesCorner
                               : HandleTypes.SquareHandles
                       )
@@ -142,28 +140,17 @@ export function getCornerResizeHTML({
     return result;
 }
 
-function imageArea(width: number, height: number): number {
-    return width * height;
-}
-
 /**
  * @internal
  * Get HTML for resize handles on the sides
  */
 export function getSideResizeHTML({
-    editInfo: editInfo,
     borderColor: resizeBorderColor,
-    sizeAdaptiveHandles: sizeAdaptiveHandles,
-    circularHandles: circularHandles,
+    isSmallImage: isSmallImage,
+    handlesExperimentalFeatures: handlesExperimentalFeatures,
 }: ImageHtmlOptions): CreateElementData[] {
-    const { widthPx, heightPx } = editInfo;
-    if (
-        sizeAdaptiveHandles &&
-        widthPx &&
-        heightPx &&
-        imageArea(widthPx, heightPx) < MAX_SMALL_SIZE_IMAGE
-    ) {
-        return null;
+    if (isSmallImage) {
+        return;
     }
 
     const result: CreateElementData[] = [];
@@ -175,7 +162,7 @@ export function getSideResizeHTML({
                           x,
                           y,
                           resizeBorderColor,
-                          !circularHandles
+                          !handlesExperimentalFeatures
                               ? HandleTypes.SquareHandles
                               : y
                               ? HandleTypes.CircularHandlesCornerVertical
@@ -186,6 +173,19 @@ export function getSideResizeHTML({
         )
     );
     return result;
+}
+
+/**
+ * @internal
+ * Get HTML for resize borders
+ */
+export function getResizeBordersHTML({
+    borderColor: resizeBorderColor,
+}: ImageHtmlOptions): CreateElementData {
+    return {
+        tag: 'div',
+        style: `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 2px ${resizeBorderColor};pointer-events:none;`,
+    };
 }
 
 function getResizeHandleHTML(
@@ -200,10 +200,7 @@ function getResizeHandleHTML(
     const topOrBottomValue = y == '' ? '50%' : '0px';
     const direction = y + x;
     return x == '' && y == ''
-        ? {
-              tag: 'div',
-              style: `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 2px ${borderColor};pointer-events:none;`,
-          }
+        ? null
         : {
               tag: 'div',
               style: `position:absolute;${leftOrRight}:${leftOrRightValue};${topOrBottom}:${topOrBottomValue}`,
@@ -230,9 +227,9 @@ const setHandleStyle: Record<
     0: (direction, leftOrRight, topOrBottom, borderColor) =>
         `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;`,
     1: (direction, leftOrRight, topOrBottom) =>
-        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;z-index:1;border: 2px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;border: 2px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
     2: (direction, leftOrRight, topOrBottom) =>
-        `position:relative;width:${RESIZE_SIDE_HANDLE_WIDTH}px;height:${RESIZE_SIDE_HANDLE_HEIGHT}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+        `position:relative;width:${RESIZE_SIDE_HANDLE_WIDTH}px;height:${RESIZE_SIDE_HANDLE_HEIGHT}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
     3: (direction, leftOrRight, topOrBottom) =>
-        `position:relative;width:${RESIZE_SIDE_HANDLE_HEIGHT}px;height:${RESIZE_SIDE_HANDLE_WIDTH}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;z-index:1;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+        `position:relative;width:${RESIZE_SIDE_HANDLE_HEIGHT}px;height:${RESIZE_SIDE_HANDLE_WIDTH}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
 };

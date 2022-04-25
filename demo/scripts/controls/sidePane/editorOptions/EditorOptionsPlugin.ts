@@ -25,8 +25,6 @@ const initialState: BuildInPluginState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
-    sizeAdaptiveImageHandles: false,
-    circularImageHandles: false,
     showRibbon: true,
     supportDarkMode: true,
     experimentalFeatures: [
@@ -37,6 +35,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.AlwaysApplyDefaultFormat,
         ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.TableAlignment,
+        ExperimentalFeatures.AdaptiveHandlesResizer,
     ],
     isRtl: false,
 };

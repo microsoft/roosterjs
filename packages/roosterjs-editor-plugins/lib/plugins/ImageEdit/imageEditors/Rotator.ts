@@ -85,7 +85,7 @@ export function getRotateHTML({
                 {
                     tag: 'div',
                     className: ImageEditElementClass.RotateHandle,
-                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move;z-index:2`,
+                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move;`,
                     children: [getRotateIconHTML(borderColor)],
                 },
             ],

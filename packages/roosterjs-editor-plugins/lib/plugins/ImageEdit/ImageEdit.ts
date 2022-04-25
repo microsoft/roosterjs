@@ -28,6 +28,7 @@ import {
     doubleCheckResize,
     getSideResizeHTML,
     getCornerResizeHTML,
+    getResizeBordersHTML,
 } from './imageEditors/Resizer';
 import {
     ExperimentalFeatures,
@@ -74,8 +75,6 @@ const DefaultOptions: Required<ImageEditOptions> = {
     minRotateDeg: 5,
     imageSelector: 'img',
     rotateIconHTML: null,
-    sizeAdaptiveHandles: false,
-    circularHandles: false,
 };
 
 /**
@@ -99,6 +98,11 @@ const IMAGE_EDIT_WRAPPER_ENTITY_TYPE = 'IMAGE_EDIT_WRAPPER';
  */
 const LIGHT_MODE_BGCOLOR = 'white';
 const DARK_MODE_BGCOLOR = '#333';
+
+/**
+ * The biggest area of image with 4 handles
+ */
+const MAX_SMALL_SIZE_IMAGE = 10000;
 
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
@@ -364,17 +368,22 @@ export default class ImageEdit implements EditorPlugin {
         this.image.style.maxWidth = null;
 
         // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
+
         const options: ImageHtmlOptions = {
-            editInfo: this.editInfo,
             borderColor: this.options.borderColor,
             rotateIconHTML: this.options.rotateIconHTML,
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
-            sizeAdaptiveHandles: this.options.sizeAdaptiveHandles,
-            circularHandles: this.options.circularHandles,
+            isSmallImage: isASmallImage(
+                this.editInfo,
+                this.editor.isFeatureEnabled(ExperimentalFeatures.AdaptiveHandlesResizer)
+            ),
+            handlesExperimentalFeatures: this.editor.isFeatureEnabled(
+                ExperimentalFeatures.AdaptiveHandlesResizer
+            ),
         };
-        const htmlData: CreateElementData[] = [];
+        const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
         ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
             thisOperation => {
@@ -649,4 +658,9 @@ function checkIfImageWasResized(image: HTMLImageElement): boolean {
 function isFixedNumberValue(value: string | number) {
     const numberValue = typeof value === 'string' ? parseInt(value) : value;
     return !isNaN(numberValue);
+}
+
+function isASmallImage(editInfo: ImageEditInfo, isFeatureEnabled?: boolean) {
+    const { widthPx, heightPx } = editInfo;
+    return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE && isFeatureEnabled;
 }

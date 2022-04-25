@@ -1,5 +1,3 @@
-import ImageEditInfo from './ImageEditInfo';
-
 /**
  * @internal
  * Options for retrieve HTML string for image editing
@@ -23,20 +21,12 @@ export default interface ImageHtmlOptions {
     rotateHandleBackColor: string;
 
     /**
-     * Image editing data
+     * Verify if the area of the image is less than 10000px, if yes, don't insert the side handles
      */
-    editInfo: ImageEditInfo;
+    isSmallImage: boolean;
 
     /**
-     * The number of handlers should be adapted to the image size
-     * 8 handlers: 100x100px or bigger
-     * 4 handlers: 50x50px or bigger
-     * 1 handler: smaller than 50x50px
+     * Enable resize handles experimental feature
      */
-    sizeAdaptiveHandles?: boolean;
-
-    /**
-     * The handlers should have circular borders
-     */
-    circularHandles?: boolean;
+    handlesExperimentalFeatures?: boolean;
 }
