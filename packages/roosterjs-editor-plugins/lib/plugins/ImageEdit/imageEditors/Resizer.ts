@@ -5,7 +5,15 @@ import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 
-const RESIZE_HANDLE_SIZE = 7;
+const enum HandleTypes {
+    SquareHandles,
+    CircularHandlesCorner,
+    CircularHandlesSideHorizontal,
+    CircularHandlesCornerVertical,
+}
+const RESIZE_HANDLE_SIZE = 10;
+const RESIZE_SIDE_HANDLE_WIDTH = 6;
+const RESIZE_SIDE_HANDLE_HEIGHT = 16;
 const RESIZE_HANDLE_MARGIN = 3;
 const Xs: X[] = ['w', '', 'e'];
 const Ys: Y[] = ['s', '', 'n'];
@@ -109,12 +117,23 @@ export function doubleCheckResize(
  */
 export function getCornerResizeHTML({
     borderColor: resizeBorderColor,
+    handlesExperimentalFeatures: handlesExperimentalFeatures,
 }: ImageHtmlOptions): CreateElementData[] {
     const result: CreateElementData[] = [];
+
     Xs.forEach(x =>
         Ys.forEach(y =>
             result.push(
-                (x == '') == (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : null
+                (x == '') == (y == '')
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles
+                      )
+                    : null
             )
         )
     );
@@ -127,40 +146,90 @@ export function getCornerResizeHTML({
  */
 export function getSideResizeHTML({
     borderColor: resizeBorderColor,
+    isSmallImage: isSmallImage,
+    handlesExperimentalFeatures: handlesExperimentalFeatures,
 }: ImageHtmlOptions): CreateElementData[] {
+    if (isSmallImage) {
+        return null;
+    }
+
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y =>
             result.push(
-                (x == '') != (y == '') ? getResizeHandleHTML(x, y, resizeBorderColor) : null
+                (x == '') != (y == '')
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          !handlesExperimentalFeatures
+                              ? HandleTypes.SquareHandles
+                              : y
+                              ? HandleTypes.CircularHandlesCornerVertical
+                              : HandleTypes.CircularHandlesSideHorizontal
+                      )
+                    : null
             )
         )
     );
     return result;
 }
 
-function getResizeHandleHTML(x: X, y: Y, borderColor: string): CreateElementData {
+/**
+ * @internal
+ * Get HTML for resize borders
+ */
+export function getResizeBordersHTML({
+    borderColor: resizeBorderColor,
+}: ImageHtmlOptions): CreateElementData {
+    return {
+        tag: 'div',
+        style: `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 2px ${resizeBorderColor};pointer-events:none;`,
+    };
+}
+
+function getResizeHandleHTML(
+    x: X,
+    y: Y,
+    borderColor: string,
+    handleTypes: HandleTypes
+): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
     const leftOrRightValue = x == '' ? '50%' : '0px';
     const topOrBottomValue = y == '' ? '50%' : '0px';
     const direction = y + x;
-
     return x == '' && y == ''
-        ? {
-              tag: 'div',
-              style: `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 1px ${borderColor};pointer-events:none`,
-          }
+        ? null
         : {
               tag: 'div',
               style: `position:absolute;${leftOrRight}:${leftOrRightValue};${topOrBottom}:${topOrBottomValue}`,
               children: [
                   {
                       tag: 'div',
-                      style: `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px`,
+                      style: setHandleStyle[handleTypes](
+                          direction,
+                          topOrBottom,
+                          leftOrRight,
+                          borderColor
+                      ),
                       className: ImageEditElementClass.ResizeHandle,
                       dataset: { x, y },
                   },
               ],
           };
 }
+
+const setHandleStyle: Record<
+    HandleTypes,
+    (direction: string, topOrBottom: string, leftOrRight: string, borderColor: string) => string
+> = {
+    0: (direction, leftOrRight, topOrBottom, borderColor) =>
+        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;`,
+    1: (direction, leftOrRight, topOrBottom) =>
+        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;border: 2px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+    2: (direction, leftOrRight, topOrBottom) =>
+        `position:relative;width:${RESIZE_SIDE_HANDLE_WIDTH}px;height:${RESIZE_SIDE_HANDLE_HEIGHT}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+    3: (direction, leftOrRight, topOrBottom) =>
+        `position:relative;width:${RESIZE_SIDE_HANDLE_HEIGHT}px;height:${RESIZE_SIDE_HANDLE_WIDTH}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+};
