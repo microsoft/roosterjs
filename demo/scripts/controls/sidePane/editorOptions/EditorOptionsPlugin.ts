@@ -35,6 +35,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.AlwaysApplyDefaultFormat,
         ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.TableAlignment,
+        ExperimentalFeatures.AdaptiveHandlesResizer,
     ],
     isRtl: false,
 };
