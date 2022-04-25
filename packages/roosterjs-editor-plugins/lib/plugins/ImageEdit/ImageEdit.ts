@@ -367,21 +367,19 @@ export default class ImageEdit implements EditorPlugin {
         this.image.style.position = 'absolute';
         this.image.style.maxWidth = null;
 
-        // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
+        const isExperimentalHandlesEnabled = this.editor.isFeatureEnabled(
+            ExperimentalFeatures.AdaptiveHandlesResizer
+        );
 
+        // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
         const options: ImageHtmlOptions = {
             borderColor: this.options.borderColor,
             rotateIconHTML: this.options.rotateIconHTML,
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
-            isSmallImage: isASmallImage(
-                this.editInfo,
-                this.editor.isFeatureEnabled(ExperimentalFeatures.AdaptiveHandlesResizer)
-            ),
-            handlesExperimentalFeatures: this.editor.isFeatureEnabled(
-                ExperimentalFeatures.AdaptiveHandlesResizer
-            ),
+            isSmallImage: isASmallImage(this.editInfo, isExperimentalHandlesEnabled),
+            handlesExperimentalFeatures: isExperimentalHandlesEnabled,
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
