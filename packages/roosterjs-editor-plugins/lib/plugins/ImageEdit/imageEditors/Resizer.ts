@@ -150,7 +150,7 @@ export function getSideResizeHTML({
     handlesExperimentalFeatures: handlesExperimentalFeatures,
 }: ImageHtmlOptions): CreateElementData[] {
     if (isSmallImage) {
-        return;
+        return null;
     }
 
     const result: CreateElementData[] = [];

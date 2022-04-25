@@ -73,6 +73,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
         moreOptions?: JSX.Element
     ): JSX.Element {
         const checked = this.props.state.pluginList[id];
+
         return (
             <tr>
                 <td className={styles.checkboxColumn}>
