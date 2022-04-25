@@ -84,6 +84,15 @@ describe('convertPastedContentFromWord', () => {
         let source = '<OL style="margin-bottom: 0in"><li></li><li></li></OL>';
         runTest(source, '<ol><li></li><li></li></ol>');
     });
+
+    it('Remove Margin bottom from List', () => {
+        let source =
+            '<div></div><ol style="margin-bottom:0in"><li>1</li><ol><li>2</li></ol></ol><p>123</p><div><br></div>';
+        runTest(
+            source,
+            '<div></div><ol><li>1</li><ol><li>2</li></ol></ol><p>123</p><div><br></div>'
+        );
+    });
 });
 
 function createBeforePasteEventMock(fragment: DocumentFragment) {
