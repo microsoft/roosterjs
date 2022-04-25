@@ -240,4 +240,5 @@ export default interface ContentEditFeatureSettings
         ShortcutFeatureSettings,
         CursorFeatureSettings,
         MarkdownFeatureSettings,
-        EntityFeatureSettings {}
+        EntityFeatureSettings,
+        TextFeatureSettings {}
