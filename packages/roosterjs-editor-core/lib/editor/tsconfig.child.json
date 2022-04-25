@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "strict": false
+    },
+    "extends": "../../../tsconfig.json",
+    "include": ["./**/*.ts"],
+    "references": [
+        { "path": "../../../roosterjs-editor-types/tsconfig.child.json" },
+        { "path": "../../../roosterjs-editor-dom/tsconfig.child.json" },
+        { "path": "../coreApi/tsconfig.child.json" },
+        { "path": "../corePlugins/tsconfig.child.json" }
+    ]
+}
