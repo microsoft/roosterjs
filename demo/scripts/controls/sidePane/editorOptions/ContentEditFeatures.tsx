@@ -37,6 +37,10 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     maintainListChainWhenDelete:
         'Maintain the list of number in the right order after press delete before the first item',
     indentTableOnTab: 'Indent the table if it is all cells are selected.',
+    indentWhenTabText:
+        'On Tab indent the selection or add Tab, requires TabKeyFeatures Experimental Feature',
+    outdentWhenTabText:
+        'On Shift + Tab outdent the selection, requires TabKeyFeatures Experimental Feature',
 };
 
 export interface ContentEditFeaturessProps {
