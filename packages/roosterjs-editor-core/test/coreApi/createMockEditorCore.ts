@@ -12,6 +12,7 @@ export default function createMockEditorCore(
             ...coreApiMap,
             ...(options.coreApiOverride || {}),
         },
+        originalApi: coreApiMap,
         plugins: options.plugins || [],
         ...getPluginState(createCorePlugins(contentDiv, options)),
         trustedHTMLHandler: (html: string) => html,
