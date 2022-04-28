@@ -1,11 +1,7 @@
 import convertPastedContentFromWord from '../../../lib/plugins/Paste/wordConverter/convertPastedContentFromWord';
 import { BeforePasteEvent, SanitizeHtmlOptions } from 'roosterjs-editor-types';
+import { ClipboardData, PluginEventType } from '../../../../roosterjs/lib';
 import { HtmlSanitizer, moveChildNodes } from 'roosterjs-editor-dom';
-import {
-    ClipboardData,
-    createDefaultHtmlSanitizerOptions,
-    PluginEventType,
-} from '../../../../roosterjs/lib';
 
 describe('convertPastedContentFromWord', () => {
     function callSanitizer(fragment: DocumentFragment, sanitizingOption: SanitizeHtmlOptions) {
@@ -31,6 +27,7 @@ describe('convertPastedContentFromWord', () => {
 
         //Assert
         expect(div.innerHTML).toBe(expected);
+        div.parentElement?.removeChild(div);
     }
 
     it('Remove Comment | mso-element:comment-list', () => {
@@ -93,6 +90,26 @@ describe('convertPastedContentFromWord', () => {
             '<div></div><ol><li>1</li><ol><li>2</li></ol></ol><p>123</p><div><br></div>'
         );
     });
+
+    it('Remove Line height less than default', () => {
+        let source = '<p style="line-height:102%"></p>';
+        runTest(source, '<p></p>');
+    });
+
+    it('Remove Line height, not percentage', () => {
+        let source = '<p style="line-height:1"></p>';
+        runTest(source, source);
+    });
+
+    it('Remove Line height, not percentage 2', () => {
+        let source = '<p style="line-height:initial"></p>';
+        runTest(source, source);
+    });
+
+    it('Remove Line height, percentage greater than default', () => {
+        let source = '<p style="line-height:122%"></p>';
+        runTest(source, source);
+    });
 });
 
 function createBeforePasteEventMock(fragment: DocumentFragment) {
@@ -100,7 +117,19 @@ function createBeforePasteEventMock(fragment: DocumentFragment) {
         eventType: PluginEventType.BeforePaste,
         clipboardData: <ClipboardData>{},
         fragment: fragment,
-        sanitizingOption: createDefaultHtmlSanitizerOptions(),
+        sanitizingOption: {
+            elementCallbacks: {},
+            attributeCallbacks: {},
+            cssStyleCallbacks: {},
+            additionalTagReplacements: {},
+            additionalAllowedAttributes: [],
+            additionalAllowedCssClasses: [],
+            additionalDefaultStyleValues: {},
+            additionalGlobalStyleNodes: [],
+            additionalPredefinedCssForElement: {},
+            preserveHtmlComments: false,
+            unknownTagReplacement: null,
+        },
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
