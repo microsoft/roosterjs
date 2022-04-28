@@ -36,6 +36,11 @@ export default interface EditorCore extends PluginState {
     readonly api: CoreApiMap;
 
     /**
+     * Original API map of this editor. Overridden core API can use API from this map to call the original version of core API.
+     */
+    readonly originalApi: CoreApiMap;
+
+    /**
      * A handler to convert HTML string to a trust HTML string.
      * By default it will just return the original HTML string directly.
      * To override, pass your own trusted HTML handler to EditorOptions.trustedHTMLHandler
