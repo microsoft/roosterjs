@@ -1,11 +1,5 @@
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { findClosestElementAncestor, Position } from 'roosterjs-editor-dom';
-import {
-    EditorPlugin,
-    ExperimentalFeatures,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
 
 /**
  * @internal
