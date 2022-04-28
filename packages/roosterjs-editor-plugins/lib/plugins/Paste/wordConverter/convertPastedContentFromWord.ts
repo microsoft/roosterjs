@@ -52,7 +52,7 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
         let parsedLineHeight: number;
         if (
             PERCENTAGE_REGEX.test(value) &&
-            (parsedLineHeight = parseInt(value)) != NaN &&
+            !isNaN((parsedLineHeight = parseInt(value))) &&
             parsedLineHeight < DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE
         ) {
             return false;
