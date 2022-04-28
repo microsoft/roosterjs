@@ -14,6 +14,7 @@ const packagesUiPath = path.join(rootPath, 'packages-ui');
 const nodeModulesPath = path.join(rootPath, 'node_modules');
 const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
+const tempPath = path.join(rootPath, 'temp');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const roosterJsUiDistPath = path.join(distPath, 'roosterjs-react/dist');
 const deployPath = path.join(distPath, 'deploy');
@@ -88,10 +89,8 @@ function readPackageJson(packageName, readFromSourceFolder) {
         'package.json'
     );
     const content = fs.readFileSync(packageJsonFilePath);
-    const writeBack = content => {
-        fs.writeFileSync(packageJsonFilePath, content);
-    };
-    return [JSON.parse(content), writeBack];
+
+    return JSON.parse(content);
 }
 
 const mainPackageJson = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json')));
@@ -142,6 +141,7 @@ module.exports = {
     nodeModulesPath,
     typescriptPath,
     distPath,
+    tempPath,
     roosterJsDistPath,
     roosterJsUiDistPath,
     deployPath,
