@@ -8,12 +8,8 @@ import { ImageEditElementClass } from '../types/ImageEditElementClass';
 const enum HandleTypes {
     SquareHandles,
     CircularHandlesCorner,
-    CircularHandlesSideHorizontal,
-    CircularHandlesCornerVertical,
 }
 const RESIZE_HANDLE_SIZE = 10;
-const RESIZE_SIDE_HANDLE_WIDTH = 6;
-const RESIZE_SIDE_HANDLE_HEIGHT = 16;
 const RESIZE_HANDLE_MARGIN = 3;
 const Xs: X[] = ['w', '', 'e'];
 const Ys: Y[] = ['s', '', 'n'];
@@ -162,11 +158,9 @@ export function getSideResizeHTML({
                           x,
                           y,
                           resizeBorderColor,
-                          !handlesExperimentalFeatures
-                              ? HandleTypes.SquareHandles
-                              : y
-                              ? HandleTypes.CircularHandlesCornerVertical
-                              : HandleTypes.CircularHandlesSideHorizontal
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles
                       )
                     : null
             )
@@ -227,9 +221,5 @@ const setHandleStyle: Record<
     0: (direction, leftOrRight, topOrBottom, borderColor) =>
         `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: ${borderColor};cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;`,
     1: (direction, leftOrRight, topOrBottom) =>
-        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;border: 2px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
-    2: (direction, leftOrRight, topOrBottom) =>
-        `position:relative;width:${RESIZE_SIDE_HANDLE_WIDTH}px;height:${RESIZE_SIDE_HANDLE_HEIGHT}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
-    3: (direction, leftOrRight, topOrBottom) =>
-        `position:relative;width:${RESIZE_SIDE_HANDLE_HEIGHT}px;height:${RESIZE_SIDE_HANDLE_WIDTH}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:20%;border: 1px solid #EAEAEA;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
+        `position:relative;width:${RESIZE_HANDLE_SIZE}px;height:${RESIZE_HANDLE_SIZE}px;background-color: #FFFFFF;cursor:${direction}-resize;${topOrBottom}:-${RESIZE_HANDLE_MARGIN}px;${leftOrRight}:-${RESIZE_HANDLE_MARGIN}px;border-radius:100%;border: 2px solid #bfbfbf;box-shadow: 0px 0.36316px 1.36185px rgba(100, 100, 100, 0.25);`,
 };
