@@ -98,6 +98,7 @@ export default class Editor implements IEditor {
                 ...coreApiMap,
                 ...(options.coreApiOverride || {}),
             },
+            originalApi: coreApiMap,
             plugins: plugins.filter(x => !!x),
             ...getPluginState(corePlugins),
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
