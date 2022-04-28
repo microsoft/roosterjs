@@ -10,7 +10,7 @@
         "declaration": true,
         "removeComments": false,
         "noImplicitAny": true,
-        "preserveConstEnums": false,
+        "preserveConstEnums": true,
         "noUnusedLocals": true,
         "baseUrl": ".",
         "paths": {

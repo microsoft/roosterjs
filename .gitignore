@@ -11,5 +11,8 @@ node_modules/
 # Distribution
 dist/
 
-#Mac files
+# Mac files
 .DS_Store
+
+# Temp files
+temp/
