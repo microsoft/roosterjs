@@ -119,6 +119,7 @@ export default class Paste implements EditorPlugin {
         }
     }
 }
+
 function isWordDocument(htmlAttributes: Record<string, string>) {
     return (
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
