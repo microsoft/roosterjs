@@ -397,7 +397,14 @@
 <a name='L332'></a><a href='#L332'>332</a>
 <a name='L333'></a><a href='#L333'>333</a>
 <a name='L334'></a><a href='#L334'>334</a>
-<a name='L335'></a><a href='#L335'>335</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L335'></a><a href='#L335'>335</a>
+<a name='L336'></a><a href='#L336'>336</a>
+<a name='L337'></a><a href='#L337'>337</a>
+<a name='L338'></a><a href='#L338'>338</a>
+<a name='L339'></a><a href='#L339'>339</a>
+<a name='L340'></a><a href='#L340'>340</a>
+<a name='L341'></a><a href='#L341'>341</a>
+<a name='L342'></a><a href='#L342'>342</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -457,6 +464,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -464,7 +472,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -480,6 +491,7 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -683,6 +695,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -712,6 +725,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -789,19 +803,23 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         cell.td,
                         backgroundColor || TRANSPARENT,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 } else <span class="missing-if-branch" title="if path not taken" >I</span>if (shouldColorWholeTable) {
 <span class="cstat-no" title="statement not covered" >                    setColor(</span>
                         cell.td,
                         format.bgColorOdd || TRANSPARENT,
-                        true /** isBackgroundColor*/
+                        true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
+                        true /** shouldAdaptFontColor */
                     );
                 } else {
                     setColor(
                         cell.td,
                         TRANSPARENT,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 }
@@ -817,6 +835,7 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         cell.td,
                         backgroundColor,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 }
@@ -1014,6 +1033,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial&lt;TableFormat&g
                         cell.td,
                         TRANSPARENT,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 }
@@ -1049,6 +1069,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
                     cell.td,
                     format.headerRowColor,
                     true /** isBackgroundColor*/,
+                    undefined /** isDarkMode **/,
                     true /** shouldAdaptFontColor */
                 );
             }
@@ -1072,7 +1093,7 @@ function getBorderStyle(style?: string | null) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Apr 28 2022 16:51:40 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 28 2022 17:07:29 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
