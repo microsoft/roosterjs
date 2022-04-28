@@ -12,7 +12,6 @@ const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
     [ExperimentalFeatures.PasteWithLinkPreview]: 'Try retrieve link preview information when paste',
     [ExperimentalFeatures.ImageRotate]: 'Rotate an inline image',
     [ExperimentalFeatures.ImageCrop]: 'Crop an inline image',
-    [ExperimentalFeatures.AlwaysApplyDefaultFormat]: 'Apply the default format to all elements',
     [ExperimentalFeatures.ConvertSingleImageBody]:
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
     [ExperimentalFeatures.TableAlignment]:
