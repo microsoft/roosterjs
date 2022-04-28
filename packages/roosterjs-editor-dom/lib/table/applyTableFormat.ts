@@ -56,19 +56,23 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         cell.td,
                         backgroundColor || TRANSPARENT,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 } else if (shouldColorWholeTable) {
                     setColor(
                         cell.td,
                         format.bgColorOdd || TRANSPARENT,
-                        true /** isBackgroundColor*/
+                        true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
+                        true /** shouldAdaptFontColor */
                     );
                 } else {
                     setColor(
                         cell.td,
                         TRANSPARENT,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 }
@@ -84,6 +88,7 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         cell.td,
                         backgroundColor,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 }
@@ -281,6 +286,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
                         cell.td,
                         TRANSPARENT,
                         true /** isBackgroundColor*/,
+                        undefined /** isDarkMode **/,
                         true /** shouldAdaptFontColor */
                     );
                 }
@@ -316,6 +322,7 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
                     cell.td,
                     format.headerRowColor,
                     true /** isBackgroundColor*/,
+                    undefined /** isDarkMode **/,
                     true /** shouldAdaptFontColor */
                 );
             }
