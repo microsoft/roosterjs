@@ -105,7 +105,6 @@ describe('convertPastedContentFromWord', () => {
         let source = '<p style="line-height:initial"></p>';
         runTest(source, source);
     });
-
     it('Remove Line height, percentage greater than default', () => {
         let source = '<p style="line-height:122%"></p>';
         runTest(source, source);
