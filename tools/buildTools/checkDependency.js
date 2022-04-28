@@ -65,7 +65,7 @@ function checkDependency() {
     allPackages.forEach(packageName => {
         const packageRoot = findPackageRoot(packageName);
 
-        var [packageJson] = readPackageJson(packageName, true /*readFromSourceFolder*/);
+        var packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
         var dependencies = Object.keys(packageJson.dependencies);
         var peerDependencies = packageJson.peerDependencies
             ? Object.keys(packageJson.peerDependencies)

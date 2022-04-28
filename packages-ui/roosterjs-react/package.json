@@ -14,5 +14,31 @@
         "react-dom": ">=16.0.0",
         "@fluentui/react": ">=8.0.0"
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "exports": {
+        ".": {
+            "default": [
+                "./lib/index.ts",
+                "./lib/index.js"
+            ]
+        },
+        "./lib/common": {
+            "default": [
+                "./lib/common/index.ts",
+                "./lib/common/index.js"
+            ]
+        },
+        "./lib/ribbon": {
+            "default": [
+                "./lib/ribbon/index.ts",
+                "./lib/ribbon/index.js"
+            ]
+        },
+        "./lib/rooster": {
+            "default": [
+                "./lib/rooster/index.ts",
+                "./lib/rooster/index.js"
+            ]
+        }
+    }
 }
