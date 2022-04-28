@@ -69,6 +69,30 @@ describe('convertPastedContentFromWord', () => {
         let source = '<span><span style="mso-special-character:comment">&nbsp;</span></span>';
         runTest(source, '<span></span>');
     });
+
+    it('Remove Bottom Margin = 0in | UL', () => {
+        let source = '<UL style="margin-bottom: 0in"><li></li><li></li></UL>';
+        runTest(source, '<ul><li></li><li></li></ul>');
+    });
+
+    it('Do Not Remove Bottom Margin = 1in | UL', () => {
+        let source = '<UL style="margin-bottom: 1in"><li></li><li></li></UL>';
+        runTest(source, '<ul style="margin-bottom:1in"><li></li><li></li></ul>');
+    });
+
+    it('Remove Bottom Margin = 0in | OL', () => {
+        let source = '<OL style="margin-bottom: 0in"><li></li><li></li></OL>';
+        runTest(source, '<ol><li></li><li></li></ol>');
+    });
+
+    it('Remove Margin bottom from List', () => {
+        let source =
+            '<div></div><ol style="margin-bottom:0in"><li>1</li><ol><li>2</li></ol></ol><p>123</p><div><br></div>';
+        runTest(
+            source,
+            '<div></div><ol><li>1</li><ol><li>2</li></ol></ol><p>123</p><div><br></div>'
+        );
+    });
 });
 
 function createBeforePasteEventMock(fragment: DocumentFragment) {
