@@ -5,6 +5,9 @@ import { createWordConverter } from './wordConverter';
 import { createWordConverterArguments } from './WordConverterArguments';
 import { processNodeConvert, processNodesDiscovery } from './converterUtils';
 
+const PERCENTAGE_REGEX = /%/;
+const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
+
 /**
  * @internal
  * Converts all the Word generated list items in the specified node into standard HTML UL and OL tags
@@ -43,5 +46,19 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
             return true;
         });
     });
+
+    //If the line height is less than the browser default line height, line between the text is going to be too narrow
+    chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'line-height', (value: string) => {
+        let parsedLineHeight: number;
+        if (
+            PERCENTAGE_REGEX.test(value) &&
+            !isNaN((parsedLineHeight = parseInt(value))) &&
+            parsedLineHeight < DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE
+        ) {
+            return false;
+        }
+        return true;
+    });
+
     commentsRemoval(sanitizingOption.elementCallbacks);
 }
