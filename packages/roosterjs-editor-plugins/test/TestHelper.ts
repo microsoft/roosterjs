@@ -1,6 +1,6 @@
-export * from 'roosterjs-editor-dom/test/DomTestHelper';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
+export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
 export function initEditor(id: string, plugins?: EditorPlugin[]) {
     let node = document.createElement('div');

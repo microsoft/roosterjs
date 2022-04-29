@@ -16,15 +16,15 @@ const dts = require('./buildTools/dts');
 const buildDemoStep = require('./buildTools/buildDemo');
 const buildDocumentStep = require('./buildTools/buildDocument');
 const publishStep = require('./buildTools/publish');
-const replaceConstEnum = require('./buildTools/replaceConstEnum');
+const buildSizeOptimizedStep = require('./buildTools/buildSizeOptimized');
 const allTasks = [
-    replaceConstEnum,
     tslintStep,
     checkDependencyStep,
     cleanStep,
     normalizeStep,
     buildAmdStep,
     buildCommonJsStep,
+    buildSizeOptimizedStep,
     pack.commonJsDebug,
     pack.commonJsProduction,
     pack.amdDebug,
@@ -44,13 +44,13 @@ const allTasks = [
 
 // Commands
 const commands = [
-    'replaceConstEnum', // Replace enum with const enum
     'tslint', // Run tslint to check code style
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
     'normalize', // Normalize package.json files
     'buildamd', // Build in AMD mode
     'buildcommonjs', // Build in CommonJs mode
+    'buildSizeOptimized', // Build in Size Optimized mode (Using const enum instead of enum)
     'pack', // Run webpack to generate standalone .js files
     'packprod', // Run webpack to generate standalone .js files in production mode
     'dts', // Generate type definition files (.d.ts)
