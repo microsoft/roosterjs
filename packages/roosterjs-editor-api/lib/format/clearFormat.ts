@@ -162,7 +162,7 @@ function clearAutoDetectFormat(editor: IEditor) {
  * @param editor The editor instance
  */
 function clearBlockFormat(editor: IEditor) {
-    editor.addUndoSnapshot((start, end) => {
+    editor.addUndoSnapshot(() => {
         blockFormat(editor, region => {
             const blocks = getSelectedBlockElementsInRegion(region);
             let nodes = collapseNodesInRegion(region, blocks);
