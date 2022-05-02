@@ -1,5 +1,5 @@
 import execCommand from '../utils/execCommand';
-import { isWholeTableSelected, VTable } from 'roosterjs-editor-dom';
+import { getTagOfNode, isWholeTableSelected, VTable, wrap } from 'roosterjs-editor-dom';
 import {
     Alignment,
     ChangeSource,
@@ -20,6 +20,8 @@ import {
 export default function setAlignment(editor: IEditor, alignment: Alignment) {
     const selection = editor.getSelectionRangeEx();
     const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
+    const elementAtCursor = editor.getElementAtCursor();
+
     editor.addUndoSnapshot(() => {
         if (
             editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
@@ -27,6 +29,8 @@ export default function setAlignment(editor: IEditor, alignment: Alignment) {
             isWholeTableSelected(new VTable(selection.table), selection.coordinates)
         ) {
             alignTable(selection, alignment);
+        } else if (isList(elementAtCursor)) {
+            alignList(editor, elementAtCursor, alignment);
         } else {
             alignText(editor, alignment);
         }
@@ -73,4 +77,26 @@ function alignText(editor: IEditor, alignment: Alignment) {
     }
     execCommand(editor, command);
     editor.queryElements('[align]', QueryScope.OnSelection, node => (node.style.textAlign = align));
+}
+
+function isList(element: HTMLElement) {
+    return ['LI', 'UL', 'OL'].indexOf(getTagOfNode(element)) > -1;
+}
+
+function alignList(editor: IEditor, element: HTMLElement, alignment: Alignment) {
+    const list = getTagOfNode(element) === 'LI' ? element.parentElement : element;
+    list.style.display = 'inline-table';
+    let align = 'left';
+    if (alignment == Alignment.Center) {
+        align = 'center';
+    } else if (alignment == Alignment.Right) {
+        align = 'right';
+    }
+    if (list.parentElement.style.textAlign) {
+        list.parentElement.style.textAlign = align;
+    } else {
+        const wrapper = editor.getDocument().createElement('div');
+        wrapper.style.textAlign = align;
+        wrap(list, wrapper);
+    }
 }
