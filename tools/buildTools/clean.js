@@ -1,7 +1,8 @@
 'use strict';
 
+const path = require('path');
 const rimraf = require('rimraf');
-const { distPath, tempPath } = require('./common');
+const { distPath, packagesPath } = require('./common');
 
 async function cleanDir(dirName) {
     await new Promise((resolve, reject) => {
@@ -17,7 +18,7 @@ async function cleanDir(dirName) {
 
 async function clean() {
     await cleanDir(distPath);
-    await cleanDir(tempPath);
+    await cleanDir(path.join(packagesPath, 'roosterjs-editor-types', 'lib', 'enum'));
 }
 
 module.exports = {

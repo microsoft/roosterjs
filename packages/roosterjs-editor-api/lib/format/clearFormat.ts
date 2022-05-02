@@ -30,6 +30,7 @@ import {
     unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
+import type { CompatibleClearFormatMode } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
@@ -235,7 +236,7 @@ function clearInlineFormat(editor: IEditor) {
  */
 export default function clearFormat(
     editor: IEditor,
-    formatType: ClearFormatMode = ClearFormatMode.Inline
+    formatType: ClearFormatMode | CompatibleClearFormatMode = ClearFormatMode.Inline
 ) {
     switch (formatType) {
         case ClearFormatMode.Inline:

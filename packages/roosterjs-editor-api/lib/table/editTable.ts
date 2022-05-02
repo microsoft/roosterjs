@@ -6,13 +6,17 @@ import {
     SelectionRangeTypes,
     TableOperation,
 } from 'roosterjs-editor-types';
+import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Edit table with given operation. If there is no table at cursor then no op.
  * @param editor The editor instance
  * @param operation Table operation
  */
-export default function editTable(editor: IEditor, operation: TableOperation) {
+export default function editTable(
+    editor: IEditor,
+    operation: TableOperation | CompatibleTableOperation
+) {
     let td = editor.getElementAtCursor('TD,TH') as HTMLTableCellElement;
     if (td) {
         editor.addUndoSnapshot(() => {
@@ -32,7 +36,11 @@ export default function editTable(editor: IEditor, operation: TableOperation) {
     }
 }
 
-function calculateCellToSelect(operation: TableOperation, currentRow: number, currentCol: number) {
+function calculateCellToSelect(
+    operation: TableOperation | CompatibleTableOperation,
+    currentRow: number,
+    currentCol: number
+) {
     let newRow = currentRow;
     let newCol = currentCol;
     switch (operation) {

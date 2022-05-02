@@ -11,8 +11,7 @@
         "coverage": true,
         ".vscode/**": true,
         "dist/**": true,
-        "stats.json": true,
-        "temp/**": true
+        "stats.json": true
     },
     "prettier.arrowParens": "avoid",
     "prettier.singleQuote": true,

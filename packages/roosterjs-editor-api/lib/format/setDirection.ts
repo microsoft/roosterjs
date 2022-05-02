@@ -1,5 +1,6 @@
 import collapseSelectedBlocks from '../utils/collapseSelectedBlocks';
 import { ChangeSource, Direction, IEditor } from 'roosterjs-editor-types';
+import type { CompatibleDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Change direction for the blocks/paragraph at selection
@@ -7,7 +8,7 @@ import { ChangeSource, Direction, IEditor } from 'roosterjs-editor-types';
  * @param direction The direction option:
  * Direction.LeftToRight refers to 'ltr', Direction.RightToLeft refers to 'rtl'
  */
-export default function setDirection(editor: IEditor, direction: Direction) {
+export default function setDirection(editor: IEditor, direction: Direction | CompatibleDirection) {
     editor.focus();
     editor.addUndoSnapshot((start, end) => {
         collapseSelectedBlocks(editor, element => {

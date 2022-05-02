@@ -4,37 +4,5 @@
     "dependencies": {
         "roosterjs-editor-types": ""
     },
-    "main": "./lib/index.ts",
-    "exports": {
-        ".": {
-            "default": [
-                "./lib/index.ts",
-                "./lib/index.js"
-            ]
-        },
-        "./lib/htmlSanitizer/HtmlSanitizer": {
-            "default": [
-                "./lib/htmlSanitizer/HtmlSanitizer.ts",
-                "./lib/htmlSanitizer/HtmlSanitizer.js"
-            ]
-        },
-        "./lib/selection/getPositionRect": {
-            "default": [
-                "./lib/selection/getPositionRect.ts",
-                "./lib/selection/getPositionRect.js"
-            ]
-        },
-        "./lib/utils/isNodeEmpty": {
-            "default": [
-                "./lib/utils/isNodeEmpty.ts",
-                "./lib/utils/isNodeEmpty.js"
-            ]
-        },
-        "./lib/utils/safeInstanceOf": {
-            "default": [
-                "./lib/utils/safeInstanceOf.ts",
-                "./lib/utils/safeInstanceOf.js"
-            ]
-        }
-    }
+    "main": "./lib/index.ts"
 }

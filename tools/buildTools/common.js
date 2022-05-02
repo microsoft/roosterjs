@@ -14,7 +14,6 @@ const packagesUiPath = path.join(rootPath, 'packages-ui');
 const nodeModulesPath = path.join(rootPath, 'node_modules');
 const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
-const tempPath = path.join(rootPath, 'temp');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const roosterJsUiDistPath = path.join(distPath, 'roosterjs-react/dist');
 const deployPath = path.join(distPath, 'deploy');
@@ -141,7 +140,6 @@ module.exports = {
     nodeModulesPath,
     typescriptPath,
     distPath,
-    tempPath,
     roosterJsDistPath,
     roosterJsUiDistPath,
     deployPath,

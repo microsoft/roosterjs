@@ -4,6 +4,7 @@ import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../utils/toArray';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
+import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 import {
     SizeTransformer,
@@ -182,7 +183,7 @@ export default class VTable {
      * Edit table with given operation.
      * @param operation Table operation
      */
-    edit(operation: TableOperation) {
+    edit(operation: TableOperation | CompatibleTableOperation) {
         if (!this.table || !this.cells || this.row === undefined || this.col == undefined) {
             return;
         }
