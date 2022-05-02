@@ -1,5 +1,12 @@
+import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
-import { getTagOfNode, isWholeTableSelected, VTable, wrap } from 'roosterjs-editor-dom';
+import {
+    createVListFromRegion,
+    getSelectedBlockElementsInRegion,
+    getTagOfNode,
+    isWholeTableSelected,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     Alignment,
     ChangeSource,
@@ -29,8 +36,11 @@ export default function setAlignment(editor: IEditor, alignment: Alignment) {
             isWholeTableSelected(new VTable(selection.table), selection.coordinates)
         ) {
             alignTable(selection, alignment);
-        } else if (isList(elementAtCursor)) {
-            alignList(editor, elementAtCursor, alignment);
+        } else if (
+            isList(elementAtCursor) &&
+            editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
+        ) {
+            alignList(editor, alignment);
         } else {
             alignText(editor, alignment);
         }
@@ -83,20 +93,11 @@ function isList(element: HTMLElement) {
     return ['LI', 'UL', 'OL'].indexOf(getTagOfNode(element)) > -1;
 }
 
-function alignList(editor: IEditor, element: HTMLElement, alignment: Alignment) {
-    const list = getTagOfNode(element) === 'LI' ? element.parentElement : element;
-    list.style.display = 'inline-table';
-    let align = 'left';
-    if (alignment == Alignment.Center) {
-        align = 'center';
-    } else if (alignment == Alignment.Right) {
-        align = 'right';
-    }
-    if (list.parentElement.style.textAlign) {
-        list.parentElement.style.textAlign = align;
-    } else {
-        const wrapper = editor.getDocument().createElement('div');
-        wrapper.style.textAlign = align;
-        wrap(list, wrapper);
-    }
+function alignList(editor: IEditor, alignment: Alignment) {
+    blockFormat(editor, (region, start, end) => {
+        const blocks = getSelectedBlockElementsInRegion(region);
+        const startNode = blocks[0].getStartNode();
+        const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
+        vList.setAlignment(start, end, alignment);
+    });
 }
