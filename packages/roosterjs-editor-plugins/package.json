@@ -76,8 +76,8 @@
         },
         "./lib/TableResize": {
             "default": [
-                "./lib/Watermark.ts",
-                "./lib/Watermark.js"
+                "./lib/TableResize.ts",
+                "./lib/TableResize.js"
             ]
         },
         "./lib/Watermark": {
