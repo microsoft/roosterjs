@@ -17,6 +17,7 @@ describe('Text Features |', () => {
 
     beforeEach(() => {
         editor = TestHelper.initEditor(TEST_ID, null, [ExperimentalFeatures.TabKeyTextFeatures]);
+        editor.focus();
     });
 
     afterEach(() => {
