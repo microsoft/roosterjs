@@ -28,6 +28,7 @@ import {
     doubleCheckResize,
     getSideResizeHTML,
     getCornerResizeHTML,
+    getResizeBordersHTML,
 } from './imageEditors/Resizer';
 import {
     ExperimentalFeatures,
@@ -97,6 +98,11 @@ const IMAGE_EDIT_WRAPPER_ENTITY_TYPE = 'IMAGE_EDIT_WRAPPER';
  */
 const LIGHT_MODE_BGCOLOR = 'white';
 const DARK_MODE_BGCOLOR = '#333';
+
+/**
+ * The biggest area of image with 4 handles
+ */
+const MAX_SMALL_SIZE_IMAGE = 10000;
 
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
@@ -361,6 +367,10 @@ export default class ImageEdit implements EditorPlugin {
         this.image.style.position = 'absolute';
         this.image.style.maxWidth = null;
 
+        const isExperimentalHandlesEnabled = this.editor.isFeatureEnabled(
+            ExperimentalFeatures.AdaptiveHandlesResizer
+        );
+
         // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
         const options: ImageHtmlOptions = {
             borderColor: this.options.borderColor,
@@ -368,8 +378,10 @@ export default class ImageEdit implements EditorPlugin {
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
+            isSmallImage: isASmallImage(this.editInfo, isExperimentalHandlesEnabled),
+            handlesExperimentalFeatures: isExperimentalHandlesEnabled,
         };
-        const htmlData: CreateElementData[] = [];
+        const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
         ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
             thisOperation => {
@@ -381,6 +393,7 @@ export default class ImageEdit implements EditorPlugin {
 
         htmlData.forEach(data => {
             const element = createElement(data, this.image.ownerDocument);
+
             if (element) {
                 wrapper.appendChild(element);
             }
@@ -643,4 +656,9 @@ function checkIfImageWasResized(image: HTMLImageElement): boolean {
 function isFixedNumberValue(value: string | number) {
     const numberValue = typeof value === 'string' ? parseInt(value) : value;
     return !isNaN(numberValue);
+}
+
+function isASmallImage(editInfo: ImageEditInfo, isFeatureEnabled?: boolean) {
+    const { widthPx, heightPx } = editInfo;
+    return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE && isFeatureEnabled;
 }

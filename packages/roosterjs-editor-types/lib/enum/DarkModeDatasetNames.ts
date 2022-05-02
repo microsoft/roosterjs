@@ -1,7 +1,7 @@
 /**
  * Constants string for dataset names used by dark mode
  */
-export const enum DarkModeDatasetNames {
+export /*--const--*/ enum DarkModeDatasetNames {
     /**
      * Original style text color
      */

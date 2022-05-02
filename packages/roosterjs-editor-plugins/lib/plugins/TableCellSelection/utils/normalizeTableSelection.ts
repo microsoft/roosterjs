@@ -14,7 +14,7 @@ export default function normalizeTableSelection(vTable: VTable): TableSelection 
         return null;
     }
 
-    const rows = vTable.table.rows;
+    const cells = vTable.cells;
 
     let newFirst = {
         x: Math.min(firstCell.x, lastCell.x),
@@ -33,11 +33,11 @@ export default function normalizeTableSelection(vTable: VTable): TableSelection 
             coord.y = 0;
         }
 
-        if (coord.y >= rows.length) {
-            coord.y = rows.length - 1;
+        if (coord.y >= cells.length) {
+            coord.y = cells.length - 1;
         }
 
-        const rowsCells = rows.item(coord.y).cells.length;
+        const rowsCells = cells[coord.y].length;
         if (coord.x >= rowsCells) {
             coord.x = rowsCells - 1;
         }

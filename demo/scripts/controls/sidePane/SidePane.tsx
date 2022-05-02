@@ -28,6 +28,10 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
         this.updateStateFromHash();
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('hashchange', this.updateStateFromHash);
+    }
+
     render() {
         let className = (this.props.className || '') + ' ' + styles.sidePane;
         return (

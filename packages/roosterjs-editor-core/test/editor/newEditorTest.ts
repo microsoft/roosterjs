@@ -199,4 +199,16 @@ describe('Editor', () => {
         expect(core.undo.snapshotsService.clearRedo).toBeDefined();
         expect(core.undo.snapshotsService.move).toBeDefined();
     });
+
+    it('create Editor with initial content as a table with colgroup', () => {
+        const div = document.createElement('div');
+        const editor = new Editor(div, {
+            initialContent:
+                '<table><thead><colgroup><col width="100" ><col width="100" ></thead><tbody><tr><td>col 1</td><td>col 2</td></tr><tr><td>col 1</td><td>col 2</td></tr></tbody></table>',
+        });
+
+        expect(editor.getContent()).toEqual(
+            '<table><thead><colgroup><col width="100"><col width="100"></colgroup></thead><tbody><tr><td>col 1</td><td>col 2</td></tr><tr><td>col 1</td><td>col 2</td></tr></tbody></table>'
+        );
+    });
 });

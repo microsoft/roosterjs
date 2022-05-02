@@ -32,9 +32,9 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.SingleDirectionResize,
         ExperimentalFeatures.ImageRotate,
         ExperimentalFeatures.ImageCrop,
-        ExperimentalFeatures.AlwaysApplyDefaultFormat,
         ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.TableAlignment,
+        ExperimentalFeatures.AdaptiveHandlesResizer,
     ],
     isRtl: false,
 };

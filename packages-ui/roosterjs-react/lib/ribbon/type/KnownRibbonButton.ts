@@ -1,7 +1,7 @@
 /**
  * Keys of known ribbon buttons (buttons included in roosterjs-react)
  */
-export const enum KnownRibbonButtonKey {
+export /*--const--*/ enum KnownRibbonButtonKey {
     /**
      * "Bold" button on the format ribbon
      */

@@ -1,7 +1,7 @@
 /**
  * Experimental feature flags
  */
-export const enum ExperimentalFeatures {
+export /*--const--*/ enum ExperimentalFeatures {
     /**
      * @deprecated This feature is always enabled
      */
@@ -46,7 +46,9 @@ export const enum ExperimentalFeatures {
      * Crop an inline image (requires ImageEdit plugin)
      */
     ImageCrop = 'ImageCrop',
+
     /**
+     * @deprecated This feature is always enabled
      * Check if the element has a style attribute, if not, apply the default format
      */
     AlwaysApplyDefaultFormat = 'AlwaysApplyDefaultFormat',
@@ -65,4 +67,9 @@ export const enum ExperimentalFeatures {
      * Provide additional Tab Key Features. Requires Text Features Content Editable Features
      */
     TabKeyTextFeatures = 'TabKeyTextFeatures',
+
+    /**
+     * Provide a circular resize handles that adaptive the number od handles to the size of the image
+     */
+    AdaptiveHandlesResizer = 'AdaptiveHandlesResizer',
 }
