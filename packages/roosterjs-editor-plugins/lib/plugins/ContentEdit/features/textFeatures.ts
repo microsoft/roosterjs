@@ -1,5 +1,11 @@
-import { createRange, getTagOfNode, Position, queryElements } from 'roosterjs-editor-dom';
 import { setIndentation } from 'roosterjs-editor-api';
+import {
+    createRange,
+    getEntitySelector,
+    getTagOfNode,
+    Position,
+    queryElements,
+} from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
     IEditor,
@@ -27,10 +33,27 @@ const TAB_SPACES = 6;
  */
 const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
-    shouldHandleEvent: (event, editor) =>
-        editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures) &&
-        !event.rawEvent.shiftKey &&
-        !editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event),
+    shouldHandleEvent: (event, editor) => {
+        if (
+            editor.isFeatureEnabled(ExperimentalFeatures.TabKeyTextFeatures) &&
+            !event.rawEvent.shiftKey
+        ) {
+            let activeElement = editor.getDocument().activeElement as HTMLElement;
+            const listOrTable = editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event);
+            const entity = editor.getElementAtCursor(
+                getEntitySelector(),
+                undefined /*startFrom*/,
+                event
+            );
+
+            return (
+                !listOrTable &&
+                (entity ? entity.isContentEditable : activeElement.isContentEditable)
+            );
+        }
+
+        return false;
+    },
     handleEvent: (event, editor) => {
         const selection = editor.getSelectionRangeEx();
         if (selection.type == SelectionRangeTypes.Normal) {
