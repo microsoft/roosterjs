@@ -351,7 +351,7 @@ export default class ImageEdit implements EditorPlugin {
             IMAGE_EDIT_WRAPPER_ENTITY_TYPE,
             wrap(this.image, KnownCreateElementDataIndex.ImageEditWrapper),
             false /*isBlock*/,
-            true /*isReadonly*/
+            false /*isReadonly*/
         );
 
         wrapper.style.position = 'relative';
