@@ -35,7 +35,7 @@ const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
     ','
 );
-const ATTRIBUTES_TO_PRESERVE = ['href', 'src'];
+const ATTRIBUTES_TO_PRESERVE = ['href', 'src', 'cellpadding', 'cellspacing'];
 const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
 
 /**
@@ -89,6 +89,8 @@ function clearAttribute(element: HTMLElement) {
     for (let attr of toArray(element.attributes)) {
         if (isTableCell && attr.name == 'style') {
             removeNonBorderStyles(element);
+        } else if (safeInstanceOf(element, 'HTMLTableElement') && attr.name == 'style') {
+            removeNotTableDefaultStyles(element);
         } else if (
             ATTRIBUTES_TO_PRESERVE.indexOf(attr.name.toLowerCase()) < 0 &&
             attr.name.indexOf('data-') != 0
@@ -98,20 +100,40 @@ function clearAttribute(element: HTMLElement) {
     }
 }
 
-function removeNonBorderStyles(element: HTMLElement): Record<string, string> {
+function updateStyles(
+    element: HTMLElement,
+    callbackfn: (
+        value: string,
+        styles: Record<string, string>,
+        result: Record<string, string>
+    ) => void
+) {
     const styles = getStyles(element);
     const result: Record<string, string> = {};
 
-    Object.keys(styles).forEach(name => {
+    Object.keys(styles).forEach(style => callbackfn(style, styles, result));
+
+    setStyles(element, styles);
+
+    return result;
+}
+
+function removeNonBorderStyles(element: HTMLElement): Record<string, string> {
+    return updateStyles(element, (name, styles, result) => {
         if (name.indexOf('border') < 0) {
             result[name] = styles[name];
             delete styles[name];
         }
     });
+}
 
-    setStyles(element, styles);
-
-    return result;
+function removeNotTableDefaultStyles(element: HTMLTableElement) {
+    return updateStyles(element, (name, styles, result) => {
+        if (name != 'border-collapse') {
+            result[name] = styles[name];
+            delete styles[name];
+        }
+    });
 }
 
 /**
@@ -140,26 +162,29 @@ function clearAutoDetectFormat(editor: IEditor) {
  * @param editor The editor instance
  */
 function clearBlockFormat(editor: IEditor) {
-    blockFormat(editor, region => {
-        const blocks = getSelectedBlockElementsInRegion(region);
-        let nodes = collapseNodesInRegion(region, blocks);
+    editor.addUndoSnapshot((start, end) => {
+        blockFormat(editor, region => {
+            const blocks = getSelectedBlockElementsInRegion(region);
+            let nodes = collapseNodesInRegion(region, blocks);
 
-        if (editor.contains(region.rootNode)) {
-            // If there are styles on table cell, wrap all its children and move down all non-border styles.
-            // So that we can preserve styles for unselected blocks as well as border styles for table
-            const nonborderStyles = removeNonBorderStyles(region.rootNode);
-            if (Object.keys(nonborderStyles).length > 0) {
-                const wrapper = wrap(toArray(region.rootNode.childNodes));
-                setStyles(wrapper, nonborderStyles);
+            if (editor.contains(region.rootNode)) {
+                // If there are styles on table cell, wrap all its children and move down all non-border styles.
+                // So that we can preserve styles for unselected blocks as well as border styles for table
+                const nonborderStyles = removeNonBorderStyles(region.rootNode);
+                if (Object.keys(nonborderStyles).length > 0) {
+                    const wrapper = wrap(toArray(region.rootNode.childNodes));
+                    setStyles(wrapper, nonborderStyles);
+                }
             }
-        }
 
-        while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
-            nodes = [splitBalancedNodeRange(nodes)];
-        }
+            while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
+                nodes = [splitBalancedNodeRange(nodes)];
+            }
 
-        nodes.forEach(clearNodeFormat);
-    });
+            nodes.forEach(clearNodeFormat);
+        });
+        setDefaultFormat(editor);
+    }, ChangeSource.Format);
 }
 
 function clearInlineFormat(editor: IEditor) {
@@ -170,60 +195,82 @@ function clearInlineFormat(editor: IEditor) {
             node.removeAttribute('class')
         );
 
-        const defaultFormat = editor.getDefaultFormat();
-        const isDefaultFormatEmpty = Object.keys(defaultFormat).length === 0;
-        editor.queryElements('[style]', QueryScope.InSelection, node => {
-            STYLES_TO_REMOVE.forEach(style => node.style.removeProperty(style));
+        setDefaultFormat(editor);
+    }, ChangeSource.Format);
+}
 
-            // when default format is empty, keep the HTML minimum by removing style attribute if there's no style
-            // (note: because default format is empty, we're not adding style back in)
-            if (isDefaultFormatEmpty && node.getAttribute('style') === '') {
-                node.removeAttribute('style');
-            }
-        });
+function setDefaultFormat(editor: IEditor) {
+    const defaultFormat = editor.getDefaultFormat();
+    const isDefaultFormatEmpty = Object.keys(defaultFormat).length === 0;
+    editor.queryElements('[style]', QueryScope.InSelection, node => {
+        const tag = getTagOfNode(node);
+        if (TAGS_TO_STOP_UNWRAP.indexOf(tag) == -1) {
+            removeStyles(tag, node, isDefaultFormatEmpty);
+        } else {
+            node.childNodes.forEach(node => {
+                node.childNodes.forEach(cNode => {
+                    const tag = getTagOfNode(cNode);
+                    if (safeInstanceOf(cNode, 'HTMLElement')) {
+                        removeStyles(tag, cNode, isDefaultFormatEmpty);
+                    }
+                });
+            });
+        }
+    });
 
-        if (!isDefaultFormatEmpty) {
-            if (defaultFormat.fontFamily) {
-                setFontName(editor, defaultFormat.fontFamily);
-            }
-            if (defaultFormat.fontSize) {
-                setFontSize(editor, defaultFormat.fontSize);
-            }
-            if (defaultFormat.textColor) {
-                const setColorIgnoredElements = editor.queryElements<HTMLElement>(
-                    'a *, a',
-                    QueryScope.OnSelection
-                );
+    if (!isDefaultFormatEmpty) {
+        if (defaultFormat.fontFamily) {
+            setFontName(editor, defaultFormat.fontFamily);
+        }
+        if (defaultFormat.fontSize) {
+            setFontSize(editor, defaultFormat.fontSize);
+        }
+        if (defaultFormat.textColor) {
+            const setColorIgnoredElements = editor.queryElements<HTMLElement>(
+                'a *, a',
+                QueryScope.OnSelection
+            );
 
-                let shouldApplyInlineStyle =
-                    setColorIgnoredElements.length > 0
-                        ? (element: HTMLElement) => setColorIgnoredElements.indexOf(element) == -1
-                        : null;
+            let shouldApplyInlineStyle =
+                setColorIgnoredElements.length > 0
+                    ? (element: HTMLElement) => setColorIgnoredElements.indexOf(element) == -1
+                    : null;
 
-                if (defaultFormat.textColors) {
-                    setTextColor(editor, defaultFormat.textColors, shouldApplyInlineStyle);
-                } else {
-                    setTextColor(editor, defaultFormat.textColor, shouldApplyInlineStyle);
-                }
-            }
-            if (defaultFormat.backgroundColor) {
-                if (defaultFormat.backgroundColors) {
-                    setBackgroundColor(editor, defaultFormat.backgroundColors);
-                } else {
-                    setBackgroundColor(editor, defaultFormat.backgroundColor);
-                }
-            }
-            if (defaultFormat.bold) {
-                toggleBold(editor);
-            }
-            if (defaultFormat.italic) {
-                toggleItalic(editor);
-            }
-            if (defaultFormat.underline) {
-                toggleUnderline(editor);
+            if (defaultFormat.textColors) {
+                setTextColor(editor, defaultFormat.textColors, shouldApplyInlineStyle);
+            } else {
+                setTextColor(editor, defaultFormat.textColor, shouldApplyInlineStyle);
             }
         }
-    }, ChangeSource.Format);
+        if (defaultFormat.backgroundColor) {
+            if (defaultFormat.backgroundColors) {
+                setBackgroundColor(editor, defaultFormat.backgroundColors);
+            } else {
+                setBackgroundColor(editor, defaultFormat.backgroundColor);
+            }
+        }
+        if (defaultFormat.bold) {
+            toggleBold(editor);
+        }
+        if (defaultFormat.italic) {
+            toggleItalic(editor);
+        }
+        if (defaultFormat.underline) {
+            toggleUnderline(editor);
+        }
+    }
+}
+
+function removeStyles(tag: string, node: HTMLElement, isDefaultFormatEmpty: boolean) {
+    if (TAGS_TO_STOP_UNWRAP.indexOf(tag) == -1) {
+        STYLES_TO_REMOVE.forEach(style => node.style.removeProperty(style));
+
+        // when default format is empty, keep the HTML minimum by removing style attribute if there's no style
+        // (note: because default format is empty, we're not adding style back in)
+        if (isDefaultFormatEmpty && node.getAttribute('style') === '') {
+            node.removeAttribute('style');
+        }
+    }
 }
 
 /**
