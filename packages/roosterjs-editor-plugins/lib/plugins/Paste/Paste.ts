@@ -18,6 +18,7 @@ import convertPastedContentFromWordOnline, {
 
 const WORD_ATTRIBUTE_NAME = 'xmlns:w';
 const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
+const WORD_PROG_ID = 'Word.Document';
 const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 const PROG_ID_NAME = 'ProgId';
@@ -74,7 +75,7 @@ export default class Paste implements EditorPlugin {
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
 
-            if (htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE) {
+            if (isWordDocument(htmlAttributes)) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
             } else if (
@@ -117,4 +118,11 @@ export default class Paste implements EditorPlugin {
             sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
         }
     }
+}
+
+function isWordDocument(htmlAttributes: Record<string, string>) {
+    return (
+        htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
+        htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
+    );
 }

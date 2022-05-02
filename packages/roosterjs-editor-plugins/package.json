@@ -6,5 +6,85 @@
         "roosterjs-editor-dom": "",
         "roosterjs-editor-api": ""
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "exports": {
+        ".": {
+            "default": [
+                "./lib/index.ts",
+                "./lib/index.js"
+            ]
+        },
+        "./lib/ContentEdit": {
+            "default": [
+                "./lib/ContentEdit.ts",
+                "./lib/ContentEdit.js"
+            ]
+        },
+        "./lib/ContextMenu": {
+            "default": [
+                "./lib/ContextMenu.ts",
+                "./lib/ContextMenu.js"
+            ]
+        },
+        "./lib/CustomReplace": {
+            "default": [
+                "./lib/CustomReplace.ts",
+                "./lib/CustomReplace.js"
+            ]
+        },
+        "./lib/CutPasteListChain": {
+            "default": [
+                "./lib/CutPasteListChain.ts",
+                "./lib/CutPasteListChain.js"
+            ]
+        },
+        "./lib/HyperLink": {
+            "default": [
+                "./lib/HyperLink.ts",
+                "./lib/HyperLink.js"
+            ]
+        },
+        "./lib/ImageEdit": {
+            "default": [
+                "./lib/ImageEdit.ts",
+                "./lib/ImageEdit.js"
+            ]
+        },
+        "./lib/ImageResize": {
+            "default": [
+                "./lib/ImageResize.ts",
+                "./lib/ImageResize.js"
+            ]
+        },
+        "./lib/Paste": {
+            "default": [
+                "./lib/Paste.ts",
+                "./lib/Paste.js"
+            ]
+        },
+        "./lib/Picker": {
+            "default": [
+                "./lib/Picker.ts",
+                "./lib/Picker.js"
+            ]
+        },
+        "./lib/TableCellSelection": {
+            "default": [
+                "./lib/TableCellSelection.ts",
+                "./lib/TableCellSelection.js"
+            ]
+        },
+        "./lib/TableResize": {
+            "default": [
+                "./lib/TableResize.ts",
+                "./lib/TableResize.js"
+            ]
+        },
+        "./lib/Watermark": {
+            "default": [
+                "./lib/Watermark.ts",
+                "./lib/Watermark.js"
+            ]
+        }
+    }
 }

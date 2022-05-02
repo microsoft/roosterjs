@@ -12,12 +12,13 @@ const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
     [ExperimentalFeatures.PasteWithLinkPreview]: 'Try retrieve link preview information when paste',
     [ExperimentalFeatures.ImageRotate]: 'Rotate an inline image',
     [ExperimentalFeatures.ImageCrop]: 'Crop an inline image',
-    [ExperimentalFeatures.AlwaysApplyDefaultFormat]: 'Apply the default format to all elements',
     [ExperimentalFeatures.ConvertSingleImageBody]:
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
     [ExperimentalFeatures.TableAlignment]:
         'Align table elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
+    [ExperimentalFeatures.AdaptiveHandlesResizer]:
+        ' Provide a circular resize handles that adaptive the number od handles to the size of the image',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
