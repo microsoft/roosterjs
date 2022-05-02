@@ -17,7 +17,6 @@ describe('Text Features |', () => {
 
     beforeEach(() => {
         editor = TestHelper.initEditor(TEST_ID, null, [ExperimentalFeatures.TabKeyTextFeatures]);
-        editor.focus();
     });
 
     afterEach(() => {
@@ -32,9 +31,13 @@ describe('Text Features |', () => {
         feature: BuildInEditFeature<PluginKeyboardEvent>,
         content: string,
         selectCallback: () => void,
-        shouldHandleExpect: boolean
+        shouldHandleExpect: boolean,
+        focusEditorOnStart: boolean = true
     ) {
         //Arrange
+        if (focusEditorOnStart) {
+            editor.focus();
+        }
         const keyboardEvent: PluginKeyboardEvent = {
             eventType: PluginEventType.KeyDown,
             rawEvent: simulateKeyDownEvent(Keys.TAB, feature == TextFeatures.outdentWhenTabText),
@@ -137,6 +140,7 @@ describe('Text Features |', () => {
                         const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
                         element.focus();
                     },
+                    false,
                     false
                 );
             });
