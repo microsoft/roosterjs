@@ -17,6 +17,7 @@ import {
     NodePosition,
     PositionType,
     NodeType,
+    Alignment,
 } from 'roosterjs-editor-types';
 
 /**
@@ -280,6 +281,27 @@ export default class VList {
                 this.items[index].addNegativeMargins();
             }
         }
+    }
+
+    /**
+     * Set alignment of the given range of this list
+     * @param start Start position to operate from
+     * @param end End position to operate to
+     * @param alignment Align items left, center or right
+     */
+
+    setAlignment(start: NodePosition, end: NodePosition, alignment: Alignment) {
+        this.rootList.style.display = 'flex';
+        this.rootList.style.flexDirection = 'column';
+        this.findListItems(start, end, item => {
+            let align = 'start';
+            if (alignment == Alignment.Center) {
+                align = 'center';
+            } else if (alignment == Alignment.Right) {
+                align = 'end';
+            }
+            item.getNode().style.alignSelf = align;
+        });
     }
 
     /**
