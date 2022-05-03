@@ -1,4 +1,4 @@
-import { PluginEventType } from '../event/PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * Handler function type of DOM event

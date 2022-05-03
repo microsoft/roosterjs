@@ -16,7 +16,7 @@ import { GetContentMode } from '../enum/GetContentMode';
 import { InsertOption } from './InsertOption';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginEventData, PluginEventFromType } from '../event/PluginEventData';
-import { PluginEventType } from '../event/PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 import { PluginKeyboardEvent } from '../event/PluginDomEvent';
 import { PositionType } from '../enum/PositionType';
 import { QueryScope } from '../enum/QueryScope';

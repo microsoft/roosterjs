@@ -1,4 +1,5 @@
 import TableSelection from './TableSelection';
+import { SelectionRangeTypes } from '../enum/SelectionRangeTypes';
 
 /**
  * Represents normal selection
@@ -39,20 +40,6 @@ export interface TableSelectionRange
  * Represents normal selection
  */
 export interface NormalSelectionRange extends SelectionRangeExBase<SelectionRangeTypes.Normal> {}
-
-/**
- * Types of Selection Ranges that the SelectionRangeEx can return
- */
-export /*--const--*/ enum SelectionRangeTypes {
-    /**
-     * Normal selection range provided by browser.
-     */
-    Normal,
-    /**
-     * Selection made inside of a single table.
-     */
-    TableSelection,
-}
 
 /**
  * Types of ranges used in editor api getSelectionRangeEx

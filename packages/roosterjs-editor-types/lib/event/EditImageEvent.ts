@@ -1,5 +1,5 @@
 import BasePluginEvent from './BasePluginEvent';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * Represents an event that will be fired when an inline image is edited by user, and the src
