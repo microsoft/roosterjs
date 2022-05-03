@@ -9,6 +9,7 @@ import {
     SelectionRangeTypes,
     ContentMetadata,
 } from 'roosterjs-editor-types';
+import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
@@ -22,7 +23,7 @@ import {
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition) => any,
-    changeSource: ChangeSource | string,
+    changeSource: ChangeSource | CompatibleChangeSource | string,
     canUndoByBackspace: boolean
 ) => {
     const undoState = core.undo;

@@ -15,7 +15,6 @@ const {
 } = require('./common');
 
 const EnumRegex = /(^\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*export const enum ([A-Za-z0-9]+)\s{([^}]+)}/gm;
-const EnumItemRegex = /(^\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*(\w[a-zA-Z0-9_]*)(?:\s*=[^,]*)?,/gm;
 const CompatibleTypePrefix = 'Compatible';
 
 function parseEnum(source) {
@@ -29,20 +28,8 @@ function parseEnum(source) {
         const currentEnum = {
             name: enumName,
             comment: enumComment,
-            items: [],
+            content: enumContent,
         };
-
-        let enumItemMatch;
-
-        while (!!(enumItemMatch = EnumItemRegex.exec(enumContent))) {
-            const itemComment = enumItemMatch[1] || '';
-            const itemName = enumItemMatch[2];
-            const item = {
-                name: itemName,
-                comment: itemComment,
-            };
-            currentEnum.items.push(item);
-        }
 
         enums.push(currentEnum);
     }
@@ -50,26 +37,13 @@ function parseEnum(source) {
     return enums;
 }
 
-function generateCompatibleEnumItem(item, enumName) {
-    return `${item.comment}\r\n    ${item.name} = ${enumName}.${item.name},\r\n`;
-}
-
 function generateCompatibleEnum(currentEnum) {
     const enumName = currentEnum.name;
-    return `${
-        currentEnum.comment
-    }\r\nexport enum ${CompatibleTypePrefix}${enumName} {\r\n${currentEnum.items
-        .map(item => generateCompatibleEnumItem(item, enumName))
-        .join('')}}\r\n`;
+    return `${currentEnum.comment}\r\nexport enum ${CompatibleTypePrefix}${enumName} {\r\n${currentEnum.content}}\r\n`;
 }
 
 function generateCompatibleEnumScript(enums, fileName) {
-    let script = `import { ${enums
-        .map(currentEnum => currentEnum.name)
-        .join(', ')} } from '../enum/${fileName.replace(/\.ts$/, '')}'\r\n\r\n`;
-    script += enums.map(generateCompatibleEnum).join('\r\n');
-
-    return script;
+    return enums.map(generateCompatibleEnum).join('\r\n');
 }
 
 function processConstEnum() {

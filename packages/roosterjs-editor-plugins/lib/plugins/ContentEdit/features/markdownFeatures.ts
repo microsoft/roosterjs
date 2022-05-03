@@ -1,4 +1,5 @@
 import { cacheGetEventData, createRange } from 'roosterjs-editor-dom';
+import type { CompatibleKeys } from 'roosterjs-editor-types/lib/compatibleTypes';
 import {
     BuildInEditFeature,
     ChangeSource,
@@ -13,7 +14,7 @@ import {
 const ZERO_WIDTH_SPACE = '\u200B';
 
 function generateBasicMarkdownFeature(
-    key: Keys,
+    key: Keys | CompatibleKeys,
     triggerCharacter: string,
     elementTag: string,
     useShiftKey: boolean

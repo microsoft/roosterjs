@@ -1,4 +1,5 @@
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
  * Handler function type of DOM event
@@ -12,7 +13,7 @@ export interface DOMEventHandlerObject {
     /**
      * Type of plugin event. The DOM event will be mapped with this plugin event type
      */
-    pluginEventType: PluginEventType;
+    pluginEventType: PluginEventType | CompatiblePluginEventType;
 
     /**
      * Handler function. Besides the mapped plugin event type, this function will also be triggered

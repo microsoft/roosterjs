@@ -1,4 +1,5 @@
 import { TableBorderFormat } from '../enum/TableBorderFormat';
+import type { CompatibleTableBorderFormat } from '../compatibleEnum/TableBorderFormat';
 
 /**
  * Table format
@@ -47,7 +48,7 @@ export default interface TableFormat {
     /**
      * Table Borders Type
      */
-    tableBorderFormat?: TableBorderFormat;
+    tableBorderFormat?: TableBorderFormat | CompatibleTableBorderFormat;
     /**
      * If true, the new format will not overlay cells that has color applied
      */
