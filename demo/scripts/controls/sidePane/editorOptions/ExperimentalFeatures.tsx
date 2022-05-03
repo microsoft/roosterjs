@@ -19,6 +19,8 @@ const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
     [ExperimentalFeatures.AdaptiveHandlesResizer]:
         ' Provide a circular resize handles that adaptive the number od handles to the size of the image',
+    [ExperimentalFeatures.ListItemAlignment]:
+        'Align list elements elements to left, center and right using setAlignment API',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
