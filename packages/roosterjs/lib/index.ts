@@ -1,5 +1,6 @@
 export { default as createEditor } from './createEditor';
 export * from 'roosterjs-editor-types';
+export * from 'roosterjs-editor-types-compatible';
 export * from 'roosterjs-editor-dom';
 export * from 'roosterjs-editor-core';
 export * from 'roosterjs-editor-api';
