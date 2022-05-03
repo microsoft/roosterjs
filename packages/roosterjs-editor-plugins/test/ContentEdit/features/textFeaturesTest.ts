@@ -31,9 +31,13 @@ describe('Text Features |', () => {
         feature: BuildInEditFeature<PluginKeyboardEvent>,
         content: string,
         selectCallback: () => void,
-        shouldHandleExpect: boolean
+        shouldHandleExpect: boolean,
+        focusEditorOnStart: boolean = true
     ) {
         //Arrange
+        if (focusEditorOnStart) {
+            editor.focus();
+        }
         const keyboardEvent: PluginKeyboardEvent = {
             eventType: PluginEventType.KeyDown,
             rawEvent: simulateKeyDownEvent(Keys.TAB, feature == TextFeatures.outdentWhenTabText),
@@ -110,6 +114,33 @@ describe('Text Features |', () => {
                         range.setStart(element, 0);
                         editor.select(range);
                     },
+                    false
+                );
+            });
+
+            it('Should not handle, in a not contenteditable entity', () => {
+                runShouldHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div><br></div><div id='${TEST_ELEMENT_ID}' class="_Entity _EType_ _EReadonly_1" contenteditable="false"><span data-hydrated-html="">Not Editable</span></div>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        const range = new Range();
+                        range.setStart(element, 0);
+                        editor.select(range);
+                    },
+                    false
+                );
+            });
+
+            it('Should not handle, Link in a not content editable entity is focused', () => {
+                runShouldHandleTest(
+                    TextFeatures.indentWhenTabText,
+                    `<div><br></div><div class="_Entity _EType_ _EReadonly_1" contenteditable="false"><span data-hydrated-html="<a href='https://github.com/microsoft/roosterjs'>Link</a>"><a id='${TEST_ELEMENT_ID}' href="https://github.com/microsoft/roosterjs">Link</a></span></div><br>`,
+                    () => {
+                        const element = editor.getDocument().getElementById(TEST_ELEMENT_ID);
+                        element.focus();
+                    },
+                    false,
                     false
                 );
             });
