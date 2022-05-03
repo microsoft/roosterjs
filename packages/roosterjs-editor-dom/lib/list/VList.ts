@@ -18,6 +18,10 @@ import {
     PositionType,
     NodeType,
 } from 'roosterjs-editor-types';
+import type {
+    CompatibleIndentation,
+    CompatibleListType,
+} from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Represent a bullet or a numbering list
@@ -238,7 +242,11 @@ export default class VList {
      * @param end End position to operate to
      * @param indentation Indent or outdent
      */
-    setIndentation(start: NodePosition, end: NodePosition, indentation: Indentation): void;
+    setIndentation(
+        start: NodePosition,
+        end: NodePosition,
+        indentation: Indentation | CompatibleIndentation
+    ): void;
 
     /**
      * Outdent the give range of this list
@@ -253,7 +261,7 @@ export default class VList {
     setIndentation(
         start: NodePosition,
         end: NodePosition,
-        indentation: Indentation.Decrease,
+        indentation: Indentation.Decrease | CompatibleIndentation.Decrease,
         softOutdent?: boolean,
         preventItemRemoval?: boolean
     ): void;
@@ -261,7 +269,7 @@ export default class VList {
     setIndentation(
         start: NodePosition,
         end: NodePosition,
-        indentation: Indentation,
+        indentation: Indentation | CompatibleIndentation,
         softOutdent?: boolean,
         preventItemRemoval: boolean = false
     ) {
@@ -290,7 +298,11 @@ export default class VList {
      * @param end End position to operate to
      * @param targetType Target list type
      */
-    changeListType(start: NodePosition, end: NodePosition, targetType: ListType) {
+    changeListType(
+        start: NodePosition,
+        end: NodePosition,
+        targetType: ListType | CompatibleListType
+    ) {
         let needChangeType = false;
 
         this.findListItems(start, end, item => {
@@ -306,7 +318,7 @@ export default class VList {
      * @param node node of the item to append. If it is not wrapped with LI tag, it will be wrapped
      * @param type Type of this list item, can be ListType.None
      */
-    appendItem(node: Node, type: ListType) {
+    appendItem(node: Node, type: ListType | CompatibleListType) {
         const nodeTag = getTagOfNode(node);
 
         // Change DIV tag to SPAN. Otherwise we cannot create new list item by Enter key in Safari
@@ -316,7 +328,11 @@ export default class VList {
             node = wrap(node, 'LI');
         }
 
-        this.items.push(type == ListType.None ? new VListItem(node) : new VListItem(node, type));
+        this.items.push(
+            type == ListType.None
+                ? new VListItem(node)
+                : new VListItem(node, <ListType.Ordered | ListType.Unordered>(<any>type))
+        );
     }
 
     /**
@@ -421,7 +437,12 @@ export default class VList {
 
     private populateItems(
         list: HTMLOListElement | HTMLUListElement,
-        listTypes: (ListType.Ordered | ListType.Unordered)[] = []
+        listTypes: (
+            | ListType.Ordered
+            | ListType.Unordered
+            | CompatibleListType.Ordered
+            | CompatibleListType.Unordered
+        )[] = []
     ) {
         const type = getListTypeFromNode(list);
         const items = toArray(list.childNodes);

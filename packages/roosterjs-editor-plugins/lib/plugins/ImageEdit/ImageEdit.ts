@@ -46,6 +46,7 @@ import {
     CreateElementData,
     KnownCreateElementDataIndex,
 } from 'roosterjs-editor-types';
+import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const SHIFT_KEYCODE = 16;
 const CTRL_KEYCODE = 17;
@@ -258,7 +259,10 @@ export default class ImageEdit implements EditorPlugin {
      * @param image The image to edit
      * @param operation The editing operation
      */
-    setEditingImage(image: HTMLImageElement, operation: ImageEditOperation): void;
+    setEditingImage(
+        image: HTMLImageElement,
+        operation: ImageEditOperation | CompatibleImageEditOperation
+    ): void;
 
     /**
      * Stop editing image. If there is already image in editing, it will quit editing mode and any pending editing
@@ -270,7 +274,7 @@ export default class ImageEdit implements EditorPlugin {
 
     setEditingImage(
         image: HTMLImageElement | null,
-        operationOrSelect?: ImageEditOperation | boolean
+        operationOrSelect?: ImageEditOperation | CompatibleImageEditOperation | boolean
     ) {
         let operation =
             typeof operationOrSelect === 'number' ? operationOrSelect : ImageEditOperation.None;
@@ -344,7 +348,7 @@ export default class ImageEdit implements EditorPlugin {
     /**
      * Create editing wrapper for the image
      */
-    private createWrapper(operation: ImageEditOperation) {
+    private createWrapper(operation: ImageEditOperation | CompatibleImageEditOperation) {
         // Wrap the image with an entity so that we can easily retrieve it later
         const { wrapper } = insertEntity(
             this.editor,

@@ -1,6 +1,7 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
 import { Capitalization, IEditor, NodeType } from 'roosterjs-editor-types';
 import { getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
+import type { CompatibleCapitalization } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Change the capitalization of text in the selection
@@ -12,7 +13,7 @@ import { getFirstLeafNode, getNextLeafSibling } from 'roosterjs-editor-dom';
  */
 export default function changeCapitalization(
     editor: IEditor,
-    capitalization: Capitalization,
+    capitalization: Capitalization | CompatibleCapitalization,
     language?: string
 ) {
     applyInlineStyle(editor, element => {

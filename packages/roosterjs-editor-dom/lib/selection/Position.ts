@@ -1,6 +1,7 @@
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import isNodeAfter from '../utils/isNodeAfter';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import type { CompatiblePositionType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Represent a position in DOM tree by the node and its offset index
@@ -33,7 +34,7 @@ export default class Position implements NodePosition {
      * @param node The node of this position
      * @param positionType Type of the position, can be Begin, End, Before, After
      */
-    constructor(node: Node, positionType: PositionType);
+    constructor(node: Node, positionType: PositionType | CompatiblePositionType);
 
     constructor(
         nodeOrPosition: Node | NodePosition,

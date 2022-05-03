@@ -2,6 +2,7 @@ import createElement from './createElement';
 import fromHtml from './fromHtml';
 import safeInstanceOf from './safeInstanceOf';
 import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import type { CompatibleKnownCreateElementDataIndex } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Wrap all the node with html and return the wrapped node, and put the wrapper node under the parent of the first node
@@ -38,12 +39,20 @@ export default function wrap(nodes: Node | Node[], wrapper?: HTMLElement): HTMLE
  */
 export default function wrap(
     nodes: Node | Node[],
-    wrapper?: CreateElementData | KnownCreateElementDataIndex
+    wrapper?:
+        | CreateElementData
+        | KnownCreateElementDataIndex
+        | CompatibleKnownCreateElementDataIndex
 ): HTMLElement;
 
 export default function wrap(
     nodes: Node | Node[],
-    wrapper?: string | HTMLElement | CreateElementData | KnownCreateElementDataIndex
+    wrapper?:
+        | string
+        | HTMLElement
+        | CreateElementData
+        | KnownCreateElementDataIndex
+        | CompatibleKnownCreateElementDataIndex
 ): HTMLElement | null {
     nodes = !nodes ? [] : safeInstanceOf(nodes, 'Node') ? [nodes] : nodes;
     if (nodes.length == 0 || !nodes[0] || !nodes[0].ownerDocument) {

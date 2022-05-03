@@ -5,6 +5,7 @@ import {
     EditorCore,
     TransformColor,
 } from 'roosterjs-editor-types';
+import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const enum ColorAttributeEnum {
     CssColor = 0,
@@ -44,7 +45,7 @@ export const transformColor: TransformColor = (
     rootNode: Node,
     includeSelf: boolean,
     callback: () => void,
-    direction: ColorTransformDirection,
+    direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) => {
     const elements =

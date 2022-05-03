@@ -2,6 +2,7 @@ import BasePluginEvent from './BasePluginEvent';
 import Entity from '../interface/Entity';
 import { EntityOperation } from '../enum/EntityOperation';
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatibleEntityOperation } from '../compatibleEnum/EntityOperation';
 
 /**
  * Provide a chance for plugins to handle entity related events.
@@ -12,7 +13,7 @@ export default interface EntityOperationEvent
     /**
      * Operation to this entity
      */
-    operation: EntityOperation;
+    operation: EntityOperation | CompatibleEntityOperation;
 
     /**
      * The entity that editor is operating on

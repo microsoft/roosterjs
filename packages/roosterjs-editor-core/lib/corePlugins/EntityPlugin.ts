@@ -29,6 +29,7 @@ import {
     PluginWithState,
     QueryScope,
 } from 'roosterjs-editor-types';
+import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const ENTITY_ID_REGEX = /_(\d{1,8})$/;
 
@@ -42,7 +43,7 @@ const ALLOWED_CSS_CLASSES = [
     ENTITY_TYPE_CSS_REGEX,
     ENTITY_READONLY_CSS_REGEX,
 ];
-const REMOVE_ENTITY_OPERATIONS = [
+const REMOVE_ENTITY_OPERATIONS: (EntityOperation | CompatibleEntityOperation)[] = [
     EntityOperation.Overwrite,
     EntityOperation.PartialOverwrite,
     EntityOperation.RemoveFromStart,
