@@ -20,7 +20,7 @@ const {
 
 const namePlaceholder = '__NAME__';
 const regExportFrom = /export([^;]+)from\s+'([^']+)';/gm;
-const regImportFrom = /import\s+([^;]*)\s+from\s+'([^']+)';/gm;
+const regImportFrom = /import\s+(?:type\s+)?([^;]*)\s+from\s+'([^']+)';/gm;
 const singleLineComment = /\/\/[^\n]*\n/g;
 const multiLineComment = /(^\/\*(\*(?!\/)|[^*])*\*\/\s*)/m;
 
@@ -36,6 +36,10 @@ const regType = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s
 const regConst = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?const\s+([0-9a-zA-Z_<>]+)\s*:\s*/g;
 // 6. export[ default] <NAME>|{NAMES};
 const regExport = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)(default\s+([0-9a-zA-Z_]+)\s*,?)?(\s*{([^}]+)})?\s*;/g;
+
+const AllowedCrossPackageImport = {
+    'roosterjs-editor-types/lib/compatibleTypes': 'roosterjs-editor-types/lib/compatibleTypes.d.ts',
+};
 
 function enqueue(queue, filename, exports) {
     var existingItem = queue.find(v => v.filename == filename);
@@ -88,6 +92,8 @@ function parseFrom(from, currentFileName, baseDir, projDir, externalHandler) {
         (externalHandler || defaultExternalHandler)(null, from, (_, replacement) => {
             if (replacement) {
                 replacedName = replacement;
+            } else if (AllowedCrossPackageImport[from]) {
+                importFileName = path.resolve(baseDir, AllowedCrossPackageImport[from]);
             } else {
                 importFileName = path.resolve(baseDir, from, 'lib/index.d.ts');
                 if (!fs.existsSync(importFileName)) {
