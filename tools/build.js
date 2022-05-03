@@ -16,15 +16,13 @@ const dts = require('./buildTools/dts');
 const buildDemoStep = require('./buildTools/buildDemo');
 const buildDocumentStep = require('./buildTools/buildDocument');
 const publishStep = require('./buildTools/publish');
-const buildSizeOptimizedStep = require('./buildTools/buildSizeOptimized');
 const allTasks = [
     tslintStep,
-    checkDependencyStep,
     cleanStep,
     normalizeStep,
+    checkDependencyStep,
     buildAmdStep,
     buildCommonJsStep,
-    buildSizeOptimizedStep,
     pack.commonJsDebug,
     pack.commonJsProduction,
     pack.amdDebug,
@@ -50,7 +48,6 @@ const commands = [
     'normalize', // Normalize package.json files
     'buildamd', // Build in AMD mode
     'buildcommonjs', // Build in CommonJs mode
-    'buildSizeOptimized', // Build in Size Optimized mode (Using const enum instead of enum)
     'pack', // Run webpack to generate standalone .js files
     'packprod', // Run webpack to generate standalone .js files in production mode
     'dts', // Generate type definition files (.d.ts)
