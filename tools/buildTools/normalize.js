@@ -10,7 +10,49 @@ const {
     readPackageJson,
     mainPackageJson,
     err,
+    rootPath,
 } = require('./common');
+
+function processConstEnum() {
+    const sourceDir = path.join(
+        rootPath,
+        'packages',
+        'roosterjs-editor-types',
+        'lib',
+        'compatibleEnum'
+    );
+    const targetDir = path.join(rootPath, 'packages', 'roosterjs-editor-types', 'lib', 'enum');
+    const fileNames = fs.readdirSync(sourceDir);
+    let indexTs = '';
+
+    fileNames.forEach(fileName => {
+        const fullName = path.join(sourceDir, fileName);
+        const content = fs.readFileSync(fullName).toString();
+        const typeNames = [];
+        const newContent = content.replace(
+            /export enum Compatible([A-Z][A-za-z0-9]*)/g,
+            (str, match) => {
+                typeNames.push(match);
+                return 'export const enum ' + match;
+            }
+        );
+
+        if (typeNames.length > 0) {
+            indexTs += `export { ${typeNames.join(', ')} } from './${fileName.replace(
+                /\.ts$/,
+                ''
+            )}'\r\n`;
+            const newFullName = path.join(targetDir, fileName);
+
+            fs.mkdirSync(targetDir, { recursive: true });
+            fs.writeFileSync(newFullName, newContent);
+        }
+    });
+
+    if (indexTs) {
+        fs.writeFileSync(path.join(targetDir, 'index.ts'), indexTs);
+    }
+}
 
 function normalize() {
     const knownCustomizedPackages = {};
@@ -51,6 +93,8 @@ function normalize() {
         mkdirp.sync(targetPackagePath);
         fs.writeFileSync(targetFileName, JSON.stringify(packageJson, null, 4));
     });
+
+    processConstEnum();
 }
 
 module.exports = {

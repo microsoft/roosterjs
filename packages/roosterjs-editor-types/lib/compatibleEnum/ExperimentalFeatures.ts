@@ -1,7 +1,7 @@
 /**
  * Experimental feature flags
  */
-export /*--const--*/ enum ExperimentalFeatures {
+export enum CompatibleExperimentalFeatures {
     /**
      * @deprecated This feature is always enabled
      */

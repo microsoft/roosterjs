@@ -1,7 +1,7 @@
 /**
  * CSS Class names for Entity
  */
-export /*--const--*/ enum EntityClasses {
+export enum CompatibleEntityClasses {
     /**
      * Class name to specify this is an entity
      */

@@ -1,7 +1,7 @@
 /**
  * Types of Selection Ranges that the SelectionRangeEx can return
  */
-export /*--const--*/ enum SelectionRangeTypes {
+export enum CompatibleSelectionRangeTypes {
     /**
      * Normal selection range provided by browser.
      */

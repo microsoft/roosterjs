@@ -1,7 +1,7 @@
 /**
  * Type of list (numbering or bullet)
  */
-export /*--const--*/ enum ListType {
+export enum CompatibleListType {
     /**
      * None list type
      * It means this is not a list

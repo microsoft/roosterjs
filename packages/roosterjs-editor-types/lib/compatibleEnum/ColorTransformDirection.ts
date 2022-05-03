@@ -1,7 +1,7 @@
 /**
  * Represents the mode of color transformation
  */
-export /*--const--*/ enum ColorTransformDirection {
+export enum CompatibleColorTransformDirection {
     /**
      * Transform from light to dark
      */

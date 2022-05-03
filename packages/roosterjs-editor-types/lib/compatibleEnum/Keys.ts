@@ -1,7 +1,7 @@
 /**
  * Key numbers common used keys
  */
-export /*--const--*/ enum Keys {
+export enum CompatibleKeys {
     NULL = 0,
     BACKSPACE = 8,
     TAB = 9,

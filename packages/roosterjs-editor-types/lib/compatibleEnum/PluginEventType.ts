@@ -1,7 +1,7 @@
 /**
  * Editor plugin event type
  */
-export /*--const--*/ enum PluginEventType {
+export enum CompatiblePluginEventType {
     /**
      * HTML KeyDown event
      */

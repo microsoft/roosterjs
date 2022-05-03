@@ -1,7 +1,7 @@
 /**
  * Prefix of content types
  */
-export /*--const--*/ enum ContentTypePrefix {
+export enum CompatibleContentTypePrefix {
     /**
      * Text type prefix
      */
@@ -16,14 +16,14 @@ export /*--const--*/ enum ContentTypePrefix {
 /**
  * Known content types
  */
-export /*--const--*/ enum ContentType {
+export enum CompatibleContentType {
     /**
      * Plain text content type
      */
-    PlainText = ContentTypePrefix.Text + 'plain',
+    PlainText = 'text/plain',
 
     /**
      * HTML content type
      */
-    HTML = ContentTypePrefix.Text + 'html',
+    HTML = 'text/html',
 }
