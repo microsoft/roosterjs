@@ -48,6 +48,51 @@ describe('setAlignment()', () => {
         );
     });
 
+    it('triggers the alignleft in a list', () => {
+        runningTestInList(
+            Alignment.Left,
+            '<ul id="list" style="display: flex; flex-direction: column;"><li id="item1" style="align-self: start;"><span>item 1</span></li><li id="item2"><span>item 2</span></li><li id="item3"><span>item 3</span></li></ul>'
+        );
+    });
+
+    it('triggers the aligncenter in a list', () => {
+        runningTestInList(
+            Alignment.Center,
+            '<ul id="list" style="display: flex; flex-direction: column;"><li id="item1" style="align-self: center;"><span>item 1</span></li><li id="item2"><span>item 2</span></li><li id="item3"><span>item 3</span></li></ul>'
+        );
+    });
+
+    it('triggers the alignright in a list', () => {
+        runningTestInList(
+            Alignment.Right,
+            '<ul id="list" style="display: flex; flex-direction: column;"><li id="item1" style="align-self: end;"><span>item 1</span></li><li id="item2"><span>item 2</span></li><li id="item3"><span>item 3</span></li></ul>'
+        );
+    });
+
+    it('triggers the alignleft in a list in multiple list items', () => {
+        runningTestInList(
+            Alignment.Left,
+            '<ul id="list" style="display: flex; flex-direction: column;"><li id="item1" style="align-self: start;"><span>item 1</span></li><li id="item2" style="align-self: start;"><span>item 2</span></li><li id="item3" style="align-self: start;"><span>item 3</span></li></ul>',
+            true
+        );
+    });
+
+    it('triggers the aligncenter in a list multiple list items', () => {
+        runningTestInList(
+            Alignment.Center,
+            '<ul id="list" style="display: flex; flex-direction: column;"><li id="item1" style="align-self: center;"><span>item 1</span></li><li id="item2" style="align-self: center;"><span>item 2</span></li><li id="item3" style="align-self: center;"><span>item 3</span></li></ul>',
+            true
+        );
+    });
+
+    it('triggers the alignright in a listmultiple list items', () => {
+        runningTestInList(
+            Alignment.Right,
+            '<ul id="list" style="display: flex; flex-direction: column;"><li id="item1" style="align-self: end;"><span>item 1</span></li><li id="item2" style="align-self: end;"><span>item 2</span></li><li id="item3" style="align-self: end;"><span>item 3</span></li></ul>',
+            true
+        );
+    });
+
     function runningTest(alignment: Alignment, command: string) {
         let document = editor.getDocument();
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
@@ -78,5 +123,21 @@ describe('setAlignment()', () => {
         setAlignment(editor, alignment);
         expect(editor.addUndoSnapshot).toHaveBeenCalled();
         expect(editor.getContent()).toBe(table);
+    }
+
+    function runningTestInList(alignment: Alignment, list: string, multipleItems?: boolean) {
+        let document = editor.getDocument();
+        spyOn(editor, 'addUndoSnapshot').and.callThrough();
+        spyOn(editor, 'isFeatureEnabled').and.returnValue(true);
+        editor.setContent(
+            '<ul id="list"><li id="item1"><span>item 1</span></li><li id="item2"><span>item 2</span></li><li id="item3"><span>item 3</span></li></ul>'
+        );
+        const range = document.createRange();
+        range.setStart(document.getElementById('list'), 0);
+        range.setEnd(document.getElementById('list'), multipleItems ? 3 : 1);
+        editor.select(range);
+        setAlignment(editor, alignment);
+        expect(editor.addUndoSnapshot).toHaveBeenCalled();
+        expect(editor.getContent()).toBe(list);
     }
 });
