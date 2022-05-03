@@ -4,13 +4,102 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const {
+    rootPath,
     packages,
     allPackages,
     distPath,
+    compatibleEnumPath,
     readPackageJson,
     mainPackageJson,
     err,
 } = require('./common');
+
+const EnumRegex = /(^\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*export const enum ([A-Za-z0-9]+)\s{([^}]+)}/gm;
+const EnumItemRegex = /(^\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*(\w[a-zA-Z0-9_]*)(?:\s*=[^,]*)?,/gm;
+const CompatibleTypePrefix = 'Compatible';
+
+function parseEnum(source) {
+    const enums = [];
+
+    let enumMatch;
+    while (!!(enumMatch = EnumRegex.exec(source))) {
+        const enumComment = enumMatch[1] || '';
+        const enumName = enumMatch[2];
+        const enumContent = enumMatch[3];
+        const currentEnum = {
+            name: enumName,
+            comment: enumComment,
+            items: [],
+        };
+
+        let enumItemMatch;
+
+        while (!!(enumItemMatch = EnumItemRegex.exec(enumContent))) {
+            const itemComment = enumItemMatch[1] || '';
+            const itemName = enumItemMatch[2];
+            const item = {
+                name: itemName,
+                comment: itemComment,
+            };
+            currentEnum.items.push(item);
+        }
+
+        enums.push(currentEnum);
+    }
+
+    return enums;
+}
+
+function generateCompatibleEnumItem(item, enumName) {
+    return `${item.comment}\r\n    ${item.name} = ${enumName}.${item.name},\r\n`;
+}
+
+function generateCompatibleEnum(currentEnum) {
+    const enumName = currentEnum.name;
+    return `${
+        currentEnum.comment
+    }\r\nexport enum ${CompatibleTypePrefix}${enumName} {\r\n${currentEnum.items
+        .map(item => generateCompatibleEnumItem(item, enumName))
+        .join('')}}\r\n`;
+}
+
+function generateCompatibleEnumScript(enums, fileName) {
+    let script = `import { ${enums
+        .map(currentEnum => currentEnum.name)
+        .join(', ')} } from '../enum/${fileName.replace(/\.ts$/, '')}'\r\n\r\n`;
+    script += enums.map(generateCompatibleEnum).join('\r\n');
+
+    return script;
+}
+
+function processConstEnum() {
+    const sourceDir = path.join(rootPath, 'packages', 'roosterjs-editor-types', 'lib', 'enum');
+    const fileNames = fs.readdirSync(sourceDir);
+    let indexTs = '';
+
+    fileNames.forEach(fileName => {
+        const fullName = path.join(sourceDir, fileName);
+        const content = fs.readFileSync(fullName).toString();
+        const enums = parseEnum(content);
+
+        if (enums.length > 0) {
+            const newContent = generateCompatibleEnumScript(enums, fileName);
+
+            indexTs += `export { ${enums
+                .map(e => `${CompatibleTypePrefix}${e.name}`)
+                .join(', ')} } from './${fileName.replace(/\.ts$/, '')}'\r\n`;
+
+            const newFullName = path.join(compatibleEnumPath, fileName);
+
+            fs.mkdirSync(compatibleEnumPath, { recursive: true });
+            fs.writeFileSync(newFullName, newContent);
+        }
+    });
+
+    if (indexTs) {
+        fs.writeFileSync(path.join(compatibleEnumPath, 'index.ts'), indexTs);
+    }
+}
 
 function normalize() {
     const knownCustomizedPackages = {};
@@ -51,6 +140,8 @@ function normalize() {
         mkdirp.sync(targetPackagePath);
         fs.writeFileSync(targetFileName, JSON.stringify(packageJson, null, 4));
     });
+
+    processConstEnum();
 }
 
 module.exports = {
