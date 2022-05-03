@@ -72,4 +72,9 @@ export const enum ExperimentalFeatures {
      * Provide a circular resize handles that adaptive the number od handles to the size of the image
      */
     AdaptiveHandlesResizer = 'AdaptiveHandlesResizer',
+
+    /**
+     * Align list elements elements to left, center and right using setAlignment API
+     */
+    ListItemAlignment = 'ListItemAlignment',
 }
