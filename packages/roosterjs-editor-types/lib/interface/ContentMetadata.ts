@@ -1,6 +1,6 @@
 import SelectionPath from './SelectionPath';
 import TableSelection from './TableSelection';
-import { SelectionRangeTypes } from './SelectionRangeEx';
+import { SelectionRangeTypes } from '../enum/SelectionRangeTypes';
 
 /**
  * Common part of NormalContentMetadata and TableContentMetadata

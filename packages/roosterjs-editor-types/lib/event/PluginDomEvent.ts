@@ -1,5 +1,5 @@
 import BasePluginEvent from './BasePluginEvent';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * A base interface of all DOM events

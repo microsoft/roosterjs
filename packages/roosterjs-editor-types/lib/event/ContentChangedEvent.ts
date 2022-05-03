@@ -1,6 +1,6 @@
 import BasePluginEvent from './BasePluginEvent';
 import { ChangeSource } from '../enum/ChangeSource';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * Represents a change to the editor made by another plugin

@@ -1,7 +1,7 @@
 import BasePluginEvent from './BasePluginEvent';
 import Entity from '../interface/Entity';
 import { EntityOperation } from '../enum/EntityOperation';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * Provide a chance for plugins to handle entity related events.
