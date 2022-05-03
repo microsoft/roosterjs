@@ -85,11 +85,12 @@ function clearNodeFormat(node: Node): boolean {
 
 function clearAttribute(element: HTMLElement) {
     const isTableCell = safeInstanceOf(element, 'HTMLTableCellElement');
+    const isTable = safeInstanceOf(element, 'HTMLTableElement');
 
     for (let attr of toArray(element.attributes)) {
         if (isTableCell && attr.name == 'style') {
             removeNonBorderStyles(element);
-        } else if (safeInstanceOf(element, 'HTMLTableElement') && attr.name == 'style') {
+        } else if (isTable && attr.name == 'style') {
             removeNotTableDefaultStyles(element);
         } else if (
             ATTRIBUTES_TO_PRESERVE.indexOf(attr.name.toLowerCase()) < 0 &&
