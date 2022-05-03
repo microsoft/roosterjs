@@ -1,5 +1,12 @@
+import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
-import { isWholeTableSelected, VTable } from 'roosterjs-editor-dom';
+import {
+    createVListFromRegion,
+    getSelectedBlockElementsInRegion,
+    getTagOfNode,
+    isWholeTableSelected,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     Alignment,
     ChangeSource,
@@ -20,6 +27,8 @@ import {
 export default function setAlignment(editor: IEditor, alignment: Alignment) {
     const selection = editor.getSelectionRangeEx();
     const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
+    const elementAtCursor = editor.getElementAtCursor();
+
     editor.addUndoSnapshot(() => {
         if (
             editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
@@ -27,6 +36,11 @@ export default function setAlignment(editor: IEditor, alignment: Alignment) {
             isWholeTableSelected(new VTable(selection.table), selection.coordinates)
         ) {
             alignTable(selection, alignment);
+        } else if (
+            isList(elementAtCursor) &&
+            editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
+        ) {
+            alignList(editor, alignment);
         } else {
             alignText(editor, alignment);
         }
@@ -73,4 +87,17 @@ function alignText(editor: IEditor, alignment: Alignment) {
     }
     execCommand(editor, command);
     editor.queryElements('[align]', QueryScope.OnSelection, node => (node.style.textAlign = align));
+}
+
+function isList(element: HTMLElement) {
+    return ['LI', 'UL', 'OL'].indexOf(getTagOfNode(element)) > -1;
+}
+
+function alignList(editor: IEditor, alignment: Alignment) {
+    blockFormat(editor, (region, start, end) => {
+        const blocks = getSelectedBlockElementsInRegion(region);
+        const startNode = blocks[0].getStartNode();
+        const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
+        vList.setAlignment(start, end, alignment);
+    });
 }
