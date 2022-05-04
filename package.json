@@ -20,10 +20,10 @@
         "build": "node tools/build.js clean checkdep normalize tslint buildcommonjs dts packprod builddemo",
         "build:ci": "node tools/build.js --noProgressBar clean checkdep normalize tslint buildcommonjs buildamd dts pack packprod builddemo builddoc",
         "start": "node tools/start.js",
-        "test": "karma start",
-        "test:chrome": "karma start --chrome",
-        "test:debug": "karma start --no-single-run",
-        "test:coverage": "karma start --coverage",
+        "test": "node tools/build.js normalize & karma start",
+        "test:chrome": "node tools/build.js normalize & karma start --chrome",
+        "test:debug": "node tools/build.js normalize & karma start --no-single-run",
+        "test:coverage": "node tools/build.js normalize & karma start --coverage",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd dts pack packprod builddemo builddoc publish"
     },
     "devDependencies": {

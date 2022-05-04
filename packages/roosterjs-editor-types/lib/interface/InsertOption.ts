@@ -1,4 +1,5 @@
 import { ContentPosition } from '../enum/ContentPosition';
+import type { CompatibleContentPosition } from '../compatibleEnum/ContentPosition';
 
 /**
  * Shared options for insertNode related APIs
@@ -38,7 +39,7 @@ export interface InsertOptionBasic extends InsertOptionBase {
  * The Range variant where insertNode will operate on a range disjointed from the current selection state.
  */
 export interface InsertOptionRange extends InsertOptionBase {
-    position: ContentPosition.Range;
+    position: ContentPosition.Range | CompatibleContentPosition.Range;
 
     /**
      * The range to be targeted when insertion happens.

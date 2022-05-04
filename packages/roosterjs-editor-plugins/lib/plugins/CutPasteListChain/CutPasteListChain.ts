@@ -7,13 +7,14 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
+import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Maintain list numbers of list chain when content is modified by cut/paste/drag&drop
  */
 export default class CutPasteListChain implements EditorPlugin {
     private chains: VListChain[];
-    private expectedChangeSource: ChangeSource;
+    private expectedChangeSource: ChangeSource | CompatibleChangeSource;
     private editor: IEditor;
     private disposer: () => void;
 
