@@ -11,10 +11,16 @@
         "rootDir": "..",
         "lib": ["es6", "dom"]
     },
-    "include": ["../packages/**/*.ts", "../packages-ui/**/*.ts", "../packages-ui/**/*.tsx"],
+    "include": [
+        "../packages/**/*.ts",
+        "../packages-ui/**/*.ts",
+        "../packages-ui/**/*.tsx",
+        "../packages/roosterjs-editor-types-compatible/**/*.ts"
+    ],
     "typedocOptions": {
         "entryPoints": [
             "../packages/roosterjs-editor-types/lib/index.ts",
+            "../packages/roosterjs-editor-types-compatible/lib/index.ts",
             "../packages/roosterjs-editor-dom/lib/index.ts",
             "../packages/roosterjs-editor-core/lib/index.ts",
             "../packages/roosterjs-editor-api/lib/index.ts",
