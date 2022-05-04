@@ -1,7 +1,7 @@
 /**
  * Key numbers common used keys
  */
-export /*--const--*/ enum Keys {
+export const enum Keys {
     NULL = 0,
     BACKSPACE = 8,
     TAB = 9,
@@ -35,7 +35,9 @@ export /*--const--*/ enum Keys {
     FORWARD_SLASH = 191,
     GRAVE_TILDE = 192,
 
-    // Keys below are non-standard, and should be used in ContentEditFeatures only
+    /**
+     * Keys below are non-standard, and should be used in ContentEditFeatures only
+     */
     CONTENTCHANGED = 0x101,
     RANGE = 0x102,
 

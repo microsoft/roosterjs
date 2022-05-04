@@ -1,6 +1,7 @@
 import BasePluginEvent from './BasePluginEvent';
 import { ChangeSource } from '../enum/ChangeSource';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 
 /**
  * Represents a change to the editor made by another plugin
@@ -10,7 +11,7 @@ export default interface ContentChangedEvent
     /**
      * Source of the change
      */
-    source: ChangeSource | string;
+    source: ChangeSource | CompatibleChangeSource | string;
 
     /**
      * Optional related data

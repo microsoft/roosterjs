@@ -9,6 +9,7 @@ import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
 import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
+import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 
@@ -24,7 +25,7 @@ const NEGATIVE_MARGIN = '-.25in';
  * That can happen after we do "outdent" on a 1-level list item, then it becomes not a list item.
  */
 export default class VListItem {
-    private listTypes: ListType[];
+    private listTypes: (ListType | CompatibleListType)[];
     private node: HTMLLIElement;
     private dummy: boolean;
     private newListStart: number | undefined = undefined;
@@ -35,7 +36,15 @@ export default class VListItem {
      * @param listTypes An array represents list types of all parent and current level.
      * Skip this parameter for a non-list item.
      */
-    constructor(node: Node, ...listTypes: (ListType.Ordered | ListType.Unordered)[]) {
+    constructor(
+        node: Node,
+        ...listTypes: (
+            | ListType.Ordered
+            | ListType.Unordered
+            | CompatibleListType.Ordered
+            | CompatibleListType.Unordered
+        )[]
+    ) {
         if (!node) {
             throw new Error('node must not be null');
         }
@@ -54,7 +63,7 @@ export default class VListItem {
     /**
      * Get type of current list item
      */
-    getListType(): ListType {
+    getListType(): ListType | CompatibleListType {
         return this.listTypes[this.listTypes.length - 1];
     }
 
@@ -168,7 +177,7 @@ export default class VListItem {
      * Change list type of this item
      * @param targetType The target list type to change to
      */
-    changeListType(targetType: ListType) {
+    changeListType(targetType: ListType | CompatibleListType) {
         if (targetType == ListType.None) {
             this.listTypes = [targetType];
         } else {
@@ -257,7 +266,7 @@ export default class VListItem {
 
 function createListElement(
     newRoot: Node,
-    listType: ListType,
+    listType: ListType | CompatibleListType,
     nextLevel: number,
     originalRoot?: HTMLOListElement | HTMLUListElement
 ): HTMLOListElement | HTMLUListElement {

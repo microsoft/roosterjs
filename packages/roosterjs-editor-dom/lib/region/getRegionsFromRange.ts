@@ -4,6 +4,7 @@ import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
 import { QueryScope, Region, RegionType } from 'roosterjs-editor-types';
+import type { CompatibleRegionType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 interface RegionTypeData {
     /**
@@ -40,7 +41,7 @@ const regionTypeData: Record<RegionType, RegionTypeData> = {
 export default function getRegionsFromRange(
     root: HTMLElement,
     range: Range,
-    type: RegionType
+    type: RegionType | CompatibleRegionType
 ): Region[] {
     let regions: Region[] = [];
     if (root && range) {
@@ -110,7 +111,11 @@ interface Boundary {
  * @param range Existing selected full range
  * @param type Type of region to create
  */
-function buildBoundaryTree(root: HTMLElement, range: Range, type: RegionType): Boundary {
+function buildBoundaryTree(
+    root: HTMLElement,
+    range: Range,
+    type: RegionType | CompatibleRegionType
+): Boundary {
     const allBoundaries: Boundary[] = [{ innerNode: root, children: [] }];
     const { outerSelector, innerSelector } = regionTypeData[type];
     const inSelectionOuterNode = queryElements(

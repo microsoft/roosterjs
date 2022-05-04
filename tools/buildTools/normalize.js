@@ -3,6 +3,7 @@
 const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
+const processConstEnum = require('./processConstEnum');
 const {
     packages,
     allPackages,
@@ -51,6 +52,8 @@ function normalize() {
         mkdirp.sync(targetPackagePath);
         fs.writeFileSync(targetFileName, JSON.stringify(packageJson, null, 4));
     });
+
+    processConstEnum();
 }
 
 module.exports = {

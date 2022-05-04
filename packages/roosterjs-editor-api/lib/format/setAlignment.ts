@@ -17,6 +17,7 @@ import {
     SelectionRangeTypes,
     TableSelectionRange,
 } from 'roosterjs-editor-types';
+import type { CompatibleAlignment } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Set content alignment
@@ -24,12 +25,12 @@ import {
  * @param alignment The alignment option:
  * Alignment.Center, Alignment.Left, Alignment.Right
  */
-export default function setAlignment(editor: IEditor, alignment: Alignment) {
-    const selection = editor.getSelectionRangeEx();
-    const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
-    const elementAtCursor = editor.getElementAtCursor();
-
+export default function setAlignment(editor: IEditor, alignment: Alignment | CompatibleAlignment) {
     editor.addUndoSnapshot(() => {
+        const selection = editor.getSelectionRangeEx();
+        const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
+        const elementAtCursor = editor.getElementAtCursor();
+
         if (
             editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
             isATable &&
@@ -55,7 +56,7 @@ export default function setAlignment(editor: IEditor, alignment: Alignment) {
  * @param addUndoSnapshot
  * @returns
  */
-function alignTable(selection: TableSelectionRange, alignment: Alignment) {
+function alignTable(selection: TableSelectionRange, alignment: Alignment | CompatibleAlignment) {
     const table = selection.table;
     if (alignment == Alignment.Center) {
         table.style.marginLeft = 'auto';
@@ -75,7 +76,7 @@ function alignTable(selection: TableSelectionRange, alignment: Alignment) {
  * @param alignment
  * @returns
  */
-function alignText(editor: IEditor, alignment: Alignment) {
+function alignText(editor: IEditor, alignment: Alignment | CompatibleAlignment) {
     let align = 'left';
     let command = DocumentCommand.JustifyLeft;
     if (alignment == Alignment.Center) {
@@ -93,7 +94,7 @@ function isList(element: HTMLElement) {
     return ['LI', 'UL', 'OL'].indexOf(getTagOfNode(element)) > -1;
 }
 
-function alignList(editor: IEditor, alignment: Alignment) {
+function alignList(editor: IEditor, alignment: Alignment | CompatibleAlignment) {
     blockFormat(editor, (region, start, end) => {
         const blocks = getSelectedBlockElementsInRegion(region);
         const startNode = blocks[0].getStartNode();

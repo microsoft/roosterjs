@@ -15,4 +15,4 @@ dist/
 .DS_Store
 
 # Temp files
-temp/
+packages/roosterjs-editor-types/lib/compatibleEnum/

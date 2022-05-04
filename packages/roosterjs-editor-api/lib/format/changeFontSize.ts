@@ -1,6 +1,7 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
 import { FontSizeChange, IEditor } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
+import type { CompatibleFontSizeChange } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,
@@ -18,7 +19,7 @@ const MAX_FONT_SIZE = 1000;
  */
 export default function changeFontSize(
     editor: IEditor,
-    change: FontSizeChange,
+    change: FontSizeChange | CompatibleFontSizeChange,
     fontSizes: number[] = FONT_SIZES
 ) {
     let changeBase: 1 | -1 = change == FontSizeChange.Increase ? 1 : -1;
