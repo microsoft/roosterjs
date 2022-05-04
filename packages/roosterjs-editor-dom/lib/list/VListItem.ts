@@ -1,10 +1,12 @@
 import contains from '../utils/contains';
 import getListTypeFromNode from './getListTypeFromNode';
+import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setListItemStyle from './setListItemStyle';
+import setStyles from '../style/setStyles';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
@@ -219,6 +221,7 @@ export default class VListItem {
         //    local listTypes:     null     > OL > UL > UL > OL
         //    then we need to create a UL and a OL tag
         for (; nextLevel < this.listTypes.length; nextLevel++) {
+            const stackLength = listStack.length - 1;
             const newList = createListElement(
                 listStack[0],
                 this.listTypes[nextLevel],
@@ -226,10 +229,18 @@ export default class VListItem {
                 originalRoot
             );
 
-            listStack[listStack.length - 1].appendChild(newList);
+            listStack[stackLength].appendChild(newList);
             listStack.push(newList);
-        }
 
+            //If the current node parent is in the same deep child index,
+            //apply the styles of the current parent list to the new list
+            if (this.getDeepChildIndex(originalRoot) == stackLength) {
+                const styles = getStyles(this.node.parentElement!);
+                if (styles['list-style-type']) {
+                    setStyles(newList, styles);
+                }
+            }
+        }
         // 3. Add current node into deepest list element
         listStack[listStack.length - 1].appendChild(this.node);
         this.node.style.setProperty('display', this.dummy ? 'block' : null);
@@ -252,6 +263,35 @@ export default class VListItem {
                 true /*checkLast*/
             );
         }
+    }
+
+    /**
+     * Get the index of how deep is the current node parent list inside of the original root list.
+     * @example In the following structure this function would return 2
+     * ```html
+     *  <ol> <!-- original Root -->
+     *      <ol>
+     *          <ol>
+     *              <li></li> <!-- this.node  -->
+     *          </ol>
+     *      </ol>
+     *  </ol>
+     * ```
+     * @param originalRoot The root list
+     * @returns -1  if the node does not have parent element or if original root was not provided,
+     *              else, how deep is the parent element inside of the original root.
+     */
+    private getDeepChildIndex(originalRoot: HTMLOListElement | HTMLUListElement | undefined) {
+        let parentElement = this.node.parentElement;
+        if (originalRoot && parentElement) {
+            let deepIndex = 0;
+            while (parentElement && parentElement != originalRoot) {
+                deepIndex++;
+                parentElement = parentElement?.parentElement || null;
+            }
+            return deepIndex;
+        }
+        return -1;
     }
 }
 
