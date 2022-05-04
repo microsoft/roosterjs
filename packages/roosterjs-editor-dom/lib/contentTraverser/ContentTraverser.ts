@@ -8,6 +8,7 @@ import SelectionScoper from './SelectionScoper';
 import TraversingScoper from './TraversingScoper';
 import { getInlineElementBeforeAfter } from '../inlineElements/getInlineElementBeforeAfter';
 import { getLeafSibling } from '../utils/getLeafSibling';
+import type { CompatibleContentPosition } from 'roosterjs-editor-types/lib/compatibleTypes';
 import {
     BlockElement,
     ContentPosition,
@@ -72,7 +73,7 @@ export default class ContentTraverser implements IContentTraverser {
     public static createBlockTraverser(
         rootNode: Node,
         position: NodePosition | Range,
-        start: ContentPosition = ContentPosition.SelectionStart,
+        start: ContentPosition | CompatibleContentPosition = ContentPosition.SelectionStart,
         skipTags?: string[]
     ): IContentTraverser {
         return new ContentTraverser(new SelectionBlockScoper(rootNode, position, start));

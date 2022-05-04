@@ -12,6 +12,7 @@ import {
     getTextContent,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
+import type { CompatibleGetContentMode } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
@@ -20,7 +21,10 @@ import {
  * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
-export const getContent: GetContent = (core: EditorCore, mode: GetContentMode): string => {
+export const getContent: GetContent = (
+    core: EditorCore,
+    mode: GetContentMode | CompatibleGetContentMode
+): string => {
     let content = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;

@@ -7,6 +7,7 @@ import { CoreApiMap } from './EditorCore';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
+import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
 
 /**
  * The options to specify parameters customizing an editor, used by ctor of Editor class
@@ -92,7 +93,7 @@ export default interface EditorOptions {
     /**
      * Specify the enabled experimental features
      */
-    experimentalFeatures?: ExperimentalFeatures[];
+    experimentalFeatures?: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
 
     /**
      * By default, we will stop propagation of a printable keyboard event

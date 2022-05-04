@@ -6,6 +6,7 @@ import {
     PluginEventType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import type { CompatibleDocumentCommand } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
@@ -17,7 +18,10 @@ import {
  * @param doWorkaroundForList Optional, set to true to do workaround for list in order to keep current format.
  * Default value is false.
  */
-export default function execCommand(editor: IEditor, command: DocumentCommand) {
+export default function execCommand(
+    editor: IEditor,
+    command: DocumentCommand | CompatibleDocumentCommand
+) {
     editor.focus();
 
     let formatter = () => editor.getDocument().execCommand(command, false, null);

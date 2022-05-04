@@ -2,6 +2,7 @@ import CustomData from '../interface/CustomData';
 import DefaultFormat from '../interface/DefaultFormat';
 import SelectionPath from '../interface/SelectionPath';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
+import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
 
 /**
  * The state object for LifecyclePlugin
@@ -35,7 +36,7 @@ export default interface LifecyclePluginState {
     /**
      * Enabled experimental features
      */
-    experimentalFeatures: ExperimentalFeatures[];
+    experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
 
     /**
      * Cached document fragment for original content

@@ -24,6 +24,12 @@ import { RegionType } from '../enum/RegionType';
 import { SelectionRangeEx } from './SelectionRangeEx';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
+import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
+import type { CompatibleContentPosition } from '../compatibleEnum/ContentPosition';
+import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
+import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
+import type { CompatibleQueryScope } from '../compatibleEnum/QueryScope';
+import type { CompatibleRegionType } from '../compatibleEnum/RegionType';
 
 /**
  * Interface of roosterjs editor object
@@ -122,7 +128,7 @@ export default interface IEditor {
      */
     queryElements<T extends keyof HTMLElementTagNameMap>(
         tag: T,
-        scope: QueryScope,
+        scope: QueryScope | CompatibleQueryScope,
         forEachCallback?: (node: HTMLElementTagNameMap[T]) => any
     ): HTMLElementTagNameMap[T][];
 
@@ -135,7 +141,7 @@ export default interface IEditor {
      */
     queryElements<T extends HTMLElement = HTMLElement>(
         selector: string,
-        scope: QueryScope,
+        scope: QueryScope | CompatibleQueryScope,
         forEachCallback?: (node: T) => any
     ): T[];
 
@@ -168,7 +174,7 @@ export default interface IEditor {
      * @param mode specify what kind of HTML content to retrieve
      * @returns HTML string representing current editor content
      */
-    getContent(mode?: GetContentMode): string;
+    getContent(mode?: GetContentMode | CompatibleGetContentMode): string;
 
     /**
      * Set HTML content to this editor. All existing content will be replaced. A ContentChanged event will be triggered
@@ -336,7 +342,7 @@ export default interface IEditor {
     /**
      * Get impacted regions from selection
      */
-    getSelectedRegions(type?: RegionType): Region[];
+    getSelectedRegions(type?: RegionType | CompatibleRegionType): Region[];
 
     //#endregion
 
@@ -379,7 +385,10 @@ export default interface IEditor {
      * @param source Source of this event, by default is 'SetContent'
      * @param data additional data for this event
      */
-    triggerContentChangedEvent(source?: ChangeSource | string, data?: any): void;
+    triggerContentChangedEvent(
+        source?: ChangeSource | CompatibleChangeSource | string,
+        data?: any
+    ): void;
 
     //#endregion
 
@@ -407,7 +416,7 @@ export default interface IEditor {
      */
     addUndoSnapshot(
         callback?: (start: NodePosition, end: NodePosition) => any,
-        changeSource?: ChangeSource | string,
+        changeSource?: ChangeSource | CompatibleChangeSource | string,
         canUndoByBackspace?: boolean
     ): void;
 
@@ -468,7 +477,7 @@ export default interface IEditor {
      * Get a content traverser for current block element start from specified position
      * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
      */
-    getBlockTraverser(startFrom?: ContentPosition): IContentTraverser;
+    getBlockTraverser(startFrom?: ContentPosition | CompatibleContentPosition): IContentTraverser;
 
     /**
      * Get a text traverser of current selection
@@ -577,7 +586,7 @@ export default interface IEditor {
      * Check if the given experimental feature is enabled
      * @param feature The feature to check
      */
-    isFeatureEnabled(feature: ExperimentalFeatures): boolean;
+    isFeatureEnabled(feature: ExperimentalFeatures | CompatibleExperimentalFeatures): boolean;
 
     /**
      * Get a function to convert HTML string to trusted HTML string.

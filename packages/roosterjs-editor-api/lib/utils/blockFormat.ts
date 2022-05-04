@@ -32,7 +32,7 @@ export default function blockFormat(
         }
         if (selection.type == SelectionRangeTypes.Normal) {
             editor.select(start, end);
-        } else {
+        } else if (selection.type == SelectionRangeTypes.TableSelection) {
             editor.select(selection.table, selection.coordinates);
         }
     }, ChangeSource.Format);

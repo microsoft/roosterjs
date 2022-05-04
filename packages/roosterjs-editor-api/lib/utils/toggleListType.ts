@@ -1,6 +1,7 @@
 import blockFormat from '../utils/blockFormat';
 import { createVListFromRegion, getBlockElementAtNode } from 'roosterjs-editor-dom';
 import { IEditor, ListType } from 'roosterjs-editor-types';
+import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Toggle List Type at selection
@@ -21,7 +22,7 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
  */
 export default function toggleListType(
     editor: IEditor,
-    listType: ListType,
+    listType: ListType | CompatibleListType,
     startNumber?: number,
     includeSiblingLists: boolean = true
 ) {
