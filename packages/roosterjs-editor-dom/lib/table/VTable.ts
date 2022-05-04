@@ -98,13 +98,15 @@ export default class VTable {
                         for (let rowSpan = 0; rowSpan < td.rowSpan; rowSpan++) {
                             const hasTd: boolean = colSpan + rowSpan == 0;
                             const rect = td.getBoundingClientRect();
-                            this.cells![rowIndex + rowSpan][targetCol] = {
-                                td: hasTd ? td : null,
-                                spanLeft: colSpan > 0,
-                                spanAbove: rowSpan > 0,
-                                width: hasTd ? rect.width : undefined,
-                                height: hasTd ? rect.height : undefined,
-                            };
+                            if (this.cells?.[rowIndex + rowSpan]) {
+                                this.cells[rowIndex + rowSpan][targetCol] = {
+                                    td: hasTd ? td : null,
+                                    spanLeft: colSpan > 0,
+                                    spanAbove: rowSpan > 0,
+                                    width: hasTd ? rect.width : undefined,
+                                    height: hasTd ? rect.height : undefined,
+                                };
+                            }
                         }
                     }
                 }
