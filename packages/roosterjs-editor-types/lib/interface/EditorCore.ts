@@ -15,6 +15,9 @@ import { SelectionRangeEx } from './SelectionRangeEx';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TableSelectionRange } from './SelectionRangeEx';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
+import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
+import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
+import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
 
 /**
  * Represents the core data structure of an editor
@@ -71,7 +74,7 @@ export default interface EditorCore extends PluginState {
 export type AddUndoSnapshot = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition) => any,
-    changeSource: ChangeSource | string,
+    changeSource: ChangeSource | CompatibleChangeSource | string,
     canUndoByBackspace: boolean
 ) => void;
 
@@ -126,7 +129,10 @@ export type Focus = (core: EditorCore) => void;
  * @param mode specify what kind of HTML content to retrieve
  * @returns HTML string representing current editor content
  */
-export type GetContent = (core: EditorCore, mode: GetContentMode) => string;
+export type GetContent = (
+    core: EditorCore,
+    mode: GetContentMode | CompatibleGetContentMode
+) => string;
 
 /**
  * Get current or cached selection range
@@ -228,7 +234,7 @@ export type TransformColor = (
     rootNode: Node,
     includeSelf: boolean,
     callback: () => void,
-    direction: ColorTransformDirection,
+    direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) => void;
 

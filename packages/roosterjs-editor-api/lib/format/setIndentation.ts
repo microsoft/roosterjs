@@ -23,6 +23,7 @@ import {
     VTable,
     wrap,
 } from 'roosterjs-editor-dom';
+import type { CompatibleIndentation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Set indentation at selection
@@ -32,7 +33,10 @@ import {
  * @param indentation The indentation option:
  * Indentation.Increase to increase indentation or Indentation.Decrease to decrease indentation
  */
-export default function setIndentation(editor: IEditor, indentation: Indentation) {
+export default function setIndentation(
+    editor: IEditor,
+    indentation: Indentation | CompatibleIndentation
+) {
     const handler = indentation == Indentation.Increase ? indent : outdent;
 
     blockFormat(
@@ -137,7 +141,11 @@ function isFirstItem(vList: VList, startNode: Node) {
     );
 }
 
-function shouldHandleWithBlockquotes(indentation: Indentation, editor: IEditor, startNode: Node) {
+function shouldHandleWithBlockquotes(
+    indentation: Indentation | CompatibleIndentation,
+    editor: IEditor,
+    startNode: Node
+) {
     return (
         indentation == Indentation.Increase || editor.getElementAtCursor('blockquote', startNode)
     );

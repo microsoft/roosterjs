@@ -1,5 +1,6 @@
 import toArray from './toArray';
 import { DocumentPosition, NodeType, QueryScope } from 'roosterjs-editor-types';
+import type { CompatibleQueryScope } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Query HTML elements in the container by a selector string
@@ -14,7 +15,7 @@ export default function queryElements(
     container: ParentNode,
     selector: string,
     forEachCallback?: ((node: HTMLElement) => any) | null,
-    scope: QueryScope = QueryScope.Body,
+    scope: QueryScope | CompatibleQueryScope = QueryScope.Body,
     range?: Range
 ): HTMLElement[] {
     if (!container || !selector) {

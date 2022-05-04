@@ -1,6 +1,6 @@
 import BasePluginEvent from './BasePluginEvent';
 import { PluginEvent } from './PluginEvent';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * A type to get specify plugin event type from eventType parameter.

@@ -1,6 +1,6 @@
 import BasePluginEvent from './BasePluginEvent';
 import SelectionPath from '../interface/SelectionPath';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * A plugin triggered right after editor has entered Shadow Edit mode

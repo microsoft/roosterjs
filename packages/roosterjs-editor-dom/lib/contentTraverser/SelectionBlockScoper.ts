@@ -11,6 +11,7 @@ import {
     getFirstInlineElement,
     getLastInlineElement,
 } from '../inlineElements/getFirstLastInlineElement';
+import type { CompatibleContentPosition } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
@@ -32,7 +33,7 @@ export default class SelectionBlockScoper implements TraversingScoper {
     constructor(
         public rootNode: Node,
         position: NodePosition | Range,
-        private startFrom: ContentPosition
+        private startFrom: ContentPosition | CompatibleContentPosition
     ) {
         position = safeInstanceOf(position, 'Range') ? Position.getStart(position) : position;
         this.position = position.normalize();

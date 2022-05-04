@@ -1,5 +1,5 @@
 import BasePluginEvent from './BasePluginEvent';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * The event to be triggered before SetContent API is called.
