@@ -1,7 +1,7 @@
 /**
  * Operation flags for ImageEdit plugin
  */
-export /*--const--*/ enum ImageEditOperation {
+export const enum ImageEditOperation {
     /**
      * No operation
      */
