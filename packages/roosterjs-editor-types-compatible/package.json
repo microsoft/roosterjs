@@ -1,0 +1,9 @@
+{
+    "name": "roosterjs-editor-types-compatible",
+    "description": "Type definition for roosterjs with enums that can be compatible with isolatedModules",
+    "dependencies": {
+        "roosterjs-editor-types": "",
+        "@types/dom-inputevent": "^1.0.3"
+    },
+    "main": "./lib/index.ts"
+}

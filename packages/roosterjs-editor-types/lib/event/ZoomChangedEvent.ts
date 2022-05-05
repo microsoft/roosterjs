@@ -1,5 +1,5 @@
 import BasePluginEvent from './BasePluginEvent';
-import { PluginEventType } from './PluginEventType';
+import { PluginEventType } from '../enum/PluginEventType';
 
 /**
  * Represents an event object triggered from Editor.setZoomScale() API.

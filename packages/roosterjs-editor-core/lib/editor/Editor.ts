@@ -60,6 +60,14 @@ import {
     arrayPush,
     toArray,
 } from 'roosterjs-editor-dom';
+import type {
+    CompatibleChangeSource,
+    CompatibleContentPosition,
+    CompatibleExperimentalFeatures,
+    CompatibleGetContentMode,
+    CompatibleQueryScope,
+    CompatibleRegionType,
+} from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * RoosterJs core editor class
@@ -210,7 +218,10 @@ export default class Editor implements IEditor {
 
     public queryElements(
         selector: string,
-        scopeOrCallback: QueryScope | ((node: Node) => any) = QueryScope.Body,
+        scopeOrCallback:
+            | QueryScope
+            | CompatibleQueryScope
+            | ((node: Node) => any) = QueryScope.Body,
         callback?: (node: Node) => any
     ) {
         const result: HTMLElement[] = [];
@@ -264,7 +275,9 @@ export default class Editor implements IEditor {
      * @param mode specify what kind of HTML content to retrieve
      * @returns HTML string representing current editor content
      */
-    public getContent(mode: GetContentMode = GetContentMode.CleanHTML): string {
+    public getContent(
+        mode: GetContentMode | CompatibleGetContentMode = GetContentMode.CleanHTML
+    ): string {
         return this.core.api.getContent(this.core, mode);
     }
 
@@ -494,7 +507,9 @@ export default class Editor implements IEditor {
     /**
      * Get impacted regions from selection
      */
-    public getSelectedRegions(type: RegionType = RegionType.Table): Region[] {
+    public getSelectedRegions(
+        type: RegionType | CompatibleRegionType = RegionType.Table
+    ): Region[] {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
         selection.ranges.forEach(range => {
@@ -546,7 +561,7 @@ export default class Editor implements IEditor {
      * @param data additional data for this event
      */
     public triggerContentChangedEvent(
-        source: ChangeSource | string = ChangeSource.SetContent,
+        source: ChangeSource | CompatibleChangeSource | string = ChangeSource.SetContent,
         data?: any
     ) {
         this.triggerPluginEvent(PluginEventType.ContentChanged, {
@@ -587,7 +602,7 @@ export default class Editor implements IEditor {
      */
     public addUndoSnapshot(
         callback?: (start: NodePosition, end: NodePosition) => any,
-        changeSource?: ChangeSource | string,
+        changeSource?: ChangeSource | CompatibleChangeSource | string,
         canUndoByBackspace?: boolean
     ) {
         this.core.api.addUndoSnapshot(this.core, callback, changeSource, canUndoByBackspace);
@@ -675,7 +690,7 @@ export default class Editor implements IEditor {
      * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
      */
     public getBlockTraverser(
-        startFrom: ContentPosition = ContentPosition.SelectionStart
+        startFrom: ContentPosition | CompatibleContentPosition = ContentPosition.SelectionStart
     ): IContentTraverser {
         let range = this.getSelectionRange();
         return (
@@ -887,7 +902,9 @@ export default class Editor implements IEditor {
      * Check if the given experimental feature is enabled
      * @param feature The feature to check
      */
-    public isFeatureEnabled(feature: ExperimentalFeatures): boolean {
+    public isFeatureEnabled(
+        feature: ExperimentalFeatures | CompatibleExperimentalFeatures
+    ): boolean {
         return this.core.lifecycle.experimentalFeatures.indexOf(feature) >= 0;
     }
 

@@ -17,6 +17,12 @@ const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const roosterJsUiDistPath = path.join(distPath, 'roosterjs-react/dist');
 const deployPath = path.join(distPath, 'deploy');
+const compatibleEnumPath = path.join(
+    packagesPath,
+    'roosterjs-editor-types',
+    'lib',
+    'compatibleEnum'
+);
 
 function collectPackages(startPath) {
     const packagePaths = glob.sync(
@@ -142,6 +148,7 @@ module.exports = {
     distPath,
     roosterJsDistPath,
     roosterJsUiDistPath,
+    compatibleEnumPath,
     deployPath,
     runNode,
     err,
