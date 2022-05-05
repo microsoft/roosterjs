@@ -7,7 +7,7 @@ describe('clearBlockFormat()', () => {
     let editor: IEditor;
 
     beforeEach(() => {
-        editor = TestHelper.initEditor(testID);
+        editor = TestHelper.initEditor(testID, undefined, undefined, {});
     });
 
     afterEach(() => {
