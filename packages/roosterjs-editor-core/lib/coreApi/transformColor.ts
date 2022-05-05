@@ -95,11 +95,17 @@ function transformToDarkMode(elements: HTMLElement[], getDarkColor: (color: stri
                     names[ColorAttributeEnum.CssColor]
                 );
                 const attrColor = element.getAttribute(names[ColorAttributeEnum.HtmlColor]);
-
-                return !element.dataset[names[ColorAttributeEnum.CssDataSet]] &&
-                    !element.dataset[names[ColorAttributeEnum.HtmlDataSet]] &&
+                const existingDataSetCssValue =
+                    element.dataset[names[ColorAttributeEnum.CssDataSet]];
+                const existingDataSetHtmlValue =
+                    element.dataset[names[ColorAttributeEnum.HtmlDataSet]];
+                const needProcess =
+                    (!existingDataSetCssValue || existingDataSetCssValue == styleColor) &&
+                    (!existingDataSetHtmlValue || existingDataSetHtmlValue == attrColor) &&
                     (styleColor || attrColor) &&
-                    styleColor != 'inherit' // For inherit style, no need to change it and let it keep inherit from parent element
+                    styleColor != 'inherit'; // For inherit style, no need to change it and let it keep inherit from parent element
+
+                return needProcess
                     ? {
                           element,
                           styleColor,
