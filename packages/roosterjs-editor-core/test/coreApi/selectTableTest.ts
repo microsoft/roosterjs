@@ -163,6 +163,22 @@ describe('selectTable |', () => {
         );
     });
 
+    it('remove duplicated ID', () => {
+        const tableHTML = buildTableHTML(true);
+        div.innerHTML = tableHTML + '' + tableHTML;
+
+        const tables = div.querySelectorAll('table');
+        table = tables[0];
+        tables.forEach(table => (table.id = 'DuplicatedId'));
+
+        selectTable(core, table, <TableSelection>{
+            firstCell: { x: 0, y: 0 },
+            lastCell: { x: 0, y: 0 },
+        });
+
+        expect(table.id).not.toEqual(tables[1].id);
+    });
+
     describe('Null scenarios |', () => {
         it('Null table selection', () => {
             const core = createEditorCore(div, {});
