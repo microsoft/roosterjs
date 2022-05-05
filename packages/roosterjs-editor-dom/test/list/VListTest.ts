@@ -497,7 +497,7 @@ describe('VList.writeBack', () => {
 
     it('Write back with Lists with list item types', () => {
         const styledList =
-            '<ol><li>123</li><ol style="list-style-type:decimal"><li>123</li><ol style="list-style-type:decimal"><li>123</li><ol><li><br></li></ol></ol></ol></ol>';
+            '<ol><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol><li><br></li></ol></ol></ol></ol>';
         const div = document.createElement('div');
         document.body.append(div);
         div.innerHTML = styledList;
@@ -1265,7 +1265,7 @@ describe('VList.split', () => {
     it('split List 3', () => {
         runTest(
             `<ol id=${listId}><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li id='${separatorElementId}'>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
-            '<ol id="listId"><li>1</li><ol style="list-style-type:lower-alpha"><li>1</li></ol></ol><ol><ol style="list-style-type:lower-alpha"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            '<ol id="listId"><li>1</li><ol style="list-style-type: lower-alpha;"><li>1</li></ol></ol><ol><ol style="list-style-type: lower-alpha;"><li id="separatorId">2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             1
         );
     });
@@ -1273,7 +1273,7 @@ describe('VList.split', () => {
     it('split List 4', () => {
         runTest(
             `<ol id=${listId}><li id='${separatorElementId}'>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
-            '<ol id="listId" start="9"><li id="separatorId">1</li><ol style="list-style-type:lower-alpha"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
+            '<ol id="listId" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             9
         );
     });

@@ -1,12 +1,10 @@
 import contains from '../utils/contains';
 import getListTypeFromNode from './getListTypeFromNode';
-import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setListItemStyle from './setListItemStyle';
-import setStyles from '../style/setStyles';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
@@ -244,9 +242,9 @@ export default class VListItem {
             //If the current node parent is in the same deep child index,
             //apply the styles of the current parent list to the new list
             if (this.getDeepChildIndex(originalRoot) == stackLength) {
-                const styles = getStyles(this.node.parentElement!);
-                if (styles['list-style-type']) {
-                    setStyles(newList, styles);
+                const listStyleType = this.node.parentElement?.style.listStyleType;
+                if (listStyleType) {
+                    newList.style.listStyleType = listStyleType;
                 }
             }
         }
