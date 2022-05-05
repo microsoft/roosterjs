@@ -182,7 +182,6 @@ export default class TableCellSelection implements EditorPlugin {
                 clonedVTable.selection = this.tableRange;
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
-                clonedVTable.table.id = '';
 
                 event.range.selectNode(clonedTable);
 
