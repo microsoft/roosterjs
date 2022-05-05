@@ -93,7 +93,7 @@ export default class TableCellSelection implements EditorPlugin {
         if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.EditorReady:
-                    this.editor.queryElements('table', table => this.removeDuplicatedId(table));
+                    this.editor.queryElements('table', table => this.preventDuplicatedId(table));
                     break;
                 case PluginEventType.EnteredShadowEdit:
                     const selection = this.editor.getSelectionRangeEx();
@@ -186,7 +186,7 @@ export default class TableCellSelection implements EditorPlugin {
                 clonedVTable.selection = this.tableRange;
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
-                this.removeDuplicatedId(clonedVTable.table);
+                this.preventDuplicatedId(clonedVTable.table);
 
                 event.range.selectNode(clonedTable);
 
@@ -199,7 +199,7 @@ export default class TableCellSelection implements EditorPlugin {
                 }
             }
         }
-        queryElements(event.clonedRoot, 'table', node => this.removeDuplicatedId(node));
+        queryElements(event.clonedRoot, 'table', node => this.preventDuplicatedId(node));
     }
 
     //#region Key events
@@ -737,7 +737,7 @@ export default class TableCellSelection implements EditorPlugin {
         }
     }
 
-    private removeDuplicatedId(node: HTMLElement) {
+    private preventDuplicatedId(node: HTMLElement) {
         if (this.editor?.queryElements('#' + node.id).length > 1) {
             node.removeAttribute('id');
         }
