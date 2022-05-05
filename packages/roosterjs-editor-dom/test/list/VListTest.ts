@@ -494,6 +494,20 @@ describe('VList.writeBack', () => {
             ol
         );
     });
+
+    it('Write back with Lists with list item types', () => {
+        const styledList =
+            '<ol><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol style="list-style-type: decimal;"><li>123</li><ol><li><br></li></ol></ol></ol></ol>';
+        const div = document.createElement('div');
+        document.body.append(div);
+        div.innerHTML = styledList;
+
+        const list = div.querySelector('ol');
+        const vList = new VList(list);
+        vList.writeBack();
+
+        expect(div.innerHTML).toEqual(styledList);
+    });
 });
 
 describe('VList.setIndentation', () => {
