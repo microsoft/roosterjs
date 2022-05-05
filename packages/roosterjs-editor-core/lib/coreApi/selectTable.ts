@@ -193,18 +193,25 @@ function unselect(core: EditorCore) {
 }
 
 function ensureUniqueId(el: HTMLElement, idPrefix: string) {
-    if (el && !el.id) {
-        const doc = el.ownerDocument;
-        const getElement = (doc: Document) => doc.getElementById(idPrefix + cont);
+    const doc = el.ownerDocument;
+
+    if (!el.id) {
         let cont = 0;
+        const getElement = () => doc.getElementById(idPrefix + cont);
         //Ensure that there are no elements with the same ID
-        let element = getElement(doc);
+        let element = getElement();
         while (element) {
-            element = getElement(doc);
+            element = getElement();
             cont++;
         }
 
         el.id = idPrefix + cont;
+    } else {
+        const elements = doc.querySelectorAll(`#${el.id}`);
+        if (elements.length > 1) {
+            el.removeAttribute('id');
+            ensureUniqueId(el, idPrefix);
+        }
     }
 }
 
