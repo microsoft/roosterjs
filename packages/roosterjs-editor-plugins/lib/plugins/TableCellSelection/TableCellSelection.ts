@@ -26,7 +26,6 @@ import {
     VTable,
     Position,
     contains,
-    queryElements,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
@@ -92,9 +91,6 @@ export default class TableCellSelection implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.EditorReady:
-                    this.editor.queryElements('table', table => this.preventDuplicatedId(table));
-                    break;
                 case PluginEventType.EnteredShadowEdit:
                     const selection = this.editor.getSelectionRangeEx();
                     if (selection.type == SelectionRangeTypes.TableSelection) {
@@ -186,7 +182,6 @@ export default class TableCellSelection implements EditorPlugin {
                 clonedVTable.selection = this.tableRange;
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
-                this.preventDuplicatedId(clonedVTable.table);
 
                 event.range.selectNode(clonedTable);
 
@@ -199,7 +194,6 @@ export default class TableCellSelection implements EditorPlugin {
                 }
             }
         }
-        queryElements(event.clonedRoot, 'table', node => this.preventDuplicatedId(node));
     }
 
     //#region Key events
@@ -734,12 +728,6 @@ export default class TableCellSelection implements EditorPlugin {
     selectTable() {
         if (this.editor && this.vTable) {
             this.editor?.select(this.vTable.table, normalizeTableSelection(this.vTable));
-        }
-    }
-
-    private preventDuplicatedId(node: HTMLElement) {
-        if (this.editor?.queryElements('#' + node.id).length > 1) {
-            node.removeAttribute('id');
         }
     }
     //#endregion
