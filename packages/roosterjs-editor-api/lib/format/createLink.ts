@@ -121,8 +121,8 @@ function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string)
 function updateAnchorTarget(anchor: HTMLAnchorElement, target?: HTMLAnchorElementTarget) {
     if (target) {
         anchor.target = target;
-    } else if (!target && anchor.target) {
-        delete anchor.target;
+    } else if (!target && anchor.getAttribute('target')) {
+        anchor.removeAttribute('target');
     }
 }
 
