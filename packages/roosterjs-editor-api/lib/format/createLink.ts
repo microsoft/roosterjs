@@ -8,8 +8,6 @@ const MAILTO_REGEX = /^[\w.%+-]+@/i;
 // Regex matching begin of ftp, i.e. ftp.microsoft.com
 const FTP_REGEX = /^ftp\./i;
 
-type HTMLAnchorElementTarget = '_self' | '_blank' | '_parent' | '_top';
-
 function applyLinkPrefix(url: string): string {
     if (!url) {
         return url;
@@ -44,7 +42,7 @@ function applyLinkPrefix(url: string): string {
  * When protocol is not specified, a best matched protocol will be predicted.
  * @param altText Optional alt text of the link, will be shown when hover on the link
  * @param displayText Optional display text for the link.
- * @param target Optional display target for the link.
+ * @param target Optional display target for the link ("_blank"|"_self"|"_parent"|"_top"|"{framename}")
  * If specified, the display text of link will be replaced with this text.
  * If not specified and there wasn't a link, the link url will be used as display text.
  */
@@ -53,7 +51,7 @@ export default function createLink(
     link: string,
     altText?: string,
     displayText?: string,
-    target?: HTMLAnchorElementTarget
+    target?: string
 ) {
     editor.focus();
     let url = (checkXss(link) || '').trim();
@@ -118,7 +116,7 @@ function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string)
     }
 }
 
-function updateAnchorTarget(anchor: HTMLAnchorElement, target?: HTMLAnchorElementTarget) {
+function updateAnchorTarget(anchor: HTMLAnchorElement, target?: string) {
     if (target) {
         anchor.target = target;
     } else if (!target && anchor.getAttribute('target')) {
