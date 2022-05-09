@@ -8,6 +8,8 @@ const MAILTO_REGEX = /^[\w.%+-]+@/i;
 // Regex matching begin of ftp, i.e. ftp.microsoft.com
 const FTP_REGEX = /^ftp\./i;
 
+type HTMLAnchorElementTarget = '_self' | '_blank' | '_parent' | '_top';
+
 function applyLinkPrefix(url: string): string {
     if (!url) {
         return url;
@@ -42,6 +44,7 @@ function applyLinkPrefix(url: string): string {
  * When protocol is not specified, a best matched protocol will be predicted.
  * @param altText Optional alt text of the link, will be shown when hover on the link
  * @param displayText Optional display text for the link.
+ * @param target Optional display target for the link.
  * If specified, the display text of link will be replaced with this text.
  * If not specified and there wasn't a link, the link url will be used as display text.
  */
@@ -49,7 +52,8 @@ export default function createLink(
     editor: IEditor,
     link: string,
     altText?: string,
-    displayText?: string
+    displayText?: string,
+    target?: HTMLAnchorElementTarget
 ) {
     editor.focus();
     let url = (checkXss(link) || '').trim();
@@ -96,6 +100,9 @@ export default function createLink(
             if (altText && anchor) {
                 anchor.title = altText;
             }
+            if (anchor) {
+                updateAnchorTarget(anchor, target);
+            }
             return anchor;
         }, ChangeSource.CreateLink);
     }
@@ -108,6 +115,14 @@ function getAnchorNodeAtCursor(editor: IEditor): HTMLAnchorElement {
 function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string) {
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
+    }
+}
+
+function updateAnchorTarget(anchor: HTMLAnchorElement, target?: HTMLAnchorElementTarget) {
+    if (target) {
+        anchor.target = target;
+    } else if (!target && anchor.target) {
+        delete anchor.target;
     }
 }
 
