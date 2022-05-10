@@ -4,6 +4,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
+import wordTableConverter from './wordConverter/wordTableConverter';
 import { toArray } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
@@ -27,6 +28,8 @@ const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
+const WORD_ONLINE_TABLE_STYLE = 'data-tablestyle';
+const WORD_ONLINE_TABLE_LOOK = 'data-tablelook';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -74,8 +77,10 @@ export default class Paste implements EditorPlugin {
             const { htmlAttributes, fragment, sanitizingOption, clipboardData } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
-
-            if (isWordDocument(htmlAttributes)) {
+            const table = getWordOnlineTable(fragment);
+            if (table) {
+                wordTableConverter(this.editor, table);
+            } else if (isWordDocument(htmlAttributes)) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
             } else if (
@@ -125,4 +130,11 @@ function isWordDocument(htmlAttributes: Record<string, string>) {
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
         htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
     );
+}
+
+function getWordOnlineTable(fragment: DocumentFragment) {
+    const table =
+        fragment.querySelector(`[${WORD_ONLINE_TABLE_STYLE}]`) ||
+        fragment.querySelector(`[${WORD_ONLINE_TABLE_LOOK}]`);
+    return table as HTMLTableElement;
 }
