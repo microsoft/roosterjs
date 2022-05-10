@@ -1,5 +1,13 @@
 import createRange from './createRange';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import validate from '../metadata/validate';
+import {
+    createArrayDefinition,
+    createBooleanDefinition,
+    createNumberDefinition,
+    createObjectDefinition,
+    createStringDefinition,
+} from '../metadata/definitionCreators';
 import {
     ContentMetadata,
     SelectionRangeTypes,
@@ -55,7 +63,10 @@ export function setHtmlWithMetadata(
         try {
             const obj = JSON.parse(potentialMetadataComment.nodeValue || '');
 
-            if (isContentMetadata(obj)) {
+            if (
+                validate(obj, NormalContentMetadataDefinition) ||
+                validate(obj, TableContentMetadataDefinition)
+            ) {
                 rootNode.removeChild(potentialMetadataComment);
                 return obj;
             }
@@ -65,48 +76,24 @@ export function setHtmlWithMetadata(
     return undefined;
 }
 
-function isContentMetadata(obj: any): obj is ContentMetadata {
-    if (!obj || typeof obj != 'object') {
-        return false;
-    }
+const NumberArrayDefinition = createArrayDefinition<number>(createNumberDefinition());
 
-    switch (obj.type || SelectionRangeTypes.Normal) {
-        case SelectionRangeTypes.Normal:
-            const regularMetadata = obj as NormalContentMetadata;
-            if (isNumberArray(regularMetadata.start) && isNumberArray(regularMetadata.end)) {
-                obj.type = SelectionRangeTypes.Normal;
-                obj.isDarkMode = !!obj.isDarkMode;
-                return true;
-            }
-            break;
+const CoordinatesDefinition = createObjectDefinition<Coordinates>({
+    x: createNumberDefinition(),
+    y: createNumberDefinition(),
+});
 
-        case SelectionRangeTypes.TableSelection:
-            const tableMetadata = obj as TableContentMetadata;
-            if (
-                typeof tableMetadata.tableId == 'string' &&
-                !!tableMetadata.tableId &&
-                isCoordinates(tableMetadata.firstCell) &&
-                isCoordinates(tableMetadata.lastCell)
-            ) {
-                obj.isDarkMode = !!obj.isDarkMode;
-                return true;
-            }
-            break;
-    }
+const NormalContentMetadataDefinition = createObjectDefinition<NormalContentMetadata>({
+    start: NumberArrayDefinition,
+    end: NumberArrayDefinition,
+    isDarkMode: createBooleanDefinition(),
+    type: createNumberDefinition(SelectionRangeTypes.Normal),
+});
 
-    return false;
-}
-
-function isNumberArray(obj: any): obj is number[] {
-    return obj && Array.isArray(obj) && obj.every(o => typeof o == 'number');
-}
-
-function isCoordinates(obj: any): obj is Coordinates {
-    const coordinates = obj as Coordinates;
-    return (
-        coordinates &&
-        typeof coordinates == 'object' &&
-        typeof coordinates.x == 'number' &&
-        typeof coordinates.y == 'number'
-    );
-}
+const TableContentMetadataDefinition = createObjectDefinition<TableContentMetadata>({
+    tableId: createStringDefinition(),
+    firstCell: CoordinatesDefinition,
+    lastCell: CoordinatesDefinition,
+    isDarkMode: createBooleanDefinition(),
+    type: createNumberDefinition(SelectionRangeTypes.TableSelection),
+});
