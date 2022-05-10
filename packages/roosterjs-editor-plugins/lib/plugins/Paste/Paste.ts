@@ -4,7 +4,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
-import wordTableConverter from './wordConverter/wordTableConverter';
+import wordOnlineTableConverter from './wordConverter/wordOnlineTableConverter';
 import { toArray } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
@@ -79,7 +79,7 @@ export default class Paste implements EditorPlugin {
             let wacListElements: Node[];
             const table = getWordOnlineTable(fragment);
             if (table) {
-                wordTableConverter(this.editor, table);
+                wordOnlineTableConverter(this.editor, table);
             } else if (isWordDocument(htmlAttributes)) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
