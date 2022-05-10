@@ -18,12 +18,19 @@ import {
     PositionType,
     NodeType,
     Alignment,
+    NumberingListType,
+    BulletListType,
 } from 'roosterjs-editor-types';
 import type {
     CompatibleAlignment,
     CompatibleIndentation,
     CompatibleListType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
+
+interface ListCSSStyle {
+    listStyle: string;
+    marker: string;
+}
 
 /**
  * Represent a bullet or a numbering list
@@ -68,6 +75,7 @@ import type {
  */
 export default class VList {
     public readonly items: VListItem[] = [];
+    private STYLE_ID = 'listStyle';
 
     /**
      * Create a new instance of VList class
@@ -339,6 +347,65 @@ export default class VList {
             needChangeType ? item.changeListType(targetType) : item.outdent()
         );
     }
+
+    setListStyle(
+        start: NodePosition,
+        end: NodePosition,
+        targetType: ListType | CompatibleListType,
+        listStyleType: NumberingListType | BulletListType
+    ) {
+        console.log(targetType, listStyleType);
+        this.findListItems(start, end, item => {
+            item.getNode().classList.add(this.STYLE_ID);
+            this.setMarkers(
+                this.numberingListStyle[listStyleType].listStyle,
+                this.numberingListStyle[listStyleType].marker,
+                targetType
+            );
+        });
+    }
+
+    private setMarkers(listStyle: string, marker: string, listType: ListType | CompatibleListType) {
+        let styleElement = document.getElementById(this.STYLE_ID);
+        if (!styleElement) {
+            styleElement = document.createElement('style');
+            document.head.appendChild(styleElement);
+            styleElement.id = this.STYLE_ID;
+        }
+        if (listType === ListType.Ordered) {
+            styleElement.textContent = `
+            .listStyle::marker {
+                content:  counter(list-item, ${listStyle}) "${marker}"
+            }`;
+        } else {
+            styleElement.textContent = '';
+        }
+    }
+
+    private numberingListStyle: Record<string, ListCSSStyle> = {
+        [NumberingListType.Decimal]: { listStyle: 'decimal', marker: '. ' },
+        [NumberingListType.DecimalDash]: {
+            listStyle: 'decimal',
+            marker: '- ',
+        },
+        [NumberingListType.DecimalParenthesis]: {
+            listStyle: 'decimal',
+            marker: ') ',
+        },
+        [NumberingListType.LowerAlpha]: { listStyle: 'lower-alpha', marker: '. ' },
+        [NumberingListType.LowerAlphaDash]: { listStyle: 'lower-alpha', marker: '- ' },
+        [NumberingListType.LowerAlphaParenthesis]: { listStyle: 'lower-alpha', marker: ') ' },
+        [NumberingListType.UpperAlpha]: { listStyle: 'upper-alpha', marker: '. ' },
+        [NumberingListType.UpperAlphaDash]: { listStyle: 'upper-alpha', marker: '- ' },
+        [NumberingListType.UpperAlphaParenthesis]: { listStyle: 'upper-alpha', marker: ') ' },
+        [NumberingListType.LowerRoman]: { listStyle: 'lower-roman', marker: '. ' },
+        [NumberingListType.LowerRomanDash]: { listStyle: 'lower-roman', marker: '- ' },
+        [NumberingListType.LowerRomanParenthesis]: { listStyle: 'lower-roman', marker: ') ' },
+        [NumberingListType.UpperRoman]: { listStyle: 'upper-roman', marker: '. ' },
+        [NumberingListType.UpperRomanDash]: { listStyle: 'upper-roman', marker: '- ' },
+        [NumberingListType.UpperRomanParenthesis]: { listStyle: 'upper-roman', marker: ') ' },
+        [BulletListType.Disc]: { listStyle: 'disc', marker: '' },
+    };
 
     /**
      * Append a new item to this VList

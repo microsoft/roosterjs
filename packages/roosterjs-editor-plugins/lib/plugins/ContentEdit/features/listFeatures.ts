@@ -1,3 +1,5 @@
+import { getListStyle } from '../utils/getListStyle';
+import { getListType } from '../utils/getListType';
 import {
     blockFormat,
     experimentCommitListChains,
@@ -148,11 +150,10 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
         if (!cacheGetListElement(event, editor)) {
             let searcher = editor.getContentSearcherOfCursor(event);
             let textBeforeCursor = searcher.getSubStringBefore(4);
-
             // Auto list is triggered if:
             // 1. Text before cursor exactly matches '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
-            return isAListPattern(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
+            return getListType(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
         }
         return false;
     },
@@ -166,21 +167,21 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                 let textBeforeCursor = searcher.getSubStringBefore(4);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
+                const listType = getListType(textBeforeCursor);
+                const listStyle = getListStyle(textBeforeCursor, listType);
+
                 if (!textRange) {
                     // no op if the range can't be found
-                } else if (
-                    textBeforeCursor.indexOf('*') == 0 ||
-                    textBeforeCursor.indexOf('-') == 0
-                ) {
+                } else if (listType === ListType.Unordered) {
                     prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor);
-                } else if (isAListPattern(textBeforeCursor)) {
+                    toggleBullet(editor, listStyle);
+                } else if (listType === ListType.Ordered) {
                     prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor);
+                    toggleNumbering(editor, undefined /** startNumber */, listStyle);
                 } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
                     const num = parseInt(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor, num);
+                    toggleNumbering(editor, num, listStyle);
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
@@ -213,10 +214,10 @@ const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
  * 1.  1>  1)  1-  (1)
  * @returns if a text is considered a list pattern
  */
-function isAListPattern(textBeforeCursor: string) {
-    const REGEX: RegExp = /^(\*|-|[0-9]{1,2}\.|[0-9]{1,2}\>|[0-9]{1,2}\)|[0-9]{1,2}\-|\([0-9]{1,2}\))$/;
-    return REGEX.test(textBeforeCursor);
-}
+// function isAListPattern(textBeforeCursor: string) {
+//     const REGEX: RegExp = /^(\*|-|[0-9]{1,2}\.|[0-9]{1,2}\>|[0-9]{1,2}\)|[0-9]{1,2}\-|\([0-9]{1,2}\))$/;
+//     return REGEX.test(textBeforeCursor);
+// }
 
 function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
