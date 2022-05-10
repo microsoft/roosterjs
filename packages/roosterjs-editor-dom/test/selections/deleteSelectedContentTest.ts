@@ -81,14 +81,14 @@ describe('deleteSelectedContent', () => {
         );
     });
 
-    it('Whole talbe 1', () => {
+    it('Whole table 1', () => {
         runTest(
             'aa<table><tbody><tr><td>line1</td><td>line2</td></tr><tr><td>line3</td><td>line4</td></tr></tbody></table>bb<!--{"start":[0,2],"end":[2,0]}-->',
             'aabb<!--{"start":[0,2],"end":[0,2]}-->'
         );
     });
 
-    it('Whole talbe 2', () => {
+    it('Whole table 2', () => {
         // TODO: the result contains separated continuous text object at root
         // Selection path gives wrong result. Need to revisit here
         runTest(

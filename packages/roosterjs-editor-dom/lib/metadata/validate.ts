@@ -27,7 +27,9 @@ export default function validate<T>(input: any, def: Definition<T>): input is T 
                 break;
 
             case DefinitionType.Boolean:
-                result = typeof input === 'boolean';
+                result =
+                    typeof input === 'boolean' &&
+                    (typeof def.value === 'undefined' || input === def.value);
                 break;
 
             case DefinitionType.Array:

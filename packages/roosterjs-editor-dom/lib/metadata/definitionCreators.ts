@@ -6,19 +6,20 @@ import {
     BooleanDefinition,
     StringDefinition,
     ObjectDefinition,
+    ObjectPropertyDefinition,
 } from 'roosterjs-editor-types';
 
 /**
  * Create a number definition
- * @param value Optional value of the number
  * @param isOptional Whether this property is optional
+ * @param value Optional value of the number
  * @param minValue Optional minimum value
  * @param maxValue Optional maximum value
  * @returns The number definition object
  */
 export function createNumberDefinition(
-    value?: number,
     isOptional?: boolean,
+    value?: number,
     minValue?: number,
     maxValue?: number
 ): NumberDefinition {
@@ -33,11 +34,11 @@ export function createNumberDefinition(
 
 /**
  * Create a boolean definition
- * @param value Optional expected boolean value
  * @param isOptional  Whether this property is optional
+ * @param value Optional expected boolean value
  * @returns  The boolean definition object
  */
-export function createBooleanDefinition(value?: boolean, isOptional?: boolean): BooleanDefinition {
+export function createBooleanDefinition(isOptional?: boolean, value?: boolean): BooleanDefinition {
     return {
         type: DefinitionType.Boolean,
         isOptional,
@@ -47,11 +48,11 @@ export function createBooleanDefinition(value?: boolean, isOptional?: boolean): 
 
 /**
  * Create a string definition
- * @param value Optional expected string value
  * @param isOptional  Whether this property is optional
+ * @param value Optional expected string value
  * @returns  The string definition object
  */
-export function createStringDefinition(value?: string, isOptional?: boolean): StringDefinition {
+export function createStringDefinition(isOptional?: boolean, value?: string): StringDefinition {
     return {
         type: DefinitionType.String,
         isOptional,
@@ -67,12 +68,16 @@ export function createStringDefinition(value?: string, isOptional?: boolean): St
  */
 export function createArrayDefinition<T>(
     itemDef: Definition<T>,
-    isOptional?: boolean
+    isOptional?: boolean,
+    minLength?: number,
+    maxLength?: number
 ): ArrayDefinition<T[]> {
     return {
         type: DefinitionType.Array,
         isOptional,
         itemDef,
+        minLength,
+        maxLength,
     };
 }
 
@@ -82,8 +87,8 @@ export function createArrayDefinition<T>(
  * @param isOptional  Whether this property is optional
  * @returns  The object definition object
  */
-export function createObjectDefinition<T extends Record<string, any>>(
-    propertyDef: { [Key in keyof T]: Definition<T[Key]> },
+export function createObjectDefinition<T extends Object>(
+    propertyDef: ObjectPropertyDefinition<T>,
     isOptional?: boolean
 ): ObjectDefinition<T> {
     return {
