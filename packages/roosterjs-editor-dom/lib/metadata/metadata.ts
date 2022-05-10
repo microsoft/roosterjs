@@ -6,11 +6,17 @@ const MetadataDataSetName = 'editingInfo';
 /**
  * Get metadata object from an HTML element
  * @param element The HTML element to get metadata object from
- * @param def The type definition of this metadata used for validate this metadata object.
+ * @param definition The type definition of this metadata used for validate this metadata object.
  * If not specified, no validation will be performed and always return whatever we get from the element
+ * @param defaultValue The default value to return if the retrieved object cannot pass the validation,
+ * or there is no metadata object at all
  * @returns The strong-type metadata object if it can be validated, or null
  */
-export function getMetadata<T>(element: HTMLElement, def?: Definition<T>): T | null {
+export function getMetadata<T>(
+    element: HTMLElement,
+    definition?: Definition<T>,
+    defaultValue?: T
+): T | null {
     const str = element.dataset[MetadataDataSetName];
     let obj: any;
 
@@ -18,7 +24,19 @@ export function getMetadata<T>(element: HTMLElement, def?: Definition<T>): T | n
         obj = str ? JSON.parse(str) : null;
     } catch {}
 
-    return !def ? (obj as T) : validate(obj, def) ? obj : null;
+    if (typeof obj !== 'undefined') {
+        if (!definition) {
+            return obj as T;
+        } else if (validate(obj, definition)) {
+            return obj;
+        }
+    }
+
+    if (defaultValue) {
+        return defaultValue;
+    } else {
+        return null;
+    }
 }
 
 /**
@@ -36,4 +54,12 @@ export function setMetadata<T>(element: HTMLElement, metadata: T, def?: Definiti
     } else {
         return false;
     }
+}
+
+/**
+ * Remove metadata from the given element if any
+ * @param element The element to remove metadata from
+ */
+export function removeMetadata(element: HTMLElement) {
+    delete element.dataset[MetadataDataSetName];
 }
