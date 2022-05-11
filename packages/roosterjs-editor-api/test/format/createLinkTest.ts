@@ -84,6 +84,15 @@ describe('createLink()', () => {
         expect(link.outerHTML).toBe('<a href="http://www.example.com">this is my link</a>');
     });
 
+    it('sets target attribute in the link', () => {
+        // Act
+        createLink(editor, 'www.example.com', undefined, undefined, '_self');
+
+        // Assert
+        let link = document.getElementsByTagName('a')[0];
+        expect(link.target).toBe('_self');
+    });
+
     it('Issue when selection is under another tag', () => {
         editor.setContent(
             '<div><span id="span1" style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);font-family:Calibri, Helvetica, sans-serif;display:inline !important">Hello<span style="box-sizing:border-box">&nbsp;</span></span><b style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);font-family:Calibri, Helvetica, sans-serif" id="span2">world<span style="box-sizing:border-box">&nbsp;</span></b><span style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);margin:0px;font-family:Calibri, Helvetica, sans-serif">🙂</span><span style="box-sizing:border-box;color:rgba(0, 0, 0, 0.9);background-color:rgb(255, 255, 255);font-family:Calibri, Helvetica, sans-serif;display:inline !important">&nbsp;this is a test</span><br></div><!--{"start":[0,0,0,0],"end":[0,0,0,0]}-->'
