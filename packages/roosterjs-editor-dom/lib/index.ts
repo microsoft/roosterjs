@@ -112,3 +112,13 @@ export { default as setStyles } from './style/setStyles';
 export { default as adjustInsertPosition } from './edit/adjustInsertPosition';
 export { default as deleteSelectedContent } from './edit/deleteSelectedContent';
 export { default as getTextContent } from './edit/getTextContent';
+
+export { default as validate } from './metadata/validate';
+export {
+    createNumberDefinition,
+    createBooleanDefinition,
+    createStringDefinition,
+    createArrayDefinition,
+    createObjectDefinition,
+} from './metadata/definitionCreators';
+export { getMetadata, setMetadata, removeMetadata } from './metadata/metadata';
