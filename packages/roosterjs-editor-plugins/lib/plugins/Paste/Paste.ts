@@ -77,7 +77,7 @@ export default class Paste implements EditorPlugin {
             const { htmlAttributes, fragment, sanitizingOption, clipboardData } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
-            const table = getWordOnlineTable(fragment);
+            const table = getWordOnlineTables(fragment);
             if (table) {
                 wordOnlineTableConverter(this.editor, table);
             } else if (isWordDocument(htmlAttributes)) {
@@ -132,9 +132,9 @@ function isWordDocument(htmlAttributes: Record<string, string>) {
     );
 }
 
-function getWordOnlineTable(fragment: DocumentFragment) {
-    const table =
-        fragment.querySelector(`[${WORD_ONLINE_TABLE_STYLE}]`) ||
-        fragment.querySelector(`[${WORD_ONLINE_TABLE_LOOK}]`);
-    return table as HTMLTableElement;
+function getWordOnlineTables(fragment: DocumentFragment) {
+    const tables =
+        fragment.querySelectorAll(`[${WORD_ONLINE_TABLE_STYLE}]`) ||
+        fragment.querySelectorAll(`[${WORD_ONLINE_TABLE_LOOK}]`);
+    return tables;
 }
