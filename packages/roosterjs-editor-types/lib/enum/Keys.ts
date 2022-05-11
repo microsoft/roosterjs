@@ -7,6 +7,8 @@ export const enum Keys {
     TAB = 9,
     ENTER = 13,
     SHIFT = 16,
+    CTRL_LEFT = 17,
+    ALT = 18,
     ESCAPE = 27,
     SPACE = 32,
     PAGEUP = 33,
@@ -14,6 +16,7 @@ export const enum Keys {
     UP = 38,
     RIGHT = 39,
     DOWN = 40,
+    PRINT_SCREEN = 44,
     DELETE = 46,
     /**
      * @deprecated Just for backward compatibility
@@ -25,6 +28,7 @@ export const enum Keys {
     U = 85,
     Y = 89,
     Z = 90,
+    META_LEFT = 91,
     COMMA = 188,
     DASH_UNDERSCORE = 189,
     PERIOD = 190,
