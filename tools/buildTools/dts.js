@@ -273,6 +273,10 @@ function parseImportFrom(content, currentFileName, queue, baseDir, projDir, exte
     return newContent.replace(regImportFrom, '');
 }
 
+function parseEmptyExport(content) {
+    return content.replace(/export \{\};/g, '');
+}
+
 function process(baseDir, queue, index, projDir, externalHandler) {
     var item = queue[index];
     var currentFileName = item.filename;
@@ -286,10 +290,15 @@ function process(baseDir, queue, index, projDir, externalHandler) {
     content = parseImportFrom(content, currentFileName, queue, baseDir, projDir, externalHandler);
 
     // 3. Parse all the public elements
-    content = [parseClasses, parseFunctions, parseEnum, parseType, parseConst, parseExport].reduce(
-        (c, func) => func(c, item.elements),
-        content
-    );
+    content = [
+        parseClasses,
+        parseFunctions,
+        parseEnum,
+        parseType,
+        parseConst,
+        parseExport,
+        parseEmptyExport,
+    ].reduce((c, func) => func(c, item.elements), content);
 
     // 4. Remove single line comments
     content = content.replace(singleLineComment, '');
