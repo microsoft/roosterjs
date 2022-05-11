@@ -29,7 +29,7 @@ const identifyNumberingListType = (textBeforeCursor: string): NumberingListType 
             return NumberingListType.LowerRomanDash;
         case 'I.':
             return NumberingListType.UpperRoman;
-        case 'I) ':
+        case 'I)':
             return NumberingListType.UpperRomanParenthesis;
         case 'I-':
             return NumberingListType.UpperRomanDash;

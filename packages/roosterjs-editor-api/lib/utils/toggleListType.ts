@@ -39,8 +39,7 @@ export default function toggleListType(
                 : createVListFromRegion(region, includeSiblingLists);
 
         if (vList) {
-            vList.changeListType(start, end, listType);
-            vList.setListStyle(start, end, listType, listStyleType);
+            vList.changeListType(start, end, listType, listStyleType);
             vList.writeBack();
         }
     });
