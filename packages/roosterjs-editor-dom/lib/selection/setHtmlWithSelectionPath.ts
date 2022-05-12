@@ -1,5 +1,13 @@
 import createRange from './createRange';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import validate from '../metadata/validate';
+import {
+    createArrayDefinition,
+    createBooleanDefinition,
+    createNumberDefinition,
+    createObjectDefinition,
+    createStringDefinition,
+} from '../metadata/definitionCreators';
 import {
     ContentMetadata,
     SelectionRangeTypes,
@@ -8,6 +16,30 @@ import {
     TableContentMetadata,
     Coordinates,
 } from 'roosterjs-editor-types';
+
+const NumberArrayDefinition = createArrayDefinition<number>(createNumberDefinition());
+
+const CoordinatesDefinition = createObjectDefinition<Coordinates>({
+    x: createNumberDefinition(),
+    y: createNumberDefinition(),
+});
+
+const IsDarkModeDefinition = createBooleanDefinition(true /*isOptional*/);
+
+const NormalContentMetadataDefinition = createObjectDefinition<NormalContentMetadata>({
+    type: createNumberDefinition(true /*isOptional*/, SelectionRangeTypes.Normal),
+    isDarkMode: IsDarkModeDefinition,
+    start: NumberArrayDefinition,
+    end: NumberArrayDefinition,
+});
+
+const TableContentMetadataDefinition = createObjectDefinition<TableContentMetadata>({
+    type: createNumberDefinition(false /*isOptional*/, SelectionRangeTypes.TableSelection),
+    isDarkMode: IsDarkModeDefinition,
+    tableId: createStringDefinition(),
+    firstCell: CoordinatesDefinition,
+    lastCell: CoordinatesDefinition,
+});
 
 /**
  * @deprecated Use setHtmlWithMetadata instead
@@ -55,58 +87,18 @@ export function setHtmlWithMetadata(
         try {
             const obj = JSON.parse(potentialMetadataComment.nodeValue || '');
 
-            if (isContentMetadata(obj)) {
+            if (
+                validate(obj, NormalContentMetadataDefinition) ||
+                validate(obj, TableContentMetadataDefinition)
+            ) {
                 rootNode.removeChild(potentialMetadataComment);
+                obj.type = typeof obj.type === 'undefined' ? SelectionRangeTypes.Normal : obj.type;
+                obj.isDarkMode = obj.isDarkMode || false;
+
                 return obj;
             }
         } catch {}
     }
 
     return undefined;
-}
-
-function isContentMetadata(obj: any): obj is ContentMetadata {
-    if (!obj || typeof obj != 'object') {
-        return false;
-    }
-
-    switch (obj.type || SelectionRangeTypes.Normal) {
-        case SelectionRangeTypes.Normal:
-            const regularMetadata = obj as NormalContentMetadata;
-            if (isNumberArray(regularMetadata.start) && isNumberArray(regularMetadata.end)) {
-                obj.type = SelectionRangeTypes.Normal;
-                obj.isDarkMode = !!obj.isDarkMode;
-                return true;
-            }
-            break;
-
-        case SelectionRangeTypes.TableSelection:
-            const tableMetadata = obj as TableContentMetadata;
-            if (
-                typeof tableMetadata.tableId == 'string' &&
-                !!tableMetadata.tableId &&
-                isCoordinates(tableMetadata.firstCell) &&
-                isCoordinates(tableMetadata.lastCell)
-            ) {
-                obj.isDarkMode = !!obj.isDarkMode;
-                return true;
-            }
-            break;
-    }
-
-    return false;
-}
-
-function isNumberArray(obj: any): obj is number[] {
-    return obj && Array.isArray(obj) && obj.every(o => typeof o == 'number');
-}
-
-function isCoordinates(obj: any): obj is Coordinates {
-    const coordinates = obj as Coordinates;
-    return (
-        coordinates &&
-        typeof coordinates == 'object' &&
-        typeof coordinates.x == 'number' &&
-        typeof coordinates.y == 'number'
-    );
 }
