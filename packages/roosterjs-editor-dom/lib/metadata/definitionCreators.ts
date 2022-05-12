@@ -52,11 +52,16 @@ export function createBooleanDefinition(isOptional?: boolean, value?: boolean): 
  * @param value Optional expected string value
  * @returns  The string definition object
  */
-export function createStringDefinition(isOptional?: boolean, value?: string): StringDefinition {
+export function createStringDefinition(
+    isOptional?: boolean,
+    value?: string,
+    allowNull?: boolean
+): StringDefinition {
     return {
         type: DefinitionType.String,
         isOptional,
         value,
+        allowNull,
     };
 }
 
@@ -89,11 +94,13 @@ export function createArrayDefinition<T>(
  */
 export function createObjectDefinition<T extends Object>(
     propertyDef: ObjectPropertyDefinition<T>,
-    isOptional?: boolean
+    isOptional?: boolean,
+    allowNull?: boolean
 ): ObjectDefinition<T> {
     return {
         type: DefinitionType.Object,
         isOptional,
         propertyDef,
+        allowNull,
     };
 }

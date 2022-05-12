@@ -1,6 +1,59 @@
+import { getMetadata, setMetadata } from '../metadata/metadata';
 import { TableFormat } from 'roosterjs-editor-types';
+import {
+    createBooleanDefinition,
+    createNumberDefinition,
+    createObjectDefinition,
+    createStringDefinition,
+} from '../metadata/definitionCreators';
 
-const TABLE_STYLE_INFO = 'roosterTableInfo';
+const tableFormatDefinition = createObjectDefinition<Required<TableFormat>>(
+    {
+        topBorderColor: createStringDefinition(
+            false /** isOptional */,
+            undefined /** value */,
+            true /** allowNull */
+        ),
+        bottomBorderColor: createStringDefinition(
+            false /** isOptional */,
+            undefined /** value */,
+            true /** allowNull */
+        ),
+        verticalBorderColor: createStringDefinition(
+            false /** isOptional */,
+            undefined /** value */,
+            true /** allowNull */
+        ),
+        hasHeaderRow: createBooleanDefinition(false /** isOptional */),
+        headerRowColor: createStringDefinition(
+            false /** isOptional */,
+            undefined /** value */,
+            true /** allowNull */
+        ),
+        hasFirstColumn: createBooleanDefinition(false /** isOptional */),
+        hasBandedColumns: createBooleanDefinition(false /** isOptional */),
+        hasBandedRows: createBooleanDefinition(false /** isOptional */),
+        bgColorEven: createStringDefinition(
+            false /** isOptional */,
+            undefined /** value */,
+            true /** allowNull */
+        ),
+        bgColorOdd: createStringDefinition(
+            false /** isOptional */,
+            undefined /** value */,
+            true /** allowNull */
+        ),
+        tableBorderFormat: createNumberDefinition(
+            false /** isOptional */,
+            undefined /* value */,
+            0,
+            7
+        ),
+        keepCellShade: createBooleanDefinition(false /** isOptional */),
+    },
+    false /* isOptional */,
+    true /** allowNull */
+);
 
 /**
  * @internal
@@ -9,8 +62,7 @@ const TABLE_STYLE_INFO = 'roosterTableInfo';
  * @param table The table that has the info
  */
 export function getTableFormatInfo(table: HTMLTableElement) {
-    const obj = safeParseJSON(table?.dataset[TABLE_STYLE_INFO]);
-    return checkIfTableFormatIsValid(obj) ? obj : null;
+    return getMetadata(table, tableFormatDefinition);
 }
 
 /**
@@ -21,74 +73,6 @@ export function getTableFormatInfo(table: HTMLTableElement) {
  */
 export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
     if (table && format) {
-        table.dataset[TABLE_STYLE_INFO] = JSON.stringify(format);
-    }
-}
-
-function checkIfTableFormatIsValid(format: any): format is Required<TableFormat> {
-    if (!format) {
-        return false;
-    }
-    const {
-        topBorderColor,
-        verticalBorderColor,
-        bottomBorderColor,
-        bgColorOdd,
-        bgColorEven,
-        hasBandedColumns,
-        hasBandedRows,
-        hasFirstColumn,
-        hasHeaderRow,
-        tableBorderFormat,
-    } = format;
-    const colorsValues = [
-        topBorderColor,
-        verticalBorderColor,
-        bottomBorderColor,
-        bgColorOdd,
-        bgColorEven,
-    ];
-    const stateValues = [hasBandedColumns, hasBandedRows, hasFirstColumn, hasHeaderRow];
-
-    if (
-        colorsValues.some(key => !isAValidColor(key)) ||
-        stateValues.some(key => !isBoolean(key)) ||
-        !isAValidTableBorderType(tableBorderFormat)
-    ) {
-        return false;
-    }
-
-    return true;
-}
-
-function isAValidColor(color: any) {
-    if (color === null || color === undefined || typeof color === 'string') {
-        return true;
-    }
-    return false;
-}
-
-function isBoolean(a: any) {
-    if (typeof a === 'boolean') {
-        return true;
-    }
-    return false;
-}
-
-function isAValidTableBorderType(border: any) {
-    if (-1 < border && border < 8) {
-        return true;
-    }
-    return false;
-}
-
-function safeParseJSON(json: string | undefined): any {
-    if (!json) {
-        return null;
-    }
-    try {
-        return JSON.parse(json);
-    } catch {
-        return null;
+        setMetadata(table, format);
     }
 }

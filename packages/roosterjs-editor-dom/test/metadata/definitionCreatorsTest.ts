@@ -58,15 +58,27 @@ describe('createStringDefinition', () => {
             type: DefinitionType.String,
             isOptional: undefined,
             value: undefined,
+            allowNull: undefined,
         });
     });
 
-    it('full case', () => {
+    it('optional case', () => {
         const def = createStringDefinition(true, 'test');
         expect(def).toEqual({
             type: DefinitionType.String,
             isOptional: true,
             value: 'test',
+            allowNull: undefined,
+        });
+    });
+
+    it('full case', () => {
+        const def = createStringDefinition(true, 'test', true);
+        expect(def).toEqual({
+            type: DefinitionType.String,
+            isOptional: true,
+            value: 'test',
+            allowNull: true,
         });
     });
 });
@@ -116,15 +128,27 @@ describe('createObjectDefinition', () => {
             type: DefinitionType.Object,
             propertyDef,
             isOptional: undefined,
+            allowNull: undefined,
         });
     });
 
-    it('full case', () => {
+    it('isOptional case', () => {
         const def = createObjectDefinition<TestType>(propertyDef, true);
         expect(def).toEqual({
             type: DefinitionType.Object,
             isOptional: true,
             propertyDef,
+            allowNull: undefined,
+        });
+    });
+
+    it('full case', () => {
+        const def = createObjectDefinition<TestType>(propertyDef, true, true);
+        expect(def).toEqual({
+            type: DefinitionType.Object,
+            isOptional: true,
+            propertyDef,
+            allowNull: true,
         });
     });
 });

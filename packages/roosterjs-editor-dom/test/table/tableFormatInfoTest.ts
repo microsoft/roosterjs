@@ -2,7 +2,7 @@ import VTable from '../../lib/table/VTable';
 import { getTableFormatInfo, saveTableInfo } from '../../lib/table/tableFormatInfo';
 import { TableFormat } from 'roosterjs-editor-types';
 
-const TABLE_STYLE_INFO = 'roosterTableInfo';
+const TABLE_STYLE_INFO = 'editingInfo';
 const format: TableFormat = {
     topBorderColor: '#0C64C0',
     bottomBorderColor: '#0C64C0',
