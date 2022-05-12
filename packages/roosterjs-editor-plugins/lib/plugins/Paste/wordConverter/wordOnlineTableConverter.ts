@@ -8,7 +8,7 @@ import { BeforePasteEvent } from 'roosterjs-editor-types/lib';
  */
 export default function wordOnlineTableConverter(event: BeforePasteEvent) {
     const { fragment } = event;
-    const tables = fragment.querySelectorAll('table');
+    const tables = fragment.querySelectorAll('td,th');
     tables.forEach(table => {
         const paragraph = table.querySelectorAll('p');
         paragraph.forEach(p => {
