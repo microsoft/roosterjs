@@ -1,7 +1,6 @@
 import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import Paste from '../../../lib/plugins/Paste/Paste';
 import { ClipboardData, IEditor } from 'roosterjs-editor-types';
-import { VTable } from 'roosterjs-editor-dom';
 
 const TEST_ID = 'wordTable';
 const WORD_ONLINE_TABLE_STYLE = 'data-tablestyle';
