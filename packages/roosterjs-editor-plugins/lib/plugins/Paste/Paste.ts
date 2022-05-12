@@ -77,10 +77,7 @@ export default class Paste implements EditorPlugin {
             const { htmlAttributes, fragment, sanitizingOption, clipboardData } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
-            const table = getWordOnlineTables(fragment);
-            if (table) {
-                wordOnlineTableConverter(this.editor, table);
-            } else if (isWordDocument(htmlAttributes)) {
+            if (isWordDocument(htmlAttributes)) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
             } else if (
@@ -114,6 +111,8 @@ export default class Paste implements EditorPlugin {
                 clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
             ) {
                 convertPasteContentForSingleImage(event, trustedHTMLHandler);
+            } else if (isWordOnlineTables(fragment)) {
+                wordOnlineTableConverter(event);
             } else {
                 convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);
@@ -132,9 +131,9 @@ function isWordDocument(htmlAttributes: Record<string, string>) {
     );
 }
 
-function getWordOnlineTables(fragment: DocumentFragment) {
-    const tables =
+function isWordOnlineTables(fragment: DocumentFragment) {
+    return (
         fragment.querySelectorAll(`[${WORD_ONLINE_TABLE_STYLE}]`) ||
-        fragment.querySelectorAll(`[${WORD_ONLINE_TABLE_LOOK}]`);
-    return tables;
+        fragment.querySelectorAll(`[${WORD_ONLINE_TABLE_LOOK}]`)
+    );
 }

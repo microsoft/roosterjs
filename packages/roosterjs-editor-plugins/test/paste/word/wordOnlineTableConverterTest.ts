@@ -11,7 +11,6 @@ describe('wordTableConverter', () => {
 
     beforeEach(() => {
         editor = TestHelper.initEditor(TEST_ID, [pluglin]);
-        spyOn(editor, 'isDarkMode').and.returnValue(true);
     });
 
     afterEach(() => {
@@ -34,15 +33,15 @@ describe('wordTableConverter', () => {
             htmlFirstLevelChildTags: ['TABLE'],
         };
         editor.paste(clipboard);
-        const table = document.querySelector(`[${WORD_ONLINE_TABLE_STYLE}]`) as HTMLTableElement;
-        const vTable = new VTable(table);
-        vTable.cells.forEach(row =>
-            row.forEach(cell => {
-                if (cell.td) {
-                    expect(cell.td.style.color).not.toEqual('windowtext');
-                }
-            })
-        );
+        const tables = document.querySelectorAll(`[${WORD_ONLINE_TABLE_STYLE}]`) as NodeListOf<
+            HTMLTableElement
+        >;
+        tables.forEach(table => {
+            const paragraph = table.querySelectorAll('p');
+            paragraph.forEach(p => {
+                expect(p.style.color).not.toEqual('windowtext');
+            });
+        });
     }
 
     it('should remove windowtext color', () => {

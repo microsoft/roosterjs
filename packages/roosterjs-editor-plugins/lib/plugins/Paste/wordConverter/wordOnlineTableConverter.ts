@@ -1,4 +1,4 @@
-import { IEditor } from 'roosterjs-editor-types';
+import { BeforePasteEvent } from 'roosterjs-editor-types/lib';
 
 /**
  * @internal
@@ -6,14 +6,14 @@ import { IEditor } from 'roosterjs-editor-types';
  * @param editor
  * @param table copied from word online
  */
-export default function wordOnlineTableConverter(editor: IEditor, tables: NodeListOf<Element>) {
+export default function wordOnlineTableConverter(event: BeforePasteEvent) {
+    const { fragment } = event;
+    const tables = fragment.querySelectorAll('table');
     tables.forEach(table => {
         const paragraph = table.querySelectorAll('p');
         paragraph.forEach(p => {
-            if (editor.isDarkMode()) {
-                if (p.style.color === 'windowtext') {
-                    p.style.removeProperty('color');
-                }
+            if (p.style.color === 'windowtext') {
+                p.style.removeProperty('color');
             }
         });
     });
