@@ -1,4 +1,4 @@
-import { BeforePasteEvent } from 'roosterjs-editor-types/lib';
+import { BeforePasteEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal
