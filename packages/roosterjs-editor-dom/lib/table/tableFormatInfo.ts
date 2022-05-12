@@ -7,7 +7,7 @@ import {
     createStringDefinition,
 } from '../metadata/definitionCreators';
 
-const tableFormatDefinition = createObjectDefinition<Required<TableFormat>>(
+const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
     {
         topBorderColor: createStringDefinition(
             false /** isOptional */,
@@ -62,7 +62,7 @@ const tableFormatDefinition = createObjectDefinition<Required<TableFormat>>(
  * @param table The table that has the info
  */
 export function getTableFormatInfo(table: HTMLTableElement) {
-    return getMetadata(table, tableFormatDefinition);
+    return getMetadata(table, TableFormatMetadata);
 }
 
 /**
@@ -73,6 +73,6 @@ export function getTableFormatInfo(table: HTMLTableElement) {
  */
 export function saveTableInfo(table: HTMLTableElement, format: TableFormat) {
     if (table && format) {
-        setMetadata(table, format);
+        setMetadata(table, format, TableFormatMetadata);
     }
 }
