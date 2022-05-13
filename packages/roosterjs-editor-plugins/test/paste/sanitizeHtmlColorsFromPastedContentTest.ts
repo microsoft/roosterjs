@@ -22,7 +22,7 @@ describe('sanitizeHtmlColorsFromPastedContent', () => {
         }
 
         const event = createBeforePasteEventMock(fragment);
-        sanitizeHtmlColorsFromPastedContent(fragment, event.sanitizingOption);
+        sanitizeHtmlColorsFromPastedContent(event.sanitizingOption);
         callSanitizer(fragment, event.sanitizingOption);
 
         while (fragment.firstChild) {

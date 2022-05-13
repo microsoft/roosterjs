@@ -76,8 +76,6 @@ export default class Paste implements EditorPlugin {
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
 
-            sanitizeHtmlColorsFromPastedContent(fragment, sanitizingOption);
-
             if (isWordDocument(htmlAttributes)) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
@@ -116,6 +114,8 @@ export default class Paste implements EditorPlugin {
                 convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);
             }
+
+            sanitizeHtmlColorsFromPastedContent(sanitizingOption);
 
             // Replace unknown tags with SPAN
             sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
