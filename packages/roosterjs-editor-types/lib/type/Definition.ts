@@ -19,6 +19,11 @@ export interface DefinitionBase<T extends DefinitionType | CompatibleDefinitionT
      * Whether this property is optional
      */
     isOptional?: boolean;
+
+    /**
+     * Whether this property is allowed to be null
+     */
+    allowNull?: boolean;
 }
 
 /**
