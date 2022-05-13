@@ -186,6 +186,22 @@ describe('applyTextStyle()', () => {
         );
     });
 
+    it('applyTextStyle() text node with SUP/SUB', () => {
+        let div = document.createElement('DIV');
+        div.innerHTML = 'test1<sup>test2</sup><sub>test3</sub>test4<span>test5';
+        let start = new Position(div, PositionType.Begin).normalize().move(2);
+        let end = new Position(div, PositionType.End).normalize().move(-2);
+        applyTextStyle(
+            div,
+            (node, isInnerNode) => (node.style.color = isInnerNode ? '' : 'red'),
+            start,
+            end
+        );
+        expect(div.innerHTML).toBe(
+            'te<span style="color: red;">st1</span><span style="color: red;"><sup>test2</sup></span><span style="color: red;"><sub>test3</sub></span><span style="color: red;">test4</span><span style="color: red;">tes</span><span>t5</span>'
+        );
+    });
+
     it('applyTextStyle() text node with double span', () => {
         let div = document.createElement('DIV');
         div.innerHTML = '<span><span>text</span></span>';
