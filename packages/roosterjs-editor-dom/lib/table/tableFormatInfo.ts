@@ -30,8 +30,8 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
         tableBorderFormat: createNumberDefinition(
             false /** isOptional */,
             undefined /* value */,
-            0,
-            7
+            0 /* first table border format */,
+            7 /* last table border format */
         ),
         keepCellShade: BooleanDefinition,
     },
