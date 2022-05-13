@@ -30,6 +30,17 @@ describe('shouldSkipNode, shouldSkipNode()', () => {
         expect(shouldSkip).toBe(true);
     });
 
+    it('CRLF+text textNode', () => {
+        // Arrange
+        let node = document.createTextNode('\r\ntest');
+
+        // Act
+        let shouldSkip = shouldSkipNode(node);
+
+        // Assert
+        expect(shouldSkip).toBe(false);
+    });
+
     it('DisplayNone', () => {
         // Arrange
         let node = DomTestHelper.createElementFromContent(
