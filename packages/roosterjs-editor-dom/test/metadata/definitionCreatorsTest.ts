@@ -16,6 +16,7 @@ describe('createNumberDefinition', () => {
             value: undefined,
             maxValue: undefined,
             minValue: undefined,
+            allowNull: undefined,
         });
     });
 
@@ -27,6 +28,7 @@ describe('createNumberDefinition', () => {
             value: 2,
             minValue: 1,
             maxValue: 3,
+            allowNull: undefined,
         });
     });
 });
@@ -38,6 +40,7 @@ describe('createBooleanDefinition', () => {
             type: DefinitionType.Boolean,
             isOptional: undefined,
             value: undefined,
+            allowNull: undefined,
         });
     });
 
@@ -47,6 +50,7 @@ describe('createBooleanDefinition', () => {
             type: DefinitionType.Boolean,
             isOptional: true,
             value: false,
+            allowNull: undefined,
         });
     });
 });
@@ -96,6 +100,7 @@ describe('createArrayDefinition', () => {
             isOptional: undefined,
             minLength: undefined,
             maxLength: undefined,
+            allowNull: undefined,
         });
     });
 
@@ -107,6 +112,7 @@ describe('createArrayDefinition', () => {
             itemDef,
             minLength: 1,
             maxLength: 3,
+            allowNull: undefined,
         });
     });
 });
