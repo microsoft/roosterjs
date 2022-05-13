@@ -50,6 +50,7 @@ export function createBooleanDefinition(isOptional?: boolean, value?: boolean): 
  * Create a string definition
  * @param isOptional  Whether this property is optional
  * @param value Optional expected string value
+ * @param allowNull Allow the property to be null
  * @returns  The string definition object
  */
 export function createStringDefinition(
@@ -90,6 +91,7 @@ export function createArrayDefinition<T>(
  * Create an object definition
  * @param propertyDef Definition of each property of the related object
  * @param isOptional  Whether this property is optional
+ * @param allowNull Allow the property to be null
  * @returns  The object definition object
  */
 export function createObjectDefinition<T extends Object>(
