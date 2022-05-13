@@ -6,7 +6,7 @@ import { getNextLeafSibling } from '../utils/getLeafSibling';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
-const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL'.split(',');
+const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL,SUP,SUB'.split(',');
 
 /**
  * Apply style using a styler function to the given container node in the given range
