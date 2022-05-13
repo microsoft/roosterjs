@@ -7,49 +7,33 @@ import {
     createStringDefinition,
 } from '../metadata/definitionCreators';
 
+const NullStringDefinition = createStringDefinition(
+    false /** isOptional */,
+    undefined /** value */,
+    true /** allowNull */
+);
+
+const BooleanDefinition = createBooleanDefinition(false /** isOptional */);
+
 const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
     {
-        topBorderColor: createStringDefinition(
-            false /** isOptional */,
-            undefined /** value */,
-            true /** allowNull */
-        ),
-        bottomBorderColor: createStringDefinition(
-            false /** isOptional */,
-            undefined /** value */,
-            true /** allowNull */
-        ),
-        verticalBorderColor: createStringDefinition(
-            false /** isOptional */,
-            undefined /** value */,
-            true /** allowNull */
-        ),
-        hasHeaderRow: createBooleanDefinition(false /** isOptional */),
-        headerRowColor: createStringDefinition(
-            false /** isOptional */,
-            undefined /** value */,
-            true /** allowNull */
-        ),
-        hasFirstColumn: createBooleanDefinition(false /** isOptional */),
-        hasBandedColumns: createBooleanDefinition(false /** isOptional */),
-        hasBandedRows: createBooleanDefinition(false /** isOptional */),
-        bgColorEven: createStringDefinition(
-            false /** isOptional */,
-            undefined /** value */,
-            true /** allowNull */
-        ),
-        bgColorOdd: createStringDefinition(
-            false /** isOptional */,
-            undefined /** value */,
-            true /** allowNull */
-        ),
+        topBorderColor: NullStringDefinition,
+        bottomBorderColor: NullStringDefinition,
+        verticalBorderColor: NullStringDefinition,
+        hasHeaderRow: BooleanDefinition,
+        headerRowColor: NullStringDefinition,
+        hasFirstColumn: BooleanDefinition,
+        hasBandedColumns: BooleanDefinition,
+        hasBandedRows: BooleanDefinition,
+        bgColorEven: NullStringDefinition,
+        bgColorOdd: NullStringDefinition,
         tableBorderFormat: createNumberDefinition(
             false /** isOptional */,
             undefined /* value */,
             0,
             7
         ),
-        keepCellShade: createBooleanDefinition(false /** isOptional */),
+        keepCellShade: BooleanDefinition,
     },
     false /* isOptional */,
     true /** allowNull */

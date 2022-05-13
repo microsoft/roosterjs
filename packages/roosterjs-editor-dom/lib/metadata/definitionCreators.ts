@@ -15,13 +15,15 @@ import {
  * @param value Optional value of the number
  * @param minValue Optional minimum value
  * @param maxValue Optional maximum value
+ * @param allowNull Allow the property to be null
  * @returns The number definition object
  */
 export function createNumberDefinition(
     isOptional?: boolean,
     value?: number,
     minValue?: number,
-    maxValue?: number
+    maxValue?: number,
+    allowNull?: boolean
 ): NumberDefinition {
     return {
         type: DefinitionType.Number,
@@ -29,6 +31,7 @@ export function createNumberDefinition(
         value,
         maxValue,
         minValue,
+        allowNull,
     };
 }
 
@@ -36,13 +39,19 @@ export function createNumberDefinition(
  * Create a boolean definition
  * @param isOptional  Whether this property is optional
  * @param value Optional expected boolean value
+ * @param allowNull Allow the property to be null
  * @returns  The boolean definition object
  */
-export function createBooleanDefinition(isOptional?: boolean, value?: boolean): BooleanDefinition {
+export function createBooleanDefinition(
+    isOptional?: boolean,
+    value?: boolean,
+    allowNull?: boolean
+): BooleanDefinition {
     return {
         type: DefinitionType.Boolean,
         isOptional,
         value,
+        allowNull,
     };
 }
 
@@ -70,13 +79,15 @@ export function createStringDefinition(
  * Create an array definition
  * @param itemDef Definition of each item of the related array
  * @param isOptional  Whether this property is optional
+ * @param allowNull Allow the property to be null
  * @returns  The array definition object
  */
 export function createArrayDefinition<T>(
     itemDef: Definition<T>,
     isOptional?: boolean,
     minLength?: number,
-    maxLength?: number
+    maxLength?: number,
+    allowNull?: boolean
 ): ArrayDefinition<T[]> {
     return {
         type: DefinitionType.Array,
@@ -84,6 +95,7 @@ export function createArrayDefinition<T>(
         itemDef,
         minLength,
         maxLength,
+        allowNull,
     };
 }
 
