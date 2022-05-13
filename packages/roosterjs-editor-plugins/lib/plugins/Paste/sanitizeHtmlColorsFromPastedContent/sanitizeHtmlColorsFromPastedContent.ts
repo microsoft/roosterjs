@@ -13,8 +13,11 @@ export default function sanitizeHtmlColorsFromPastedContent(
     sanitizingOption: Required<HtmlSanitizerOptions>
 ) {
     const htmlElements = fragment.querySelectorAll('*') as NodeListOf<HTMLElement>;
-    htmlElements.forEach(tag =>
-        chainSanitizerCallback(sanitizingOption.elementCallbacks, getTagOfNode(tag), element => {
+    const allTags = Array.from(htmlElements).map(el => getTagOfNode(el));
+    const uniqueTags = allTags.filter((tag, index) => allTags.indexOf(tag) == index);
+
+    uniqueTags.forEach(tag =>
+        chainSanitizerCallback(sanitizingOption.elementCallbacks, tag, element => {
             if (DeprecatedColorList.indexOf(element.style.color) > -1) {
                 element.style.removeProperty('color');
             }
