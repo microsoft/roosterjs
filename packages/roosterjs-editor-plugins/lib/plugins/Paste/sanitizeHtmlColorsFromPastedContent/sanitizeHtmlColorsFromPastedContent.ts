@@ -5,9 +5,10 @@ import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 /**
  * @internal
  * Remove the deprecated colors from pasted content
- * @sanitizingOption
+ * @fragment the pasted fragment
+ * @sanitizingOption the sanitizingOption of BeforePasteEvent
  * */
-export default function sanitizeHtmlTextFromPastedContent(
+export default function sanitizeHtmlColorsFromPastedContent(
     fragment: DocumentFragment,
     sanitizingOption: Required<HtmlSanitizerOptions>
 ) {

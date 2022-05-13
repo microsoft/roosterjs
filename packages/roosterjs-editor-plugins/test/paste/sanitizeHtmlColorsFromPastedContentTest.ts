@@ -1,4 +1,4 @@
-import sanitizeHtmlTextFromPastedContent from '../../lib/plugins/Paste/sanitizeHtmlTextFromPastedContent/sanitizeHtmlTextFromPastedContent';
+import sanitizeHtmlColorsFromPastedContent from '../../lib/plugins/Paste/sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import { HtmlSanitizer } from 'roosterjs-editor-dom';
 import {
     BeforePasteEvent,
@@ -7,7 +7,7 @@ import {
     ClipboardData,
 } from 'roosterjs-editor-types';
 
-describe('sanitizeHtmlTextFromPastedContent', () => {
+describe('sanitizeHtmlColorsFromPastedContent', () => {
     function callSanitizer(fragment: DocumentFragment, sanitizingOption: SanitizeHtmlOptions) {
         const sanitizer = new HtmlSanitizer(sanitizingOption);
         sanitizer.convertGlobalCssToInlineCss(fragment);
@@ -22,7 +22,7 @@ describe('sanitizeHtmlTextFromPastedContent', () => {
         }
 
         const event = createBeforePasteEventMock(fragment);
-        sanitizeHtmlTextFromPastedContent(fragment, event.sanitizingOption);
+        sanitizeHtmlColorsFromPastedContent(fragment, event.sanitizingOption);
         callSanitizer(fragment, event.sanitizingOption);
 
         while (fragment.firstChild) {
