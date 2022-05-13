@@ -11,10 +11,10 @@ export default function sanitizeHtmlColorsFromPastedContent(
     sanitizingOption: Required<HtmlSanitizerOptions>
 ) {
     ['color', 'background-color'].forEach(property => {
-        chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, property, (value: string) => {
-            if (DeprecatedColorList.indexOf(value) < 0) {
-                return true;
-            }
-        });
+        chainSanitizerCallback(
+            sanitizingOption.cssStyleCallbacks,
+            property,
+            (value: string) => DeprecatedColorList.indexOf(value) < 0
+        );
     });
 }
