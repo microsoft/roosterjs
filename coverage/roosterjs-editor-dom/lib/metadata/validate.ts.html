@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.55% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>29/31</span>
+                <span class='fraction'>33/33</span>
             </div>
         
             
@@ -132,30 +132,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1782x</span>
-<span class="cline-any cline-yes">1782x</span>
-<span class="cline-any cline-yes">263x</span>
+<span class="cline-any cline-yes">2515x</span>
+<span class="cline-any cline-yes">2515x</span>
+<span class="cline-any cline-yes">828x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1519x</span>
+<span class="cline-any cline-yes">1687x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">109x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">973x</span>
+<span class="cline-any cline-yes">109x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">987x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">973x</span>
+<span class="cline-any cline-yes">987x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">292x</span>
@@ -166,10 +166,10 @@
 <span class="cline-any cline-yes">292x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">178x</span>
+<span class="cline-any cline-yes">192x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">597x</span>
-<span class="cline-any cline-yes">178x</span>
+<span class="cline-any cline-yes">765x</span>
+<span class="cline-any cline-yes">192x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
@@ -177,7 +177,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1782x</span>
+<span class="cline-any cline-yes">2515x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -193,7 +193,7 @@
  */
 export default function validate&lt;T&gt;(input: any, def: Definition&lt;T&gt;): input is T {
     let result = false;
-    if (def.isOptional &amp;&amp; typeof input === 'undefined') {
+    if ((def.isOptional &amp;&amp; typeof input === 'undefined') || (def.allowNull &amp;&amp; input === null)) {
         result = true;
     } else {
         switch (def.type) {
@@ -207,8 +207,8 @@ export default function validate&lt;T&gt;(input: any, def: Definition&lt;T&gt;):
                 result =
                     typeof input === 'number' &amp;&amp;
                     (typeof def.value === 'undefined' || areSameNumbers(def.value, input)) &amp;&amp;
-                    (typeof def.minValue === 'undefined' || <span class="branch-4 cbranch-no" title="branch not covered" >input &gt;= def.minValue)</span> &amp;&amp;
-                    (typeof def.maxValue === 'undefined' || <span class="branch-6 cbranch-no" title="branch not covered" >input &lt;= def.maxValue)</span>;
+                    (typeof def.minValue === 'undefined' || input &gt;= def.minValue) &amp;&amp;
+                    (typeof def.maxValue === 'undefined' || input &lt;= def.maxValue);
                 break;
 &nbsp;
             case DefinitionType.Boolean:
@@ -250,7 +250,7 @@ function areSameNumbers(n1: number, n2: number) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri May 13 2022 21:12:18 GMT+0000 (Coordinated Universal Time)
+                at Fri May 13 2022 21:17:38 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
