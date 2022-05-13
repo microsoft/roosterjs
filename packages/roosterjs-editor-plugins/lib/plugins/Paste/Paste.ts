@@ -4,6 +4,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
+import sanitizeHtmlTextFromPastedContent from './sanitizeHtmlTextFromPastedContent/sanitizeHtmlTextFromPastedContent';
 import { toArray } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
@@ -75,6 +76,7 @@ export default class Paste implements EditorPlugin {
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
             let wacListElements: Node[];
 
+            sanitizeHtmlTextFromPastedContent(fragment, sanitizingOption);
             if (isWordDocument(htmlAttributes)) {
                 // Handle HTML copied from Word
                 convertPastedContentFromWord(event);
