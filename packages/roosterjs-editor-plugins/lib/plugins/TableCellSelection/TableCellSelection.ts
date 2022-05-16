@@ -217,8 +217,7 @@ export default class TableCellSelection implements EditorPlugin {
         if (shiftKey) {
             if (!this.firstTarget) {
                 const pos = this.editor.getFocusedPosition();
-
-                const cell = getCellAtCursor(this.editor, pos.node);
+                const cell = pos && getCellAtCursor(this.editor, pos.node);
 
                 this.firstTarget = this.firstTarget || cell;
             }
@@ -229,7 +228,7 @@ export default class TableCellSelection implements EditorPlugin {
             }
             this.editor.runAsync(editor => {
                 const pos = editor.getFocusedPosition();
-                this.setData(this.tableSelection ? this.lastTarget : pos.node);
+                pos && this.setData(this.tableSelection ? this.lastTarget : pos.node);
 
                 if (this.firstTable! == this.targetTable!) {
                     if (!this.shouldConvertToTableSelection() && !this.tableSelection) {
