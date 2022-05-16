@@ -228,7 +228,10 @@ export default class TableCellSelection implements EditorPlugin {
             }
             this.editor.runAsync(editor => {
                 const pos = editor.getFocusedPosition();
-                pos && this.setData(this.tableSelection ? this.lastTarget : pos.node);
+                const newTarget = this.tableSelection ? this.lastTarget : pos?.node;
+                if (newTarget) {
+                    this.setData(newTarget);
+                }
 
                 if (this.firstTable! == this.targetTable!) {
                     if (!this.shouldConvertToTableSelection() && !this.tableSelection) {
