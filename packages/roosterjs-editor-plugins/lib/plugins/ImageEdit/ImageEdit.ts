@@ -5,12 +5,14 @@ import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
 import ImageEditInfo from './types/ImageEditInfo';
+import ImageEditPlugin from './types/ImageEditPlugin';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
+import { setImageEditPlugin } from './api/setEditingImage';
 import {
     arrayPush,
     Browser,
@@ -35,7 +37,6 @@ import {
     ImageEditOperation,
     ImageEditOptions,
     ChangeSource,
-    EditorPlugin,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -108,7 +109,7 @@ const MAX_SMALL_SIZE_IMAGE = 10000;
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
  */
-export default class ImageEdit implements EditorPlugin {
+export default class ImageEdit implements ImageEditPlugin {
     protected editor: IEditor;
     protected options: ImageEditOptions;
     private disposer: () => void;
@@ -167,12 +168,15 @@ export default class ImageEdit implements EditorPlugin {
                 ? FeatureToOperationMap[key]
                 : 0;
         });
+
+        setImageEditPlugin(this.editor, this);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
+        setImageEditPlugin(this.editor, null);
         this.clearDndHelpers();
         this.disposer();
         this.disposer = null;

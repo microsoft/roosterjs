@@ -18,7 +18,8 @@ export interface BuildInPluginList {
     tableResize: boolean;
     customReplace: boolean;
     pickerPlugin: boolean;
-    resetList: boolean;
+    resetListMenu: boolean;
+    imageEditMenu: boolean;
     contextMenu: boolean;
 }
 

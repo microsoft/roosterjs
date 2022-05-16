@@ -95,7 +95,11 @@ function parseFrom(from, currentFileName, baseDir, projDir, externalHandler) {
             } else if (AllowedCrossPackageImport[from]) {
                 importFileName = path.resolve(baseDir, AllowedCrossPackageImport[from]);
             } else {
-                importFileName = path.resolve(baseDir, from, 'lib/index.d.ts');
+                importFileName = path.resolve(baseDir, from + '.d.ts');
+
+                if (!fs.existsSync(importFileName)) {
+                    importFileName = path.resolve(baseDir, from, 'lib/index.d.ts');
+                }
                 if (!fs.existsSync(importFileName)) {
                     importFileName = path.resolve(projDir, 'node_modules', from, 'lib/index.d.ts');
                 }

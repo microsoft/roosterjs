@@ -1,19 +1,21 @@
 import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from './BuildInPluginState';
-import ImageEditPlugin from './contextMenu/ImageEditPlugin';
-import ResetListPlugin from './contextMenu/ResetListPlugin';
 import SampleColorPickerPluginDataProvider from './samplepicker/SampleColorPickerPluginDataProvider';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
-import { CONTEXT_MENU_DATA_PROVIDER } from './contextMenu/ContextMenuProvider';
-import { ContextMenu } from 'roosterjs-editor-plugins/lib/ContextMenu';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { EditorPlugin } from 'roosterjs-editor-types';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
+import { ImageEdit } from 'roosterjs-editor-plugins/lib/ImageEdit';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
+import {
+    createContextMenuPlugin,
+    createImageEditMenuProvider,
+    createListEditMenuProvider,
+} from 'roosterjs-react/lib/contextMenu';
 
 const PluginCreators: {
     [key in keyof BuildInPluginList]: (initState: BuildInPluginState) => EditorPlugin;
@@ -30,7 +32,7 @@ const PluginCreators: {
     paste: _ => new Paste(),
     watermark: initState => new Watermark(initState.watermarkText),
     imageEdit: initState =>
-        new ImageEditPlugin({
+        new ImageEdit({
             preserveRatio: initState.forcePreserveRatio,
         }),
     cutPasteListChain: _ => new CutPasteListChain(),
@@ -44,8 +46,9 @@ const PluginCreators: {
             isHorizontal: true,
         }),
     customReplace: _ => new CustomReplacePlugin(),
-    resetList: _ => new ResetListPlugin(),
-    contextMenu: _ => new ContextMenu(CONTEXT_MENU_DATA_PROVIDER),
+    resetListMenu: _ => createListEditMenuProvider(),
+    imageEditMenu: _ => createImageEditMenuProvider(),
+    contextMenu: _ => createContextMenuPlugin(),
 };
 
 export default function getToggleablePlugins(initState: BuildInPluginState) {
