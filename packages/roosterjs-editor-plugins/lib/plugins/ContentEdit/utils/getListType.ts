@@ -1,4 +1,4 @@
-import { ListType } from 'roosterjs-editor-types/lib';
+import { ListType } from 'roosterjs-editor-types';
 
 function isABulletList(textBeforeCursor: string) {
     const hasTriggers = ['*', '-', '>'].indexOf(textBeforeCursor[0]) > -1;
@@ -11,6 +11,11 @@ function isANumberingList(textBeforeCursor: string) {
     return REGEX.test(textBeforeCursor.replace(/\s/g, ''));
 }
 
+/**
+ * @internal
+ * @param textBeforeCursor The trigger character
+ * @returns If the list is ordered or unordered
+ */
 export function getListType(textBeforeCursor: string): ListType {
     if (isABulletList(textBeforeCursor)) {
         return ListType.Unordered;

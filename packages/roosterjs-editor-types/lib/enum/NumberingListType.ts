@@ -1,7 +1,6 @@
-/*
- * Enum used to control the different types of numbering list
+/**
+ *  Enum used to control the different types of numbering list
  */
-
 export const enum NumberingListType {
     /**
      * Numbering triggered by 1.

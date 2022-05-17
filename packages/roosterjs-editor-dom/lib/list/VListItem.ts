@@ -5,11 +5,10 @@ import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setListItemStyle from './setListItemStyle';
-import setNumberingListMarkers from './setNumberingListMarkers';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
-import { KnownCreateElementDataIndex, ListType, NumberingListType } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
 import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
@@ -185,10 +184,6 @@ export default class VListItem {
             this.outdent();
             this.listTypes.push(targetType);
         }
-    }
-
-    setListItemMarkerStyle(listStyleType: NumberingListType, li: VListItem) {
-        setNumberingListMarkers(listStyleType, li, this.node);
     }
 
     /**

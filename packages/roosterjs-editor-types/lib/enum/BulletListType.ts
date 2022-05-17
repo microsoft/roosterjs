@@ -1,5 +1,5 @@
-/*
- * Enum used to control the different types of bullet list
+/**
+ *  Enum used to control the different types of bullet list
  */
 
 export const enum BulletListType {

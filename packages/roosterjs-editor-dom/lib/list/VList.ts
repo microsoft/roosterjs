@@ -18,8 +18,6 @@ import {
     PositionType,
     NodeType,
     Alignment,
-    NumberingListType,
-    BulletListType,
 } from 'roosterjs-editor-types';
 import type {
     CompatibleAlignment,
@@ -330,20 +328,16 @@ export default class VList {
     changeListType(
         start: NodePosition,
         end: NodePosition,
-        targetType: ListType | CompatibleListType,
-        listStyleType?: NumberingListType | BulletListType
+        targetType: ListType | CompatibleListType
     ) {
         let needChangeType = false;
 
         this.findListItems(start, end, item => {
             needChangeType = needChangeType || item.getListType() != targetType;
         });
-        this.findListItems(start, end, item => {
-            needChangeType ? item.changeListType(targetType) : item.outdent();
-            if (listStyleType) {
-                item.setListItemMarkerStyle(listStyleType as NumberingListType, item);
-            }
-        });
+        this.findListItems(start, end, item =>
+            needChangeType ? item.changeListType(targetType) : item.outdent()
+        );
     }
 
     /**

@@ -1,5 +1,5 @@
 import toggleListType from '../utils/toggleListType';
-import { BulletListType, IEditor, ListType, NumberingListType } from 'roosterjs-editor-types';
+import { IEditor, ListType } from 'roosterjs-editor-types';
 
 /**
  * Toggle numbering at selection
@@ -10,16 +10,6 @@ import { BulletListType, IEditor, ListType, NumberingListType } from 'roosterjs-
  * @param editor The editor instance
  * @param startNumber (Optional) Start number of the list
  */
-export default function toggleNumbering(
-    editor: IEditor,
-    startNumber?: number,
-    styleType?: NumberingListType | BulletListType
-) {
-    toggleListType(
-        editor,
-        ListType.Ordered,
-        startNumber,
-        false /** includeSiblingLists */,
-        styleType
-    );
+export default function toggleNumbering(editor: IEditor, startNumber?: number) {
+    toggleListType(editor, ListType.Ordered, startNumber);
 }

@@ -1,4 +1,4 @@
-import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types/lib';
+import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types';
 
 const numberingListTypes: Record<string, number> = {
     '1.': NumberingListType.Decimal,
@@ -38,6 +38,12 @@ const identifyBulletListType = (textBeforeCursor: string): BulletListType => {
     return bulletListType[bullet] || null;
 };
 
+/**
+ * @internal
+ * @param textBeforeCursor The trigger character
+ * @param listType The type of the list (ordered or unordered)
+ * @returns the style of the list
+ */
 export function getListStyle(
     textBeforeCursor: string,
     listType: ListType
