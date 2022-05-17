@@ -1,5 +1,6 @@
 import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
+import { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
 import { LocalizedStrings } from '../../common/type/LocalizedStrings';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import {
@@ -13,26 +14,20 @@ import {
     setEditingImage,
     hasImageEditPlugin,
 } from 'roosterjs-editor-plugins/lib/ImageEdit';
-import {
-    ImageAltTextMenuItemStringKey,
-    ImageCropMenuItemStringKey,
-    ImageRemoveMenuItemStringKey,
-    ImageResizeMenuItemStringKey,
-} from '../types/ContextMenuItemStringKeys';
 
-const ImageAltTextMenuItem: ContextMenuItem<ImageAltTextMenuItemStringKey> = {
+const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     key: 'menuNameImageAltText',
     unlocalizedText: 'Add alternate text',
     onClick: (editor, node) => {},
 };
 
-const ImageResizeMenuItem: ContextMenuItem<ImageResizeMenuItemStringKey> = {
+const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     key: 'menuNameImageResize',
     unlocalizedText: 'Size',
     onClick: () => {},
 };
 
-const ImageCropMenuItem: ContextMenuItem<ImageCropMenuItemStringKey> = {
+const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     key: 'menuNameImageCrop',
     unlocalizedText: 'Crop image',
     shouldShow: (editor, node) => {
@@ -46,7 +41,7 @@ const ImageCropMenuItem: ContextMenuItem<ImageCropMenuItemStringKey> = {
     },
 };
 
-const ImageRemoveMenuItem: ContextMenuItem<ImageRemoveMenuItemStringKey> = {
+const ImageRemoveMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     key: 'menuNameImageRemove',
     unlocalizedText: 'Remove image',
     onClick: (editor, node) => {
@@ -72,12 +67,7 @@ function shouldShowImageEditItems(editor: IEditor, node: Node) {
  * @returns A new ContextMenuProvider
  */
 export default function createListEditMenuProvider(
-    strings?: LocalizedStrings<
-        | ImageAltTextMenuItemStringKey
-        | ImageResizeMenuItemStringKey
-        | ImageCropMenuItemStringKey
-        | ImageRemoveMenuItemStringKey
-    >
+    strings?: LocalizedStrings<ImageEditMenuItemStringKey>
 ): EditorPlugin {
     return createContextMenuProvider(
         'imageEdit',

@@ -64,7 +64,7 @@ class ContextMenuProviderImpl<TString extends string>
             data: item,
             text: getLocalizedString(this.strings, item.key, item.unlocalizedText),
             ariaLabel: getLocalizedString(this.strings, item.key, item.unlocalizedText),
-            onClick: () => item.onClick(this.editor, this.targetNode),
+            onClick: () => item.onClick(this.editor, this.targetNode, this.strings),
         };
     }
 }

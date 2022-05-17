@@ -4,10 +4,6 @@ export { default as createListEditMenuProvider } from './itemGroups/createListEd
 export { default as createImageEditMenuProvider } from './itemGroups/createImageEditMenuProvider';
 export { default as ContextMenuItem } from './types/ContextMenuItem';
 export {
-    ListNumberEditMenuItemStringKey,
-    ListNumberResetMenuItemStringKey,
-    ImageAltTextMenuItemStringKey,
-    ImageCropMenuItemStringKey,
-    ImageRemoveMenuItemStringKey,
-    ImageResizeMenuItemStringKey,
+    ListNumberMenuItemStringKey,
+    ImageEditMenuItemStringKey,
 } from './types/ContextMenuItemStringKeys';

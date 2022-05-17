@@ -1,4 +1,5 @@
 import { IEditor } from 'roosterjs-editor-types';
+import { LocalizedStrings } from '../../common';
 
 /**
  * Represent a context menu item
@@ -19,7 +20,7 @@ export default interface ContextMenuItem<T extends string> {
      * @param editor The editor object that triggers this event
      * @param targetNode The node that user is clicking onto
      */
-    onClick: (editor: IEditor, targetNode: Node) => void;
+    onClick: (editor: IEditor, targetNode: Node, strings: LocalizedStrings<T>) => void;
 
     /**
      * A callback function to check whether this menu item should show now

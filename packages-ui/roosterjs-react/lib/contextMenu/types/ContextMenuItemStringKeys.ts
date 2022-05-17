@@ -1,29 +1,31 @@
-/**
- * Key of localized strings of List Number Edit menu item
- */
-export type ListNumberEditMenuItemStringKey = 'menuNameListNumberEdit';
+import { CancelButtonStringKey, OkButtonStringKey } from 'roosterjs-react/lib/common';
 
 /**
- * Key of localized strings of List Number Reset menu item
+ * Key of localized strings of List Number menu items and its dialog.
+ * Including:
+ * - Menu item "Set numbering value"
+ * - Menu item "Restart at 1"
+ * - Dialog text "Set value to"
+ * - Ok button
+ * - Cancel button
  */
-export type ListNumberResetMenuItemStringKey = 'menuNameListNumberReset';
+export type ListNumberMenuItemStringKey =
+    | 'menuNameListNumberEdit'
+    | 'menuNameListNumberReset'
+    | 'dialogTextSetListNumber'
+    | OkButtonStringKey
+    | CancelButtonStringKey;
 
 /**
- * Key of localized strings of Image Alt Text menu item
+ * Key of localized strings of Image Alt Text menu item.
+ * Including:
+ * - Menu item "Add alternate text"
+ * - Menu item "Size"
+ * - Menu item "Crop image"
+ * - Menu item "Remove image"
  */
-export type ImageAltTextMenuItemStringKey = 'menuNameImageAltText';
-
-/**
- * Key of localized strings of Image Resize menu item
- */
-export type ImageResizeMenuItemStringKey = 'menuNameImageResize';
-
-/**
- * Key of localized strings of Image Crop menu item
- */
-export type ImageCropMenuItemStringKey = 'menuNameImageCrop';
-
-/**
- * Key of localized strings of Image Remove menu item
- */
-export type ImageRemoveMenuItemStringKey = 'menuNameImageRemove';
+export type ImageEditMenuItemStringKey =
+    | 'menuNameImageAltText'
+    | 'menuNameImageResize'
+    | 'menuNameImageCrop'
+    | 'menuNameImageRemove';
