@@ -4,6 +4,7 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
+import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import { toArray } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
@@ -113,6 +114,8 @@ export default class Paste implements EditorPlugin {
                 convertPastedContentForLI(fragment);
                 handleLineMerge(fragment);
             }
+
+            sanitizeHtmlColorsFromPastedContent(sanitizingOption);
 
             // Replace unknown tags with SPAN
             sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;

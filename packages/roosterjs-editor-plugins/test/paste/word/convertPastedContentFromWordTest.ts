@@ -1,7 +1,11 @@
 import convertPastedContentFromWord from '../../../lib/plugins/Paste/wordConverter/convertPastedContentFromWord';
-import { BeforePasteEvent, SanitizeHtmlOptions } from 'roosterjs-editor-types';
-import { ClipboardData, PluginEventType } from '../../../../roosterjs/lib';
 import { HtmlSanitizer, moveChildNodes } from 'roosterjs-editor-dom';
+import {
+    BeforePasteEvent,
+    SanitizeHtmlOptions,
+    PluginEventType,
+    ClipboardData,
+} from 'roosterjs-editor-types';
 
 describe('convertPastedContentFromWord', () => {
     function callSanitizer(fragment: DocumentFragment, sanitizingOption: SanitizeHtmlOptions) {

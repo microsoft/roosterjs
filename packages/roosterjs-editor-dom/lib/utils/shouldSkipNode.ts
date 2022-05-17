@@ -2,7 +2,7 @@ import getTagOfNode from './getTagOfNode';
 import { getComputedStyle } from './getComputedStyles';
 import { NodeType } from 'roosterjs-editor-types';
 
-const CRLF = /^[\r\n]+$/gm;
+const CRLF = /^[\r\n]+$/g;
 const CRLF_SPACE = /[\t\r\n\u0020\u200B]/gm; // We should only find new line, real space or ZeroWidthSpace (TAB, %20, but not &nbsp;)
 
 /**
