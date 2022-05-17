@@ -1,5 +1,5 @@
 import { IEditor } from 'roosterjs-editor-types';
-import { LocalizedStrings } from '../../common';
+import { LocalizedStrings } from '../../common/type/LocalizedStrings';
 
 /**
  * Represent a context menu item

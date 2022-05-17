@@ -1,4 +1,4 @@
-import { CancelButtonStringKey, OkButtonStringKey } from 'roosterjs-react/lib/common';
+import { CancelButtonStringKey, OkButtonStringKey } from '../../common/type/LocalizedStrings';
 
 /**
  * Key of localized strings of List Number menu items and its dialog.
