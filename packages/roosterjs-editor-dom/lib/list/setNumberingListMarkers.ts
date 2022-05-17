@@ -7,8 +7,6 @@ interface NumberingCSSStyle {
     className: string;
 }
 
-//const STYLE_ID = 'ListStyle';
-
 /**
  * @internal
  * Set marker style of a numbering list
@@ -22,34 +20,7 @@ export default function setNumberingListMarkers(
 ) {
     const { marker } = numberingListStyle[listStyleType];
     rootLi.style.listStyleType = `${li.getNode()}${marker}`;
-
-    // let styleTag = document.getElementById(STYLE_ID);
-    // if (!styleTag) {
-    //     styleTag = document.createElement('style');
-    //     document.head.appendChild(styleTag);
-    //     styleTag.id = STYLE_ID;
-    // }
-    // setNumberingListClass(styleTag, listStyleType as NumberingListType, li);
-    // rootList.style.counterReset = 'list-item';
 }
-
-// function setNumberingListClass(
-//     styleTag: HTMLElement,
-//     listStyleType: NumberingListType,
-//     li: HTMLLIElement
-// ) {
-//     const { listStyle, marker, className } = numberingListStyle[listStyleType];
-//     const styledLists = document.getElementsByClassName(className);
-//     if (styledLists.length < 1) {
-//         styleTag.textContent =
-//             styleTag.textContent +
-//             `
-//         .${className}::marker {
-//             content:  counter(list-item, ${listStyle}) "${marker}"
-//         }`;
-//         li.classList.add(className);
-//     }
-// }
 
 const numberingListStyle: Record<string, NumberingCSSStyle> = {
     [NumberingListType.Decimal]: {
