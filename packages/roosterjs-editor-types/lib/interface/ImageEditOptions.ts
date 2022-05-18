@@ -60,6 +60,9 @@ export default interface ImageEditOptions {
     rotateIconHTML?: string;
 }
 
+/**
+ * Possible directions of resize handles
+ */
 type ResizeHandleDirection = 'w' | '' | 'e' | 'n' | 's' | 'nw' | 'ne' | 'sw' | 'se'
 
 /**
