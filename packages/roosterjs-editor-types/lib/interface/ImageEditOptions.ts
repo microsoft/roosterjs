@@ -41,9 +41,27 @@ export default interface ImageEditOptions {
     imageSelector?: string;
 
     /**
+     * Whether to use touch events due to working on mobile browsers
+     * @default false
+     */
+    isMobile?: boolean
+
+    /**
+     * customized corner resize handle style
+     * @default A predefined style
+     */
+     getCustomResizeHandelStyle?: GetResizeHandleStyle;
+
+    /**
      * @deprecated
      * HTML for the rotate icon
      * @default A predefined SVG icon
      */
     rotateIconHTML?: string;
+}
+
+export type ResizeHandleDirection = 'w' | '' | 'e' | 'n' | 's' | 'nw' | 'ne' | 'sw' | 'se'
+
+export interface GetResizeHandleStyle {
+    (direction: ResizeHandleDirection, topOrBottom: 'top' | 'bottom', leftOrRight: 'left' | 'right', borderColor: string): string
 }

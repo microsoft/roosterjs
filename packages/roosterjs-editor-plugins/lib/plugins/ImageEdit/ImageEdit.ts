@@ -76,6 +76,8 @@ const DefaultOptions: Required<ImageEditOptions> = {
     minRotateDeg: 5,
     imageSelector: 'img',
     rotateIconHTML: null,
+    isMobile: false,
+    getCustomResizeHandelStyle: undefined,
 };
 
 /**
@@ -384,6 +386,7 @@ export default class ImageEdit implements EditorPlugin {
                 : LIGHT_MODE_BGCOLOR,
             isSmallImage: isASmallImage(this.editInfo, isExperimentalHandlesEnabled),
             handlesExperimentalFeatures: isExperimentalHandlesEnabled,
+            getCustomResizeHandelStyle: this.options.getCustomResizeHandelStyle,
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 

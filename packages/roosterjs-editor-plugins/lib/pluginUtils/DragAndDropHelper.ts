@@ -1,6 +1,12 @@
 import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
 
+interface MouseEventNames {
+    mousedown: string;
+    mousemove: string;
+    mouseup: string;
+}
+
 /**
  * @internal
  * A helper class to help manage drag and drop to an HTML element
@@ -9,6 +15,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
     private initX: number;
     private initY: number;
     private initValue: TInitValue;
+    private eventNames: MouseEventNames; // Used to be compatible with desktop and mobile browsers
 
     /**
      * Create a new instance of DragAndDropHelper class
@@ -24,29 +31,50 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private context: TContext,
         private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
-        private zoomScale: number
+        private zoomScale: number,
+        isMobile: boolean = false
     ) {
-        trigger.addEventListener('mousedown', this.onMouseDown);
+        this.eventNames = DragAndDropHelper.getMouseEventNames(isMobile);
+        trigger.addEventListener(this.eventNames.mousedown, this.onMouseDown);
+    }
+
+    /**
+     * Generate event names based on different platforms
+     */
+    static getMouseEventNames(isMobile: boolean): MouseEventNames {
+        if (isMobile) {
+            return {
+                mousedown: 'touchstart',
+                mousemove: 'touchmove',
+                mouseup: 'touchmove',
+            }
+        } else {
+            return {
+                mousedown: 'mousedown',
+                mousemove: 'mousemove',
+                mouseup: 'mouseup',
+            }
+        }
     }
 
     /**
      * Dispose this object, remove all event listeners that has been attached
      */
     dispose() {
-        this.trigger.removeEventListener('mousedown', this.onMouseDown);
+        this.trigger.removeEventListener(this.eventNames.mousedown, this.onMouseDown);
         this.removeDocumentEvents();
     }
 
     private addDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.addEventListener('mousemove', this.onMouseMove, true /*useCapture*/);
-        doc.addEventListener('mouseup', this.onMouseUp, true /*useCapture*/);
+        doc.addEventListener(this.eventNames.mousemove, this.onMouseMove, true /*useCapture*/);
+        doc.addEventListener(this.eventNames.mouseup, this.onMouseUp, true /*useCapture*/);
     }
 
     private removeDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.removeEventListener('mousemove', this.onMouseMove, true /*useCapture*/);
-        doc.removeEventListener('mouseup', this.onMouseUp, true /*useCapture*/);
+        doc.removeEventListener(this.eventNames.mousemove, this.onMouseMove, true /*useCapture*/);
+        doc.removeEventListener(this.eventNames.mouseup, this.onMouseUp, true /*useCapture*/);
     }
 
     private onMouseDown = (e: MouseEvent) => {
