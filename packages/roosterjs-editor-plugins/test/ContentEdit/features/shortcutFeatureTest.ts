@@ -68,6 +68,12 @@ const parameters = [
         key: 85,
         command: DocumentCommand.Underline,
     },
+    {
+        description:
+            'default shortcut calls the clearFormat command on the editor when typing CTRL+Spacebar',
+        key: 32,
+        command: DocumentCommand.RemoveFormat,
+    },
 ];
 
 parameters.forEach(({ description, key, command }) => {

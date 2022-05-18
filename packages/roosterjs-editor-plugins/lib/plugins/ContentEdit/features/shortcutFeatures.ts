@@ -15,6 +15,7 @@ import {
     toggleUnderline,
     toggleBullet,
     toggleNumbering,
+    clearFormat,
 } from 'roosterjs-editor-api';
 
 interface ShortcutCommand {
@@ -35,6 +36,7 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.B, Keys.Meta | Keys.B, toggleBold),
     createCommand(Keys.Ctrl | Keys.I, Keys.Meta | Keys.I, toggleItalic),
     createCommand(Keys.Ctrl | Keys.U, Keys.Meta | Keys.U, toggleUnderline),
+    createCommand(Keys.Ctrl | Keys.SPACE, Keys.Meta | Keys.SPACE, clearFormat),
     createCommand(Keys.Ctrl | Keys.Z, Keys.Meta | Keys.Z, editor => editor.undo()),
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
