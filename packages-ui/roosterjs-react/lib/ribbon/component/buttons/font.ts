@@ -1,6 +1,6 @@
 import RibbonButton from '../../type/RibbonButton';
+import { applyTextStyle, Position } from 'roosterjs-editor-dom';
 import { FontButtonStringKey } from '../../type/RibbonButtonStringKeys';
-import { setFontName } from 'roosterjs-editor-api';
 
 interface FontName {
     name: string;
@@ -166,6 +166,18 @@ export const font: RibbonButton<FontButtonStringKey> = {
         allowLivePreview: true,
     },
     onClick: (editor, font) => {
-        setFontName(editor, font);
+        const range = editor.getSelectionRange();
+        const startPos = Position.getStart(range);
+        const endPos = Position.getEnd(range);
+
+        applyTextStyle(
+            range.commonAncestorContainer,
+            node => {
+                node.style.fontFamily = font;
+                node.style.backgroundColor = 'blue';
+            },
+            startPos,
+            endPos
+        );
     },
 };
