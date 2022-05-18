@@ -1,6 +1,10 @@
 import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
 
+/**
+ * @internal
+ * Compatible mouse event names for different platform
+ */
 interface MouseEventNames {
     mousedown: string;
     mousemove: string;
