@@ -18,6 +18,11 @@ export const enum NumberingListType {
     DecimalParenthesis,
 
     /**
+     * Numbering triggered by (1)
+     */
+    DecimalDoubleParenthesis,
+
+    /**
      * Numbering triggered by a.
      */
     LowerAlpha,
@@ -26,6 +31,11 @@ export const enum NumberingListType {
      * Numbering triggered by a)
      */
     LowerAlphaParenthesis,
+
+    /**
+     * Numbering triggered by (a)
+     */
+    LowerAlphaDoubleParenthesis,
 
     /**
      * Numbering triggered by a-
@@ -43,6 +53,11 @@ export const enum NumberingListType {
     UpperAlphaParenthesis,
 
     /**
+     * Numbering triggered by (A)
+     */
+    UpperAlphaDoubleParenthesis,
+
+    /**
      * Numbering triggered by A-
      */
     UpperAlphaDash,
@@ -58,6 +73,11 @@ export const enum NumberingListType {
     LowerRomanParenthesis,
 
     /**
+     * Numbering triggered by (i)
+     */
+    LowerRomanDoubleParenthesis,
+
+    /**
      * Numbering triggered by i-
      */
     LowerRomanDash,
@@ -71,6 +91,11 @@ export const enum NumberingListType {
      * Numbering triggered by I)
      */
     UpperRomanParenthesis,
+
+    /**
+     * Numbering triggered by (I)
+     */
+    UpperRomanDoubleParenthesis,
 
     /**
      * Numbering triggered by I-

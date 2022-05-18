@@ -165,7 +165,6 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(4);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-
                 if (!textRange) {
                     // no op if the range can't be found
                 } else if (

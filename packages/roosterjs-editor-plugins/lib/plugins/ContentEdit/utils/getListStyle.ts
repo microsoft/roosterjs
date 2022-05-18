@@ -1,21 +1,92 @@
 import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types';
 
-const numberingListTypes: Record<string, number> = {
-    '1.': NumberingListType.Decimal,
-    '1-': NumberingListType.DecimalDash,
-    '1)': NumberingListType.DecimalParenthesis,
-    'a.': NumberingListType.LowerAlpha,
-    'a)': NumberingListType.LowerAlphaParenthesis,
-    'a-': NumberingListType.LowerAlphaDash,
-    'A.': NumberingListType.UpperAlpha,
-    'A)': NumberingListType.UpperAlphaParenthesis,
-    'A-': NumberingListType.UpperAlphaDash,
-    'i.': NumberingListType.LowerRoman,
-    'i)': NumberingListType.LowerRomanParenthesis,
-    'i-': NumberingListType.LowerRomanDash,
-    'I.': NumberingListType.UpperRoman,
-    'I)': NumberingListType.UpperRomanParenthesis,
-    'I-': NumberingListType.UpperRomanDash,
+const enum NumberingTypes {
+    Decimal,
+    LowerAlpha,
+    UpperAlpha,
+    LowerRoman,
+    UpperRoman,
+}
+
+const enum Character {
+    Dot,
+    Dash,
+    Parenthesis,
+    DoubleParenthesis,
+}
+
+const characters: Record<string, number> = {
+    '.': Character.Dot,
+    '-': Character.Dash,
+    ')': Character.Parenthesis,
+    '(': Character.DoubleParenthesis,
+};
+
+const identifyCharacter = (text: string) => {
+    const char = text.length === 2 ? text[1] : text[0];
+    return characters[char] || null;
+};
+
+const identifyNumberingType = (text: string) => {
+    const char = text[0] === '(' ? text[1] : text[0];
+    if (!isNaN(parseInt(char))) {
+        return NumberingTypes.Decimal;
+    } else if (/[a-z]+/g.test(char)) {
+        if (char === 'i') {
+            return NumberingTypes.LowerRoman;
+        } else {
+            return NumberingTypes.LowerAlpha;
+        }
+    } else if (/[A-Z]+/g.test(char)) {
+        if (char === 'I') {
+            return NumberingTypes.UpperRoman;
+        } else {
+            return NumberingTypes.UpperAlpha;
+        }
+    }
+};
+
+const numberingListTypes: Record<number, (char: number) => number> = {
+    [NumberingTypes.Decimal]: char => DecimalsTypes[char],
+    [NumberingTypes.LowerAlpha]: char => LowerAlphaTypes[char],
+    [NumberingTypes.UpperAlpha]: char => UpperAlphaTypes[char],
+    [NumberingTypes.LowerRoman]: char => LowerRomanTypes[char],
+    [NumberingTypes.UpperRoman]: char => UpperRomanTypes[char],
+};
+
+const UpperRomanTypes: Record<number, number> = {
+    [Character.Dot]: NumberingListType.UpperRoman,
+    [Character.Dash]: NumberingListType.UpperRomanDash,
+    [Character.Parenthesis]: NumberingListType.UpperRomanParenthesis,
+    [Character.DoubleParenthesis]: NumberingListType.UpperRomanDoubleParenthesis,
+};
+
+const LowerRomanTypes: Record<number, number> = {
+    [Character.Dot]: NumberingListType.LowerRoman,
+    [Character.Dash]: NumberingListType.LowerRomanDash,
+    [Character.Parenthesis]: NumberingListType.LowerRomanParenthesis,
+    [Character.DoubleParenthesis]: NumberingListType.LowerRomanDoubleParenthesis,
+};
+
+const UpperAlphaTypes: Record<number, number> = {
+    [Character.Dot]: NumberingListType.UpperAlpha,
+    [Character.Dash]: NumberingListType.UpperAlphaDash,
+    [Character.Parenthesis]: NumberingListType.UpperAlphaParenthesis,
+    [Character.DoubleParenthesis]: NumberingListType.UpperAlphaDoubleParenthesis,
+};
+
+const LowerAlphaTypes: Record<number, number> = {
+    [Character.Dot]: NumberingListType.LowerAlpha,
+    [Character.Dash]: NumberingListType.LowerAlphaDash,
+    [Character.Parenthesis]: NumberingListType.LowerAlphaParenthesis,
+    [Character.DoubleParenthesis]: NumberingListType.LowerAlphaDoubleParenthesis,
+};
+
+const DecimalsTypes: Record<number, number> = {
+    [Character.Dot]: NumberingListType.Decimal,
+    [Character.Dash]: NumberingListType.DecimalDash,
+    [Character.Parenthesis]: NumberingListType.DecimalParenthesis,
+    [Character.DoubleParenthesis]: NumberingListType.DecimalDoubleParenthesis,
 };
 
 const bulletListType: Record<string, number> = {
@@ -30,7 +101,9 @@ const bulletListType: Record<string, number> = {
 
 const identifyNumberingListType = (textBeforeCursor: string): NumberingListType => {
     const numbering = textBeforeCursor.replace(/\s/g, '');
-    return numberingListTypes[numbering] || null;
+    const char = identifyCharacter(numbering);
+    const numberingType = identifyNumberingType(numbering);
+    return numberingListTypes[numberingType](char) || null;
 };
 
 const identifyBulletListType = (textBeforeCursor: string): BulletListType => {
