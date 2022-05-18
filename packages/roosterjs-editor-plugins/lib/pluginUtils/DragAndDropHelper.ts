@@ -46,7 +46,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
             return {
                 mousedown: 'touchstart',
                 mousemove: 'touchmove',
-                mouseup: 'touchmove',
+                mouseup: 'touchend',
             }
         } else {
             return {
