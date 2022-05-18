@@ -60,8 +60,11 @@ export default interface ImageEditOptions {
     rotateIconHTML?: string;
 }
 
-export type ResizeHandleDirection = 'w' | '' | 'e' | 'n' | 's' | 'nw' | 'ne' | 'sw' | 'se'
+type ResizeHandleDirection = 'w' | '' | 'e' | 'n' | 's' | 'nw' | 'ne' | 'sw' | 'se'
 
+/**
+ * Function to generate resize handle style
+ */
 export interface GetResizeHandleStyle {
     (direction: ResizeHandleDirection, topOrBottom: 'top' | 'bottom', leftOrRight: 'left' | 'right', borderColor: string): string
 }
