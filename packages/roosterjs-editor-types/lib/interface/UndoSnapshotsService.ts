@@ -14,7 +14,7 @@ export default interface UndoSnapshotsService<T = string> {
      * @param step The step to move
      * @returns If can move with the given step, returns the snapshot after move, otherwise null
      */
-    move(step: number): T;
+    move(step: number): T | null;
 
     /**
      * Add a new undo snapshot
