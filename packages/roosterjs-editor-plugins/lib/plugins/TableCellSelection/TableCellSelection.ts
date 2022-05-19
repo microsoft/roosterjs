@@ -31,7 +31,13 @@ import {
 const TABLE_CELL_SELECTOR = 'td,th';
 const LEFT_CLICK = 1;
 const RIGHT_CLICK = 3;
-
+const IGNORE_KEY_UP_KEYS = [
+    Keys.SHIFT,
+    Keys.ALT,
+    Keys.META_LEFT,
+    Keys.CTRL_LEFT,
+    Keys.PRINT_SCREEN,
+];
 /**
  * TableCellSelectionPlugin help highlight table cells
  */
@@ -211,8 +217,7 @@ export default class TableCellSelection implements EditorPlugin {
         if (shiftKey) {
             if (!this.firstTarget) {
                 const pos = this.editor.getFocusedPosition();
-
-                const cell = getCellAtCursor(this.editor, pos.node);
+                const cell = pos && getCellAtCursor(this.editor, pos.node);
 
                 this.firstTarget = this.firstTarget || cell;
             }
@@ -223,7 +228,10 @@ export default class TableCellSelection implements EditorPlugin {
             }
             this.editor.runAsync(editor => {
                 const pos = editor.getFocusedPosition();
-                this.setData(this.tableSelection ? this.lastTarget : pos.node);
+                const newTarget = this.tableSelection ? this.lastTarget : pos?.node;
+                if (newTarget) {
+                    this.setData(newTarget);
+                }
 
                 if (this.firstTable! == this.targetTable!) {
                     if (!this.shouldConvertToTableSelection() && !this.tableSelection) {
@@ -242,8 +250,14 @@ export default class TableCellSelection implements EditorPlugin {
     }
 
     private handleKeyUpEvent(event: PluginKeyUpEvent) {
-        const { shiftKey, which } = event.rawEvent;
-        if (!shiftKey && which != Keys.SHIFT && this.firstTarget && !this.preventKeyUp) {
+        const { shiftKey, which, ctrlKey } = event.rawEvent;
+        if (
+            !shiftKey &&
+            !ctrlKey &&
+            this.firstTarget &&
+            !this.preventKeyUp &&
+            IGNORE_KEY_UP_KEYS.indexOf(which) == -1
+        ) {
             this.clearState();
         }
         this.preventKeyUp = false;

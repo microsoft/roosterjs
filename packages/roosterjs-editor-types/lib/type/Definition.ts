@@ -1,7 +1,10 @@
 import { DefinitionType } from '../enum/DefinitionType';
 import type { CompatibleDefinitionType } from '../compatibleEnum/DefinitionType';
 
-type ArrayItemType<T extends any[]> = T extends (infer U)[] ? U : never;
+/**
+ * A type template to get item type of an array
+ */
+export type ArrayItemType<T extends any[]> = T extends (infer U)[] ? U : never;
 
 /**
  * Base interface of property definition
@@ -16,6 +19,11 @@ export interface DefinitionBase<T extends DefinitionType | CompatibleDefinitionT
      * Whether this property is optional
      */
     isOptional?: boolean;
+
+    /**
+     * Whether this property is allowed to be null
+     */
+    allowNull?: boolean;
 }
 
 /**
@@ -83,35 +91,42 @@ export interface ArrayDefinition<T extends any[]>
 }
 
 /**
+ * Object property definition type used by Object Definition
+ */
+export type ObjectPropertyDefinition<T extends Object> = {
+    [Key in keyof T]: Definition<T[Key]>;
+};
+
+/**
  * Object property definition.
  */
-export interface ObjectDefinition<T extends Record<string, any>>
+export interface ObjectDefinition<T extends Object>
     extends DefinitionBase<DefinitionType.Object | CompatibleDefinitionType.Object> {
     /**
      * A key-value map to specify the definition of each possible property of this object
      */
-    propertyDef: { [Key in keyof T]: Definition<T[Key]> };
+    propertyDef: ObjectPropertyDefinition<T>;
 }
 
 /**
  * Customize property definition. When all other property definition type cannot satisfy your requirement,
  * use this definition with a customized validator function to do property validation.
  */
-export interface CustomizeDefinition<V>
+export interface CustomizeDefinition
     extends DefinitionBase<DefinitionType.Customize | CompatibleDefinitionType.Customize> {
     /**
      * The customized validator function to do customized validation
      * @param input The value to validate
      * @returns True means the given value is of the specified type, otherwise false
      */
-    validator: (input: V) => input is V;
+    validator: (input: any) => boolean;
 }
 
 /**
  * A combination of all definition types
  */
 export type Definition<T> =
-    | CustomizeDefinition<T>
+    | CustomizeDefinition
     | (T extends any[]
           ? ArrayDefinition<T>
           : T extends Record<string, any>

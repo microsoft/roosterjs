@@ -129,6 +129,10 @@ function shouldSetIndentation(editor: IEditor, range: Range): boolean {
     const firstBlock = editor.getBlockElementAtNode(startPosition.node);
     const lastBlock = editor.getBlockElementAtNode(endPosition.node);
 
+    if (!firstBlock || !lastBlock) {
+        return false;
+    }
+
     if (!firstBlock.equals(lastBlock)) {
         //If the selections has more than one block, we indent all the blocks in the selection
         return true;

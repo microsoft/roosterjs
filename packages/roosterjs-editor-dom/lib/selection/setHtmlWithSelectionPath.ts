@@ -17,6 +17,30 @@ import {
     Coordinates,
 } from 'roosterjs-editor-types';
 
+const NumberArrayDefinition = createArrayDefinition<number>(createNumberDefinition());
+
+const CoordinatesDefinition = createObjectDefinition<Coordinates>({
+    x: createNumberDefinition(),
+    y: createNumberDefinition(),
+});
+
+const IsDarkModeDefinition = createBooleanDefinition(true /*isOptional*/);
+
+const NormalContentMetadataDefinition = createObjectDefinition<NormalContentMetadata>({
+    type: createNumberDefinition(true /*isOptional*/, SelectionRangeTypes.Normal),
+    isDarkMode: IsDarkModeDefinition,
+    start: NumberArrayDefinition,
+    end: NumberArrayDefinition,
+});
+
+const TableContentMetadataDefinition = createObjectDefinition<TableContentMetadata>({
+    type: createNumberDefinition(false /*isOptional*/, SelectionRangeTypes.TableSelection),
+    isDarkMode: IsDarkModeDefinition,
+    tableId: createStringDefinition(),
+    firstCell: CoordinatesDefinition,
+    lastCell: CoordinatesDefinition,
+});
+
 /**
  * @deprecated Use setHtmlWithMetadata instead
  * Restore inner HTML of a root element from given html string. If the string contains selection path,
@@ -68,6 +92,9 @@ export function setHtmlWithMetadata(
                 validate(obj, TableContentMetadataDefinition)
             ) {
                 rootNode.removeChild(potentialMetadataComment);
+                obj.type = typeof obj.type === 'undefined' ? SelectionRangeTypes.Normal : obj.type;
+                obj.isDarkMode = obj.isDarkMode || false;
+
                 return obj;
             }
         } catch {}
@@ -75,25 +102,3 @@ export function setHtmlWithMetadata(
 
     return undefined;
 }
-
-const NumberArrayDefinition = createArrayDefinition<number>(createNumberDefinition());
-
-const CoordinatesDefinition = createObjectDefinition<Coordinates>({
-    x: createNumberDefinition(),
-    y: createNumberDefinition(),
-});
-
-const NormalContentMetadataDefinition = createObjectDefinition<NormalContentMetadata>({
-    start: NumberArrayDefinition,
-    end: NumberArrayDefinition,
-    isDarkMode: createBooleanDefinition(),
-    type: createNumberDefinition(SelectionRangeTypes.Normal),
-});
-
-const TableContentMetadataDefinition = createObjectDefinition<TableContentMetadata>({
-    tableId: createStringDefinition(),
-    firstCell: CoordinatesDefinition,
-    lastCell: CoordinatesDefinition,
-    isDarkMode: createBooleanDefinition(),
-    type: createNumberDefinition(SelectionRangeTypes.TableSelection),
-});

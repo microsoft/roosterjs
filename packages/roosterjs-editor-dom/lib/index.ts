@@ -121,4 +121,4 @@ export {
     createArrayDefinition,
     createObjectDefinition,
 } from './metadata/definitionCreators';
-export { getMetadata, setMetadata } from './metadata/metadata';
+export { getMetadata, setMetadata, removeMetadata } from './metadata/metadata';

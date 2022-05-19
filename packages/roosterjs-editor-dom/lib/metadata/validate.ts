@@ -8,7 +8,7 @@ import { Definition, DefinitionType } from 'roosterjs-editor-types';
  */
 export default function validate<T>(input: any, def: Definition<T>): input is T {
     let result = false;
-    if (def.isOptional && typeof input === 'undefined') {
+    if ((def.isOptional && typeof input === 'undefined') || (def.allowNull && input === null)) {
         result = true;
     } else {
         switch (def.type) {
@@ -27,7 +27,9 @@ export default function validate<T>(input: any, def: Definition<T>): input is T 
                 break;
 
             case DefinitionType.Boolean:
-                result = typeof input === 'boolean';
+                result =
+                    typeof input === 'boolean' &&
+                    (typeof def.value === 'undefined' || input === def.value);
                 break;
 
             case DefinitionType.Array:
