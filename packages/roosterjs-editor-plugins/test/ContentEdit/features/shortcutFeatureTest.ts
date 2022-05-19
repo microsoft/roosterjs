@@ -68,6 +68,12 @@ const parameters = [
         key: 85,
         command: DocumentCommand.Underline,
     },
+    {
+        description:
+            'default shortcut calls the clearFormat command on the editor when typing CTLR+Space',
+        key: 32,
+        command: DocumentCommand.RemoveFormat,
+    },
 ];
 
 parameters.forEach(({ description, key, command }) => {
@@ -160,3 +166,4 @@ it('default shortcut calls the changeFontSize increase when typing CTRL+SHiFT+, 
     shortCutFeature.handleEvent(event, editor);
     expect(changeFontSizeSpy).toHaveBeenCalledWith(editor, FontSizeChange.Decrease);
 });
+

@@ -15,6 +15,7 @@ import {
     toggleUnderline,
     toggleBullet,
     toggleNumbering,
+    clearFormat,
 } from 'roosterjs-editor-api';
 
 interface ShortcutCommand {
@@ -35,6 +36,7 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.B, Keys.Meta | Keys.B, toggleBold),
     createCommand(Keys.Ctrl | Keys.I, Keys.Meta | Keys.I, toggleItalic),
     createCommand(Keys.Ctrl | Keys.U, Keys.Meta | Keys.U, toggleUnderline),
+    createCommand(Keys.Ctrl | Keys.SPACE, Keys.Meta | Keys.SPACE, clearFormat),
     createCommand(Keys.Ctrl | Keys.Z, Keys.Meta | Keys.Z, editor => editor.undo()),
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
@@ -56,6 +58,7 @@ const commands: ShortcutCommand[] = [
  * Ctrl/Meta+B: toggle bold style
  * Ctrl/Meta+I: toggle italic style
  * Ctrl/Meta+U: toggle underline style
+ * Ctrl/Meta+Space: clear formatting
  * Ctrl/Meta+Z: undo
  * Ctrl+Y/Meta+Shift+Z: redo
  * Ctrl/Meta+PERIOD: toggle bullet list
@@ -65,7 +68,17 @@ const commands: ShortcutCommand[] = [
  */
 const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     allowFunctionKeys: true,
-    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARD_SLASH],
+    keys: [
+        Keys.B,
+        Keys.I,
+        Keys.U,
+        Keys.Y,
+        Keys.Z,
+        Keys.COMMA,
+        Keys.PERIOD,
+        Keys.FORWARD_SLASH,
+        Keys.SPACE,
+    ],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);
