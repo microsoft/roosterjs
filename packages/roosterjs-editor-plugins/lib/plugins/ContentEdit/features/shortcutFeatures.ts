@@ -67,7 +67,17 @@ const commands: ShortcutCommand[] = [
  */
 const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     allowFunctionKeys: true,
-    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARD_SLASH],
+    keys: [
+        Keys.B,
+        Keys.I,
+        Keys.U,
+        Keys.Y,
+        Keys.Z,
+        Keys.COMMA,
+        Keys.PERIOD,
+        Keys.FORWARD_SLASH,
+        Keys.SPACE,
+    ],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);
