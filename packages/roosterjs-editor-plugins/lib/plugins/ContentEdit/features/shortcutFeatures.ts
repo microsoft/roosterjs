@@ -58,6 +58,7 @@ const commands: ShortcutCommand[] = [
  * Ctrl/Meta+B: toggle bold style
  * Ctrl/Meta+I: toggle italic style
  * Ctrl/Meta+U: toggle underline style
+ * Ctrl/Meta+Space: clear formatting
  * Ctrl/Meta+Z: undo
  * Ctrl+Y/Meta+Shift+Z: redo
  * Ctrl/Meta+PERIOD: toggle bullet list
@@ -114,4 +115,3 @@ export const ShortcutFeatures: Record<
 > = {
     defaultShortcut: DefaultShortcut,
 };
-
