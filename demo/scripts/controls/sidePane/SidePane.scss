@@ -52,3 +52,18 @@
         overflow: hidden;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    .sidePane {
+        color: #00bbcc;
+        border: solid 1px $primaryBorderDark;
+    }
+
+    .title {
+        background-color: $primaryColorDark;
+        color: #333333;
+        &:hover {
+            background-color: $primaryLighterDark;
+        }
+    }
+}
