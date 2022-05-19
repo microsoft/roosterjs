@@ -46,3 +46,13 @@
 .externalLink {
     vertical-align: middle;
 }
+
+@media (prefers-color-scheme: dark) {
+    .titleBar {
+        background-color: $primaryColorDark;
+    }
+    .title,
+    .link {
+        color: #bbd1e1;
+    }
+}

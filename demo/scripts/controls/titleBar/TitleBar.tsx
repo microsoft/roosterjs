@@ -17,7 +17,7 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
         return (
             <div className={className}>
                 <div className={styles.title}>
-                    <span className={styles.titleText}>RoosterJs Demo Site</span>
+                    <span>RoosterJs Demo Site</span>
                 </div>
                 <div className={styles.version}>
                     {((window as any) as WindowHack).roosterJsVer || ''}
