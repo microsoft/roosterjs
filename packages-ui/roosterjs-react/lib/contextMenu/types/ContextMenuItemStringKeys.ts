@@ -20,12 +20,20 @@ export type ListNumberMenuItemStringKey =
  * Key of localized strings of Image Alt Text menu item.
  * Including:
  * - Menu item "Add alternate text"
- * - Menu item "Size"
+ * - Menu item "Size" and sub menus
  * - Menu item "Crop image"
  * - Menu item "Remove image"
+ * - Ok button
+ * - Cancel button
  */
 export type ImageEditMenuItemStringKey =
     | 'menuNameImageAltText'
     | 'menuNameImageResize'
     | 'menuNameImageCrop'
-    | 'menuNameImageRemove';
+    | 'menuNameImageRemove'
+    | 'menuNameImageSizeBestFit'
+    | 'menuNameImageSizeSmall'
+    | 'menuNameImageSizeMedium'
+    | 'menuNameImageSizeOriginal'
+    | OkButtonStringKey
+    | CancelButtonStringKey;

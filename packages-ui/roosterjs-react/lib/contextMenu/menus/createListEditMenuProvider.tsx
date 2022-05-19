@@ -16,7 +16,7 @@ import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 const ListNumberResetMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
     key: 'menuNameListNumberReset',
     unlocalizedText: 'Restart at 1',
-    onClick: (editor, node) => {
+    onClick: (_, editor, node) => {
         const li = editor.getElementAtCursor('LI', node) as HTMLLIElement;
         setOrderedListNumbering(editor, li, 1);
     },
@@ -25,7 +25,7 @@ const ListNumberResetMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
 const ListNumberEditMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
     key: 'menuNameListNumberEdit',
     unlocalizedText: 'Set numbering value',
-    onClick: (editor, node, strings) => {
+    onClick: (_, editor, node, strings) => {
         const listAndLi = getEditingList(editor, node);
 
         if (listAndLi) {

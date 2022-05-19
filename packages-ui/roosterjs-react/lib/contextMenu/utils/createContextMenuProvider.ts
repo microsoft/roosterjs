@@ -64,7 +64,24 @@ class ContextMenuProviderImpl<TString extends string>
             data: item,
             text: getLocalizedString(this.strings, item.key, item.unlocalizedText),
             ariaLabel: getLocalizedString(this.strings, item.key, item.unlocalizedText),
-            onClick: () => item.onClick(this.editor, this.targetNode, this.strings),
+            onClick: () => item.onClick(item.key, this.editor, this.targetNode, this.strings),
+            subMenuProps: item.subItems
+                ? {
+                      onItemClick: (_, menuItem) => {
+                          item.onClick(
+                              menuItem.data as string,
+                              this.editor,
+                              this.targetNode,
+                              this.strings
+                          );
+                      },
+                      items: Object.keys(item.subItems).map((key: keyof typeof item.subItems) => ({
+                          key: key,
+                          data: key,
+                          text: getLocalizedString(this.strings, key, item.subItems[key]),
+                      })),
+                  }
+                : undefined,
         };
     }
 }
