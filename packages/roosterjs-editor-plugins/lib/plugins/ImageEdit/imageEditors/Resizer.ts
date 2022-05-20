@@ -4,7 +4,19 @@ import ImageEditInfo, { ResizeInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { OnShowResizeHandle } from '../ImageEdit';
+
+/**
+ * An optional callback to allow customize resize handle element of image resizing.
+ * To customize the resize handle element, add this callback and change the attributes of elementData then it
+ * will be picked up by ImageEdit code
+ */
+export interface OnShowResizeHandle {
+    (
+        elementData: CreateElementData,
+        x: X,
+        y: Y
+    ): void
+}
 
 const enum HandleTypes {
     SquareHandles,

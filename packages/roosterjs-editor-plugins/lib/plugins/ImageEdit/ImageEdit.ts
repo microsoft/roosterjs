@@ -75,7 +75,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     preserveRatio: false,
     minRotateDeg: 5,
     imageSelector: 'img',
-    rotateIconHTML: null
+    rotateIconHTML: null,
 };
 
 /**
@@ -104,14 +104,6 @@ const DARK_MODE_BGCOLOR = '#333';
  * The biggest area of image with 4 handles
  */
 const MAX_SMALL_SIZE_IMAGE = 10000;
-
-export interface OnShowResizeHandle {
-    (
-        elementData: CreateElementData,
-        x: X,
-        y: Y
-    ): void
-}
 
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
@@ -398,6 +390,7 @@ export default class ImageEdit implements EditorPlugin {
             handlesExperimentalFeatures: isExperimentalHandlesEnabled,
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
+
         ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
             thisOperation => {
                 if ((operation & thisOperation) == thisOperation) {
