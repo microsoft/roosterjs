@@ -2,7 +2,7 @@ import { BrowserInfo } from 'roosterjs-editor-types';
 import { getBrowserInfo } from '../../lib/utils/Browser';
 
 function runBrowserDataTest(userAgent: string, appVersion: string, expected: BrowserInfo): void {
-    let b = getBrowserInfo(userAgent, appVersion);
+    let b = getBrowserInfo(userAgent, appVersion, '');
     expect(b.isChrome).toBe(expected.isChrome);
     expect(b.isEdge).toBe(expected.isEdge);
     expect(b.isFirefox).toBe(expected.isFirefox);
@@ -28,6 +28,7 @@ describe('getBrowserData', () => {
                 isSafari: true,
                 isWebKit: true,
                 isWin: false,
+                isMobileOrTablet: false,
             }
         );
     });
@@ -46,6 +47,7 @@ describe('getBrowserData', () => {
                 isSafari: false,
                 isWebKit: false,
                 isWin: true,
+                isMobileOrTablet: false,
             }
         );
     });
@@ -64,6 +66,7 @@ describe('getBrowserData', () => {
                 isSafari: false,
                 isWebKit: true,
                 isWin: true,
+                isMobileOrTablet: false,
             }
         );
     });
@@ -82,6 +85,7 @@ describe('getBrowserData', () => {
                 isSafari: false,
                 isWebKit: false,
                 isWin: true,
+                isMobileOrTablet: false,
             }
         );
     });
@@ -100,6 +104,7 @@ describe('getBrowserData', () => {
                 isSafari: false,
                 isWebKit: false,
                 isWin: true,
+                isMobileOrTablet: false,
             }
         );
     });
@@ -118,6 +123,7 @@ describe('getBrowserData', () => {
                 isSafari: false,
                 isWebKit: false,
                 isWin: true,
+                isMobileOrTablet: false,
             }
         );
     });

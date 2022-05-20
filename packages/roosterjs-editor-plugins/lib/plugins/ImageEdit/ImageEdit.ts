@@ -29,6 +29,7 @@ import {
     getSideResizeHTML,
     getCornerResizeHTML,
     getResizeBordersHTML,
+    OnShowResizeHandle,
 } from './imageEditors/Resizer';
 import {
     ExperimentalFeatures,
