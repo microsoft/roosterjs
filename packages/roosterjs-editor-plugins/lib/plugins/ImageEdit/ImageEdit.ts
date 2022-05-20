@@ -75,9 +75,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     preserveRatio: false,
     minRotateDeg: 5,
     imageSelector: 'img',
-    rotateIconHTML: null,
-    isMobile: false,
-    getCustomResizeHandelStyle: undefined,
+    rotateIconHTML: null
 };
 
 /**
@@ -106,6 +104,14 @@ const DARK_MODE_BGCOLOR = '#333';
  * The biggest area of image with 4 handles
  */
 const MAX_SMALL_SIZE_IMAGE = 10000;
+
+export interface OnShowResizeHandle {
+    (
+        elementData: CreateElementData,
+        x: X,
+        y: Y
+    ): void
+}
 
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
@@ -140,8 +146,12 @@ export default class ImageEdit implements EditorPlugin {
     /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
+     *  * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
+     * To customize the resize handle element, add this callback and change the attributes of elementData then it
+     * will be picked up by ImageEdit code
      */
-    constructor(options?: ImageEditOptions) {
+    constructor(options?: ImageEditOptions,
+        private onShowResizeHandle?: OnShowResizeHandle) {
         this.options = {
             ...DefaultOptions,
             ...(options || {}),
@@ -386,14 +396,12 @@ export default class ImageEdit implements EditorPlugin {
                 : LIGHT_MODE_BGCOLOR,
             isSmallImage: isASmallImage(this.editInfo, isExperimentalHandlesEnabled),
             handlesExperimentalFeatures: isExperimentalHandlesEnabled,
-            getCustomResizeHandelStyle: this.options.getCustomResizeHandelStyle,
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
-
         ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
             thisOperation => {
                 if ((operation & thisOperation) == thisOperation) {
-                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options));
+                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle));
                 }
             }
         );
@@ -568,8 +576,7 @@ export default class ImageEdit implements EditorPlugin {
                           },
                           this.updateWrapper,
                           dragAndDrop,
-                          this.editor.getZoomScale(),
-                          this.options.isMobile
+                          this.editor.getZoomScale()
                       )
               )
             : [];

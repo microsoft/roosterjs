@@ -1,5 +1,3 @@
-import { GetResizeHandleStyle} from 'roosterjs-editor-types'
-
 /**
  * @internal
  * Options for retrieve HTML string for image editing
@@ -31,9 +29,4 @@ export default interface ImageHtmlOptions {
      * Enable resize handles experimental feature
      */
     handlesExperimentalFeatures?: boolean;
-
-    /**
-     * customized corner resize handle style
-     */
-    getCustomResizeHandelStyle?: GetResizeHandleStyle;
 }

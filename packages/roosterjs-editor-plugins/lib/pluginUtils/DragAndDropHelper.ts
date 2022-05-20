@@ -1,3 +1,4 @@
+import { Browser } from 'roosterjs-editor-dom/lib';
 import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
 
@@ -6,10 +7,30 @@ import DragAndDropHandler from './DragAndDropHandler';
  * Compatible mouse event names for different platform
  */
 interface MouseEventNames {
-    mousedown: string;
-    mousemove: string;
-    mouseup: string;
+    MOUSEDOWN: string;
+    MOUSEMOVE: string;
+    MOUSEUP: string;
 }
+
+/**
+ * Generate event names based on different platforms to be compatible with desktop and mobile browsers
+ */
+const MOUSE_EVENT_NAMES: MouseEventNames = (() => {
+    if (Browser.isMobileOrTablet) {
+        return {
+            MOUSEDOWN: 'touchstart',
+            MOUSEMOVE: 'touchmove',
+            MOUSEUP: 'touchend',
+        }
+    } else {
+        return {
+            MOUSEDOWN: 'mousedown',
+            MOUSEMOVE: 'mousemove',
+            MOUSEUP: 'mouseup',
+        }
+    }
+})()
+
 
 /**
  * @internal
@@ -19,7 +40,6 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
     private initX: number;
     private initY: number;
     private initValue: TInitValue;
-    private eventNames: MouseEventNames; // Used to be compatible with desktop and mobile browsers
 
     /**
      * Create a new instance of DragAndDropHelper class
@@ -35,50 +55,29 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private context: TContext,
         private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
-        private zoomScale: number,
-        isMobile: boolean = false
+        private zoomScale: number
     ) {
-        this.eventNames = DragAndDropHelper.getMouseEventNames(isMobile);
-        trigger.addEventListener(this.eventNames.mousedown, this.onMouseDown);
-    }
-
-    /**
-     * Generate event names based on different platforms
-     */
-    static getMouseEventNames(isMobile: boolean): MouseEventNames {
-        if (isMobile) {
-            return {
-                mousedown: 'touchstart',
-                mousemove: 'touchmove',
-                mouseup: 'touchend',
-            }
-        } else {
-            return {
-                mousedown: 'mousedown',
-                mousemove: 'mousemove',
-                mouseup: 'mouseup',
-            }
-        }
+        trigger.addEventListener(MOUSE_EVENT_NAMES.MOUSEDOWN, this.onMouseDown);
     }
 
     /**
      * Dispose this object, remove all event listeners that has been attached
      */
     dispose() {
-        this.trigger.removeEventListener(this.eventNames.mousedown, this.onMouseDown);
+        this.trigger.removeEventListener(MOUSE_EVENT_NAMES.MOUSEDOWN, this.onMouseDown);
         this.removeDocumentEvents();
     }
 
     private addDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.addEventListener(this.eventNames.mousemove, this.onMouseMove, true /*useCapture*/);
-        doc.addEventListener(this.eventNames.mouseup, this.onMouseUp, true /*useCapture*/);
+        doc.addEventListener(MOUSE_EVENT_NAMES.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
+        doc.addEventListener(MOUSE_EVENT_NAMES.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 
     private removeDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.removeEventListener(this.eventNames.mousemove, this.onMouseMove, true /*useCapture*/);
-        doc.removeEventListener(this.eventNames.mouseup, this.onMouseUp, true /*useCapture*/);
+        doc.removeEventListener(MOUSE_EVENT_NAMES.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
+        doc.removeEventListener(MOUSE_EVENT_NAMES.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 
     private onMouseDown = (e: MouseEvent) => {
