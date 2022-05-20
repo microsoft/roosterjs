@@ -3,13 +3,11 @@ import { ImageEditElementClass } from './ImageEditElementClass';
 import { ImageEditOptions } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * Horizontal direction types for image edit
  */
 export type X = 'w' | '' | 'e';
 
 /**
- * @internal
  * Vertical direction types for image edit
  */
 export type Y = 'n' | '' | 's';
