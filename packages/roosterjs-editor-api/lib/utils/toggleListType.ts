@@ -1,7 +1,17 @@
 import blockFormat from '../utils/blockFormat';
-import { BulletListType, IEditor, ListType, NumberingListType } from 'roosterjs-editor-types';
 import { createVListFromRegion, getBlockElementAtNode } from 'roosterjs-editor-dom';
-import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
+import {
+    BulletListType,
+    ExperimentalFeatures,
+    IEditor,
+    ListType,
+    NumberingListType,
+} from 'roosterjs-editor-types';
+import type {
+    CompatibleBulletListType,
+    CompatibleListType,
+    CompatibleNumberingListType,
+} from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Toggle List Type at selection
@@ -19,13 +29,18 @@ import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTy
  * @param listType The list type to toggle
  * @param startNumber (Optional) Start number of the list
  * @param includeSiblingLists Sets wether the operation should include Sibling Lists, by default true
+ * @param listStyle (Optional) the style of an ordered or unordered list. If If not defined, the style will be set to disc or decimal.
  */
 export default function toggleListType(
     editor: IEditor,
     listType: ListType | CompatibleListType,
     startNumber?: number,
     includeSiblingLists: boolean = true,
-    listStyle?: BulletListType | NumberingListType
+    listStyle?:
+        | BulletListType
+        | NumberingListType
+        | CompatibleBulletListType
+        | CompatibleNumberingListType
 ) {
     blockFormat(editor, (region, start, end, chains) => {
         const chain =
@@ -40,10 +55,9 @@ export default function toggleListType(
 
         if (vList) {
             vList.changeListType(start, end, listType);
-            if (listStyle) {
-                vList.changeListStyleType(start, end, listStyle);
+            if (listStyle && editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
+                vList.setListStyleType(start, end, listStyle);
             }
-
             vList.writeBack();
         }
     });

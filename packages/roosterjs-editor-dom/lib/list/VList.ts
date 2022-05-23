@@ -6,6 +6,8 @@ import isNodeEmpty from '../utils/isNodeEmpty';
 import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setBulletListMarkers from './setBulletListMarkers';
+import setNumberingListMarkers from './setNumberingListMarkers';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
@@ -23,8 +25,10 @@ import {
 } from 'roosterjs-editor-types';
 import type {
     CompatibleAlignment,
+    CompatibleBulletListType,
     CompatibleIndentation,
     CompatibleListType,
+    CompatibleNumberingListType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -214,6 +218,8 @@ export default class VList {
                 }
             }
 
+            this.applyListStyle(item);
+
             lastList = topList;
         });
 
@@ -350,14 +356,40 @@ export default class VList {
      * @param end End position to operate to
      * @param targetType Target list type
      */
-    changeListStyleType(
+    setListStyleType(
         start: NodePosition,
         end: NodePosition,
-        targetStyle: NumberingListType | BulletListType
+        targetStyle:
+            | NumberingListType
+            | BulletListType
+            | CompatibleBulletListType
+            | CompatibleNumberingListType
     ) {
         this.findListItems(start, end, item => {
-            item.changeListStyle(targetStyle);
+            item.getNode().className = targetStyle.toString();
         });
+    }
+
+    /**
+     * Apply the list style type
+     * @param item the vList item that receives the style
+     */
+    private applyListStyle(item: VListItem) {
+        const li = item.getNode();
+        const style = parseInt(li.className);
+        const index = this.getListItemIndex(li);
+
+        if (style) {
+            if (item.getLevel() < 2) {
+                if (item.getListType() === ListType.Unordered) {
+                    setBulletListMarkers(li, style as BulletListType);
+                } else if (item.getListType() === ListType.Ordered) {
+                    setNumberingListMarkers(li, style as NumberingListType, index);
+                }
+            } else {
+                li.style.removeProperty('list-style-type');
+            }
+        }
     }
 
     /**

@@ -24,7 +24,7 @@ const characters: Record<string, number> = {
 
 const identifyCharacter = (text: string) => {
     const char = text.length === 2 ? text[1] : text[0];
-    return characters[char] || null;
+    return characters[char];
 };
 
 const identifyNumberingType = (text: string) => {
@@ -103,7 +103,7 @@ const identifyNumberingListType = (textBeforeCursor: string): NumberingListType 
     const numbering = textBeforeCursor.replace(/\s/g, '');
     const char = identifyCharacter(numbering);
     const numberingType = identifyNumberingType(numbering);
-    return numberingListTypes[numberingType](char) || null;
+    return numberingListTypes[numberingType](char);
 };
 
 const identifyBulletListType = (textBeforeCursor: string): BulletListType => {

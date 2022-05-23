@@ -1,5 +1,6 @@
 import toggleListType from '../utils/toggleListType';
 import { BulletListType, IEditor, ListType } from 'roosterjs-editor-types';
+import { CompatibleBulletListType } from 'roosterjs-editor-types/lib/compatibleEnum';
 
 /**
  * Toggle bullet at selection
@@ -8,8 +9,12 @@ import { BulletListType, IEditor, ListType } from 'roosterjs-editor-types';
  * If selection contains both bullet/numbering and normal text, the behavior is decided by corresponding
  * browser execCommand API
  * @param editor The editor instance
+ * @param listStyle (Optional) the style of the bullet list. If If not defined, the style will be set to disc.
  */
-export default function toggleBullet(editor: IEditor, listStyle?: BulletListType) {
+export default function toggleBullet(
+    editor: IEditor,
+    listStyle?: BulletListType | CompatibleBulletListType
+) {
     toggleListType(
         editor,
         ListType.Unordered,

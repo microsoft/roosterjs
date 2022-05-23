@@ -1,4 +1,3 @@
-import setListMarker from './setListMarker';
 import { BulletListType } from 'roosterjs-editor-types';
 
 /**
@@ -7,16 +6,15 @@ import { BulletListType } from 'roosterjs-editor-types';
  * @param listStyleType
  */
 export default function setBulletListMarkers(li: HTMLLIElement, listStyleType: BulletListType) {
-    const bullet = bulletListStyle[listStyleType];
-    setListMarker(li, bullet);
+    const marker = bulletListStyle[listStyleType];
+    const isDiscOrSquare =
+        listStyleType === BulletListType.Disc || listStyleType === BulletListType.Square;
+    li.style.listStyleType = isDiscOrSquare ? marker : `"${marker}"`;
 }
 
 const bulletListStyle: Record<string, string> = {
     [BulletListType.Disc]: 'disc',
     [BulletListType.Square]: 'square',
-    [BulletListType.Hyphen]: "'—'",
-    [BulletListType.Dash]: "'-'",
-    [BulletListType.LongArrow]: "'→'",
-    [BulletListType.ShortArrow]: "'✏'",
-    [BulletListType.UnfilledArrow]: "'⇨'",
+    [BulletListType.Dash]: '- ',
+    [BulletListType.LongArrow]: '→ ',
 };

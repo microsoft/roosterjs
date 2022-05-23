@@ -30,6 +30,7 @@ import {
     RegionBase,
     ListType,
     BulletListType,
+    NumberingListType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -168,21 +169,26 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(4);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                const listType = getListType(textBeforeCursor);
 
+                const listType = getListType(textBeforeCursor);
                 const listStyle = getListStyle(textBeforeCursor, listType);
+
                 if (!textRange) {
                     // no op if the range can't be found
                 } else if (listType === ListType.Unordered) {
                     prepareAutoBullet(editor, textRange);
                     toggleBullet(editor, listStyle as BulletListType);
-                } else if (isAListPattern(textBeforeCursor)) {
+                } else if (getListType(textBeforeCursor)) {
                     prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor);
+                    toggleNumbering(
+                        editor,
+                        undefined /* startNumber*/,
+                        listStyle as NumberingListType
+                    );
                 } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
                     const num = parseInt(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor, num);
+                    toggleNumbering(editor, num, listStyle as NumberingListType);
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
@@ -208,17 +214,6 @@ const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
         editor.runAsync(editor => experimentCommitListChains(editor, chains));
     },
 };
-
-/**
- * Validate if a block of text is considered a list pattern
- * The regex expression will look for patterns of the form:
- * 1.  1>  1)  1-  (1)
- * @returns if a text is considered a list pattern
- */
-function isAListPattern(textBeforeCursor: string) {
-    const REGEX: RegExp = /^(\*|-|[0-9]{1,2}\.|[0-9]{1,2}\>|[0-9]{1,2}\)|[0-9]{1,2}\-|\([0-9]{1,2}\))$/;
-    return REGEX.test(textBeforeCursor);
-}
 
 function getListChains(editor: IEditor) {
     return VListChain.createListChains(editor.getSelectedRegions());
