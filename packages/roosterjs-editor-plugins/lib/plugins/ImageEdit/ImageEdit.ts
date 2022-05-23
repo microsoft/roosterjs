@@ -1,6 +1,6 @@
 import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
-import DragAndDropContext, { X, Y } from './types/DragAndDropContext';
+import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
@@ -139,7 +139,7 @@ export default class ImageEdit implements EditorPlugin {
     /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
-     *  * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
+     * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
      * To customize the resize handle element, add this callback and change the attributes of elementData then it
      * will be picked up by ImageEdit code
      */
@@ -565,8 +565,8 @@ export default class ImageEdit implements EditorPlugin {
                           element,
                           {
                               ...commonContext,
-                              x: element.dataset.x as X,
-                              y: element.dataset.y as Y,
+                              x: element.dataset.x as DNDDirectionX,
+                              y: element.dataset.y as DnDDirectionY,
                           },
                           this.updateWrapper,
                           dragAndDrop,

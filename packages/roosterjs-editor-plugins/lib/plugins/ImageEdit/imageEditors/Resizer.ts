@@ -1,4 +1,4 @@
-import DragAndDropContext, { X, Y } from '../types/DragAndDropContext';
+import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import ImageEditInfo, { ResizeInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
@@ -13,8 +13,8 @@ import { ImageEditElementClass } from '../types/ImageEditElementClass';
 export interface OnShowResizeHandle {
     (
         elementData: CreateElementData,
-        x: X,
-        y: Y
+        x: DNDDirectionX,
+        y: DnDDirectionY
     ): void
 }
 
@@ -24,8 +24,8 @@ const enum HandleTypes {
 }
 const RESIZE_HANDLE_SIZE = 10;
 const RESIZE_HANDLE_MARGIN = 3;
-const Xs: X[] = ['w', '', 'e'];
-const Ys: Y[] = ['s', '', 'n'];
+const Xs: DNDDirectionX[] = ['w', '', 'e'];
+const Ys: DnDDirectionY[] = ['s', '', 'n'];
 
 /**
  * @internal
@@ -205,8 +205,8 @@ export function getResizeBordersHTML({
 }
 
 function getResizeHandleHTML(
-    x: X,
-    y: Y,
+    x: DNDDirectionX,
+    y: DnDDirectionY,
     borderColor: string,
     handleTypes: HandleTypes
 ): CreateElementData {

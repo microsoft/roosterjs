@@ -9,7 +9,7 @@ const isAndroidRegex = /android/i;
  * @param vendor The vendor string of a browser
  * @returns The BrowserInfo object calculated from the given userAgent and appVersion
  */
-export function getBrowserInfo(userAgent: string, appVersion: string, vendor: string): BrowserInfo {
+export function getBrowserInfo(userAgent: string, appVersion: string, vendor?: string): BrowserInfo {
     // checks whether the browser is running in IE
     // IE11 will use rv in UA instead of MSIE. Unfortunately Firefox also uses this. We should also look for "Trident" to confirm this.
     // There have been cases where companies using older version of IE and custom UserAgents have broken this logic (e.g. IE 10 and KellyServices)
@@ -34,7 +34,7 @@ export function getBrowserInfo(userAgent: string, appVersion: string, vendor: st
         ) {
             isMobileOrTablet = true;
         }
-    })(userAgent || vendor);
+    })(userAgent || vendor || "");
 
 
     if (!isIE) {

@@ -4,4 +4,4 @@ export { default as resizeByPercentage } from './api/resizeByPercentage';
 export { default as isResizedTo } from './api/isResizedTo';
 export { default as resetImage } from './api/resetImage';
 export { OnShowResizeHandle } from './imageEditors/Resizer';
-export { X, Y } from './types/DragAndDropContext';
+export { DNDDirectionX as X, DnDDirectionY as Y } from './types/DragAndDropContext';
