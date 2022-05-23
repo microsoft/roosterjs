@@ -108,7 +108,7 @@ const identifyNumberingListType = (textBeforeCursor: string): NumberingListType 
 
 const identifyBulletListType = (textBeforeCursor: string): BulletListType => {
     const bullet = textBeforeCursor.replace(/\s/g, '');
-    return bulletListType[bullet] || null;
+    return bulletListType[bullet];
 };
 
 /**

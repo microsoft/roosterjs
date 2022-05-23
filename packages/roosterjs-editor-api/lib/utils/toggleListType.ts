@@ -1,6 +1,6 @@
 import blockFormat from '../utils/blockFormat';
+import { BulletListType, IEditor, ListType, NumberingListType } from 'roosterjs-editor-types';
 import { createVListFromRegion, getBlockElementAtNode } from 'roosterjs-editor-dom';
-import { IEditor, ListType } from 'roosterjs-editor-types';
 import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -24,7 +24,8 @@ export default function toggleListType(
     editor: IEditor,
     listType: ListType | CompatibleListType,
     startNumber?: number,
-    includeSiblingLists: boolean = true
+    includeSiblingLists: boolean = true,
+    listStyle?: BulletListType | NumberingListType
 ) {
     blockFormat(editor, (region, start, end, chains) => {
         const chain =
@@ -39,6 +40,10 @@ export default function toggleListType(
 
         if (vList) {
             vList.changeListType(start, end, listType);
+            if (listStyle) {
+                vList.changeListStyleType(start, end, listStyle);
+            }
+
             vList.writeBack();
         }
     });

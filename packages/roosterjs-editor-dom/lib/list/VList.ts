@@ -18,6 +18,8 @@ import {
     PositionType,
     NodeType,
     Alignment,
+    NumberingListType,
+    BulletListType,
 } from 'roosterjs-editor-types';
 import type {
     CompatibleAlignment,
@@ -338,6 +340,24 @@ export default class VList {
         this.findListItems(start, end, item =>
             needChangeType ? item.changeListType(targetType) : item.outdent()
         );
+    }
+
+    /**
+     * Change list type of the given range of this list.
+     * If some of the items are not real list item yet, this will make them to be list item with given type
+     * If all items in the given range are already in the type to change to, this becomes an outdent operation
+     * @param start Start position to operate from
+     * @param end End position to operate to
+     * @param targetType Target list type
+     */
+    changeListStyleType(
+        start: NodePosition,
+        end: NodePosition,
+        targetStyle: NumberingListType | BulletListType
+    ) {
+        this.findListItems(start, end, item => {
+            item.changeListStyle(targetStyle);
+        });
     }
 
     /**

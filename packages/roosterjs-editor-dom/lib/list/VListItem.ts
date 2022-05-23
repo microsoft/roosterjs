@@ -4,11 +4,17 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setBulletListMarkers from './setBulletListMarkers';
 import setListItemStyle from './setListItemStyle';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
-import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
+import {
+    BulletListType,
+    KnownCreateElementDataIndex,
+    ListType,
+    NumberingListType,
+} from 'roosterjs-editor-types';
 import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
@@ -29,6 +35,7 @@ export default class VListItem {
     private node: HTMLLIElement;
     private dummy: boolean;
     private newListStart: number | undefined = undefined;
+    private listStyle: NumberingListType | BulletListType | undefined = undefined;
 
     /**
      * Construct a new instance of VListItem class
@@ -187,6 +194,14 @@ export default class VListItem {
     }
 
     /**
+     * Change list type of this item
+     * @param targetType The target list type to change to
+     */
+    changeListStyle(targetStyle: NumberingListType | BulletListType) {
+        this.listStyle = targetStyle;
+    }
+
+    /**
      * Set whether the item is a dummy item
      * @param isDummy Whether the item is a dummy item
      */
@@ -245,6 +260,16 @@ export default class VListItem {
                 const listStyleType = this.node.parentElement?.style.listStyleType;
                 if (listStyleType) {
                     newList.style.listStyleType = listStyleType;
+                }
+            }
+
+            for (; nextLevel < listStack.length; nextLevel++) {
+                if (
+                    getListTypeFromNode(listStack[nextLevel]) === ListType.Unordered &&
+                    this.listStyle
+                ) {
+                    setBulletListMarkers(this.node, this.listStyle as BulletListType);
+                    break;
                 }
             }
         }

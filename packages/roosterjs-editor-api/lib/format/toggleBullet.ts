@@ -1,5 +1,5 @@
 import toggleListType from '../utils/toggleListType';
-import { IEditor, ListType } from 'roosterjs-editor-types';
+import { BulletListType, IEditor, ListType } from 'roosterjs-editor-types';
 
 /**
  * Toggle bullet at selection
@@ -9,6 +9,12 @@ import { IEditor, ListType } from 'roosterjs-editor-types';
  * browser execCommand API
  * @param editor The editor instance
  */
-export default function toggleBullet(editor: IEditor) {
-    toggleListType(editor, ListType.Unordered);
+export default function toggleBullet(editor: IEditor, listStyle?: BulletListType) {
+    toggleListType(
+        editor,
+        ListType.Unordered,
+        undefined /* startNumber */,
+        false /* includeSiblingLists */,
+        listStyle
+    );
 }
