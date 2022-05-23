@@ -33,7 +33,7 @@ describe('Resizer: resize only', () => {
     function runTest(
         e: MouseEvent,
         getEditInfo: () => ImageEditInfo,
-        expectedResult: Record<X, Record<Y, [number, number]>>
+        expectedResult: Record<DNDDirectionX, Record<DnDDirectionY, [number, number]>>
     ) {
         const actualResult: { [key: string]: { [key: string]: [number, number] } } = {};
         Xs.forEach(x => {
