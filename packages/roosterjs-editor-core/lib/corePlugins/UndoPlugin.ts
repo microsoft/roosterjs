@@ -137,7 +137,8 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     private onKeyDown(evt: KeyboardEvent): void {
         // Handle backspace/delete when there is a selection to take a snapshot
         // since we want the state prior to deletion restorable
-        if (evt.which == Keys.BACKSPACE || evt.which == Keys.DELETE) {
+        // Ignore if keycombo is ALT+BACKSPACE
+        if ((evt.which == Keys.BACKSPACE && !evt.altKey) || evt.which == Keys.DELETE) {
             if (evt.which == Keys.BACKSPACE && this.canUndoAutoComplete()) {
                 evt.preventDefault();
                 this.editor.undo();

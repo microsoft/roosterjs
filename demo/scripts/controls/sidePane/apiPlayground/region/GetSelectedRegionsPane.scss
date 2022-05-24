@@ -9,3 +9,13 @@
     background-color: $primaryLighter;
     border: solid 2px $primaryColor;
 }
+
+@media (prefers-color-scheme: dark) {
+    .regionNode {
+        background-color: $primaryLighter2Dark;
+    }
+    .hover {
+        background-color: $primaryLighterDark;
+        border: solid 2px $primaryColorDark;
+    }
+}
