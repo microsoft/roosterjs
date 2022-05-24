@@ -22,16 +22,15 @@ describe('listFeatures', () => {
         const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
-        expect(ListFeatures.autoBullet.shouldHandleEvent(null, editor, false)).toBe(expectedResult);
+        const isAutoBulletTriggered = ListFeatures.autoBullet.shouldHandleEvent(null, editor, false)
+            ? true
+            : false;
+        expect(isAutoBulletTriggered).toBe(expectedResult);
     }
 
     it('AutoBullet detects the correct patterns', () => {
         runListPatternTest('1.', true);
         runListPatternTest('2.', true);
-        runListPatternTest('90.', true);
-        runListPatternTest('1>', true);
-        runListPatternTest('2>', true);
-        runListPatternTest('90>', true);
         runListPatternTest('1)', true);
         runListPatternTest('2)', true);
         runListPatternTest('90)', true);

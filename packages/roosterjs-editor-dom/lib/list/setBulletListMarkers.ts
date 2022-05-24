@@ -1,6 +1,7 @@
 import { BulletListType } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Set the marker of a bullet list
  * @param li
  * @param listStyleType

@@ -27,6 +27,13 @@ const ALPHABET: Record<number, string> = {
     26: 'Z',
 };
 
+/**
+ * @internal
+ * Convert decimal numbers into english alphabet letters
+ * @param decimal The decimal number that needs to be converted
+ * @param isLowerCase if true the roman value will appear in lower case
+ * @returns
+ */
 export default function convertDecimalsToAlpha(decimal: number, isLowerCase?: boolean): string {
     if (decimal < 27) {
         return isLowerCase ? ALPHABET[decimal].toLowerCase() : ALPHABET[decimal];

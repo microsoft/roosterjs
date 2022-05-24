@@ -93,10 +93,8 @@ const bulletListType: Record<string, number> = {
     '*': BulletListType.Disc,
     '-': BulletListType.Dash,
     '--': BulletListType.Square,
-    '>': BulletListType.ShortArrow,
     '->': BulletListType.LongArrow,
     '-->': BulletListType.LongArrow,
-    '=>': BulletListType.UnfilledArrow,
 };
 
 const identifyNumberingListType = (textBeforeCursor: string): NumberingListType => {
