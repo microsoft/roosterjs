@@ -117,14 +117,14 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
         extractClipboardEvent(
             event as ClipboardEvent,
-            clipboardData => this.editor.paste(clipboardData),
+            clipboardData => this.editor?.paste(clipboardData),
             {
-                allowLinkPreview: this.editor.isFeatureEnabled(
+                allowLinkPreview: this.editor?.isFeatureEnabled(
                     ExperimentalFeatures.PasteWithLinkPreview
                 ),
                 allowedCustomPasteType: this.state.allowedCustomPasteType,
                 getTempDiv: () => {
-                    range = this.editor.getSelectionRange();
+                    range = this.editor?.getSelectionRange();
                     return this.getTempDiv();
                 },
                 removeTempDiv: div => {
