@@ -77,4 +77,9 @@ export const enum ExperimentalFeatures {
      * Align list elements elements to left, center and right using setAlignment API
      */
     ListItemAlignment = 'ListItemAlignment',
+
+    /**
+     * Automatically transform -- into hyphen, if typed between two words.
+     */
+    AutoHyphen = 'AutoHyphen',
 }

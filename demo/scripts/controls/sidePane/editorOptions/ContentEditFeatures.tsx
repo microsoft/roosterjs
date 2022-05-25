@@ -41,6 +41,7 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
         'On Tab indent the selection or add Tab, requires TabKeyFeatures Experimental Feature',
     outdentWhenTabText:
         'On Shift + Tab outdent the selection, requires TabKeyFeatures Experimental Feature',
+    autoHyphen: '',
 };
 
 export interface ContentEditFeaturessProps {
