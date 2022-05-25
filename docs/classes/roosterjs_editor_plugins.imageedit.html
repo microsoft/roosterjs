@@ -128,13 +128,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Image<wbr>Edit<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_types.imageeditoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ImageEditOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.imageedit.html" class="tsd-signature-type" data-tsd-kind="Class">ImageEdit</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Image<wbr>Edit<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_types.imageeditoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ImageEditOptions</a>, onShowResizeHandle<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_editor_plugins.onshowresizehandle.html" class="tsd-signature-type" data-tsd-kind="Interface">OnShowResizeHandle</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.imageedit.html" class="tsd-signature-type" data-tsd-kind="Class">ImageEdit</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L136">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L137">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:137</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -148,6 +148,14 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/roosterjs_editor_types.imageeditoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ImageEditOptions</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Image editing options</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> onShowResizeHandle: <a href="../interfaces/roosterjs_editor_plugins.onshowresizehandle.html" class="tsd-signature-type" data-tsd-kind="Interface">OnShowResizeHandle</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An optional callback to allow customize resize handle element of image resizing.
+											To customize the resize handle element, add this callback and change the attributes of elementData then it
+										will be picked up by ImageEdit code</p>
 									</div>
 								</li>
 							</ul>
@@ -164,7 +172,7 @@
 					<div class="tsd-signature tsd-kind-icon">editor<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L112">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:112</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L113">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:113</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -174,7 +182,7 @@
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_editor_types.imageeditoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ImageEditOptions</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L113">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:113</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L114">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:114</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -192,7 +200,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L175">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:175</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L180">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:180</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -215,7 +223,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L152">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:152</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L157">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:157</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -238,7 +246,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L160">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L165">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:165</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -270,7 +278,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L186">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L191">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -299,7 +307,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L262">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:262</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L267">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:267</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -328,7 +336,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/1b7f062/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L273">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:273</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ecb9098/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L278">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:278</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -463,6 +471,15 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../interfaces/roosterjs_editor_plugins.contextmenuoptions.html" class="tsd-kind-icon">Context<wbr>Menu<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/roosterjs_editor_plugins.onshowresizehandle.html" class="tsd-kind-icon">On<wbr>Show<wbr>Resize<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/roosterjs_editor_plugins.html#dnddirectionx" class="tsd-kind-icon">DNDDirectionX</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/roosterjs_editor_plugins.html#dnddirectiony" class="tsd-kind-icon">DnDDirectionY</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="../modules/roosterjs_editor_plugins.html#canregenerateimage" class="tsd-kind-icon">can<wbr>Regenerate<wbr>Image</a>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15.25% </span>
+                <span class="strong">15.18% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/223</span>
+                <span class='fraction'>34/224</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15.67% </span>
+                <span class="strong">15.6% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/217</span>
+                <span class='fraction'>34/218</span>
             </div>
         
             
@@ -731,7 +731,12 @@
 <a name='L666'></a><a href='#L666'>666</a>
 <a name='L667'></a><a href='#L667'>667</a>
 <a name='L668'></a><a href='#L668'>668</a>
-<a name='L669'></a><a href='#L669'>669</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L669'></a><a href='#L669'>669</a>
+<a name='L670'></a><a href='#L670'>670</a>
+<a name='L671'></a><a href='#L671'>671</a>
+<a name='L672'></a><a href='#L672'>672</a>
+<a name='L673'></a><a href='#L673'>673</a>
+<a name='L674'></a><a href='#L674'>674</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -757,6 +762,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -872,6 +878,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1401,7 +1411,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
-import DragAndDropContext, { X, Y } from './types/DragAndDropContext';
+import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
@@ -1430,6 +1440,7 @@ import {
     getSideResizeHTML,
     getCornerResizeHTML,
     getResizeBordersHTML,
+    OnShowResizeHandle,
 } from './imageEditors/Resizer';
 import {
     ExperimentalFeatures,
@@ -1539,8 +1550,12 @@ export default class ImageEdit implements EditorPlugin {
     /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
+     * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
+     * To customize the resize handle element, add this callback and change the attributes of elementData then it
+     * will be picked up by ImageEdit code
      */
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    constructor(o</span></span>ptions?: ImageEditOptions) {
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    constructor(o</span></span>ptions?: ImageEditOptions,
+        private <span class="cstat-no" title="statement not covered" >onShowResizeHandle?: OnShowResizeHandle)</span> {
 <span class="cstat-no" title="statement not covered" >        this.options = {</span>
             ...DefaultOptions,
             ...(options || {}),
@@ -1791,7 +1806,7 @@ export default class ImageEdit implements EditorPlugin {
         ((<span class="cstat-no" title="statement not covered" >Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(</span>
 <span class="fstat-no" title="function not covered" >            thisOperation </span>=&gt; {
 <span class="cstat-no" title="statement not covered" >                if ((operation &amp; thisOperation) == thisOperation) {</span>
-<span class="cstat-no" title="statement not covered" >                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options));</span>
+<span class="cstat-no" title="statement not covered" >                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle));</span>
                 }
             }
         );
@@ -1961,8 +1976,8 @@ export default class ImageEdit implements EditorPlugin {
                           element,
                           {
                               ...commonContext,
-                              x: element.dataset.x as X,
-                              y: element.dataset.y as Y,
+                              x: element.dataset.x as DNDDirectionX,
+                              y: element.dataset.y as DnDDirectionY,
                           },
                           this.updateWrapper,
                           dragAndDrop,
@@ -2074,7 +2089,7 @@ function <span class="fstat-no" title="function not covered" >isASmallImage(</sp
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri May 20 2022 21:02:13 GMT+0000 (Coordinated Universal Time)
+                at Wed May 25 2022 14:13:52 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
