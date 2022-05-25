@@ -15,6 +15,7 @@ import {
     toggleUnderline,
     toggleBullet,
     toggleNumbering,
+    clearFormat,
 } from 'roosterjs-editor-api';
 
 interface ShortcutCommand {
@@ -35,7 +36,9 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.B, Keys.Meta | Keys.B, toggleBold),
     createCommand(Keys.Ctrl | Keys.I, Keys.Meta | Keys.I, toggleItalic),
     createCommand(Keys.Ctrl | Keys.U, Keys.Meta | Keys.U, toggleUnderline),
+    createCommand(Keys.Ctrl | Keys.SPACE, Keys.Meta | Keys.SPACE, clearFormat),
     createCommand(Keys.Ctrl | Keys.Z, Keys.Meta | Keys.Z, editor => editor.undo()),
+    createCommand(Keys.ALT | Keys.BACKSPACE, Keys.ALT | Keys.BACKSPACE, editor => editor.undo()),
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
     createCommand(Keys.Ctrl | Keys.FORWARD_SLASH, Keys.Meta | Keys.FORWARD_SLASH, toggleNumbering),
@@ -56,6 +59,8 @@ const commands: ShortcutCommand[] = [
  * Ctrl/Meta+B: toggle bold style
  * Ctrl/Meta+I: toggle italic style
  * Ctrl/Meta+U: toggle underline style
+ * Ctrl/Meta+Space: clear formatting
+ * Alt+Backspace: undo
  * Ctrl/Meta+Z: undo
  * Ctrl+Y/Meta+Shift+Z: redo
  * Ctrl/Meta+PERIOD: toggle bullet list
@@ -65,7 +70,18 @@ const commands: ShortcutCommand[] = [
  */
 const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     allowFunctionKeys: true,
-    keys: [Keys.B, Keys.I, Keys.U, Keys.Y, Keys.Z, Keys.COMMA, Keys.PERIOD, Keys.FORWARD_SLASH],
+    keys: [
+        Keys.B,
+        Keys.I,
+        Keys.U,
+        Keys.Y,
+        Keys.Z,
+        Keys.COMMA,
+        Keys.PERIOD,
+        Keys.FORWARD_SLASH,
+        Keys.SPACE,
+        Keys.BACKSPACE,
+    ],
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);
@@ -81,13 +97,16 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
     return cacheGetEventData(event, 'DEFAULT_SHORT_COMMAND', () => {
         let e = event.rawEvent;
         let key =
-            // Need to check ALT key to be false since in some language (e.g. Polski) uses AltGr to input some special characters
-            // In that case, ctrlKey and altKey are both true in Edge, but we should not trigger any shortcut function here
-            event.eventType == PluginEventType.KeyDown && !e.altKey
+            // Need to check AltGraph isn't being pressed since some languages (e.g. Polski) use AltGr
+            // to input some special characters. In that case, ctrlKey and altKey are both true in Edge,
+            // but we should not trigger any shortcut function here. However, we still want to capture
+            // the ALT+BACKSPACE combination.
+            event.eventType == PluginEventType.KeyDown && !e.getModifierState('AltGraph')
                 ? e.which |
                   (e.metaKey && Keys.Meta) |
                   (e.shiftKey && Keys.Shift) |
-                  (e.ctrlKey && Keys.Ctrl)
+                  (e.ctrlKey && Keys.Ctrl) |
+                  (e.altKey && Keys.ALT)
                 : 0;
         return key && commands.filter(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key)[0];
     });

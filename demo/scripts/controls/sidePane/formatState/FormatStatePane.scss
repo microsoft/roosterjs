@@ -5,3 +5,9 @@
 .title {
     font-weight: bold;
 }
+
+@media (prefers-color-scheme: dark) {
+    .inactive {
+        color: #555;
+    }
+}

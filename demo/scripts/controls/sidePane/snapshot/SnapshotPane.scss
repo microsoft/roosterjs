@@ -43,3 +43,15 @@
         }
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    .snapshotList {
+        border: solid 1px $primaryBorderDark;
+    }
+    .textarea {
+        border-color: $primaryBorderDark;
+    }
+    .snapshotList {
+        border: solid 1px $primaryBorderDark;
+    }
+}
