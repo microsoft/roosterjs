@@ -3,3 +3,25 @@ $primaryLighter: lighten($primaryColor, 5%);
 $primaryLighter2: lighten($primaryColor, 50%);
 $primaryBorder: #00bbcc;
 $primaryBackgroundColor: white;
+
+$primaryColorDark: #0091a1;
+$primaryLighterDark: lighten($primaryColorDark, 5%);
+$primaryLighter2Dark: lighten($primaryColorDark, 50%);
+$primaryBorderDark: #007b8b;
+$primaryBackgroundColorDark: #333333;
+
+@media (prefers-color-scheme: dark) {
+    button {
+        background-color: $primaryColorDark;
+        color: $primaryLighter2;
+        border: solid 1px $primaryBorderDark;
+    }
+
+    select,
+    input,
+    textarea {
+        background-color: $primaryBackgroundColorDark;
+        color: $primaryLighter2;
+        border: solid 1px $primaryBorderDark;
+    }
+}

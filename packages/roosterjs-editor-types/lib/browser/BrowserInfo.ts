@@ -56,4 +56,9 @@ export default interface BrowserInfo {
      * Whether current OS is Android
      */
     readonly isAndroid?: boolean;
+
+    /**
+     * Whether current browser is on mobile or a tablet
+     */
+     readonly isMobileOrTablet?: boolean;
 }

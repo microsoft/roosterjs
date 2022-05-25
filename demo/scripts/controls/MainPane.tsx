@@ -15,6 +15,7 @@ import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { tableEdit, TableEditOperationsStringKey } from './ribbonButtons/tableEditOperations';
@@ -46,6 +47,60 @@ const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
+const LightTheme: PartialTheme = {
+    palette: {
+        themePrimary: '#0099aa',
+        themeLighterAlt: '#f2fbfc',
+        themeLighter: '#cbeef2',
+        themeLight: '#a1dfe6',
+        themeTertiary: '#52c0cd',
+        themeSecondary: '#16a5b5',
+        themeDarkAlt: '#008a9a',
+        themeDark: '#007582',
+        themeDarker: '#005660',
+        neutralLighterAlt: '#faf9f8',
+        neutralLighter: '#f3f2f1',
+        neutralLight: '#edebe9',
+        neutralQuaternaryAlt: '#e1dfdd',
+        neutralQuaternary: '#d0d0d0',
+        neutralTertiaryAlt: '#c8c6c4',
+        neutralTertiary: '#a19f9d',
+        neutralSecondary: '#605e5c',
+        neutralPrimaryAlt: '#3b3a39',
+        neutralPrimary: '#323130',
+        neutralDark: '#201f1e',
+        black: '#000000',
+        white: '#ffffff',
+    },
+};
+
+const DarkTheme: PartialTheme = {
+    palette: {
+        themePrimary: '#0091A1',
+        themeLighterAlt: '#f1fafb',
+        themeLighter: '#caecf0',
+        themeLight: '#9fdce3',
+        themeTertiary: '#4fbac6',
+        themeSecondary: '#159dac',
+        themeDarkAlt: '#008291',
+        themeDark: '#006e7a',
+        themeDarker: '#00515a',
+        neutralLighterAlt: '#3c3c3c',
+        neutralLighter: '#444444',
+        neutralLight: '#515151',
+        neutralQuaternaryAlt: '#595959',
+        neutralQuaternary: '#5f5f5f',
+        neutralTertiaryAlt: '#7a7a7a',
+        neutralTertiary: '#c8c8c8',
+        neutralSecondary: '#d0d0d0',
+        neutralPrimaryAlt: '#dadada',
+        neutralPrimary: '#ffffff',
+        neutralDark: '#f4f4f4',
+        black: '#f8f8f8',
+        white: '#333333',
+    },
+};
+
 type RibbonStringKeys =
     | AllButtonStringKeys
     | DarkModeButtonStringKey
@@ -58,6 +113,7 @@ type RibbonStringKeys =
 class MainPane extends MainPaneBase {
     private mouseX: number;
     private popoutRoot: HTMLElement;
+    private themeMatch = window.matchMedia?.('(prefers-color-scheme: dark)');
 
     private formatStatePlugin: FormatStatePlugin;
     private editorOptionPlugin: EditorOptionsPlugin;
@@ -100,7 +156,7 @@ class MainPane extends MainPaneBase {
             initState: this.editorOptionPlugin.getBuildInPluginState(),
             supportDarkMode: true,
             scale: 1,
-            isDarkMode: false,
+            isDarkMode: this.themeMatch?.matches || false,
             editorCreator: null,
             isRtl: false,
         };
@@ -108,7 +164,10 @@ class MainPane extends MainPaneBase {
 
     render() {
         return (
-            <div className={styles.mainPane}>
+            <ThemeProvider
+                applyTo="body"
+                theme={this.state.isDarkMode ? DarkTheme : LightTheme}
+                className={styles.mainPane}>
                 <TitleBar className={styles.noGrow} />
                 {this.state.showRibbon &&
                     !this.state.popoutWindow &&
@@ -116,7 +175,7 @@ class MainPane extends MainPaneBase {
                 <div className={styles.body}>
                     {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
                 </div>
-            </div>
+            </ThemeProvider>
         );
     }
 
@@ -189,6 +248,20 @@ class MainPane extends MainPaneBase {
             }
         });
     }
+
+    componentDidMount() {
+        this.themeMatch?.addEventListener('change', this.onThemeChange);
+    }
+
+    componentWillUnmount() {
+        this.themeMatch?.removeEventListener('change', this.onThemeChange);
+    }
+
+    private onThemeChange = () => {
+        this.setState({
+            isDarkMode: this.themeMatch?.matches || false,
+        });
+    };
 
     private onMouseDown = (e: React.MouseEvent<EventTarget>) => {
         document.addEventListener('mousemove', this.onMouseMove, true);

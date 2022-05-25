@@ -68,6 +68,12 @@ const parameters = [
         key: 85,
         command: DocumentCommand.Underline,
     },
+    {
+        description:
+            'default shortcut calls the clearFormat command on the editor when typing CTLR+Space',
+        key: 32,
+        command: DocumentCommand.RemoveFormat,
+    },
 ];
 
 parameters.forEach(({ description, key, command }) => {
@@ -89,22 +95,27 @@ parameters.forEach(({ description, key, command }) => {
     });
 });
 
-it('default shortcut calls the undo command on the editor when typing CTRL+Z', () => {
-    const rawEvent = new KeyboardEvent('keydown', {
-        ctrlKey: true,
-    });
-    Object.defineProperty(rawEvent, 'which', {
-        get: () => 90,
-    });
-    const event = {
-        rawEvent,
-        eventType: 0,
-    };
+[
+    { key: 90, mod: 'ctrl', keyCombo: 'Ctrl+Z' },
+    { key: 8, mod: 'alt', keyCombo: 'Alt+Backspace' },
+].forEach(({ key, mod, keyCombo }) => {
+    it(`default shortcut calls the undo command on the editor when typing ${keyCombo}`, () => {
+        const rawEvent = new KeyboardEvent('keydown', {
+            [`${mod}Key`]: true,
+        });
+        Object.defineProperty(rawEvent, 'which', {
+            get: () => key,
+        });
+        const event = {
+            rawEvent,
+            eventType: 0,
+        };
 
-    const shortCutFeature = ShortcutFeatures.defaultShortcut;
-    const spyUndo = spyOn(editor, 'undo');
-    shortCutFeature.handleEvent(event, editor);
-    expect(spyUndo).toHaveBeenCalled();
+        const shortCutFeature = ShortcutFeatures.defaultShortcut;
+        const spyUndo = spyOn(editor, 'undo');
+        shortCutFeature.handleEvent(event, editor);
+        expect(spyUndo).toHaveBeenCalled();
+    });
 });
 
 it('default shortcut calls the redo command on the editor when typing CTRL+Y', () => {

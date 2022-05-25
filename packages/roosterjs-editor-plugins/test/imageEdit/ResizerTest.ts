@@ -1,4 +1,4 @@
-import DragAndDropContext, { X, Y } from '../../lib/plugins/ImageEdit/types/DragAndDropContext';
+import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../../lib/plugins/ImageEdit/types/DragAndDropContext';
 import ImageEditInfo, { ResizeInfo } from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
 import { ImageEditOptions } from 'roosterjs-editor-types';
 import { Resizer } from '../../lib/plugins/ImageEdit/imageEditors/Resizer';
@@ -12,8 +12,8 @@ describe('Resizer: resize only', () => {
     const initValue: ResizeInfo = { widthPx: 100, heightPx: 200 };
     const mouseEvent: MouseEvent = {} as any;
     const mouseEventShift: MouseEvent = { shiftKey: true } as any;
-    const Xs: X[] = ['w', '', 'e'];
-    const Ys: Y[] = ['n', '', 's'];
+    const Xs: DNDDirectionX[] = ['w', '', 'e'];
+    const Ys: DnDDirectionY[] = ['n', '', 's'];
 
     function getInitEditInfo(): ImageEditInfo {
         return {
@@ -33,7 +33,7 @@ describe('Resizer: resize only', () => {
     function runTest(
         e: MouseEvent,
         getEditInfo: () => ImageEditInfo,
-        expectedResult: Record<X, Record<Y, [number, number]>>
+        expectedResult: Record<DNDDirectionX, Record<DnDDirectionY, [number, number]>>
     ) {
         const actualResult: { [key: string]: { [key: string]: [number, number] } } = {};
         Xs.forEach(x => {
