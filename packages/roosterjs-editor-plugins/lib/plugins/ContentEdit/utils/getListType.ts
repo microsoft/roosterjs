@@ -16,7 +16,7 @@ function isANumberingList(textBeforeCursor: string) {
  * @param textBeforeCursor The trigger character
  * @returns If the list is ordered or unordered
  */
-export function getListType(textBeforeCursor: string): ListType {
+export default function getListType(textBeforeCursor: string): ListType {
     if (isABulletList(textBeforeCursor)) {
         return ListType.Unordered;
     } else if (isANumberingList(textBeforeCursor)) {

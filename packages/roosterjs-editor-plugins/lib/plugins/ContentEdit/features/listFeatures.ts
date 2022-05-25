@@ -1,5 +1,5 @@
-import { getListStyle } from '../utils/getListStyle';
-import { getListType } from '../utils/getListType';
+import getListStyle from '../utils/getListStyle';
+import getListType from '../utils/getListType';
 import {
     blockFormat,
     experimentCommitListChains,

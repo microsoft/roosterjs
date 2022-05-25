@@ -117,7 +117,7 @@ const identifyBulletListType = (textBeforeCursor: string): BulletListType => {
  * @param listType The type of the list (ordered or unordered)
  * @returns the style of the list
  */
-export function getListStyle(
+export default function getListStyle(
     textBeforeCursor: string,
     listType: ListType
 ): NumberingListType | BulletListType {
