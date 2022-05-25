@@ -530,10 +530,12 @@ describe('Text Features |', () => {
         let editor: IEditor;
         const TEST_ID = 'autoHyphenTest';
         let editorSearchCursorSpy: any;
+        let editorIsFeatureEnabled: any;
         beforeEach(() => {
             editor = TestHelper.initEditor(TEST_ID);
             spyOn(editor, 'getElementAtCursor').and.returnValue(null);
             editorSearchCursorSpy = spyOn(editor, 'getContentSearcherOfCursor');
+            editorIsFeatureEnabled = spyOn(editor, 'isFeatureEnabled');
         });
 
         afterEach(() => {
@@ -545,6 +547,7 @@ describe('Text Features |', () => {
             const mockedPosition = new PositionContentSearcher(root, new Position(root, 3));
             spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
             editorSearchCursorSpy.and.returnValue(mockedPosition);
+            editorIsFeatureEnabled.and.returnValue(true);
             expect(TextFeatures.autoHyphen.shouldHandleEvent(null, editor, false)).toBe(
                 expectedResult
             );
