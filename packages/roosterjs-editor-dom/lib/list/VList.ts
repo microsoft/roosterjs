@@ -365,7 +365,7 @@ export default class VList {
             | CompatibleNumberingListType
     ) {
         this.findListItems(start, end, item => {
-            item.getNode().className = targetStyle.toString();
+            item.getNode().title = targetStyle.toString();
         });
     }
 
@@ -375,7 +375,7 @@ export default class VList {
      */
     private applyListStyle(item: VListItem) {
         const li = item.getNode();
-        const style = li.className ? parseInt(li.className) : null;
+        const style = li.title ? parseInt(li.title) : null;
         const index = this.getListItemIndex(li);
 
         if (style) {

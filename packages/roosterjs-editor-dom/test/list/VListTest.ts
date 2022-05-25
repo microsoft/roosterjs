@@ -2,6 +2,7 @@ import * as DomTestHelper from '../DomTestHelper';
 import Position from '../../lib/selection/Position';
 import VList from '../../lib/list/VList';
 import VListItem from '../../lib/list/VListItem';
+import { title } from 'process';
 import {
     Indentation,
     ListType,
@@ -1296,11 +1297,7 @@ describe('VList.setListStyleType', () => {
         DomTestHelper.removeElement(testId);
     });
 
-    function runTest(
-        source: string,
-        listStyle: NumberingListType | BulletListType,
-        className: string
-    ) {
+    function runTest(source: string, listStyle: NumberingListType | BulletListType, title: string) {
         DomTestHelper.createElementFromContent(testId, source);
         const list = document.getElementById(ListRoot) as HTMLOListElement;
         const focus = document.getElementById(FocusNode);
@@ -1323,7 +1320,7 @@ describe('VList.setListStyleType', () => {
 
         const items = (<any>vList).items as VListItem[];
         items.forEach(item => {
-            expect(item.getNode().className).toEqual(className);
+            expect(item.getNode().title).toEqual(title);
         });
         DomTestHelper.removeElement(testId);
     }
