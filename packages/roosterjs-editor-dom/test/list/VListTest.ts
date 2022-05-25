@@ -2,7 +2,13 @@ import * as DomTestHelper from '../DomTestHelper';
 import Position from '../../lib/selection/Position';
 import VList from '../../lib/list/VList';
 import VListItem from '../../lib/list/VListItem';
-import { Indentation, ListType, PositionType } from 'roosterjs-editor-types';
+import {
+    Indentation,
+    ListType,
+    PositionType,
+    NumberingListType,
+    BulletListType,
+} from 'roosterjs-editor-types';
 
 describe('VList.ctor', () => {
     const testId = 'VList_ctor';
@@ -1275,6 +1281,218 @@ describe('VList.split', () => {
             `<ol id=${listId}><li id='${separatorElementId}'>1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>`,
             '<ol id="listId" start="9"><li id="separatorId">1</li><ol style="list-style-type: lower-alpha;"><li>1</li><li>2</li><li>3</li></ol><li>3</li><li>4</li></ol>',
             9
+        );
+    });
+});
+
+describe('VList.setListStyleType', () => {
+    const testId = 'VList_changeListType';
+    const ListRoot = 'listRoot';
+    const FocusNode = 'focus';
+    const FocusNode1 = 'focus1';
+    const FocusNode2 = 'focus2';
+
+    afterEach(() => {
+        DomTestHelper.removeElement(testId);
+    });
+
+    function runTest(
+        source: string,
+        listStyle: NumberingListType | BulletListType,
+        className: string
+    ) {
+        DomTestHelper.createElementFromContent(testId, source);
+        const list = document.getElementById(ListRoot) as HTMLOListElement;
+        const focus = document.getElementById(FocusNode);
+        const focus1 = document.getElementById(FocusNode1);
+        const focus2 = document.getElementById(FocusNode2);
+
+        if (!list) {
+            throw new Error('No root node');
+        }
+        if (!focus && (!focus1 || !focus2)) {
+            throw new Error('No focus node');
+        }
+
+        const vList = new VList(list);
+        const start = new Position(focus || focus1, PositionType.Begin);
+        const end = new Position(focus || focus2, PositionType.End);
+
+        // Act
+        vList.setListStyleType(start, end, listStyle);
+
+        const items = (<any>vList).items as VListItem[];
+        items.forEach(item => {
+            expect(item.getNode().className).toEqual(className);
+        });
+        DomTestHelper.removeElement(testId);
+    }
+
+    it('empty list', () => {
+        runTest(
+            `<ol id="${ListRoot}"></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.Decimal,
+            undefined
+        );
+    });
+
+    it('Decimal', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.Decimal,
+            '0'
+        );
+    });
+
+    it('DecimalDash', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.DecimalDash,
+            '1'
+        );
+    });
+
+    it('DecimalParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.DecimalParenthesis,
+            '2'
+        );
+    });
+
+    it('DecimalDoubleParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.DecimalDoubleParenthesis,
+            '3'
+        );
+    });
+
+    it('LowerAlpha', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerAlpha,
+            '4'
+        );
+    });
+
+    it('LowerAlphaDash', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerAlphaDash,
+            '7'
+        );
+    });
+
+    it('LowerAlphaParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerAlphaParenthesis,
+            '5'
+        );
+    });
+
+    it('LowerAlphaDoubleParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerAlphaDoubleParenthesis,
+            '6'
+        );
+    });
+
+    it('UpperAlpha', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperAlpha,
+            '8'
+        );
+    });
+
+    it('UpperAlphaDash', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperAlphaDash,
+            '11'
+        );
+    });
+
+    it('UpperAlphaParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperAlphaParenthesis,
+            '9'
+        );
+    });
+
+    it('UpperAlphaDoubleParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperAlphaDoubleParenthesis,
+            '10'
+        );
+    });
+
+    it('LowerRoman', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerRoman,
+            '12'
+        );
+    });
+
+    it('LowerRomanDash', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerRomanDash,
+            '15'
+        );
+    });
+
+    it('LowerRomanParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerRomanParenthesis,
+            '13'
+        );
+    });
+
+    it('LowerRomanDoubleParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.LowerRomanDoubleParenthesis,
+            '14'
+        );
+    });
+
+    it('UpperRoman', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperRoman,
+            '16'
+        );
+    });
+
+    it('UpperRomanDash', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperRomanDash,
+            '19'
+        );
+    });
+
+    it('UpperRomanParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperRomanParenthesis,
+            '17'
+        );
+    });
+
+    it('UpperRomanDoubleParenthesis', () => {
+        runTest(
+            `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            NumberingListType.UpperRomanDoubleParenthesis,
+            '18'
         );
     });
 });

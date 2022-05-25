@@ -29,11 +29,12 @@ export default function setNumberingListMarkers(
     const { markerSeparator, markerSecondSeparator, markerType, lowerCase } = numberingListStyle[
         listStyleType
     ];
+
     let markerNumber = level.toString();
     if (markerType === MarkerTypes.Roman) {
         markerNumber = convertDecimalsToRoman(level, lowerCase);
     } else if (markerType === MarkerTypes.Alpha) {
-        markerNumber = convertDecimalsToAlpha(level, lowerCase);
+        markerNumber = convertDecimalsToAlpha(level - 1, lowerCase);
     }
 
     const marker = markerSecondSeparator

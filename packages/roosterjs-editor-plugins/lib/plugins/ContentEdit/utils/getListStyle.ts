@@ -23,7 +23,7 @@ const characters: Record<string, number> = {
 };
 
 const identifyCharacter = (text: string) => {
-    const char = text.length === 2 ? text[1] : text[0];
+    const char = text[0] === '(' ? text[0] : text[text.length - 1];
     return characters[char];
 };
 
@@ -95,6 +95,8 @@ const bulletListType: Record<string, number> = {
     '--': BulletListType.Square,
     '->': BulletListType.LongArrow,
     '-->': BulletListType.LongArrow,
+    '=>': BulletListType.UnfilledArrow,
+    '>': BulletListType.ShortArrow,
 };
 
 const identifyNumberingListType = (textBeforeCursor: string): NumberingListType => {

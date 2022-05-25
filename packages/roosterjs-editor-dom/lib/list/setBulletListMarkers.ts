@@ -18,4 +18,6 @@ const bulletListStyle: Record<string, string> = {
     [BulletListType.Square]: 'square',
     [BulletListType.Dash]: '- ',
     [BulletListType.LongArrow]: '→ ',
+    [BulletListType.ShortArrow]: '➢ ',
+    [BulletListType.UnfilledArrow]: '➪ ',
 };

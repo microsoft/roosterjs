@@ -349,12 +349,11 @@ export default class VList {
     }
 
     /**
-     * Change list type of the given range of this list.
-     * If some of the items are not real list item yet, this will make them to be list item with given type
-     * If all items in the given range are already in the type to change to, this becomes an outdent operation
+     * Change list style of the given range of this list.
+     * If some of the items are not real list item yet, this will make them to be list item with given style
      * @param start Start position to operate from
      * @param end End position to operate to
-     * @param targetType Target list type
+     * @param targetStyle Target list style
      */
     setListStyleType(
         start: NodePosition,
@@ -376,7 +375,7 @@ export default class VList {
      */
     private applyListStyle(item: VListItem) {
         const li = item.getNode();
-        const style = parseInt(li.className);
+        const style = li.className ? parseInt(li.className) : null;
         const index = this.getListItemIndex(li);
 
         if (style) {

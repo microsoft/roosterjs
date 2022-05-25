@@ -248,7 +248,6 @@ export default class VListItem {
                 }
             }
         }
-
         // 3. Add current node into deepest list element
         listStack[listStack.length - 1].appendChild(this.node);
         this.node.style.setProperty('display', this.dummy ? 'block' : null);

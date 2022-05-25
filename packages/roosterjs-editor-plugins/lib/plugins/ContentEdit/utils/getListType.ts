@@ -7,7 +7,7 @@ function isABulletList(textBeforeCursor: string) {
 }
 
 function isANumberingList(textBeforeCursor: string) {
-    const REGEX: RegExp = /^([1-9,a-z, i,A,I]\.|[1-9,a-z, i,A,I]\)|[1-9,a-z, i,A,I]\-|\([1-9,a-z, i,A,I]\))$/;
+    const REGEX: RegExp = /^([1-9,a-z, i,A-Z,I]{1,2}\.|[1-9,a-z, i,A-Z,I]{1,2}\)|[1-9,a-z, i,A-Z,I]{1,2}\-|\([1-9,a-z, i,A-Z,I]{1,2}\))$/;
     return REGEX.test(textBeforeCursor.replace(/\s/g, ''));
 }
 

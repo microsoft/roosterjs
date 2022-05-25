@@ -19,11 +19,6 @@ export const enum BulletListType {
     Square,
 
     /**
-     * Bullet triggered by ——
-     */
-    Hyphen,
-
-    /**
      * Bullet triggered by >
      */
     ShortArrow,
