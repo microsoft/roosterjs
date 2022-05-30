@@ -10,6 +10,8 @@ import {
     BulletListType,
 } from 'roosterjs-editor-types';
 
+const editingInfo = 'editingInfo';
+
 describe('VList.ctor', () => {
     const testId = 'VList_ctor';
     const ListRoot = 'listRoot';
@@ -1296,7 +1298,7 @@ describe('VList.setListStyleType', () => {
         DomTestHelper.removeElement(testId);
     });
 
-    function runTest(source: string, listStyle: NumberingListType | BulletListType, title: string) {
+    function runTest(source: string, listStyle: NumberingListType | BulletListType, style: string) {
         DomTestHelper.createElementFromContent(testId, source);
         const list = document.getElementById(ListRoot) as HTMLOListElement;
         const focus = document.getElementById(FocusNode);
@@ -1311,16 +1313,11 @@ describe('VList.setListStyleType', () => {
         }
 
         const vList = new VList(list);
-        const start = new Position(focus || focus1, PositionType.Begin);
-        const end = new Position(focus || focus2, PositionType.End);
 
         // Act
-        vList.setListStyleType(start, end, listStyle);
+        vList.setListStyleType(listStyle);
 
-        const items = (<any>vList).items as VListItem[];
-        items.forEach(item => {
-            expect(item.getNode().title).toEqual(title);
-        });
+        expect(list.dataset[editingInfo]).toEqual(style);
         DomTestHelper.removeElement(testId);
     }
 
@@ -1328,7 +1325,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"></ol><div id="${FocusNode}"></div>`,
             NumberingListType.Decimal,
-            undefined
+            '0'
         );
     });
 

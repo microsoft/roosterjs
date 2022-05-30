@@ -6,13 +6,13 @@ import isNodeEmpty from '../utils/isNodeEmpty';
 import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import setBulletListMarkers from './setBulletListMarkers';
-import setNumberingListMarkers from './setNumberingListMarkers';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import VListItem from './VListItem';
 import wrap from '../utils/wrap';
+import { createNumberDefinition } from '../metadata/definitionCreators';
+import { setMetadata } from '../metadata/metadata';
 import {
     Indentation,
     ListType,
@@ -217,8 +217,8 @@ export default class VList {
                     start++;
                 }
             }
-
-            this.applyListStyle(item);
+            const itemIndex = this.getListItemIndex(item.getNode());
+            item.applyListStyle(this.rootList, itemIndex);
 
             lastList = topList;
         });
@@ -351,44 +351,16 @@ export default class VList {
     /**
      * Change list style of the given range of this list.
      * If some of the items are not real list item yet, this will make them to be list item with given style
-     * @param start Start position to operate from
-     * @param end End position to operate to
      * @param targetStyle Target list style
      */
     setListStyleType(
-        start: NodePosition,
-        end: NodePosition,
         targetStyle:
             | NumberingListType
             | BulletListType
             | CompatibleBulletListType
             | CompatibleNumberingListType
     ) {
-        this.findListItems(start, end, item => {
-            item.getNode().title = targetStyle.toString();
-        });
-    }
-
-    /**
-     * Apply the list style type
-     * @param item the vList item that receives the style
-     */
-    private applyListStyle(item: VListItem) {
-        const li = item.getNode();
-        const style = li.title ? parseInt(li.title) : null;
-        const index = this.getListItemIndex(li);
-
-        if (style) {
-            if (item.getLevel() < 2) {
-                if (item.getListType() === ListType.Unordered) {
-                    setBulletListMarkers(li, style as BulletListType);
-                } else if (item.getListType() === ListType.Ordered) {
-                    setNumberingListMarkers(li, style as NumberingListType, index);
-                }
-            } else {
-                li.style.removeProperty('list-style-type');
-            }
-        }
+        setMetadata(this.rootList, targetStyle, createNumberDefinition());
     }
 
     /**

@@ -56,7 +56,7 @@ export default function toggleListType(
         if (vList) {
             vList.changeListType(start, end, listType);
             if (listStyle && editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
-                vList.setListStyleType(start, end, listStyle);
+                vList.setListStyleType(listStyle);
             }
             vList.writeBack();
         }
