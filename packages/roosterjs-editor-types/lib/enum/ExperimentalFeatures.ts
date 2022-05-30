@@ -79,7 +79,13 @@ export const enum ExperimentalFeatures {
     ListItemAlignment = 'ListItemAlignment',
 
     /**
+     * Trigger formatting by a especial characters. Ex: (A), 1. i).
+     */
+    AutoFormatList = 'AutoFormatList',
+
+    /**
      * Automatically transform -- into hyphen, if typed between two words.
      */
     AutoHyphen = 'AutoHyphen',
+
 }
