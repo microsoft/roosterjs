@@ -101,11 +101,11 @@ export default class TableResize implements EditorPlugin {
             }
         }
 
-        this.setTableEditor(currentTable);
+        this.setTableEditor(currentTable, e);
         this.tableEditor?.onMouseMove(x, y);
     };
 
-    private setTableEditor(table: HTMLTableElement) {
+    private setTableEditor(table: HTMLTableElement, e?: MouseEvent) {
         if (this.tableEditor && table != this.tableEditor.table) {
             this.tableEditor.dispose();
             this.tableEditor = null;
@@ -116,7 +116,8 @@ export default class TableResize implements EditorPlugin {
                 this.editor,
                 table,
                 this.invalidateTableRects,
-                this.onShowHelperElement
+                this.onShowHelperElement,
+                e
             );
         }
     }

@@ -3,13 +3,20 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
+import {
+    getComputedStyle,
+    normalizeRect,
+    Position,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
     NodePosition,
     TableSelection,
     CreateElementData,
+    Rect,
 } from 'roosterjs-editor-types';
 
 const INSERTER_HOVER_OFFSET = 5;
@@ -69,7 +76,8 @@ export default class TableEditor {
         private onShowHelperElement?: (
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) => void
+        ) => void,
+        private event?: MouseEvent
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
@@ -84,7 +92,8 @@ export default class TableEditor {
             table,
             editor.getZoomScale(),
             this.onSelect,
-            this.onShowHelperElement
+            this.onShowHelperElement,
+            this.getShouldShowTableSelectorHandler(this.event)
         );
     }
 
@@ -293,4 +302,14 @@ export default class TableEditor {
             this.editor.select(table, selection);
         }
     };
+
+    private getShouldShowTableSelectorHandler(e: MouseEvent): (rect: Rect) => boolean {
+        if (safeInstanceOf(e.currentTarget, 'HTMLElement')) {
+            const containerRect = normalizeRect(e.currentTarget.getBoundingClientRect());
+
+            return (rect: Rect) => containerRect.top < rect.top;
+        }
+
+        return () => true;
+    }
 }
