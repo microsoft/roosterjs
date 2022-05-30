@@ -11,6 +11,8 @@ import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import VListItem from './VListItem';
 import wrap from '../utils/wrap';
+import { createNumberDefinition } from '../metadata/definitionCreators';
+import { setMetadata } from '../metadata/metadata';
 import {
     Indentation,
     ListType,
@@ -18,11 +20,15 @@ import {
     PositionType,
     NodeType,
     Alignment,
+    NumberingListType,
+    BulletListType,
 } from 'roosterjs-editor-types';
 import type {
     CompatibleAlignment,
+    CompatibleBulletListType,
     CompatibleIndentation,
     CompatibleListType,
+    CompatibleNumberingListType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -211,6 +217,8 @@ export default class VList {
                     start++;
                 }
             }
+            const itemIndex = this.getListItemIndex(item.getNode());
+            item.applyListStyle(this.rootList, itemIndex);
 
             lastList = topList;
         });
@@ -338,6 +346,21 @@ export default class VList {
         this.findListItems(start, end, item =>
             needChangeType ? item.changeListType(targetType) : item.outdent()
         );
+    }
+
+    /**
+     * Change list style of the given range of this list.
+     * If some of the items are not real list item yet, this will make them to be list item with given style
+     * @param targetStyle Target list style
+     */
+    setListStyleType(
+        targetStyle:
+            | NumberingListType
+            | BulletListType
+            | CompatibleBulletListType
+            | CompatibleNumberingListType
+    ) {
+        setMetadata(this.rootList, targetStyle, createNumberDefinition());
     }
 
     /**

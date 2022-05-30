@@ -27,4 +27,6 @@ export { KnownCreateElementDataIndex } from './KnownCreateElementDataIndex';
 export { TableBorderFormat } from './TableBorderFormat';
 export { PluginEventType } from './PluginEventType';
 export { SelectionRangeTypes } from './SelectionRangeTypes';
+export { NumberingListType } from './NumberingListType';
+export { BulletListType } from './BulletListType';
 export { DefinitionType } from './DefinitionType';

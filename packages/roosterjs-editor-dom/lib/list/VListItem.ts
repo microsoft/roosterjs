@@ -4,11 +4,19 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
 import safeInstanceOf from '../utils/safeInstanceOf';
+import setBulletListMarkers from './setBulletListMarkers';
 import setListItemStyle from './setListItemStyle';
+import setNumberingListMarkers from './setNumberingListMarkers';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
-import { KnownCreateElementDataIndex, ListType } from 'roosterjs-editor-types';
+import { getMetadata } from '../metadata/metadata';
+import {
+    BulletListType,
+    KnownCreateElementDataIndex,
+    ListType,
+    NumberingListType,
+} from 'roosterjs-editor-types';
 import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
@@ -200,6 +208,26 @@ export default class VListItem {
      */
     setNewListStart(startNumber: number) {
         this.newListStart = startNumber;
+    }
+
+    /**
+     * Apply the list style type
+     * @param rootList the vList that receives the style
+     * @param index the list item index
+     */
+    applyListStyle(rootList: HTMLOListElement | HTMLUListElement, index: number) {
+        const style = getMetadata(rootList) ? getMetadata(rootList) : undefined;
+        if (style) {
+            if (this.listTypes.length < 3) {
+                if (this.listTypes[1] === ListType.Unordered) {
+                    setBulletListMarkers(this.node, style as BulletListType);
+                } else if (this.listTypes[1] === ListType.Ordered) {
+                    setNumberingListMarkers(this.node, style as NumberingListType, index);
+                }
+            } else {
+                this.node.style.removeProperty('list-style-type');
+            }
+        }
     }
 
     /**
