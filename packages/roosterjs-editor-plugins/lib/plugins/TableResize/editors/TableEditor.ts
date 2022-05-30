@@ -307,7 +307,7 @@ export default class TableEditor {
         if (safeInstanceOf(e.currentTarget, 'HTMLElement')) {
             const containerRect = normalizeRect(e.currentTarget.getBoundingClientRect());
 
-            return (rect: Rect) => containerRect.top < rect.top;
+            return (rect: Rect) => containerRect.top <= rect.top;
         }
 
         return () => true;
