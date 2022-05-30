@@ -280,7 +280,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div', 'ol'],
             [ListType.Ordered, ListType.Unordered],
-            '<ol><ul><li><div></div></li></ul></ol>'
+            '<ol><ul style="list-style-type: circle;"><li><div></div></li></ul></ol>'
         );
     });
 
@@ -288,7 +288,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div', 'ol', 'ol'],
             [ListType.Ordered, ListType.Unordered],
-            '<ol><ol></ol><ul><li><div></div></li></ul></ol>'
+            '<ol><ol></ol><ul style="list-style-type: circle;"><li><div></div></li></ul></ol>'
         );
     });
 
@@ -378,7 +378,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div'],
             [ListType.Ordered, ListType.Unordered],
-            '<ol id="id1" data-test="test"><ul><li><div></div></li></ul></ol>',
+            '<ol id="id1" data-test="test"><ul style="list-style-type: circle;"><li><div></div></li></ul></ol>',
             ol
         );
     });

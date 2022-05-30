@@ -10,7 +10,8 @@ import setNumberingListMarkers from './setNumberingListMarkers';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
-import { getMetadata } from '../metadata/metadata';
+import { createNumberDefinition } from '../metadata/definitionCreators';
+import { getMetadata, setMetadata } from '../metadata/metadata';
 import {
     BulletListType,
     KnownCreateElementDataIndex,
@@ -20,6 +21,7 @@ import {
 import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
+const unorderedListStyles = ['disc', 'circle', 'square'];
 
 const MARGIN_BASE = '0in 0in 0in 0.5in';
 const NEGATIVE_MARGIN = '-.25in';
@@ -360,10 +362,29 @@ function createListElement(
         result = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
     }
 
+    // Always maintain the metadata saved in the list
+    if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
+        const style = getMetadata(originalRoot) ? getMetadata(originalRoot) : undefined;
+        if (style) {
+            setMetadata(
+                result,
+                style as NumberingListType | BulletListType,
+                createNumberDefinition()
+            );
+        }
+    }
+
     if (listType == ListType.Ordered && nextLevel > 1) {
         result.style.setProperty(
             'list-style-type',
             orderListStyles[(nextLevel - 1) % orderListStyles.length]
+        );
+    }
+
+    if (listType == ListType.Unordered && nextLevel > 1) {
+        result.style.setProperty(
+            'list-style-type',
+            unorderedListStyles[(nextLevel - 1) % unorderedListStyles.length]
         );
     }
 
