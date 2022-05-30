@@ -226,6 +226,12 @@ export interface TextFeatureSettings {
      *      If Whole Paragraph selected, outdent paragraph
      */
     outdentWhenTabText: boolean;
+
+    /**
+     * Requires @see ExperimentalFeatures.AutoHyphen to be enabled
+     * Automatically transform -- into hyphen, if typed between two words.
+     */
+    autoHyphen: boolean;
 }
 
 /**
