@@ -1325,7 +1325,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"></ol><div id="${FocusNode}"></div>`,
             NumberingListType.Decimal,
-            '1'
+            '0'
         );
     });
 
@@ -1333,7 +1333,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.Decimal,
-            '1'
+            '0'
         );
     });
 
@@ -1341,7 +1341,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.DecimalDash,
-            '2'
+            '1'
         );
     });
 
@@ -1349,7 +1349,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.DecimalParenthesis,
-            '3'
+            '2'
         );
     });
 
@@ -1357,7 +1357,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.DecimalDoubleParenthesis,
-            '4'
+            '3'
         );
     });
 
@@ -1365,7 +1365,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlpha,
-            '5'
+            '4'
         );
     });
 
@@ -1373,7 +1373,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlphaDash,
-            '8'
+            '7'
         );
     });
 
@@ -1381,7 +1381,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlphaParenthesis,
-            '6'
+            '5'
         );
     });
 
@@ -1389,7 +1389,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlphaDoubleParenthesis,
-            '7'
+            '6'
         );
     });
 
@@ -1397,7 +1397,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlpha,
-            '9'
+            '8'
         );
     });
 
@@ -1405,7 +1405,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlphaDash,
-            '12'
+            '11'
         );
     });
 
@@ -1413,7 +1413,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlphaParenthesis,
-            '10'
+            '9'
         );
     });
 
@@ -1421,7 +1421,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlphaDoubleParenthesis,
-            '11'
+            '10'
         );
     });
 
@@ -1429,7 +1429,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRoman,
-            '13'
+            '12'
         );
     });
 
@@ -1437,7 +1437,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRomanDash,
-            '16'
+            '15'
         );
     });
 
@@ -1445,7 +1445,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRomanParenthesis,
-            '14'
+            '13'
         );
     });
 
@@ -1453,7 +1453,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRomanDoubleParenthesis,
-            '15'
+            '14'
         );
     });
 
@@ -1461,7 +1461,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRoman,
-            '17'
+            '16'
         );
     });
 
@@ -1469,7 +1469,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRomanDash,
-            '20'
+            '19'
         );
     });
 
@@ -1477,7 +1477,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRomanParenthesis,
-            '18'
+            '17'
         );
     });
 
@@ -1485,7 +1485,7 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRomanDoubleParenthesis,
-            '19'
+            '18'
         );
     });
 });
