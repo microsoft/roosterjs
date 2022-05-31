@@ -16,6 +16,7 @@ import {
     getTagOfNode,
     isNodeInRegion,
     isWholeTableSelected,
+    safeInstanceOf,
     splitBalancedNodeRange,
     toArray,
     unwrap,
@@ -24,6 +25,8 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import type { CompatibleIndentation } from 'roosterjs-editor-types/lib/compatibleTypes';
+
+const LIST_NEGATIVE_MARGIN = '-0.25in';
 
 /**
  * Set indentation at selection
@@ -147,6 +150,8 @@ function shouldHandleWithBlockquotes(
     startNode: Node
 ) {
     return (
-        indentation == Indentation.Increase || editor.getElementAtCursor('blockquote', startNode)
+        safeInstanceOf(startNode, 'HTMLLIElement') &&
+        startNode.style.marginLeft != LIST_NEGATIVE_MARGIN &&
+        (indentation == Indentation.Increase || editor.getElementAtCursor('blockquote', startNode))
     );
 }

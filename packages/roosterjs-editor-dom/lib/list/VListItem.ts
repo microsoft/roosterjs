@@ -22,7 +22,7 @@ import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTy
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 
 const MARGIN_BASE = '0in 0in 0in 0.5in';
-const NEGATIVE_MARGIN = '-.25in';
+const NEGATIVE_MARGIN = '-0.25in';
 /**
  * !!! Never directly create instance of this class. It should be created within VList class !!!
  *
