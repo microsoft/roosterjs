@@ -4,6 +4,11 @@
 
 export const enum BulletListType {
     /**
+     * Minimum value of the enum
+     */
+    Min,
+
+    /**
      * Bullet triggered by *
      */
     Disc,
@@ -32,4 +37,9 @@ export const enum BulletListType {
      * Bullet triggered by =>
      */
     UnfilledArrow,
+
+    /**
+     * Maximum value of the enum
+     */
+    Max,
 }

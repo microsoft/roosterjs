@@ -3,6 +3,11 @@
  */
 export const enum NumberingListType {
     /**
+     * Minimum value of the enum
+     */
+    Min,
+
+    /**
      * Numbering triggered by 1.
      */
     Decimal,
@@ -101,4 +106,9 @@ export const enum NumberingListType {
      * Numbering triggered by I-
      */
     UpperRomanDash,
+
+    /**
+     * Maximum value of the enum
+     */
+    Max,
 }
