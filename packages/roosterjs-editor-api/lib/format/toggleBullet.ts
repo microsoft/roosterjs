@@ -1,6 +1,6 @@
 import toggleListType from '../utils/toggleListType';
 import { BulletListType, IEditor, ListType } from 'roosterjs-editor-types';
-import { CompatibleBulletListType } from 'roosterjs-editor-types/lib/compatibleTypes';
+import type { CompatibleBulletListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Toggle bullet at selection
