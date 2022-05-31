@@ -218,7 +218,11 @@ export default class VListItem {
      * @param index the list item index
      */
     applyListStyle(rootList: HTMLOListElement | HTMLUListElement, index: number) {
-        const style = getMetadata(rootList) ? getMetadata(rootList) : undefined;
+        const style = getMetadata(rootList)
+            ? (getMetadata(rootList, createNumberDefinition()) as
+                  | NumberingListType
+                  | BulletListType)
+            : undefined;
         if (style) {
             if (this.listTypes.length < 3) {
                 if (this.listTypes[1] === ListType.Unordered) {
@@ -364,13 +368,13 @@ function createListElement(
 
     // Always maintain the metadata saved in the list
     if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
-        const style = getMetadata(originalRoot) ? getMetadata(originalRoot) : undefined;
+        const style = getMetadata(originalRoot)
+            ? (getMetadata(originalRoot, createNumberDefinition()) as
+                  | NumberingListType
+                  | BulletListType)
+            : undefined;
         if (style) {
-            setMetadata(
-                result,
-                style as NumberingListType | BulletListType,
-                createNumberDefinition()
-            );
+            setMetadata(result, style, createNumberDefinition());
         }
     }
 
