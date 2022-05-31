@@ -31,6 +31,13 @@ import type {
     CompatibleNumberingListType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 
+const numberDefinition = createNumberDefinition(
+    false /** isOptional */,
+    undefined /** value */,
+    0,
+    19
+);
+
 /**
  * Represent a bullet or a numbering list
  *
@@ -360,7 +367,7 @@ export default class VList {
             | CompatibleBulletListType
             | CompatibleNumberingListType
     ) {
-        setMetadata(this.rootList, targetStyle, createNumberDefinition());
+        setMetadata(this.rootList, targetStyle, numberDefinition);
     }
 
     /**

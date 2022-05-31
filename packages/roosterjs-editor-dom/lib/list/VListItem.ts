@@ -22,9 +22,16 @@ import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTy
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 const unorderedListStyles = ['disc', 'circle', 'square'];
+const numberDefinition = createNumberDefinition(
+    false /** isOptional */,
+    undefined /** value */,
+    0,
+    19
+);
 
 const MARGIN_BASE = '0in 0in 0in 0.5in';
 const NEGATIVE_MARGIN = '-.25in';
+
 /**
  * !!! Never directly create instance of this class. It should be created within VList class !!!
  *
@@ -218,11 +225,7 @@ export default class VListItem {
      * @param index the list item index
      */
     applyListStyle(rootList: HTMLOListElement | HTMLUListElement, index: number) {
-        const style = getMetadata(rootList)
-            ? (getMetadata(rootList, createNumberDefinition()) as
-                  | NumberingListType
-                  | BulletListType)
-            : undefined;
+        const style = getMetadata<NumberingListType | BulletListType>(rootList, numberDefinition);
         if (style) {
             if (this.listTypes.length < 3) {
                 if (this.listTypes[1] === ListType.Unordered) {
@@ -368,13 +371,12 @@ function createListElement(
 
     // Always maintain the metadata saved in the list
     if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
-        const style = getMetadata(originalRoot)
-            ? (getMetadata(originalRoot, createNumberDefinition()) as
-                  | NumberingListType
-                  | BulletListType)
-            : undefined;
+        const style = getMetadata<NumberingListType | BulletListType>(
+            originalRoot,
+            numberDefinition
+        );
         if (style) {
-            setMetadata(result, style, createNumberDefinition());
+            setMetadata(result, style, numberDefinition);
         }
     }
 
