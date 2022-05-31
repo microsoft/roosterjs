@@ -65,6 +65,7 @@ import type {
     CompatibleContentPosition,
     CompatibleExperimentalFeatures,
     CompatibleGetContentMode,
+    CompatiblePluginEventType,
     CompatibleQueryScope,
     CompatibleRegionType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -541,7 +542,7 @@ export default class Editor implements IEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    public triggerPluginEvent<T extends PluginEventType>(
+    public triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast?: boolean

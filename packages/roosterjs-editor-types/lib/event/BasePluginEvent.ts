@@ -1,9 +1,10 @@
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
  * Editor plugin event interface
  */
-export default interface BasePluginEvent<T extends PluginEventType> {
+export default interface BasePluginEvent<T extends PluginEventType | CompatiblePluginEventType> {
     /**
      * Type of this event
      */

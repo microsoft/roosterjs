@@ -24,6 +24,7 @@ import { RegionType } from '../enum/RegionType';
 import { SelectionRangeEx } from './SelectionRangeEx';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatibleContentPosition } from '../compatibleEnum/ContentPosition';
 import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
@@ -374,7 +375,7 @@ export default interface IEditor {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    triggerPluginEvent<T extends PluginEventType>(
+    triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast?: boolean
