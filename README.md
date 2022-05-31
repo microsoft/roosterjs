@@ -52,7 +52,7 @@ There are also some extension packages to provide additional functionalities.
 2. [roosterjs-react](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_react.html):
    Provide a React wrapper of roosterjs so it can be easily used with React.
 
-3. [roosterjs-editor-types-compatible](modules/roosterjs_editor_types_compatible.html):
+3. [roosterjs-editor-types-compatible](https://microsoft.github.io/roosterjs/docs/modules/roosterjs_editor_types_compatible.html):
    Provide types that are compatible with isolatedModules mode. When using isolatedModules mode,
    "const enum" will not work correctly, this package provides enums with prefix "Compatible" in
    their names and they have the same value with const enums in roosterjs-editor-types package

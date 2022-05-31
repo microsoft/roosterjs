@@ -25,4 +25,8 @@ export interface DOMEventHandlerObject {
 /**
  * Combined event handler type with all 3 possibilities
  */
-export type DOMEventHandler = PluginEventType | DOMEventHandlerFunction | DOMEventHandlerObject;
+export type DOMEventHandler =
+    | PluginEventType
+    | CompatiblePluginEventType
+    | DOMEventHandlerFunction
+    | DOMEventHandlerObject;
