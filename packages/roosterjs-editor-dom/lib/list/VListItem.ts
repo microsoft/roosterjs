@@ -22,11 +22,14 @@ import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTy
 
 const orderListStyles = [null, 'lower-alpha', 'lower-roman'];
 const unorderedListStyles = ['disc', 'circle', 'square'];
+const maxEnum =
+    BulletListType.Max > NumberingListType.Max ? BulletListType.Max : NumberingListType.Max;
+
 const numberDefinition = createNumberDefinition(
     false /** isOptional */,
     undefined /** value */,
-    0,
-    19
+    BulletListType.Min,
+    maxEnum
 );
 
 const MARGIN_BASE = '0in 0in 0in 0.5in';
@@ -226,7 +229,7 @@ export default class VListItem {
      */
     applyListStyle(rootList: HTMLOListElement | HTMLUListElement, index: number) {
         const style = getMetadata<NumberingListType | BulletListType>(rootList, numberDefinition);
-        if (style) {
+        if (style !== null) {
             if (this.listTypes.length < 3) {
                 if (this.listTypes[1] === ListType.Unordered) {
                     setBulletListMarkers(this.node, style as BulletListType);
@@ -375,7 +378,7 @@ function createListElement(
             originalRoot,
             numberDefinition
         );
-        if (style) {
+        if (style !== null) {
             setMetadata(result, style, numberDefinition);
         }
     }

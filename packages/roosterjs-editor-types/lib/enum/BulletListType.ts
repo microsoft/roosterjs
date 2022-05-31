@@ -32,4 +32,14 @@ export const enum BulletListType {
      * Bullet triggered by =>
      */
     UnfilledArrow,
+
+    /**
+     * Minimum value of the enum
+     */
+    Min = 0,
+
+    /**
+     * Maximum value of the enum
+     */
+    Max = 5,
 }

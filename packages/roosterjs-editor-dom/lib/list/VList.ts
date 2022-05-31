@@ -31,11 +31,14 @@ import type {
     CompatibleNumberingListType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 
+const maxEnum =
+    BulletListType.Max > NumberingListType.Max ? BulletListType.Max : NumberingListType.Max;
+
 const numberDefinition = createNumberDefinition(
     false /** isOptional */,
     undefined /** value */,
-    0,
-    19
+    BulletListType.Min,
+    maxEnum
 );
 
 /**

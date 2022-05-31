@@ -101,4 +101,14 @@ export const enum NumberingListType {
      * Numbering triggered by I-
      */
     UpperRomanDash,
+
+    /**
+     * Minimum value of the enum
+     */
+    Min = 0,
+
+    /**
+     * Maximum value of the enum
+     */
+    Max = 19,
 }
