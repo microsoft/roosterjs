@@ -4,39 +4,38 @@
 
 export const enum BulletListType {
     /**
+     * Minimum value of the enum
+     */
+    Min = 0,
+    /**
      * Bullet triggered by *
      */
-    Disc,
+    Disc = 0,
 
     /**
      * Bullet triggered by -
      */
-    Dash,
+    Dash = 1,
 
     /**
      * Bullet triggered by --
      */
-    Square,
+    Square = 2,
 
     /**
      * Bullet triggered by >
      */
-    ShortArrow,
+    ShortArrow = 3,
 
     /**
      * Bullet triggered by -> or -->
      */
-    LongArrow,
+    LongArrow = 4,
 
     /**
      * Bullet triggered by =>
      */
-    UnfilledArrow,
-
-    /**
-     * Minimum value of the enum
-     */
-    Min = 0,
+    UnfilledArrow = 5,
 
     /**
      * Maximum value of the enum

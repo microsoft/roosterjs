@@ -31,13 +31,12 @@ import type {
     CompatibleNumberingListType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 
-const maxEnum =
-    BulletListType.Max > NumberingListType.Max ? BulletListType.Max : NumberingListType.Max;
-
+const maxEnum = Math.max(BulletListType.Max, NumberingListType.Max);
+const minEnum = Math.min(BulletListType.Min, NumberingListType.Min);
 const numberDefinition = createNumberDefinition(
     false /** isOptional */,
     undefined /** value */,
-    BulletListType.Min,
+    minEnum,
     maxEnum
 );
 
@@ -211,7 +210,7 @@ export default class VList {
                 start = newListStart;
             }
 
-            item.writeBack(listStack, this.rootList);
+            item.writeBack(listStack, this.rootList, numberDefinition);
             const topList = listStack[1];
 
             if (safeInstanceOf(topList, 'HTMLOListElement')) {
@@ -228,7 +227,7 @@ export default class VList {
                 }
             }
             const itemIndex = this.getListItemIndex(item.getNode());
-            item.applyListStyle(this.rootList, itemIndex);
+            item.applyListStyle(this.rootList, itemIndex, numberDefinition);
 
             lastList = topList;
         });
