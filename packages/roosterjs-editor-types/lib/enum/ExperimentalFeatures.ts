@@ -77,4 +77,14 @@ export const enum ExperimentalFeatures {
      * Align list elements elements to left, center and right using setAlignment API
      */
     ListItemAlignment = 'ListItemAlignment',
+
+    /**
+     * Trigger formatting by a especial characters. Ex: (A), 1. i).
+     */
+    AutoFormatList = 'AutoFormatList',
+
+    /**
+     * Automatically transform -- into hyphen, if typed between two words.
+     */
+    AutoHyphen = 'AutoHyphen',
 }

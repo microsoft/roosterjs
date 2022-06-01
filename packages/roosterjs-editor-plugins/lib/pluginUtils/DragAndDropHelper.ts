@@ -1,5 +1,35 @@
+import { Browser } from 'roosterjs-editor-dom/lib';
 import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
+
+/**
+ * @internal
+ * Compatible mouse event names for different platform
+ */
+interface MouseEventNames {
+    MOUSEDOWN: string;
+    MOUSEMOVE: string;
+    MOUSEUP: string;
+}
+
+/**
+ * Generate event names based on different platforms to be compatible with desktop and mobile browsers
+ */
+const MOUSE_EVENT_NAMES: MouseEventNames = (() => {
+    if (Browser.isMobileOrTablet) {
+        return {
+            MOUSEDOWN: 'touchstart',
+            MOUSEMOVE: 'touchmove',
+            MOUSEUP: 'touchend',
+        };
+    } else {
+        return {
+            MOUSEDOWN: 'mousedown',
+            MOUSEMOVE: 'mousemove',
+            MOUSEUP: 'mouseup',
+        };
+    }
+})();
 
 /**
  * @internal
@@ -26,27 +56,27 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private handler: DragAndDropHandler<TContext, TInitValue>,
         private zoomScale: number
     ) {
-        trigger.addEventListener('mousedown', this.onMouseDown);
+        trigger.addEventListener(MOUSE_EVENT_NAMES.MOUSEDOWN, this.onMouseDown);
     }
 
     /**
      * Dispose this object, remove all event listeners that has been attached
      */
     dispose() {
-        this.trigger.removeEventListener('mousedown', this.onMouseDown);
+        this.trigger.removeEventListener(MOUSE_EVENT_NAMES.MOUSEDOWN, this.onMouseDown);
         this.removeDocumentEvents();
     }
 
     private addDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.addEventListener('mousemove', this.onMouseMove, true /*useCapture*/);
-        doc.addEventListener('mouseup', this.onMouseUp, true /*useCapture*/);
+        doc.addEventListener(MOUSE_EVENT_NAMES.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
+        doc.addEventListener(MOUSE_EVENT_NAMES.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 
     private removeDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.removeEventListener('mousemove', this.onMouseMove, true /*useCapture*/);
-        doc.removeEventListener('mouseup', this.onMouseUp, true /*useCapture*/);
+        doc.removeEventListener(MOUSE_EVENT_NAMES.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
+        doc.removeEventListener(MOUSE_EVENT_NAMES.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 
     private onMouseDown = (e: MouseEvent) => {

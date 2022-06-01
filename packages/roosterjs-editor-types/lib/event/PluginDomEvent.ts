@@ -1,11 +1,14 @@
 import BasePluginEvent from './BasePluginEvent';
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
  * A base interface of all DOM events
  */
-export interface PluginDomEventBase<TEventType extends PluginEventType, TRawEvent extends Event>
-    extends BasePluginEvent<TEventType> {
+export interface PluginDomEventBase<
+    TEventType extends PluginEventType | CompatiblePluginEventType,
+    TRawEvent extends Event
+> extends BasePluginEvent<TEventType> {
     rawEvent: TRawEvent;
 }
 

@@ -5,3 +5,5 @@ export { default as isResizedTo } from './api/isResizedTo';
 export { default as resetImage } from './api/resetImage';
 export { default as setEditingImage, hasImageEditPlugin } from './api/setEditingImage';
 export { default as ImageEditPlugin } from './types/ImageEditPlugin';
+export { OnShowResizeHandle } from './imageEditors/Resizer';
+export { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
