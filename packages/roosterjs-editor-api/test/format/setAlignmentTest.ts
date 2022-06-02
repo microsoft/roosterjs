@@ -93,14 +93,6 @@ describe('setAlignment()', () => {
         );
     });
 
-    it('triggers the alignright in a listmultiple list items', () => {
-        runningTestInList(
-            Alignment.Right,
-            '<ul id="list" style="display: flex; flex-direction: column;"><li id="item1" style="align-self: end;"><span>item 1</span></li><li id="item2" style="align-self: end;"><span>item 2</span></li><li id="item3" style="align-self: end;"><span>item 3</span></li></ul>',
-            true
-        );
-    });
-
     function runningTest(alignment: Alignment, command: string) {
         let document = editor.getDocument();
         spyOn(editor, 'addUndoSnapshot').and.callThrough();

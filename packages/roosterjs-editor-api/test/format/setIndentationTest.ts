@@ -58,6 +58,45 @@ describe('setIndentation()', () => {
         );
     });
 
+    it('Outdent the first list item in a list to -1', () => {
+        runTest(
+            '<div><ol><li><span id="test">Text</span></li></ol></div>',
+            () => {
+                const range = new Range();
+                range.setStart(editor.getDocument().getElementById('test'), 0);
+                editor.select(range);
+            },
+            Indentation.Decrease,
+            '<div><ol><li style="margin:0in 0in 0in -0.25in"><span id="test">Text</span></li></ol></div>'
+        );
+    });
+
+    it('Outdent the first list item in a list to -1 when is already -1', () => {
+        runTest(
+            '<div><ol><li style="margin:0in 0in 0in -0.25in"><span id="test">Text</span></li></ol></div>',
+            () => {
+                const range = new Range();
+                range.setStart(editor.getDocument().getElementById('test'), 0);
+                editor.select(range);
+            },
+            Indentation.Decrease,
+            '<div><ol><li style="margin:0in 0in 0in -0.25in"><span id="test">Text</span></li></ol></div>'
+        );
+    });
+
+    it('Indent the first list item in a list when is -1', () => {
+        runTest(
+            '<div><ol><li style="margin:0in 0in 0in -0.25in"><span id="test">Text</span></li></ol></div>',
+            () => {
+                const range = new Range();
+                range.setStart(editor.getDocument().getElementById('test'), 0);
+                editor.select(range);
+            },
+            Indentation.Increase,
+            '<div><ol><li><span id="test">Text</span></li></ol></div>'
+        );
+    });
+
     it('Outdent whole table selected, when no Blockquote wraping table', () => {
         runTest(
             '<table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>',
