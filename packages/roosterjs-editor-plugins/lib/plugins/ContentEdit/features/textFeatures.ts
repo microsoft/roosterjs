@@ -117,11 +117,14 @@ const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
 const AutoHyphen: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [...createNumberSequenceArray(48, 57), ...createNumberSequenceArray(65, 90)],
     shouldHandleEvent: (event, editor) => {
-        const searcher = editor.getContentSearcherOfCursor(event);
-        const textBeforeCursor = searcher.getSubStringBefore(3);
-        const hasDashes = textBeforeCursor[2] === '-' && textBeforeCursor[1] === '-';
-        const noSpace = textBeforeCursor[0] !== ' ';
-        return hasDashes && noSpace && editor.isFeatureEnabled(ExperimentalFeatures.AutoHyphen);
+        if (editor.isFeatureEnabled(ExperimentalFeatures.AutoHyphen)) {
+            const searcher = editor.getContentSearcherOfCursor(event);
+            const textBeforeCursor = searcher.getSubStringBefore(3);
+            const hasDashes = textBeforeCursor[2] === '-' && textBeforeCursor[1] === '-';
+            const noSpace = textBeforeCursor[0] !== ' ';
+            return hasDashes && noSpace;
+        }
+        return false;
     },
     handleEvent: (event, editor) => {
         const searcher = editor.getContentSearcherOfCursor(event);
