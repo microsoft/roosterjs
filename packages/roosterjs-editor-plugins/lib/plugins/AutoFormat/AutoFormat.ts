@@ -7,15 +7,14 @@ import {
     PositionType,
 } from 'roosterjs-editor-types';
 
-const specialCharacters = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
 
 /**
  * Automatically transform -- into hyphen, if typed between two words.
  */
 export default class AutoFormat implements EditorPlugin {
     private editor: IEditor;
-    private isHyphenTyped = false;
-    private shouldFormat = false;
+    private lastKeyTyped: string;
 
     /**
      * Get a friendly name of this plugin
@@ -50,29 +49,23 @@ export default class AutoFormat implements EditorPlugin {
         ) {
             const keyTyped = event.rawEvent.key;
 
-            if (keyTyped === '-') {
-                this.isHyphenTyped = true;
-            }
-
-            if (this.isHyphenTyped && keyTyped === '-') {
-                this.shouldFormat = true;
-            } else {
-                this.isHyphenTyped = false;
-            }
-
             if (
-                this.shouldFormat &&
+                this.lastKeyTyped === '-' &&
                 keyTyped.length === 1 &&
                 !specialCharacters.test(keyTyped) &&
-                keyTyped !== ' '
+                keyTyped !== ' ' &&
+                keyTyped !== '-'
             ) {
                 const searcher = this.editor.getContentSearcherOfCursor(event);
                 const textBeforeCursor = searcher.getSubStringBefore(3);
-                if (textBeforeCursor[0] === ' ') {
-                    this.isHyphenTyped = false;
+                const dashes = searcher.getSubStringBefore(2);
+                if (
+                    (textBeforeCursor[0] === ' ' || textBeforeCursor[0] === '-') &&
+                    !specialCharacters.test(textBeforeCursor[0]) &&
+                    dashes === '--'
+                ) {
                     return;
                 }
-                const dashes = searcher.getSubStringBefore(2);
                 const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
                 const nodeHyphen = document.createTextNode('—');
                 this.editor.addUndoSnapshot(
@@ -84,8 +77,9 @@ export default class AutoFormat implements EditorPlugin {
                     null /*changeSource*/,
                     true /*canUndoByBackspace*/
                 );
-                this.isHyphenTyped = false;
-                this.shouldFormat = false;
+                this.lastKeyTyped = '';
+            } else {
+                this.lastKeyTyped = keyTyped;
             }
         }
     }
