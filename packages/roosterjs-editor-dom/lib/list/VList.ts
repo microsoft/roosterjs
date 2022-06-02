@@ -9,9 +9,8 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
-import VListItem from './VListItem';
+import VListItem, { numberDefinition } from './VListItem';
 import wrap from '../utils/wrap';
-import { createNumberDefinition } from '../metadata/definitionCreators';
 import { setMetadata } from '../metadata/metadata';
 import {
     Indentation,
@@ -30,15 +29,6 @@ import type {
     CompatibleListType,
     CompatibleNumberingListType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
-
-const maxEnum = Math.max(BulletListType.Max, NumberingListType.Max);
-const minEnum = Math.min(BulletListType.Min, NumberingListType.Min);
-const numberDefinition = createNumberDefinition(
-    false /** isOptional */,
-    undefined /** value */,
-    minEnum,
-    maxEnum
-);
 
 /**
  * Represent a bullet or a numbering list
@@ -210,7 +200,7 @@ export default class VList {
                 start = newListStart;
             }
 
-            item.writeBack(listStack, this.rootList, numberDefinition);
+            item.writeBack(listStack, this.rootList);
             const topList = listStack[1];
 
             if (safeInstanceOf(topList, 'HTMLOListElement')) {
@@ -227,7 +217,7 @@ export default class VList {
                 }
             }
             const itemIndex = this.getListItemIndex(item.getNode());
-            item.applyListStyle(this.rootList, itemIndex, numberDefinition);
+            item.applyListStyle(this.rootList, itemIndex);
 
             lastList = topList;
         });

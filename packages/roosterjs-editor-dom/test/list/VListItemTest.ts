@@ -1,7 +1,6 @@
 import VList from '../../lib/list/VList';
 import VListItem from '../../lib/list/VListItem';
 import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types';
-import { createNumberDefinition } from '../../lib/metadata/definitionCreators';
 import { itChromeOnly, itFirefoxOnly } from 'roosterjs-editor-api/test/TestHelper';
 
 describe('VListItem.getListType', () => {
@@ -443,14 +442,6 @@ describe('VListItem.applyListStyle', () => {
         styleType: NumberingListType | BulletListType,
         marker: string
     ) {
-        const maxEnum = Math.max(BulletListType.Max, NumberingListType.Max);
-        const minEnum = Math.min(BulletListType.Min, NumberingListType.Min);
-        const numberDefinition = createNumberDefinition(
-            false /** isOptional */,
-            undefined /** value */,
-            minEnum,
-            maxEnum
-        );
         const list =
             listType === ListType.Unordered
                 ? document.createElement('ul')
@@ -462,7 +453,7 @@ describe('VListItem.applyListStyle', () => {
         vList.setListStyleType(styleType);
         vList.items.forEach(item => {
             const index = vList.getListItemIndex(item.getNode());
-            item.applyListStyle(list, index, numberDefinition);
+            item.applyListStyle(list, index);
         });
         expect(li.style.listStyleType).toBe(marker);
         document.body.removeChild(list);

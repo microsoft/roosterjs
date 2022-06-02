@@ -10,12 +10,12 @@ import setNumberingListMarkers from './setNumberingListMarkers';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
+import { createNumberDefinition } from '../metadata/definitionCreators';
 import { getMetadata, setMetadata } from '../metadata/metadata';
 import {
     BulletListType,
     KnownCreateElementDataIndex,
     ListType,
-    NumberDefinition,
     NumberingListType,
 } from 'roosterjs-editor-types';
 import type { CompatibleListType } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -25,6 +25,20 @@ const unorderedListStyles = ['disc', 'circle', 'square'];
 
 const MARGIN_BASE = '0in 0in 0in 0.5in';
 const NEGATIVE_MARGIN = '-.25in';
+
+const maxEnum = Math.max(BulletListType.Max, NumberingListType.Max);
+const minEnum = Math.min(BulletListType.Min, NumberingListType.Min);
+
+/**
+ * @internal
+ * The definition for the number of BulletListType or NumberingListType
+ */
+export const numberDefinition = createNumberDefinition(
+    false /** isOptional */,
+    undefined /** value */,
+    minEnum,
+    maxEnum
+);
 
 /**
  * !!! Never directly create instance of this class. It should be created within VList class !!!
@@ -217,13 +231,8 @@ export default class VListItem {
      * Apply the list style type
      * @param rootList the vList that receives the style
      * @param index the list item index
-     * @param numberDefinition the number definitions of BulletListType or NumberingListType
      */
-    applyListStyle(
-        rootList: HTMLOListElement | HTMLUListElement,
-        index: number,
-        numberDefinition: NumberDefinition
-    ) {
+    applyListStyle(rootList: HTMLOListElement | HTMLUListElement, index: number) {
         const style = getMetadata<NumberingListType | BulletListType>(rootList, numberDefinition);
         if (style !== null) {
             if (this.listTypes.length < 3) {
@@ -244,11 +253,7 @@ export default class VListItem {
      * @param originalRoot Original list root element. It will be reused when write back if possible
      * @param numberDefinition the number definition of BulletListType or NumberingListType saved in the style metadata
      */
-    writeBack(
-        listStack: Node[],
-        originalRoot?: HTMLOListElement | HTMLUListElement,
-        numberDefinition?: NumberDefinition
-    ) {
+    writeBack(listStack: Node[], originalRoot?: HTMLOListElement | HTMLUListElement) {
         let nextLevel = 1;
 
         // 1. Determine list elements that we can reuse
@@ -274,8 +279,7 @@ export default class VListItem {
                 listStack[0],
                 this.listTypes[nextLevel],
                 nextLevel,
-                originalRoot,
-                numberDefinition
+                originalRoot
             );
 
             listStack[stackLength].appendChild(newList);
@@ -348,8 +352,7 @@ function createListElement(
     newRoot: Node,
     listType: ListType | CompatibleListType,
     nextLevel: number,
-    originalRoot?: HTMLOListElement | HTMLUListElement,
-    numberDefinition?: NumberDefinition
+    originalRoot?: HTMLOListElement | HTMLUListElement
 ): HTMLOListElement | HTMLUListElement {
     const doc = newRoot.ownerDocument!;
     let result: HTMLOListElement | HTMLUListElement;
@@ -376,12 +379,7 @@ function createListElement(
     }
 
     // Always maintain the metadata saved in the list
-    if (
-        numberDefinition &&
-        originalRoot &&
-        nextLevel == 1 &&
-        listType != getListTypeFromNode(originalRoot)
-    ) {
+    if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
         const style = getMetadata<NumberingListType | BulletListType>(
             originalRoot,
             numberDefinition
