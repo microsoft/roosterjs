@@ -8,6 +8,7 @@ import {
     PositionType,
     NumberingListType,
     BulletListType,
+    ListStyleMetadata,
 } from 'roosterjs-editor-types';
 
 const editingInfo = 'editingInfo';
@@ -1298,7 +1299,12 @@ describe('VList.setListStyleType', () => {
         DomTestHelper.removeElement(testId);
     });
 
-    function runTest(source: string, listStyle: NumberingListType | BulletListType, style: string) {
+    function runTest(
+        source: string,
+        listType: ListType,
+        listStyle: NumberingListType | BulletListType,
+        style: ListStyleMetadata
+    ) {
         DomTestHelper.createElementFromContent(testId, source);
         const list = document.getElementById(ListRoot) as HTMLOListElement;
         const focus = document.getElementById(FocusNode);
@@ -1315,177 +1321,197 @@ describe('VList.setListStyleType', () => {
         const vList = new VList(list);
 
         // Act
-        vList.setListStyleType(listStyle);
-
-        expect(list.dataset[editingInfo]).toEqual(style);
+        vList.setListStyleType(listType, listStyle);
+        expect(list.dataset[editingInfo]).toEqual(JSON.stringify(style));
         DomTestHelper.removeElement(testId);
     }
 
     it('empty list', () => {
         runTest(
             `<ol id="${ListRoot}"></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.Decimal,
-            '0'
+            { orderedStyleType: 0 }
         );
     });
 
     it('Decimal', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.Decimal,
-            '0'
+            { orderedStyleType: 0 }
         );
     });
 
     it('DecimalDash', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.DecimalDash,
-            '1'
+            { orderedStyleType: 1 }
         );
     });
 
     it('DecimalParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.DecimalParenthesis,
-            '2'
+            { orderedStyleType: 2 }
         );
     });
 
     it('DecimalDoubleParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.DecimalDoubleParenthesis,
-            '3'
+            { orderedStyleType: 3 }
         );
     });
 
     it('LowerAlpha', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerAlpha,
-            '4'
+            { orderedStyleType: 4 }
         );
     });
 
     it('LowerAlphaDash', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerAlphaDash,
-            '7'
+            { orderedStyleType: 7 }
         );
     });
 
     it('LowerAlphaParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerAlphaParenthesis,
-            '5'
+            { orderedStyleType: 5 }
         );
     });
 
     it('LowerAlphaDoubleParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerAlphaDoubleParenthesis,
-            '6'
+            { orderedStyleType: 6 }
         );
     });
 
     it('UpperAlpha', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperAlpha,
-            '8'
+            { orderedStyleType: 8 }
         );
     });
 
     it('UpperAlphaDash', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperAlphaDash,
-            '11'
+            { orderedStyleType: 11 }
         );
     });
 
     it('UpperAlphaParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperAlphaParenthesis,
-            '9'
+            { orderedStyleType: 9 }
         );
     });
 
     it('UpperAlphaDoubleParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperAlphaDoubleParenthesis,
-            '10'
+            { orderedStyleType: 10 }
         );
     });
 
     it('LowerRoman', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerRoman,
-            '12'
+            { orderedStyleType: 12 }
         );
     });
 
     it('LowerRomanDash', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerRomanDash,
-            '15'
+            { orderedStyleType: 15 }
         );
     });
 
     it('LowerRomanParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerRomanParenthesis,
-            '13'
+            { orderedStyleType: 13 }
         );
     });
 
     it('LowerRomanDoubleParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.LowerRomanDoubleParenthesis,
-            '14'
+            { orderedStyleType: 14 }
         );
     });
 
     it('UpperRoman', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperRoman,
-            '16'
+            { orderedStyleType: 16 }
         );
     });
 
     it('UpperRomanDash', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperRomanDash,
-            '19'
+            { orderedStyleType: 19 }
         );
     });
 
     it('UpperRomanParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperRomanParenthesis,
-            '17'
+            { orderedStyleType: 17 }
         );
     });
 
     it('UpperRomanDoubleParenthesis', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
+            ListType.Ordered,
             NumberingListType.UpperRomanDoubleParenthesis,
-            '18'
+            { orderedStyleType: 18 }
         );
     });
 });

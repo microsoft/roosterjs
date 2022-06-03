@@ -123,7 +123,7 @@ export default function getListStyle(
 ): NumberingListType | BulletListType {
     if (listType === ListType.Ordered) {
         return identifyNumberingListType(textBeforeCursor);
-    } else {
+    } else if (listType === ListType.Unordered) {
         return identifyBulletListType(textBeforeCursor);
     }
 }

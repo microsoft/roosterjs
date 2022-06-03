@@ -163,7 +163,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
             let searcher = editor.getContentSearcherOfCursor(event);
-            let textBeforeCursor = searcher.getSubStringBefore(4);
+            let textBeforeCursor = searcher.getSubStringBefore(5);
             const listTrigger = (text: string) =>
                 editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
                     ? getListType(text)
@@ -182,7 +182,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
             () => {
                 let regions: RegionBase[];
                 let searcher = editor.getContentSearcherOfCursor();
-                let textBeforeCursor = searcher.getSubStringBefore(4);
+                let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
                 let listType = ListType.None;
                 let listStyle;

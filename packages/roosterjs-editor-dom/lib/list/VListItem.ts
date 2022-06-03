@@ -10,11 +10,12 @@ import setNumberingListMarkers from './setNumberingListMarkers';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
-import { createNumberDefinition } from '../metadata/definitionCreators';
-import { getMetadata, setMetadata } from '../metadata/metadata';
+import { createNumberDefinition, createObjectDefinition } from '../metadata/definitionCreators';
+import { getMetadata } from '../metadata/metadata';
 import {
     BulletListType,
     KnownCreateElementDataIndex,
+    ListStyleMetadata,
     ListType,
     NumberingListType,
 } from 'roosterjs-editor-types';
@@ -26,18 +27,27 @@ const unorderedListStyles = ['disc', 'circle', 'square'];
 const MARGIN_BASE = '0in 0in 0in 0.5in';
 const NEGATIVE_MARGIN = '-.25in';
 
-const maxEnum = Math.max(BulletListType.Max, NumberingListType.Max);
-const minEnum = Math.min(BulletListType.Min, NumberingListType.Min);
-
 /**
  * @internal
  * The definition for the number of BulletListType or NumberingListType
  */
-export const numberDefinition = createNumberDefinition(
-    false /** isOptional */,
-    undefined /** value */,
-    minEnum,
-    maxEnum
+export const listStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
+    {
+        orderedStyleType: createNumberDefinition(
+            true,
+            undefined /** value **/,
+            NumberingListType.Min,
+            NumberingListType.Max
+        ),
+        unOrderedStyleType: createNumberDefinition(
+            true,
+            undefined /** value **/,
+            BulletListType.Min,
+            BulletListType.Max
+        ),
+    },
+    true,
+    true
 );
 
 /**
@@ -233,14 +243,25 @@ export default class VListItem {
      * @param index the list item index
      */
     applyListStyle(rootList: HTMLOListElement | HTMLUListElement, index: number) {
-        const style = getMetadata<NumberingListType | BulletListType>(rootList, numberDefinition);
-        if (style !== null) {
-            if (this.listTypes.length < 3) {
-                if (this.listTypes[1] === ListType.Unordered) {
-                    setBulletListMarkers(this.node, style as BulletListType);
-                } else if (this.listTypes[1] === ListType.Ordered) {
-                    setNumberingListMarkers(this.node, style as NumberingListType, index);
-                }
+        const style = getMetadata<ListStyleMetadata>(rootList, listStyleDefinitionMetadata);
+        const isFirstLevel = this.listTypes.length < 3;
+        if (style) {
+            if (
+                isFirstLevel &&
+                this.listTypes[1] === ListType.Unordered &&
+                style.unOrderedStyleType
+            ) {
+                setBulletListMarkers(this.node, style.unOrderedStyleType as BulletListType);
+            } else if (
+                isFirstLevel &&
+                this.listTypes[1] === ListType.Ordered &&
+                style.orderedStyleType
+            ) {
+                setNumberingListMarkers(
+                    this.node,
+                    style.orderedStyleType as NumberingListType,
+                    index
+                );
             } else {
                 this.node.style.removeProperty('list-style-type');
             }
@@ -378,16 +399,13 @@ function createListElement(
         result = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
     }
 
-    // Always maintain the metadata saved in the list
-    if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
-        const style = getMetadata<NumberingListType | BulletListType>(
-            originalRoot,
-            numberDefinition
-        );
-        if (style !== null) {
-            setMetadata(result, style, numberDefinition);
-        }
-    }
+    // // Always maintain the metadata saved in the list
+    // if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
+    //     const style = getMetadata<ListStyleMetadata>(originalRoot, listStyleDefinitionMetadata);
+    //     if (style) {
+    //         setMetadata(result, style, listStyleDefinitionMetadata);
+    //     }
+    // }
 
     if (listType == ListType.Ordered && nextLevel > 1) {
         result.style.setProperty(

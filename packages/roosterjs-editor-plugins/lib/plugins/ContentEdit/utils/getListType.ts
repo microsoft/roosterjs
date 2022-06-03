@@ -1,14 +1,30 @@
 import { ListType } from 'roosterjs-editor-types';
 
-function isABulletList(textBeforeCursor: string) {
-    const hasTriggers = ['*', '-', '>'].indexOf(textBeforeCursor[0]) > -1;
-    const REGEX: RegExp = /^(.*?)=>|^(.*?)->|^(.*?)-->|^(.*?)=>|^(.*?)--/;
-    return hasTriggers || REGEX.test(textBeforeCursor);
+function isABulletList(trigger: string) {
+    const triggerLength = trigger.length;
+    if (triggerLength === 1) {
+        const REGEX: RegExp = /^((.*?)-|^(.*?)*|^(.*?)>)$/;
+        return REGEX.test(trigger);
+    } else if (triggerLength === 2) {
+        const REGEX: RegExp = /^((.*?)=>|^(.*?)->|^(.*?)=>|^(.*?)--)$/;
+        return REGEX.test(trigger);
+    } else if (triggerLength === 3) {
+        const REGEX: RegExp = /^(.*?)-->$/;
+        return REGEX.test(trigger);
+    }
+    return false;
 }
 
-function isANumberingList(textBeforeCursor: string) {
-    const REGEX: RegExp = /^([1-9,a-z, i,A-Z,I]{1,2}\.|[1-9,a-z, i,A-Z,I]{1,2}\)|[1-9,a-z, i,A-Z,I]{1,2}\-|\([1-9,a-z, i,A-Z,I]{1,2}\))$/;
-    return REGEX.test(textBeforeCursor.replace(/\s/g, ''));
+function isANumberingList(trigger: string) {
+    const triggerLength = trigger.length;
+    if (triggerLength === 2) {
+        const REGEX: RegExp = /^([1-9,a-z,A-Z]{1,2}\.|[1-9,a-z,A-Z]{1,2}\)|[1-9,a-z,A-Z]{1,2}\-)$/;
+        return REGEX.test(trigger);
+    } else if (triggerLength === 3) {
+        const REGEX: RegExp = /^(\([1-9,a-z, A-Z]{1,2}\))$/;
+        return REGEX.test(trigger);
+    }
+    return false;
 }
 
 /**
@@ -17,9 +33,10 @@ function isANumberingList(textBeforeCursor: string) {
  * @returns If the list is ordered or unordered
  */
 export default function getListType(textBeforeCursor: string): ListType {
-    if (isABulletList(textBeforeCursor)) {
+    const trigger = textBeforeCursor.replace(/\s/g, '');
+    if (isABulletList(trigger)) {
         return ListType.Unordered;
-    } else if (isANumberingList(textBeforeCursor)) {
+    } else if (isANumberingList(trigger)) {
         return ListType.Ordered;
     }
 }

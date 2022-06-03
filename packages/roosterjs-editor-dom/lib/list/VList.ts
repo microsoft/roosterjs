@@ -9,9 +9,9 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
-import VListItem, { numberDefinition } from './VListItem';
+import VListItem, { listStyleDefinitionMetadata } from './VListItem';
 import wrap from '../utils/wrap';
-import { setMetadata } from '../metadata/metadata';
+import { getMetadata, setMetadata } from '../metadata/metadata';
 import {
     Indentation,
     ListType,
@@ -21,6 +21,7 @@ import {
     Alignment,
     NumberingListType,
     BulletListType,
+    ListStyleMetadata,
 } from 'roosterjs-editor-types';
 import type {
     CompatibleAlignment,
@@ -353,13 +354,16 @@ export default class VList {
      * @param targetStyle Target list style
      */
     setListStyleType(
-        targetStyle:
+        targetType: ListType | CompatibleListType,
+        targetStyle?:
             | NumberingListType
             | BulletListType
             | CompatibleBulletListType
             | CompatibleNumberingListType
     ) {
-        setMetadata(this.rootList, targetStyle, numberDefinition);
+        const style = getMetadata<ListStyleMetadata>(this.rootList, listStyleDefinitionMetadata);
+        const styleMetadata = createListStyleMetadata(style, targetType, targetStyle);
+        setMetadata(this.rootList, styleMetadata, listStyleDefinitionMetadata);
     }
 
     /**
@@ -545,5 +549,36 @@ function moveLiToList(li: HTMLElement) {
         }
 
         unwrap(li.parentNode!);
+    }
+}
+
+function createListStyleMetadata(
+    style: ListStyleMetadata | null,
+    listType: ListType | CompatibleListType,
+    listStyle?:
+        | NumberingListType
+        | CompatibleNumberingListType
+        | BulletListType
+        | CompatibleBulletListType
+) {
+    if (style) {
+        if (listType === ListType.Ordered && listStyle) {
+            style.orderedStyleType = listStyle as NumberingListType;
+        } else if (listStyle) {
+            style.unOrderedStyleType = listStyle as BulletListType;
+        }
+        return style;
+    } else {
+        return listType === ListType.Ordered
+            ? {
+                  orderedStyleType: listStyle
+                      ? (listStyle as NumberingListType)
+                      : NumberingListType.Decimal,
+              }
+            : {
+                  unOrderedStyleType: listStyle
+                      ? (listStyle as BulletListType)
+                      : BulletListType.Disc,
+              };
     }
 }
