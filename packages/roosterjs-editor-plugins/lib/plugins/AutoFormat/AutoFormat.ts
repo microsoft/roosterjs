@@ -1,6 +1,5 @@
 import {
     EditorPlugin,
-    ExperimentalFeatures,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -44,14 +43,22 @@ export default class AutoFormat implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (
-            event.eventType === PluginEventType.KeyDown &&
-            this.editor.isFeatureEnabled(ExperimentalFeatures.AutoHyphen)
+            event.eventType === PluginEventType.ContentChanged ||
+            event.eventType === PluginEventType.MouseDown ||
+            event.eventType === PluginEventType.MouseUp
         ) {
+            this.lastKeyTyped = '';
+        }
+
+        if (event.eventType === PluginEventType.KeyDown) {
             const keyTyped = event.rawEvent.key;
+
+            if (keyTyped.length > 1) {
+                this.lastKeyTyped = '';
+            }
 
             if (
                 this.lastKeyTyped === '-' &&
-                keyTyped.length === 1 &&
                 !specialCharacters.test(keyTyped) &&
                 keyTyped !== ' ' &&
                 keyTyped !== '-'
@@ -59,13 +66,17 @@ export default class AutoFormat implements EditorPlugin {
                 const searcher = this.editor.getContentSearcherOfCursor(event);
                 const textBeforeCursor = searcher.getSubStringBefore(3);
                 const dashes = searcher.getSubStringBefore(2);
+                const isPrecededByADash = textBeforeCursor[0] === '-';
+                const isPrecededByASpace = textBeforeCursor[0] === ' ';
                 if (
-                    (textBeforeCursor[0] === ' ' || textBeforeCursor[0] === '-') &&
-                    !specialCharacters.test(textBeforeCursor[0]) &&
-                    dashes === '--'
+                    isPrecededByADash ||
+                    isPrecededByASpace ||
+                    specialCharacters.test(textBeforeCursor[0]) ||
+                    dashes !== '--'
                 ) {
                     return;
                 }
+
                 const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
                 const nodeHyphen = document.createTextNode('—');
                 this.editor.addUndoSnapshot(
@@ -77,6 +88,8 @@ export default class AutoFormat implements EditorPlugin {
                     null /*changeSource*/,
                     true /*canUndoByBackspace*/
                 );
+
+                //After the substitution the last key typed needs to be cleaned
                 this.lastKeyTyped = '';
             } else {
                 this.lastKeyTyped = keyTyped;

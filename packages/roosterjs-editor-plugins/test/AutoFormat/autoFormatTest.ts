@@ -1,12 +1,6 @@
 import * as TestHelper from '../TestHelper';
 import { AutoFormat } from '../../lib/AutoFormat';
-import {
-    ExperimentalFeatures,
-    IEditor,
-    PluginEventType,
-    EditorPlugin,
-    PluginEvent,
-} from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 describe('AutoHyphen |', () => {
     let editor: IEditor;
@@ -14,7 +8,7 @@ describe('AutoHyphen |', () => {
     let plugin: EditorPlugin;
     beforeEach(() => {
         plugin = new AutoFormat();
-        editor = TestHelper.initEditor(TEST_ID, [plugin], [ExperimentalFeatures.AutoHyphen]);
+        editor = TestHelper.initEditor(TEST_ID, [plugin]);
     });
 
     afterEach(() => {
@@ -38,15 +32,10 @@ describe('AutoHyphen |', () => {
         expect(editor.getContent()).toBe(expectedResult);
     }
 
-    it('Should format', () => {
+    it('Should format ', () => {
         runTestShouldHandleAutoHyphen(
-            '<div>t—-</div><!--{"start":[0,0,3],"end":[0,0,3]}-->',
+            '<div>t--</div><!--{"start":[0,0,4],"end":[0,0,4]}-->',
             ['t', '-', '-', 'b'],
-            '<div>t—</div>'
-        );
-        runTestShouldHandleAutoHyphen(
-            '<div>t—-</div><!--{"start":[0,0,3],"end":[0,0,3]}-->',
-            ['t', '-', '-', 'g'],
             '<div>t—</div>'
         );
     });
