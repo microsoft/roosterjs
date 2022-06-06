@@ -93,7 +93,7 @@ export default class TableEditor {
             editor.getZoomScale(),
             this.onSelect,
             this.onShowHelperElement,
-            this.getShouldShowTableSelectorHandler(this.event)
+            this.getShouldShowTableSelectorHandler(this.event, this.editor.getScrollContainer())
         );
     }
 
@@ -303,11 +303,17 @@ export default class TableEditor {
         }
     };
 
-    private getShouldShowTableSelectorHandler(e: MouseEvent): (rect: Rect) => boolean {
+    private getShouldShowTableSelectorHandler(
+        e: MouseEvent,
+        scrollContainer: HTMLElement
+    ): (rect: Rect) => boolean {
         if (safeInstanceOf(e.currentTarget, 'HTMLElement')) {
             const containerRect = normalizeRect(e.currentTarget.getBoundingClientRect());
+            const scrollContainerRect = normalizeRect(scrollContainer.getBoundingClientRect());
+            const scrollContainerVisibleTop = scrollContainer.scrollTop - scrollContainerRect.top;
 
-            return (rect: Rect) => containerRect.top <= rect.top;
+            return (rect: Rect) =>
+                containerRect.top <= rect.top && scrollContainerVisibleTop <= rect.top;
         }
 
         return () => true;
