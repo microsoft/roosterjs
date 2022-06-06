@@ -77,6 +77,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     minRotateDeg: 5,
     imageSelector: 'img',
     rotateIconHTML: null,
+    minDistanceFromEditorBorders: 11,
 };
 
 /**
@@ -137,14 +138,18 @@ export default class ImageEdit implements EditorPlugin {
     private wasResized: boolean;
 
     /**
+     * Every time user click at the image should check if the rotator image is hidden by the editor top or left border, if yes, flip the handle to opposite side.
+     */
+    private isRotatorHidden: boolean;
+
+    /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
      * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
      * To customize the resize handle element, add this callback and change the attributes of elementData then it
      * will be picked up by ImageEdit code
      */
-    constructor(options?: ImageEditOptions,
-        private onShowResizeHandle?: OnShowResizeHandle) {
+    constructor(options?: ImageEditOptions, private onShowResizeHandle?: OnShowResizeHandle) {
         this.options = {
             ...DefaultOptions,
             ...(options || {}),
@@ -298,6 +303,7 @@ export default class ImageEdit implements EditorPlugin {
 
             // Remove editing wrapper
             const wrapper = this.getImageWrapper(this.image);
+
             if (wrapper) {
                 this.removeWrapper(wrapper);
             }
@@ -322,12 +328,21 @@ export default class ImageEdit implements EditorPlugin {
             //Check if the image was resized by the user
             this.wasResized = checkIfImageWasResized(this.image);
 
+            //Check the image position, to know if the rotator is hidden by the editor border
+            this.isRotatorHidden = isImageAtLeftOrTopCorner(
+                this.editor,
+                this.editInfo,
+                this.image,
+                this.options.minDistanceFromEditorBorders
+            );
+
             operation =
                 (canRegenerateImage(image) ? operation : ImageEditOperation.Resize) &
                 this.allowedOperations;
 
             // Create and update editing wrapper and elements
             const wrapper = this.createWrapper(operation);
+
             this.updateWrapper();
 
             // Init drag and drop
@@ -395,7 +410,10 @@ export default class ImageEdit implements EditorPlugin {
         ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
             thisOperation => {
                 if ((operation & thisOperation) == thisOperation) {
-                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle));
+                    arrayPush(
+                        htmlData,
+                        ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle)
+                    );
                 }
             }
         );
@@ -534,7 +552,8 @@ export default class ImageEdit implements EditorPlugin {
                     this.editor.getRelativeDistanceToEditor(wrapper, true /*addScroll*/),
                     marginVertical,
                     rotateCenter,
-                    rotateHandle
+                    rotateHandle,
+                    this.isRotatorHidden
                 );
 
                 updateHandleCursor(resizeHandles, angleRad);
@@ -558,6 +577,7 @@ export default class ImageEdit implements EditorPlugin {
             elementClass,
         };
         const wrapper = this.getImageWrapper(this.image);
+
         return wrapper
             ? getEditElements(wrapper, elementClass).map(
                   element =>
@@ -670,4 +690,23 @@ function isFixedNumberValue(value: string | number) {
 function isASmallImage(editInfo: ImageEditInfo, isFeatureEnabled?: boolean) {
     const { widthPx, heightPx } = editInfo;
     return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE && isFeatureEnabled;
+}
+
+function isImageAtLeftOrTopCorner(
+    editor: IEditor,
+    editInfo: ImageEditInfo,
+    wrapper: HTMLElement,
+    minimumDistance?: number
+) {
+    const distance = editor.getRelativeDistanceToEditor(wrapper, true /*addScroll*/);
+    const deg45 = Math.PI / 4;
+    const deg135 = 3 * (Math.PI / 4);
+    if (distance) {
+        const { angleRad } = editInfo;
+        if (distance[1] === minimumDistance && angleRad <= deg45 && angleRad >= -deg45) {
+            return true;
+        } else if (distance[0] === minimumDistance && angleRad <= -deg45 && angleRad >= -deg135) {
+            return true;
+        }
+    }
 }
