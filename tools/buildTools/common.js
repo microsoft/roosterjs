@@ -95,7 +95,7 @@ function readPackageJson(packageName, readFromSourceFolder) {
     );
     const content = fs.readFileSync(packageJsonFilePath);
 
-    return JSON.parse(content);
+    return { dependencies: {}, devDependencies: {}, ...JSON.parse(content) };
 }
 
 const mainPackageJson = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json')));
