@@ -22,6 +22,8 @@ import {
 const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';
 const NBSP_HTML = '\u00A0';
+const ENSP_HTML = '\u2002';
+const TAB_SPACES = 6;
 
 /**
  * @internal
@@ -127,6 +129,11 @@ export const createPasteFragment: CreatePasteFragment = (
                 .replace(/^ /g, NBSP_HTML)
                 .replace(/\r/g, '')
                 .replace(/ {2}/g, ' ' + NBSP_HTML);
+
+            if (line.includes('\t')) {
+                line = transformTabCharacters(line, index === 0 ? position.offset : 0);
+            }
+
             const textNode = document.createTextNode(line);
 
             // There are 3 scenarios:
@@ -158,6 +165,25 @@ export const createPasteFragment: CreatePasteFragment = (
 
     return fragment;
 };
+
+/**
+ * @internal
+ * Transform \t characters into EN SPACE characters
+ * @param input string NOT containing \n characters
+ * @example t("\thello", 2) => "&ensp;&ensp;&ensp;&ensp;hello"
+ */
+export function transformTabCharacters(input: string, initialOffset = 0) {
+    let line = input;
+    let t_index: number;
+    while ((t_index = line.indexOf('\t')) != -1) {
+        const lineBefore = line.slice(0, t_index);
+        const lineAfter = line.slice(t_index + 1);
+        const tabCount = TAB_SPACES - ((lineBefore.length + initialOffset) % TAB_SPACES);
+        const tabStr = Array(tabCount).fill(ENSP_HTML).join('');
+        line = lineBefore + tabStr + lineAfter;
+    }
+    return line;
+}
 
 function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
     const pendableFormat = core.api.getPendableFormatState(core, true /** forceGetStateFromDOM*/);
