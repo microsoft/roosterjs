@@ -46,4 +46,10 @@ export default interface ImageEditOptions {
      * @default A predefined SVG icon
      */
     rotateIconHTML?: string;
+
+    /**
+     * Minimum distance to editor top or left border
+     * @default 11
+     */
+    minDistanceFromEditorBorders?: number;
 }
