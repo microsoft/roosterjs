@@ -38,5 +38,7 @@ export default function getListType(textBeforeCursor: string): ListType {
         return ListType.Unordered;
     } else if (isANumberingList(trigger)) {
         return ListType.Ordered;
+    } else {
+        return ListType.None;
     }
 }

@@ -171,7 +171,11 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
             // Auto list is triggered if:
             // 1. Text before cursor exactly matches '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
-            return listTrigger(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
+            return (
+                listTrigger(textBeforeCursor) &&
+                listTrigger(textBeforeCursor) !== ListType.None &&
+                !searcher.getNearestNonTextInlineElement()
+            );
         }
         return false;
     },
@@ -198,7 +202,6 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                             ? ListType.Ordered
                             : ListType.None;
                 }
-
                 if (!textRange) {
                     // no op if the range can't be found
                 } else if (listType === ListType.Unordered) {

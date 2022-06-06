@@ -11,7 +11,7 @@ import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
 import { createNumberDefinition, createObjectDefinition } from '../metadata/definitionCreators';
-import { getMetadata } from '../metadata/metadata';
+import { getMetadata, setMetadata } from '../metadata/metadata';
 import {
     BulletListType,
     KnownCreateElementDataIndex,
@@ -31,7 +31,7 @@ const NEGATIVE_MARGIN = '-.25in';
  * @internal
  * The definition for the number of BulletListType or NumberingListType
  */
-export const listStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
+export const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     {
         orderedStyleType: createNumberDefinition(
             true,
@@ -39,7 +39,7 @@ export const listStyleDefinitionMetadata = createObjectDefinition<ListStyleMetad
             NumberingListType.Min,
             NumberingListType.Max
         ),
-        unOrderedStyleType: createNumberDefinition(
+        unorderedStyleType: createNumberDefinition(
             true,
             undefined /** value **/,
             BulletListType.Min,
@@ -243,25 +243,22 @@ export default class VListItem {
      * @param index the list item index
      */
     applyListStyle(rootList: HTMLOListElement | HTMLUListElement, index: number) {
-        const style = getMetadata<ListStyleMetadata>(rootList, listStyleDefinitionMetadata);
+        const style = getMetadata<ListStyleMetadata>(rootList, ListStyleDefinitionMetadata);
+        // The list just need to be styled if it is at top level, so the listType length for this Vlist must be 2.
         const isFirstLevel = this.listTypes.length < 3;
         if (style) {
             if (
                 isFirstLevel &&
                 this.listTypes[1] === ListType.Unordered &&
-                style.unOrderedStyleType
+                style.unorderedStyleType !== undefined
             ) {
-                setBulletListMarkers(this.node, style.unOrderedStyleType as BulletListType);
+                setBulletListMarkers(this.node, style.unorderedStyleType);
             } else if (
                 isFirstLevel &&
                 this.listTypes[1] === ListType.Ordered &&
-                style.orderedStyleType
+                style.orderedStyleType !== undefined
             ) {
-                setNumberingListMarkers(
-                    this.node,
-                    style.orderedStyleType as NumberingListType,
-                    index
-                );
+                setNumberingListMarkers(this.node, style.orderedStyleType, index);
             } else {
                 this.node.style.removeProperty('list-style-type');
             }
@@ -272,7 +269,6 @@ export default class VListItem {
      * Write the change result back into DOM
      * @param listStack current stack of list elements
      * @param originalRoot Original list root element. It will be reused when write back if possible
-     * @param numberDefinition the number definition of BulletListType or NumberingListType saved in the style metadata
      */
     writeBack(listStack: Node[], originalRoot?: HTMLOListElement | HTMLUListElement) {
         let nextLevel = 1;
@@ -399,13 +395,13 @@ function createListElement(
         result = doc.createElement(listType == ListType.Ordered ? 'ol' : 'ul');
     }
 
-    // // Always maintain the metadata saved in the list
-    // if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
-    //     const style = getMetadata<ListStyleMetadata>(originalRoot, listStyleDefinitionMetadata);
-    //     if (style) {
-    //         setMetadata(result, style, listStyleDefinitionMetadata);
-    //     }
-    // }
+    // Always maintain the metadata saved in the list
+    if (originalRoot && nextLevel == 1 && listType != getListTypeFromNode(originalRoot)) {
+        const style = getMetadata<ListStyleMetadata>(originalRoot, ListStyleDefinitionMetadata);
+        if (style) {
+            setMetadata(result, style, ListStyleDefinitionMetadata);
+        }
+    }
 
     if (listType == ListType.Ordered && nextLevel > 1) {
         result.style.setProperty(

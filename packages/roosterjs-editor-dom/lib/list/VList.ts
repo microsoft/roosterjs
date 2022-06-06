@@ -9,7 +9,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
-import VListItem, { listStyleDefinitionMetadata } from './VListItem';
+import VListItem, { ListStyleDefinitionMetadata } from './VListItem';
 import wrap from '../utils/wrap';
 import { getMetadata, setMetadata } from '../metadata/metadata';
 import {
@@ -355,15 +355,17 @@ export default class VList {
      */
     setListStyleType(
         targetType: ListType | CompatibleListType,
-        targetStyle?:
-            | NumberingListType
-            | BulletListType
-            | CompatibleBulletListType
-            | CompatibleNumberingListType
+        orderedStyle: NumberingListType | CompatibleNumberingListType,
+        unorderedStyle: BulletListType | CompatibleBulletListType
     ) {
-        const style = getMetadata<ListStyleMetadata>(this.rootList, listStyleDefinitionMetadata);
-        const styleMetadata = createListStyleMetadata(style, targetType, targetStyle);
-        setMetadata(this.rootList, styleMetadata, listStyleDefinitionMetadata);
+        const style = getMetadata<ListStyleMetadata>(this.rootList, ListStyleDefinitionMetadata);
+        const styleMetadata = createListStyleMetadata(
+            style,
+            targetType,
+            orderedStyle as NumberingListType,
+            unorderedStyle as BulletListType
+        );
+        setMetadata(this.rootList, styleMetadata, ListStyleDefinitionMetadata);
     }
 
     /**
@@ -555,30 +557,23 @@ function moveLiToList(li: HTMLElement) {
 function createListStyleMetadata(
     style: ListStyleMetadata | null,
     listType: ListType | CompatibleListType,
-    listStyle?:
-        | NumberingListType
-        | CompatibleNumberingListType
-        | BulletListType
-        | CompatibleBulletListType
-) {
+    orderedStyle: NumberingListType,
+    unorderedStyle: BulletListType
+): ListStyleMetadata {
     if (style) {
-        if (listType === ListType.Ordered && listStyle) {
-            style.orderedStyleType = listStyle as NumberingListType;
-        } else if (listStyle) {
-            style.unOrderedStyleType = listStyle as BulletListType;
+        if (listType === ListType.Ordered && orderedStyle !== undefined) {
+            style.orderedStyleType = orderedStyle;
+        } else if (unorderedStyle !== undefined) {
+            style.unorderedStyleType = unorderedStyle;
         }
         return style;
     } else {
         return listType === ListType.Ordered
             ? {
-                  orderedStyleType: listStyle
-                      ? (listStyle as NumberingListType)
-                      : NumberingListType.Decimal,
+                  orderedStyleType: orderedStyle ? orderedStyle : NumberingListType.Decimal,
               }
             : {
-                  unOrderedStyleType: listStyle
-                      ? (listStyle as BulletListType)
-                      : BulletListType.Disc,
+                  unorderedStyleType: unorderedStyle ? unorderedStyle : BulletListType.Disc,
               };
     }
 }

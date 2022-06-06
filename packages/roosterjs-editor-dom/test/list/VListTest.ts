@@ -1302,7 +1302,8 @@ describe('VList.setListStyleType', () => {
     function runTest(
         source: string,
         listType: ListType,
-        listStyle: NumberingListType | BulletListType,
+        orderedStyle: NumberingListType | undefined,
+        unorderedStyle: BulletListType | undefined,
         style: ListStyleMetadata
     ) {
         DomTestHelper.createElementFromContent(testId, source);
@@ -1321,7 +1322,7 @@ describe('VList.setListStyleType', () => {
         const vList = new VList(list);
 
         // Act
-        vList.setListStyleType(listType, listStyle);
+        vList.setListStyleType(listType, orderedStyle, unorderedStyle);
         expect(list.dataset[editingInfo]).toEqual(JSON.stringify(style));
         DomTestHelper.removeElement(testId);
     }
@@ -1331,6 +1332,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.Decimal,
+            undefined,
             { orderedStyleType: 0 }
         );
     });
@@ -1340,6 +1342,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.Decimal,
+            undefined,
             { orderedStyleType: 0 }
         );
     });
@@ -1349,6 +1352,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.DecimalDash,
+            undefined,
             { orderedStyleType: 1 }
         );
     });
@@ -1358,6 +1362,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.DecimalParenthesis,
+            undefined,
             { orderedStyleType: 2 }
         );
     });
@@ -1367,6 +1372,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.DecimalDoubleParenthesis,
+            undefined,
             { orderedStyleType: 3 }
         );
     });
@@ -1376,6 +1382,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerAlpha,
+            undefined,
             { orderedStyleType: 4 }
         );
     });
@@ -1385,6 +1392,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerAlphaDash,
+            undefined,
             { orderedStyleType: 7 }
         );
     });
@@ -1394,6 +1402,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerAlphaParenthesis,
+            undefined,
             { orderedStyleType: 5 }
         );
     });
@@ -1403,6 +1412,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerAlphaDoubleParenthesis,
+            undefined,
             { orderedStyleType: 6 }
         );
     });
@@ -1412,6 +1422,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperAlpha,
+            undefined,
             { orderedStyleType: 8 }
         );
     });
@@ -1421,6 +1432,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperAlphaDash,
+            undefined,
             { orderedStyleType: 11 }
         );
     });
@@ -1430,6 +1442,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperAlphaParenthesis,
+            undefined,
             { orderedStyleType: 9 }
         );
     });
@@ -1439,6 +1452,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperAlphaDoubleParenthesis,
+            undefined,
             { orderedStyleType: 10 }
         );
     });
@@ -1448,6 +1462,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerRoman,
+            undefined,
             { orderedStyleType: 12 }
         );
     });
@@ -1457,6 +1472,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerRomanDash,
+            undefined,
             { orderedStyleType: 15 }
         );
     });
@@ -1466,6 +1482,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerRomanParenthesis,
+            undefined,
             { orderedStyleType: 13 }
         );
     });
@@ -1475,6 +1492,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.LowerRomanDoubleParenthesis,
+            undefined,
             { orderedStyleType: 14 }
         );
     });
@@ -1484,6 +1502,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperRoman,
+            undefined,
             { orderedStyleType: 16 }
         );
     });
@@ -1493,6 +1512,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperRomanDash,
+            undefined,
             { orderedStyleType: 19 }
         );
     });
@@ -1502,6 +1522,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperRomanParenthesis,
+            undefined,
             { orderedStyleType: 17 }
         );
     });
@@ -1511,6 +1532,7 @@ describe('VList.setListStyleType', () => {
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             ListType.Ordered,
             NumberingListType.UpperRomanDoubleParenthesis,
+            undefined,
             { orderedStyleType: 18 }
         );
     });

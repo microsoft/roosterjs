@@ -6,5 +6,5 @@ import { NumberingListType } from '../enum/NumberingListType';
  */
 export default interface ListStyleMetadata {
     orderedStyleType?: NumberingListType;
-    unOrderedStyleType?: BulletListType;
+    unorderedStyleType?: BulletListType;
 }
