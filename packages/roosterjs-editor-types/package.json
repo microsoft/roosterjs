@@ -1,7 +1,7 @@
 {
     "name": "roosterjs-editor-types",
     "description": "Type definition for roosterjs",
-    "dependencies": {
+    "devDependencies": {
         "@types/dom-inputevent": "^1.0.3"
     },
     "main": "./lib/index.ts"
