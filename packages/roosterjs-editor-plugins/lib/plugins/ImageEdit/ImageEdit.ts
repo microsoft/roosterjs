@@ -703,9 +703,9 @@ function isImageAtLeftOrTopCorner(
     const deg135 = 3 * (Math.PI / 4);
     if (distance) {
         const { angleRad } = editInfo;
-        if (distance[1] === minimumDistance && angleRad <= deg45 && angleRad >= -deg45) {
+        if (distance[1] <= minimumDistance && angleRad <= deg45 && angleRad >= -deg45) {
             return true;
-        } else if (distance[0] === minimumDistance && angleRad <= -deg45 && angleRad >= -deg135) {
+        } else if (distance[0] <= minimumDistance && angleRad <= -deg45 && angleRad >= -deg135) {
             return true;
         }
     }
