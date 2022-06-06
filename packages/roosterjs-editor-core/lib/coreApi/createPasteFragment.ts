@@ -172,12 +172,12 @@ export const createPasteFragment: CreatePasteFragment = (
  * @param input string NOT containing \n characters
  * @example t("\thello", 2) => "&ensp;&ensp;&ensp;&ensp;hello"
  */
-export function transformTabCharacters(input: string, initialOffset = 0) {
+export function transformTabCharacters(input: string, initialOffset: number = 0) {
     let line = input;
-    let t_index: number;
-    while ((t_index = line.indexOf('\t')) != -1) {
-        const lineBefore = line.slice(0, t_index);
-        const lineAfter = line.slice(t_index + 1);
+    let tIndex: number;
+    while ((tIndex = line.indexOf('\t')) != -1) {
+        const lineBefore = line.slice(0, tIndex);
+        const lineAfter = line.slice(tIndex + 1);
         const tabCount = TAB_SPACES - ((lineBefore.length + initialOffset) % TAB_SPACES);
         const tabStr = Array(tabCount).fill(ENSP_HTML).join('');
         line = lineBefore + tabStr + lineAfter;
