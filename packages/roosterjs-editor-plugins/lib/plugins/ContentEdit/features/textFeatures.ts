@@ -115,28 +115,12 @@ const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
  * Automatically transform -- into hyphen, if typed between two words.
  */
 const AutoHyphen: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [...createNumberSequenceArray(48, 57), ...createNumberSequenceArray(65, 90)],
+    keys: [],
     shouldHandleEvent: (event, editor) => {
-        const searcher = editor.getContentSearcherOfCursor(event);
-        const textBeforeCursor = searcher.getSubStringBefore(3);
-        const hasDashes = textBeforeCursor[2] === '-' && textBeforeCursor[1] === '-';
-        const noSpace = textBeforeCursor[0] !== ' ';
-        return hasDashes && noSpace;
+        return false;
     },
     handleEvent: (event, editor) => {
-        const searcher = editor.getContentSearcherOfCursor(event);
-        const dashes = searcher.getSubStringBefore(2);
-        const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
-        const nodeHyphen = document.createTextNode('—');
-        editor.addUndoSnapshot(
-            () => {
-                textRange.deleteContents();
-                textRange.insertNode(nodeHyphen);
-                editor.select(nodeHyphen, PositionType.End);
-            },
-            null /*changeSource*/,
-            true /*canUndoByBackspace*/
-        );
+        return false;
     },
     defaultDisabled: true,
 };
@@ -224,8 +208,4 @@ function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
     if (span2) {
         editor.deleteNode(span2);
     }
-}
-
-function createNumberSequenceArray(start: number, end: number) {
-    return new Array(end - start).fill(start).map((keyCodeValue, i) => i + start);
 }
