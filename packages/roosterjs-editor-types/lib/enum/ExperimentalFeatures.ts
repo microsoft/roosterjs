@@ -84,8 +84,8 @@ export const enum ExperimentalFeatures {
     AutoFormatList = 'AutoFormatList',
 
     /**
+     * @deprecated this feature is always disabled
      * Automatically transform -- into hyphen, if typed between two words.
      */
     AutoHyphen = 'AutoHyphen',
-
 }
