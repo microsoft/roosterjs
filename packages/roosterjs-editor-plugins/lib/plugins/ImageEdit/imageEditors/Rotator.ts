@@ -55,7 +55,7 @@ export function updateRotateHandlePosition(
     if (rotateCenter && rotateHandle && distance) {
         const { angleRad, heightPx } = editInfo;
         const cosAngle = Math.cos(angleRad);
-        const { rotateGap, rotateTop } = calculateRotatorHandlePosition(
+        const rotateGap = calculateRotatorHandlePosition(
             distance,
             marginVertical,
             cosAngle,
@@ -67,7 +67,7 @@ export function updateRotateHandlePosition(
             rotateCenter.style.top = heightPx + 'px';
         } else {
             rotateCenter.style.top = -rotateGap + 'px';
-            rotateHandle.style.top = -rotateTop + 'px';
+            rotateHandle.style.top = -heightPx + rotateGap + 'px';
         }
     }
 }
@@ -77,15 +77,14 @@ function calculateRotatorHandlePosition(
     marginVertical: number,
     cosAngle: number,
     heightPx: number
-): { rotateGap: number; rotateTop: number } {
+): number {
+    const minDistance = Math.min(distance[1], distance[0]);
     const adjustedDistance =
         cosAngle <= 0
             ? Number.MAX_SAFE_INTEGER
-            : (distance[1] + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
+            : (minDistance + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
 
-    const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
-    const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-    return { rotateGap, rotateTop };
+    return Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
 }
 
 /**
