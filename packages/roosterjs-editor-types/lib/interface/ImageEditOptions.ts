@@ -1,3 +1,5 @@
+import ModeIndependentColor from "./ModeIndependentColor";
+
 /**
  * Options for ImageEdit plugin
  */
@@ -6,7 +8,7 @@ export default interface ImageEditOptions {
      * Color of resize/rotate border, handle and icon
      * @default #DB626C
      */
-    borderColor?: string;
+    borderColor?: ModeIndependentColor;
 
     /**
      * Minimum resize/crop width

@@ -1,5 +1,5 @@
 import ImageEdit from '../ImageEdit/ImageEdit';
-import { ImageEditOperation } from 'roosterjs-editor-types';
+import { ImageEditOperation, ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * @deprecated Use ImageEdit plugin instead
@@ -17,7 +17,10 @@ export default class ImageResize extends ImageEdit {
     constructor(
         minWidth: number = 10,
         minHeight: number = 10,
-        selectionBorderColor: string = '#DB626C',
+        selectionBorderColor: ModeIndependentColor = {
+            lightModeColor: '#DB626C',
+            darkModeColor: '#DB626C',
+        },
         forcePreserveRatio: boolean = false,
         resizableImageSelector: string = 'img'
     ) {

@@ -70,7 +70,10 @@ const FeatureToOperationMap = {
  * Default image edit options
  */
 const DefaultOptions: Required<ImageEditOptions> = {
-    borderColor: '#DB626C',
+    borderColor: {
+        lightModeColor: '#DB626C',
+        darkModeColor: '#DB626C',
+    },
     minWidth: 10,
     minHeight: 10,
     preserveRatio: false,
@@ -382,7 +385,7 @@ export default class ImageEdit implements EditorPlugin {
 
         // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
         const options: ImageHtmlOptions = {
-            borderColor: this.options.borderColor,
+            borderColor: this.editor.isDarkMode ? this.options.borderColor.darkModeColor : this.options.borderColor.lightModeColor,
             rotateIconHTML: this.options.rotateIconHTML,
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
