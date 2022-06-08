@@ -293,7 +293,6 @@ describe('NormalizeTablePlugin', () => {
     });
 
     it('Table has THEAD With colgroup and TR and TFOOT', () => {
-        debugger;
         runTest(
             createTable(
                 getTheadWithColgroup(createTableSection),
