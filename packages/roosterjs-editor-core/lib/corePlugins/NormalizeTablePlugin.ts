@@ -133,15 +133,20 @@ function normalizeTables(tables: HTMLTableElement[]) {
                         tbody = child as HTMLTableSectionElement;
                     }
                     break;
-                case 'COLGROUP':
-                    if (table.tHead) {
-                        table.tHead.prepend(child);
-                    }
-                    break;
                 default:
                     tbody = null;
                     break;
             }
+        }
+
+        const colgroups = table.querySelectorAll('colgroup');
+        const thead = table.querySelector('thead');
+        if (thead) {
+            colgroups.forEach(colgroup => {
+                if (colgroup && !thead.contains(colgroup)) {
+                    thead.appendChild(colgroup);
+                }
+            });
         }
     });
 
