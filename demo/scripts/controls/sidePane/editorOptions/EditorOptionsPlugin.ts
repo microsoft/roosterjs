@@ -19,6 +19,7 @@ const initialState: BuildInPluginState = {
         pickerPlugin: true,
         resetList: true,
         contextMenu: true,
+        autoFormat: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},

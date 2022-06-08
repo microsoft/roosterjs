@@ -1,7 +1,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
 import { createElement, normalizeRect } from 'roosterjs-editor-dom';
-import { CreateElementData, Rect } from 'roosterjs-editor-types';
+import { CreateElementData } from 'roosterjs-editor-types';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -16,14 +16,8 @@ export default function createTableSelector(
     onShowHelperElement: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void,
-    shouldShow: (rect: Rect) => boolean
+    ) => void
 ): TableEditorFeature {
-    const rect = normalizeRect(table.getBoundingClientRect());
-    if (!shouldShow(rect)) {
-        return undefined;
-    }
-
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
@@ -42,7 +36,6 @@ export default function createTableSelector(
     const context: DragAndDropContext = {
         table,
         zoomScale,
-        rect,
     };
 
     setSelectorDivPosition(context, div);
@@ -70,7 +63,6 @@ export default function createTableSelector(
 interface DragAndDropContext {
     table: HTMLTableElement;
     zoomScale: number;
-    rect: Rect;
 }
 
 interface DragAndDropInitValue {
@@ -78,7 +70,9 @@ interface DragAndDropInitValue {
 }
 
 function setSelectorDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
-    const { rect } = context;
+    const { table } = context;
+    const rect = normalizeRect(table.getBoundingClientRect());
+
     if (rect) {
         trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
         trigger.style.left = `${rect.left - TABLE_SELECTOR_LENGTH - 2}px`;
