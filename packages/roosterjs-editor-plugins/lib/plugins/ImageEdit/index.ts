@@ -5,4 +5,3 @@ export { default as isResizedTo } from './api/isResizedTo';
 export { default as resetImage } from './api/resetImage';
 export { OnShowResizeHandle } from './imageEditors/Resizer';
 export { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
-export { getPageX, getPageY } from './editInfoUtils/getMouseEventInfo';
