@@ -114,4 +114,3 @@ export {
     TableSelectionRange,
     SelectionRangeEx,
 } from './SelectionRangeEx';
-export { default as ListStyleMetadata } from './ListStyleMetadata';

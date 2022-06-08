@@ -21,7 +21,7 @@ describe('listFeatures', () => {
 
     function runListPatternTest(text: string, expectedResult: boolean) {
         const root = document.createElement('div');
-        const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
+        const mockedPosition = new PositionContentSearcher(root, new Position(root, 5));
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
         editorIsFeatureEnabled.and.returnValue(false);
@@ -33,7 +33,7 @@ describe('listFeatures', () => {
 
     function runTestWithStyles(text: string, expectedResult: boolean) {
         const root = document.createElement('div');
-        const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
+        const mockedPosition = new PositionContentSearcher(root, new Position(root, 5));
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
         editorIsFeatureEnabled.and.returnValue(true);
         editorSearchCursorSpy.and.returnValue(mockedPosition);

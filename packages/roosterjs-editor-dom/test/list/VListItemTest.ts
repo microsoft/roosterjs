@@ -451,7 +451,7 @@ describe('VListItem.applyListStyle', () => {
         const li = document.createElement('li');
         list.appendChild(li);
         const vList = new VList(list);
-        vList.setListStyleType(listType, orderedStyle, unorderedStyle);
+        vList.setListStyleType(orderedStyle, unorderedStyle);
         vList.items.forEach(item => {
             const index = vList.getListItemIndex(item.getNode());
             item.applyListStyle(list, index);

@@ -15,7 +15,6 @@ import { getMetadata, setMetadata } from '../metadata/metadata';
 import {
     BulletListType,
     KnownCreateElementDataIndex,
-    ListStyleMetadata,
     ListType,
     NumberingListType,
 } from 'roosterjs-editor-types';
@@ -49,6 +48,15 @@ export const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetad
     true,
     true
 );
+
+/**
+ * @internal
+ * Represents the metadata of the style of a list element
+ */
+export interface ListStyleMetadata {
+    orderedStyleType?: NumberingListType;
+    unorderedStyleType?: BulletListType;
+}
 
 /**
  * !!! Never directly create instance of this class. It should be created within VList class !!!
@@ -250,13 +258,13 @@ export default class VListItem {
             if (
                 isFirstLevel &&
                 this.listTypes[1] === ListType.Unordered &&
-                style.unorderedStyleType !== undefined
+                style.unorderedStyleType
             ) {
                 setBulletListMarkers(this.node, style.unorderedStyleType);
             } else if (
                 isFirstLevel &&
                 this.listTypes[1] === ListType.Ordered &&
-                style.orderedStyleType !== undefined
+                style.orderedStyleType
             ) {
                 setNumberingListMarkers(this.node, style.orderedStyleType, index);
             } else {

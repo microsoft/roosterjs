@@ -54,7 +54,7 @@ export default function toggleListType(
         if (vList) {
             vList.changeListType(start, end, listType);
             if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
-                vList.setListStyleType(listType, orderedStyle, unorderedStyle);
+                vList.setListStyleType(orderedStyle, unorderedStyle);
             }
             vList.writeBack();
         }
