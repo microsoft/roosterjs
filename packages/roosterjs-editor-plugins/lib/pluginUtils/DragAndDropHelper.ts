@@ -1,6 +1,7 @@
 import { Browser } from 'roosterjs-editor-dom/lib';
 import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
+import { getPageX, getPageY } from '../plugins/ImageEdit/editInfoUtils/getMouseEventInfo';
 
 /**
  * @internal
@@ -85,35 +86,15 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         e.stopPropagation();
         this.addDocumentEvents();
 
-        this.initX = this.getPageX(e);
-        this.initY = this.getPageY(e);
+        this.initX = getPageX(e);
+        this.initY = getPageY(e);
         this.initValue = this.handler.onDragStart?.(this.context, e);
     };
 
-    private getPageX = (e: MouseEvent): number => {
-        let pageX = e.pageX;
-        if (!pageX) {
-            const touchEvent = e as unknown as TouchEvent;
-            const touch = touchEvent.targetTouches[0];
-            pageX = touch.pageX;
-        }
-        return pageX;
-    }
-
-    private getPageY = (e: MouseEvent): number => {
-        let pageY = e.pageY;
-        if (!pageY) {
-            const touchEvent = e as unknown as TouchEvent;
-            const touch = touchEvent.targetTouches[0];
-            pageY = touch.pageY;
-        }
-        return pageY;
-    }
-
     private onMouseMove = (e: MouseEvent) => {
         e.preventDefault();
-        const deltaX = (this.getPageX(e) - this.initX) / this.zoomScale;
-        const deltaY = (this.getPageY(e) - this.initY) / this.zoomScale;
+        const deltaX = (getPageX(e) - this.initX) / this.zoomScale;
+        const deltaY = (getPageY(e) - this.initY) / this.zoomScale;
         if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {
             this.onSubmit?.(this.context, this.trigger);
         }
