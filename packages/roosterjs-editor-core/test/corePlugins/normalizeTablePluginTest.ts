@@ -260,4 +260,149 @@ describe('NormalizeTablePlugin', () => {
         expect(table.outerHTML).toBe('<table><tbody><tr><td>test1</td></tr></tbody></table>');
         expect(select).toHaveBeenCalledWith(table, coordinates);
     });
+
+    it('Normalize table with THEAD With colgroup, Tbody, Tfoot', () => {
+        runTest(
+            createTable(
+                getTheadWithColgroup(createTableSection),
+                createTableSection('tbody', 'test2'),
+                createTr('test3'),
+                createTableSection('tbody', 'test4'),
+                createTableSection('tfoot', 'test5')
+            ),
+            '<table>' +
+                '<thead><tr><td>test1</td></tr><colgroup><col><col></colgroup></thead>' +
+                '<tbody><tr><td>test2</td></tr><tr><td>test3</td></tr><tr><td>test4</td></tr></tbody>' +
+                '<tfoot><tr><td>test5</td></tr></tfoot>' +
+                '</table>'
+        );
+    });
+
+    it('Table already has THEAD With colgroup/TBODY/TFOOT', () => {
+        runTest(
+            createTable(
+                getTheadWithColgroup(createTableSection),
+                createTableSection('tbody', 'test2', 'test3'),
+                createTableSection('tfoot', 'test4')
+            ),
+            '<table>' +
+                '<thead><tr><td>test1</td></tr><colgroup><col><col></colgroup></thead>' +
+                '<tbody><tr><td>test2</td></tr><tr><td>test3</td></tr></tbody>' +
+                '<tfoot><tr><td>test4</td></tr></tfoot></table>'
+        );
+    });
+
+    it('Table has THEAD With colgroup and TR and TFOOT', () => {
+        runTest(
+            createTable(
+                getTheadWithColgroup(createTableSection),
+                createTr('test2'),
+                createTr('test3'),
+                createTableSection('tfoot', 'test4')
+            ),
+            '<table>' +
+                '<thead><tr><td>test1</td></tr><colgroup><col><col></colgroup></thead>' +
+                '<tbody><tr><td>test2</td></tr><tr><td>test3</td></tr></tbody>' +
+                '<tfoot><tr><td>test4</td></tr></tfoot></table>'
+        );
+    });
+
+    it('Table has THEAD With colgroup and TR and TBODY and TR and TFOOT', () => {
+        runTest(
+            createTable(
+                getTheadWithColgroup(createTableSection),
+                createTr('test2'),
+                createTableSection('tbody', 'test3'),
+                createTr('test4'),
+                createTableSection('tfoot', 'test5')
+            ),
+            '<table>' +
+                '<thead><tr><td>test1</td></tr><colgroup><col><col></colgroup></thead>' +
+                '<tbody><tr><td>test2</td></tr><tr><td>test3</td></tr><tr><td>test4</td></tr></tbody>' +
+                '<tfoot><tr><td>test5</td></tr></tfoot>' +
+                '</table>'
+        );
+    });
+
+    it('Table has THEAD With colgroup and TR and TBODY and TR and TFOOT 2', () => {
+        runTest(
+            createTable(
+                createTableSection('thead', 'test1'),
+                getColgroup(),
+                createTr('test2'),
+                createTableSection('tbody', 'test3'),
+                createTr('test4'),
+                createTableSection('tfoot', 'test5')
+            ),
+            '<table>' +
+                '<thead><tr><td>test1</td></tr><colgroup><col><col></colgroup></thead>' +
+                '<tbody><tr><td>test2</td></tr><tr><td>test3</td></tr><tr><td>test4</td></tr></tbody>' +
+                '<tfoot><tr><td>test5</td></tr></tfoot>' +
+                '</table>'
+        );
+    });
+
+    it('Table has THEAD With colgroup and TBODY and TR and TBODY and TFOOT', () => {
+        runTest(
+            createTable(
+                getTheadWithColgroup(createTableSection),
+                createTableSection('tbody', 'test2'),
+                createTr('test3'),
+                createTableSection('tbody', 'test4'),
+                createTableSection('tfoot', 'test5')
+            ),
+            '<table>' +
+                '<thead><tr><td>test1</td></tr><colgroup><col><col></colgroup></thead>' +
+                '<tbody><tr><td>test2</td></tr><tr><td>test3</td></tr><tr><td>test4</td></tr></tbody>' +
+                '<tfoot><tr><td>test5</td></tr></tfoot>' +
+                '</table>'
+        );
+    });
+
+    it('Table has TR and TBODY and a orphaned colgroup 1', () => {
+        runTest(
+            createTable(
+                getColgroup(),
+                createTr('test1'),
+                getColgroup(),
+                createTableSection('tbody', 'test2'),
+                getColgroup()
+            ),
+            '<table>' +
+                '<colgroup><col><col></colgroup>' +
+                '<tbody><tr><td>test1</td></tr></tbody><colgroup><col><col></colgroup><tbody>' +
+                '<tr><td>test2</td></tr></tbody><colgroup><col><col></colgroup></table>'
+        );
+    });
+
+    it('Table has TR and TBODY and a orphaned colgroup 2', () => {
+        runTest(
+            createTable(createTableSection('tbody', 'test1'), createTr('test2'), getColgroup()),
+            '<table>' +
+                '<tbody><tr><td>test1</td></tr><tr><td>test2</td></tr></tbody>' +
+                '<colgroup><col><col></colgroup></table>'
+        );
+    });
 });
+
+function getTheadWithColgroup(
+    createTableSection: (tag: string, ...texts: string[]) => CreateElementData
+) {
+    const thead = createTableSection('thead', 'test1');
+    thead.children?.push(getColgroup());
+    return thead;
+}
+
+function getColgroup(): CreateElementData {
+    return {
+        tag: 'colgroup',
+        children: [
+            {
+                tag: 'col',
+            },
+            {
+                tag: 'col',
+            },
+        ],
+    };
+}
