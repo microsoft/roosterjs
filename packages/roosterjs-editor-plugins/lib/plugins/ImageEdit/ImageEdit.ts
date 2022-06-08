@@ -550,7 +550,6 @@ export default class ImageEdit implements EditorPlugin {
                 updateRotateHandlePosition(
                     this.editInfo,
                     this.editor.getRelativeDistanceToEditor(wrapper, true /*addScroll*/),
-                    marginVertical,
                     rotateCenter,
                     rotateHandle,
                     this.isRotatorHidden

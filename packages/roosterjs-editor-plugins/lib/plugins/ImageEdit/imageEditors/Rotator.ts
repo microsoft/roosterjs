@@ -47,44 +47,21 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
 export function updateRotateHandlePosition(
     editInfo: ImageEditInfo,
     distance: number[],
-    marginVertical: number,
     rotateCenter: HTMLElement,
     rotateHandle: HTMLElement,
     isRotatorHidden: boolean
 ) {
     if (rotateCenter && rotateHandle && distance) {
-        const { angleRad, heightPx } = editInfo;
-        const cosAngle = Math.cos(angleRad);
-        const rotateGap = calculateRotatorHandlePosition(
-            distance,
-            marginVertical,
-            cosAngle,
-            heightPx
-        );
-        rotateCenter.style.height = rotateGap + 'px';
+        const { heightPx } = editInfo;
+        rotateCenter.style.height = ROTATE_GAP + 'px';
         if (isRotatorHidden) {
-            rotateHandle.style.top = rotateGap + 'px';
+            rotateHandle.style.top = ROTATE_GAP + 'px';
             rotateCenter.style.top = heightPx + 'px';
         } else {
-            rotateCenter.style.top = -rotateGap + 'px';
-            rotateHandle.style.top = -heightPx + rotateGap + 'px';
+            rotateCenter.style.top = -ROTATE_GAP + 'px';
+            rotateHandle.style.top = -heightPx + ROTATE_GAP + 'px';
         }
     }
-}
-
-function calculateRotatorHandlePosition(
-    distance: number[],
-    marginVertical: number,
-    cosAngle: number,
-    heightPx: number
-): number {
-    const minDistance = Math.min(distance[1], distance[0]);
-    const adjustedDistance =
-        cosAngle <= 0
-            ? Number.MAX_SAFE_INTEGER
-            : (minDistance + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
-
-    return Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
 }
 
 /**
