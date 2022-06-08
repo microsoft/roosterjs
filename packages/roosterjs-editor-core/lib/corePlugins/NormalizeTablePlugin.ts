@@ -126,7 +126,7 @@ function normalizeTables(tables: HTMLTableElement[]) {
                 case 'TBODY':
                     if (tbody) {
                         moveChildNodes(tbody, child, true /*keepExistingChildren*/);
-                        child.parentNode.removeChild(child);
+                        child.parentNode?.removeChild(child);
                         child = tbody;
                         isDOMChanged = true;
                     } else {
@@ -143,7 +143,7 @@ function normalizeTables(tables: HTMLTableElement[]) {
         const thead = table.querySelector('thead');
         if (thead) {
             colgroups.forEach(colgroup => {
-                if (colgroup && !thead.contains(colgroup)) {
+                if (!thead.contains(colgroup)) {
                     thead.appendChild(colgroup);
                 }
             });
