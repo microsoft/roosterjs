@@ -2,6 +2,7 @@ import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from './BuildIn
 import ImageEditPlugin from './contextMenu/ImageEditPlugin';
 import ResetListPlugin from './contextMenu/ResetListPlugin';
 import SampleColorPickerPluginDataProvider from './samplepicker/SampleColorPickerPluginDataProvider';
+import { AutoFormat } from 'roosterjs-editor-plugins/lib/AutoFormat';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { CONTEXT_MENU_DATA_PROVIDER } from './contextMenu/ContextMenuProvider';
 import { ContextMenu } from 'roosterjs-editor-plugins/lib/ContextMenu';
@@ -46,6 +47,7 @@ const PluginCreators: {
     customReplace: _ => new CustomReplacePlugin(),
     resetList: _ => new ResetListPlugin(),
     contextMenu: _ => new ContextMenu(CONTEXT_MENU_DATA_PROVIDER),
+    autoFormat: _ => new AutoFormat(),
 };
 
 export default function getToggleablePlugins(initState: BuildInPluginState) {

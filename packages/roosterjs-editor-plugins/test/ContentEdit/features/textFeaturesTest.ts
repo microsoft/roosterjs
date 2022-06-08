@@ -1,7 +1,7 @@
 import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
 import { Browser } from 'roosterjs-editor-dom';
-import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
 import { TextFeatures } from '../../../lib/plugins/ContentEdit/features/textFeatures';
+
 import {
     BuildInEditFeature,
     ExperimentalFeatures,
@@ -523,45 +523,6 @@ describe('Text Features |', () => {
                     '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>'
                 );
             });
-        });
-    });
-
-    describe('AutoHyphen |', () => {
-        let editor: IEditor;
-        const TEST_ID = 'autoHyphenTest';
-        let editorSearchCursorSpy: any;
-        let editorIsFeatureEnabled: any;
-        beforeEach(() => {
-            editor = TestHelper.initEditor(TEST_ID);
-            spyOn(editor, 'getElementAtCursor').and.returnValue(null);
-            editorSearchCursorSpy = spyOn(editor, 'getContentSearcherOfCursor');
-            editorIsFeatureEnabled = spyOn(editor, 'isFeatureEnabled');
-        });
-
-        afterEach(() => {
-            editor.dispose();
-        });
-
-        function runTestShouldHandleAutoHyphen(text: string, expectedResult: boolean) {
-            const root = document.createElement('div');
-            const mockedPosition = new PositionContentSearcher(root, new Position(root, 3));
-            spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
-            editorSearchCursorSpy.and.returnValue(mockedPosition);
-            editorIsFeatureEnabled.and.returnValue(true);
-            expect(TextFeatures.autoHyphen.shouldHandleEvent(null, editor, false)).toBe(
-                expectedResult
-            );
-        }
-
-        it('Should handle event', () => {
-            runTestShouldHandleAutoHyphen('a--', true);
-            runTestShouldHandleAutoHyphen('y--', true);
-            runTestShouldHandleAutoHyphen('A--', true);
-            runTestShouldHandleAutoHyphen('7--', true);
-        });
-
-        it('Should not handle event', () => {
-            runTestShouldHandleAutoHyphen(' --', false);
         });
     });
 });

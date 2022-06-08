@@ -228,6 +228,7 @@ export interface TextFeatureSettings {
     outdentWhenTabText: boolean;
 
     /**
+     * @deprecated
      * Requires @see ExperimentalFeatures.AutoHyphen to be enabled
      * Automatically transform -- into hyphen, if typed between two words.
      */
