@@ -324,6 +324,24 @@ describe('NormalizeTablePlugin', () => {
         );
     });
 
+    it('Table has THEAD With colgroup and TR and TBODY and TR and TFOOT 2', () => {
+        runTest(
+            createTable(
+                createTableSection('thead', 'test1'),
+                getColgroup(),
+                createTr('test2'),
+                createTableSection('tbody', 'test3'),
+                createTr('test4'),
+                createTableSection('tfoot', 'test5')
+            ),
+            '<table>' +
+                '<thead><tr><td>test1</td></tr><colgroup><col><col></colgroup></thead>' +
+                '<tbody><tr><td>test2</td></tr><tr><td>test3</td></tr><tr><td>test4</td></tr></tbody>' +
+                '<tfoot><tr><td>test5</td></tr></tfoot>' +
+                '</table>'
+        );
+    });
+
     it('Table has THEAD With colgroup and TBODY and TR and TBODY and TFOOT', () => {
         runTest(
             createTable(
