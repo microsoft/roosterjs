@@ -8,7 +8,7 @@ export default interface ImageEditOptions {
      * Color of resize/rotate border, handle and icon
      * @default #DB626C
      */
-    borderColor?: ModeIndependentColor;
+    borderColor?: string | ModeIndependentColor;
 
     /**
      * Minimum resize/crop width
