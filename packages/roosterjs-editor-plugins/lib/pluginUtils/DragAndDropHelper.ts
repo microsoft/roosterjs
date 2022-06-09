@@ -6,31 +6,47 @@ import DragAndDropHandler from './DragAndDropHandler';
  * @internal
  * Compatible mouse event names for different platform
  */
-interface MouseEventNames {
+interface MouseEventInfo {
     MOUSEDOWN: string;
     MOUSEMOVE: string;
     MOUSEUP: string;
+    getPageXY: (e: Event) => number[];
 }
 
 /**
- * Generate event names based on different platforms to be compatible with desktop and mobile browsers
+ * Generate event names and getXY function based on different platforms to be compatible with desktop and mobile browsers
  */
-const MOUSE_EVENT_NAMES: MouseEventNames = (() => {
+const MOUSE_EVENT_INFO: MouseEventInfo = (() => {
     if (Browser.isMobileOrTablet) {
         return {
             MOUSEDOWN: 'touchstart',
             MOUSEMOVE: 'touchmove',
             MOUSEUP: 'touchend',
+            getPageXY: getTouchEventPageXY,
         }
     } else {
         return {
             MOUSEDOWN: 'mousedown',
             MOUSEMOVE: 'mousemove',
             MOUSEUP: 'mouseup',
+            getPageXY: getMouseEventPageXY,
         }
     }
 })()
 
+function getMouseEventPageXY(e: MouseEvent): number[] {
+    return new Array(e.pageX, e.pageY);
+}
+
+function getTouchEventPageXY(e: TouchEvent): number[] {
+    let pageX, pageY;
+    if (e.targetTouches && e.targetTouches.length > 0) {
+        const touch = e.targetTouches[0];
+        pageX = touch.pageX;
+        pageY = touch.pageY;
+    }
+    return new Array(pageX, pageY);
+}
 
 /**
  * @internal
@@ -57,63 +73,42 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private handler: DragAndDropHandler<TContext, TInitValue>,
         private zoomScale: number
     ) {
-        trigger.addEventListener(MOUSE_EVENT_NAMES.MOUSEDOWN, this.onMouseDown);
+        trigger.addEventListener(MOUSE_EVENT_INFO.MOUSEDOWN, this.onMouseDown);
     }
 
     /**
      * Dispose this object, remove all event listeners that has been attached
      */
     dispose() {
-        this.trigger.removeEventListener(MOUSE_EVENT_NAMES.MOUSEDOWN, this.onMouseDown);
+        this.trigger.removeEventListener(MOUSE_EVENT_INFO.MOUSEDOWN, this.onMouseDown);
         this.removeDocumentEvents();
     }
 
     private addDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.addEventListener(MOUSE_EVENT_NAMES.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
-        doc.addEventListener(MOUSE_EVENT_NAMES.MOUSEUP, this.onMouseUp, true /*useCapture*/);
+        doc.addEventListener(MOUSE_EVENT_INFO.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
+        doc.addEventListener(MOUSE_EVENT_INFO.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 
     private removeDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.removeEventListener(MOUSE_EVENT_NAMES.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
-        doc.removeEventListener(MOUSE_EVENT_NAMES.MOUSEUP, this.onMouseUp, true /*useCapture*/);
-    }
-
-    private getPageX(e: MouseEvent): number {
-        let pageX = e.pageX;
-        if (!pageX) {
-            const touchEvent = e as unknown as TouchEvent;
-            const touch = touchEvent.targetTouches[0];
-            pageX = touch.pageX;
-        }
-        return pageX;
-    }
-
-    private getPageY(e: MouseEvent): number {
-        let pageY = e.pageY;
-        if (!pageY) {
-            const touchEvent = e as unknown as TouchEvent;
-            const touch = touchEvent.targetTouches[0];
-            pageY = touch.pageX;
-        }
-        return pageY;
+        doc.removeEventListener(MOUSE_EVENT_INFO.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
+        doc.removeEventListener(MOUSE_EVENT_INFO.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 
     private onMouseDown = (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         this.addDocumentEvents();
-
-        this.initX = this.getPageX(e);
-        this.initY = this.getPageY(e);
+        [this.initX, this.initY] = MOUSE_EVENT_INFO.getPageXY(e);
         this.initValue = this.handler.onDragStart?.(this.context, e);
     };
 
     private onMouseMove = (e: MouseEvent) => {
         e.preventDefault();
-        const deltaX = (this.getPageX(e) - this.initX) / this.zoomScale;
-        const deltaY = (this.getPageY(e) - this.initY) / this.zoomScale;
+        const [pageX, pageY] = MOUSE_EVENT_INFO.getPageXY(e);
+        const deltaX = (pageX - this.initX) / this.zoomScale;
+        const deltaY = (pageY - this.initY) / this.zoomScale;
         if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {
             this.onSubmit?.(this.context, this.trigger);
         }
