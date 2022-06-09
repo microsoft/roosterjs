@@ -5,8 +5,9 @@ import convertPastedContentFromPowerPoint from './pptConverter/convertPastedCont
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
-import { toArray } from 'roosterjs-editor-dom';
+import { safeInstanceOf, toArray } from 'roosterjs-editor-dom';
 import {
+    ClipboardData,
     EditorPlugin,
     ExperimentalFeatures,
     IEditor,
@@ -28,6 +29,7 @@ const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
+const INVALID_PASTED_URLS_REGEX = /^blob:|^webkit-fake-url:|^file:|^data:/i;
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -37,12 +39,15 @@ const WAC_IDENTIFY_SELECTOR =
  */
 export default class Paste implements EditorPlugin {
     private editor: IEditor;
-
+    private invalidSingleImageUrls?: RegExp[];
     /**
      * Construct a new instance of Paste class
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
+     * @param invalidSingleImageUrls Invalid Image Sources to convert to single image
      */
-    constructor(private unknownTagReplacement: string = 'SPAN') {}
+    constructor(private unknownTagReplacement: string = 'SPAN', invalidSingleImageUrls?: RegExp[]) {
+        this.invalidSingleImageUrls = [INVALID_PASTED_URLS_REGEX, ...invalidSingleImageUrls];
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -106,8 +111,7 @@ export default class Paste implements EditorPlugin {
                 sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
             } else if (
                 this.editor.isFeatureEnabled(ExperimentalFeatures.ConvertSingleImageBody) &&
-                clipboardData.htmlFirstLevelChildTags?.length == 1 &&
-                clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
+                isValidSingleImageToConvert(clipboardData, fragment, this.invalidSingleImageUrls)
             ) {
                 convertPasteContentForSingleImage(event, trustedHTMLHandler);
             } else {
@@ -128,4 +132,27 @@ function isWordDocument(htmlAttributes: Record<string, string>) {
         htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
         htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
     );
+}
+
+function isValidSingleImageToConvert(
+    clipboardData: ClipboardData,
+    fragment: DocumentFragment,
+    invalidImgSrcs: RegExp[]
+) {
+    const { htmlFirstLevelChildTags } = clipboardData;
+    const { firstChild } = fragment;
+
+    if (
+        htmlFirstLevelChildTags?.length == 1 &&
+        htmlFirstLevelChildTags[0] == 'IMG' &&
+        safeInstanceOf(firstChild, 'HTMLImageElement')
+    ) {
+        for (const invalidImgSrc of invalidImgSrcs) {
+            if (invalidImgSrc.test(firstChild.src)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
 }
