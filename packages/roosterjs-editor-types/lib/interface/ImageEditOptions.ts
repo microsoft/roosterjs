@@ -1,4 +1,4 @@
-import ModeIndependentColor from "./ModeIndependentColor";
+import ModeIndependentColor from './ModeIndependentColor';
 
 /**
  * Options for ImageEdit plugin
