@@ -1,18 +1,27 @@
 import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types';
 
+/**
+ * @internal
+ * The type and style of a list
+ */
+interface ListInfo {
+    listType: ListType;
+    listStyle: NumberingListType | BulletListType;
+}
+
 const enum NumberingTypes {
-    Decimal,
-    LowerAlpha,
-    UpperAlpha,
-    LowerRoman,
-    UpperRoman,
+    Decimal = 1,
+    LowerAlpha = 2,
+    UpperAlpha = 3,
+    LowerRoman = 4,
+    UpperRoman = 5,
 }
 
 const enum Character {
-    Dot,
-    Dash,
-    Parenthesis,
-    DoubleParenthesis,
+    Dot = 1,
+    Dash = 2,
+    Parenthesis = 3,
+    DoubleParenthesis = 4,
 }
 
 const characters: Record<string, number> = {
@@ -23,22 +32,20 @@ const characters: Record<string, number> = {
 };
 
 const identifyCharacter = (text: string) => {
-    const char = text[0] === '(' ? text[0] : text[text.length - 1];
-    return characters[char];
+    return characters[text];
 };
 
 const identifyNumberingType = (text: string) => {
-    const char = text[0] === '(' ? text[1] : text[0];
-    if (!isNaN(parseInt(char))) {
+    if (!isNaN(parseInt(text))) {
         return NumberingTypes.Decimal;
-    } else if (/[a-z]+/g.test(char)) {
-        if (char === 'i') {
+    } else if (/[a-z]+/g.test(text)) {
+        if (text === 'i') {
             return NumberingTypes.LowerRoman;
         } else {
             return NumberingTypes.LowerAlpha;
         }
-    } else if (/[A-Z]+/g.test(char)) {
-        if (char === 'I') {
+    } else if (/[A-Z]+/g.test(text)) {
+        if (text === 'I') {
             return NumberingTypes.UpperRoman;
         } else {
             return NumberingTypes.UpperAlpha;
@@ -46,12 +53,12 @@ const identifyNumberingType = (text: string) => {
     }
 };
 
-const numberingListTypes: Record<number, (char: number) => number> = {
-    [NumberingTypes.Decimal]: char => DecimalsTypes[char],
-    [NumberingTypes.LowerAlpha]: char => LowerAlphaTypes[char],
-    [NumberingTypes.UpperAlpha]: char => UpperAlphaTypes[char],
-    [NumberingTypes.LowerRoman]: char => LowerRomanTypes[char],
-    [NumberingTypes.UpperRoman]: char => UpperRomanTypes[char],
+const numberingListTypes: Record<number, (char: number) => number | null> = {
+    [NumberingTypes.Decimal]: char => DecimalsTypes[char] || null,
+    [NumberingTypes.LowerAlpha]: char => LowerAlphaTypes[char] || null,
+    [NumberingTypes.UpperAlpha]: char => UpperAlphaTypes[char] || null,
+    [NumberingTypes.LowerRoman]: char => LowerRomanTypes[char] || null,
+    [NumberingTypes.UpperRoman]: char => UpperRomanTypes[char] || null,
 };
 
 const UpperRomanTypes: Record<number, number> = {
@@ -99,31 +106,41 @@ const bulletListType: Record<string, number> = {
     '>': BulletListType.ShortArrow,
 };
 
-const identifyNumberingListType = (textBeforeCursor: string): NumberingListType => {
-    const numbering = textBeforeCursor.replace(/\s/g, '');
-    const char = identifyCharacter(numbering);
-    const numberingType = identifyNumberingType(numbering);
-    return numberingListTypes[numberingType](char);
+const identifyNumberingListType = (numbering: string): NumberingListType | null => {
+    const number = numbering.length === 2 ? numbering[0] : numbering[1];
+    const separator = numbering.length === 2 ? numbering[1] : numbering[0];
+    const char = identifyCharacter(separator);
+    const numberingType = identifyNumberingType(number);
+    return char && numberingType ? numberingListTypes[numberingType](char) : null;
 };
 
-const identifyBulletListType = (textBeforeCursor: string): BulletListType => {
-    const bullet = textBeforeCursor.replace(/\s/g, '');
-    return bulletListType[bullet];
+const identifyBulletListType = (bullet: string): BulletListType | null => {
+    return bulletListType[bullet] || null;
 };
 
 /**
  * @internal
  * @param textBeforeCursor The trigger character
  * @param listType The type of the list (ordered or unordered)
- * @returns the style of the list
+ * @returns The info with type and style of the list
  */
-export default function getListStyle(
-    textBeforeCursor: string,
-    listType: ListType
-): NumberingListType | BulletListType {
-    if (listType === ListType.Ordered) {
-        return identifyNumberingListType(textBeforeCursor);
+export default function getListInfo(textBeforeCursor: string): ListInfo {
+    const trigger = textBeforeCursor.replace(/\s/g, '');
+    const bulletType = identifyBulletListType(trigger);
+    if (bulletType) {
+        return {
+            listType: ListType.Unordered,
+            listStyle: bulletType,
+        };
     } else {
-        return identifyBulletListType(textBeforeCursor);
+        const numberingType = identifyNumberingListType(trigger);
+        if (numberingType) {
+            return {
+                listType: ListType.Ordered,
+                listStyle: numberingType,
+            };
+        } else {
+            return null;
+        }
     }
 }

@@ -1,18 +1,18 @@
-import getListStyle from '../../../../lib/plugins/ContentEdit/utils/getListStyle';
+import getListInfo from '../../../../lib/plugins/ContentEdit/utils/getListInfo';
 import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types';
 
-describe('getListType', () => {
+describe('getListInfo ', () => {
     function runTest(
         textBeforeCursor: string,
         listType: ListType,
-        expectedListStyle: BulletListType | NumberingListType
+        listStyle: BulletListType | NumberingListType
     ) {
-        const style = getListStyle(textBeforeCursor, listType);
-        expect(style).toBe(style);
+        const style = getListInfo(textBeforeCursor);
+        expect(style).toEqual({ listType, listStyle });
     }
 
     it('1. ', () => {
-        runTest('1. ', ListType.Ordered, NumberingListType.Decimal);
+        runTest('1.', ListType.Ordered, NumberingListType.Decimal);
     });
 
     it('1- ', () => {
@@ -44,7 +44,7 @@ describe('getListType', () => {
     });
 
     it('a. ', () => {
-        runTest('a) ', ListType.Ordered, NumberingListType.LowerAlpha);
+        runTest('a. ', ListType.Ordered, NumberingListType.LowerAlpha);
     });
 
     it('a- ', () => {
