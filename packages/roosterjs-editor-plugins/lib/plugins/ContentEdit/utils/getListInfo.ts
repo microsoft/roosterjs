@@ -104,6 +104,7 @@ const bulletListType: Record<string, number> = {
     '-->': BulletListType.LongArrow,
     '=>': BulletListType.UnfilledArrow,
     '>': BulletListType.ShortArrow,
+    '—': BulletListType.Hyphen,
 };
 
 const identifyNumberingListType = (numbering: string): NumberingListType | null => {

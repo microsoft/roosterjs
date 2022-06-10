@@ -33,4 +33,8 @@ describe('setBulletListMarkers', () => {
     it('Unfilled arrow', () => {
         runTest(BulletListType.UnfilledArrow, '"➪ "');
     });
+
+    it('Hyphen', () => {
+        runTest(BulletListType.UnfilledArrow, '"— "');
+    });
 });

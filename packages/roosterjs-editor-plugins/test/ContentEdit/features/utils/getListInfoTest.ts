@@ -118,4 +118,8 @@ describe('getListInfo ', () => {
     it('* ', () => {
         runTest('* ', ListType.Unordered, BulletListType.Disc);
     });
+
+    it('— ', () => {
+        runTest('— ', ListType.Unordered, BulletListType.Hyphen);
+    });
 });
