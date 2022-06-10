@@ -1,4 +1,4 @@
-import getListInfo from '../utils/getListInfo';
+import getAutoListStyle from '../utils/getAutoListStyle';
 import {
     blockFormat,
     experimentCommitListChains,
@@ -231,8 +231,10 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                const listStyle = getListInfo(textBeforeCursor, ListType.Unordered)
-                    .listStyle as BulletListType;
+                const listStyle = getAutoListStyle(
+                    textBeforeCursor,
+                    ListType.Unordered
+                ) as BulletListType;
                 if (textRange) {
                     prepareAutoBullet(editor, textRange);
                     toggleBullet(editor, listStyle);
@@ -268,8 +270,10 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                const listStyle = getListInfo(textBeforeCursor, ListType.Ordered)
-                    .listStyle as NumberingListType;
+                const listStyle = getAutoListStyle(
+                    textBeforeCursor,
+                    ListType.Ordered
+                ) as NumberingListType;
 
                 if (!textRange) {
                     // no op if the range can't be found
@@ -367,7 +371,9 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
 function shouldTriggerList(event: PluginKeyboardEvent, editor: IEditor, listType: ListType) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(5);
-    return !searcher.getNearestNonTextInlineElement() && getListInfo(textBeforeCursor, listType);
+    return (
+        !searcher.getNearestNonTextInlineElement() && getAutoListStyle(textBeforeCursor, listType)
+    );
 }
 
 /**

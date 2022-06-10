@@ -1,14 +1,14 @@
-import getListInfo from '../../../../lib/plugins/ContentEdit/utils/getListInfo';
+import getAutoListStyle from '../../../../lib/plugins/ContentEdit/utils/getAutoListStyle';
 import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types';
 
-describe('getListInfo ', () => {
+describe('getAutoListStyle ', () => {
     function runTest(
         textBeforeCursor: string,
         listType: ListType,
         listStyle: BulletListType | NumberingListType
     ) {
-        const style = getListInfo(textBeforeCursor, listType);
-        expect(style).toEqual({ listType, listStyle });
+        const style = getAutoListStyle(textBeforeCursor, listType);
+        expect(style).toEqual(listStyle);
     }
 
     it('1. ', () => {
