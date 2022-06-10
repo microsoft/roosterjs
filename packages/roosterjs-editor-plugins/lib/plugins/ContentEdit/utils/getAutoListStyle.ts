@@ -4,10 +4,6 @@ import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-ty
  * @internal
  * The type and style of a list
  */
-interface ListInfo {
-    listType: ListType;
-    listStyle: NumberingListType | BulletListType;
-}
 
 const enum NumberingTypes {
     Decimal = 1,
@@ -127,28 +123,21 @@ const identifyBulletListType = (bullet: string): BulletListType | null => {
  * @internal
  * @param textBeforeCursor The trigger character
  * @param listType The type of the list (ordered or unordered)
- * @returns The info with type and style of the list
+ * @returns The style of a list triggered by a string
  */
-export default function getListInfo(textBeforeCursor: string, listType: ListType): ListInfo {
+export default function getAutoListStyle(
+    textBeforeCursor: string,
+    listType: ListType
+): NumberingListType | BulletListType {
     const trigger = textBeforeCursor.replace(/\s/g, '');
     if (listType == ListType.Unordered) {
         const bulletType = identifyBulletListType(trigger);
-        return bulletType
-            ? {
-                  listType: ListType.Unordered,
-                  listStyle: bulletType,
-              }
-            : null;
+        return bulletType;
     }
 
     if (listType == ListType.Ordered) {
         // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
         const numberingType = trigger.length > 1 ? identifyNumberingListType(trigger) : null;
-        return numberingType
-            ? {
-                  listType: ListType.Ordered,
-                  listStyle: numberingType,
-              }
-            : null;
+        return numberingType;
     }
 }
