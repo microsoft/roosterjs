@@ -69,6 +69,7 @@ export interface EntityFeatureSettings {
  */
 export interface ListFeatureSettings {
     /**
+     * @deprecated
      * When press space after an asterisk or number in an empty line, toggle bullet/numbering
      * @default true
      */
@@ -113,6 +114,18 @@ export interface ListFeatureSettings {
      * When delete key is pressed before the first item, indent the correct list of numbers
      */
     maintainListChainWhenDelete: boolean;
+
+    /**
+     * When press space after *, -, --, ->, -->, >, =>  in an empty line, toggle bullet
+     * @default true
+     */
+    autoBulletList: boolean;
+
+    /**
+     * When press space after an number, a letter or roman number followed by ), ., -, or between parenthesis in an empty line, toggle numbering
+     * @default true
+     */
+    autoNumberingList: boolean;
 }
 
 /**

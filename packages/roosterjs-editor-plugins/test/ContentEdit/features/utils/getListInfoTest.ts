@@ -7,7 +7,7 @@ describe('getListInfo ', () => {
         listType: ListType,
         listStyle: BulletListType | NumberingListType
     ) {
-        const style = getListInfo(textBeforeCursor);
+        const style = getListInfo(textBeforeCursor, listType);
         expect(style).toEqual({ listType, listStyle });
     }
 

@@ -156,21 +156,106 @@ function isAListPattern(textBeforeCursor: string) {
  * AutoBullet edit feature, provides the ability to automatically convert current line into a list.
  * When user input "1. ", convert into a numbering list
  * When user input "- " or "* ", convert into a bullet list
+ * @deprecated
  */
 const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (!cacheGetListElement(event, editor)) {
-            const searcher = editor.getContentSearcherOfCursor(event);
-            const textBeforeCursor = searcher.getSubStringBefore(5);
-            const listTrigger = (text: string) =>
-                editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-                    ? getListInfo(text)
-                    : isAListPattern(text);
+        if (
+            !cacheGetListElement(event, editor) &&
+            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
+        ) {
+            let searcher = editor.getContentSearcherOfCursor(event);
+            let textBeforeCursor = searcher.getSubStringBefore(4);
+
             // Auto list is triggered if:
             // 1. Text before cursor exactly matches '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
-            return !searcher.getNearestNonTextInlineElement() && listTrigger(textBeforeCursor);
+            return isAListPattern(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
+        }
+        return false;
+    },
+    handleEvent: (event, editor) => {
+        editor.insertContent('&nbsp;');
+        event.rawEvent.preventDefault();
+        editor.addUndoSnapshot(
+            () => {
+                let regions: RegionBase[];
+                let searcher = editor.getContentSearcherOfCursor();
+                let textBeforeCursor = searcher.getSubStringBefore(4);
+                let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
+
+                if (!textRange) {
+                    // no op if the range can't be found
+                } else if (
+                    textBeforeCursor.indexOf('*') == 0 ||
+                    textBeforeCursor.indexOf('-') == 0
+                ) {
+                    prepareAutoBullet(editor, textRange);
+                    toggleBullet(editor);
+                } else if (isAListPattern(textBeforeCursor)) {
+                    prepareAutoBullet(editor, textRange);
+                    toggleNumbering(editor);
+                } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
+                    const num = parseInt(textBeforeCursor);
+                    prepareAutoBullet(editor, textRange);
+                    toggleNumbering(editor, num);
+                }
+                searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
+            },
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        );
+    },
+};
+
+/**
+ * AutoBulletList edit feature, provides the ability to automatically convert current line into a bullet list.
+ */
+const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.SPACE],
+    shouldHandleEvent: (event, editor) => {
+        if (
+            !cacheGetListElement(event, editor) &&
+            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
+        ) {
+            return shouldTriggerList(event, editor, ListType.Unordered);
+        }
+        return false;
+    },
+    handleEvent: (event, editor) => {
+        editor.insertContent('&nbsp;');
+        event.rawEvent.preventDefault();
+        editor.addUndoSnapshot(
+            () => {
+                let searcher = editor.getContentSearcherOfCursor();
+                let textBeforeCursor = searcher.getSubStringBefore(5);
+                let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
+                const listStyle = getListInfo(textBeforeCursor, ListType.Unordered)
+                    .listStyle as BulletListType;
+                if (textRange) {
+                    prepareAutoBullet(editor, textRange);
+                    toggleBullet(editor, listStyle);
+                }
+                searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
+            },
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        );
+    },
+};
+
+/**
+ * AutoNumberingList edit feature, provides the ability to automatically convert current line into a numbering list.
+ */
+const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.SPACE],
+    shouldHandleEvent: (event, editor) => {
+        if (
+            !cacheGetListElement(event, editor) &&
+            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
+        ) {
+            return shouldTriggerList(event, editor, ListType.Ordered);
         }
         return false;
     },
@@ -183,37 +268,18 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                let listStyle;
-                let listType;
+                const listStyle = getListInfo(textBeforeCursor, ListType.Ordered)
+                    .listStyle as NumberingListType;
 
-                if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
-                    const listInfo = getListInfo(textBeforeCursor);
-                    listType = listInfo.listType;
-                    listStyle = listInfo.listStyle;
-                } else {
-                    listType =
-                        textBeforeCursor.indexOf('*') == 0 || textBeforeCursor.indexOf('-') == 0
-                            ? ListType.Unordered
-                            : isAListPattern(textBeforeCursor)
-                            ? ListType.Ordered
-                            : ListType.None;
-                }
                 if (!textRange) {
                     // no op if the range can't be found
-                } else if (listType === ListType.Unordered) {
-                    prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor, listStyle as BulletListType);
-                } else if (listType === ListType.Ordered) {
-                    prepareAutoBullet(editor, textRange);
-                    toggleNumbering(
-                        editor,
-                        undefined /* startNumber*/,
-                        listStyle as NumberingListType | undefined
-                    );
                 } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
                     const num = parseInt(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor, num, listStyle as NumberingListType);
+                    toggleNumbering(editor, num, listStyle);
+                } else {
+                    prepareAutoBullet(editor, textRange);
+                    toggleNumbering(editor, undefined /* startNumber*/, listStyle);
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
@@ -298,6 +364,12 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
     return listElement ? [listElement, li] : null;
 }
 
+function shouldTriggerList(event: PluginKeyboardEvent, editor: IEditor, listType: ListType) {
+    const searcher = editor.getContentSearcherOfCursor(event);
+    const textBeforeCursor = searcher.getSubStringBefore(5);
+    return !searcher.getNearestNonTextInlineElement() && getListInfo(textBeforeCursor, listType);
+}
+
 /**
  * @internal
  */
@@ -313,4 +385,6 @@ export const ListFeatures: Record<
     mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,
     maintainListChain: MaintainListChain,
     maintainListChainWhenDelete: MaintainListChainWhenDelete,
+    autoNumberingList: AutoNumberingList,
+    autoBulletList: AutoBulletList,
 };

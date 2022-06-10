@@ -107,11 +107,15 @@ const bulletListType: Record<string, number> = {
 };
 
 const identifyNumberingListType = (numbering: string): NumberingListType | null => {
-    const number = numbering.length === 2 ? numbering[0] : numbering[1];
     const separator = numbering.length === 2 ? numbering[1] : numbering[0];
     const char = identifyCharacter(separator);
-    const numberingType = identifyNumberingType(number);
-    return char && numberingType ? numberingListTypes[numberingType](char) : null;
+    // if separator is not valid, no need to check if the number is valid.
+    if (char) {
+        const number = numbering.length === 2 ? numbering[0] : numbering[1];
+        const numberingType = identifyNumberingType(number);
+        return char && numberingType ? numberingListTypes[numberingType](char) : null;
+    }
+    return null;
 };
 
 const identifyBulletListType = (bullet: string): BulletListType | null => {
@@ -124,23 +128,26 @@ const identifyBulletListType = (bullet: string): BulletListType | null => {
  * @param listType The type of the list (ordered or unordered)
  * @returns The info with type and style of the list
  */
-export default function getListInfo(textBeforeCursor: string): ListInfo {
+export default function getListInfo(textBeforeCursor: string, listType: ListType): ListInfo {
     const trigger = textBeforeCursor.replace(/\s/g, '');
-    const bulletType = identifyBulletListType(trigger);
-    if (bulletType) {
-        return {
-            listType: ListType.Unordered,
-            listStyle: bulletType,
-        };
-    } else {
-        const numberingType = identifyNumberingListType(trigger);
-        if (numberingType) {
-            return {
-                listType: ListType.Ordered,
-                listStyle: numberingType,
-            };
-        } else {
-            return null;
-        }
+    if (listType == ListType.Unordered) {
+        const bulletType = identifyBulletListType(trigger);
+        return bulletType
+            ? {
+                  listType: ListType.Unordered,
+                  listStyle: bulletType,
+              }
+            : null;
+    }
+
+    if (listType == ListType.Ordered) {
+        // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
+        const numberingType = trigger.length > 1 ? identifyNumberingListType(trigger) : null;
+        return numberingType
+            ? {
+                  listType: ListType.Ordered,
+                  listStyle: numberingType,
+              }
+            : null;
     }
 }
