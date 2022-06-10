@@ -34,18 +34,19 @@ const MOUSE_EVENT_INFO: MouseEventInfo = (() => {
     }
 })()
 
-function getMouseEventPageXY(e: MouseEvent): number[] {
-    return new Array(e.pageX, e.pageY);
+function getMouseEventPageXY(e: MouseEvent): [number, number] {
+    return [e.pageX, e.pageY];
 }
 
-function getTouchEventPageXY(e: TouchEvent): number[] {
-    let pageX, pageY;
+function getTouchEventPageXY(e: TouchEvent): [number, number] {
+    let pageX = 0;
+    let pageY = 0;
     if (e.targetTouches && e.targetTouches.length > 0) {
         const touch = e.targetTouches[0];
         pageX = touch.pageX;
         pageY = touch.pageY;
     }
-    return new Array(pageX, pageY);
+    return [pageX, pageY];
 }
 
 /**
