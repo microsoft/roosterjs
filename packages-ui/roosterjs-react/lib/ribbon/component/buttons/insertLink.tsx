@@ -8,7 +8,6 @@ import { IEditor, Keys, QueryScope } from 'roosterjs-editor-types';
 import { InsertLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { LocalizedStrings } from '../../../common/type/LocalizedStrings';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 
 /**
  * @internal
@@ -109,48 +108,46 @@ function InsertLinkDialog(props: {
     );
 
     return (
-        <WindowProvider window={editor.getDocument().defaultView}>
-            <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
+        <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
+            <div>
                 <div>
-                    <div>
-                        <label htmlFor="linkInput">Web address (URL)</label>
-                        <input
-                            id="linkInput"
-                            ref={urlInput}
-                            role="textbox"
-                            type="text"
-                            className={classNames.linkInput}
-                            value={url}
-                            onChange={onUrlChanged}
-                            onKeyPress={onKeyPress}
-                            autoFocus={true}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="displayTextInput">Display as</label>
-                        <input
-                            id="displayTextInput"
-                            ref={displayTextInput}
-                            role="textbox"
-                            type="text"
-                            className={classNames.linkInput}
-                            value={displayText}
-                            onChange={onDisplayTextChanged}
-                            onKeyPress={onKeyPress}
-                        />
-                    </div>
+                    <label htmlFor="linkInput">Web address (URL)</label>
+                    <input
+                        id="linkInput"
+                        ref={urlInput}
+                        role="textbox"
+                        type="text"
+                        className={classNames.linkInput}
+                        value={url}
+                        onChange={onUrlChanged}
+                        onKeyPress={onKeyPress}
+                        autoFocus={true}
+                    />
                 </div>
-                <DialogFooter>
-                    <PrimaryButton
-                        text={getLocalizedString(strings, 'buttonNameOK', 'OK')}
-                        onClick={onOk}
+                <div>
+                    <label htmlFor="displayTextInput">Display as</label>
+                    <input
+                        id="displayTextInput"
+                        ref={displayTextInput}
+                        role="textbox"
+                        type="text"
+                        className={classNames.linkInput}
+                        value={displayText}
+                        onChange={onDisplayTextChanged}
+                        onKeyPress={onKeyPress}
                     />
-                    <DefaultButton
-                        text={getLocalizedString(strings, 'buttonNameCancel', 'Cancel')}
-                        onClick={onCancel}
-                    />
-                </DialogFooter>
-            </Dialog>
-        </WindowProvider>
+                </div>
+            </div>
+            <DialogFooter>
+                <PrimaryButton
+                    text={getLocalizedString(strings, 'buttonNameOK', 'OK')}
+                    onClick={onOk}
+                />
+                <DefaultButton
+                    text={getLocalizedString(strings, 'buttonNameCancel', 'Cancel')}
+                    onClick={onCancel}
+                />
+            </DialogFooter>
+        </Dialog>
     );
 }
