@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import getLocalizedString from '../../../common/utils/getLocalizedString';
 import RibbonButton from '../../type/RibbonButton';
 import { createLink } from 'roosterjs-editor-api';
@@ -19,16 +18,11 @@ export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
     key: 'buttonNameInsertLink',
     unlocalizedText: 'Insert link',
     iconName: 'Link',
-    onClick: (editor, _, strings) => {
-        const doc = editor.getDocument();
-        let div = doc.createElement('div');
-        doc.body.appendChild(div);
+    onClick: (editor, _, strings, uiUtilities) => {
+        let disposer: null | (() => void) = null;
         const onDismiss = () => {
-            ReactDOM.unmountComponentAtNode(div);
-            doc.body.removeChild(div);
-            div = null;
+            disposer?.();
         };
-
         const existingLink = editor.queryElements<HTMLAnchorElement>(
             'a[href]',
             QueryScope.OnSelection
@@ -36,15 +30,15 @@ export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
         const url = existingLink?.href || '';
         const displayText =
             existingLink?.textContent || editor.getSelectionRange()?.toString() || '';
-        ReactDOM.render(
+
+        disposer = uiUtilities.renderComponent(
             <InsertLinkDialog
                 editor={editor}
                 onDismiss={onDismiss}
                 initUrl={url}
                 initDisplayText={displayText}
                 strings={strings}
-            />,
-            div
+            />
         );
     },
 };
