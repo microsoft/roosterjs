@@ -1,7 +1,7 @@
 import * as DomTestHelper from '../DomTestHelper';
 import Position from '../../lib/selection/Position';
 import VList from '../../lib/list/VList';
-import VListItem from '../../lib/list/VListItem';
+import VListItem, { ListStyleMetadata } from '../../lib/list/VListItem';
 import {
     Indentation,
     ListType,
@@ -1298,7 +1298,12 @@ describe('VList.setListStyleType', () => {
         DomTestHelper.removeElement(testId);
     });
 
-    function runTest(source: string, listStyle: NumberingListType | BulletListType, style: string) {
+    function runTest(
+        source: string,
+        orderedStyle: NumberingListType | undefined,
+        unorderedStyle: BulletListType | undefined,
+        style: ListStyleMetadata
+    ) {
         DomTestHelper.createElementFromContent(testId, source);
         const list = document.getElementById(ListRoot) as HTMLOListElement;
         const focus = document.getElementById(FocusNode);
@@ -1315,9 +1320,8 @@ describe('VList.setListStyleType', () => {
         const vList = new VList(list);
 
         // Act
-        vList.setListStyleType(listStyle);
-
-        expect(list.dataset[editingInfo]).toEqual(style);
+        vList.setListStyleType(orderedStyle, unorderedStyle);
+        expect(list.dataset[editingInfo]).toEqual(JSON.stringify(style));
         DomTestHelper.removeElement(testId);
     }
 
@@ -1325,7 +1329,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"></ol><div id="${FocusNode}"></div>`,
             NumberingListType.Decimal,
-            '1'
+            undefined,
+            { orderedStyleType: 1, unorderedStyleType: 1 }
         );
     });
 
@@ -1333,7 +1338,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.Decimal,
-            '1'
+            undefined,
+            { orderedStyleType: 1, unorderedStyleType: 1 }
         );
     });
 
@@ -1341,7 +1347,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.DecimalDash,
-            '2'
+            undefined,
+            { orderedStyleType: 2, unorderedStyleType: 1 }
         );
     });
 
@@ -1349,7 +1356,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.DecimalParenthesis,
-            '3'
+            undefined,
+            { orderedStyleType: 3, unorderedStyleType: 1 }
         );
     });
 
@@ -1357,7 +1365,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.DecimalDoubleParenthesis,
-            '4'
+            undefined,
+            { orderedStyleType: 4, unorderedStyleType: 1 }
         );
     });
 
@@ -1365,7 +1374,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlpha,
-            '5'
+            undefined,
+            { orderedStyleType: 5, unorderedStyleType: 1 }
         );
     });
 
@@ -1373,7 +1383,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlphaDash,
-            '8'
+            undefined,
+            { orderedStyleType: 8, unorderedStyleType: 1 }
         );
     });
 
@@ -1381,7 +1392,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlphaParenthesis,
-            '6'
+            undefined,
+            { orderedStyleType: 6, unorderedStyleType: 1 }
         );
     });
 
@@ -1389,7 +1401,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerAlphaDoubleParenthesis,
-            '7'
+            undefined,
+            { orderedStyleType: 7, unorderedStyleType: 1 }
         );
     });
 
@@ -1397,7 +1410,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlpha,
-            '9'
+            undefined,
+            { orderedStyleType: 9, unorderedStyleType: 1 }
         );
     });
 
@@ -1405,7 +1419,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlphaDash,
-            '12'
+            undefined,
+            { orderedStyleType: 12, unorderedStyleType: 1 }
         );
     });
 
@@ -1413,7 +1428,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlphaParenthesis,
-            '10'
+            undefined,
+            { orderedStyleType: 10, unorderedStyleType: 1 }
         );
     });
 
@@ -1421,7 +1437,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperAlphaDoubleParenthesis,
-            '11'
+            undefined,
+            { orderedStyleType: 11, unorderedStyleType: 1 }
         );
     });
 
@@ -1429,7 +1446,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRoman,
-            '13'
+            undefined,
+            { orderedStyleType: 13, unorderedStyleType: 1 }
         );
     });
 
@@ -1437,7 +1455,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRomanDash,
-            '16'
+            undefined,
+            { orderedStyleType: 16, unorderedStyleType: 1 }
         );
     });
 
@@ -1445,7 +1464,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRomanParenthesis,
-            '14'
+            undefined,
+            { orderedStyleType: 14, unorderedStyleType: 1 }
         );
     });
 
@@ -1453,7 +1473,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.LowerRomanDoubleParenthesis,
-            '15'
+            undefined,
+            { orderedStyleType: 15, unorderedStyleType: 1 }
         );
     });
 
@@ -1461,7 +1482,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRoman,
-            '17'
+            undefined,
+            { orderedStyleType: 17, unorderedStyleType: 1 }
         );
     });
 
@@ -1469,7 +1491,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRomanDash,
-            '20'
+            undefined,
+            { orderedStyleType: 20, unorderedStyleType: 1 }
         );
     });
 
@@ -1477,7 +1500,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRomanParenthesis,
-            '18'
+            undefined,
+            { orderedStyleType: 18, unorderedStyleType: 1 }
         );
     });
 
@@ -1485,7 +1509,8 @@ describe('VList.setListStyleType', () => {
         runTest(
             `<ol id="${ListRoot}"><li id="${FocusNode}">test</li></ol><div id="${FocusNode}"></div>`,
             NumberingListType.UpperRomanDoubleParenthesis,
-            '19'
+            undefined,
+            { orderedStyleType: 19, unorderedStyleType: 1 }
         );
     });
 });
