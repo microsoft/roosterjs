@@ -5,6 +5,7 @@ import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
 import { Keys } from 'roosterjs-editor-types';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
+import { TextField } from '@fluentui/react/lib/TextField';
 import {
     CancelButtonStringKey,
     LocalizedStrings,
@@ -21,14 +22,12 @@ interface ItemProps<Strings extends string, ItemNames extends string> {
 }
 
 const classNames = mergeStyleSets({
-    linkInput: {
+    inputBox: {
         width: '100%',
         minWidth: '250px',
         height: '32px',
-        margin: '5px 0',
-        border: '1px solid black',
+        margin: '5px 0 16px',
         borderRadius: '2px',
-        padding: '0 0 0 5px',
     },
 });
 
@@ -38,10 +37,12 @@ function DialogItem<Strings extends string, ItemNames extends string>(
     const { itemName, strings, items, currentValues, onChanged, onEnterKey } = props;
     const { labelKey, unlocalizedLabel, autoFocus } = items[itemName];
     const value = currentValues[itemName];
-    const inputRef = React.useRef<HTMLInputElement>(null);
-    const onValueChange = React.useCallback(() => {
-        onChanged(itemName, inputRef.current.value);
-    }, [itemName, onChanged]);
+    const onValueChange = React.useCallback(
+        (_, newValue) => {
+            onChanged(itemName, newValue);
+        },
+        [itemName, onChanged]
+    );
 
     const onKeyPress = React.useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -54,17 +55,18 @@ function DialogItem<Strings extends string, ItemNames extends string>(
 
     return (
         <div>
-            <label>{getLocalizedString(strings, labelKey, unlocalizedLabel)}</label>
-            <input
-                ref={inputRef}
-                role="textbox"
-                type="text"
-                className={classNames.linkInput}
-                value={value}
-                onChange={onValueChange}
-                onKeyPress={onKeyPress}
-                autoFocus={autoFocus}
-            />
+            {labelKey ? <div>{getLocalizedString(strings, labelKey, unlocalizedLabel)}</div> : null}
+            <div>
+                <TextField
+                    role="textbox"
+                    type="text"
+                    className={classNames.inputBox}
+                    value={value}
+                    onChange={onValueChange}
+                    onKeyPress={onKeyPress}
+                    autoFocus={autoFocus}
+                />
+            </div>
         </div>
     );
 }
@@ -149,7 +151,7 @@ function InputDialog<Strings extends string, ItemNames extends string>(
  * @internal
  */
 export interface InputDialogItem<Strings extends string> {
-    labelKey: Strings;
+    labelKey: Strings | null;
     unlocalizedLabel: string;
     initValue: string;
     autoFocus?: boolean;
