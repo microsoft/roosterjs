@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import BuildInPluginState from './BuildInPluginState';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
@@ -312,16 +312,22 @@ class MainPane extends MainPaneBase {
 
     private renderPopout() {
         return (
-            <WindowProvider window={this.state.popoutWindow}>
+            <>
                 {this.renderSidePane(true /*fullWidth*/)}
-                {ReactDom.createPortal(
-                    <div className={styles.mainPane}>
-                        {this.renderRibbon(true /*isPopout*/)}
-                        <div className={styles.body}>{this.renderEditor()}</div>
-                    </div>,
+                {ReactDOM.createPortal(
+                    <WindowProvider window={this.state.popoutWindow}>
+                        <ThemeProvider
+                            applyTo="body"
+                            theme={this.state.isDarkMode ? DarkTheme : LightTheme}>
+                            <div className={styles.mainPane}>
+                                {this.renderRibbon(true /*isPopout*/)}
+                                <div className={styles.body}>{this.renderEditor()}</div>
+                            </div>
+                        </ThemeProvider>
+                    </WindowProvider>,
                     this.popoutRoot
                 )}
-            </WindowProvider>
+            </>
         );
     }
 
@@ -424,5 +430,5 @@ class MainPane extends MainPaneBase {
 }
 
 export function mount(parent: HTMLElement) {
-    ReactDom.render(<MainPane />, parent);
+    ReactDOM.render(<MainPane />, parent);
 }

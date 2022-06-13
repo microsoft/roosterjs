@@ -8,4 +8,9 @@ export default interface UIUtilities {
      * @returns A disposer function to help unmount this element
      */
     renderComponent(element: JSX.Element): () => void;
+
+    /**
+     * Check if editor is rendered in Right-to-left mode
+     */
+    isRightToLeft(): boolean;
 }

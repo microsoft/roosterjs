@@ -1,12 +1,10 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import RoosterProps from '../type/RoosterProps';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
-import { ReactEditorPlugin, UIUtilities } from '../../common/index';
-import { ThemeProvider, useTheme } from '@fluentui/react/lib/Theme';
-import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+import { useTheme } from '@fluentui/react/lib/Theme';
+import { createUIUtilities, ReactEditorPlugin } from '../../common/index';
 
 /**
  * Main component of react wrapper for roosterjs
@@ -22,25 +20,7 @@ export default function Rooster(props: RoosterProps) {
 
     React.useEffect(() => {
         if (plugins) {
-            const uiUtilities: UIUtilities = {
-                renderComponent: e => {
-                    const doc = editorDiv.current.ownerDocument;
-                    const div = doc.createElement('div');
-                    doc.body.appendChild(div);
-
-                    ReactDOM.render(
-                        <WindowProvider window={doc.defaultView}>
-                            <ThemeProvider theme={theme}>{e}</ThemeProvider>
-                        </WindowProvider>,
-                        div
-                    );
-
-                    return () => {
-                        ReactDOM.unmountComponentAtNode(div);
-                        doc.body.removeChild(div);
-                    };
-                },
-            };
+            const uiUtilities = createUIUtilities(editorDiv.current, theme);
 
             plugins.forEach(plugin => {
                 if (isReactEditorPlugin(plugin)) {
