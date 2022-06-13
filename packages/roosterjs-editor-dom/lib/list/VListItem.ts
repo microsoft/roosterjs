@@ -37,20 +37,20 @@ const NEGATIVE_MARGIN = '-.25in';
 export const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     {
         orderedStyleType: createNumberDefinition(
-            true,
+            true /** isOptional */,
             undefined /** value **/,
             NumberingListType.Min,
             NumberingListType.Max
         ),
         unorderedStyleType: createNumberDefinition(
-            true,
+            true /** isOptional */,
             undefined /** value **/,
             BulletListType.Min,
             BulletListType.Max
         ),
     },
-    true,
-    true
+    true /** isOptional */,
+    true /** allowNull */
 );
 
 /**
