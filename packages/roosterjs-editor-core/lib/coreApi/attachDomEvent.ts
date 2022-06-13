@@ -1,3 +1,4 @@
+import { getObjectKeys } from 'roosterjs-editor-dom/lib';
 import {
     AttachDomEvent,
     DOMEventHandler,
@@ -18,7 +19,7 @@ export const attachDomEvent: AttachDomEvent = (
     core: EditorCore,
     eventMap: Record<string, DOMEventHandler>
 ) => {
-    const disposers = Object.keys(eventMap || {}).map(eventName => {
+    const disposers = getObjectKeys(eventMap || {}).map(eventName => {
         const { pluginEventType, beforeDispatch } = extractHandler(eventMap[eventName]);
         let onEvent = (event: UIEvent) => {
             if (beforeDispatch) {

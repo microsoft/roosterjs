@@ -1,4 +1,4 @@
-import arrayPush from '../utils/arrayPush';
+import arrayPush from '../jsUtils/arrayPush';
 import getRootListNode from './getRootListNode';
 import isNodeAfter from '../utils/isNodeAfter';
 import isNodeInRegion from '../region/isNodeInRegion';

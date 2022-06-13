@@ -1,8 +1,14 @@
 import * as React from 'react';
 import RibbonButtonDropDown from '../../type/RibbonButtonDropDown';
-import { BackgroundColorKeys, TextColorKeys } from '../../type/RibbonButtonStringKeys';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { ModeIndependentColor } from 'roosterjs-editor-types';
+import {
+    BackgroundColorKeys,
+    BackgroundColorButtonStringKey,
+    TextColorButtonStringKey,
+    TextColorKeys,
+    CellShadeButtonStringKey,
+} from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal
@@ -71,7 +77,7 @@ const classNames = mergeStyleSets({
 /**
  * @internal
  */
-const TextColors: { [key in TextColorKeys]: ModeIndependentColor } = {
+const TextColors: Partial<Record<TextColorButtonStringKey, ModeIndependentColor>> = {
     textColorLightBlue: { lightModeColor: '#51a7f9', darkModeColor: '#0075c2' },
     textColorLightGreen: { lightModeColor: '#6fc040', darkModeColor: '#207a00' },
     textColorLightYellow: { lightModeColor: '#f5d427', darkModeColor: '#5d4d00' },
@@ -107,7 +113,10 @@ const TextColors: { [key in TextColorKeys]: ModeIndependentColor } = {
 /**
  * @internal
  */
-const BackgroundColors: { [key in BackgroundColorKeys]: ModeIndependentColor } = {
+const BackgroundColors: Partial<Record<
+    BackgroundColorButtonStringKey | CellShadeButtonStringKey,
+    ModeIndependentColor
+>> = {
     backgroundColorCyan: { lightModeColor: '#00ffff', darkModeColor: '#005357' },
     backgroundColorGreen: { lightModeColor: '#00ff00', darkModeColor: '#005e00' },
     backgroundColorYellow: { lightModeColor: '#ffff00', darkModeColor: '#383e00' },
@@ -133,7 +142,7 @@ const BackgroundColors: { [key in BackgroundColorKeys]: ModeIndependentColor } =
  */
 type AllColorKeys = TextColorKeys | BackgroundColorKeys;
 
-const AllColors: { [key in AllColorKeys]: ModeIndependentColor } = {
+const AllColors: Partial<Record<AllColorKeys, ModeIndependentColor>> = {
     ...TextColors,
     ...BackgroundColors,
 };

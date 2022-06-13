@@ -7,7 +7,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import setBulletListMarkers from './setBulletListMarkers';
 import setListItemStyle from './setListItemStyle';
 import setNumberingListMarkers from './setNumberingListMarkers';
-import toArray from '../utils/toArray';
+import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
 import { createNumberDefinition, createObjectDefinition } from '../metadata/definitionCreators';

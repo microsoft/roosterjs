@@ -1,5 +1,5 @@
 import readFile from '../utils/readFile';
-import toArray from '../utils/toArray';
+import toArray from '../jsUtils/toArray';
 import {
     ClipboardData,
     ContentTypePrefix,

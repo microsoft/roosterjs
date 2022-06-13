@@ -12,7 +12,7 @@ import Position from '../selection/Position';
 import PositionContentSearcher from '../contentTraverser/PositionContentSearcher';
 import queryElements from '../utils/queryElements';
 import splitTextNode from '../utils/splitTextNode';
-import toArray from '../utils/toArray';
+import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import VTable from '../table/VTable';
 import wrap from '../utils/wrap';

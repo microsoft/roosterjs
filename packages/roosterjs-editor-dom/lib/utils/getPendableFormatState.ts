@@ -1,3 +1,4 @@
+import getObjectKeys from '../jsUtils/getObjectKeys';
 import { DocumentCommand, PendableFormatState } from 'roosterjs-editor-types';
 
 /**
@@ -46,7 +47,7 @@ export const PendableFormatCommandMap: { [key in PendableFormatNames]: DocumentC
  * @returns A PendableFormatState object which contains the values of pendable format states
  */
 export default function getPendableFormatState(document: Document): PendableFormatState {
-    let keys = Object.keys(PendableFormatCommandMap) as PendableFormatNames[];
+    let keys = getObjectKeys(PendableFormatCommandMap);
 
     return keys.reduce((state, key) => {
         state[key] = document.queryCommandState(PendableFormatCommandMap[key]);

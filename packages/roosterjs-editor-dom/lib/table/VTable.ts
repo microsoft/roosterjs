@@ -2,7 +2,7 @@ import applyTableFormat from './applyTableFormat';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import toArray from '../utils/toArray';
+import toArray from '../jsUtils/toArray';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 import {
     SizeTransformer,

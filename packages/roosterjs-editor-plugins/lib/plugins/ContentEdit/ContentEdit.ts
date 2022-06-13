@@ -1,4 +1,5 @@
 import getAllFeatures from './getAllFeatures';
+import { getObjectKeys } from 'roosterjs-editor-dom/lib';
 import {
     ContentEditFeatureSettings,
     EditorPlugin,
@@ -45,7 +46,7 @@ export default class ContentEdit implements EditorPlugin {
         const features: GenericContentEditFeature<PluginEvent>[] = [];
         const allFeatures = getAllFeatures();
 
-        Object.keys(allFeatures).forEach((key: keyof typeof allFeatures) => {
+        getObjectKeys(allFeatures).forEach(key => {
             const feature = allFeatures[key];
             const hasSettingForKey =
                 this.settingsOverride && this.settingsOverride[key] !== undefined;

@@ -5,6 +5,7 @@ import RibbonProps from '../type/RibbonProps';
 import { CommandBar, ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
 import { FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { FormatState } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { IContextualMenuItem, IContextualMenuItemProps } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { moreCommands } from './buttons/moreCommands';
@@ -93,7 +94,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                                   </div>
                               )
                             : undefined,
-                        items: Object.keys(dropDownMenu.items).map(key => ({
+                        items: getObjectKeys(dropDownMenu.items).map(key => ({
                             key: key,
                             text: getLocalizedString(strings, key, dropDownMenu.items[key]),
                             data: button,

@@ -9,6 +9,7 @@ import { ContextMenu } from 'roosterjs-editor-plugins/lib/ContextMenu';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { EditorPlugin } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
@@ -51,7 +52,7 @@ const PluginCreators: {
 };
 
 export default function getToggleablePlugins(initState: BuildInPluginState) {
-    return Object.keys(PluginCreators).map((key: keyof BuildInPluginList) =>
+    return getObjectKeys(PluginCreators).map(key =>
         initState.pluginList[key] ? PluginCreators[key](initState) : null
     );
 }

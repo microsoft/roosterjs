@@ -7,7 +7,7 @@ import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
-import toArray from '../utils/toArray';
+import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import VListItem, { ListStyleDefinitionMetadata, ListStyleMetadata } from './VListItem';
 import wrap from '../utils/wrap';
