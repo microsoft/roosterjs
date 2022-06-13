@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="roosterjs_editor_types.editorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorPlugin</a>
+						<a href="roosterjs_react.reacteditorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">ReactEditorPlugin</a>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">RibbonPlugin</span>
@@ -104,6 +104,12 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_react.ribbonplugin.html#willhandleeventexclusively" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively</a></li>
 							</ul>
 						</section>
+						<section class="tsd-index-section tsd-is-inherited">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_react.ribbonplugin.html#setuiutilities" class="tsd-kind-icon">setUIUtilities</a></li>
+							</ul>
+						</section>
 					</div>
 				</section>
 			</section>
@@ -114,9 +120,9 @@
 					<h3>dispose</h3>
 					<div class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_editor_types.editorplugin.html">EditorPlugin</a>.<a href="roosterjs_editor_types.editorplugin.html#dispose">dispose</a></p>
+						<p>Inherited from <a href="roosterjs_react.reacteditorplugin.html">ReactEditorPlugin</a>.<a href="roosterjs_react.reacteditorplugin.html#dispose">dispose</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L26">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L26">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:26</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -147,9 +153,9 @@
 					<h3>get<wbr>Name</h3>
 					<div class="tsd-signature tsd-kind-icon">get<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_editor_types.editorplugin.html">EditorPlugin</a>.<a href="roosterjs_editor_types.editorplugin.html#getname">getName</a></p>
+						<p>Inherited from <a href="roosterjs_react.reacteditorplugin.html">ReactEditorPlugin</a>.<a href="roosterjs_react.reacteditorplugin.html#getname">getName</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L11">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L11">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -178,9 +184,9 @@
 					<h3>initialize</h3>
 					<div class="tsd-signature tsd-kind-icon">initialize<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_editor_types.editorplugin.html">EditorPlugin</a>.<a href="roosterjs_editor_types.editorplugin.html#initialize">initialize</a></p>
+						<p>Inherited from <a href="roosterjs_react.reacteditorplugin.html">ReactEditorPlugin</a>.<a href="roosterjs_react.reacteditorplugin.html#initialize">initialize</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L19">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L19">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -223,7 +229,7 @@
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Button<wbr>Click<span class="tsd-signature-symbol">:</span> &lt;T&gt;<span class="tsd-signature-symbol">(</span>button<span class="tsd-signature-symbol">: </span><a href="roosterjs_react.ribbonbutton.html" class="tsd-signature-type" data-tsd-kind="Interface">RibbonButton</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, strings<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_react.html#localizedstrings" class="tsd-signature-type" data-tsd-kind="Type alias">LocalizedStrings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L20">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L20">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -285,9 +291,9 @@
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Plugin<wbr>Event</h3>
 					<div class="tsd-signature tsd-kind-icon">on<wbr>Plugin<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_editor_types.editorplugin.html">EditorPlugin</a>.<a href="roosterjs_editor_types.editorplugin.html#onpluginevent">onPluginEvent</a></p>
+						<p>Inherited from <a href="roosterjs_react.reacteditorplugin.html">ReactEditorPlugin</a>.<a href="roosterjs_react.reacteditorplugin.html#onpluginevent">onPluginEvent</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L44">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L44">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -330,7 +336,7 @@
 					<div class="tsd-signature tsd-kind-icon">register<wbr>Format<wbr>Changed<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>formatState<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.formatstate.html" class="tsd-signature-type" data-tsd-kind="Interface">FormatState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L12">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L12">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -396,7 +402,7 @@
 					<div class="tsd-signature tsd-kind-icon">start<wbr>Live<wbr>Preview<span class="tsd-signature-symbol">:</span> &lt;T&gt;<span class="tsd-signature-symbol">(</span>button<span class="tsd-signature-symbol">: </span><a href="roosterjs_react.ribbonbutton.html" class="tsd-signature-type" data-tsd-kind="Interface">RibbonButton</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, strings<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_react.html#localizedstrings" class="tsd-signature-type" data-tsd-kind="Type alias">LocalizedStrings</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L32">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L32">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -459,7 +465,7 @@
 					<div class="tsd-signature tsd-kind-icon">stop<wbr>Live<wbr>Preview<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L41">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts#L41">packages-ui/roosterjs-react/lib/ribbon/type/RibbonPlugin.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -488,9 +494,9 @@
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> will<wbr>Handle<wbr>Event<wbr>Exclusively</h3>
 					<div class="tsd-signature tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/roosterjs_editor_types.html#pluginevent" class="tsd-signature-type" data-tsd-kind="Type alias">PluginEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="roosterjs_editor_types.editorplugin.html">EditorPlugin</a>.<a href="roosterjs_editor_types.editorplugin.html#willhandleeventexclusively">willHandleEventExclusively</a></p>
+						<p>Inherited from <a href="roosterjs_react.reacteditorplugin.html">ReactEditorPlugin</a>.<a href="roosterjs_react.reacteditorplugin.html#willhandleeventexclusively">willHandleEventExclusively</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/55b6a7e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L36">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts#L36">packages/roosterjs-editor-types/lib/interface/EditorPlugin.ts:36</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -528,6 +534,41 @@
 							</li>
 						</ul>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="setuiutilities" class="tsd-anchor"></a>
+					<h3>setUIUtilities</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">setUIUtilities<span class="tsd-signature-symbol">(</span>uiUtilities<span class="tsd-signature-symbol">: </span><a href="roosterjs_react.uiutilities.html" class="tsd-signature-type" data-tsd-kind="Interface">UIUtilities</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="roosterjs_react.reacteditorplugin.html">ReactEditorPlugin</a>.<a href="roosterjs_react.reacteditorplugin.html#setuiutilities">setUIUtilities</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8bb904e/packages-ui/roosterjs-react/lib/common/type/ReactEditorPlugin.ts#L12">packages-ui/roosterjs-react/lib/common/type/ReactEditorPlugin.ts:12</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the UI utilities objects to this plugin to help render additional UI elements</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>uiUtilities: <a href="roosterjs_react.uiutilities.html" class="tsd-signature-type" data-tsd-kind="Interface">UIUtilities</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The UI utilities object to set</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -599,6 +640,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_react.ribbonplugin.html#willhandleeventexclusively" class="tsd-kind-icon">will<wbr>Handle<wbr>Event<wbr>Exclusively</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_react.ribbonplugin.html#setuiutilities" class="tsd-kind-icon">setUIUtilities</a>
 							</li>
 						</ul>
 					</li>
