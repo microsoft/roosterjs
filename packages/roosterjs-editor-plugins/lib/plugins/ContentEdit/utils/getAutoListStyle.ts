@@ -27,8 +27,11 @@ const characters: Record<string, number> = {
     '(': Character.DoubleParenthesis,
 };
 
-const identifyCharacter = (text: string) => {
-    return characters[text];
+const identifyCharacter = (text: string, secondSeparator?: string) => {
+    const charType = characters[text];
+    return charType === Character.DoubleParenthesis && secondSeparator !== ')'
+        ? undefined
+        : charType;
 };
 
 const identifyNumberingType = (text: string) => {
@@ -103,13 +106,15 @@ const bulletListType: Record<string, number> = {
 };
 
 const identifyNumberingListType = (numbering: string): NumberingListType | null => {
-    const separator = numbering.length === 2 ? numbering[1] : numbering[0];
-    const char = identifyCharacter(separator);
+    // If the marker length is 3, the marker style is double parenthis such as (1), (A). Then the number is second character of the string and the separator is first character and last character.
+    const separator = numbering.length === 3 ? numbering[0] : numbering[1];
+    const secondSeparator = numbering.length === 3 ? numbering[2] : undefined;
+    const char = identifyCharacter(separator, secondSeparator);
     // if separator is not valid, no need to check if the number is valid.
     if (char) {
-        const number = numbering.length === 2 ? numbering[0] : numbering[1];
+        const number = numbering.length === 3 ? numbering[1] : numbering[0];
         const numberingType = identifyNumberingType(number);
-        return char && numberingType ? numberingListTypes[numberingType](char) : null;
+        return numberingType ? numberingListTypes[numberingType](char) : null;
     }
     return null;
 };
