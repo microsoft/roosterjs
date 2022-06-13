@@ -1,4 +1,5 @@
-import getAutoListStyle from '../utils/getAutoListStyle';
+import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
+import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
 import {
     blockFormat,
     experimentCommitListChains,
@@ -28,8 +29,6 @@ import {
     QueryScope,
     RegionBase,
     ListType,
-    BulletListType,
-    NumberingListType,
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
@@ -219,7 +218,7 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
             !cacheGetListElement(event, editor) &&
             editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
         ) {
-            return shouldTriggerList(event, editor, ListType.Unordered);
+            return shouldTriggerList(event, editor, getAutoBulletListStyle);
         }
         return false;
     },
@@ -231,10 +230,7 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                const listStyle = getAutoListStyle(
-                    textBeforeCursor,
-                    ListType.Unordered
-                ) as BulletListType;
+                const listStyle = getAutoBulletListStyle(textBeforeCursor);
                 if (textRange) {
                     prepareAutoBullet(editor, textRange);
                     toggleBullet(editor, listStyle);
@@ -257,7 +253,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
             !cacheGetListElement(event, editor) &&
             editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
         ) {
-            return shouldTriggerList(event, editor, ListType.Ordered);
+            return shouldTriggerList(event, editor, getAutoNumberingListStyle);
         }
         return false;
     },
@@ -270,10 +266,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                const listStyle = getAutoListStyle(
-                    textBeforeCursor,
-                    ListType.Ordered
-                ) as NumberingListType;
+                const listStyle = getAutoNumberingListStyle(textBeforeCursor);
 
                 if (!textRange) {
                     // no op if the range can't be found
@@ -368,12 +361,14 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
     return listElement ? [listElement, li] : null;
 }
 
-function shouldTriggerList(event: PluginKeyboardEvent, editor: IEditor, listType: ListType) {
+function shouldTriggerList(
+    event: PluginKeyboardEvent,
+    editor: IEditor,
+    getListStyle: (text: string) => number
+) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(5);
-    return (
-        !searcher.getNearestNonTextInlineElement() && getAutoListStyle(textBeforeCursor, listType)
-    );
+    return !searcher.getNearestNonTextInlineElement() && getListStyle(textBeforeCursor);
 }
 
 /**

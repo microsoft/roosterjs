@@ -1,9 +1,4 @@
-import { BulletListType, ListType, NumberingListType } from 'roosterjs-editor-types';
-
-/**
- * @internal
- * The type and style of a list
- */
+import { NumberingListType } from 'roosterjs-editor-types';
 
 const enum NumberingTypes {
     Decimal = 1,
@@ -27,8 +22,11 @@ const characters: Record<string, number> = {
     '(': Character.DoubleParenthesis,
 };
 
-const identifyCharacter = (text: string) => {
-    return characters[text];
+const identifyCharacter = (text: string, secondSeparator?: string) => {
+    const charType = characters[text];
+    return charType === Character.DoubleParenthesis && secondSeparator !== ')'
+        ? undefined
+        : charType;
 };
 
 const identifyNumberingType = (text: string) => {
@@ -92,52 +90,28 @@ const DecimalsTypes: Record<number, number> = {
     [Character.DoubleParenthesis]: NumberingListType.DecimalDoubleParenthesis,
 };
 
-const bulletListType: Record<string, number> = {
-    '*': BulletListType.Disc,
-    '-': BulletListType.Dash,
-    '--': BulletListType.Square,
-    '->': BulletListType.LongArrow,
-    '-->': BulletListType.LongArrow,
-    '=>': BulletListType.UnfilledArrow,
-    '>': BulletListType.ShortArrow,
-    '—': BulletListType.Hyphen,
-};
-
 const identifyNumberingListType = (numbering: string): NumberingListType | null => {
-    const separator = numbering.length === 2 ? numbering[1] : numbering[0];
-    const char = identifyCharacter(separator);
+    // If the marker length is 3, the marker style is double parenthis such as (1), (A). Then the number is second character of the string and the separator is first character and last character.
+    const separator = numbering.length === 3 ? numbering[0] : numbering[1];
+    const secondSeparator = numbering.length === 3 ? numbering[2] : undefined;
+    const char = identifyCharacter(separator, secondSeparator);
     // if separator is not valid, no need to check if the number is valid.
     if (char) {
-        const number = numbering.length === 2 ? numbering[0] : numbering[1];
+        const number = numbering.length === 3 ? numbering[1] : numbering[0];
         const numberingType = identifyNumberingType(number);
-        return char && numberingType ? numberingListTypes[numberingType](char) : null;
+        return numberingType ? numberingListTypes[numberingType](char) : null;
     }
     return null;
-};
-
-const identifyBulletListType = (bullet: string): BulletListType | null => {
-    return bulletListType[bullet] || null;
 };
 
 /**
  * @internal
  * @param textBeforeCursor The trigger character
- * @param listType The type of the list (ordered or unordered)
- * @returns The style of a list triggered by a string
+ * @returns The style of a numbering list triggered by a string
  */
-export default function getAutoListStyle(
-    textBeforeCursor: string,
-    listType: ListType
-): NumberingListType | BulletListType {
-    const trigger = textBeforeCursor.replace(/\s/g, '');
-    if (listType == ListType.Unordered) {
-        const bulletType = identifyBulletListType(trigger);
-        return bulletType;
-    }
-
-    if (listType == ListType.Ordered) {
-        // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
-        const numberingType = trigger.length > 1 ? identifyNumberingListType(trigger) : null;
-        return numberingType;
-    }
+export default function getAutoNumberingListStyle(textBeforeCursor: string): NumberingListType {
+    const trigger = textBeforeCursor.trim();
+    // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
+    const numberingType = trigger.length > 1 ? identifyNumberingListType(trigger) : null;
+    return numberingType;
 }
