@@ -1,10 +1,10 @@
 import * as React from 'react';
 import RoosterProps from '../type/RoosterProps';
+import { createUIUtilities, ReactEditorPlugin } from '../../common/index';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { useTheme } from '@fluentui/react/lib/Theme';
-import { createUIUtilities, ReactEditorPlugin } from '../../common/index';
 
 /**
  * Main component of react wrapper for roosterjs
@@ -28,7 +28,7 @@ export default function Rooster(props: RoosterProps) {
                 }
             });
         }
-    }, [theme]);
+    }, [theme, editorCreator]);
 
     React.useEffect(() => {
         editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);
