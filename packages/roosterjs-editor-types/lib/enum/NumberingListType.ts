@@ -3,102 +3,112 @@
  */
 export const enum NumberingListType {
     /**
+     * Minimum value of the enum
+     */
+    Min = 1,
+
+    /**
      * Numbering triggered by 1.
      */
-    Decimal,
+    Decimal = 1,
 
     /**
      * Numbering triggered by 1-
      */
-    DecimalDash,
+    DecimalDash = 2,
 
     /**
      * Numbering triggered by 1)
      */
-    DecimalParenthesis,
+    DecimalParenthesis = 3,
 
     /**
      * Numbering triggered by (1)
      */
-    DecimalDoubleParenthesis,
+    DecimalDoubleParenthesis = 4,
 
     /**
      * Numbering triggered by a.
      */
-    LowerAlpha,
+    LowerAlpha = 5,
 
     /**
      * Numbering triggered by a)
      */
-    LowerAlphaParenthesis,
+    LowerAlphaParenthesis = 6,
 
     /**
      * Numbering triggered by (a)
      */
-    LowerAlphaDoubleParenthesis,
+    LowerAlphaDoubleParenthesis = 7,
 
     /**
      * Numbering triggered by a-
      */
-    LowerAlphaDash,
+    LowerAlphaDash = 8,
 
     /**
      * Numbering triggered by A.
      */
-    UpperAlpha,
+    UpperAlpha = 9,
 
     /**
      * Numbering triggered by A)
      */
-    UpperAlphaParenthesis,
+    UpperAlphaParenthesis = 10,
 
     /**
      * Numbering triggered by (A)
      */
-    UpperAlphaDoubleParenthesis,
+    UpperAlphaDoubleParenthesis = 11,
 
     /**
      * Numbering triggered by A-
      */
-    UpperAlphaDash,
+    UpperAlphaDash = 12,
 
     /**
      * Numbering triggered by i.
      */
-    LowerRoman,
+    LowerRoman = 13,
 
     /**
      * Numbering triggered by i)
      */
-    LowerRomanParenthesis,
+    LowerRomanParenthesis = 14,
 
     /**
      * Numbering triggered by (i)
      */
-    LowerRomanDoubleParenthesis,
+    LowerRomanDoubleParenthesis = 15,
 
     /**
      * Numbering triggered by i-
      */
-    LowerRomanDash,
+    LowerRomanDash = 16,
 
     /**
      * Numbering triggered by I.
      */
-    UpperRoman,
+    UpperRoman = 17,
 
     /**
      * Numbering triggered by I)
      */
-    UpperRomanParenthesis,
+    UpperRomanParenthesis = 18,
 
     /**
      * Numbering triggered by (I)
      */
-    UpperRomanDoubleParenthesis,
+    UpperRomanDoubleParenthesis = 19,
 
     /**
      * Numbering triggered by I-
      */
-    UpperRomanDash,
+    UpperRomanDash = 20,
+
+    /**
+     * Maximum value of the enum
+     */
+    Max = 20,
 }
