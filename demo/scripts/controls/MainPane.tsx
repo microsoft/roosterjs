@@ -12,7 +12,7 @@ import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
@@ -34,6 +34,7 @@ import {
     UpdateContentPlugin,
     UpdateMode,
     AllButtonKeys,
+    createPasteOptionPlugin,
 } from 'roosterjs-react';
 import {
     tableAlign,
@@ -121,6 +122,7 @@ class MainPane extends MainPaneBase {
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private ribbonPlugin: RibbonPlugin;
+    private pasteOptionPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
@@ -138,6 +140,7 @@ class MainPane extends MainPaneBase {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
+        this.pasteOptionPlugin = createPasteOptionPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
@@ -417,8 +420,13 @@ class MainPane extends MainPaneBase {
 
     private getPlugins() {
         return this.state.showSidePane || this.state.popoutWindow
-            ? [this.ribbonPlugin, ...this.getSidePanePlugins(), this.updateContentPlugin]
-            : [this.ribbonPlugin, this.updateContentPlugin];
+            ? [
+                  this.ribbonPlugin,
+                  this.pasteOptionPlugin,
+                  ...this.getSidePanePlugins(),
+                  this.updateContentPlugin,
+              ]
+            : [this.ribbonPlugin, this.pasteOptionPlugin, this.updateContentPlugin];
     }
 
     private resetEditor() {
