@@ -27,7 +27,7 @@ export default function Rooster(props: RoosterProps) {
                 }
             });
         }
-    }, [theme]);
+    }, [theme, editorCreator]);
 
     React.useEffect(() => {
         editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);

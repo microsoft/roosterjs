@@ -10,6 +10,7 @@ import MainPaneBase from './MainPaneBase';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
+import { arrayPush } from 'roosterjs-editor-dom';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
@@ -124,6 +125,7 @@ class MainPane extends MainPaneBase {
     private ribbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
+    private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
@@ -364,7 +366,7 @@ class MainPane extends MainPaneBase {
     }
 
     private renderEditor() {
-        const allPlugins = getToggleablePlugins(this.state.initState).concat(this.getPlugins());
+        const allPlugins = this.getPlugins();
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
             transformOrigin: this.state.isRtl ? 'right top' : 'left top',
@@ -419,17 +421,22 @@ class MainPane extends MainPaneBase {
     }
 
     private getPlugins() {
-        return this.state.showSidePane || this.state.popoutWindow
-            ? [
-                  this.ribbonPlugin,
-                  this.pasteOptionPlugin,
-                  ...this.getSidePanePlugins(),
-                  this.updateContentPlugin,
-              ]
-            : [this.ribbonPlugin, this.pasteOptionPlugin, this.updateContentPlugin];
+        this.toggleablePlugins =
+            this.toggleablePlugins || getToggleablePlugins(this.state.initState);
+
+        const plugins = [...this.toggleablePlugins, this.ribbonPlugin, this.pasteOptionPlugin];
+
+        if (this.state.showSidePane || this.state.popoutWindow) {
+            arrayPush(plugins, this.getSidePanePlugins());
+        }
+
+        plugins.push(this.updateContentPlugin);
+
+        return plugins;
     }
 
     private resetEditor() {
+        this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
                 new Editor(div, options),

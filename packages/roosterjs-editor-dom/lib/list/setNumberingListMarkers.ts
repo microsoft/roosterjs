@@ -1,6 +1,7 @@
 import convertDecimalsToAlpha from './convertDecimalsToAlpha';
 import convertDecimalsToRoman from './convertDecimalsToRomans';
 import { NumberingListType } from 'roosterjs-editor-types';
+import type { CompatibleNumberingListType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 interface MarkerStyle {
     markerType: number;
@@ -23,7 +24,7 @@ enum MarkerTypes {
  */
 export default function setNumberingListMarkers(
     li: HTMLLIElement,
-    listStyleType: NumberingListType,
+    listStyleType: NumberingListType | CompatibleNumberingListType,
     level: number
 ) {
     const { markerSeparator, markerSecondSeparator, markerType, lowerCase } = numberingListStyle[
