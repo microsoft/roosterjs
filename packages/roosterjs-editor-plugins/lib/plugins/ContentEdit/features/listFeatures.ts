@@ -1,5 +1,4 @@
-import getListStyle from '../utils/getListStyle';
-import getListType from '../utils/getListType';
+import getListInfo from '../utils/getListInfo';
 import {
     blockFormat,
     experimentCommitListChains,
@@ -162,16 +161,16 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
         if (!cacheGetListElement(event, editor)) {
-            let searcher = editor.getContentSearcherOfCursor(event);
-            let textBeforeCursor = searcher.getSubStringBefore(4);
+            const searcher = editor.getContentSearcherOfCursor(event);
+            const textBeforeCursor = searcher.getSubStringBefore(5);
             const listTrigger = (text: string) =>
                 editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-                    ? getListType(text)
+                    ? getListInfo(text)
                     : isAListPattern(text);
             // Auto list is triggered if:
             // 1. Text before cursor exactly matches '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
-            return listTrigger(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
+            return !searcher.getNearestNonTextInlineElement() && listTrigger(textBeforeCursor);
         }
         return false;
     },
@@ -182,14 +181,15 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
             () => {
                 let regions: RegionBase[];
                 let searcher = editor.getContentSearcherOfCursor();
-                let textBeforeCursor = searcher.getSubStringBefore(4);
+                let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                let listType = ListType.None;
                 let listStyle;
+                let listType;
 
                 if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
-                    listType = getListType(textBeforeCursor);
-                    listStyle = getListStyle(textBeforeCursor, listType);
+                    const listInfo = getListInfo(textBeforeCursor);
+                    listType = listInfo.listType;
+                    listStyle = listInfo.listStyle;
                 } else {
                     listType =
                         textBeforeCursor.indexOf('*') == 0 || textBeforeCursor.indexOf('-') == 0
@@ -198,12 +198,11 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                             ? ListType.Ordered
                             : ListType.None;
                 }
-
                 if (!textRange) {
                     // no op if the range can't be found
                 } else if (listType === ListType.Unordered) {
                     prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor, listStyle as BulletListType | undefined);
+                    toggleBullet(editor, listStyle as BulletListType);
                 } else if (listType === ListType.Ordered) {
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(

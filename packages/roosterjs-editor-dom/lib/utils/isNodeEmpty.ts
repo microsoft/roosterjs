@@ -12,7 +12,11 @@ const ZERO_WIDTH_SPACE = /\u200b/g;
  * Default value is false
  * @returns True if there isn't any visible element inside node, otherwise false
  */
-export default function isNodeEmpty(node: Node, trimContent?: boolean) {
+export default function isNodeEmpty(
+    node: Node,
+    trimContent?: boolean,
+    shouldCountBrAsVisible?: boolean
+) {
     if (!node) {
         return false;
     } else if (node.nodeType == NodeType.Text) {
@@ -20,10 +24,13 @@ export default function isNodeEmpty(node: Node, trimContent?: boolean) {
     } else if (node.nodeType == NodeType.Element) {
         let element = node as Element;
         let textContent = trim(element.textContent || '', trimContent);
+        const visibleSelector = shouldCountBrAsVisible
+            ? `${VISIBLE_CHILD_ELEMENT_SELECTOR},BR`
+            : VISIBLE_CHILD_ELEMENT_SELECTOR;
         if (
             textContent != '' ||
             VISIBLE_ELEMENT_TAGS.indexOf(getTagOfNode(element)) >= 0 ||
-            element.querySelectorAll(VISIBLE_CHILD_ELEMENT_SELECTOR)[0]
+            element.querySelectorAll(visibleSelector)[0]
         ) {
             return false;
         }
