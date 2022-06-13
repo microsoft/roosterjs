@@ -1,8 +1,10 @@
 import * as React from 'react';
 import RoosterProps from '../type/RoosterProps';
+import { createUIUtilities, ReactEditorPlugin } from '../../common/index';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, IEditor } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import { useTheme } from '@fluentui/react/lib/Theme';
 
 /**
  * Main component of react wrapper for roosterjs
@@ -12,8 +14,21 @@ import { EditorOptions, IEditor } from 'roosterjs-editor-types';
 export default function Rooster(props: RoosterProps) {
     const editorDiv = React.useRef<HTMLDivElement>(null);
     const editor = React.useRef<IEditor>(null);
+    const theme = useTheme();
 
-    const { focusOnInit, editorCreator, zoomScale, inDarkMode } = props;
+    const { focusOnInit, editorCreator, zoomScale, inDarkMode, plugins } = props;
+
+    React.useEffect(() => {
+        if (plugins) {
+            const uiUtilities = createUIUtilities(editorDiv.current, theme);
+
+            plugins.forEach(plugin => {
+                if (isReactEditorPlugin(plugin)) {
+                    plugin.setUIUtilities(uiUtilities);
+                }
+            });
+        }
+    }, [theme, editorCreator]);
 
     React.useEffect(() => {
         editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);
@@ -44,4 +59,8 @@ export default function Rooster(props: RoosterProps) {
 
 function defaultEditorCreator(div: HTMLDivElement, options: EditorOptions) {
     return new Editor(div, options);
+}
+
+function isReactEditorPlugin(plugin: EditorPlugin): plugin is ReactEditorPlugin {
+    return !!(plugin as ReactEditorPlugin)?.setUIUtilities;
 }

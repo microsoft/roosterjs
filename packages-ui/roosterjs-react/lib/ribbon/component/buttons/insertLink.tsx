@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import getLocalizedString from '../../../common/utils/getLocalizedString';
 import RibbonButton from '../../type/RibbonButton';
 import { createLink } from 'roosterjs-editor-api';
@@ -9,7 +8,6 @@ import { IEditor, Keys, QueryScope } from 'roosterjs-editor-types';
 import { InsertLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { LocalizedStrings } from '../../../common/type/LocalizedStrings';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 
 /**
  * @internal
@@ -19,16 +17,11 @@ export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
     key: 'buttonNameInsertLink',
     unlocalizedText: 'Insert link',
     iconName: 'Link',
-    onClick: (editor, _, strings) => {
-        const doc = editor.getDocument();
-        let div = doc.createElement('div');
-        doc.body.appendChild(div);
+    onClick: (editor, _, strings, uiUtilities) => {
+        let disposer: null | (() => void) = null;
         const onDismiss = () => {
-            ReactDOM.unmountComponentAtNode(div);
-            doc.body.removeChild(div);
-            div = null;
+            disposer?.();
         };
-
         const existingLink = editor.queryElements<HTMLAnchorElement>(
             'a[href]',
             QueryScope.OnSelection
@@ -36,15 +29,15 @@ export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
         const url = existingLink?.href || '';
         const displayText =
             existingLink?.textContent || editor.getSelectionRange()?.toString() || '';
-        ReactDOM.render(
+
+        disposer = uiUtilities.renderComponent(
             <InsertLinkDialog
                 editor={editor}
                 onDismiss={onDismiss}
                 initUrl={url}
                 initDisplayText={displayText}
                 strings={strings}
-            />,
-            div
+            />
         );
     },
 };
@@ -115,48 +108,46 @@ function InsertLinkDialog(props: {
     );
 
     return (
-        <WindowProvider window={editor.getDocument().defaultView}>
-            <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
+        <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
+            <div>
                 <div>
-                    <div>
-                        <label htmlFor="linkInput">Web address (URL)</label>
-                        <input
-                            id="linkInput"
-                            ref={urlInput}
-                            role="textbox"
-                            type="text"
-                            className={classNames.linkInput}
-                            value={url}
-                            onChange={onUrlChanged}
-                            onKeyPress={onKeyPress}
-                            autoFocus={true}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="displayTextInput">Display as</label>
-                        <input
-                            id="displayTextInput"
-                            ref={displayTextInput}
-                            role="textbox"
-                            type="text"
-                            className={classNames.linkInput}
-                            value={displayText}
-                            onChange={onDisplayTextChanged}
-                            onKeyPress={onKeyPress}
-                        />
-                    </div>
+                    <label htmlFor="linkInput">Web address (URL)</label>
+                    <input
+                        id="linkInput"
+                        ref={urlInput}
+                        role="textbox"
+                        type="text"
+                        className={classNames.linkInput}
+                        value={url}
+                        onChange={onUrlChanged}
+                        onKeyPress={onKeyPress}
+                        autoFocus={true}
+                    />
                 </div>
-                <DialogFooter>
-                    <PrimaryButton
-                        text={getLocalizedString(strings, 'buttonNameOK', 'OK')}
-                        onClick={onOk}
+                <div>
+                    <label htmlFor="displayTextInput">Display as</label>
+                    <input
+                        id="displayTextInput"
+                        ref={displayTextInput}
+                        role="textbox"
+                        type="text"
+                        className={classNames.linkInput}
+                        value={displayText}
+                        onChange={onDisplayTextChanged}
+                        onKeyPress={onKeyPress}
                     />
-                    <DefaultButton
-                        text={getLocalizedString(strings, 'buttonNameCancel', 'Cancel')}
-                        onClick={onCancel}
-                    />
-                </DialogFooter>
-            </Dialog>
-        </WindowProvider>
+                </div>
+            </div>
+            <DialogFooter>
+                <PrimaryButton
+                    text={getLocalizedString(strings, 'buttonNameOK', 'OK')}
+                    onClick={onOk}
+                />
+                <DefaultButton
+                    text={getLocalizedString(strings, 'buttonNameCancel', 'Cancel')}
+                    onClick={onCancel}
+                />
+            </DialogFooter>
+        </Dialog>
     );
 }
