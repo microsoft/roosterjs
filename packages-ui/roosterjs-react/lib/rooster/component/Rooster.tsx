@@ -1,40 +1,10 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import RoosterProps from '../type/RoosterProps';
+import { createUIUtilities, ReactEditorPlugin } from '../../common/index';
 import { divProperties, getNativeProps } from '@fluentui/react/lib/Utilities';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
-import { getComputedStyles } from 'roosterjs-editor-dom';
-import { PartialTheme, ThemeProvider, useTheme } from '@fluentui/react/lib/Theme';
-import { ReactEditorPlugin, UIUtilities } from '../../common/index';
-import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-
-function createUIUtilities(editorDiv: HTMLDivElement, theme: PartialTheme): UIUtilities {
-    return {
-        renderComponent: e => {
-            const doc = editorDiv.ownerDocument;
-            const div = doc.createElement('div');
-            doc.body.appendChild(div);
-
-            ReactDOM.render(
-                <WindowProvider window={doc.defaultView}>
-                    <ThemeProvider theme={theme}>{e}</ThemeProvider>
-                </WindowProvider>,
-                div
-            );
-
-            return () => {
-                ReactDOM.unmountComponentAtNode(div);
-                doc.body.removeChild(div);
-            };
-        },
-        isRightToLeft: () => {
-            const dir = editorDiv && getComputedStyles(editorDiv, 'direction')[0];
-
-            return dir == 'rtl';
-        },
-    };
-}
+import { useTheme } from '@fluentui/react/lib/Theme';
 
 /**
  * Main component of react wrapper for roosterjs
