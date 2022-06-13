@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.02% </span>
+                <span class="strong">21.3% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>24/109</span>
+                <span class='fraction'>23/108</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.43% </span>
+                <span class="strong">21.7% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>24/107</span>
+                <span class='fraction'>23/106</span>
             </div>
         
             
@@ -379,9 +379,7 @@
 <a name='L314'></a><a href='#L314'>314</a>
 <a name='L315'></a><a href='#L315'>315</a>
 <a name='L316'></a><a href='#L316'>316</a>
-<a name='L317'></a><a href='#L317'>317</a>
-<a name='L318'></a><a href='#L318'>318</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L317'></a><a href='#L317'>317</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -566,15 +564,15 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -697,8 +695,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getListStyle from '../utils/getListStyle';
-import getListType from '../utils/getListType';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getListInfo from '../utils/getListInfo';
 import {
     blockFormat,
     experimentCommitListChains,
@@ -861,16 +858,16 @@ const AutoBullet: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (!cacheGetListElement(event, editor)) {
-            let searcher = editor.getContentSearcherOfCursor(event);
-            let textBeforeCursor = searcher.getSubStringBefore(4);
+            const searcher = editor.getContentSearcherOfCursor(event);
+            const textBeforeCursor = searcher.getSubStringBefore(5);
             const listTrigger = (text: string) =&gt;
                 editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-                    ? getListType(text)
+                    ? getListInfo(text)
                     : isAListPattern(text);
             // Auto list is triggered if:
             // 1. Text before cursor exactly matches '*', '-' or '1.'
             // 2. There's no non-text inline entities before cursor
-            return listTrigger(textBeforeCursor) &amp;&amp; !searcher.getNearestNonTextInlineElement();
+            return !searcher.getNearestNonTextInlineElement() &amp;&amp; listTrigger(textBeforeCursor);
         }
 <span class="cstat-no" title="statement not covered" >        return false;</span>
     },
@@ -881,14 +878,15 @@ const AutoBullet: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
 <span class="fstat-no" title="function not covered" >            () =&gt; {</span>
                 let regions: RegionBase[];
                 let searcher = <span class="cstat-no" title="statement not covered" >editor.getContentSearcherOfCursor();</span>
-                let textBeforeCursor = <span class="cstat-no" title="statement not covered" >searcher.getSubStringBefore(4);</span>
+                let textBeforeCursor = <span class="cstat-no" title="statement not covered" >searcher.getSubStringBefore(5);</span>
                 let textRange = <span class="cstat-no" title="statement not covered" >searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);</span>
-                let listType<span class="cstat-no" title="statement not covered" > = ListType.None;</span>
                 let listStyle;
+                let listType;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {</span>
-<span class="cstat-no" title="statement not covered" >                    listType = getListType(textBeforeCursor);</span>
-<span class="cstat-no" title="statement not covered" >                    listStyle = getListStyle(textBeforeCursor, listType);</span>
+                    const listInfo = <span class="cstat-no" title="statement not covered" >getListInfo(textBeforeCursor);</span>
+<span class="cstat-no" title="statement not covered" >                    listType = listInfo.listType;</span>
+<span class="cstat-no" title="statement not covered" >                    listStyle = listInfo.listStyle;</span>
                 } else {
 <span class="cstat-no" title="statement not covered" >                    listType =</span>
                         textBeforeCursor.indexOf('*') == 0 || textBeforeCursor.indexOf('-') == 0
@@ -897,12 +895,11 @@ const AutoBullet: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
                             ? ListType.Ordered
                             : ListType.None;
                 }
-&nbsp;
 <span class="cstat-no" title="statement not covered" >                if (!textRange) {</span>
                     // no op if the range can't be found
                 } else <span class="cstat-no" title="statement not covered" >if (listType === ListType.Unordered) {</span>
 <span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, textRange);</span>
-<span class="cstat-no" title="statement not covered" >                    toggleBullet(editor, listStyle as BulletListType | undefined);</span>
+<span class="cstat-no" title="statement not covered" >                    toggleBullet(editor, listStyle as BulletListType);</span>
                 } else <span class="cstat-no" title="statement not covered" >if (listType === ListType.Ordered) {</span>
 <span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, textRange);</span>
 <span class="cstat-no" title="statement not covered" >                    toggleNumbering(</span>
@@ -1021,7 +1018,7 @@ export const ListFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Fri Jun 10 2022 20:27:54 GMT+0000 (Coordinated Universal Time)
+                at Mon Jun 13 2022 19:24:23 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
