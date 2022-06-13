@@ -39,7 +39,10 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
 
     if (block) {
         formatNode = block.collapseToSingleElement();
-
+        if (isNodeEmpty(formatNode, false /* trimContent */, true /* shouldCountBrAsVisible */)) {
+            const brEl = formatNode.ownerDocument.createElement('br');
+            formatNode.append(brEl);
+        }
         // if the block is empty, apply default format
         // Otherwise, leave it as it is as we don't want to change the style for existing data
         // unless the block was just created by the keyboard event (e.g. ctrl+a & start typing)
