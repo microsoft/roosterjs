@@ -21,6 +21,7 @@ export default function Rooster(props: RoosterProps) {
     React.useEffect(() => {
         if (plugins) {
             const uiUtilities = createUIUtilities(editorDiv.current, theme);
+
             plugins.forEach(plugin => {
                 if (isReactEditorPlugin(plugin)) {
                     plugin.setUIUtilities(uiUtilities);
