@@ -33,7 +33,6 @@ const classNames = mergeStyleSets({
     colorPickerContainer: {
         width: '192px',
         padding: '8px',
-        background: 'white',
         overflow: 'hidden',
         '& ul': {
             width: '192px',
@@ -44,7 +43,6 @@ const classNames = mergeStyleSets({
         display: 'inline-block',
         width: '32px',
         height: '32px',
-        background: 'white',
         '& button': {
             padding: '0px',
             minWidth: '0px',

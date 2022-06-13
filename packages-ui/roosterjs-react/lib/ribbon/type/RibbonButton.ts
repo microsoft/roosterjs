@@ -1,7 +1,7 @@
 import RibbonButtonDropDown from './RibbonButtonDropDown';
 import { FormatState, IEditor } from 'roosterjs-editor-types';
 import { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
-import { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * Represents a button on format ribbon
@@ -31,8 +31,15 @@ export default interface RibbonButton<T extends string> {
      * Click handler of this button.
      * @param editor the editor instance
      * @param key key of the button that is clicked
+     * @param strings localized strings used by any UI element of this click handler
+     * @param uiUtilities a utilities object to help render addition UI elements
      */
-    onClick: (editor: IEditor, key: string, strings: LocalizedStrings<T>) => void;
+    onClick: (
+        editor: IEditor,
+        key: string,
+        strings: LocalizedStrings<T>,
+        uiUtilities: UIUtilities
+    ) => void;
 
     /**
      * Get if the current button should be checked
