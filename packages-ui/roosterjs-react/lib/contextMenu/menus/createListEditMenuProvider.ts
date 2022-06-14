@@ -1,6 +1,6 @@
 import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
-import showInputDialog from '../../common/utils/showInputDialog';
+import showInputDialog from '../../inputDialog/utils/showInputDialog';
 import { EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { ListNumberMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
 import { LocalizedStrings } from '../../common/type/LocalizedStrings';
@@ -49,10 +49,12 @@ const ListNumberEditMenuItem: ContextMenuItem<ListNumberMenuItemStringKey> = {
             ).then(values => {
                 editor.focus();
 
-                const result = parseInt(values.value);
+                if (values) {
+                    const result = parseInt(values.value);
 
-                if (result > 0 && result != startNumber) {
-                    setOrderedListNumbering(editor, li, Math.floor(result));
+                    if (result > 0 && result != startNumber) {
+                        setOrderedListNumbering(editor, li, Math.floor(result));
+                    }
                 }
             });
         }

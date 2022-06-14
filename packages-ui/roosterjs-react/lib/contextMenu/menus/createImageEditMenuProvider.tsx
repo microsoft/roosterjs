@@ -1,6 +1,6 @@
 import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
-import showInputDialog from '../../common/utils/showInputDialog';
+import showInputDialog from '../../inputDialog/utils/showInputDialog';
 import { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
 import { LocalizedStrings } from '../../common/type/LocalizedStrings';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
@@ -41,7 +41,9 @@ const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
             editor.focus();
             editor.select(image);
 
-            setImageAltText(editor, values.altText);
+            if (values) {
+                setImageAltText(editor, values.altText);
+            }
         });
     },
 };
