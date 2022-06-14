@@ -1,14 +1,14 @@
 import * as React from 'react';
 import DialogItem from '../type/DialogItem';
-import getLocalizedString from '../utils/getLocalizedString';
 import InputDialogItem from './InputDialogItem';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
-import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
 import {
     CancelButtonStringKey,
+    getLocalizedString,
     LocalizedStrings,
     OkButtonStringKey,
-} from '../type/LocalizedStrings';
+} from '../../common/index';
+import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
 
 /**
  * @internal

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import DialogItem from '../type/DialogItem';
 import InputDialog from '../component/InputDialog';
-import UIUtilities from '../type/UIUtilities';
 import {
     CancelButtonStringKey,
     LocalizedStrings,
     OkButtonStringKey,
-} from '../type/LocalizedStrings';
+    UIUtilities,
+} from '../../common/index';
 
 /**
  * @internal
