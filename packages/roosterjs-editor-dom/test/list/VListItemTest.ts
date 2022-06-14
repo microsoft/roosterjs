@@ -504,4 +504,8 @@ describe('VListItem.applyListStyle', () => {
     it('Square Bullet List', () => {
         runTest(ListType.Unordered, undefined, BulletListType.Square, 'square');
     });
+
+    it('Square Bullet List', () => {
+        runTest(ListType.Unordered, undefined, BulletListType.Hyphen, '"— "');
+    });
 });
