@@ -50,13 +50,14 @@ export const insertLink: RibbonButton<InsertLinkButtonStringKey> = {
                 }
             }
         ).then(result => {
+            editor.focus();
+
             if (
                 result &&
                 result.displayText &&
                 result.url &&
                 (result.displayText != displayText || result.url != url)
             ) {
-                editor.focus();
                 createLink(editor, result.url, result.url, result.displayText);
             }
         });
