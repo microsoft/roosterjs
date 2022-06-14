@@ -23,16 +23,16 @@ const MOUSE_EVENT_INFO: MouseEventInfo = (() => {
             MOUSEMOVE: 'touchmove',
             MOUSEUP: 'touchend',
             getPageXY: getTouchEventPageXY,
-        }
+        };
     } else {
         return {
             MOUSEDOWN: 'mousedown',
             MOUSEMOVE: 'mousemove',
             MOUSEUP: 'mouseup',
             getPageXY: getMouseEventPageXY,
-        }
+        };
     }
-})()
+})();
 
 function getMouseEventPageXY(e: MouseEvent): [number, number] {
     return [e.pageX, e.pageY];
