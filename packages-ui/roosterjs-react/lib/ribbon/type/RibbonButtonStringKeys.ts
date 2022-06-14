@@ -144,6 +144,8 @@ export type InsertImageButtonStringKey = 'buttonNameInsertImage';
 export type InsertLinkButtonStringKey =
     | 'buttonNameInsertLink'
     | 'insertLinkTitle'
+    | 'insertLinkDialogUrl'
+    | 'insertLinkDialogDisplayAs'
     | OkButtonStringKey
     | CancelButtonStringKey;
 
