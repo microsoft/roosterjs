@@ -9,10 +9,9 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import splitParentNode from '../utils/splitParentNode';
 import toArray from '../utils/toArray';
 import unwrap from '../utils/unwrap';
-import VListItem from './VListItem';
+import VListItem, { ListStyleDefinitionMetadata, ListStyleMetadata } from './VListItem';
 import wrap from '../utils/wrap';
-import { createNumberDefinition } from '../metadata/definitionCreators';
-import { setMetadata } from '../metadata/metadata';
+import { getMetadata, setMetadata } from '../metadata/metadata';
 import {
     Indentation,
     ListType,
@@ -351,16 +350,20 @@ export default class VList {
     /**
      * Change list style of the given range of this list.
      * If some of the items are not real list item yet, this will make them to be list item with given style
-     * @param targetStyle Target list style
+     * @param orderedStyle The style of ordered list
+     * @param unorderedStyle The style of unordered list
      */
     setListStyleType(
-        targetStyle:
-            | NumberingListType
-            | BulletListType
-            | CompatibleBulletListType
-            | CompatibleNumberingListType
+        orderedStyle?: NumberingListType | CompatibleNumberingListType,
+        unorderedStyle?: BulletListType | CompatibleBulletListType
     ) {
-        setMetadata(this.rootList, targetStyle, createNumberDefinition());
+        const style = getMetadata<ListStyleMetadata>(this.rootList, ListStyleDefinitionMetadata);
+        const styleMetadata = createListStyleMetadata(
+            style,
+            orderedStyle as NumberingListType,
+            unorderedStyle as BulletListType
+        );
+        setMetadata(this.rootList, styleMetadata, ListStyleDefinitionMetadata);
     }
 
     /**
@@ -547,4 +550,27 @@ function moveLiToList(li: HTMLElement) {
 
         unwrap(li.parentNode!);
     }
+}
+
+function getValidValue<T>(...values: (T | undefined)[]): T | undefined {
+    return values.filter(x => x !== undefined)[0];
+}
+
+function createListStyleMetadata(
+    style: ListStyleMetadata | null,
+    orderedStyle?: NumberingListType | CompatibleNumberingListType,
+    unorderedStyle?: BulletListType | CompatibleBulletListType
+): ListStyleMetadata {
+    return {
+        orderedStyleType: getValidValue(
+            orderedStyle,
+            style?.orderedStyleType,
+            NumberingListType.Decimal
+        ),
+        unorderedStyleType: getValidValue(
+            unorderedStyle,
+            style?.unorderedStyleType,
+            BulletListType.Disc
+        ),
+    };
 }
