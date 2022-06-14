@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import BuildInPluginState from './BuildInPluginState';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
@@ -10,9 +10,10 @@ import MainPaneBase from './MainPaneBase';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
+import { arrayPush } from 'roosterjs-editor-dom';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
@@ -34,6 +35,7 @@ import {
     UpdateContentPlugin,
     UpdateMode,
     AllButtonKeys,
+    createPasteOptionPlugin,
 } from 'roosterjs-react';
 import {
     tableAlign,
@@ -121,7 +123,9 @@ class MainPane extends MainPaneBase {
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private snapshotPlugin: SnapshotPlugin;
     private ribbonPlugin: RibbonPlugin;
+    private pasteOptionPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
+    private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
@@ -138,6 +142,7 @@ class MainPane extends MainPaneBase {
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
+        this.pasteOptionPlugin = createPasteOptionPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
@@ -312,16 +317,22 @@ class MainPane extends MainPaneBase {
 
     private renderPopout() {
         return (
-            <WindowProvider window={this.state.popoutWindow}>
+            <>
                 {this.renderSidePane(true /*fullWidth*/)}
-                {ReactDom.createPortal(
-                    <div className={styles.mainPane}>
-                        {this.renderRibbon(true /*isPopout*/)}
-                        <div className={styles.body}>{this.renderEditor()}</div>
-                    </div>,
+                {ReactDOM.createPortal(
+                    <WindowProvider window={this.state.popoutWindow}>
+                        <ThemeProvider
+                            applyTo="body"
+                            theme={this.state.isDarkMode ? DarkTheme : LightTheme}>
+                            <div className={styles.mainPane}>
+                                {this.renderRibbon(true /*isPopout*/)}
+                                <div className={styles.body}>{this.renderEditor()}</div>
+                            </div>
+                        </ThemeProvider>
+                    </WindowProvider>,
                     this.popoutRoot
                 )}
-            </WindowProvider>
+            </>
         );
     }
 
@@ -355,7 +366,7 @@ class MainPane extends MainPaneBase {
     }
 
     private renderEditor() {
-        const allPlugins = getToggleablePlugins(this.state.initState).concat(this.getPlugins());
+        const allPlugins = this.getPlugins();
         const editorStyles = {
             transform: `scale(${this.state.scale})`,
             transformOrigin: this.state.isRtl ? 'right top' : 'left top',
@@ -410,12 +421,22 @@ class MainPane extends MainPaneBase {
     }
 
     private getPlugins() {
-        return this.state.showSidePane || this.state.popoutWindow
-            ? [this.ribbonPlugin, ...this.getSidePanePlugins(), this.updateContentPlugin]
-            : [this.ribbonPlugin, this.updateContentPlugin];
+        this.toggleablePlugins =
+            this.toggleablePlugins || getToggleablePlugins(this.state.initState);
+
+        const plugins = [...this.toggleablePlugins, this.ribbonPlugin, this.pasteOptionPlugin];
+
+        if (this.state.showSidePane || this.state.popoutWindow) {
+            arrayPush(plugins, this.getSidePanePlugins());
+        }
+
+        plugins.push(this.updateContentPlugin);
+
+        return plugins;
     }
 
     private resetEditor() {
+        this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
                 new Editor(div, options),
@@ -424,5 +445,5 @@ class MainPane extends MainPaneBase {
 }
 
 export function mount(parent: HTMLElement) {
-    ReactDom.render(<MainPane />, parent);
+    ReactDOM.render(<MainPane />, parent);
 }

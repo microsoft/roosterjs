@@ -2,7 +2,7 @@ import RibbonButton from '../type/RibbonButton';
 import RibbonPlugin from '../type/RibbonPlugin';
 import { FormatState, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getFormatState } from 'roosterjs-editor-api';
-import { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * A plugin to connect format ribbon component and the editor
@@ -12,6 +12,7 @@ class RibbonPluginImpl implements RibbonPlugin {
     private onFormatChanged: (formatState: FormatState) => void;
     private timer = 0;
     private formatState: FormatState;
+    private uiUtilities: UIUtilities;
 
     /**
      * Construct a new instance of RibbonPlugin object
@@ -61,6 +62,14 @@ class RibbonPluginImpl implements RibbonPlugin {
     }
 
     /**
+     * Set the UI utilities objects to this plugin to help render additional UI elements
+     * @param uiUtilities The UI utilities object to set
+     */
+    setUIUtilities(uiUtilities: UIUtilities) {
+        this.uiUtilities = uiUtilities;
+    }
+
+    /**
      * Register a callback to be invoked when format state of editor is changed, returns a disposer function.
      */
     registerFormatChangedCallback(callback: (formatState: FormatState) => void) {
@@ -81,7 +90,7 @@ class RibbonPluginImpl implements RibbonPlugin {
         if (this.editor) {
             this.editor.stopShadowEdit();
 
-            button.onClick(this.editor, key, strings);
+            button.onClick(this.editor, key, strings, this.uiUtilities);
 
             if (button.isChecked || button.isDisabled || button.dropDownMenu?.getSelectedItemKey) {
                 this.updateFormat();
@@ -109,7 +118,7 @@ class RibbonPluginImpl implements RibbonPlugin {
 
             if (isInShadowEdit || (range && !range.areAllCollapsed)) {
                 this.editor.startShadowEdit();
-                button.onClick(this.editor, key, strings);
+                button.onClick(this.editor, key, strings, this.uiUtilities);
             }
         }
     }
