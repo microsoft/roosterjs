@@ -1,12 +1,12 @@
 /**
  *  Enum used to control the different types of bullet list
  */
-
 export const enum BulletListType {
     /**
      * Minimum value of the enum
      */
     Min = 1,
+
     /**
      * Bullet triggered by *
      */
@@ -38,7 +38,12 @@ export const enum BulletListType {
     UnfilledArrow = 6,
 
     /**
+     * Bullet triggered by —
+     */
+    Hyphen = 7,
+
+    /**
      * Maximum value of the enum
      */
-    Max = 6,
+    Max = 7,
 }

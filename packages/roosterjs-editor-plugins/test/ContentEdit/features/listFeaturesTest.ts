@@ -85,6 +85,7 @@ describe('listFeatures', () => {
         runTestWithBulletStyles('-->', true);
         runTestWithBulletStyles('>', true);
         runTestWithBulletStyles('=>', true);
+        runTestWithBulletStyles('—', true);
     });
 
     it('AutoNumberingList with styles detects the correct patterns', () => {
