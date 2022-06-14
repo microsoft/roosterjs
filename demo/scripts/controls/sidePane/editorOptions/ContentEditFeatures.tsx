@@ -42,6 +42,10 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     outdentWhenTabText:
         'On Shift + Tab outdent the selection, requires TabKeyFeatures Experimental Feature',
     autoHyphen: 'Automatically transform -- into hyphen, if typed between two words.',
+    autoBulletList:
+        'When press space after *, -, --, ->, -->, >, =>  in an empty line, toggle bullet',
+    autoNumberingList:
+        'When press space after an number, a letter or roman number followed by ), ., -, or between parenthesis in an empty line, toggle numbering',
 };
 
 export interface ContentEditFeaturessProps {
