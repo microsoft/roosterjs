@@ -16,6 +16,7 @@ import {
     createContextMenuPlugin,
     createImageEditMenuProvider,
     createListEditMenuProvider,
+    createTableEditMenuProvider,
 } from 'roosterjs-react/lib/contextMenu';
 
 export default function getToggleablePlugins(initState: BuildInPluginState) {
@@ -53,13 +54,15 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
             : null,
         customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
         autoFormat: pluginList.autoFormat ? new AutoFormat() : null,
-        resetListMenu:
-            pluginList.contextMenu && pluginList.resetListMenu
-                ? createListEditMenuProvider()
-                : null,
+        listEditMenu:
+            pluginList.contextMenu && pluginList.listEditMenu ? createListEditMenuProvider() : null,
         imageEditMenu:
             pluginList.contextMenu && pluginList.imageEditMenu && imageEdit
                 ? createImageEditMenuProvider(imageEdit)
+                : null,
+        tableEditMenu:
+            pluginList.contextMenu && pluginList.tableEditMenu
+                ? createTableEditMenuProvider()
                 : null,
         contextMenu: pluginList.contextMenu ? createContextMenuPlugin() : null,
     };
