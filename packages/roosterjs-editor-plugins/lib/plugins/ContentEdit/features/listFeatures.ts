@@ -155,15 +155,11 @@ function isAListPattern(textBeforeCursor: string) {
  * AutoBullet edit feature, provides the ability to automatically convert current line into a list.
  * When user input "1. ", convert into a numbering list
  * When user input "- " or "* ", convert into a bullet list
- * @deprecated
  */
 const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (
-            !cacheGetListElement(event, editor) &&
-            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-        ) {
+        if (!cacheGetListElement(event, editor)) {
             let searcher = editor.getContentSearcherOfCursor(event);
             let textBeforeCursor = searcher.getSubStringBefore(4);
 
@@ -209,6 +205,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
+ * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoBulletList edit feature, provides the ability to automatically convert current line into a bullet list.
  */
 const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
@@ -244,6 +241,7 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
+ * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoNumberingList edit feature, provides the ability to automatically convert current line into a numbering list.
  */
 const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
