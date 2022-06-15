@@ -1,4 +1,8 @@
-import { CancelButtonStringKey, OkButtonStringKey } from '../../common/type/LocalizedStrings';
+import {
+    CancelButtonStringKey,
+    MenuItemSplitterKey0,
+    OkButtonStringKey,
+} from '../../common/type/LocalizedStrings';
 
 /**
  * Localized string keys for text colors
@@ -129,8 +133,8 @@ export type HeaderButtonStringKey =
     | 'buttonNameHeader4'
     | 'buttonNameHeader5'
     | 'buttonNameHeader6'
-    | 'buttonNameDivider'
-    | 'buttonNameNoHeader';
+    | 'buttonNameNoHeader'
+    | MenuItemSplitterKey0;
 
 /**
  * Key of localized strings of Increase font size button

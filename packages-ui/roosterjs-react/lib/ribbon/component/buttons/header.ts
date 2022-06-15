@@ -10,7 +10,7 @@ const headers: Partial<Record<HeaderButtonStringKey, string>> = {
     buttonNameHeader4: 'Header 4',
     buttonNameHeader5: 'Header 5',
     buttonNameHeader6: 'Header 6',
-    buttonNameDivider: '-',
+    '-': '-',
     buttonNameNoHeader: 'No header',
 };
 
