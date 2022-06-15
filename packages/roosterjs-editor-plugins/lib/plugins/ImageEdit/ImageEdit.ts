@@ -144,8 +144,7 @@ export default class ImageEdit implements EditorPlugin {
      * To customize the resize handle element, add this callback and change the attributes of elementData then it
      * will be picked up by ImageEdit code
      */
-    constructor(options?: ImageEditOptions,
-        private onShowResizeHandle?: OnShowResizeHandle) {
+    constructor(options?: ImageEditOptions, private onShowResizeHandle?: OnShowResizeHandle) {
         this.options = {
             ...DefaultOptions,
             ...(options || {}),
@@ -396,7 +395,10 @@ export default class ImageEdit implements EditorPlugin {
         ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
             thisOperation => {
                 if ((operation & thisOperation) == thisOperation) {
-                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle));
+                    arrayPush(
+                        htmlData,
+                        ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle)
+                    );
                 }
             }
         );
