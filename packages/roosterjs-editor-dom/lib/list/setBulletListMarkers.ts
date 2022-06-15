@@ -24,4 +24,5 @@ const bulletListStyle: Record<string, string> = {
     [BulletListType.LongArrow]: '→ ',
     [BulletListType.ShortArrow]: '➢ ',
     [BulletListType.UnfilledArrow]: '➪ ',
+    [BulletListType.Hyphen]: '— ',
 };
