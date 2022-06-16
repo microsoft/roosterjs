@@ -1,3 +1,4 @@
+import getObjectKeys from '../jsUtils/getObjectKeys';
 import { Definition, DefinitionType } from 'roosterjs-editor-types';
 
 /**
@@ -43,7 +44,9 @@ export default function validate<T>(input: any, def: Definition<T>): input is T 
             case DefinitionType.Object:
                 result =
                     typeof input === 'object' &&
-                    Object.keys(def.propertyDef).every(x => validate(input[x], def.propertyDef[x]));
+                    getObjectKeys(def.propertyDef).every(x =>
+                        validate(input[x], def.propertyDef[x])
+                    );
                 break;
 
             case DefinitionType.Customize:

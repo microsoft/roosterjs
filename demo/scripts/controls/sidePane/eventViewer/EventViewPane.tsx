@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { getTagOfNode, HtmlSanitizer, readFile, safeInstanceOf } from 'roosterjs-editor-dom';
+import { EntityOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 import {
-    EntityOperation,
-    PendableFormatState,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+    getObjectKeys,
+    getTagOfNode,
+    HtmlSanitizer,
+    readFile,
+    safeInstanceOf,
+} from 'roosterjs-editor-dom';
 
 const styles = require('./EventViewPane.scss');
 
@@ -198,7 +199,7 @@ export default class EventViewPane extends React.Component<
                                 ? JSON.stringify(event.clipboardData.linkPreview)
                                 : ''
                         )}
-                        {Object.keys(event.clipboardData.customValues).map(contentType =>
+                        {getObjectKeys(event.clipboardData.customValues).map(contentType =>
                             this.renderPasteContent(
                                 contentType,
                                 event.clipboardData.customValues[contentType]
@@ -208,7 +209,7 @@ export default class EventViewPane extends React.Component<
                 );
             case PluginEventType.PendingFormatStateChanged:
                 const formatState = event.formatState;
-                const keys = Object.keys(formatState) as (keyof PendableFormatState)[];
+                const keys = getObjectKeys(formatState);
                 return <span>{keys.map(key => `${key}=${event.formatState[key]}; `)}</span>;
 
             case PluginEventType.EntityOperation:

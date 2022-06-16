@@ -1,4 +1,10 @@
-import { contains, getTagOfNode, PendableFormatNames, Position } from 'roosterjs-editor-dom';
+import {
+    contains,
+    getObjectKeys,
+    getTagOfNode,
+    PendableFormatNames,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     EditorCore,
     GetPendableFormatState,
@@ -76,7 +82,7 @@ function queryCommandStateFromDOM(
         const tag = getTagOfNode(node);
         const style = node.nodeType == NodeType.Element && (node as HTMLElement).style;
         if (tag && style) {
-            Object.keys(PendableStyleCheckers).forEach((key: PendableFormatNames) => {
+            getObjectKeys(PendableStyleCheckers).forEach(key => {
                 if (!(pendableKeys.indexOf(key) >= 0)) {
                     formatState[key] = formatState[key] || PendableStyleCheckers[key](tag, style);
                     if (CssFalsyCheckers[key](style)) {

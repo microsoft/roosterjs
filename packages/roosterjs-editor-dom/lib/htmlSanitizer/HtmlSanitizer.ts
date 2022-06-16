@@ -1,11 +1,12 @@
 import changeElementTag from '../utils/changeElementTag';
 import getInheritableStyles from './getInheritableStyles';
+import getObjectKeys from '../jsUtils/getObjectKeys';
 import getPredefinedCssForElement from './getPredefinedCssForElement';
 import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setStyles from '../style/setStyles';
-import toArray from '../utils/toArray';
+import toArray from '../jsUtils/toArray';
 import { cloneObject } from './cloneObject';
 import {
     getAllowedAttributes,
@@ -248,7 +249,7 @@ export default class HtmlSanitizer {
             this.additionalPredefinedCssForElement
         );
         if (predefinedStyles) {
-            Object.keys(predefinedStyles).forEach(name => {
+            getObjectKeys(predefinedStyles).forEach(name => {
                 thisStyle[name] = predefinedStyles[name];
             });
         }
@@ -256,7 +257,7 @@ export default class HtmlSanitizer {
 
     private processCss(element: HTMLElement, thisStyle: StringMap, context: Object) {
         const styles = getStyles(element);
-        Object.keys(styles).forEach(name => {
+        getObjectKeys(styles).forEach(name => {
             const value = styles[name];
             let callback = this.styleCallbacks[name];
             let isInheritable = thisStyle[name] != undefined;

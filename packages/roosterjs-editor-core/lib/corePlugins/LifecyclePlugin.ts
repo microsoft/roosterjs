@@ -1,4 +1,4 @@
-import { Browser, getComputedStyles, setColor } from 'roosterjs-editor-dom';
+import { Browser, getComputedStyles, getObjectKeys, setColor } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
@@ -12,15 +12,13 @@ import {
 } from 'roosterjs-editor-types';
 
 const CONTENT_EDITABLE_ATTRIBUTE_NAME = 'contenteditable';
-const COMMANDS: {
-    [command: string]: any;
-} = Browser.isFirefox
+const COMMANDS: Record<string, string> = Browser.isFirefox
     ? {
           /**
            * Disable these object resizing for firefox since other browsers don't have these behaviors
            */
-          [DocumentCommand.EnableObjectResizing]: false,
-          [DocumentCommand.EnableInlineTableEditing]: false,
+          [DocumentCommand.EnableObjectResizing]: (false as any) as string,
+          [DocumentCommand.EnableInlineTableEditing]: (false as any) as string,
       }
     : Browser.isIE
     ? {
@@ -32,7 +30,7 @@ const COMMANDS: {
           /**
            * Disable auto link feature in IE since we have our own implementation
            */
-          [DocumentCommand.AutoUrlDetect]: false,
+          [DocumentCommand.AutoUrlDetect]: (false as any) as string,
       }
     : {};
 
@@ -143,7 +141,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     dispose() {
         this.editor.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
-        Object.keys(this.state.customData).forEach(key => {
+        getObjectKeys(this.state.customData).forEach(key => {
             const data = this.state.customData[key];
 
             if (data && data.disposer) {
@@ -186,7 +184,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     }
 
     private adjustBrowserBehavior() {
-        Object.keys(COMMANDS).forEach(command => {
+        getObjectKeys(COMMANDS).forEach(command => {
             // Catch any possible exception since this should not block the initialization of editor
             try {
                 this.editor.getDocument().execCommand(command, false, COMMANDS[command]);
@@ -206,7 +204,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             }
         }
 
-        if (baseFormat && Object.keys(baseFormat).length === 0) {
+        if (baseFormat && getObjectKeys(baseFormat).length === 0) {
             return;
         }
 

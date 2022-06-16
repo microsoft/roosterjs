@@ -15,7 +15,6 @@ export { default as extractClipboardEvent } from './clipboard/extractClipboardEv
 export { default as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { default as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
 
-export { default as arrayPush } from './utils/arrayPush';
 export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
@@ -42,7 +41,6 @@ export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibli
 export { getFirstLeafNode, getLastLeafNode } from './utils/getLeafNode';
 export { default as splitTextNode } from './utils/splitTextNode';
 export { default as normalizeRect } from './utils/normalizeRect';
-export { default as toArray } from './utils/toArray';
 export { default as safeInstanceOf } from './utils/safeInstanceOf';
 export { default as readFile } from './utils/readFile';
 export { default as getInnerHTML } from './utils/getInnerHTML';
@@ -122,3 +120,7 @@ export {
     createObjectDefinition,
 } from './metadata/definitionCreators';
 export { getMetadata, setMetadata, removeMetadata } from './metadata/metadata';
+
+export { default as arrayPush } from './jsUtils/arrayPush';
+export { default as getObjectKeys } from './jsUtils/getObjectKeys';
+export { default as toArray } from './jsUtils/toArray';

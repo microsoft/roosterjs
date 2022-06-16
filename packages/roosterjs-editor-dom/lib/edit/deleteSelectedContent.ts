@@ -1,4 +1,4 @@
-import arrayPush from '../utils/arrayPush';
+import arrayPush from '../jsUtils/arrayPush';
 import collapseNodesInRegion from '../region/collapseNodesInRegion';
 import getRegionsFromRange from '../region/getRegionsFromRange';
 import getSelectionRangeInRegion from '../region/getSelectionRangeInRegion';

@@ -1,5 +1,5 @@
 import { ChangeSource, IEditor } from 'roosterjs-editor-types';
-import { readFile } from 'roosterjs-editor-dom';
+import { getObjectKeys, readFile } from 'roosterjs-editor-dom';
 
 /**
  * Insert an image to editor at current selection
@@ -48,7 +48,7 @@ function insertImageWithSrc(editor: IEditor, src: string, attributes?: Record<st
         image.src = src;
 
         if (attributes) {
-            Object.keys(attributes).forEach(attribute =>
+            getObjectKeys(attributes).forEach(attribute =>
                 image.setAttribute(attribute, attributes[attribute])
             );
         }

@@ -1,6 +1,7 @@
 import CodeElement from './CodeElement';
 import getDefaultContentEditFeatureSettings from '../getDefaultContentEditFeatureSettings';
 import { ContentEditFeatureSettings } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 export default class ContentEditFeaturesCode extends CodeElement {
     constructor(private state: ContentEditFeatureSettings) {
@@ -9,8 +10,8 @@ export default class ContentEditFeaturesCode extends CodeElement {
 
     getCode() {
         let defaultValues = getDefaultContentEditFeatureSettings();
-        let features = Object.keys(defaultValues)
-            .map((key: keyof ContentEditFeatureSettings) => {
+        let features = getObjectKeys(defaultValues)
+            .map(key => {
                 let checked = this.state[key];
 
                 return typeof checked != 'boolean' || checked == defaultValues[key]

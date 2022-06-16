@@ -1,8 +1,5 @@
+import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlugins';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import createCorePlugins, {
-    getPluginState,
-    CreateCorePluginResponse,
-} from '../corePlugins/createCorePlugins';
 import {
     BlockElement,
     ChangeSource,
@@ -59,6 +56,7 @@ import {
     isPositionAtBeginningOf,
     arrayPush,
     toArray,
+    getObjectKeys,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -92,7 +90,7 @@ export default class Editor implements IEditor {
         // 2. Store options values to local variables
         const corePlugins = createCorePlugins(contentDiv, options);
         const plugins: EditorPlugin[] = [];
-        Object.keys(corePlugins).forEach((name: keyof CreateCorePluginResponse) => {
+        getObjectKeys(corePlugins).forEach(name => {
             if (name == '_placeholder') {
                 arrayPush(plugins, options.plugins);
             } else {

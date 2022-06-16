@@ -1,13 +1,14 @@
 import * as React from 'react';
 import BuildInPluginState from '../../BuildInPluginState';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 export interface ExperimentalFeaturesProps {
     state: ExperimentalFeatures[];
     resetState: (callback: (state: BuildInPluginState) => void, resetEditor: boolean) => void;
 }
 
-const FeatureNames: { [key in ExperimentalFeatures]?: string } = {
+const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.SingleDirectionResize]: 'Resize an image horizontally or vertically',
     [ExperimentalFeatures.PasteWithLinkPreview]: 'Try retrieve link preview information when paste',
     [ExperimentalFeatures.ImageRotate]: 'Rotate an inline image',
@@ -30,13 +31,7 @@ export default class ExperimentalFeaturesPane extends React.Component<
     {}
 > {
     render() {
-        return (
-            <>
-                {Object.keys(FeatureNames).map((name: keyof typeof FeatureNames) =>
-                    this.renderFeature(name)
-                )}
-            </>
-        );
+        return <>{getObjectKeys(FeatureNames).map(name => this.renderFeature(name))}</>;
     }
 
     private renderFeature(name: keyof typeof FeatureNames): JSX.Element {

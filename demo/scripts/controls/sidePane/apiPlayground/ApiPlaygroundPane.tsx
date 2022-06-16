@@ -1,6 +1,7 @@
 import * as React from 'react';
 import apiEntries, { ApiPlaygroundReactComponent } from './apiEntries';
 import ApiPaneProps from './ApiPaneProps';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { PluginEvent } from 'roosterjs-editor-types';
 import { SidePaneElement } from '../SidePaneElement';
 
@@ -32,7 +33,7 @@ export default class ApiPlaygroundPane extends React.Component<ApiPaneProps, Api
                     <h3>Select an API to try</h3>
 
                     <select ref={this.select} value={this.state.current} onChange={this.onChange}>
-                        {Object.keys(apiEntries).map(key => (
+                        {getObjectKeys(apiEntries).map(key => (
                             <option value={key} key={key}>
                                 {apiEntries[key].name}
                             </option>
@@ -51,7 +52,7 @@ export default class ApiPlaygroundPane extends React.Component<ApiPaneProps, Api
     }
 
     setHashPath(path: string[]) {
-        let paneName = path && Object.keys(apiEntries).indexOf(path[0]) >= 0 ? path[0] : null;
+        let paneName = path && getObjectKeys(apiEntries).indexOf(path[0]) >= 0 ? path[0] : null;
 
         if (paneName && paneName != this.state.current) {
             this.setState({
