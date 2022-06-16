@@ -2,6 +2,7 @@ import * as React from 'react';
 import BuildInPluginState from '../../BuildInPluginState';
 import { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 import { getAllFeatures } from 'roosterjs-editor-plugins/lib/ContentEdit';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 type ContentEditItemId = keyof ContentEditFeatureSettings;
 
@@ -59,7 +60,7 @@ export default class ContentEditFeatures extends React.Component<ContentEditFeat
         return (
             <table>
                 <tbody>
-                    {Object.keys(features).map((key: ContentEditItemId) =>
+                    {getObjectKeys(features).map(key =>
                         this.renderContentEditItem(key, EditFeatureDescriptionMap[key])
                     )}
                 </tbody>

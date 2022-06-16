@@ -1,3 +1,4 @@
+import getObjectKeys from '../jsUtils/getObjectKeys';
 import { LinkData } from 'roosterjs-editor-types';
 
 interface LinkMatchRule {
@@ -33,7 +34,7 @@ const domainNameRegEx = `(?:${labelRegEx}\\.)*${labelRegEx}`;
 const domainPortRegEx = `${domainNameRegEx}(?:\\:[0-9]+)?`;
 const domainPortWithUrlRegEx = `${domainPortRegEx}(?:[\\/\\?]\\S*)?`;
 
-const linkMatchRules: { [schema: string]: LinkMatchRule } = {
+const linkMatchRules: Record<string, LinkMatchRule> = {
     http: {
         match: new RegExp(
             `^(?:microsoft-edge:)?http:\\/\\/${domainPortWithUrlRegEx}|www\\.${domainPortWithUrlRegEx}`,
@@ -76,7 +77,7 @@ const linkMatchRules: { [schema: string]: LinkMatchRule } = {
  */
 export default function matchLink(url: string): LinkData | null {
     if (url) {
-        for (let schema of Object.keys(linkMatchRules)) {
+        for (let schema of getObjectKeys(linkMatchRules)) {
             let rule = linkMatchRules[schema];
             let matches = url.match(rule.match);
             if (matches && matches[0] == url && (!rule.except || !rule.except.test(url))) {

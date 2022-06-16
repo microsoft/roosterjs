@@ -1,4 +1,5 @@
 import MainPaneBase from '../MainPaneBase';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { RibbonButton } from 'roosterjs-react';
 
 const DropDownItems = {
@@ -32,8 +33,8 @@ export const zoom: RibbonButton<ZoomButtonStringKey> = {
     dropDownMenu: {
         items: DropDownItems,
         getSelectedItemKey: formatState =>
-            Object.keys(DropDownItems).filter(
-                (key: keyof typeof DropDownItems) => DropDownValues[key] == formatState.zoomScale
+            getObjectKeys(DropDownItems).filter(
+                key => DropDownValues[key] == formatState.zoomScale
             )[0],
     },
     onClick: (editor, key) => {

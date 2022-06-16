@@ -1,3 +1,5 @@
+import getObjectKeys from '../jsUtils/getObjectKeys';
+
 const RomanValues: Record<string, number> = {
     M: 1000,
     CM: 900,
@@ -23,7 +25,7 @@ const RomanValues: Record<string, number> = {
  */
 export default function convertDecimalsToRoman(decimal: number, isLowerCase?: boolean) {
     let romanValue = '';
-    for (let i of Object.keys(RomanValues)) {
+    for (let i of getObjectKeys(RomanValues)) {
         let timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
         decimal = decimal - timesRomanCharAppear * RomanValues[i];
         romanValue = romanValue + i.repeat(timesRomanCharAppear);

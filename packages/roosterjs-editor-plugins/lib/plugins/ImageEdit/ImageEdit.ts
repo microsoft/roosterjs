@@ -18,6 +18,7 @@ import {
     getComputedStyle,
     getEntityFromElement,
     getEntitySelector,
+    getObjectKeys,
     matchesSelector,
     safeInstanceOf,
     toArray,
@@ -167,7 +168,7 @@ export default class ImageEdit implements EditorPlugin {
         this.disposer = editor.addDomEventHandler('blur', this.onBlur);
 
         // Read current enabled features from editor to determine which editing operations are allowed
-        Object.keys(FeatureToOperationMap).forEach((key: keyof typeof FeatureToOperationMap) => {
+        getObjectKeys(FeatureToOperationMap).forEach(key => {
             this.allowedOperations |= this.editor.isFeatureEnabled(key)
                 ? FeatureToOperationMap[key]
                 : 0;
@@ -392,16 +393,14 @@ export default class ImageEdit implements EditorPlugin {
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
-        ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
-            thisOperation => {
-                if ((operation & thisOperation) == thisOperation) {
-                    arrayPush(
-                        htmlData,
-                        ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle)
-                    );
-                }
+        getObjectKeys(ImageEditHTMLMap).forEach(thisOperation => {
+            if ((operation & thisOperation) == thisOperation) {
+                arrayPush(
+                    htmlData,
+                    ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle)
+                );
             }
-        );
+        });
 
         htmlData.forEach(data => {
             const element = createElement(data, this.image.ownerDocument);

@@ -36,7 +36,7 @@ export default interface RibbonButton<T extends string> {
      */
     onClick: (
         editor: IEditor,
-        key: string,
+        key: T,
         strings: LocalizedStrings<T>,
         uiUtilities: UIUtilities
     ) => void;

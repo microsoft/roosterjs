@@ -1,4 +1,4 @@
-import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
+import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     DocumentCommand,
@@ -31,8 +31,8 @@ export default function execCommand(
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
         formatter();
-        const formatName = Object.keys(PendableFormatCommandMap).filter(
-            (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
+        const formatName = getObjectKeys(PendableFormatCommandMap).filter(
+            x => PendableFormatCommandMap[x] == command
         )[0] as PendableFormatNames;
 
         if (formatName) {

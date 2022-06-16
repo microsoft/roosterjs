@@ -2,6 +2,7 @@ import RibbonButton from '../type/RibbonButton';
 import RibbonPlugin from '../type/RibbonPlugin';
 import { FormatState, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getFormatState } from 'roosterjs-editor-api';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
@@ -106,7 +107,7 @@ class RibbonPluginImpl implements RibbonPlugin {
      */
     startLivePreview<T extends string>(
         button: RibbonButton<T>,
-        key: string,
+        key: T,
         strings: LocalizedStrings<T>
     ) {
         if (this.editor) {
@@ -149,8 +150,8 @@ class RibbonPluginImpl implements RibbonPlugin {
 
             if (
                 !this.formatState ||
-                Object.keys(newFormatState).some(
-                    (key: keyof FormatState) => newFormatState[key] != this.formatState[key]
+                getObjectKeys(newFormatState).some(
+                    key => newFormatState[key] != this.formatState[key]
                 )
             ) {
                 this.formatState = newFormatState;

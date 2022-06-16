@@ -4,9 +4,9 @@ import {
     contains,
     getPendableFormatState,
     Position,
-    PendableFormatNames,
     PendableFormatCommandMap,
     addRangeToSelection,
+    getObjectKeys,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -55,7 +55,7 @@ function restorePendingFormatState(core: EditorCore) {
     if (pendingFormatState.pendableFormatState) {
         const document = contentDiv.ownerDocument;
         let formatState = getPendableFormatState(document);
-        (<PendableFormatNames[]>Object.keys(PendableFormatCommandMap)).forEach(key => {
+        getObjectKeys(PendableFormatCommandMap).forEach(key => {
             if (!!pendingFormatState.pendableFormatState[key] != formatState[key]) {
                 document.execCommand(PendableFormatCommandMap[key], false, null);
             }

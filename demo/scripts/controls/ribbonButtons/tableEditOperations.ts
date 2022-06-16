@@ -2,53 +2,52 @@ import { editTable } from 'roosterjs-editor-api';
 import { FormatState, IEditor, TableOperation } from 'roosterjs-editor-types';
 import { RibbonButton } from 'roosterjs-react';
 
-type TableEditOperationsKey =
-    | 'deleteTable'
-    | 'deleteRow'
-    | 'deleteColumn'
-    | 'insertAbove'
-    | 'insertBelow'
-    | 'insertLeft'
-    | 'insertRight'
-    | 'merge'
-    | 'mergeAbove'
-    | 'mergeBelow'
-    | 'mergeLeft'
-    | 'mergeRight';
-
 /**
  * Key of localized strings of Table Edit Operations button
  */
-export type TableEditOperationsStringKey = 'buttonNameTableEditOperations';
+export type TableEditOperationsStringKey =
+    | 'buttonNameTableEditOperations'
+    | 'buttonNameDeleteTable'
+    | 'buttonNameDeleteRow'
+    | 'buttonNameDeleteColumn'
+    | 'buttonNameInsertAbove'
+    | 'buttonNameInsertBelow'
+    | 'buttonNameInsertLeft'
+    | 'buttonNameInsertRight'
+    | 'buttonNameMerge'
+    | 'buttonNameMergeAbove'
+    | 'buttonNameMergeBelow'
+    | 'buttonNameMergeLeft'
+    | 'buttonNameMergeRight';
 
-const tableEditOperationsLabel: Record<TableEditOperationsKey, string> = {
-    insertAbove: 'Insert Above',
-    insertBelow: 'Insert Below',
-    insertLeft: 'Insert Left',
-    insertRight: 'Insert Right',
-    merge: 'Merge Cells',
-    deleteTable: 'Delete Table',
-    deleteRow: 'Delete Row',
-    deleteColumn: 'Delete Column',
-    mergeAbove: 'Merge Above',
-    mergeBelow: 'Merge Below',
-    mergeLeft: 'Merge Left',
-    mergeRight: 'Merge Right',
+const tableEditOperationsLabel: Partial<Record<TableEditOperationsStringKey, string>> = {
+    buttonNameInsertAbove: 'Insert Above',
+    buttonNameInsertBelow: 'Insert Below',
+    buttonNameInsertLeft: 'Insert Left',
+    buttonNameInsertRight: 'Insert Right',
+    buttonNameMerge: 'Merge Cells',
+    buttonNameDeleteTable: 'Delete Table',
+    buttonNameDeleteRow: 'Delete Row',
+    buttonNameDeleteColumn: 'Delete Column',
+    buttonNameMergeAbove: 'Merge Above',
+    buttonNameMergeBelow: 'Merge Below',
+    buttonNameMergeLeft: 'Merge Left',
+    buttonNameMergeRight: 'Merge Right',
 };
 
-const tableEditOperations: Record<TableEditOperationsKey, TableOperation> = {
-    insertAbove: TableOperation.InsertAbove,
-    insertBelow: TableOperation.InsertBelow,
-    insertLeft: TableOperation.InsertLeft,
-    insertRight: TableOperation.InsertRight,
-    merge: TableOperation.MergeCells,
-    deleteTable: TableOperation.DeleteTable,
-    deleteRow: TableOperation.DeleteRow,
-    deleteColumn: TableOperation.DeleteColumn,
-    mergeAbove: TableOperation.MergeAbove,
-    mergeBelow: TableOperation.MergeBelow,
-    mergeLeft: TableOperation.MergeLeft,
-    mergeRight: TableOperation.MergeRight,
+const tableEditOperations: Partial<Record<TableEditOperationsStringKey, TableOperation>> = {
+    buttonNameInsertAbove: TableOperation.InsertAbove,
+    buttonNameInsertBelow: TableOperation.InsertBelow,
+    buttonNameInsertLeft: TableOperation.InsertLeft,
+    buttonNameInsertRight: TableOperation.InsertRight,
+    buttonNameMerge: TableOperation.MergeCells,
+    buttonNameDeleteTable: TableOperation.DeleteTable,
+    buttonNameDeleteRow: TableOperation.DeleteRow,
+    buttonNameDeleteColumn: TableOperation.DeleteColumn,
+    buttonNameMergeAbove: TableOperation.MergeAbove,
+    buttonNameMergeBelow: TableOperation.MergeBelow,
+    buttonNameMergeLeft: TableOperation.MergeLeft,
+    buttonNameMergeRight: TableOperation.MergeRight,
 };
 
 /**
@@ -65,7 +64,7 @@ export const tableEdit: RibbonButton<TableEditOperationsStringKey> = {
     isDisabled: (format: FormatState) => {
         return format.isInTable ? false : true;
     },
-    onClick: (editor, key: TableEditOperationsKey) => {
+    onClick: (editor, key) => {
         editTableOperation(editor, tableEditOperations[key]);
     },
 };

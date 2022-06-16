@@ -2,35 +2,37 @@ import { editTable } from 'roosterjs-editor-api';
 import { FormatState, IEditor, TableOperation } from 'roosterjs-editor-types';
 import { RibbonButton } from 'roosterjs-react';
 
-type TableAlignmentOperationsKey =
-    | 'alignLeft'
-    | 'alignRight'
-    | 'alignTop'
-    | 'alignCenter'
-    | 'alignMiddle'
-    | 'alignBottom';
-
 /**
  * Key of localized strings of Table Edit Operations button
  */
-export type TableAlignmentOperationsStringKey = 'buttonNameTableAlignmentOperations';
+export type TableAlignmentOperationsStringKey =
+    | 'buttonNameTableAlignmentOperations'
+    | 'buttonNameTableAlignLeft'
+    | 'buttonNameTableAlignRight'
+    | 'buttonNameTableAlignTop'
+    | 'buttonNameTableAlignCenter'
+    | 'buttonNameTableAlignMiddle'
+    | 'buttonNameTableAlignBottom';
 
-const tableAlignmentOperationsLabel: Record<TableAlignmentOperationsKey, string> = {
-    alignTop: 'Align Top',
-    alignMiddle: 'Align Middle',
-    alignBottom: 'Align Bottom',
-    alignCenter: 'Align Center',
-    alignLeft: 'Align Left',
-    alignRight: 'Align Right',
+const tableAlignmentOperationsLabel: Partial<Record<TableAlignmentOperationsStringKey, string>> = {
+    buttonNameTableAlignTop: 'Align Top',
+    buttonNameTableAlignMiddle: 'Align Middle',
+    buttonNameTableAlignBottom: 'Align Bottom',
+    buttonNameTableAlignCenter: 'Align Center',
+    buttonNameTableAlignLeft: 'Align Left',
+    buttonNameTableAlignRight: 'Align Right',
 };
 
-const tableAlignmentOperations: Record<TableAlignmentOperationsKey, TableOperation> = {
-    alignTop: TableOperation.AlignCellTop,
-    alignMiddle: TableOperation.AlignCellMiddle,
-    alignBottom: TableOperation.AlignCellBottom,
-    alignCenter: TableOperation.AlignCellCenter,
-    alignLeft: TableOperation.AlignCellLeft,
-    alignRight: TableOperation.AlignCellRight,
+const tableAlignmentOperations: Partial<Record<
+    TableAlignmentOperationsStringKey,
+    TableOperation
+>> = {
+    buttonNameTableAlignTop: TableOperation.AlignCellTop,
+    buttonNameTableAlignMiddle: TableOperation.AlignCellMiddle,
+    buttonNameTableAlignBottom: TableOperation.AlignCellBottom,
+    buttonNameTableAlignCenter: TableOperation.AlignCellCenter,
+    buttonNameTableAlignLeft: TableOperation.AlignCellLeft,
+    buttonNameTableAlignRight: TableOperation.AlignCellRight,
 };
 
 /**
@@ -47,7 +49,7 @@ export const tableAlign: RibbonButton<TableAlignmentOperationsStringKey> = {
     isDisabled: (format: FormatState) => {
         return format.isInTable ? false : true;
     },
-    onClick: (editor, key: TableAlignmentOperationsKey) => {
+    onClick: (editor, key) => {
         editTableOperation(editor, tableAlignmentOperations[key]);
     },
 };

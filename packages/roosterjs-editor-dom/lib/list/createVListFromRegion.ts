@@ -5,7 +5,7 @@ import isNodeInRegion from '../region/isNodeInRegion';
 import Position from '../selection/Position';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import shouldSkipNode from '../utils/shouldSkipNode';
-import toArray from '../utils/toArray';
+import toArray from '../jsUtils/toArray';
 import VList from './VList';
 import wrap from '../utils/wrap';
 import { getLeafSibling } from '../utils/getLeafSibling';

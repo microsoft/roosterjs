@@ -1,4 +1,8 @@
-import { CancelButtonStringKey, OkButtonStringKey } from '../../common/type/LocalizedStrings';
+import {
+    CancelButtonStringKey,
+    MenuItemSplitterKey0,
+    OkButtonStringKey,
+} from '../../common/type/LocalizedStrings';
 
 /**
  * Localized string keys for text colors
@@ -121,7 +125,16 @@ export type FontSizeButtonStringKey = 'buttonNameFontSize';
 /**
  * Key of localized strings of Header button
  */
-export type HeaderButtonStringKey = 'buttonNameHeader';
+export type HeaderButtonStringKey =
+    | 'buttonNameHeader'
+    | 'buttonNameHeader1'
+    | 'buttonNameHeader2'
+    | 'buttonNameHeader3'
+    | 'buttonNameHeader4'
+    | 'buttonNameHeader5'
+    | 'buttonNameHeader6'
+    | 'buttonNameNoHeader'
+    | MenuItemSplitterKey0;
 
 /**
  * Key of localized strings of Increase font size button
@@ -227,7 +240,7 @@ export type UndoButtonStringKey = 'buttonNameUndo';
 /**
  * Key of localized strings of Cell shade button
  */
-export type CellShadeButtonStringKey = 'buttonNameCellShade';
+export type CellShadeButtonStringKey = 'buttonNameCellShade' | BackgroundColorKeys;
 
 /**
  * A public type for localized string keys of all buttons
