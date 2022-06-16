@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>199/199</span>
+                <span class='fraction'>201/201</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.44% </span>
+                <span class="strong">69.72% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>75/108</span>
+                <span class='fraction'>76/109</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>104/104</span>
+                <span class='fraction'>105/105</span>
             </div>
         
             
@@ -187,7 +187,9 @@
 <a name='L122'></a><a href='#L122'>122</a>
 <a name='L123'></a><a href='#L123'>123</a>
 <a name='L124'></a><a href='#L124'>124</a>
-<a name='L125'></a><a href='#L125'>125</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2181x</span>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2181x</span>
 <span class="cline-any cline-yes">2123x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">123x</span>
@@ -204,12 +206,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2130x</span>
 <span class="cline-any cline-yes">8611x</span>
 <span class="cline-any cline-yes">2104x</span>
 <span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">8561x</span>
+<span class="cline-any cline-yes">8477x</span>
 <span class="cline-any cline-yes">2704x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2298x</span>
@@ -231,7 +232,6 @@
 <span class="cline-any cline-yes">126x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">689x</span>
 <span class="cline-any cline-yes">785x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -289,7 +289,7 @@
 <span class="cline-any cline-yes">2916x</span>
 <span class="cline-any cline-yes">3075x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">447x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">22x</span>
@@ -311,6 +311,10 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2130x</span>
+<span class="cline-any cline-yes">15437x</span>
+<span class="cline-any cline-yes">689x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
 export { default as getFirstLastBlockElement } from './blockElements/getFirstLastBlockElement';
 &nbsp;
@@ -328,7 +332,6 @@ export { default as extractClipboardEvent } from './clipboard/extractClipboardEv
 export { <span class="fstat-no" title="function not covered" >default </span>as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { <span class="fstat-no" title="function not covered" >default </span>as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
 &nbsp;
-export { default as arrayPush } from './utils/arrayPush';
 export { Browser, <span class="fstat-no" title="function not covered" >getBrowserInfo </span>} from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
 export { default as changeElementTag } from './utils/changeElementTag';
@@ -355,7 +358,6 @@ export { getNextLeafSibling, getPreviousLeafSibling } from './utils/getLeafSibli
 export { getFirstLeafNode, <span class="fstat-no" title="function not covered" >getLastLeafNode </span>} from './utils/getLeafNode';
 export { <span class="fstat-no" title="function not covered" >default </span>as splitTextNode } from './utils/splitTextNode';
 export { default as normalizeRect } from './utils/normalizeRect';
-export { default as toArray } from './utils/toArray';
 export { default as safeInstanceOf } from './utils/safeInstanceOf';
 export { <span class="fstat-no" title="function not covered" >default </span>as readFile } from './utils/readFile';
 export { <span class="fstat-no" title="function not covered" >default </span>as getInnerHTML } from './utils/getInnerHTML';
@@ -435,6 +437,10 @@ export {
 <span class="fstat-no" title="function not covered" >    createObjectDefinition,</span>
 } from './metadata/definitionCreators';
 export { <span class="fstat-no" title="function not covered" >getMetadata,</span> <span class="fstat-no" title="function not covered" >setMetadata,</span> <span class="fstat-no" title="function not covered" >removeMetadata </span>} from './metadata/metadata';
+&nbsp;
+export { default as arrayPush } from './jsUtils/arrayPush';
+export { default as getObjectKeys } from './jsUtils/getObjectKeys';
+export { default as toArray } from './jsUtils/toArray';
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -442,7 +448,7 @@ export { <span class="fstat-no" title="function not covered" >getMetadata,</span
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Jun 15 2022 21:54:25 GMT+0000 (Coordinated Universal Time)
+                at Thu Jun 16 2022 03:57:24 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../prettify.js"></script>
         <script>

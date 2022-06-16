@@ -1025,9 +1025,7 @@
 <a name='L960'></a><a href='#L960'>960</a>
 <a name='L961'></a><a href='#L961'>961</a>
 <a name='L962'></a><a href='#L962'>962</a>
-<a name='L963'></a><a href='#L963'>963</a>
-<a name='L964'></a><a href='#L964'>964</a>
-<a name='L965'></a><a href='#L965'>965</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L963'></a><a href='#L963'>963</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1064,10 +1062,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1243,7 +1239,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">994x</span>
+<span class="cline-any cline-yes">910x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5585x</span>
@@ -1453,20 +1449,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">683x</span>
+<span class="cline-any cline-yes">599x</span>
 <span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">624x</span>
-<span class="cline-any cline-yes">624x</span>
+<span class="cline-any cline-yes">540x</span>
+<span class="cline-any cline-yes">540x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">624x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">540x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1474,7 +1467,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">624x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">540x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1991,11 +1987,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { coreApiMap } from '../coreApi/coreApiMap';
-import createCorePlugins, {
-    getPluginState,
-    CreateCorePluginResponse,
-} from '../corePlugins/createCorePlugins';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlugins';
+import { coreApiMap } from '../coreApi/coreApiMap';
 import {
     BlockElement,
     ChangeSource,
@@ -2052,6 +2045,7 @@ import {
     isPositionAtBeginningOf,
     arrayPush,
     toArray,
+    getObjectKeys,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -2085,7 +2079,7 @@ export default class Editor implements IEditor {
         // 2. Store options values to local variables
         const corePlugins = createCorePlugins(contentDiv, options);
         const plugins: EditorPlugin[] = [];
-        Object.keys(corePlugins).forEach((name: keyof CreateCorePluginResponse) =&gt; {
+        getObjectKeys(corePlugins).forEach(name =&gt; {
             if (name == '_placeholder') {
                 arrayPush(plugins, options.plugins);
             } else {
@@ -2962,7 +2956,7 @@ export default class Editor implements IEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Jun 15 2022 21:54:25 GMT+0000 (Coordinated Universal Time)
+                at Thu Jun 16 2022 03:57:24 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
