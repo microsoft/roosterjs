@@ -28,8 +28,6 @@ const initialState: BuildInPluginState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
-    showRibbon: true,
-    supportDarkMode: true,
     experimentalFeatures: [
         ExperimentalFeatures.PasteWithLinkPreview,
         ExperimentalFeatures.SingleDirectionResize,

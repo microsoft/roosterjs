@@ -18,9 +18,9 @@ export default class EditorCode extends CodeElement {
 
         this.plugins = new PluginsCode(state);
         this.defaultFormat = new DefaultFormatCode(state.defaultFormat);
-        this.buttons = state.showRibbon ? new ButtonsCode(state.supportDarkMode) : null;
+        this.buttons = new ButtonsCode();
         this.experimentalFeatures = new ExperimentalFeaturesCode(state.experimentalFeatures);
-        this.darkMode = new DarkModeCode(state.supportDarkMode);
+        this.darkMode = new DarkModeCode();
     }
 
     getCode() {

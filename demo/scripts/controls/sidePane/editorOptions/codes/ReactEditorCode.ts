@@ -21,12 +21,12 @@ export default class ReactEditorCode extends CodeElement {
     constructor(state: BuildInPluginState) {
         super();
 
-        this.ribbonButton = state.showRibbon ? new RibbonButtonCode(state) : null;
-        this.ribbon = state.showRibbon ? new RibbonCode(state, this.ribbonButton) : null;
+        this.ribbonButton = new RibbonButtonCode();
+        this.ribbon = new RibbonCode(state, this.ribbonButton);
         this.plugins = new PluginsCode(state, this.ribbon ? [RibbonPluginVarName] : undefined);
         this.defaultFormat = new DefaultFormatCode(state.defaultFormat);
         this.experimentalFeatures = new ExperimentalFeaturesCode(state.experimentalFeatures);
-        this.darkMode = new DarkModeCode(state.supportDarkMode);
+        this.darkMode = new DarkModeCode();
         this.isRtl = state.isRtl;
     }
 

@@ -1,16 +1,9 @@
-import BuildInPluginState from '../../../BuildInPluginState';
 import CodeElement from './CodeElement';
 
 const ButtonVarName = 'buttons';
 
 export default class RibbonButtonCode extends CodeElement {
     private supportDarkMode: boolean;
-
-    constructor(state: BuildInPluginState) {
-        super();
-
-        this.supportDarkMode = state.supportDarkMode;
-    }
 
     getCode() {
         let code = `let ${ButtonVarName} = roosterjsReact.getButtons();\n`;
