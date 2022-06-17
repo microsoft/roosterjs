@@ -1,5 +1,13 @@
-import { ChangeSource, IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
-import { Position, VTable } from 'roosterjs-editor-dom';
+import { createRange, Position, VTable, wrap } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    ContentPosition,
+    IEditor,
+    PositionType,
+    TableFormat,
+} from 'roosterjs-editor-types';
+
+const NOT_EDITABLE_SELECTOR = '[contenteditable=false]';
 
 /**
  * Insert table into editor at current selection
@@ -39,10 +47,44 @@ export default function insertTable(
         vtable.applyFormat(format);
         vtable.writeBack();
         editor.insertNode(fragment);
+
+        if (!table.isContentEditable) {
+            handleNotEditableTable(table, editor);
+        }
+
         editor.runAsync(editor =>
             editor.select(new Position(table, PositionType.Begin).normalize())
         );
     }, ChangeSource.Format);
+}
+
+function handleNotEditableTable(table: HTMLTableElement, editor: IEditor) {
+    let nonEditableElement: HTMLElement | undefined;
+    let lastNonEditableElement: HTMLElement | undefined = editor.getElementAtCursor(
+        NOT_EDITABLE_SELECTOR,
+        table
+    );
+
+    while (lastNonEditableElement) {
+        nonEditableElement = lastNonEditableElement;
+        lastNonEditableElement = nonEditableElement.parentElement
+            ? editor.getElementAtCursor(NOT_EDITABLE_SELECTOR, nonEditableElement.parentElement)
+            : undefined;
+    }
+
+    const container = editor.getElementAtCursor(
+        'div',
+        nonEditableElement?.parentElement || nonEditableElement
+    );
+
+    if (container) {
+        const afterPosition = new Position(container, PositionType.After);
+        const wrapper = wrap(table, 'div');
+        editor.insertNode(wrapper, {
+            position: ContentPosition.Range,
+            range: createRange(afterPosition),
+        });
+    }
 }
 
 function getTableCellWidth(columns: number): string {
