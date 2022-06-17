@@ -44,7 +44,7 @@ import {
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
-const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Page PopOut</title></head><body><div id=${PopoutRoot}></div></body></html>`;
+const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Site</title></head><body><div id=${PopoutRoot}></div></body></html>`;
 const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
@@ -156,10 +156,8 @@ class MainPane extends MainPaneBase {
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
             showSidePane: window.location.hash != '',
-            showRibbon: true,
             popoutWindow: null,
             initState: this.editorOptionPlugin.getBuildInPluginState(),
-            supportDarkMode: true,
             scale: 1,
             isDarkMode: this.themeMatch?.matches || false,
             editorCreator: null,
@@ -174,10 +172,8 @@ class MainPane extends MainPaneBase {
                 theme={this.state.isDarkMode ? DarkTheme : LightTheme}
                 className={styles.mainPane}>
                 <TitleBar className={styles.noGrow} />
-                {this.state.showRibbon &&
-                    !this.state.popoutWindow &&
-                    this.renderRibbon(false /*isPopout*/)}
-                <div className={styles.body}>
+                {!this.state.popoutWindow && this.renderRibbon(false /*isPopout*/)}
+                <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
                     {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
                 </div>
             </ThemeProvider>
@@ -195,22 +191,6 @@ class MainPane extends MainPaneBase {
 
     updateFormatState() {
         this.formatStatePlugin.updateFormatState();
-    }
-
-    setIsRibbonShown(isShown: boolean) {
-        this.setState({
-            showRibbon: isShown,
-        });
-    }
-
-    setIsDarkModeSupported(isSupported: boolean) {
-        this.setState({
-            supportDarkMode: isSupported,
-        });
-    }
-
-    isDarkModeSupported() {
-        return this.state.supportDarkMode;
     }
 
     popout() {
