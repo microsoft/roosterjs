@@ -13,12 +13,8 @@ const codeMap: { [id: string]: string } = {
 const buttonDark = 'editor.setDarkModeState(!editor.isDarkMode())';
 
 export default class ButtonsCode extends CodeElement {
-    constructor(private supportDarkMode: boolean) {
-        super();
-    }
-
     getCode() {
-        const map = this.supportDarkMode ? { ...codeMap, buttonDark: buttonDark } : codeMap;
+        const map = { ...codeMap, buttonDark: buttonDark };
         return getObjectKeys(map)
             .map(
                 id =>

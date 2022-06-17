@@ -4,10 +4,8 @@ import { EditorOptions, IEditor } from 'roosterjs-editor-types';
 
 export interface MainPaneBaseState {
     showSidePane: boolean;
-    showRibbon: boolean;
     popoutWindow: Window;
     initState: BuildInPluginState;
-    supportDarkMode: boolean;
     scale: number;
     isDarkMode: boolean;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
@@ -30,12 +28,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract resetEditorPlugin(pluginState: BuildInPluginState): void;
 
     abstract updateFormatState(): void;
-
-    abstract setIsRibbonShown(isShown: boolean): void;
-
-    abstract setIsDarkModeSupported(isSupported: boolean): void;
-
-    abstract isDarkModeSupported(): boolean;
 
     abstract popout(): void;
 
