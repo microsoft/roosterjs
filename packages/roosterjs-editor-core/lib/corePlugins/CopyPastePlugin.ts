@@ -131,7 +131,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
                 },
             },
-            this.editor?.getSelectionRange().cloneRange()
+            this.editor?.getSelectionRange()?.cloneRange()
         );
     };
 
