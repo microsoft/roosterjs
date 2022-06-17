@@ -2,6 +2,7 @@ import extractClipboardItems from './extractClipboardItems';
 import extractClipboardItemsForIE from './extractClipboardItemsForIE';
 import toArray from '../jsUtils/toArray';
 import { ClipboardData, ExtractClipboardEventOption } from 'roosterjs-editor-types';
+import { Browser } from '../utils/Browser';
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;
@@ -24,7 +25,8 @@ interface WindowForIE extends Window {
 export default function extractClipboardEvent(
     event: ClipboardEvent,
     callback: (clipboardData: ClipboardData) => void,
-    options?: ExtractClipboardEventOption
+    options?: ExtractClipboardEventOption,
+    tempRange?: Range
 ) {
     const dataTransfer =
         event.clipboardData ||
@@ -32,8 +34,19 @@ export default function extractClipboardEvent(
 
     if (dataTransfer.items) {
         event.preventDefault();
-        extractClipboardItems(toArray(dataTransfer.items), options).then(callback);
+        extractClipboardItems(toArray(dataTransfer.items), options)
+            .then(callback)
+            .then(() => removeContents(tempRange));
     } else {
         extractClipboardItemsForIE(dataTransfer, callback, options);
     }
+}
+
+function removeContents(rangeToRemove?: Range) {
+    return new Promise<void>(resolve => {
+        if (Browser.isMobileOrTablet && rangeToRemove) {
+            rangeToRemove.deleteContents();
+        }
+        resolve();
+    });
 }
