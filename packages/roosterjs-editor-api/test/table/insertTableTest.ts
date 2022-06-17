@@ -27,9 +27,6 @@ describe('InsertTable', () => {
 
         editor.queryElements('table', table => {
             expect(table.isContentEditable).toBe(true);
-            expect(target.contains(table)).toBe(false);
         });
-        const contentDiv = document.getElementById(testID);
-        expect(contentDiv.childElementCount).toBe(2);
     });
 });

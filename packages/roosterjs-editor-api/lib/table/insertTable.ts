@@ -72,17 +72,17 @@ function handleNotEditableTable(table: HTMLTableElement, editor: IEditor) {
             : undefined;
     }
 
-    const container = editor.getElementAtCursor(
-        'div',
-        nonEditableElement?.parentElement || nonEditableElement
-    );
-
-    if (container) {
-        const afterPosition = new Position(container, PositionType.After);
+    if (nonEditableElement) {
+        const afterPosition = new Position(nonEditableElement, PositionType.After);
         const wrapper = wrap(table, 'div');
+        const range = createRange(afterPosition);
+        editor.insertContent('&nbsp;', {
+            position: ContentPosition.Range,
+            range,
+        });
         editor.insertNode(wrapper, {
             position: ContentPosition.Range,
-            range: createRange(afterPosition),
+            range,
         });
     }
 }
