@@ -11,3 +11,7 @@
         color: #555;
     }
 }
+
+:global(.dark) .inactive {
+    color: #555;
+}
