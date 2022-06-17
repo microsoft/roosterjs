@@ -130,8 +130,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 removeTempDiv: div => {
                     this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
                 },
-            },
-            this.editor?.getSelectionRange()?.cloneRange()
+            }
         );
     };
 
