@@ -44,7 +44,7 @@ export default function extractClipboardEvent(
 
 function removeContents(rangeToRemove?: Range) {
     return new Promise<void>(resolve => {
-        if (Browser.isMobileOrTablet && rangeToRemove) {
+        if (Browser.isAndroid && rangeToRemove) {
             rangeToRemove.deleteContents();
         }
         resolve();
