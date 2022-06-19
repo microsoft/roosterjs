@@ -1,5 +1,4 @@
 import readFile from '../utils/readFile';
-import { Browser } from '../utils/Browser';
 import {
     ClipboardData,
     ContentType,
@@ -8,29 +7,18 @@ import {
     ExtractClipboardItemsOption,
 } from 'roosterjs-editor-types';
 
-// HTML header to indicate where is the HTML content started from.
-// Sample header:
-// Version:0.9
-// StartHTML:71
-// EndHTML:170
-// StartFragment:140
-// EndFragment:160
-// StartSelection:140
-// EndSelection:160
-const CLIPBOARD_HTML_HEADER_REGEX = /^Version:[0-9\.]+\s+StartHTML:\s*([0-9]+)\s+EndHTML:\s*([0-9]+)\s+/i;
 const OTHER_TEXT_TYPE = ContentTypePrefix.Text + '*';
 const EDGE_LINK_PREVIEW = 'link-preview';
 const ContentHandlers: {
     [contentType: string]: (data: ClipboardData, value: string, type?: string) => void;
 } = {
-    [ContentType.HTML]: (data, value) =>
-        (data.rawHtml = Browser.isEdge ? workaroundForEdge(value) : value),
+    [ContentType.HTML]: (data, value) => (data.rawHtml = value),
     [ContentType.PlainText]: (data, value) => (data.text = value),
     [OTHER_TEXT_TYPE]: (data, value, type?) => !!type && (data.customValues[type] = value),
 };
 
 /**
- * Extract clipboard items to be a ClipboardData object for IE
+ * Extract clipboard items to be a ClipboardData object
  * @param items The clipboard items retrieve from a DataTransfer object
  * @param callback Callback function when data is ready
  * @returns An object with the following properties:
@@ -102,25 +90,6 @@ export default function extractClipboardItems(
             }
         })
     ).then(() => data);
-}
-
-/**
- * Edge sometimes doesn't remove the headers, which cause we paste more things then expected.
- * So we need to remove it in our code
- * @param html The HTML string got from clipboard
- */
-function workaroundForEdge(html: string) {
-    const headerValues = CLIPBOARD_HTML_HEADER_REGEX.exec(html);
-
-    if (headerValues?.length == 3) {
-        const start = parseInt(headerValues[1]);
-        const end = parseInt(headerValues[2]);
-        if (start > 0 && end > start) {
-            html = html.substring(start, end);
-        }
-    }
-
-    return html;
 }
 
 function tryParseLinkPreview(data: ClipboardData, value: string) {

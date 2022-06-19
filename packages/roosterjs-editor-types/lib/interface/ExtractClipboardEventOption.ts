@@ -15,6 +15,7 @@ export interface ExtractClipboardItemsOption {
 }
 
 /**
+ * @deprecated
  * Options for ExtractClipboardItemsForIE API
  */
 export interface ExtractClipboardItemsForIEOptions {

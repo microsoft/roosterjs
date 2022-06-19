@@ -137,7 +137,7 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
             true /*canUndoByBackspace*/
         );
     },
-    defaultDisabled: !Browser.isIE && !Browser.isChrome,
+    defaultDisabled: !Browser.isChrome,
 };
 
 /**

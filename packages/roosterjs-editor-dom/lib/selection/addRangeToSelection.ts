@@ -1,5 +1,3 @@
-import { Browser } from '../utils/Browser';
-
 /**
  * Add the given range into selection of the given document
  * @param range The range to select
@@ -13,24 +11,21 @@ export default function addRangeToSelection(range: Range, skipSameRange?: boolea
         let needAddRange = true;
 
         if (selection.rangeCount > 0) {
-            // Workaround IE exception 800a025e
-            try {
-                let currentRange: Range | null = null;
-                // Do not remove/add range if current selection is the same with target range
-                // Without this check, execCommand() may fail in Edge since we changed the selection
-                if (
-                    (skipSameRange || Browser.isEdge) &&
-                    (currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
-                    currentRange.startContainer == range.startContainer &&
-                    currentRange.startOffset == range.startOffset &&
-                    currentRange.endContainer == range.endContainer &&
-                    currentRange.endOffset == range.endOffset
-                ) {
-                    needAddRange = false;
-                } else {
-                    selection.removeAllRanges();
-                }
-            } catch (e) {}
+            let currentRange: Range | null = null;
+            // Do not remove/add range if current selection is the same with target range
+            // Without this check, execCommand() may fail in Edge since we changed the selection
+            if (
+                skipSameRange &&
+                (currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : null) &&
+                currentRange.startContainer == range.startContainer &&
+                currentRange.startOffset == range.startOffset &&
+                currentRange.endContainer == range.endContainer &&
+                currentRange.endOffset == range.endOffset
+            ) {
+                needAddRange = false;
+            } else {
+                selection.removeAllRanges();
+            }
         }
 
         if (needAddRange) {

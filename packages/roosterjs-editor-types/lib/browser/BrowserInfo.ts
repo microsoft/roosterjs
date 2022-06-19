@@ -18,11 +18,13 @@ export default interface BrowserInfo {
     readonly isWebKit?: boolean;
 
     /**
+     * @deprecated
      * Whether current browser is Internet Explorer
      */
     readonly isIE?: boolean;
 
     /**
+     * @deprecated
      * Whether current browser is IE10 or IE11
      */
     readonly isIE11OrGreater?: boolean;
@@ -43,11 +45,13 @@ export default interface BrowserInfo {
     readonly isFirefox?: boolean;
 
     /**
+     * @deprecated
      * Whether current browser is Edge
      */
     readonly isEdge?: boolean;
 
     /**
+     * @deprecated
      * Whether current browser is IE/Edge
      */
     readonly isIEOrEdge?: boolean;
@@ -60,5 +64,5 @@ export default interface BrowserInfo {
     /**
      * Whether current browser is on mobile or a tablet
      */
-     readonly isMobileOrTablet?: boolean;
+    readonly isMobileOrTablet?: boolean;
 }

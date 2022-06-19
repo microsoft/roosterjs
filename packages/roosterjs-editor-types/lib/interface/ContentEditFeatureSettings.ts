@@ -93,8 +93,8 @@ export interface ListFeatureSettings {
     outdentWhenBackspaceOnEmptyFirstLine: boolean;
 
     /**
+     * @deprecated We don't need this feature any more since browser already has this behavior
      * When press Enter on empty line in a list, outdent current list item
-     * @default true for IE, false for other browsers since they have already had the behavior
      */
     outdentWhenEnterOnEmptyLine: boolean;
 

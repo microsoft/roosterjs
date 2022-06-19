@@ -1,10 +1,11 @@
 import {
     addRangeToSelection,
-    createElement,
-    extractClipboardEvent,
-    setHtmlWithSelectionPath,
-    moveChildNodes,
     Browser,
+    createElement,
+    extractClipboardItems,
+    moveChildNodes,
+    setHtmlWithSelectionPath,
+    toArray,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -112,26 +113,13 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         }
     }
 
-    private onPaste = (event: Event) => {
-        let range: Range;
-
-        extractClipboardEvent(
-            event as ClipboardEvent,
-            clipboardData => this.editor?.paste(clipboardData),
-            {
-                allowLinkPreview: this.editor?.isFeatureEnabled(
-                    ExperimentalFeatures.PasteWithLinkPreview
-                ),
-                allowedCustomPasteType: this.state.allowedCustomPasteType,
-                getTempDiv: () => {
-                    range = this.editor?.getSelectionRange();
-                    return this.getTempDiv();
-                },
-                removeTempDiv: div => {
-                    this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
-                },
-            }
-        );
+    private onPaste = (event: ClipboardEvent) => {
+        extractClipboardItems(toArray(event.clipboardData.items), {
+            allowLinkPreview: this.editor?.isFeatureEnabled(
+                ExperimentalFeatures.PasteWithLinkPreview
+            ),
+            allowedCustomPasteType: this.state.allowedCustomPasteType,
+        });
     };
 
     private getTempDiv(forceInLightMode?: boolean) {

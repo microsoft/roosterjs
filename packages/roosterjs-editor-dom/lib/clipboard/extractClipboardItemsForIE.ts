@@ -7,6 +7,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @deprecated
  * Extract clipboard items to be a ClipboardData object for IE
  * @param dataTransfer The clipboard items retrieve from a DataTransfer object
  * @param callback Callback function when data is ready

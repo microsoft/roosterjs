@@ -20,18 +20,6 @@ const COMMANDS: Record<string, string> = Browser.isFirefox
           [DocumentCommand.EnableObjectResizing]: (false as any) as string,
           [DocumentCommand.EnableInlineTableEditing]: (false as any) as string,
       }
-    : Browser.isIE
-    ? {
-          /**
-           * Change the default paragraph separator to DIV. This is mainly for IE since its default setting is P
-           */
-          [DocumentCommand.DefaultParagraphSeparator]: 'div',
-
-          /**
-           * Disable auto link feature in IE since we have our own implementation
-           */
-          [DocumentCommand.AutoUrlDetect]: (false as any) as string,
-      }
     : {};
 
 const DARK_MODE_DEFAULT_FORMAT = {

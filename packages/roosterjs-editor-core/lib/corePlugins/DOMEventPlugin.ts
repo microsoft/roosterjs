@@ -87,7 +87,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             focus: this.onFocus,
 
             // 6. Input event
-            [Browser.isIE ? 'textinput' : 'input']: this.getEventHandler(PluginEventType.Input),
+            input: this.getEventHandler(PluginEventType.Input),
         };
 
         // 7. onBlur handlers
@@ -96,7 +96,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             document.addEventListener('keydown', this.onKeyDownDocument);
             document.defaultView?.addEventListener('blur', this.cacheSelection);
         } else {
-            eventHandlers[Browser.isIEOrEdge ? 'beforedeactivate' : 'blur'] = this.cacheSelection;
+            eventHandlers.blur = this.cacheSelection;
         }
 
         this.disposer = editor.addDomEventHandler(eventHandlers);

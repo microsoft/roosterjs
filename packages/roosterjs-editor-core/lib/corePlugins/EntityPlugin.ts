@@ -1,21 +1,16 @@
 import {
-    Browser,
     commitEntity,
     getEntityFromElement,
     getEntitySelector,
     isCharacterValue,
     toArray,
     arrayPush,
-    createElement,
-    addRangeToSelection,
-    createRange,
     moveChildNodes,
     getObjectKeys,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ContentChangedEvent,
-    ContentPosition,
     Entity,
     EntityClasses,
     EntityOperation,
@@ -184,8 +179,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             !!(entityElement = this.editor.getElementAtCursor(getEntitySelector(), node))
         ) {
             this.triggerEvent(entityElement, EntityOperation.Click, rawEvent);
-
-            workaroundSelectionIssueForIE(this.editor);
         }
     }
 
@@ -412,35 +405,3 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         return this.state.knownEntityElements.indexOf(wrapper) >= 0;
     }
 }
-
-/**
- * IE will show a resize border around the readonly content within content editable DIV
- * This is a workaround to remove it by temporarily move focus out of editor
- */
-const workaroundSelectionIssueForIE = Browser.isIE
-    ? (editor: IEditor) => {
-          editor.runAsync(editor => {
-              const workaroundButton = editor.getCustomData('ENTITY_IE_FOCUS_BUTTON', () => {
-                  const button = createElement(
-                      {
-                          tag: 'button',
-                          style: 'overflow:hidden;position:fixed;width:0;height:0;top:-1000px',
-                      },
-                      editor.getDocument()
-                  ) as HTMLElement;
-                  button.onblur = () => {
-                      button.style.display = 'none';
-                  };
-
-                  editor.insertNode(button, {
-                      position: ContentPosition.Outside,
-                  });
-
-                  return button;
-              });
-
-              workaroundButton.style.display = '';
-              addRangeToSelection(createRange(workaroundButton, 0));
-          });
-      }
-    : () => {};

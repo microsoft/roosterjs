@@ -1,6 +1,5 @@
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
-    Browser,
     createRange,
     isCharacterValue,
     isModifierKey,
@@ -23,16 +22,15 @@ import {
 
 // Character codes.
 // IE11 uses different character codes. which are noted below.
-// If adding a new key, test in IE to figure out what the code is.
 const BACKSPACE_CHAR_CODE = 'Backspace';
 const TAB_CHAR_CODE = 'Tab';
 const ENTER_CHAR_CODE = 'Enter';
-const ESC_CHAR_CODE = !Browser.isIE ? 'Escape' : 'Esc';
-const LEFT_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowLeft' : 'Left';
-const UP_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowUp' : 'Up';
-const RIGHT_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowRight' : 'Right';
-const DOWN_ARROW_CHAR_CODE = !Browser.isIE ? 'ArrowDown' : 'Down';
-const DELETE_CHAR_CODE = !Browser.isIE ? 'Delete' : 'Del';
+const ESC_CHAR_CODE = 'Escape';
+const LEFT_ARROW_CHAR_CODE = 'ArrowLeft';
+const UP_ARROW_CHAR_CODE = 'ArrowUp';
+const RIGHT_ARROW_CHAR_CODE = 'ArrowRight';
+const DOWN_ARROW_CHAR_CODE = 'ArrowDown';
+const DELETE_CHAR_CODE = 'Delete';
 
 // Input event input types.
 const DELETE_CONTENT_BACKWARDS_INPUT_TYPE = 'deleteContentBackwards';
