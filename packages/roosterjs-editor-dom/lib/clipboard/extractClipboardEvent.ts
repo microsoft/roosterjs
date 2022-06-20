@@ -1,6 +1,7 @@
 import extractClipboardItems from './extractClipboardItems';
 import extractClipboardItemsForIE from './extractClipboardItemsForIE';
 import toArray from '../jsUtils/toArray';
+import { Browser } from '../utils/Browser';
 import { ClipboardData, ExtractClipboardEventOption } from 'roosterjs-editor-types';
 
 interface WindowForIE extends Window {
@@ -13,6 +14,7 @@ interface WindowForIE extends Window {
  * @param event The paste event
  * @param callback Callback function when data is ready
  * @param options Options to retrieve more items from the event, including HTML string and other customized items
+ * @param rangeBeforePaste Optional range to be removed when pasting in Android
  * @returns An object with the following properties:
  *  types: Available types from the clipboard event
  *  text: Plain text from the clipboard event
@@ -24,7 +26,8 @@ interface WindowForIE extends Window {
 export default function extractClipboardEvent(
     event: ClipboardEvent,
     callback: (clipboardData: ClipboardData) => void,
-    options?: ExtractClipboardEventOption
+    options?: ExtractClipboardEventOption,
+    rangeBeforePaste?: Range
 ) {
     const dataTransfer =
         event.clipboardData ||
@@ -32,8 +35,19 @@ export default function extractClipboardEvent(
 
     if (dataTransfer.items) {
         event.preventDefault();
-        extractClipboardItems(toArray(dataTransfer.items), options).then(callback);
+        extractClipboardItems(toArray(dataTransfer.items), options)
+            .then(callback)
+            .then(() => removeContents(rangeBeforePaste));
     } else {
         extractClipboardItemsForIE(dataTransfer, callback, options);
     }
+}
+
+function removeContents(range?: Range) {
+    return new Promise<void>(resolve => {
+        if (Browser.isAndroid && range) {
+            range.deleteContents();
+        }
+        resolve();
+    });
 }
