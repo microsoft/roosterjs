@@ -1,5 +1,6 @@
 import BlockElement from './BlockElement';
 import ClipboardData from './ClipboardData';
+import ContentChangedData from './ContentChangedData';
 import DefaultFormat from './DefaultFormat';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
@@ -414,11 +415,13 @@ export default interface IEditor {
      * @param changeSource The change source to use when fire ContentChangedEvent. When the value is not null,
      * a ContentChangedEvent will be fired with change source equal to this value
      * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
+     * @param additionalData Optional parameter to provide additional data related to the ContentChanged Event.
      */
     addUndoSnapshot(
         callback?: (start: NodePosition, end: NodePosition) => any,
         changeSource?: ChangeSource | CompatibleChangeSource | string,
-        canUndoByBackspace?: boolean
+        canUndoByBackspace?: boolean,
+        additionalData?: ContentChangedData
     ): void;
 
     /**
