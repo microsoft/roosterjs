@@ -35,19 +35,19 @@ export default function extractClipboardEvent(
 
     if (dataTransfer.items) {
         event.preventDefault();
-        extractClipboardItems(toArray(dataTransfer.items), options)
-            .then(callback)
-            .then(() => removeContents(rangeBeforePaste));
+        extractClipboardItems(toArray(dataTransfer.items), options).then(
+            (clipboardData: ClipboardData) => {
+                removeContents(rangeBeforePaste);
+                callback(clipboardData);
+            }
+        );
     } else {
         extractClipboardItemsForIE(dataTransfer, callback, options);
     }
 }
 
 function removeContents(range?: Range) {
-    return new Promise<void>(resolve => {
-        if (Browser.isAndroid && range) {
-            range.deleteContents();
-        }
-        resolve();
-    });
+    if (Browser.isAndroid && range) {
+        range.deleteContents();
+    }
 }
