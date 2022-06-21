@@ -1,5 +1,5 @@
 import * as addRangeToSelection from 'roosterjs-editor-dom/lib/selection/addRangeToSelection';
-import * as extractClipboardEvent from 'roosterjs-editor-dom/lib/clipboard/extractClipboardEvent';
+import * as extractClipboardItems from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import CopyPastePlugin from '../../lib/corePlugins/CopyPastePlugin';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -67,7 +67,7 @@ describe('CopyPastePlugin paste', () => {
         expect(Object.keys(parameter)).toEqual(['paste', 'copy', 'cut']);
     });
 
-    it('trigger paste event for html', () => {
+    it('trigger paste event for html', async () => {
         const items: ClipboardData = {
             rawHtml: '',
             text: '',
@@ -76,11 +76,13 @@ describe('CopyPastePlugin paste', () => {
             types: [],
             customValues: {},
         };
-        spyOn(extractClipboardEvent, 'default').and.callFake((event, callback) => {
-            callback(items);
+        spyOn(extractClipboardItems, 'default').and.callFake(() => {
+            return Promise.resolve(items);
         });
 
-        handler.paste(<any>{});
+        await handler.paste(<any>{
+            clipboardData: { items: [] },
+        });
         expect(paste).toHaveBeenCalledWith(items);
         expect(tempNode).toBeNull();
     });
