@@ -39,7 +39,6 @@ export default function insertTable(
         vtable.applyFormat(format);
         vtable.writeBack();
         editor.insertNode(fragment);
-
         editor.runAsync(editor =>
             editor.select(new Position(table, PositionType.Begin).normalize())
         );
