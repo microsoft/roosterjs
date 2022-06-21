@@ -19,5 +19,5 @@
         "rootDir": ".",
         "lib": ["es6", "dom"]
     },
-    "include": ["**/*.ts", "**/*.tsx"]
+    "include": ["**/*.ts", "**/*.tsx", "**/*.scss"]
 }

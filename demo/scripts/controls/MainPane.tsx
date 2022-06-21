@@ -36,6 +36,11 @@ import {
     UpdateMode,
     AllButtonKeys,
     createPasteOptionPlugin,
+    createEmojiPlugin,
+    EmojiPaneProps,
+    EmojiDescriptionStrings,
+    EmojiKeywordStrings,
+    EmojiFamilyStrings,
 } from 'roosterjs-react';
 import {
     tableAlign,
@@ -48,6 +53,23 @@ const POPOUT_HTML = `<!doctype html><html><head><title>RoosterJs Demo Site</titl
 const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
+
+const emojiPaneProps: EmojiPaneProps = {
+    navBarProps: {
+        className: 'nabvar-class-name',
+        buttonClassName: 'nabvar-button-class-name',
+        selectedButtonClassName: 'selected-button-class-name',
+        iconClassName: 'navbar-icon-class-name',
+    },
+    statusBarProps: { className: 'status-bar-class-name' },
+    emojiIconProps: {
+        className: 'emoji-icon-class-name',
+        selectedClassName: 'selected-emoji-icon-class-name',
+    },
+    searchPlaceholder: 'Search...',
+    searchInputAriaLabel: 'Search field',
+    fullListClassName: 'full-list-class-name',
+};
 
 const LightTheme: PartialTheme = {
     palette: {
@@ -124,6 +146,7 @@ class MainPane extends MainPaneBase {
     private snapshotPlugin: SnapshotPlugin;
     private ribbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
+    private emojiPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
@@ -143,6 +166,14 @@ class MainPane extends MainPaneBase {
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
+        this.emojiPlugin = createEmojiPlugin({
+            strings: {
+                ...EmojiDescriptionStrings,
+                ...EmojiKeywordStrings,
+                ...EmojiFamilyStrings,
+            },
+            emojiPaneProps,
+        });
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
@@ -404,7 +435,12 @@ class MainPane extends MainPaneBase {
         this.toggleablePlugins =
             this.toggleablePlugins || getToggleablePlugins(this.state.initState);
 
-        const plugins = [...this.toggleablePlugins, this.ribbonPlugin, this.pasteOptionPlugin];
+        const plugins = [
+            ...this.toggleablePlugins,
+            this.ribbonPlugin,
+            this.pasteOptionPlugin,
+            this.emojiPlugin,
+        ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
             arrayPush(plugins, this.getSidePanePlugins());
