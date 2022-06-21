@@ -16,17 +16,25 @@ export default function changeCapitalization(
     capitalization: Capitalization | CompatibleCapitalization,
     language?: string
 ) {
-    applyInlineStyle(editor, element => {
-        for (let node = getFirstLeafNode(element); node; node = getNextLeafSibling(element, node)) {
-            if (node.nodeType == NodeType.Text) {
-                try {
-                    node.textContent = getCapitalizedText(node.textContent, language);
-                } catch {
-                    node.textContent = getCapitalizedText(node.textContent, undefined);
+    applyInlineStyle(
+        editor,
+        element => {
+            for (
+                let node = getFirstLeafNode(element);
+                node;
+                node = getNextLeafSibling(element, node)
+            ) {
+                if (node.nodeType == NodeType.Text) {
+                    try {
+                        node.textContent = getCapitalizedText(node.textContent, language);
+                    } catch {
+                        node.textContent = getCapitalizedText(node.textContent, undefined);
+                    }
                 }
             }
-        }
-    });
+        },
+        'changeCapitalization'
+    );
 
     function getCapitalizedText(originalText: string, language: string): string {
         switch (capitalization) {

@@ -30,6 +30,7 @@ export default function toggleCodeBlock(
                     unwrap(code);
                     unwrap(parent);
                 }
-            }).length == 0
+            }).length == 0,
+        'toggleCodeBlock'
     );
 }

@@ -1,4 +1,5 @@
-import { ChangeSource, IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import { IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
 import { Position, VTable } from 'roosterjs-editor-dom';
 
 /**
@@ -34,15 +35,19 @@ export default function insertTable(
     }
 
     editor.focus();
-    editor.addUndoSnapshot(() => {
-        let vtable = new VTable(table);
-        vtable.applyFormat(format);
-        vtable.writeBack();
-        editor.insertNode(fragment);
-        editor.runAsync(editor =>
-            editor.select(new Position(table, PositionType.Begin).normalize())
-        );
-    }, ChangeSource.Format);
+    formatUndoSnapshot(
+        editor,
+        () => {
+            let vtable = new VTable(table);
+            vtable.applyFormat(format);
+            vtable.writeBack();
+            editor.insertNode(fragment);
+            editor.runAsync(editor =>
+                editor.select(new Position(table, PositionType.Begin).normalize())
+            );
+        },
+        'insertTable'
+    );
 }
 
 function getTableCellWidth(columns: number): string {

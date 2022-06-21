@@ -122,6 +122,7 @@ describe('addUndoSnapshot', () => {
                 eventType: PluginEventType.ContentChanged,
                 source: 'change source',
                 data,
+                additionalData: undefined,
             },
             true
         );

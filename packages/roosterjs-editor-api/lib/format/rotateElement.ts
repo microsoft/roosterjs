@@ -1,4 +1,5 @@
-import { ChangeSource, IEditor } from 'roosterjs-editor-types';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Rotate an element visually
@@ -8,8 +9,12 @@ import { ChangeSource, IEditor } from 'roosterjs-editor-types';
  */
 export default function rotateElement(editor: IEditor, element: HTMLElement, angle: number): void {
     if (element) {
-        editor.addUndoSnapshot(() => {
-            element.style.transform = `rotate(${angle}deg)`;
-        }, ChangeSource.Format);
+        formatUndoSnapshot(
+            editor,
+            () => {
+                element.style.transform = `rotate(${angle}deg)`;
+            },
+            'rotateElement'
+        );
     }
 }
