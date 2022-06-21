@@ -1,4 +1,5 @@
 import ClipboardData from './ClipboardData';
+import ContentChangedData from './ContentChangedData';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import TableSelection from './TableSelection';
@@ -70,12 +71,14 @@ export default interface EditorCore extends PluginState {
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+ * @param additionalData Optional parameter to provide additional data related to the ContentChanged Event.
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition) => any,
     changeSource: ChangeSource | CompatibleChangeSource | string,
-    canUndoByBackspace: boolean
+    canUndoByBackspace: boolean,
+    additionalData?: ContentChangedData
 ) => void;
 
 /**

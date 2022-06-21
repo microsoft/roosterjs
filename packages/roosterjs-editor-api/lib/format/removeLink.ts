@@ -1,4 +1,5 @@
-import { ChangeSource, IEditor, QueryScope } from 'roosterjs-editor-types';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import { IEditor, QueryScope } from 'roosterjs-editor-types';
 import { unwrap } from 'roosterjs-editor-dom';
 
 /**
@@ -9,8 +10,12 @@ import { unwrap } from 'roosterjs-editor-dom';
  */
 export default function removeLink(editor: IEditor) {
     editor.focus();
-    editor.addUndoSnapshot((start, end) => {
-        editor.queryElements('a[href]', QueryScope.OnSelection, unwrap);
-        editor.select(start, end);
-    }, ChangeSource.Format);
+    formatUndoSnapshot(
+        editor,
+        (start, end) => {
+            editor.queryElements('a[href]', QueryScope.OnSelection, unwrap);
+            editor.select(start, end);
+        },
+        'removeLink'
+    );
 }

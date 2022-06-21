@@ -1,5 +1,6 @@
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
@@ -165,29 +166,33 @@ function clearAutoDetectFormat(editor: IEditor) {
  * @param editor The editor instance
  */
 function clearBlockFormat(editor: IEditor) {
-    editor.addUndoSnapshot(() => {
-        blockFormat(editor, region => {
-            const blocks = getSelectedBlockElementsInRegion(region);
-            let nodes = collapseNodesInRegion(region, blocks);
+    formatUndoSnapshot(
+        editor,
+        () => {
+            blockFormat(editor, region => {
+                const blocks = getSelectedBlockElementsInRegion(region);
+                let nodes = collapseNodesInRegion(region, blocks);
 
-            if (editor.contains(region.rootNode)) {
-                // If there are styles on table cell, wrap all its children and move down all non-border styles.
-                // So that we can preserve styles for unselected blocks as well as border styles for table
-                const nonborderStyles = removeNonBorderStyles(region.rootNode);
-                if (getObjectKeys(nonborderStyles).length > 0) {
-                    const wrapper = wrap(toArray(region.rootNode.childNodes));
-                    setStyles(wrapper, nonborderStyles);
+                if (editor.contains(region.rootNode)) {
+                    // If there are styles on table cell, wrap all its children and move down all non-border styles.
+                    // So that we can preserve styles for unselected blocks as well as border styles for table
+                    const nonborderStyles = removeNonBorderStyles(region.rootNode);
+                    if (getObjectKeys(nonborderStyles).length > 0) {
+                        const wrapper = wrap(toArray(region.rootNode.childNodes));
+                        setStyles(wrapper, nonborderStyles);
+                    }
                 }
-            }
 
-            while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
-                nodes = [splitBalancedNodeRange(nodes)];
-            }
+                while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
+                    nodes = [splitBalancedNodeRange(nodes)];
+                }
 
-            nodes.forEach(clearNodeFormat);
-        });
-        setDefaultFormat(editor);
-    }, ChangeSource.Format);
+                nodes.forEach(clearNodeFormat);
+            });
+            setDefaultFormat(editor);
+        },
+        'clearBlockFormat'
+    );
 }
 
 function clearInlineFormat(editor: IEditor) {
@@ -199,6 +204,8 @@ function clearInlineFormat(editor: IEditor) {
         );
 
         setDefaultFormat(editor);
+
+        return 'clearInlineFormat';
     }, ChangeSource.Format);
 }
 

@@ -13,7 +13,11 @@ import { setColor } from 'roosterjs-editor-dom';
  * If in dark mode, the darkModeColor will be used and the lightModeColor will be used when converting back to light mode.
  **/
 export default function setBackgroundColor(editor: IEditor, color: string | ModeIndependentColor) {
-    applyInlineStyle(editor, (element, isInnerNode) => {
-        setColor(element, isInnerNode ? '' : color, true /*isBackground*/, editor.isDarkMode());
-    });
+    applyInlineStyle(
+        editor,
+        (element, isInnerNode) => {
+            setColor(element, isInnerNode ? '' : color, true /*isBackground*/, editor.isDarkMode());
+        },
+        'setBackgroundColor'
+    );
 }
