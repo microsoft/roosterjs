@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.33% </span>
+                <span class="strong">18.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/15</span>
+                <span class='fraction'>3/16</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.33% </span>
+                <span class="strong">18.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/15</span>
+                <span class='fraction'>3/16</span>
             </div>
         
             
@@ -122,7 +122,12 @@
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -150,6 +155,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -168,21 +174,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource, IEditor } from 'roosterjs-editor-types';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import { getObjectKeys, readFile } from 'roosterjs-editor-dom';
+import { IEditor } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * Insert an image to editor at current selection
@@ -226,19 +237,23 @@ export default function <span class="fstat-no" title="function not covered" >ins
 }
 &nbsp;
 function <span class="fstat-no" title="function not covered" >insertImageWithSrc(</span>editor: IEditor, src: string, attributes?: Record&lt;string, string&gt;) {
-<span class="cstat-no" title="statement not covered" >    editor.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
-        const image = <span class="cstat-no" title="statement not covered" >editor.getDocument().createElement('img');</span>
-<span class="cstat-no" title="statement not covered" >        image.src = src;</span>
+<span class="cstat-no" title="statement not covered" >    formatUndoSnapshot(</span>
+        editor,
+<span class="fstat-no" title="function not covered" >        () =&gt; {</span>
+            const image = <span class="cstat-no" title="statement not covered" >editor.getDocument().createElement('img');</span>
+<span class="cstat-no" title="statement not covered" >            image.src = src;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (attributes) {</span>
-<span class="cstat-no" title="statement not covered" >            getObjectKeys(attributes).forEach(<span class="fstat-no" title="function not covered" >attribute </span>=&gt;</span>
-<span class="cstat-no" title="statement not covered" >                image.setAttribute(attribute, attributes[attribute])</span>
-            );
-        }
+<span class="cstat-no" title="statement not covered" >            if (attributes) {</span>
+<span class="cstat-no" title="statement not covered" >                getObjectKeys(attributes).forEach(<span class="fstat-no" title="function not covered" >attribute </span>=&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    image.setAttribute(attribute, attributes[attribute])</span>
+                );
+            }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        image.style.maxWidth = '100%';</span>
-<span class="cstat-no" title="statement not covered" >        editor.insertNode(image);</span>
-    }, ChangeSource.Format);
+<span class="cstat-no" title="statement not covered" >            image.style.maxWidth = '100%';</span>
+<span class="cstat-no" title="statement not covered" >            editor.insertNode(image);</span>
+        },
+        'insertImage'
+    );
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -247,7 +262,7 @@ function <span class="fstat-no" title="function not covered" >insertImageWithSrc
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Jun 21 2022 19:20:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Jun 21 2022 20:52:06 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

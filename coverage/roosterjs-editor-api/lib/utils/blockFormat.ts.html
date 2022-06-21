@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -102,7 +102,15 @@
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
 <a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -114,20 +122,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-yes">64x</span>
 <span class="cline-any cline-yes">64x</span>
@@ -141,15 +141,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import experimentCommitListChains from '../experiment/experimentCommitListChains';
+import formatUndoSnapshot from './formatUndoSnapshot';
+import { IEditor, NodePosition, Region, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { VListChain } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    IEditor,
-    NodePosition,
-    Region,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
 &nbsp;
 /**
  * Split selection into regions, and perform a block-wise formatting action for each region.
@@ -162,23 +159,29 @@ export default function blockFormat(
         end: NodePosition,
         chains: VListChain[]
     ) =&gt; void,
-    beforeRunCallback?: () =&gt; boolean
+    beforeRunCallback?: () =&gt; boolean,
+    apiName?: string
 ) {
     editor.focus();
     const selection = editor.getSelectionRangeEx();
-    editor.addUndoSnapshot((start, end) =&gt; {
-        if (!beforeRunCallback || beforeRunCallback()) {
-            const regions = editor.getSelectedRegions();
-            const chains = VListChain.createListChains(regions, start<span class="branch-0 cbranch-no" title="branch not covered" >?.n</span>ode);
-            regions.forEach(region =&gt; callback(region, start, end, chains));
-            experimentCommitListChains(editor, chains);
-        }
-        if (selection.type == SelectionRangeTypes.Normal) {
-            editor.select(start, end);
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (selection.type == SelectionRangeTypes.TableSelection) {
-            editor.select(selection.table, selection.coordinates);
-        }
-    }, ChangeSource.Format);
+&nbsp;
+    formatUndoSnapshot(
+        editor,
+        (start, end) =&gt; {
+            if (!beforeRunCallback || beforeRunCallback()) {
+                const regions = editor.getSelectedRegions();
+                const chains = VListChain.createListChains(regions, start<span class="branch-0 cbranch-no" title="branch not covered" >?.n</span>ode);
+                regions.forEach(region =&gt; callback(region, start, end, chains));
+                experimentCommitListChains(editor, chains);
+            }
+            if (selection.type == SelectionRangeTypes.Normal) {
+                editor.select(start, end);
+            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (selection.type == SelectionRangeTypes.TableSelection) {
+                editor.select(selection.table, selection.coordinates);
+            }
+        },
+        apiName
+    );
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -187,7 +190,7 @@ export default function blockFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Jun 21 2022 19:20:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Jun 21 2022 20:52:06 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -125,7 +125,15 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -169,9 +177,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,6 +197,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,25 +245,33 @@ export default function toggleListType(
     orderedStyle?: NumberingListType | CompatibleNumberingListType,
     unorderedStyle?: BulletListType | CompatibleBulletListType
 ) {
-    blockFormat(editor, (region, start, end, chains) =&gt; {
-        const chain =
-            startNumber &gt; 0 &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >chains.filter(<span class="fstat-no" title="function not covered" >chain </span>=&gt; <span class="cstat-no" title="statement not covered" >chain.canAppendAtCursor(startNumber))[</span>0];</span>
-        const vList =
-            chain &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >start.equalTo(end)</span>
-                ? <span class="branch-0 cbranch-no" title="branch not covered" >chain.createVListAtBlock(</span>
-                      getBlockElementAtNode(region.rootNode, start.node)?.collapseToSingleElement(),
-                      startNumber
-                  )
-                : createVListFromRegion(region, includeSiblingLists);
+    blockFormat(
+        editor,
+        (region, start, end, chains) =&gt; {
+            const chain =
+                startNumber &gt; 0 &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >chains.filter(<span class="fstat-no" title="function not covered" >chain </span>=&gt; <span class="cstat-no" title="statement not covered" >chain.canAppendAtCursor(startNumber))[</span>0];</span>
+            const vList =
+                chain &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >start.equalTo(end)</span>
+                    ? <span class="branch-0 cbranch-no" title="branch not covered" >chain.createVListAtBlock(</span>
+                          getBlockElementAtNode(
+                              region.rootNode,
+                              start.node
+                          )?.collapseToSingleElement(),
+                          startNumber
+                      )
+                    : createVListFromRegion(region, includeSiblingLists);
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (vList) {
-            vList.changeListType(start, end, listType);
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
-<span class="cstat-no" title="statement not covered" >                vList.setListStyleType(orderedStyle, unorderedStyle);</span>
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (vList) {
+                vList.changeListType(start, end, listType);
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
+<span class="cstat-no" title="statement not covered" >                    vList.setListStyleType(orderedStyle, unorderedStyle);</span>
+                }
+                vList.writeBack();
             }
-            vList.writeBack();
-        }
-    });
+        },
+        undefined /* beforeRunCallback */,
+        'toggleListType'
+    );
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -256,7 +280,7 @@ export default function toggleListType(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Jun 21 2022 19:20:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Jun 21 2022 20:52:06 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

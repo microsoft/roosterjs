@@ -171,7 +171,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L523">packages/roosterjs-editor-types/lib/interface/IEditor.ts:523</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L526">packages/roosterjs-editor-types/lib/interface/IEditor.ts:526</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -203,7 +203,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L359">packages/roosterjs-editor-types/lib/interface/IEditor.ts:359</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L360">packages/roosterjs-editor-types/lib/interface/IEditor.ts:360</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -245,7 +245,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L367">packages/roosterjs-editor-types/lib/interface/IEditor.ts:367</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L368">packages/roosterjs-editor-types/lib/interface/IEditor.ts:368</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -284,13 +284,13 @@
 					<a name="addundosnapshot" class="tsd-anchor"></a>
 					<h3>add<wbr>Undo<wbr>Snapshot</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Undo<wbr>Snapshot<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a>, end<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span>, changeSource<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, canUndoByBackspace<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Undo<wbr>Snapshot<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>start<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a>, end<span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.nodeposition.html" class="tsd-signature-type" data-tsd-kind="Interface">NodePosition</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span>, changeSource<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, canUndoByBackspace<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, additionalData<span class="tsd-signature-symbol">?: </span><a href="roosterjs_editor_types.contentchangeddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentChangedData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L418">packages/roosterjs-editor-types/lib/interface/IEditor.ts:418</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L420">packages/roosterjs-editor-types/lib/interface/IEditor.ts:420</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,6 +343,12 @@
 										<p>True if this action can be undone when user presses Backspace key (aka Auto Complete).</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> additionalData: <a href="roosterjs_editor_types.contentchangeddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentChangedData</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Optional parameter to provide additional data related to the ContentChanged Event.</p>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
@@ -358,7 +364,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L160">packages/roosterjs-editor-types/lib/interface/IEditor.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L161">packages/roosterjs-editor-types/lib/interface/IEditor.ts:161</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -407,7 +413,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L92">packages/roosterjs-editor-types/lib/interface/IEditor.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L93">packages/roosterjs-editor-types/lib/interface/IEditor.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -430,7 +436,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L99">packages/roosterjs-editor-types/lib/interface/IEditor.ts:99</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L100">packages/roosterjs-editor-types/lib/interface/IEditor.ts:100</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -462,7 +468,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L69">packages/roosterjs-editor-types/lib/interface/IEditor.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L70">packages/roosterjs-editor-types/lib/interface/IEditor.ts:70</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -494,7 +500,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L201">packages/roosterjs-editor-types/lib/interface/IEditor.ts:201</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L202">packages/roosterjs-editor-types/lib/interface/IEditor.ts:202</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -516,7 +522,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L42">packages/roosterjs-editor-types/lib/interface/IEditor.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L43">packages/roosterjs-editor-types/lib/interface/IEditor.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -538,7 +544,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L542">packages/roosterjs-editor-types/lib/interface/IEditor.ts:542</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L545">packages/roosterjs-editor-types/lib/interface/IEditor.ts:545</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -575,7 +581,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L248">packages/roosterjs-editor-types/lib/interface/IEditor.ts:248</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L249">packages/roosterjs-editor-types/lib/interface/IEditor.ts:249</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -597,7 +603,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L85">packages/roosterjs-editor-types/lib/interface/IEditor.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L86">packages/roosterjs-editor-types/lib/interface/IEditor.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -629,7 +635,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L481">packages/roosterjs-editor-types/lib/interface/IEditor.ts:481</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L484">packages/roosterjs-editor-types/lib/interface/IEditor.ts:484</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -660,7 +666,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L470">packages/roosterjs-editor-types/lib/interface/IEditor.ts:470</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L473">packages/roosterjs-editor-types/lib/interface/IEditor.ts:473</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -691,7 +697,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L178">packages/roosterjs-editor-types/lib/interface/IEditor.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L179">packages/roosterjs-editor-types/lib/interface/IEditor.ts:179</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -723,7 +729,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L488">packages/roosterjs-editor-types/lib/interface/IEditor.ts:488</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L491">packages/roosterjs-editor-types/lib/interface/IEditor.ts:491</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -755,7 +761,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L452">packages/roosterjs-editor-types/lib/interface/IEditor.ts:452</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L455">packages/roosterjs-editor-types/lib/interface/IEditor.ts:455</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -836,7 +842,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L464">packages/roosterjs-editor-types/lib/interface/IEditor.ts:464</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L467">packages/roosterjs-editor-types/lib/interface/IEditor.ts:467</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -859,7 +865,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L437">packages/roosterjs-editor-types/lib/interface/IEditor.ts:437</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L440">packages/roosterjs-editor-types/lib/interface/IEditor.ts:440</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -882,7 +888,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L508">packages/roosterjs-editor-types/lib/interface/IEditor.ts:508</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L511">packages/roosterjs-editor-types/lib/interface/IEditor.ts:511</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -913,7 +919,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L333">packages/roosterjs-editor-types/lib/interface/IEditor.ts:333</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L334">packages/roosterjs-editor-types/lib/interface/IEditor.ts:334</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -962,7 +968,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L319">packages/roosterjs-editor-types/lib/interface/IEditor.ts:319</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L320">packages/roosterjs-editor-types/lib/interface/IEditor.ts:320</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -984,7 +990,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L535">packages/roosterjs-editor-types/lib/interface/IEditor.ts:535</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L538">packages/roosterjs-editor-types/lib/interface/IEditor.ts:538</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1016,7 +1022,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L517">packages/roosterjs-editor-types/lib/interface/IEditor.ts:517</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L520">packages/roosterjs-editor-types/lib/interface/IEditor.ts:520</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1055,7 +1061,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L442">packages/roosterjs-editor-types/lib/interface/IEditor.ts:442</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L445">packages/roosterjs-editor-types/lib/interface/IEditor.ts:445</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1077,7 +1083,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L346">packages/roosterjs-editor-types/lib/interface/IEditor.ts:346</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L347">packages/roosterjs-editor-types/lib/interface/IEditor.ts:347</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1105,7 +1111,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L237">packages/roosterjs-editor-types/lib/interface/IEditor.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L238">packages/roosterjs-editor-types/lib/interface/IEditor.ts:238</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1129,7 +1135,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L223">packages/roosterjs-editor-types/lib/interface/IEditor.ts:223</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L224">packages/roosterjs-editor-types/lib/interface/IEditor.ts:224</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1163,7 +1169,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L230">packages/roosterjs-editor-types/lib/interface/IEditor.ts:230</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L231">packages/roosterjs-editor-types/lib/interface/IEditor.ts:231</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1187,7 +1193,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L475">packages/roosterjs-editor-types/lib/interface/IEditor.ts:475</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L478">packages/roosterjs-editor-types/lib/interface/IEditor.ts:478</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1215,7 +1221,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L618">packages/roosterjs-editor-types/lib/interface/IEditor.ts:618</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L621">packages/roosterjs-editor-types/lib/interface/IEditor.ts:621</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1239,7 +1245,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L528">packages/roosterjs-editor-types/lib/interface/IEditor.ts:528</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L531">packages/roosterjs-editor-types/lib/interface/IEditor.ts:531</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1267,7 +1273,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L598">packages/roosterjs-editor-types/lib/interface/IEditor.ts:598</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L601">packages/roosterjs-editor-types/lib/interface/IEditor.ts:601</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1292,7 +1298,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L427">packages/roosterjs-editor-types/lib/interface/IEditor.ts:427</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L430">packages/roosterjs-editor-types/lib/interface/IEditor.ts:430</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1314,7 +1320,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L606">packages/roosterjs-editor-types/lib/interface/IEditor.ts:606</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L609">packages/roosterjs-editor-types/lib/interface/IEditor.ts:609</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1339,7 +1345,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L243">packages/roosterjs-editor-types/lib/interface/IEditor.ts:243</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L244">packages/roosterjs-editor-types/lib/interface/IEditor.ts:244</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1362,7 +1368,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L196">packages/roosterjs-editor-types/lib/interface/IEditor.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L197">packages/roosterjs-editor-types/lib/interface/IEditor.ts:197</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1400,7 +1406,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L62">packages/roosterjs-editor-types/lib/interface/IEditor.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L63">packages/roosterjs-editor-types/lib/interface/IEditor.ts:63</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1442,7 +1448,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L558">packages/roosterjs-editor-types/lib/interface/IEditor.ts:558</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L561">packages/roosterjs-editor-types/lib/interface/IEditor.ts:561</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1465,7 +1471,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L48">packages/roosterjs-editor-types/lib/interface/IEditor.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L49">packages/roosterjs-editor-types/lib/interface/IEditor.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1488,7 +1494,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L171">packages/roosterjs-editor-types/lib/interface/IEditor.ts:171</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L172">packages/roosterjs-editor-types/lib/interface/IEditor.ts:172</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1520,7 +1526,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L590">packages/roosterjs-editor-types/lib/interface/IEditor.ts:590</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L593">packages/roosterjs-editor-types/lib/interface/IEditor.ts:593</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1551,7 +1557,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L458">packages/roosterjs-editor-types/lib/interface/IEditor.ts:458</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L461">packages/roosterjs-editor-types/lib/interface/IEditor.ts:461</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1574,7 +1580,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L584">packages/roosterjs-editor-types/lib/interface/IEditor.ts:584</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L587">packages/roosterjs-editor-types/lib/interface/IEditor.ts:587</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1596,7 +1602,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L341">packages/roosterjs-editor-types/lib/interface/IEditor.ts:341</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L342">packages/roosterjs-editor-types/lib/interface/IEditor.ts:342</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1629,7 +1635,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L210">packages/roosterjs-editor-types/lib/interface/IEditor.ts:210</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L211">packages/roosterjs-editor-types/lib/interface/IEditor.ts:211</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1672,7 +1678,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L107">packages/roosterjs-editor-types/lib/interface/IEditor.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L108">packages/roosterjs-editor-types/lib/interface/IEditor.ts:108</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1725,7 +1731,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L118">packages/roosterjs-editor-types/lib/interface/IEditor.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L119">packages/roosterjs-editor-types/lib/interface/IEditor.ts:119</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1778,7 +1784,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L130">packages/roosterjs-editor-types/lib/interface/IEditor.ts:130</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L131">packages/roosterjs-editor-types/lib/interface/IEditor.ts:131</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1837,7 +1843,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L143">packages/roosterjs-editor-types/lib/interface/IEditor.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L144">packages/roosterjs-editor-types/lib/interface/IEditor.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1905,7 +1911,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L406">packages/roosterjs-editor-types/lib/interface/IEditor.ts:406</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L407">packages/roosterjs-editor-types/lib/interface/IEditor.ts:407</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1927,7 +1933,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L78">packages/roosterjs-editor-types/lib/interface/IEditor.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L79">packages/roosterjs-editor-types/lib/interface/IEditor.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1971,7 +1977,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L495">packages/roosterjs-editor-types/lib/interface/IEditor.ts:495</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L498">packages/roosterjs-editor-types/lib/interface/IEditor.ts:498</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2040,7 +2046,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L255">packages/roosterjs-editor-types/lib/interface/IEditor.ts:255</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L256">packages/roosterjs-editor-types/lib/interface/IEditor.ts:256</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2063,7 +2069,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L262">packages/roosterjs-editor-types/lib/interface/IEditor.ts:262</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L263">packages/roosterjs-editor-types/lib/interface/IEditor.ts:263</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2086,7 +2092,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L270">packages/roosterjs-editor-types/lib/interface/IEditor.ts:270</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L271">packages/roosterjs-editor-types/lib/interface/IEditor.ts:271</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2115,7 +2121,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L277">packages/roosterjs-editor-types/lib/interface/IEditor.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L278">packages/roosterjs-editor-types/lib/interface/IEditor.ts:278</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2138,7 +2144,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L285">packages/roosterjs-editor-types/lib/interface/IEditor.ts:285</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L286">packages/roosterjs-editor-types/lib/interface/IEditor.ts:286</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2167,7 +2173,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L295">packages/roosterjs-editor-types/lib/interface/IEditor.ts:295</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L296">packages/roosterjs-editor-types/lib/interface/IEditor.ts:296</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2208,7 +2214,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L307">packages/roosterjs-editor-types/lib/interface/IEditor.ts:307</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L308">packages/roosterjs-editor-types/lib/interface/IEditor.ts:308</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2231,7 +2237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L314">packages/roosterjs-editor-types/lib/interface/IEditor.ts:314</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L315">packages/roosterjs-editor-types/lib/interface/IEditor.ts:315</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2268,7 +2274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L185">packages/roosterjs-editor-types/lib/interface/IEditor.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L186">packages/roosterjs-editor-types/lib/interface/IEditor.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2305,7 +2311,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L552">packages/roosterjs-editor-types/lib/interface/IEditor.ts:552</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L555">packages/roosterjs-editor-types/lib/interface/IEditor.ts:555</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2336,7 +2342,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L502">packages/roosterjs-editor-types/lib/interface/IEditor.ts:502</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L505">packages/roosterjs-editor-types/lib/interface/IEditor.ts:505</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2373,7 +2379,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L613">packages/roosterjs-editor-types/lib/interface/IEditor.ts:613</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L616">packages/roosterjs-editor-types/lib/interface/IEditor.ts:616</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2403,7 +2409,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L574">packages/roosterjs-editor-types/lib/interface/IEditor.ts:574</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L577">packages/roosterjs-editor-types/lib/interface/IEditor.ts:577</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2430,7 +2436,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L579">packages/roosterjs-editor-types/lib/interface/IEditor.ts:579</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L582">packages/roosterjs-editor-types/lib/interface/IEditor.ts:582</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2452,7 +2458,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L564">packages/roosterjs-editor-types/lib/interface/IEditor.ts:564</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L567">packages/roosterjs-editor-types/lib/interface/IEditor.ts:567</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2483,7 +2489,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L389">packages/roosterjs-editor-types/lib/interface/IEditor.ts:389</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L390">packages/roosterjs-editor-types/lib/interface/IEditor.ts:390</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2520,7 +2526,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L378">packages/roosterjs-editor-types/lib/interface/IEditor.ts:378</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L379">packages/roosterjs-editor-types/lib/interface/IEditor.ts:379</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2572,7 +2578,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c82fda9/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L401">packages/roosterjs-editor-types/lib/interface/IEditor.ts:401</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/7231c39/packages/roosterjs-editor-types/lib/interface/IEditor.ts#L402">packages/roosterjs-editor-types/lib/interface/IEditor.ts:402</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

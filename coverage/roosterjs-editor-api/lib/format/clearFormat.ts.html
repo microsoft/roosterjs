@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.85% </span>
+                <span class="strong">85.07% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>112/132</span>
+                <span class='fraction'>114/134</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.13% </span>
+                <span class="strong">84.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>106/126</span>
+                <span class='fraction'>108/128</span>
             </div>
         
             
@@ -363,7 +363,15 @@
 <a name='L298'></a><a href='#L298'>298</a>
 <a name='L299'></a><a href='#L299'>299</a>
 <a name='L300'></a><a href='#L300'>300</a>
-<a name='L301'></a><a href='#L301'>301</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -531,6 +539,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
@@ -556,12 +566,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -665,6 +679,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
@@ -830,29 +845,33 @@ function clearAutoDetectFormat(editor: IEditor) {
  * @param editor The editor instance
  */
 function clearBlockFormat(editor: IEditor) {
-    editor.addUndoSnapshot(() =&gt; {
-        blockFormat(editor, region =&gt; {
-            const blocks = getSelectedBlockElementsInRegion(region);
-            let nodes = collapseNodesInRegion(region, blocks);
+    formatUndoSnapshot(
+        editor,
+        () =&gt; {
+            blockFormat(editor, region =&gt; {
+                const blocks = getSelectedBlockElementsInRegion(region);
+                let nodes = collapseNodesInRegion(region, blocks);
 &nbsp;
-            if (editor.contains(region.rootNode)) {
-                // If there are styles on table cell, wrap all its children and move down all non-border styles.
-                // So that we can preserve styles for unselected blocks as well as border styles for table
-                const nonborderStyles = removeNonBorderStyles(region.rootNode);
-                if (getObjectKeys(nonborderStyles).length &gt; 0) {
-                    const wrapper = wrap(toArray(region.rootNode.childNodes));
-                    setStyles(wrapper, nonborderStyles);
+                if (editor.contains(region.rootNode)) {
+                    // If there are styles on table cell, wrap all its children and move down all non-border styles.
+                    // So that we can preserve styles for unselected blocks as well as border styles for table
+                    const nonborderStyles = removeNonBorderStyles(region.rootNode);
+                    if (getObjectKeys(nonborderStyles).length &gt; 0) {
+                        const wrapper = wrap(toArray(region.rootNode.childNodes));
+                        setStyles(wrapper, nonborderStyles);
+                    }
                 }
-            }
 &nbsp;
-            while (nodes.length &gt; 0 &amp;&amp; isNodeInRegion(region, nodes[0].parentNode)) {
-                nodes = [splitBalancedNodeRange(nodes)];
-            }
+                while (nodes.length &gt; 0 &amp;&amp; isNodeInRegion(region, nodes[0].parentNode)) {
+                    nodes = [splitBalancedNodeRange(nodes)];
+                }
 &nbsp;
-            nodes.forEach(clearNodeFormat);
-        });
-        setDefaultFormat(editor);
-    }, ChangeSource.Format);
+                nodes.forEach(clearNodeFormat);
+            });
+            setDefaultFormat(editor);
+        },
+        'clearBlockFormat'
+    );
 }
 &nbsp;
 function clearInlineFormat(editor: IEditor) {
@@ -864,6 +883,8 @@ function clearInlineFormat(editor: IEditor) {
         );
 &nbsp;
         setDefaultFormat(editor);
+&nbsp;
+        return 'clearInlineFormat';
     }, ChangeSource.Format);
 }
 &nbsp;
@@ -970,7 +991,7 @@ export default function clearFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Jun 21 2022 19:20:50 GMT+0000 (Coordinated Universal Time)
+                at Tue Jun 21 2022 20:52:06 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
