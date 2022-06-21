@@ -32,20 +32,6 @@ describe('safeInstanceOf', () => {
         expect(remoteWindow).toBe(<any>iframeDocument.defaultView, 'remoteNode => getTargetWindow');
     });
 
-    it('getTargetWindow for Range', () => {
-        const localRange = document.createRange();
-        const remoteRange = iframeDocument.createRange();
-        const localWindow = getTargetWindow(localRange);
-        const remoteWindow = getTargetWindow(remoteRange);
-        expect(localWindow).toBe(<any>window, 'localNode => getTargetWindow');
-        expect(localWindow).not.toBe(
-            <any>iframeDocument.defaultView,
-            'localNode => getTargetWindow'
-        );
-        expect(remoteWindow).not.toBe(<any>window, 'remoteNode => getTargetWindow');
-        expect(remoteWindow).toBe(<any>iframeDocument.defaultView, 'remoteNode => getTargetWindow');
-    });
-
     it('Node', () => {
         const localNode = document.createTextNode('test 1');
         const remoteNode = iframeDocument.createTextNode('test 2');

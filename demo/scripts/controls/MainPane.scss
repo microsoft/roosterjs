@@ -25,6 +25,15 @@
     position: relative;
 }
 
+@media (prefers-color-scheme: dark) {
+    .editorContainer {
+        a:link,
+        a:visited {
+            color: #ba7cff;
+        }
+    }
+}
+
 .editor {
     border: solid 1px $primaryBorder;
     overflow: auto;

@@ -1,4 +1,5 @@
 import BasePluginEvent from './BasePluginEvent';
+import ContentChangedData from '../interface/ContentChangedData';
 import { ChangeSource } from '../enum/ChangeSource';
 import { PluginEventType } from '../enum/PluginEventType';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
@@ -17,4 +18,9 @@ export default interface ContentChangedEvent
      * Optional related data
      */
     data?: any;
+
+    /*
+     * Additional Data Related to the ContentChanged Event
+     */
+    additionalData?: ContentChangedData;
 }

@@ -114,11 +114,18 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private onPaste = (event: ClipboardEvent) => {
+        const range = this.editor?.getSelectionRange();
         extractClipboardItems(toArray(event.clipboardData.items), {
             allowLinkPreview: this.editor?.isFeatureEnabled(
                 ExperimentalFeatures.PasteWithLinkPreview
             ),
             allowedCustomPasteType: this.state.allowedCustomPasteType,
+        }).then(clipboardData => {
+            if (Browser.isAndroid && range) {
+                range.deleteContents();
+            }
+
+            this.editor?.paste(clipboardData);
         });
     };
 

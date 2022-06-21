@@ -10,5 +10,5 @@ import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
  * @param editor The editor instance
  */
 export default function toggleStrikethrough(editor: IEditor) {
-    execCommand(editor, DocumentCommand.StrikeThrough);
+    execCommand(editor, DocumentCommand.StrikeThrough, 'toggleStrikethrough');
 }
