@@ -31,7 +31,10 @@ export default function safeInstanceOf<T extends keyof W, W extends TargetWindow
     typeName: T
 ): obj is W[T] {
     if (typeName == 'Range') {
-        return !!(<Range>obj)?.commonAncestorContainer;
+        return (
+            Object.prototype.toString.apply(obj) == '[object Range]' &&
+            !!(<Range>obj)?.commonAncestorContainer
+        );
     }
 
     const targetWindow = getTargetWindow<W>(obj);
