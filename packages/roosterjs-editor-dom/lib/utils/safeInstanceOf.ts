@@ -6,7 +6,7 @@ import { TargetWindow } from 'roosterjs-editor-types';
 /**
  * @internal Export for test only
  * Try get window from the given node or range
- * @param source Source node or range
+ * @param node Source node to get window from
  */
 export function getTargetWindow<T extends TargetWindow = TargetWindow>(node: Node): T {
     const document =
