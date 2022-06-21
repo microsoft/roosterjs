@@ -11,10 +11,6 @@ $primaryBorderDark: #007b8b;
 $primaryBackgroundColorDark: #333333;
 
 @media (prefers-color-scheme: dark) {
-    a:link,
-    a:visited {
-        color: #ba7cff;
-    }
     button {
         background-color: $primaryColorDark;
         color: $primaryLighter2;
