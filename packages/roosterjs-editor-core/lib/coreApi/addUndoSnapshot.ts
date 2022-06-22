@@ -8,6 +8,7 @@ import {
     PluginEventType,
     SelectionRangeTypes,
     ContentMetadata,
+    ContentChangedData,
 } from 'roosterjs-editor-types';
 import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatibleTypes';
 
@@ -19,12 +20,14 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+ * @param formatApiName Optional parameter to provide the ContentChangeEvent which FormatApi was invoked.
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
     callback: (start: NodePosition, end: NodePosition) => any,
     changeSource: ChangeSource | CompatibleChangeSource | string,
-    canUndoByBackspace: boolean
+    canUndoByBackspace: boolean,
+    additionalData: ContentChangedData = undefined
 ) => {
     const undoState = core.undo;
     const isNested = undoState.isNested;
@@ -59,6 +62,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (
             eventType: PluginEventType.ContentChanged,
             source: changeSource,
             data: data,
+            additionalData,
         };
         core.api.triggerEvent(core, event, true /*broadcast*/);
     }

@@ -12,17 +12,22 @@ import { safeInstanceOf, setListItemStyle } from 'roosterjs-editor-dom';
 export default function applyListItemStyleWrap(
     editor: IEditor,
     styleName: string,
-    formatCallback: (element: HTMLElement, isInnerNode?: boolean) => any
+    formatCallback: (element: HTMLElement, isInnerNode?: boolean) => any,
+    apiName: string
 ) {
     const parentNodes: Node[] = [];
-    applyInlineStyle(editor, (element, isInnerNode) => {
-        formatCallback(element, isInnerNode);
+    applyInlineStyle(
+        editor,
+        (element, isInnerNode) => {
+            formatCallback(element, isInnerNode);
 
-        let parent = editor.getElementAtCursor('LI', element);
-        if (parent && parentNodes.indexOf(parent) === -1) {
-            parentNodes.push(parent);
-        }
-    });
+            let parent = editor.getElementAtCursor('LI', element);
+            if (parent && parentNodes.indexOf(parent) === -1) {
+                parentNodes.push(parent);
+            }
+        },
+        apiName
+    );
 
     applyStyleToListItems(parentNodes, [styleName]);
 }

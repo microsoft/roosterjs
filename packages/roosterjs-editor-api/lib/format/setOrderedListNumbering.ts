@@ -1,5 +1,6 @@
-import { ChangeSource, IEditor } from 'roosterjs-editor-types';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import { createVListFromRegion } from 'roosterjs-editor-dom';
+import { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Resets Ordered List Numbering back to the value of the parameter startNumber
@@ -12,19 +13,23 @@ export default function setOrderedListNumbering(
     separator: HTMLLIElement,
     startNumber: number = 1
 ) {
-    editor.addUndoSnapshot(() => {
-        editor.focus();
-        const regions = editor.getSelectedRegions();
-        if (regions[0]) {
-            const vList = createVListFromRegion(
-                regions[0],
-                false /*includeSiblingLists*/,
-                separator
-            );
-            if (vList) {
-                vList.split(separator, startNumber);
-                vList.writeBack();
+    formatUndoSnapshot(
+        editor,
+        () => {
+            editor.focus();
+            const regions = editor.getSelectedRegions();
+            if (regions[0]) {
+                const vList = createVListFromRegion(
+                    regions[0],
+                    false /*includeSiblingLists*/,
+                    separator
+                );
+                if (vList) {
+                    vList.split(separator, startNumber);
+                    vList.writeBack();
+                }
             }
-        }
-    }, ChangeSource.Format);
+        },
+        'setOrderedListNumbering'
+    );
 }

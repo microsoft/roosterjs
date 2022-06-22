@@ -18,14 +18,19 @@ export default function setTextColor(
     color: string | ModeIndependentColor,
     shouldApplyInlineStyle?: (element: HTMLElement) => boolean
 ) {
-    applyListItemStyleWrap(editor, 'color', (element, isInnerNode) => {
-        if (!shouldApplyInlineStyle || shouldApplyInlineStyle(element)) {
-            setColor(
-                element,
-                isInnerNode ? '' : color,
-                false /*isBackground*/,
-                editor.isDarkMode()
-            );
-        }
-    });
+    applyListItemStyleWrap(
+        editor,
+        'color',
+        (element, isInnerNode) => {
+            if (!shouldApplyInlineStyle || shouldApplyInlineStyle(element)) {
+                setColor(
+                    element,
+                    isInnerNode ? '' : color,
+                    false /*isBackground*/,
+                    editor.isDarkMode()
+                );
+            }
+        },
+        'setTextColor'
+    );
 }

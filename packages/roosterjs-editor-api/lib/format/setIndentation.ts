@@ -105,7 +105,8 @@ export default function setIndentation(
             }
 
             return true;
-        }
+        },
+        'setIndentation'
     );
 }
 
