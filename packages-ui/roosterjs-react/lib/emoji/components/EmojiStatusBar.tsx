@@ -1,25 +1,34 @@
 import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
 import { Emoji } from '../type/Emoji';
+import { EmojiStatusBarStyle } from '../type/EmojiStyle';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { Strings } from '../type/Strings';
 import { TooltipHost, TooltipOverflowMode } from '@fluentui/react/lib/Tooltip';
 
+/**
+ * @internal
+ * Emoji Status Bar data
+ */
 export interface EmojiStatusBarProps {
     emoji: Emoji;
     strings: Strings;
-    className?: string;
+    statusBarStyle?: EmojiStatusBarStyle;
     hasResult: boolean;
 }
 
 const NO_SUGGESTIONS = 'emjDNoSuggetions';
 
+/**
+ * @internal
+ * Emoji status bar component
+ */
 export default function EmojiStatusBar(props: EmojiStatusBarProps) {
-    const { emoji, strings, hasResult, className } = props;
+    const { emoji, strings, hasResult, statusBarStyle } = props;
     if (!hasResult) {
         const noResultDescription = strings[NO_SUGGESTIONS];
         return (
-            <div className={css(classNames.statusBar, className)}>
+            <div className={css(classNames.statusBar, statusBarStyle.className)}>
                 <div style={{ display: 'none' }} aria-live="polite">
                     {noResultDescription}
                 </div>
@@ -38,7 +47,7 @@ export default function EmojiStatusBar(props: EmojiStatusBarProps) {
     const description = emoji ? strings[emoji.description] : '';
 
     return (
-        <div className={css(classNames.statusBar, className)}>
+        <div className={css(classNames.statusBar, statusBarStyle.className)}>
             <i className={classNames.statusBarIcon} role="presentation" aria-hidden="true">
                 {icon}
             </i>

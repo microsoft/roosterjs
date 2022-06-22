@@ -1,12 +1,13 @@
 import * as React from 'react';
 import EmojiIcon, { EmojiIconProps } from './EmojiIcon';
-import EmojiList, { CommonEmojis, EmojiFamilyKeys, MoreEmoji } from '../utils/emojiList';
 import EmojiNavBar, { EmojiNavBarProps } from './EmojiNavBar';
 import EmojiStatusBar, { EmojiStatusBarProps } from './EmojiStatusBar';
 import { AriaAttributes } from '../type/AriaAttributes';
 import { Callout, DirectionalHint, ICalloutProps } from '@fluentui/react/lib/Callout';
+import { CommonEmojis, EmojiFamilyKeys, EmojiList, MoreEmoji } from '../utils/emojiList';
 import { css, KeyCodes } from '@fluentui/react/lib/Utilities';
 import { Emoji } from '../type/Emoji';
+import { EmojiStyle } from '../type/EmojiStyle';
 import { FocusZone } from '@fluentui/react/lib/FocusZone';
 import { ITextField, TextField } from '@fluentui/react/lib/TextField';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
@@ -41,17 +42,29 @@ const TooltipCalloutProps: ICalloutProps = {
     directionalHint: DirectionalHint.bottomCenter,
 };
 
+/**
+ * @internal
+ * Types of emoji pane size
+ */
 export const enum EmojiPaneMode {
     Quick,
     Partial,
     Full,
 }
 
+/**
+ * @internal
+ * Types of emoji Navigation direction
+ */
 export const enum EmojiPaneNavigateDirection {
     Horizontal,
     Vertical,
 }
 
+/**
+ * @internal
+ * Emoji Pane data
+ */
 export interface EmojiPaneState {
     index: number;
     mode: EmojiPaneMode;
@@ -61,30 +74,35 @@ export interface EmojiPaneState {
     searchInBox: string;
 }
 
+/**
+ * @internal
+ * Emoji Pane customizable data
+ */
 export interface EmojiPaneProps {
-    quickPickerClassName?: string;
-    fullPickerClassName?: string;
-    fullListClassName?: string;
-    fullListContentClassName?: string;
-    partialListClassName?: string;
-    tooltipClassName?: string;
-    searchInputAriaLabel?: string;
-    searchPlaceholder?: string;
+    emojiStyle?: EmojiStyle;
     onLayoutChanged?: () => void;
     onModeChanged?: (newMode: EmojiPaneMode, previousMode: EmojiPaneMode) => void;
+    searchDisabled?: boolean;
+    hideStatusBar?: boolean;
     navBarProps?: Partial<EmojiNavBarProps>;
     statusBarProps?: Partial<EmojiStatusBarProps>;
     emojiIconProps?: Partial<EmojiIconProps>;
-    searchDisabled?: boolean;
-    hideStatusBar?: boolean;
 }
 
+/**
+ * @internal
+ * Internal interface for emoji pane
+ */
 export interface InternalEmojiPaneProps extends EmojiPaneProps {
     onSelect: (emoji: Emoji, wordBeforeCursor: string) => void;
     strings: Strings;
     onLayoutChange?: () => void;
 }
 
+/**
+ * @internal
+ * Emoji pane component
+ */
 export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProps, EmojiPaneState> {
     private static IdCounter = 0;
     private baseId = EmojiPane.IdCounter++;
@@ -92,11 +110,6 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     private listId = `EmojiPane${this.baseId}`;
     private emojiBody: HTMLElement;
     private input: HTMLInputElement;
-
-    public static defaultProps: EmojiPaneProps = {
-        onLayoutChanged: NullFunction,
-        onModeChanged: NullFunction,
-    };
 
     constructor(props: InternalEmojiPaneProps) {
         super(props);
@@ -110,6 +123,11 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
             searchInBox: '',
         };
     }
+
+    public static defaultProps: EmojiPaneProps = {
+        onLayoutChanged: NullFunction,
+        onModeChanged: NullFunction,
+    };
 
     public render(): JSX.Element {
         return this.state.mode === EmojiPaneMode.Quick
@@ -222,7 +240,8 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderQuickPicker(): JSX.Element {
-        const { quickPickerClassName, tooltipClassName, strings } = this.props;
+        const { strings } = this.props;
+        const { quickPickerClassName, tooltipClassName } = this.props.emojiStyle.emojiPaneStyle;
         const selectedEmoji = this.getSelectedEmoji();
         const target = selectedEmoji ? `#${this.getEmojiIconId(selectedEmoji)}` : undefined;
         const content = selectedEmoji ? strings[selectedEmoji.description] : undefined;
@@ -256,12 +275,12 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderFullPicker(): JSX.Element {
+        const { searchDisabled } = this.props;
         const {
-            searchDisabled,
             searchPlaceholder,
             searchInputAriaLabel,
             fullPickerClassName,
-        } = this.props;
+        } = this.props.emojiStyle.emojiPaneStyle;
         const emojiId = this.getEmojiIconId(this.getSelectedEmoji());
         const autoCompleteAttributes = {
             [AriaAttributes.AutoComplete]: 'list',
@@ -358,13 +377,13 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     };
 
     private renderCurrentEmojiIcons(): JSX.Element[] {
-        const { strings, emojiIconProps } = this.props;
+        const { strings, emojiStyle } = this.props;
         const { currentEmojiList } = this.state;
 
         return currentEmojiList.map((emoji, index) => (
             <EmojiIcon
                 strings={strings}
-                {...emojiIconProps}
+                emojiIconStyle={emojiStyle.emojiIconStyle}
                 id={this.getEmojiIconId(emoji)}
                 key={emoji.key}
                 onMouseOver={() => this.setState({ index })}
@@ -378,12 +397,9 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
         ));
     }
 
-    private getEmojiIconId(emoji: Emoji): string {
-        return emoji ? `${this.listId}-${emoji.key}` : undefined;
-    }
-
     private renderPartialList(): JSX.Element {
-        const { strings, hideStatusBar, statusBarProps, partialListClassName } = this.props;
+        const { strings, hideStatusBar, emojiStyle, statusBarProps } = this.props;
+        const { partialListClassName } = this.props.emojiStyle.emojiPaneStyle;
         const { currentEmojiList } = this.state;
         const hasResult = currentEmojiList && currentEmojiList.length > 0;
 
@@ -405,6 +421,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                 {!hideStatusBar && (
                     <EmojiStatusBar
                         strings={strings}
+                        statusBarStyle={emojiStyle.emojiNavBarStyle}
                         {...statusBarProps}
                         hasResult={hasResult}
                         emoji={this.getSelectedEmoji()}
@@ -415,14 +432,11 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderFullList(): JSX.Element {
+        const { strings, hideStatusBar, emojiStyle, navBarProps, statusBarProps } = this.props;
         const {
-            strings,
-            hideStatusBar,
-            navBarProps,
-            statusBarProps,
             fullListClassName,
             fullListContentClassName,
-        } = this.props;
+        } = this.props.emojiStyle.emojiPaneStyle;
         const { currentEmojiList } = this.state;
         const hasResult = currentEmojiList && currentEmojiList.length > 0;
 
@@ -435,6 +449,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                     ref={this.onEmojiBodyRef}>
                     <EmojiNavBar
                         strings={strings}
+                        navBarStyle={emojiStyle.emojiNavBarStyle}
                         {...navBarProps}
                         onClick={this.pivotClick}
                         currentSelected={this.state.currentFamily}
@@ -459,6 +474,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                 {!hideStatusBar && (
                     <EmojiStatusBar
                         strings={strings}
+                        statusBarStyle={emojiStyle.emojiStatusBarStyle}
                         {...statusBarProps}
                         hasResult={hasResult}
                         emoji={this.getSelectedEmoji()}
@@ -466,6 +482,10 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                 )}
             </div>
         );
+    }
+
+    private getEmojiIconId(emoji: Emoji): string {
+        return emoji ? `${this.listId}-${emoji.key}` : undefined;
     }
 
     private onEmojiBodyRef = (ref: HTMLDivElement) => {

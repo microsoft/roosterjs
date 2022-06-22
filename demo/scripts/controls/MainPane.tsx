@@ -37,10 +37,10 @@ import {
     AllButtonKeys,
     createPasteOptionPlugin,
     createEmojiPlugin,
-    EmojiPaneProps,
     EmojiDescriptionStrings,
     EmojiKeywordStrings,
     EmojiFamilyStrings,
+    EmojiStyle,
 } from 'roosterjs-react';
 import {
     tableAlign,
@@ -54,21 +54,23 @@ const POPOUT_FEATURES = 'menubar=no,statusbar=no,width=1200,height=800';
 const POPOUT_URL = 'about:blank';
 const POPOUT_TARGET = '_blank';
 
-const emojiPaneProps: EmojiPaneProps = {
-    navBarProps: {
+const emojiPaneProps: EmojiStyle = {
+    emojiNavBarStyle: {
         className: 'nabvar-class-name',
         buttonClassName: 'nabvar-button-class-name',
         selectedButtonClassName: 'selected-button-class-name',
         iconClassName: 'navbar-icon-class-name',
     },
-    statusBarProps: { className: 'status-bar-class-name' },
-    emojiIconProps: {
+    emojiStatusBarStyle: { className: 'status-bar-class-name' },
+    emojiIconStyle: {
         className: 'emoji-icon-class-name',
         selectedClassName: 'selected-emoji-icon-class-name',
     },
-    searchPlaceholder: 'Search...',
-    searchInputAriaLabel: 'Search field',
-    fullListClassName: 'full-list-class-name',
+    emojiPaneStyle: {
+        searchPlaceholder: 'Search...',
+        searchInputAriaLabel: 'Search field',
+        fullListClassName: 'full-list-class-name',
+    },
 };
 
 const LightTheme: PartialTheme = {
@@ -172,7 +174,7 @@ class MainPane extends MainPaneBase {
                 ...EmojiKeywordStrings,
                 ...EmojiFamilyStrings,
             },
-            emojiPaneProps,
+            emojiStyle: emojiPaneProps,
         });
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([

@@ -1,3 +1,6 @@
+/**
+ * Emoji Description
+ */
 export const EmojiDescriptionStrings = {
     emjDMore: 'More',
     emjDNoSuggetions: 'No suggestions found',
@@ -693,6 +696,9 @@ export const EmojiDescriptionStrings = {
     emjD1f5ff: 'Moyai',
 };
 
+/**
+ * Emoji Keywords
+ */
 export const EmojiKeywordStrings = {
     emjK1f607: 'saint angel innocent',
     emjK1f47c: 'cherub angel',
@@ -1196,6 +1202,9 @@ export const EmojiKeywordStrings = {
     emjK02764: 'love heart',
 };
 
+/**
+ * Emoji Family
+ */
 export const EmojiFamilyStrings = {
     People: 'People',
     Nature: 'Nature',
@@ -1206,5 +1215,12 @@ export const EmojiFamilyStrings = {
     Objects: 'Objects',
 };
 
+/**
+ * Emoji Description Key
+ */
 export type EmojiDescriptionStringKey = keyof typeof EmojiDescriptionStrings;
+
+/**
+ * Emoji Keyword Key
+ */
 export type EmojiKeywordStringKey = keyof typeof EmojiKeywordStrings;

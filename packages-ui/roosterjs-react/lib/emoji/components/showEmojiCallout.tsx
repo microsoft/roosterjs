@@ -1,13 +1,18 @@
 import * as React from 'react';
-import EmojiPane, { EmojiPaneMode, EmojiPaneProps } from './EmojiPane';
+import EmojiPane, { EmojiPaneMode } from './EmojiPane';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
 import { Emoji } from '../type/Emoji';
+import { EmojiStyle } from '../type/EmojiStyle';
 import { Strings } from '../type/Strings';
 import { UIUtilities } from '../../common/index';
 
+/**
+ * @internal
+ * Emoji callout data
+ */
 interface EmojiICallOutPorps {
     calloutClassName: string;
-    emojiPaneProps: EmojiPaneProps;
+    emojiStyle: EmojiStyle;
     cursorRect: DOMRect;
     strings: Strings;
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void;
@@ -20,18 +25,16 @@ interface EmojiICallOutPorps {
 function EmojiICallout(props: EmojiICallOutPorps) {
     const {
         calloutClassName,
-        emojiPaneProps,
+        emojiStyle,
         cursorRect,
         strings,
         onSelectFromPane,
-        refreshCalloutDebounced,
-        onModeChanged,
         paneRef,
         onHideCallout,
     } = props;
     const [isCalloutVisible, toggleIsCalloutVisible] = React.useState(true);
     const point = {
-        x: cursorRect.right,
+        x: cursorRect.left,
         y: (cursorRect.top + cursorRect.bottom) / 2,
     };
     const gap = (cursorRect.bottom - cursorRect.top) / 2 + 5;
@@ -53,16 +56,12 @@ function EmojiICallout(props: EmojiICallOutPorps) {
                     gapSpace={gap}
                     onDismiss={toogleCallout}>
                     <EmojiPane
-                        {...emojiPaneProps}
                         ref={paneRef}
                         onSelect={onSelectFromPane}
                         strings={strings || {}}
-                        onLayoutChanged={refreshCalloutDebounced}
-                        onModeChanged={onModeChanged}
-                        navBarProps={emojiPaneProps.navBarProps}
-                        statusBarProps={emojiPaneProps.statusBarProps}
-                        searchDisabled={!strings || emojiPaneProps.searchDisabled}
+                        emojiStyle={emojiStyle}
                         hideStatusBar={!strings}
+                        searchDisabled={!strings}
                     />
                 </Callout>
             )}
@@ -70,10 +69,15 @@ function EmojiICallout(props: EmojiICallOutPorps) {
     );
 }
 
+/**
+ * @internal
+ * Enable emoji callout
+ */
+
 export default function showEmojiCallout(
     uiUtilities: UIUtilities,
     calloutClassName: string,
-    emojiPaneProps: EmojiPaneProps,
+    emojiStyle: EmojiStyle,
     cursorRect: DOMRect,
     strings: Strings,
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void,
@@ -85,7 +89,7 @@ export default function showEmojiCallout(
     uiUtilities.renderComponent(
         <EmojiICallout
             calloutClassName={calloutClassName}
-            emojiPaneProps={emojiPaneProps}
+            emojiStyle={emojiStyle}
             cursorRect={cursorRect}
             strings={strings}
             onSelectFromPane={onSelectFromPane}

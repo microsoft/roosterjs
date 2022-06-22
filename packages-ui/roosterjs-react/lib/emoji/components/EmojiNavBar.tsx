@@ -1,33 +1,30 @@
 import * as React from 'react';
-import EmojiList, { EmojiFabricIconCharacterMap, EmojiFamilyKeys } from '../utils/emojiList';
 import { css } from '@fluentui/react/lib/Utilities';
+import { EmojiFabricIconCharacterMap, EmojiFamilyKeys, EmojiList } from '../utils/emojiList';
+import { EmojiNavBarStyle } from '../type/EmojiStyle';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { Strings } from '../type/Strings';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 
+/**
+ * @internal
+ * Emoji Nav Bar data
+ */
 export interface EmojiNavBarProps {
     onClick?: (selected: string) => void;
     currentSelected?: string;
     getTabId?: (selected: string) => string;
-    className?: string;
-    buttonClassName?: string;
-    selectedButtonClassName?: string;
-    iconClassName?: string;
+    navBarStyle?: EmojiNavBarStyle;
     strings: Strings;
 }
 
+/**
+ * @internal
+ */
 export default function EmojiNavBar(props: EmojiNavBarProps) {
-    const {
-        currentSelected,
-        getTabId,
-        strings = {},
-        iconClassName,
-        className,
-        buttonClassName,
-        selectedButtonClassName,
-    } = props;
+    const { currentSelected, getTabId, strings = {}, navBarStyle } = props;
     const keys = Object.keys(EmojiList) as EmojiFamilyKeys[];
     const onFamilyClick = (key: string) => {
         if (props.onClick) {
@@ -37,7 +34,7 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
 
     return (
         // for each emoji family key, create a button to use as nav bar
-        <div className={css(classNames.navBar, className)} role="tablist">
+        <div className={css(classNames.navBar, navBarStyle.className)} role="tablist">
             <FocusZone direction={FocusZoneDirection.horizontal}>
                 {keys.map((key, index) => {
                     const selected = key === currentSelected;
@@ -50,11 +47,11 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
                             <button
                                 className={css(
                                     classNames.navBarButton,
-                                    buttonClassName,
+                                    navBarStyle.buttonClassName,
                                     'emoji-nav-bar-button',
                                     {
                                         [classNames.selected]: selected,
-                                        [selectedButtonClassName]: selected,
+                                        [navBarStyle.selectedButtonClassName]: selected,
                                     }
                                 )}
                                 key={key}
@@ -68,7 +65,7 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
                                 aria-setsize={keys.length}>
                                 <Icon
                                     iconName={EmojiFabricIconCharacterMap[key]}
-                                    className={iconClassName}
+                                    className={navBarStyle.iconClassName}
                                 />
                             </button>
                         </TooltipHost>

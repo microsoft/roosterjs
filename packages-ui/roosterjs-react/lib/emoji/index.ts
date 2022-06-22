@@ -1,5 +1,4 @@
 export { default as createEmojiPlugin, EmojiPluginOptions } from './plugin/createEmojiPlugin';
-export { EmojiPaneProps } from './components/EmojiPane';
 export {
     EmojiKeywordStrings,
     EmojiDescriptionStrings,
@@ -7,3 +6,10 @@ export {
     EmojiDescriptionStringKey,
     EmojiKeywordStringKey,
 } from './type/EmojiStrings';
+export {
+    EmojiPaneStyle,
+    EmojiNavBarStyle,
+    EmojiIconStyle,
+    EmojiStatusBarStyle,
+    EmojiStyle,
+} from './type/EmojiStyle';

@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
 import { Emoji } from '../type/Emoji';
+import { EmojiIconStyle } from '../type/EmojiStyle';
 import { getDataAndAriaProps } from '../utils/getAriaAndDataProp';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { Strings } from '../type/Strings';
 
+/**
+ * @internal
+ * Emoji icon data
+ */
 export interface EmojiIconProps {
     id: string;
     emoji: Emoji;
@@ -13,31 +18,24 @@ export interface EmojiIconProps {
     onMouseOver?: (e: React.MouseEvent<EventTarget>) => void;
     onFocus?: React.FocusEventHandler<HTMLButtonElement>;
     isSelected?: boolean;
-    className?: string;
-    selectedClassName?: string;
+    emojiIconStyle: EmojiIconStyle;
 }
 
+/**
+ * @internal
+ * Emoji icon component
+ */
 export default function EmojiIcon(props: EmojiIconProps) {
-    const {
-        emoji,
-        onClick,
-        isSelected,
-        onMouseOver,
-        className,
-        onFocus,
-        strings,
-        id,
-        selectedClassName,
-    } = props;
+    const { emoji, onClick, isSelected, onMouseOver, emojiIconStyle, onFocus, strings, id } = props;
     const content = strings[emoji.description];
 
     return (
         <button
             id={id}
             role="option"
-            className={css(classNames.emoji, className, {
+            className={css(classNames.emoji, emojiIconStyle.className, {
                 [classNames.roosterEmojiSelected]: isSelected,
-                [selectedClassName]: isSelected,
+                [emojiIconStyle.selectedClassName]: isSelected,
             })}
             onClick={onClick}
             onMouseOver={onMouseOver}

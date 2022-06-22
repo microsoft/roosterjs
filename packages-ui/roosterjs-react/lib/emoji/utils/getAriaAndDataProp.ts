@@ -11,6 +11,9 @@ function reduceObject<T>(object: any, callback: (key: string) => boolean): T {
     }, {} as T);
 }
 
+/**
+ * @internal
+ */
 export function getDataAndAriaProps<T>(props: any): T {
     return reduceObject(
         props || {},

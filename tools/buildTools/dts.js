@@ -260,11 +260,12 @@ function parseImportFrom(content, currentFileName, queue, baseDir, projDir, exte
         } else {
             const imports = matches[1]
                 .split(',')
-                .map(x => x.replace('{', '').replace('}', '').trim())
+                .map(x => x.replace('{', '').replace('}', '').replace('*', '\\*').trim())
                 .filter(x => !!x);
             imports.forEach(x => {
                 newContent = newContent.replace(
                     new RegExp(`(\\W|^)(${x})(\\W|$)`, 'gm'),
+
                     '$1' + replacedName + '.$2$3'
                 );
             });

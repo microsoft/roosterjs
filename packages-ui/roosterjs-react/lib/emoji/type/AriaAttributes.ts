@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export const AriaAttributes = {
     ActiveDescendant: 'aria-activedescendant',
     AutoComplete: 'aria-autocomplete',

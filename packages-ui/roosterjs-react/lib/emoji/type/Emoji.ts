@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export interface Emoji {
     /**
      * Uniquely identifies an emoji. It is stored in hex string in lower case.

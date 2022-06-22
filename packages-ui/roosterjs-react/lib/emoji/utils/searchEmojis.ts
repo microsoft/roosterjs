@@ -2,6 +2,9 @@ import { Emoji } from '../type/Emoji';
 import { forEachEmoji } from './emojiList';
 import { Strings } from '../type/Strings';
 
+/**
+ * @internal
+ */
 export function searchEmojis(search: string, strings: Strings): Emoji[] {
     const shortcutMatch = matchShortcut(search);
     search = search.toLowerCase();
@@ -24,6 +27,9 @@ export function searchEmojis(search: string, strings: Strings): Emoji[] {
     return fullMatch.concat(partialMatch);
 }
 
+/**
+ * @internal
+ */
 export function matchShortcut(search: string): Emoji {
     let result: Emoji;
     search = ' ' + search + ' ';

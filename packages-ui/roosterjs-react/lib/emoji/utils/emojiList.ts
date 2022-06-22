@@ -6,14 +6,23 @@ const common3 = createEmoji('02764', '<3');
 const common4 = createEmoji('1f61e', ':( :-(');
 const common5 = createEmoji('1f603', ':D :-D');
 
+/**
+ * @internal
+ */
 export const MoreEmoji: Emoji = {
     key: 'more',
     description: 'emjDMore',
     codePoint: '',
 };
 
+/**
+ * @internal
+ */
 export const CommonEmojis = [Common1, common2, common3, common4, common5, MoreEmoji];
 
+/**
+ * @internal
+ */
 export const enum EmojiFamilyKeys {
     People = 'People',
     Nature = 'Nature',
@@ -24,8 +33,11 @@ export const enum EmojiFamilyKeys {
     Objects = 'Objects',
 }
 
-// NOTE: name for an emoji should be in lower case
-const EmojiList = {
+/**
+ * @internal
+ * NOTE: name for an emoji should be in lower case
+ */
+export const EmojiList = {
     [EmojiFamilyKeys.People]: [
         createEmoji('1f601'),
         createEmoji('1f602'),
@@ -705,8 +717,9 @@ const EmojiList = {
     ],
 };
 
-export default EmojiList;
-
+/**
+ * @internal
+ */
 export const EmojiFabricIconCharacterMap = {
     [EmojiFamilyKeys.Activities]: 'Soccer',
     [EmojiFamilyKeys.Food]: 'EatDrink',
@@ -717,6 +730,9 @@ export const EmojiFabricIconCharacterMap = {
     [EmojiFamilyKeys.Travel]: 'Car',
 };
 
+/**
+ * @internal
+ */
 export function forEachEmojiFamily(
     callback: (emojis: Emoji[], family: EmojiFamilyKeys) => boolean
 ): void {
@@ -728,6 +744,9 @@ export function forEachEmojiFamily(
     }
 }
 
+/**
+ * @internal
+ */
 export function forEachEmoji(callback: (emoji: Emoji) => boolean): void {
     forEachEmojiFamily(emojis => {
         for (const emoji of emojis) {

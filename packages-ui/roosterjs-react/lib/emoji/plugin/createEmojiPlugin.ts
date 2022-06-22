@@ -1,15 +1,17 @@
 import * as ReactDOM from 'react-dom';
-import EmojiPane, { EmojiPaneMode, EmojiPaneProps } from '../components/EmojiPane';
+import EmojiPane, { EmojiPaneMode } from '../components/EmojiPane';
 import showEmojiCallout from '../components/showEmojiCallout';
 import { AriaAttributes } from '../type/AriaAttributes';
 import { Editor } from 'roosterjs-editor-core';
 import { Emoji } from '../type/Emoji';
+import { EmojiStyle } from '../type/EmojiStyle';
 import { KeyCodes } from '@fluentui/react/lib/utilities';
 import { matchShortcut } from '../utils/searchEmojis';
 import { MoreEmoji } from '../utils/emojiList';
 import { ReactEditorPlugin, UIUtilities } from '../../common/index';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import { Strings } from '../type/Strings';
+
 import {
     ChangeSource,
     PluginDomEvent,
@@ -29,15 +31,21 @@ const KEYCODE_COLON_FIREFOX = 59;
 // MATCHES: 0: 😃:r
 //          1: 😃
 //          2: :r
+
 const EMOJI_BEFORE_COLON_REGEX = /([\u0023-\u0039][\u20e3]|[\ud800-\udbff][\udc00-\udfff]|[\u00a9-\u00ae]|[\u2122-\u3299])*([:;][^:]*)/;
 
+/**
+ * Interface to customize the emoji plugin
+ */
 export interface EmojiPluginOptions {
-    strings?: Strings;
+    strings?: {
+        [key: string]: string;
+    };
     calloutClassName?: string;
-    emojiPaneProps?: EmojiPaneProps;
+    emojiStyle?: EmojiStyle;
 }
 
-export class EmojiPlugin implements ReactEditorPlugin {
+class EmojiPlugin implements ReactEditorPlugin {
     private editor: Editor;
     private contentDiv: HTMLDivElement;
     private eventHandledOnKeyDown: boolean;
@@ -265,13 +273,13 @@ export class EmojiPlugin implements ReactEditorPlugin {
     };
 
     private getCallout() {
-        const { calloutClassName, emojiPaneProps } = this.options;
+        const { calloutClassName, emojiStyle } = this.options;
         const rangeNode = this.editor.getElementAtCursor();
         const rect = rangeNode.getBoundingClientRect();
         showEmojiCallout(
             this.uiUtilities,
             calloutClassName,
-            emojiPaneProps,
+            emojiStyle,
             rect,
             this.strings,
             this.onSelectFromPane,
@@ -413,7 +421,7 @@ export class EmojiPlugin implements ReactEditorPlugin {
 }
 
 /**
- * Create a new instance of Emoji plugin with context menu implementation based on FluentUI.
+ * Create a new instance of Emoji plugin with FluentUI components.
  */
 export default function createEmojiPlugin(options: EmojiPluginOptions): ReactEditorPlugin {
     return new EmojiPlugin(options);
