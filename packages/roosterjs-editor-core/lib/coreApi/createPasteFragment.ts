@@ -215,7 +215,7 @@ function createBeforePasteEvent(
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
-        isApplyCurrentStyle: applyCurrentStyle,
+        isApplyingCurrentStyle: applyCurrentStyle,
         isPastingAsText: pasteAsText,
     };
 }

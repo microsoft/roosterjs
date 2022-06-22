@@ -45,5 +45,5 @@ export default interface BeforePasteEvent extends BasePluginEvent<PluginEventTyp
     /**
      * Whether the current paste fragment had applied the current style
      */
-    isApplyCurrentStyle?: boolean;
+    isApplyingCurrentStyle?: boolean;
 }

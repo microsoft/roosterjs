@@ -354,7 +354,7 @@ describe('createPasteFragment', () => {
                     metaName2: 'metaContent2',
                 },
                 isPastingAsText: false,
-                isApplyCurrentStyle: false,
+                isApplyingCurrentStyle: false,
             },
             true
         );
