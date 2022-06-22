@@ -12,7 +12,7 @@ import { UIUtilities } from '../../common/index';
  */
 interface EmojiICallOutPorps {
     calloutClassName: string;
-    emojiStyle: EmojiStyle;
+    emojiStyle?: EmojiStyle;
     cursorRect: DOMRect;
     strings: Strings;
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void;
@@ -77,14 +77,15 @@ function EmojiICallout(props: EmojiICallOutPorps) {
 export default function showEmojiCallout(
     uiUtilities: UIUtilities,
     calloutClassName: string,
-    emojiStyle: EmojiStyle,
+
     cursorRect: DOMRect,
     strings: Strings,
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void,
     refreshCalloutDebounced: () => void,
     onModeChanged: (newMode: EmojiPaneMode) => void,
     paneRef: (ref: EmojiPane) => void,
-    onHideCallout: () => void
+    onHideCallout: () => void,
+    emojiStyle?: EmojiStyle
 ) {
     uiUtilities.renderComponent(
         <EmojiICallout

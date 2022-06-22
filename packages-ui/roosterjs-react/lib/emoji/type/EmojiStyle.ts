@@ -2,10 +2,10 @@
  * Emoji pane style options
  */
 export interface EmojiStyle {
-    emojiPaneStyle?: Partial<EmojiPaneStyle>;
-    emojiNavBarStyle?: Partial<EmojiNavBarStyle>;
-    emojiStatusBarStyle?: Partial<EmojiStatusBarStyle>;
-    emojiIconStyle?: Partial<EmojiIconStyle>;
+    emojiPaneStyle?: EmojiPaneStyle;
+    emojiNavBarStyle?: EmojiNavBarStyle;
+    emojiStatusBarStyle?: EmojiStatusBarStyle;
+    emojiIconStyle?: EmojiIconStyle;
 }
 
 /**

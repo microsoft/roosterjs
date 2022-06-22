@@ -5,7 +5,7 @@ import { AriaAttributes } from '../type/AriaAttributes';
 import { Editor } from 'roosterjs-editor-core';
 import { Emoji } from '../type/Emoji';
 import { EmojiStyle } from '../type/EmojiStyle';
-import { KeyCodes } from '@fluentui/react/lib/utilities';
+import { KeyCodes } from '@fluentui/react/lib/Utilities';
 import { matchShortcut } from '../utils/searchEmojis';
 import { MoreEmoji } from '../utils/emojiList';
 import { ReactEditorPlugin, UIUtilities } from '../../common/index';
@@ -279,14 +279,14 @@ class EmojiPlugin implements ReactEditorPlugin {
         showEmojiCallout(
             this.uiUtilities,
             calloutClassName,
-            emojiStyle,
             rect,
             this.strings,
             this.onSelectFromPane,
             this.refreshCalloutDebounced,
             this.onModeChanged,
             this.paneRef,
-            this.onHideCallout
+            this.onHideCallout,
+            emojiStyle
         );
     }
 
