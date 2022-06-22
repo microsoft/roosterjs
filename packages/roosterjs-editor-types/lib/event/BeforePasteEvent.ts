@@ -36,4 +36,14 @@ export default interface BeforePasteEvent extends BasePluginEvent<PluginEventTyp
      * Attributes of the root "HTML" tag
      */
     htmlAttributes: Record<string, string>;
+
+    /**
+     * Whether the current paste fragment was processed as Plain Text
+     */
+    isPastingAsText?: boolean;
+
+    /**
+     * Whether the current paste fragment had applied the current style
+     */
+    isApplyCurrentStyle?: boolean;
 }

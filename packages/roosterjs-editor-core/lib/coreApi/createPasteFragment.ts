@@ -47,7 +47,7 @@ export const createPasteFragment: CreatePasteFragment = (
     }
 
     // Step 1: Prepare BeforePasteEvent object
-    const event = createBeforePasteEvent(core, clipboardData);
+    const event = createBeforePasteEvent(core, clipboardData, pasteAsText, applyCurrentStyle);
     const { fragment, sanitizingOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     const document = core.contentDiv.ownerDocument;
@@ -201,7 +201,12 @@ function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
     };
 }
 
-function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData): BeforePasteEvent {
+function createBeforePasteEvent(
+    core: EditorCore,
+    clipboardData: ClipboardData,
+    pasteAsText: boolean,
+    applyCurrentStyle: boolean
+): BeforePasteEvent {
     return {
         eventType: PluginEventType.BeforePaste,
         clipboardData,
@@ -210,6 +215,8 @@ function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData):
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
+        isApplyCurrentStyle: applyCurrentStyle,
+        isPastingAsText: pasteAsText,
     };
 }
 
