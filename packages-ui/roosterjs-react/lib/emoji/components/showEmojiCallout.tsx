@@ -77,7 +77,6 @@ function EmojiICallout(props: EmojiICallOutPorps) {
 export default function showEmojiCallout(
     uiUtilities: UIUtilities,
     calloutClassName: string,
-
     cursorRect: DOMRect,
     strings: Strings,
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void,
