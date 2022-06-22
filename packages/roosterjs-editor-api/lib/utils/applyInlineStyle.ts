@@ -1,11 +1,6 @@
+import formatUndoSnapshot from './formatUndoSnapshot';
 import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    IEditor,
-    NodeType,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import { IEditor, NodeType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -17,7 +12,8 @@ const ZERO_WIDTH_SPACE = '\u200B';
  */
 export default function applyInlineStyle(
     editor: IEditor,
-    callback: (element: HTMLElement, isInnerNode?: boolean) => any
+    callback: (element: HTMLElement, isInnerNode?: boolean) => any,
+    apiName: string
 ) {
     editor.focus();
     let selection = editor.getSelectionRangeEx();
@@ -54,26 +50,30 @@ export default function applyInlineStyle(
     } else {
         // This is start and end node that get the style. The start and end needs to be recorded so that selection
         // can be re-applied post-applying style
-        editor.addUndoSnapshot(() => {
-            let firstNode: Node;
-            let lastNode: Node;
-            selection.ranges.forEach(range => {
-                let contentTraverser = editor.getSelectionTraverser(range);
-                let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
-                while (inlineElement) {
-                    let nextInlineElement = contentTraverser.getNextInlineElement();
-                    inlineElement.applyStyle((element, isInnerNode) => {
-                        callback(element, isInnerNode);
-                        firstNode = firstNode || element;
-                        lastNode = element;
-                    });
-                    inlineElement = nextInlineElement;
-                }
-            });
+        formatUndoSnapshot(
+            editor,
+            () => {
+                let firstNode: Node;
+                let lastNode: Node;
+                selection.ranges.forEach(range => {
+                    let contentTraverser = editor.getSelectionTraverser(range);
+                    let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
+                    while (inlineElement) {
+                        let nextInlineElement = contentTraverser.getNextInlineElement();
+                        inlineElement.applyStyle((element, isInnerNode) => {
+                            callback(element, isInnerNode);
+                            firstNode = firstNode || element;
+                            lastNode = element;
+                        });
+                        inlineElement = nextInlineElement;
+                    }
+                });
 
-            if (firstNode && lastNode && selection.type == SelectionRangeTypes.Normal) {
-                editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
-            }
-        }, ChangeSource.Format);
+                if (firstNode && lastNode && selection.type == SelectionRangeTypes.Normal) {
+                    editor.select(firstNode, PositionType.Before, lastNode, PositionType.After);
+                }
+            },
+            apiName
+        );
     }
 }
