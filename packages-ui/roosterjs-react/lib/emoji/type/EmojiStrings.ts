@@ -1,4 +1,5 @@
 /**
+ * @internal
  * Emoji Description
  */
 export const EmojiDescriptionStrings = {
@@ -697,6 +698,7 @@ export const EmojiDescriptionStrings = {
 };
 
 /**
+ * @internal
  * Emoji Keywords
  */
 export const EmojiKeywordStrings = {
@@ -1203,6 +1205,7 @@ export const EmojiKeywordStrings = {
 };
 
 /**
+ * @internal
  * Emoji Family
  */
 export const EmojiFamilyStrings = {
@@ -1216,11 +1219,13 @@ export const EmojiFamilyStrings = {
 };
 
 /**
+ * @internal
  * Emoji Description Key
  */
 export type EmojiDescriptionStringKey = keyof typeof EmojiDescriptionStrings;
 
 /**
+ * @internal
  * Emoji Keyword Key
  */
 export type EmojiKeywordStringKey = keyof typeof EmojiKeywordStrings;

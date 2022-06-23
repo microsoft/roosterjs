@@ -7,11 +7,9 @@ import { Callout, DirectionalHint, ICalloutProps } from '@fluentui/react/lib/Cal
 import { CommonEmojis, EmojiFamilyKeys, EmojiList, MoreEmoji } from '../utils/emojiList';
 import { css, KeyCodes } from '@fluentui/react/lib/Utilities';
 import { Emoji } from '../type/Emoji';
-import { EmojiStyle } from '../type/EmojiStyle';
 import { FocusZone } from '@fluentui/react/lib/FocusZone';
+import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 import { ITextField, TextField } from '@fluentui/react/lib/TextField';
-import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { NullFunction } from '../type/NullFunction';
 import { searchEmojis } from '../utils/searchEmojis';
 import { Strings } from '../type/Strings';
 
@@ -79,14 +77,31 @@ export interface EmojiPaneState {
  * Emoji Pane customizable data
  */
 export interface EmojiPaneProps {
-    emojiStyle?: EmojiStyle;
     onLayoutChanged?: () => void;
-    onModeChanged?: (newMode: EmojiPaneMode, previousMode: EmojiPaneMode) => void;
+    onModeChanged: (newMode: EmojiPaneMode, previousMode: EmojiPaneMode) => void;
     searchDisabled?: boolean;
     hideStatusBar?: boolean;
     navBarProps?: Partial<EmojiNavBarProps>;
     statusBarProps?: Partial<EmojiStatusBarProps>;
     emojiIconProps?: Partial<EmojiIconProps>;
+    searchPlaceholder?: string;
+    searchInputAriaLabel?: string;
+    classNames?: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>;
+}
+
+/**
+ * @internal
+ * EmojiPane Style classes
+ */
+interface EmojiPaneStyle {
+    quickPicker: IStyleSet;
+    tooltip: IStyleSet;
+    emojiTextInput: IStyleSet;
+    partialList: IStyleSet;
+    fullListContent: IStyleSet;
+    fullListBody: IStyleSet;
+    fullList: IStyleSet;
+    roosterEmojiPane: IStyleSet;
 }
 
 /**
@@ -124,11 +139,6 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
         };
     }
 
-    public static defaultProps: EmojiPaneProps = {
-        onLayoutChanged: NullFunction,
-        onModeChanged: NullFunction,
-    };
-
     public render(): JSX.Element {
         return this.state.mode === EmojiPaneMode.Quick
             ? this.renderQuickPicker()
@@ -137,23 +147,11 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
 
     public componentDidUpdate(_: EmojiPaneProps, prevState: EmojiPaneState) {
         // call onLayoutChange when the call out parent of the EmojiPane needs to reorient itself on the page
-        const { onLayoutChanged, onModeChanged } = this.props;
-        const { currentEmojiList, mode, currentFamily } = this.state;
+        const { onModeChanged } = this.props;
+        const { mode } = this.state;
 
         if (mode !== prevState.mode) {
             onModeChanged(mode, prevState.mode);
-            onLayoutChanged();
-            return;
-        }
-
-        const currentEmojisLength = currentEmojiList
-            ? currentEmojiList.length
-            : EmojiList[currentFamily].length;
-        const prevEmojisLength = prevState.currentEmojiList
-            ? prevState.currentEmojiList.length
-            : EmojiList[prevState.currentFamily].length;
-        if (mode !== EmojiPaneMode.Quick && currentEmojisLength !== prevEmojisLength) {
-            onLayoutChanged();
             return;
         }
     }
@@ -240,8 +238,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderQuickPicker(): JSX.Element {
-        const { strings } = this.props;
-        const { quickPickerClassName, tooltipClassName } = this.props.emojiStyle.emojiPaneStyle;
+        const { strings, classNames } = this.props;
         const selectedEmoji = this.getSelectedEmoji();
         const target = selectedEmoji ? `#${this.getEmojiIconId(selectedEmoji)}` : undefined;
         const content = selectedEmoji ? strings[selectedEmoji.description] : undefined;
@@ -257,16 +254,14 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                     className={css(
                         classNames.quickPicker,
                         classNames.roosterEmojiPane,
-                        'quick-picker',
-                        quickPickerClassName
+                        'quick-picker'
                     )}>
-                    {content}
                     <Callout
                         {...TooltipCalloutProps}
                         role="tooltip"
                         target={target}
                         hidden={!content}
-                        className={css(classNames.tooltip, tooltipClassName)}>
+                        className={classNames.tooltip}>
                         {content}
                     </Callout>
                 </div>
@@ -275,12 +270,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderFullPicker(): JSX.Element {
-        const { searchDisabled } = this.props;
-        const {
-            searchPlaceholder,
-            searchInputAriaLabel,
-            fullPickerClassName,
-        } = this.props.emojiStyle.emojiPaneStyle;
+        const { searchDisabled, searchPlaceholder, searchInputAriaLabel, classNames } = this.props;
         const emojiId = this.getEmojiIconId(this.getSelectedEmoji());
         const autoCompleteAttributes = {
             [AriaAttributes.AutoComplete]: 'list',
@@ -293,7 +283,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
         }
 
         return (
-            <div className={css(classNames.roosterEmojiPane, fullPickerClassName)}>
+            <div className={classNames.roosterEmojiPane}>
                 {!searchDisabled && (
                     <TextField
                         role="combobox"
@@ -377,13 +367,12 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     };
 
     private renderCurrentEmojiIcons(): JSX.Element[] {
-        const { strings, emojiStyle } = this.props;
+        const { strings } = this.props;
         const { currentEmojiList } = this.state;
 
         return currentEmojiList.map((emoji, index) => (
             <EmojiIcon
                 strings={strings}
-                emojiIconStyle={emojiStyle.emojiIconStyle}
                 id={this.getEmojiIconId(emoji)}
                 key={emoji.key}
                 onMouseOver={() => this.setState({ index })}
@@ -398,15 +387,14 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderPartialList(): JSX.Element {
-        const { strings, hideStatusBar, emojiStyle, statusBarProps } = this.props;
-        const { partialListClassName } = this.props.emojiStyle.emojiPaneStyle;
+        const { strings, hideStatusBar, statusBarProps, classNames } = this.props;
         const { currentEmojiList } = this.state;
         const hasResult = currentEmojiList && currentEmojiList.length > 0;
 
         return (
             <div>
                 <div
-                    className={css(classNames.partialList, partialListClassName)}
+                    className={classNames.partialList}
                     data-is-scrollable={true}
                     tabIndex={TabIndexForFirefoxBug}
                     ref={this.onEmojiBodyRef}>
@@ -421,7 +409,6 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                 {!hideStatusBar && (
                     <EmojiStatusBar
                         strings={strings}
-                        statusBarStyle={emojiStyle.emojiNavBarStyle}
                         {...statusBarProps}
                         hasResult={hasResult}
                         emoji={this.getSelectedEmoji()}
@@ -432,16 +419,12 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderFullList(): JSX.Element {
-        const { strings, hideStatusBar, emojiStyle, navBarProps, statusBarProps } = this.props;
-        const {
-            fullListClassName,
-            fullListContentClassName,
-        } = this.props.emojiStyle.emojiPaneStyle;
+        const { strings, hideStatusBar, navBarProps, statusBarProps, classNames } = this.props;
         const { currentEmojiList } = this.state;
         const hasResult = currentEmojiList && currentEmojiList.length > 0;
 
         return (
-            <div className={css(classNames.fullList, fullListClassName)}>
+            <div className={classNames.fullList}>
                 <div
                     className={classNames.fullListBody}
                     data-is-scrollable={true}
@@ -449,7 +432,6 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                     ref={this.onEmojiBodyRef}>
                     <EmojiNavBar
                         strings={strings}
-                        navBarStyle={emojiStyle.emojiNavBarStyle}
                         {...navBarProps}
                         onClick={this.pivotClick}
                         currentSelected={this.state.currentFamily}
@@ -460,10 +442,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                             <FocusZone
                                 id={this.listId}
                                 role="listbox"
-                                className={css(
-                                    classNames.fullListContent,
-                                    fullListContentClassName
-                                )}
+                                className={classNames.fullListContent}
                                 ref={this.focusZoneRefCallback}>
                                 {this.renderCurrentEmojiIcons()}
                             </FocusZone>
@@ -474,7 +453,6 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                 {!hideStatusBar && (
                     <EmojiStatusBar
                         strings={strings}
-                        statusBarStyle={emojiStyle.emojiStatusBarStyle}
                         {...statusBarProps}
                         hasResult={hasResult}
                         emoji={this.getSelectedEmoji()}
@@ -552,77 +530,3 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
         }
     };
 }
-
-const calcMaxHeight = () => {
-    const buttonHeight = 40;
-    const rowsOfIcons = 6; // including family bar if shown
-    const bottomPaddingForContent = 5;
-    const maxHeightForContent = rowsOfIcons * buttonHeight + bottomPaddingForContent;
-    return maxHeightForContent.toString() + 'px';
-};
-
-const calcPaneWidth = () => {
-    const buttonWidth = 40;
-    const pivotItemCount = 7;
-    const paneHorizontalPadding = 1;
-    const paneWidth = buttonWidth * pivotItemCount + 2 * paneHorizontalPadding;
-    return paneWidth.toString() + 'px';
-};
-
-const classNames = mergeStyleSets({
-    quickPicker: {
-        overflowY: 'hidden',
-        '.rooster-emoji-selected::after': {
-            content: '',
-            position: 'absolute',
-            left: '0px',
-            top: '0px',
-            bottom: '0px',
-            right: '0px',
-            zIndex: 1,
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderColor: 'rgb(255, 255, 255)',
-            borderImage: 'initial',
-            outline: 'rgb(102, 102, 102) solid 1px',
-        },
-    },
-
-    tooltip: {
-        padding: '8px',
-    },
-
-    emojiTextInput: {
-        padding: '6px',
-    },
-
-    partialList: {
-        maxHeight: calcMaxHeight(),
-        overflow: 'hidden',
-        overflowY: 'scroll',
-    },
-
-    fullListContent: {
-        width: calcPaneWidth(),
-    },
-
-    fullListBody: {
-        maxHeight: calcMaxHeight(),
-        overflow: 'hidden',
-        overflowY: 'scroll',
-        height: calcMaxHeight(),
-    },
-
-    fullList: {
-        position: 'relative',
-    },
-
-    roosterEmojiPane: {
-        padding: '1px',
-        '@media screen and (-ms-high-contrast: active)': {
-            backgroundColor: 'Highlight',
-            color: 'HighlightText',
-            '-ms-high-contrast-adjust': 'none',
-        },
-    },
-});

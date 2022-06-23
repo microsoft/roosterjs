@@ -4,14 +4,12 @@ import showEmojiCallout from '../components/showEmojiCallout';
 import { AriaAttributes } from '../type/AriaAttributes';
 import { Editor } from 'roosterjs-editor-core';
 import { Emoji } from '../type/Emoji';
-import { EmojiStyle } from '../type/EmojiStyle';
 import { KeyCodes } from '@fluentui/react/lib/Utilities';
 import { matchShortcut } from '../utils/searchEmojis';
 import { MoreEmoji } from '../utils/emojiList';
 import { ReactEditorPlugin, UIUtilities } from '../../common/index';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import { Strings } from '../type/Strings';
-
 import {
     ChangeSource,
     PluginDomEvent,
@@ -19,6 +17,11 @@ import {
     PluginEventType,
     PositionType,
 } from 'roosterjs-editor-types';
+import {
+    EmojiDescriptionStrings,
+    EmojiFamilyStrings,
+    EmojiKeywordStrings,
+} from '../type/EmojiStrings';
 
 const EMOJI_SEARCH_DELAY = 300;
 const INTERNAL_EMOJI_FONT_NAME = 'EmojiFont';
@@ -38,11 +41,8 @@ const EMOJI_BEFORE_COLON_REGEX = /([\u0023-\u0039][\u20e3]|[\ud800-\udbff][\udc0
  * Interface to customize the emoji plugin
  */
 export interface EmojiPluginOptions {
-    strings?: {
-        [key: string]: string;
-    };
-    calloutClassName?: string;
-    emojiStyle?: EmojiStyle;
+    searchPlaceholder?: string;
+    searchInputAriaLabel?: string;
 }
 
 class EmojiPlugin implements ReactEditorPlugin {
@@ -59,7 +59,16 @@ class EmojiPlugin implements ReactEditorPlugin {
     private refreshCalloutDebounced: () => void;
 
     constructor(private options: EmojiPluginOptions = {}) {
-        this.strings = options.strings;
+        if (options) {
+            this.options.searchInputAriaLabel = options.searchInputAriaLabel;
+            this.options.searchPlaceholder = options.searchPlaceholder;
+        }
+
+        this.strings = {
+            ...EmojiDescriptionStrings,
+            ...EmojiKeywordStrings,
+            ...EmojiFamilyStrings,
+        };
     }
 
     setUIUtilities(uiUtilities: UIUtilities) {
@@ -273,12 +282,10 @@ class EmojiPlugin implements ReactEditorPlugin {
     };
 
     private getCallout() {
-        const { calloutClassName, emojiStyle } = this.options;
         const rangeNode = this.editor.getElementAtCursor();
         const rect = rangeNode.getBoundingClientRect();
         showEmojiCallout(
             this.uiUtilities,
-            calloutClassName,
             rect,
             this.strings,
             this.onSelectFromPane,
@@ -286,7 +293,8 @@ class EmojiPlugin implements ReactEditorPlugin {
             this.onModeChanged,
             this.paneRef,
             this.onHideCallout,
-            emojiStyle
+            this.options.searchPlaceholder,
+            this.options.searchInputAriaLabel
         );
     }
 
@@ -423,6 +431,6 @@ class EmojiPlugin implements ReactEditorPlugin {
 /**
  * Create a new instance of Emoji plugin with FluentUI components.
  */
-export default function createEmojiPlugin(options: EmojiPluginOptions): ReactEditorPlugin {
+export default function createEmojiPlugin(options?: EmojiPluginOptions): ReactEditorPlugin {
     return new EmojiPlugin(options);
 }
