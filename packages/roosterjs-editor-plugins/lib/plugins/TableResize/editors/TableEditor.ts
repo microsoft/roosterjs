@@ -308,7 +308,11 @@ export default class TableEditor {
         scrollContainer: HTMLElement,
         ev?: MouseEvent
     ): (rect: Rect) => boolean {
-        if (ev?.currentTarget && safeInstanceOf(ev.currentTarget, 'HTMLElement')) {
+        if (
+            ev?.currentTarget &&
+            safeInstanceOf(ev.currentTarget, 'HTMLElement') &&
+            scrollContainer
+        ) {
             const scrollContainerRect = normalizeRect(scrollContainer.getBoundingClientRect());
             const containerRect = normalizeRect(ev.currentTarget.getBoundingClientRect());
 
