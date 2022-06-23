@@ -103,7 +103,7 @@ class EmojiPlugin implements ReactEditorPlugin {
     }
 
     public startEmoji(startingString: string = ':'): void {
-        if (this.editor) {
+        if (!this.editor) {
             return;
         }
 
