@@ -102,16 +102,6 @@ class EmojiPlugin implements ReactEditorPlugin {
         this.contentEditable = contentEditable;
     }
 
-    public startEmoji(startingString: string = ':'): void {
-        if (!this.editor) {
-            return;
-        }
-
-        this.setIsSuggesting(true);
-        this.editor.insertContent(startingString);
-        this.triggerChangeEvent();
-    }
-
     public onPluginEvent(event: PluginEvent): void {
         const domEvent = event as PluginDomEvent;
         const keyboardEvent = domEvent.rawEvent as KeyboardEvent;
