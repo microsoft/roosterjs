@@ -313,4 +313,36 @@ describe('insertNode', () => {
         expect((<HTMLElement>div.nextSibling).outerHTML).toBe('<span id="span1"></span>');
         node.parentNode.removeChild(node);
     });
+
+    itFirefoxOnly(
+        'insert at selection with focus, no replace, no new line, update cursor in a not content editable element',
+        () => {
+            const core = createEditorCore(div, {});
+            const node = document.createElement('span');
+            node.id = 'span1';
+            div.contentEditable = 'true';
+            div.innerHTML =
+                '<div contenteditable="false"><span id="span2"></span><span id="span3"></span></div>';
+            div.focus();
+            selectNode(document.getElementById('span2'));
+            insertNode(core, node, {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: false,
+                updateCursor: true,
+                replaceSelection: true,
+            });
+
+            expect(div.innerHTML).toBe(
+                '<div contenteditable="false"><span id="span3"></span></div><span id="span1"></span>'
+            );
+
+            const range = getSelectionRange(core, false);
+            const span2 = document.getElementById('span1');
+
+            expect(range.startContainer).toBe(span2);
+            expect(range.endContainer).toBe(span2);
+            expect(range.startOffset).toBe(0);
+            expect(range.endOffset).toBe(0);
+        }
+    );
 });

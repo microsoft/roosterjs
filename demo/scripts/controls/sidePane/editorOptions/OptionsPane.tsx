@@ -43,8 +43,6 @@ const cssRoosterReact = '.editor { border: solid 1px black; width: 100%; height:
 export default class OptionsPane extends React.Component<BuildInPluginProps, BuildInPluginState> {
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
-    private showRibbon = React.createRef<HTMLInputElement>();
-    private darkMode = React.createRef<HTMLInputElement>();
     private rtl = React.createRef<HTMLInputElement>();
 
     constructor(props: BuildInPluginProps) {
@@ -103,26 +101,6 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
                 </div>
                 <div>
                     <input
-                        id="showRibbon"
-                        type="checkbox"
-                        checked={this.state.showRibbon}
-                        onChange={this.onToggleRibbon}
-                        ref={this.showRibbon}
-                    />
-                    <label htmlFor="showRibbon">Show format buttons</label>
-                </div>{' '}
-                <div>
-                    <input
-                        id="darkMode"
-                        type="checkbox"
-                        checked={this.state.supportDarkMode}
-                        onChange={this.onToggleDarkMode}
-                        ref={this.darkMode}
-                    />
-                    <label htmlFor="darkMode">Support dark mode</label>
-                </div>
-                <div>
-                    <input
                         id="pageRtl"
                         type="checkbox"
                         checked={this.state.isRtl}
@@ -167,13 +145,11 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
         let state: BuildInPluginState = {
             linkTitle: this.state.linkTitle,
             watermarkText: this.state.watermarkText,
-            showRibbon: this.state.showRibbon,
             pluginList: { ...this.state.pluginList },
             contentEditFeatures: { ...this.state.contentEditFeatures },
             defaultFormat: { ...this.state.defaultFormat },
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
-            supportDarkMode: this.state.supportDarkMode,
             isRtl: this.state.isRtl,
         };
 
@@ -216,22 +192,6 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
         this.exportForm.current.submit();
     };
 
-    private onToggleRibbon = () => {
-        let showRibbon = this.showRibbon.current.checked;
-        this.setState({
-            showRibbon,
-        });
-        MainPaneBase.getInstance().setIsRibbonShown(showRibbon);
-    };
-
-    private onToggleDarkMode = () => {
-        let supportDarkMode = this.darkMode.current.checked;
-        this.setState({
-            supportDarkMode,
-        });
-        MainPaneBase.getInstance().setIsDarkModeSupported(supportDarkMode);
-    };
-
     private onToggleDirection = () => {
         let isRtl = this.rtl.current.checked;
         this.setState({
@@ -241,8 +201,6 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
     };
 
     private getHtml() {
-        return `${htmlStart}${this.state.showRibbon ? htmlButtons : ''}${
-            this.state.supportDarkMode ? darkButton : ''
-        }${htmlEnd}`;
+        return `${htmlStart}${htmlButtons}${darkButton}${htmlEnd}`;
     }
 }

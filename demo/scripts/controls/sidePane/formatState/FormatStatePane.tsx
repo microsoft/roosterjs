@@ -79,6 +79,7 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(format.isBlockQuote, 'Quote')}
                             {this.renderSpan(format.canUnlink, 'In Link')}
                             {this.renderSpan(format.canAddImageAltText, 'In Image')}
+                            {this.renderSpan(format.isInTable, 'In Table')}
                             <span
                                 className={
                                     format.headerLevel == 0 && styles.inactive
@@ -96,11 +97,7 @@ export default class FormatStatePane extends React.Component<
                         <td className={styles.title}>Browser</td>
                         <td>
                             {this.renderSpan(Browser.isChrome, 'Chrome')}
-                            {this.renderSpan(Browser.isEdge, 'Edge')}
                             {this.renderSpan(Browser.isFirefox, 'Firefox')}
-                            {this.renderSpan(Browser.isIE11OrGreater, 'IE10/11')}
-                            {this.renderSpan(Browser.isIE, 'IE')}
-                            {this.renderSpan(Browser.isIEOrEdge, 'IE/Edge')}
                             {this.renderSpan(Browser.isSafari, 'Safari')}
                             {this.renderSpan(Browser.isWebKit, 'Webkit')}
                         </td>
@@ -110,6 +107,8 @@ export default class FormatStatePane extends React.Component<
                         <td>
                             {this.renderSpan(Browser.isMac, 'MacOS')}
                             {this.renderSpan(Browser.isWin, 'Windows')}
+                            {this.renderSpan(Browser.isAndroid, 'Android')}
+                            {this.renderSpan(Browser.isMobileOrTablet, 'Mobile/Tablet')}
                         </td>
                     </tr>
                     <tr>

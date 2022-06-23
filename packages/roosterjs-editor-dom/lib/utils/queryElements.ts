@@ -1,4 +1,4 @@
-import toArray from './toArray';
+import toArray from '../jsUtils/toArray';
 import { DocumentPosition, NodeType, QueryScope } from 'roosterjs-editor-types';
 import type { CompatibleQueryScope } from 'roosterjs-editor-types/lib/compatibleTypes';
 

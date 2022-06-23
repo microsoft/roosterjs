@@ -18,7 +18,9 @@ export interface BuildInPluginList {
     tableResize: boolean;
     customReplace: boolean;
     pickerPlugin: boolean;
-    resetList: boolean;
+    listEditMenu: boolean;
+    imageEditMenu: boolean;
+    tableEditMenu: boolean;
     contextMenu: boolean;
     autoFormat: boolean;
 }
@@ -29,8 +31,6 @@ export default interface BuildInPluginState {
     defaultFormat: DefaultFormat;
     linkTitle: string;
     watermarkText: string;
-    showRibbon: boolean;
-    supportDarkMode: boolean;
     experimentalFeatures: ExperimentalFeatures[];
     forcePreserveRatio: boolean;
     isRtl: boolean;

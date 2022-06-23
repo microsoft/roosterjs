@@ -2,6 +2,7 @@ import * as React from 'react';
 import BuildInPluginState from '../../BuildInPluginState';
 import { ContentEditFeatureSettings } from 'roosterjs-editor-types';
 import { getAllFeatures } from 'roosterjs-editor-plugins/lib/ContentEdit';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 type ContentEditItemId = keyof ContentEditFeatureSettings;
 
@@ -42,6 +43,10 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     outdentWhenTabText:
         'On Shift + Tab outdent the selection, requires TabKeyFeatures Experimental Feature',
     autoHyphen: 'Automatically transform -- into hyphen, if typed between two words.',
+    autoBulletList:
+        'When press space after *, -, --, ->, -->, >, =>  in an empty line, toggle bullet',
+    autoNumberingList:
+        'When press space after an number, a letter or roman number followed by ), ., -, or between parenthesis in an empty line, toggle numbering',
 };
 
 export interface ContentEditFeaturessProps {
@@ -55,7 +60,7 @@ export default class ContentEditFeatures extends React.Component<ContentEditFeat
         return (
             <table>
                 <tbody>
-                    {Object.keys(features).map((key: ContentEditItemId) =>
+                    {getObjectKeys(features).map(key =>
                         this.renderContentEditItem(key, EditFeatureDescriptionMap[key])
                     )}
                 </tbody>

@@ -18,6 +18,7 @@ import {
     getComputedStyle,
     getEntityFromElement,
     getEntitySelector,
+    getObjectKeys,
     matchesSelector,
     safeInstanceOf,
     toArray,
@@ -46,6 +47,7 @@ import {
     PositionType,
     CreateElementData,
     KnownCreateElementDataIndex,
+    ModeIndependentColor,
 } from 'roosterjs-editor-types';
 import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
@@ -143,8 +145,7 @@ export default class ImageEdit implements EditorPlugin {
      * To customize the resize handle element, add this callback and change the attributes of elementData then it
      * will be picked up by ImageEdit code
      */
-    constructor(options?: ImageEditOptions,
-        private onShowResizeHandle?: OnShowResizeHandle) {
+    constructor(options?: ImageEditOptions, private onShowResizeHandle?: OnShowResizeHandle) {
         this.options = {
             ...DefaultOptions,
             ...(options || {}),
@@ -167,7 +168,7 @@ export default class ImageEdit implements EditorPlugin {
         this.disposer = editor.addDomEventHandler('blur', this.onBlur);
 
         // Read current enabled features from editor to determine which editing operations are allowed
-        Object.keys(FeatureToOperationMap).forEach((key: keyof typeof FeatureToOperationMap) => {
+        getObjectKeys(FeatureToOperationMap).forEach(key => {
             this.allowedOperations |= this.editor.isFeatureEnabled(key)
                 ? FeatureToOperationMap[key]
                 : 0;
@@ -382,7 +383,7 @@ export default class ImageEdit implements EditorPlugin {
 
         // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
         const options: ImageHtmlOptions = {
-            borderColor: this.options.borderColor,
+            borderColor: getColorString(this.options.borderColor, this.editor.isDarkMode()),
             rotateIconHTML: this.options.rotateIconHTML,
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
@@ -392,13 +393,14 @@ export default class ImageEdit implements EditorPlugin {
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
-        ((Object.keys(ImageEditHTMLMap) as any[]) as (keyof typeof ImageEditHTMLMap)[]).forEach(
-            thisOperation => {
-                if ((operation & thisOperation) == thisOperation) {
-                    arrayPush(htmlData, ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle));
-                }
+        getObjectKeys(ImageEditHTMLMap).forEach(thisOperation => {
+            if ((operation & thisOperation) == thisOperation) {
+                arrayPush(
+                    htmlData,
+                    ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle)
+                );
             }
-        );
+        });
 
         htmlData.forEach(data => {
             const element = createElement(data, this.image.ownerDocument);
@@ -670,4 +672,11 @@ function isFixedNumberValue(value: string | number) {
 function isASmallImage(editInfo: ImageEditInfo, isFeatureEnabled?: boolean) {
     const { widthPx, heightPx } = editInfo;
     return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE && isFeatureEnabled;
+}
+
+function getColorString(color: string | ModeIndependentColor, isDarkMode: boolean): string {
+    if (typeof color === 'string') {
+        return color.trim();
+    }
+    return isDarkMode ? color.darkModeColor.trim() : color.lightModeColor.trim();
 }

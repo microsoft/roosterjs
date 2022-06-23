@@ -20,6 +20,7 @@ export default function toggleBullet(
         ListType.Unordered,
         undefined /* startNumber */,
         false /* includeSiblingLists */,
+        undefined /** orderedStyle  */,
         listStyle
     );
 }

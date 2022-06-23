@@ -1,4 +1,5 @@
 import CodeElement from './CodeElement';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 const codeMap: { [id: string]: string } = {
     buttonB: 'roosterjs.toggleBold(editor)',
@@ -12,13 +13,9 @@ const codeMap: { [id: string]: string } = {
 const buttonDark = 'editor.setDarkModeState(!editor.isDarkMode())';
 
 export default class ButtonsCode extends CodeElement {
-    constructor(private supportDarkMode: boolean) {
-        super();
-    }
-
     getCode() {
-        const map = this.supportDarkMode ? { ...codeMap, buttonDark: buttonDark } : codeMap;
-        return Object.keys(map)
+        const map = { ...codeMap, buttonDark: buttonDark };
+        return getObjectKeys(map)
             .map(
                 id =>
                     `document.getElementById('${id}').addEventListener('click', () => ${map[id]});\n`

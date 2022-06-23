@@ -1,6 +1,6 @@
 import contains from './contains';
 import splitParentNode from './splitParentNode';
-import toArray from './toArray';
+import toArray from '../jsUtils/toArray';
 
 /**
  * Collapse nodes within the given start and end nodes to their common ancestor node,

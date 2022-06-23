@@ -1,5 +1,6 @@
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
@@ -16,6 +17,7 @@ import {
 } from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
+    getObjectKeys,
     getSelectedBlockElementsInRegion,
     getStyles,
     getTagOfNode,
@@ -113,7 +115,7 @@ function updateStyles(
     const styles = getStyles(element);
     const result: Record<string, string> = {};
 
-    Object.keys(styles).forEach(style => callbackfn(style, styles, result));
+    getObjectKeys(styles).forEach(style => callbackfn(style, styles, result));
 
     setStyles(element, styles);
 
@@ -164,29 +166,33 @@ function clearAutoDetectFormat(editor: IEditor) {
  * @param editor The editor instance
  */
 function clearBlockFormat(editor: IEditor) {
-    editor.addUndoSnapshot(() => {
-        blockFormat(editor, region => {
-            const blocks = getSelectedBlockElementsInRegion(region);
-            let nodes = collapseNodesInRegion(region, blocks);
+    formatUndoSnapshot(
+        editor,
+        () => {
+            blockFormat(editor, region => {
+                const blocks = getSelectedBlockElementsInRegion(region);
+                let nodes = collapseNodesInRegion(region, blocks);
 
-            if (editor.contains(region.rootNode)) {
-                // If there are styles on table cell, wrap all its children and move down all non-border styles.
-                // So that we can preserve styles for unselected blocks as well as border styles for table
-                const nonborderStyles = removeNonBorderStyles(region.rootNode);
-                if (Object.keys(nonborderStyles).length > 0) {
-                    const wrapper = wrap(toArray(region.rootNode.childNodes));
-                    setStyles(wrapper, nonborderStyles);
+                if (editor.contains(region.rootNode)) {
+                    // If there are styles on table cell, wrap all its children and move down all non-border styles.
+                    // So that we can preserve styles for unselected blocks as well as border styles for table
+                    const nonborderStyles = removeNonBorderStyles(region.rootNode);
+                    if (getObjectKeys(nonborderStyles).length > 0) {
+                        const wrapper = wrap(toArray(region.rootNode.childNodes));
+                        setStyles(wrapper, nonborderStyles);
+                    }
                 }
-            }
 
-            while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
-                nodes = [splitBalancedNodeRange(nodes)];
-            }
+                while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
+                    nodes = [splitBalancedNodeRange(nodes)];
+                }
 
-            nodes.forEach(clearNodeFormat);
-        });
-        setDefaultFormat(editor);
-    }, ChangeSource.Format);
+                nodes.forEach(clearNodeFormat);
+            });
+            setDefaultFormat(editor);
+        },
+        'clearBlockFormat'
+    );
 }
 
 function clearInlineFormat(editor: IEditor) {
@@ -198,12 +204,14 @@ function clearInlineFormat(editor: IEditor) {
         );
 
         setDefaultFormat(editor);
+
+        return 'clearInlineFormat';
     }, ChangeSource.Format);
 }
 
 function setDefaultFormat(editor: IEditor) {
     const defaultFormat = editor.getDefaultFormat();
-    const isDefaultFormatEmpty = Object.keys(defaultFormat).length === 0;
+    const isDefaultFormatEmpty = getObjectKeys(defaultFormat).length === 0;
     editor.queryElements('[style]', QueryScope.InSelection, node => {
         const tag = getTagOfNode(node);
         if (TAGS_TO_STOP_UNWRAP.indexOf(tag) == -1) {

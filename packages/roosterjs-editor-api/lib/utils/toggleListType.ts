@@ -29,36 +29,42 @@ import type {
  * @param listType The list type to toggle
  * @param startNumber (Optional) Start number of the list
  * @param includeSiblingLists Sets wether the operation should include Sibling Lists, by default true
- * @param listStyle (Optional) the style of an ordered or unordered list. If If not defined, the style will be set to disc or decimal.
+ * @param orderedStyle (Optional) the style of an ordered. If not defined, the style will be set to decimal.
+ * @param unorderedStyle (Optional) the style of an unordered list. If not defined, the style will be set to disc.
  */
 export default function toggleListType(
     editor: IEditor,
     listType: ListType | CompatibleListType,
     startNumber?: number,
     includeSiblingLists: boolean = true,
-    listStyle?:
-        | BulletListType
-        | NumberingListType
-        | CompatibleBulletListType
-        | CompatibleNumberingListType
+    orderedStyle?: NumberingListType | CompatibleNumberingListType,
+    unorderedStyle?: BulletListType | CompatibleBulletListType
 ) {
-    blockFormat(editor, (region, start, end, chains) => {
-        const chain =
-            startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];
-        const vList =
-            chain && start.equalTo(end)
-                ? chain.createVListAtBlock(
-                      getBlockElementAtNode(region.rootNode, start.node)?.collapseToSingleElement(),
-                      startNumber
-                  )
-                : createVListFromRegion(region, includeSiblingLists);
+    blockFormat(
+        editor,
+        (region, start, end, chains) => {
+            const chain =
+                startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];
+            const vList =
+                chain && start.equalTo(end)
+                    ? chain.createVListAtBlock(
+                          getBlockElementAtNode(
+                              region.rootNode,
+                              start.node
+                          )?.collapseToSingleElement(),
+                          startNumber
+                      )
+                    : createVListFromRegion(region, includeSiblingLists);
 
-        if (vList) {
-            vList.changeListType(start, end, listType);
-            if (listStyle && editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
-                vList.setListStyleType(listStyle);
+            if (vList) {
+                vList.changeListType(start, end, listType);
+                if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
+                    vList.setListStyleType(orderedStyle, unorderedStyle);
+                }
+                vList.writeBack();
             }
-            vList.writeBack();
-        }
-    });
+        },
+        undefined /* beforeRunCallback */,
+        'toggleListType'
+    );
 }

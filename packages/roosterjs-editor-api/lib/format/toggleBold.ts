@@ -10,5 +10,5 @@ import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
  * @param editor The editor instance
  */
 export default function toggleBold(editor: IEditor) {
-    execCommand(editor, DocumentCommand.Bold);
+    execCommand(editor, DocumentCommand.Bold, 'toggleBold');
 }

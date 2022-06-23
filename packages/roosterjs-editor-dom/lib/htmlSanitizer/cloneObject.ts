@@ -1,3 +1,5 @@
+import getObjectKeys from '../jsUtils/getObjectKeys';
+
 function nativeClone<T>(
     source: Record<string, T> | null | undefined,
     existingObj?: Record<string, T>
@@ -11,7 +13,7 @@ function customClone<T>(
 ): Record<string, T> {
     let result: Record<string, T> = existingObj || {};
     if (source) {
-        for (let key of Object.keys(source)) {
+        for (let key of getObjectKeys(source)) {
             result[key] = source[key];
         }
     }

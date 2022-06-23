@@ -23,6 +23,7 @@ export default function toggleBlockQuote(editor: IEditor, styler?: (element: HTM
             const wrapper = wrap(nodes, BLOCKQUOTE_TAG);
             (styler || DEFAULT_STYLER)(wrapper);
         },
-        () => editor.queryElements('blockquote', QueryScope.OnSelection, unwrap).length == 0
+        () => editor.queryElements('blockquote', QueryScope.OnSelection, unwrap).length == 0,
+        'toggleBlockQuote'
     );
 }

@@ -1,5 +1,6 @@
-import { ChangeSource, IEditor } from 'roosterjs-editor-types';
-import { readFile } from 'roosterjs-editor-dom';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import { getObjectKeys, readFile } from 'roosterjs-editor-dom';
+import { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Insert an image to editor at current selection
@@ -43,17 +44,21 @@ export default function insertImage(
 }
 
 function insertImageWithSrc(editor: IEditor, src: string, attributes?: Record<string, string>) {
-    editor.addUndoSnapshot(() => {
-        const image = editor.getDocument().createElement('img');
-        image.src = src;
+    formatUndoSnapshot(
+        editor,
+        () => {
+            const image = editor.getDocument().createElement('img');
+            image.src = src;
 
-        if (attributes) {
-            Object.keys(attributes).forEach(attribute =>
-                image.setAttribute(attribute, attributes[attribute])
-            );
-        }
+            if (attributes) {
+                getObjectKeys(attributes).forEach(attribute =>
+                    image.setAttribute(attribute, attributes[attribute])
+                );
+            }
 
-        image.style.maxWidth = '100%';
-        editor.insertNode(image);
-    }, ChangeSource.Format);
+            image.style.maxWidth = '100%';
+            editor.insertNode(image);
+        },
+        'insertImage'
+    );
 }

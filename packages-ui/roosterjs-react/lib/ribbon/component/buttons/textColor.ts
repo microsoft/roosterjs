@@ -45,7 +45,7 @@ export const textColor: RibbonButton<TextColorButtonStringKey> = {
     key: 'buttonNameTextColor',
     unlocalizedText: 'Text color',
     iconName: 'FontColor',
-    onClick: (editor, key: TextColorKeys) => {
+    onClick: (editor, key) => {
         setTextColor(editor, TextColors[key]);
     },
 };

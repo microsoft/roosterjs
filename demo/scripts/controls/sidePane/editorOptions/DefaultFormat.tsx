@@ -1,6 +1,7 @@
 import * as React from 'react';
 import BuildInPluginState from '../../BuildInPluginState';
 import { DefaultFormat } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 type ToggleFormatId = 'bold' | 'italic' | 'underline';
 type ModeIndependentColorId = 'textColors' | 'backgroundColors';
@@ -111,7 +112,7 @@ export default class DefaultFormatPane extends React.Component<DefaultFormatProp
                         id={id}
                         onChange={() => this.onSelectChanged(id)}
                         defaultValue={(this.props.state[id] || NOT_SET) as string}>
-                        {Object.keys(items).map(key => (
+                        {getObjectKeys(items).map(key => (
                             <option value={key} key={key}>
                                 {items[key]}
                             </option>

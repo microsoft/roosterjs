@@ -280,7 +280,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div', 'ol'],
             [ListType.Ordered, ListType.Unordered],
-            '<ol><ul><li><div></div></li></ul></ol>'
+            '<ol><ul style="list-style-type: circle;"><li><div></div></li></ul></ol>'
         );
     });
 
@@ -288,7 +288,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div', 'ol', 'ol'],
             [ListType.Ordered, ListType.Unordered],
-            '<ol><ol></ol><ul><li><div></div></li></ul></ol>'
+            '<ol><ol></ol><ul style="list-style-type: circle;"><li><div></div></li></ul></ol>'
         );
     });
 
@@ -378,7 +378,7 @@ describe('VListItem.writeBack', () => {
         runTest(
             ['div'],
             [ListType.Ordered, ListType.Unordered],
-            '<ol id="id1" data-test="test"><ul><li><div></div></li></ul></ol>',
+            '<ol id="id1" data-test="test"><ul style="list-style-type: circle;"><li><div></div></li></ul></ol>',
             ol
         );
     });
@@ -439,7 +439,8 @@ describe('VListItem.writeBack', () => {
 describe('VListItem.applyListStyle', () => {
     function runTest(
         listType: ListType,
-        styleType: NumberingListType | BulletListType,
+        orderedStyle: NumberingListType | undefined,
+        unorderedStyle: BulletListType | undefined,
         marker: string
     ) {
         const list =
@@ -450,7 +451,7 @@ describe('VListItem.applyListStyle', () => {
         const li = document.createElement('li');
         list.appendChild(li);
         const vList = new VList(list);
-        vList.setListStyleType(styleType);
+        vList.setListStyleType(orderedStyle, unorderedStyle);
         vList.items.forEach(item => {
             const index = vList.getListItemIndex(item.getNode());
             item.applyListStyle(list, index);
@@ -460,42 +461,51 @@ describe('VListItem.applyListStyle', () => {
     }
 
     it('DecimalParenthesis Numbering List', () => {
-        runTest(ListType.Ordered, NumberingListType.DecimalParenthesis, '"1) "');
+        runTest(ListType.Ordered, NumberingListType.DecimalParenthesis, undefined, '"1) "');
     });
 
     it('LowerRoman Numbering List', () => {
-        runTest(ListType.Ordered, NumberingListType.LowerRoman, '"i. "');
+        runTest(ListType.Ordered, NumberingListType.LowerRoman, undefined, '"i. "');
     });
 
     it('UpperRomanDoubleParenthesis Numbering List', () => {
-        runTest(ListType.Ordered, NumberingListType.UpperRomanDoubleParenthesis, '"(I) "');
+        runTest(
+            ListType.Ordered,
+            NumberingListType.UpperRomanDoubleParenthesis,
+            undefined,
+            '"(I) "'
+        );
     });
 
     it('LowerAlphaDash Numbering List', () => {
-        runTest(ListType.Ordered, NumberingListType.LowerAlphaDash, '"a- "');
+        runTest(ListType.Ordered, NumberingListType.LowerAlphaDash, undefined, '"a- "');
     });
 
     it('UpperAlphaParenthesis Numbering List', () => {
-        runTest(ListType.Ordered, NumberingListType.UpperAlphaParenthesis, '"A) "');
+        runTest(ListType.Ordered, NumberingListType.UpperAlphaParenthesis, undefined, '"A) "');
     });
 
     it('LongArrow Bullet List', () => {
-        runTest(ListType.Unordered, BulletListType.LongArrow, '"→ "');
+        runTest(ListType.Unordered, undefined, BulletListType.LongArrow, '"→ "');
     });
 
     it('ShortArrow Bullet List', () => {
-        runTest(ListType.Unordered, BulletListType.ShortArrow, '"➢ "');
+        runTest(ListType.Unordered, undefined, BulletListType.ShortArrow, '"➢ "');
     });
 
     it('UnfilledArrow Bullet List', () => {
-        runTest(ListType.Unordered, BulletListType.UnfilledArrow, '"➪ "');
+        runTest(ListType.Unordered, undefined, BulletListType.UnfilledArrow, '"➪ "');
     });
 
     it('Dash Bullet List', () => {
-        runTest(ListType.Unordered, BulletListType.Dash, '"- "');
+        runTest(ListType.Unordered, undefined, BulletListType.Dash, '"- "');
     });
 
     it('Square Bullet List', () => {
-        runTest(ListType.Unordered, BulletListType.Square, 'square');
+        runTest(ListType.Unordered, undefined, BulletListType.Square, 'square');
+    });
+
+    it('Square Bullet List', () => {
+        runTest(ListType.Unordered, undefined, BulletListType.Hyphen, '"— "');
     });
 });

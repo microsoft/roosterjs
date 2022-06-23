@@ -1,3 +1,4 @@
+import getObjectKeys from '../jsUtils/getObjectKeys';
 import { cloneObject } from './cloneObject';
 import { CssStyleCallbackMap, StringMap } from 'roosterjs-editor-types';
 
@@ -194,7 +195,7 @@ export function getTagReplacement(
 ): Record<string, string | null> {
     const result = { ...HTML_TAG_REPLACEMENT };
     const replacements = additionalReplacements || {};
-    Object.keys(replacements).forEach(key => {
+    getObjectKeys(replacements).forEach(key => {
         if (key) {
             result[key.toLowerCase()] = replacements[key];
         }

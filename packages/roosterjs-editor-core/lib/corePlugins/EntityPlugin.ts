@@ -10,6 +10,7 @@ import {
     addRangeToSelection,
     createRange,
     moveChildNodes,
+    getObjectKeys,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -247,7 +248,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             this.handleNewEntity(entity);
         });
 
-        Object.keys(this.state.shadowEntityCache).forEach(id => {
+        getObjectKeys(this.state.shadowEntityCache).forEach(id => {
             this.triggerEvent(this.state.shadowEntityCache[id], EntityOperation.Overwrite);
             delete this.state.shadowEntityCache[id];
         });

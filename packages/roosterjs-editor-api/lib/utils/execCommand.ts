@@ -1,6 +1,6 @@
-import { PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
+import formatUndoSnapshot from './formatUndoSnapshot';
+import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
 import {
-    ChangeSource,
     DocumentCommand,
     IEditor,
     PluginEventType,
@@ -20,7 +20,8 @@ import type { CompatibleDocumentCommand } from 'roosterjs-editor-types/lib/compa
  */
 export default function execCommand(
     editor: IEditor,
-    command: DocumentCommand | CompatibleDocumentCommand
+    command: DocumentCommand | CompatibleDocumentCommand,
+    apiName?: string
 ) {
     editor.focus();
 
@@ -31,8 +32,8 @@ export default function execCommand(
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
         formatter();
-        const formatName = Object.keys(PendableFormatCommandMap).filter(
-            (x: PendableFormatNames) => PendableFormatCommandMap[x] == command
+        const formatName = getObjectKeys(PendableFormatCommandMap).filter(
+            x => PendableFormatCommandMap[x] == command
         )[0] as PendableFormatNames;
 
         if (formatName) {
@@ -42,21 +43,25 @@ export default function execCommand(
             });
         }
     } else {
-        editor.addUndoSnapshot(() => {
-            let tempRange: Range;
-            selection.ranges.forEach(range => {
-                if (selection.type == SelectionRangeTypes.TableSelection) {
-                    editor.select(range);
+        formatUndoSnapshot(
+            editor,
+            () => {
+                let tempRange: Range;
+                selection.ranges.forEach(range => {
+                    if (selection.type == SelectionRangeTypes.TableSelection) {
+                        editor.select(range);
+                    }
+
+                    formatter();
+
+                    tempRange = range;
+                });
+
+                if (tempRange && selection.type == SelectionRangeTypes.TableSelection) {
+                    editor.select(selection.table, selection.coordinates);
                 }
-
-                formatter();
-
-                tempRange = range;
-            });
-
-            if (tempRange && selection.type == SelectionRangeTypes.TableSelection) {
-                editor.select(selection.table, selection.coordinates);
-            }
-        }, ChangeSource.Format);
+            },
+            apiName
+        );
     }
 }

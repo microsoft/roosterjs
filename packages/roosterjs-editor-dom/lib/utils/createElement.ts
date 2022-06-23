@@ -1,3 +1,4 @@
+import getObjectKeys from '../jsUtils/getObjectKeys';
 import safeInstanceOf from './safeInstanceOf';
 import { Browser } from './Browser';
 import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
@@ -92,13 +93,13 @@ export default function createElement(
     }
 
     if (dataset && safeInstanceOf(result, 'HTMLElement')) {
-        Object.keys(dataset).forEach(datasetName => {
+        getObjectKeys(dataset).forEach(datasetName => {
             result.dataset[datasetName] = dataset[datasetName];
         });
     }
 
     if (attributes) {
-        Object.keys(attributes).forEach(attrName => {
+        getObjectKeys(attributes).forEach(attrName => {
             result.setAttribute(attrName, attributes[attrName]);
         });
     }
