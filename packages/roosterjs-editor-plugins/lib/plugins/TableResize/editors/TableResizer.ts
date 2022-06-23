@@ -16,7 +16,7 @@ export default function createTableResizer(
     isRTL: boolean,
     onStart: () => void,
     onDragEnd: () => false,
-    onShowHelperElement: (
+    onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
@@ -97,13 +97,15 @@ function onDragging(
     const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
 
     if (shouldResizeX || shouldResizeY) {
-        for (let i = 0; i < vTable.cells.length; i++) {
-            for (let j = 0; j < vTable.cells[i].length; j++) {
-                const cell = vTable.cells[i][j];
-                if (cell.td) {
-                    if (shouldResizeX) {
+        const cellslenght = vTable?.cells ? vTable.cells.length : 0;
+        for (let i = 0; i < cellslenght; i++) {
+            const lenght = vTable.cells?.[i] ? vTable.cells[i].length : 0;
+            for (let j = 0; j < lenght; j++) {
+                const cell = vTable.cells?.[i][j];
+                if (cell?.td) {
+                    if (shouldResizeX && cell.width) {
                         // the width of some external table is fixed, we need to make it resizable
-                        vTable.table.style.width = null;
+                        vTable.table.style.width = '';
                         const newWidth = (cell.width * ratioX) / zoomScale;
                         cell.td.style.boxSizing = 'border-box';
                         if (newWidth >= MIN_CELL_WIDTH) {
@@ -113,16 +115,16 @@ function onDragging(
                         }
                     }
 
-                    if (shouldResizeY) {
+                    if (shouldResizeY && cell.height) {
                         // the height of some external table is fixed, we need to make it resizable
-                        vTable.table.style.height = null;
+                        vTable.table.style.height = '';
                         if (j == 0) {
                             const newHeight = (cell.height * ratioY) / zoomScale;
                             if (newHeight >= MIN_CELL_HEIGHT) {
                                 cell.td.style.height = `${newHeight}px`;
                             }
                         } else {
-                            cell.td.style.height = null;
+                            cell.td.style.height = '';
                         }
                     }
                 }

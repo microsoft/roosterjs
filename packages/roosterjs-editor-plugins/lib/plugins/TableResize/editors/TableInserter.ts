@@ -12,17 +12,17 @@ const INSERTER_BORDER_SIZE = 1;
  * @internal
  */
 export default function createTableInserter(
-    editor: IEditor,
+    editor: IEditor | undefined,
     td: HTMLTableCellElement,
     isRTL: boolean,
     isHorizontal: boolean,
     onInsert: (table: HTMLTableElement) => void,
-    onShowHelperElement: (
+    onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
-): TableEditFeature {
-    const table = editor.getElementAtCursor('table', td);
+): TableEditFeature | undefined {
+    const table = editor?.getElementAtCursor('table', td);
     const tdRect = normalizeRect(td.getBoundingClientRect());
     const tableRect = table ? normalizeRect(table.getBoundingClientRect()) : null;
 
@@ -31,9 +31,9 @@ export default function createTableInserter(
         const document = td.ownerDocument;
         const createElementData = getInsertElementData(
             isHorizontal,
-            editor.isDarkMode(),
+            !!editor?.isDarkMode(),
             isRTL,
-            editor.getDefaultFormat().backgroundColor || 'white'
+            editor?.getDefaultFormat().backgroundColor || 'white'
         );
 
         onShowHelperElement?.(createElementData, 'TableInserter');
@@ -66,29 +66,29 @@ export default function createTableInserter(
 
 class TableInsertHandler implements Disposable {
     constructor(
-        private div: HTMLDivElement,
+        private div: HTMLDivElement | undefined,
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
-        private editor: IEditor,
+        private editor: IEditor | undefined,
         private onInsert: (table: HTMLTableElement) => void
     ) {
-        this.div.addEventListener('click', this.insertTd);
+        this.div?.addEventListener('click', this.insertTd);
     }
 
     dispose() {
-        this.div.removeEventListener('click', this.insertTd);
-        this.div = null;
-        this.editor = null;
+        this.div?.removeEventListener('click', this.insertTd);
+        this.div = undefined;
+        this.editor = undefined;
     }
 
     private insertTd = () => {
         let vtable = new VTable(this.td);
         if (!this.isHorizontal) {
-            vtable.normalizeTableCellSize(this.editor.getZoomScale());
+            vtable.normalizeTableCellSize(this.editor?.getZoomScale());
 
             // Since adding new column will cause table width to change, we need to remove width properties
             vtable.table.removeAttribute('width');
-            vtable.table.style.width = null;
+            vtable.table.style.width = '';
         }
 
         vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);

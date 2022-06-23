@@ -17,7 +17,7 @@ export default function createCellResizer(
     isHorizontal: boolean,
     onStart: () => void,
     onEnd: () => false,
-    onShowHelperElement: (
+    onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
@@ -101,10 +101,11 @@ function onDraggingHorizontal(
     const { vTable } = initValue;
 
     vTable.table.removeAttribute('height');
-    vTable.table.style.height = null;
+    vTable.table.style.height = '';
     vTable.forEachCellOfCurrentRow(cell => {
         if (cell.td) {
-            cell.td.style.height = cell.td == td ? `${cell.height / zoomScale + deltaY}px` : null;
+            cell.td.style.height =
+                cell.td == td && cell.height ? `${cell.height / zoomScale + deltaY}px` : '';
         }
     });
 
@@ -132,7 +133,7 @@ function onDraggingVertical(
     const isShiftPressed = event.shiftKey;
 
     if (isLastCell || isShiftPressed) {
-        vTable.table.style.width = null;
+        vTable.table.style.width = '';
     }
 
     const newWidthList = new Map<HTMLTableCellElement, number>();
@@ -155,7 +156,7 @@ function onDraggingVertical(
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
-            td.style.width = null;
+            td.style.width = '';
         });
     }
 

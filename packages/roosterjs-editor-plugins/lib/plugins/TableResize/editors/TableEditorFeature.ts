@@ -5,16 +5,16 @@ import Disposable from '../../../pluginUtils/Disposable';
  */
 export default interface TableEditFeature {
     node: Node;
-    div: HTMLDivElement;
-    featureHandler: Disposable;
+    div: HTMLDivElement | undefined;
+    featureHandler: Disposable | undefined;
 }
 
 /**
  * @internal
  */
 export function disposeTableEditFeature(resizer: TableEditFeature) {
-    resizer.div.parentNode?.removeChild(resizer.div);
-    resizer.div = null;
-    resizer.featureHandler.dispose();
-    resizer.featureHandler = null;
+    resizer.div?.parentNode?.removeChild(resizer.div);
+    resizer.div = undefined;
+    resizer.featureHandler?.dispose();
+    resizer.featureHandler = undefined;
 }

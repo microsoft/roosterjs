@@ -15,10 +15,10 @@ const TABLE_RESIZER_LENGTH = 12;
  * TableResize plugin, provides the ability to resize a table by drag-and-drop
  */
 export default class TableResize implements EditorPlugin {
-    private editor: IEditor;
-    private onMouseMoveDisposer: () => void;
-    private tableRectMap: { table: HTMLTableElement; rect: Rect }[] = null;
-    private tableEditor: TableEditor;
+    private editor: IEditor | null = null;
+    private onMouseMoveDisposer: (() => void) | null = null;
+    private tableRectMap: { table: HTMLTableElement; rect: Rect }[] | null = null;
+    private tableEditor: TableEditor | null = null;
 
     /**
      * Construct a new instance of TableResize plugin
@@ -46,14 +46,14 @@ export default class TableResize implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.onMouseMoveDisposer = this.editor.addDomEventHandler({ mousemove: this.onMouseMove });
+        this.onMouseMoveDisposer = this.editor.addDomEventHandler('mousemove', this.onMouseMove);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.onMouseMoveDisposer();
+        this.onMouseMoveDisposer?.();
         this.invalidateTableRects();
         this.setTableEditor(null);
         this.editor = null;
@@ -75,43 +75,47 @@ export default class TableResize implements EditorPlugin {
         }
     }
 
-    private onMouseMove = (e: MouseEvent) => {
-        if (e.buttons > 0) {
-            return;
-        }
+    private onMouseMove = (e: Event) => {
+        if (e instanceof MouseEvent && this.editor) {
+            if (e.buttons > 0) {
+                return;
+            }
 
-        this.ensureTableRects();
+            this.ensureTableRects();
 
-        const editorWindow = this.editor.getDocument().defaultView;
-        const x = e.pageX - editorWindow.scrollX;
-        const y = e.pageY - editorWindow.scrollY;
-        let currentTable: HTMLTableElement | null = null;
+            const editorWindow = this.editor.getDocument().defaultView;
+            if (editorWindow && this.tableRectMap) {
+                const x = e.pageX - editorWindow.scrollX;
+                const y = e.pageY - editorWindow.scrollY;
+                let currentTable: HTMLTableElement | null = null;
 
-        for (let i = this.tableRectMap.length - 1; i >= 0; i--) {
-            const { table, rect } = this.tableRectMap[i];
+                for (let i = this.tableRectMap.length - 1; i >= 0; i--) {
+                    const { table, rect } = this.tableRectMap[i];
 
-            if (
-                x >= rect.left - TABLE_RESIZER_LENGTH &&
-                x <= rect.right + TABLE_RESIZER_LENGTH &&
-                y >= rect.top - TABLE_RESIZER_LENGTH &&
-                y <= rect.bottom + TABLE_RESIZER_LENGTH
-            ) {
-                currentTable = table;
-                break;
+                    if (
+                        x >= rect.left - TABLE_RESIZER_LENGTH &&
+                        x <= rect.right + TABLE_RESIZER_LENGTH &&
+                        y >= rect.top - TABLE_RESIZER_LENGTH &&
+                        y <= rect.bottom + TABLE_RESIZER_LENGTH
+                    ) {
+                        currentTable = table;
+                        break;
+                    }
+                }
+
+                this.setTableEditor(currentTable, e);
+                this.tableEditor?.onMouseMove(x, y);
             }
         }
-
-        this.setTableEditor(currentTable, e);
-        this.tableEditor?.onMouseMove(x, y);
     };
 
-    private setTableEditor(table: HTMLTableElement, e?: MouseEvent) {
+    private setTableEditor(table: HTMLTableElement | null, e?: MouseEvent) {
         if (this.tableEditor && table != this.tableEditor.table) {
             this.tableEditor.dispose();
             this.tableEditor = null;
         }
 
-        if (!this.tableEditor && table) {
+        if (!this.tableEditor && table && this.editor) {
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
@@ -129,11 +133,11 @@ export default class TableResize implements EditorPlugin {
     private ensureTableRects() {
         if (!this.tableRectMap) {
             this.tableRectMap = [];
-            this.editor.queryElements('table', table => {
+            this.editor?.queryElements('table', table => {
                 if (table.isContentEditable) {
                     const rect = normalizeRect(table.getBoundingClientRect());
                     if (rect) {
-                        this.tableRectMap.push({
+                        this.tableRectMap?.push({
                             table,
                             rect,
                         });

@@ -13,14 +13,14 @@ export default function createTableSelector(
     table: HTMLTableElement,
     zoomScale: number,
     onFinishDragging: (table: HTMLTableElement) => void,
-    onShowHelperElement: (
+    onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    shouldShow: (rect: Rect) => boolean
-): TableEditorFeature {
+    shouldShow?: (rect: Rect) => boolean
+): TableEditorFeature | undefined {
     const rect = normalizeRect(table.getBoundingClientRect());
-    if (!shouldShow(rect)) {
+    if (shouldShow && rect && !shouldShow(rect)) {
         return undefined;
     }
 
@@ -70,7 +70,7 @@ export default function createTableSelector(
 interface DragAndDropContext {
     table: HTMLTableElement;
     zoomScale: number;
-    rect: Rect;
+    rect: Rect | null;
 }
 
 interface DragAndDropInitValue {

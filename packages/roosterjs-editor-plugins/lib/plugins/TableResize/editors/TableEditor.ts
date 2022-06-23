@@ -52,22 +52,22 @@ const INSERTER_HOVER_OFFSET = 5;
  */
 export default class TableEditor {
     // 1, 2 - Insert a column or a row
-    private horizontalInserter: TableEditFeature;
-    private verticalInserter: TableEditFeature;
+    private horizontalInserter: TableEditFeature | undefined;
+    private verticalInserter: TableEditFeature | undefined;
 
     // 3, 4 - Resize a column or a row from a cell
-    private horizontalResizer: TableEditFeature;
-    private verticalResizer: TableEditFeature;
+    private horizontalResizer: TableEditFeature | undefined;
+    private verticalResizer: TableEditFeature | undefined;
 
     // 5 - Resize whole table
-    private tableResizer: TableEditFeature;
+    private tableResizer: TableEditFeature | undefined;
 
     // 6 - Select whole table
-    private tableSelector: TableEditFeature;
+    private tableSelector: TableEditFeature | undefined;
 
     private isRTL: boolean;
-    private start: NodePosition;
-    private end: NodePosition;
+    private start: NodePosition | undefined;
+    private end: NodePosition | undefined;
 
     constructor(
         private editor: IEditor,
@@ -183,7 +183,7 @@ export default class TableEditor {
         }
     }
 
-    private setInserterTd(td: HTMLTableCellElement, isHorizontal?: boolean) {
+    private setInserterTd(td: HTMLTableCellElement | null, isHorizontal?: boolean) {
         const inserter = isHorizontal ? this.horizontalInserter : this.verticalInserter;
         if (inserter && inserter.node != td) {
             this.disposeTableInserter();
@@ -194,7 +194,7 @@ export default class TableEditor {
                 this.editor,
                 td,
                 this.isRTL,
-                isHorizontal,
+                !isHorizontal,
                 this.onInserted,
                 this.onShowHelperElement
             );
@@ -209,43 +209,45 @@ export default class TableEditor {
     private disposeTableResizer() {
         if (this.tableResizer) {
             disposeTableEditFeature(this.tableResizer);
-            this.tableResizer = null;
+            this.tableResizer = undefined;
         }
     }
 
     private disposeTableInserter() {
         if (this.horizontalInserter) {
             disposeTableEditFeature(this.horizontalInserter);
-            this.horizontalInserter = null;
+            this.horizontalInserter = undefined;
         }
         if (this.verticalInserter) {
             disposeTableEditFeature(this.verticalInserter);
-            this.verticalInserter = null;
+            this.verticalInserter = undefined;
         }
     }
 
     private disposeCellResizers() {
         if (this.horizontalResizer) {
             disposeTableEditFeature(this.horizontalResizer);
-            this.horizontalResizer = null;
+            this.horizontalResizer = undefined;
         }
         if (this.verticalResizer) {
             disposeTableEditFeature(this.verticalResizer);
-            this.verticalResizer = null;
+            this.verticalResizer = undefined;
         }
     }
 
     private disposeTableSelector() {
         if (this.tableSelector) {
             disposeTableEditFeature(this.tableSelector);
-            this.tableSelector = null;
+            this.tableSelector = undefined;
         }
     }
 
     private onFinishEditing = (): false => {
         this.editor.focus();
-        this.editor.select(this.start, this.end);
-        this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
+        if (this.start && this.end) {
+            this.editor.select(this.start, this.end);
+        }
+        this.editor.addUndoSnapshot(undefined /*callback*/, ChangeSource.Format);
         this.onChanged();
         return false;
     };
