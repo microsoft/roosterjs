@@ -218,10 +218,6 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         });
     };
 
-    const getListId = (): string => {
-        return listId;
-    };
-
     const getSearchResult = (searchValue: string, mode: EmojiPaneMode): Emoji[] => {
         const isQuickMode = mode === EmojiPaneMode.Quick;
         if (!searchValue) {
@@ -244,7 +240,6 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
             showFullPicker,
             getSearchResult,
             setSearch,
-            getListId,
             getSelectedEmoji,
             normalizeSearchText,
             getEmojiIconId,
@@ -256,7 +251,6 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
             getSearchResult,
             setSearch,
             getEmojiIconId,
-            getListId,
             getSelectedEmoji,
             normalizeSearchText,
         ]
