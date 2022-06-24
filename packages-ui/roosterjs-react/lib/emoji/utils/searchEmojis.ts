@@ -26,10 +26,7 @@ export function searchEmojis(search: string, strings: Record<string, string>): E
     return fullMatch.concat(partialMatch);
 }
 
-/**
- * @internal
- */
-export function matchShortcut(search: string): Emoji {
+function matchShortcut(search: string): Emoji {
     let result: Emoji;
     search = ' ' + search + ' ';
     forEachEmoji((emoji: Emoji) => {
