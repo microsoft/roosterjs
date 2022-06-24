@@ -16,7 +16,7 @@ interface EmojiICallOutProps {
     cursorRect: DOMRect;
     strings: Record<string, string>;
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void;
-    paneRef: (ref: EmojiPane) => void;
+    paneRef: React.RefObject<EmojiPane>;
     onHideCallout: () => void;
     searchBoxString?: LocalizedStrings<EmojiStringKeys>;
     dismiss: () => void;
@@ -100,8 +100,8 @@ export default function showEmojiCallout(
     cursorRect: DOMRect,
     strings: Record<string, string>,
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void,
-    paneRef: (ref: EmojiPane) => void,
-    emojiCalloutRef: (ref: EmojiICallout) => void,
+    paneRef: React.RefObject<EmojiPane>,
+    emojiCalloutRef: React.RefObject<EmojiICallout>,
     dismiss: () => void,
     onHideCallout: () => void,
     baseId: number,

@@ -559,7 +559,7 @@ export function showEmojiPane(
     onSelect: (emoji: Emoji, wordBeforeCursor: string) => void,
     strings: Record<string, string>,
     classNames: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>,
-    paneRef: (ref: EmojiPane) => void,
+    paneRef: React.RefObject<EmojiPane>,
     baseId: number,
     searchBoxString?: LocalizedStrings<EmojiStringKeys>
 ) {

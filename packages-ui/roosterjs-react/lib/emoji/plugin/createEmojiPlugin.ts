@@ -21,8 +21,8 @@ import {
     EmojiFamilyStrings,
     EmojiKeywordStrings,
 } from '../type/EmojiStrings';
+import React = require('react');
 
-const EMOJI_SEARCH_DELAY = 300;
 const KEYCODE_COLON = 186;
 const KEYCODE_COLON_FIREFOX = 59;
 
@@ -38,11 +38,11 @@ class EmojiPlugin implements ReactEditorPlugin {
     private eventHandledOnKeyDown: boolean;
     private canUndoEmoji: boolean;
     private isSuggesting: boolean;
-    private pane: EmojiPane;
+    private paneRef = React.createRef<EmojiPane>();
     private timer: number;
     private uiUtilities: UIUtilities | null = null;
     private strings: Record<string, string>;
-    private emojiCalloutRef: EmojiICallout | null = null;
+    private emojiCalloutRef = React.createRef<EmojiICallout>();
     private baseId = 0;
 
     constructor(private searchBoxStrings?: LocalizedStrings<EmojiStringKeys>) {
@@ -63,7 +63,7 @@ class EmojiPlugin implements ReactEditorPlugin {
 
     public dispose() {
         this.setIsSuggesting(false);
-        this.emojiCalloutRef.dismiss();
+        this.emojiCalloutRef.current?.dismiss();
         this.editor = null;
         this.baseId = 0;
     }
@@ -113,7 +113,7 @@ class EmojiPlugin implements ReactEditorPlugin {
         let emoji: Emoji;
         switch (event.rawEvent.which) {
             case KeyCodes.enter:
-                const selectedEmoji = this.pane.getSelectedEmoji();
+                const selectedEmoji = this.paneRef.current.getSelectedEmoji();
                 // check if selection is on the "..." and show full picker if so, otherwise try to apply emoji
                 if (this.tryShowFullPicker(event, selectedEmoji, wordBeforeCursor)) {
                     break;
@@ -144,7 +144,7 @@ class EmojiPlugin implements ReactEditorPlugin {
         }
 
         this.handleEventOnKeyDown(event);
-        this.pane.showFullPicker(wordBeforeCursor);
+        this.paneRef.current?.showFullPicker(wordBeforeCursor);
         return true;
     }
 
@@ -169,14 +169,11 @@ class EmojiPlugin implements ReactEditorPlugin {
 
         const wordBeforeCursor = this.getWordBeforeCursor(event);
         if (wordBeforeCursor) {
-            this.timer = this.editor.getDocument().defaultView.setTimeout(() => {
-                if (this.pane) {
-                    this.pane.setSearch(wordBeforeCursor);
-                    this.timer = null;
-                } else {
-                    this.setIsSuggesting(false);
-                }
-            }, EMOJI_SEARCH_DELAY);
+            if (this.paneRef) {
+                this.paneRef.current.setSearch(wordBeforeCursor);
+            } else {
+                this.setIsSuggesting(false);
+            }
         } else {
             this.setIsSuggesting(false);
         }
@@ -196,17 +193,8 @@ class EmojiPlugin implements ReactEditorPlugin {
         }
     }
 
-    private paneRef = (ref: EmojiPane): void => {
-        this.pane = ref;
-    };
-
-    private getEmojiCalloutRef = (ref: EmojiICallout) => {
-        this.emojiCalloutRef = ref;
-    };
-
     private onDismiss = () => {
-        this.emojiCalloutRef = null;
-        this.pane = null;
+        this.emojiCalloutRef.current?.dismiss();
     };
 
     private getCallout() {
@@ -219,7 +207,7 @@ class EmojiPlugin implements ReactEditorPlugin {
             this.strings,
             this.onSelectFromPane,
             this.paneRef,
-            this.getEmojiCalloutRef,
+            this.emojiCalloutRef,
             this.onDismiss,
             this.onHideCallout,
             this.baseId,
@@ -231,7 +219,7 @@ class EmojiPlugin implements ReactEditorPlugin {
 
     private onSelectFromPane = (emoji: Emoji, wordBeforeCursor: string): void => {
         if (emoji === MoreEmoji) {
-            this.pane.showFullPicker(wordBeforeCursor);
+            this.paneRef.current.showFullPicker(wordBeforeCursor);
             return;
         }
 
