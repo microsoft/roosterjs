@@ -186,7 +186,7 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
  * @param position Target position
  * @param strings Localize string for this component
  * @param onPaste A callback to be called when user click on a paste button
- * @param ref Referenace object for this component
+ * @param ref Reference object for this component
  */
 export default function showPasteOptionPane(
     uiUtilities: UIUtilities,
