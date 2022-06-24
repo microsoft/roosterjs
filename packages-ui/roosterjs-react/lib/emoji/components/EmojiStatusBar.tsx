@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Emoji } from '../type/Emoji';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { Strings } from '../type/Strings';
 import { Theme, useTheme } from '@fluentui/react/lib/Theme';
 import { TooltipHost, TooltipOverflowMode } from '@fluentui/react/lib/Tooltip';
 /**
@@ -11,7 +10,7 @@ import { TooltipHost, TooltipOverflowMode } from '@fluentui/react/lib/Tooltip';
  */
 export interface EmojiStatusBarProps {
     emoji: Emoji;
-    strings: Strings;
+    strings: Record<string, string>;
     hasResult: boolean;
 }
 

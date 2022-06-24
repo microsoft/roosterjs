@@ -1,43 +1,50 @@
 import * as React from 'react';
-import EmojiPane, { EmojiPaneMode } from './EmojiPane';
+import EmojiPane from './EmojiPane';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
 import { Emoji } from '../type/Emoji';
+import { EmojiStringKeys } from '../type/EmojiStringKeys';
+import { LocalizedStrings, UIUtilities } from '../../common/index';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { Strings } from '../type/Strings';
 import { Theme, useTheme } from '@fluentui/react/lib/Theme';
-import { UIUtilities } from '../../common/index';
 
 /**
  * @internal
  * Emoji callout data
  */
-interface EmojiICallOutPorps {
+interface EmojiICallOutProps {
     cursorRect: DOMRect;
-    strings: Strings;
+    strings: Record<string, string>;
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void;
-    refreshCalloutDebounced: () => void;
-    onModeChanged: (newMode: EmojiPaneMode) => void;
     paneRef: (ref: EmojiPane) => void;
     onHideCallout: () => void;
-    searchPlaceholder?: string;
-    searchInputAriaLabel?: string;
+    searchBoxString?: LocalizedStrings<EmojiStringKeys>;
     dismiss: () => void;
 }
 
-function EmojiICallout(props: EmojiICallOutPorps) {
+const EmojiICallout = React.forwardRef(function EmojiCalloutFunc(
+    props: EmojiICallOutProps,
+    ref: React.Ref<EmojiICallout>
+) {
     const {
         cursorRect,
         strings,
         onSelectFromPane,
-        onModeChanged,
         paneRef,
         onHideCallout,
-        searchInputAriaLabel,
-        searchPlaceholder,
+        searchBoxString,
         dismiss,
     } = props;
     const [isCalloutVisible, toggleIsCalloutVisible] = React.useState(true);
+
+    React.useImperativeHandle(
+        ref,
+        () => ({
+            dismiss,
+        }),
+        [dismiss]
+    );
+
     const point = {
         x: cursorRect.left,
         y: (cursorRect.top + cursorRect.bottom) / 2,
@@ -46,10 +53,10 @@ function EmojiICallout(props: EmojiICallOutPorps) {
     if (!isCalloutVisible) {
         onHideCallout();
     }
-    const toogleCallout = () => {
+    const toogleCallout = React.useCallback(() => {
         toggleIsCalloutVisible(false);
         dismiss();
-    };
+    }, [dismiss]);
     const theme = useTheme();
     const classNames = getEmojiPaneClassName(theme);
     return (
@@ -65,52 +72,55 @@ function EmojiICallout(props: EmojiICallOutPorps) {
                         ref={paneRef}
                         classNames={classNames}
                         onSelect={onSelectFromPane}
-                        onModeChanged={onModeChanged}
                         strings={strings || {}}
                         hideStatusBar={!strings}
                         searchDisabled={!strings}
-                        searchInputAriaLabel={searchInputAriaLabel}
-                        searchPlaceholder={searchPlaceholder}
+                        searchBoxString={searchBoxString}
                     />
                 </Callout>
             )}
         </>
     );
+});
+
+/**
+ * @internal
+ */
+export interface EmojiICallout {
+    dismiss: () => void;
 }
 
 /**
  * @internal
  * Enable emoji callout
  */
-
 export default function showEmojiCallout(
     uiUtilities: UIUtilities,
     cursorRect: DOMRect,
-    strings: Strings,
+    strings: Record<string, string>,
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void,
-    refreshCalloutDebounced: () => void,
-    onModeChanged: (newMode: EmojiPaneMode) => void,
     paneRef: (ref: EmojiPane) => void,
+    emojiCalloutRef: (ref: EmojiICallout) => void,
+    dismiss: () => void,
     onHideCallout: () => void,
-    searchPlaceholder?: string,
-    searchInputAriaLabel?: string
+    searchBoxString?: LocalizedStrings<EmojiStringKeys>
 ) {
     let disposer: (() => void) | null = null;
     const onDismiss = () => {
         disposer?.();
         disposer = null;
+        dismiss();
     };
+
     disposer = uiUtilities.renderComponent(
         <EmojiICallout
+            ref={emojiCalloutRef}
             cursorRect={cursorRect}
             strings={strings}
             onSelectFromPane={onSelectFromPane}
-            refreshCalloutDebounced={refreshCalloutDebounced}
-            onModeChanged={onModeChanged}
             paneRef={paneRef}
             onHideCallout={onHideCallout}
-            searchPlaceholder={searchPlaceholder}
-            searchInputAriaLabel={searchInputAriaLabel}
+            searchBoxString={searchBoxString}
             dismiss={onDismiss}
         />
     );

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Emoji } from '../type/Emoji';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { Strings } from '../type/Strings';
 import { Theme, useTheme } from '@fluentui/react/lib/Theme';
 
 /**
@@ -12,7 +11,7 @@ import { Theme, useTheme } from '@fluentui/react/lib/Theme';
 export interface EmojiIconProps {
     id: string;
     emoji: Emoji;
-    strings: Strings;
+    strings: Record<string, string>;
     onClick?: (e: React.MouseEvent<EventTarget>) => void;
     onMouseOver?: (e: React.MouseEvent<EventTarget>) => void;
     onFocus?: React.FocusEventHandler<HTMLButtonElement>;

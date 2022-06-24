@@ -1,1 +1,2 @@
-export { default as createEmojiPlugin, EmojiPluginOptions } from './plugin/createEmojiPlugin';
+export { default as createEmojiPlugin } from './plugin/createEmojiPlugin';
+export { EmojiStringKeys } from './type/EmojiStringKeys';

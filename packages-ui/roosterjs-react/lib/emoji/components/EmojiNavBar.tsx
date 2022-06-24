@@ -4,7 +4,6 @@ import { EmojiFabricIconCharacterMap, EmojiFamilyKeys, EmojiList } from '../util
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { Strings } from '../type/Strings';
 import { Theme, useTheme } from '@fluentui/react/lib/Theme';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 
@@ -16,7 +15,7 @@ export interface EmojiNavBarProps {
     onClick?: (selected: string) => void;
     currentSelected?: string;
     getTabId?: (selected: string) => string;
-    strings: Strings;
+    strings: Record<string, string>;
 }
 
 /**
@@ -49,7 +48,7 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
                                     [classNames.selected]: selected,
                                 })}
                                 key={key}
-                                onClick={onFamilyClick.bind(this, key)}
+                                onClick={onFamilyClick.bind(onclick, key)}
                                 id={getTabId(key)}
                                 role="tab"
                                 aria-selected={selected}

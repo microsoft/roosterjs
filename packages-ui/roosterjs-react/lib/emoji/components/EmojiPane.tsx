@@ -2,16 +2,16 @@ import * as React from 'react';
 import EmojiIcon, { EmojiIconProps } from './EmojiIcon';
 import EmojiNavBar, { EmojiNavBarProps } from './EmojiNavBar';
 import EmojiStatusBar, { EmojiStatusBarProps } from './EmojiStatusBar';
-import { AriaAttributes } from '../type/AriaAttributes';
 import { Callout, DirectionalHint, ICalloutProps } from '@fluentui/react/lib/Callout';
 import { CommonEmojis, EmojiFamilyKeys, EmojiList, MoreEmoji } from '../utils/emojiList';
 import { css, KeyCodes } from '@fluentui/react/lib/Utilities';
 import { Emoji } from '../type/Emoji';
+import { EmojiStringKeys } from '../type/EmojiStringKeys';
 import { FocusZone } from '@fluentui/react/lib/FocusZone';
+import { getLocalizedString, LocalizedStrings } from '../../common/index';
 import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 import { ITextField, TextField } from '@fluentui/react/lib/TextField';
 import { searchEmojis } from '../utils/searchEmojis';
-import { Strings } from '../type/Strings';
 
 // "When a div contains an element that is bigger (either taller or wider) than the parent and has the property
 // overflow-x or overflow-y set to any value, then it can receive the focus."
@@ -77,15 +77,12 @@ export interface EmojiPaneState {
  * Emoji Pane customizable data
  */
 export interface EmojiPaneProps {
-    onLayoutChanged?: () => void;
-    onModeChanged: (newMode: EmojiPaneMode, previousMode: EmojiPaneMode) => void;
     searchDisabled?: boolean;
     hideStatusBar?: boolean;
     navBarProps?: Partial<EmojiNavBarProps>;
     statusBarProps?: Partial<EmojiStatusBarProps>;
     emojiIconProps?: Partial<EmojiIconProps>;
-    searchPlaceholder?: string;
-    searchInputAriaLabel?: string;
+    searchBoxString?: LocalizedStrings<EmojiStringKeys>;
     classNames?: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>;
 }
 
@@ -110,9 +107,19 @@ interface EmojiPaneStyle {
  */
 export interface InternalEmojiPaneProps extends EmojiPaneProps {
     onSelect: (emoji: Emoji, wordBeforeCursor: string) => void;
-    strings: Strings;
+    strings: Record<string, string>;
     onLayoutChange?: () => void;
 }
+
+const AriaAttributes = {
+    ActiveDescendant: 'aria-activedescendant',
+    AutoComplete: 'aria-autocomplete',
+    Controls: 'aria-controls',
+    Expanded: 'aria-expanded',
+    HasPopup: 'aria-haspopup',
+    Owns: 'aria-owns',
+    Pressed: 'aria-pressed',
+};
 
 /**
  * @internal
@@ -143,17 +150,6 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
         return this.state.mode === EmojiPaneMode.Quick
             ? this.renderQuickPicker()
             : this.renderFullPicker();
-    }
-
-    public componentDidUpdate(_: EmojiPaneProps, prevState: EmojiPaneState) {
-        // call onLayoutChange when the call out parent of the EmojiPane needs to reorient itself on the page
-        const { onModeChanged } = this.props;
-        const { mode } = this.state;
-
-        if (mode !== prevState.mode) {
-            onModeChanged(mode, prevState.mode);
-            return;
-        }
     }
 
     public navigate(
@@ -270,7 +266,7 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
     }
 
     private renderFullPicker(): JSX.Element {
-        const { searchDisabled, searchPlaceholder, searchInputAriaLabel, classNames } = this.props;
+        const { searchDisabled, searchBoxString, classNames } = this.props;
         const emojiId = this.getEmojiIconId(this.getSelectedEmoji());
         const autoCompleteAttributes = {
             [AriaAttributes.AutoComplete]: 'list',
@@ -294,8 +290,16 @@ export default class EmojiPane extends React.PureComponent<InternalEmojiPaneProp
                         onKeyPress={this.onSearchKeyPress}
                         onKeyDown={this.onSearchKeyDown}
                         onFocus={this.onSearchFocus}
-                        placeholder={searchPlaceholder}
-                        ariaLabel={searchInputAriaLabel}
+                        placeholder={getLocalizedString(
+                            searchBoxString,
+                            'searchPlaceholder',
+                            'Search...'
+                        )}
+                        ariaLabel={getLocalizedString(
+                            searchBoxString,
+                            'searchInputAriaLabel',
+                            'Search...'
+                        )}
                         {...autoCompleteAttributes}
                     />
                 )}

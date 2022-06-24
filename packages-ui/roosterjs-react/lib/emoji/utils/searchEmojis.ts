@@ -1,11 +1,10 @@
 import { Emoji } from '../type/Emoji';
 import { forEachEmoji } from './emojiList';
-import { Strings } from '../type/Strings';
 
 /**
  * @internal
  */
-export function searchEmojis(search: string, strings: Strings): Emoji[] {
+export function searchEmojis(search: string, strings: Record<string, string>): Emoji[] {
     const shortcutMatch = matchShortcut(search);
     search = search.toLowerCase();
     const fullMatch: Emoji[] = shortcutMatch ? [shortcutMatch] : [];
