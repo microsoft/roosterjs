@@ -1,7 +1,7 @@
-import EmojiPane from '../components/EmojiPane';
 import showEmojiCallout, { EmojiICallout } from '../components/showEmojiCallout';
 import { Editor } from 'roosterjs-editor-core';
 import { Emoji } from '../type/Emoji';
+import { EmojiPane } from '../components/EmojiPane';
 import { EmojiStringKeys } from '../type/EmojiStringKeys';
 import { isModifierKey } from 'roosterjs-editor-dom';
 import { KeyCodes } from '@fluentui/react/lib/Utilities';
@@ -43,6 +43,7 @@ class EmojiPlugin implements ReactEditorPlugin {
     private uiUtilities: UIUtilities | null = null;
     private strings: Record<string, string>;
     private emojiCalloutRef: EmojiICallout | null = null;
+    private baseId = 0;
 
     constructor(private searchBoxStrings?: LocalizedStrings<EmojiStringKeys>) {
         this.strings = {
@@ -61,9 +62,10 @@ class EmojiPlugin implements ReactEditorPlugin {
     }
 
     public dispose() {
-        this.emojiCalloutRef.dismiss();
         this.setIsSuggesting(false);
+        this.emojiCalloutRef.dismiss();
         this.editor = null;
+        this.baseId = 0;
     }
 
     public initialize(editor: Editor): void {
@@ -104,13 +106,14 @@ class EmojiPlugin implements ReactEditorPlugin {
     private onKeyDownSuggestingDomEvent(event: PluginDomEvent): void {
         // If key is enter, try insert emoji at selection
         // If key is space and selection is shortcut, try insert emoji
-        const selectedEmoji = this.pane.getSelectedEmoji();
+
         const wordBeforeCursor = this.getWordBeforeCursor(event);
 
         // TODO: 1053
         let emoji: Emoji;
         switch (event.rawEvent.which) {
             case KeyCodes.enter:
+                const selectedEmoji = this.pane.getSelectedEmoji();
                 // check if selection is on the "..." and show full picker if so, otherwise try to apply emoji
                 if (this.tryShowFullPicker(event, selectedEmoji, wordBeforeCursor)) {
                     break;
@@ -170,6 +173,8 @@ class EmojiPlugin implements ReactEditorPlugin {
                 if (this.pane) {
                     this.pane.setSearch(wordBeforeCursor);
                     this.timer = null;
+                } else {
+                    this.setIsSuggesting(false);
                 }
             }, EMOJI_SEARCH_DELAY);
         } else {
@@ -201,9 +206,11 @@ class EmojiPlugin implements ReactEditorPlugin {
 
     private onDismiss = () => {
         this.emojiCalloutRef = null;
+        this.pane = null;
     };
 
     private getCallout() {
+        this.baseId++;
         const rangeNode = this.editor.getElementAtCursor();
         const rect = rangeNode.getBoundingClientRect();
         showEmojiCallout(
@@ -215,6 +222,7 @@ class EmojiPlugin implements ReactEditorPlugin {
             this.getEmojiCalloutRef,
             this.onDismiss,
             this.onHideCallout,
+            this.baseId,
             this.searchBoxStrings
         );
     }
@@ -238,6 +246,8 @@ class EmojiPlugin implements ReactEditorPlugin {
         this.isSuggesting = isSuggesting;
         if (this.isSuggesting) {
             this.getCallout();
+        } else if (this.emojiCalloutRef) {
+            this.onDismiss();
         }
     }
 

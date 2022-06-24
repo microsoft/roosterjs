@@ -1,7 +1,7 @@
 import * as React from 'react';
-import EmojiPane from './EmojiPane';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
 import { Emoji } from '../type/Emoji';
+import { EmojiPane, showEmojiPane } from './EmojiPane';
 import { EmojiStringKeys } from '../type/EmojiStringKeys';
 import { LocalizedStrings, UIUtilities } from '../../common/index';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
@@ -20,6 +20,7 @@ interface EmojiICallOutProps {
     onHideCallout: () => void;
     searchBoxString?: LocalizedStrings<EmojiStringKeys>;
     dismiss: () => void;
+    baseId: number;
 }
 
 const EmojiICallout = React.forwardRef(function EmojiCalloutFunc(
@@ -30,10 +31,11 @@ const EmojiICallout = React.forwardRef(function EmojiCalloutFunc(
         cursorRect,
         strings,
         onSelectFromPane,
-        paneRef,
         onHideCallout,
         searchBoxString,
         dismiss,
+        paneRef,
+        baseId,
     } = props;
     const [isCalloutVisible, toggleIsCalloutVisible] = React.useState(true);
 
@@ -68,15 +70,14 @@ const EmojiICallout = React.forwardRef(function EmojiCalloutFunc(
                     isBeakVisible={false}
                     gapSpace={gap}
                     onDismiss={toogleCallout}>
-                    <EmojiPane
-                        ref={paneRef}
-                        classNames={classNames}
-                        onSelect={onSelectFromPane}
-                        strings={strings || {}}
-                        hideStatusBar={!strings}
-                        searchDisabled={!strings}
-                        searchBoxString={searchBoxString}
-                    />
+                    {showEmojiPane(
+                        onSelectFromPane,
+                        strings,
+                        classNames,
+                        paneRef,
+                        baseId,
+                        searchBoxString
+                    )}
                 </Callout>
             )}
         </>
@@ -103,6 +104,7 @@ export default function showEmojiCallout(
     emojiCalloutRef: (ref: EmojiICallout) => void,
     dismiss: () => void,
     onHideCallout: () => void,
+    baseId: number,
     searchBoxString?: LocalizedStrings<EmojiStringKeys>
 ) {
     let disposer: (() => void) | null = null;
@@ -121,6 +123,7 @@ export default function showEmojiCallout(
             paneRef={paneRef}
             onHideCallout={onHideCallout}
             searchBoxString={searchBoxString}
+            baseId={baseId}
             dismiss={onDismiss}
         />
     );
