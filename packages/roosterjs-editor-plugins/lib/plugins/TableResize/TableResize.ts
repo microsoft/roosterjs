@@ -117,7 +117,7 @@ export default class TableResize implements EditorPlugin {
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
-                e
+                e.currentTarget
             );
         }
     }

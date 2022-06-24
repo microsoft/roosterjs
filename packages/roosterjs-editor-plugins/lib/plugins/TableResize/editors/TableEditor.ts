@@ -77,7 +77,7 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private event?: MouseEvent
+        private eventTarget?: EventTarget
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
@@ -93,7 +93,10 @@ export default class TableEditor {
             editor.getZoomScale(),
             this.onSelect,
             this.onShowHelperElement,
-            this.getShouldShowTableSelectorHandler(this.editor.getScrollContainer(), this.event)
+            this.getShouldShowTableSelectorHandler(
+                this.editor.getScrollContainer(),
+                this.eventTarget
+            )
         );
     }
 
@@ -306,15 +309,11 @@ export default class TableEditor {
 
     private getShouldShowTableSelectorHandler(
         scrollContainer: HTMLElement,
-        ev?: MouseEvent
+        eventTarget?: EventTarget
     ): (rect: Rect) => boolean {
-        if (
-            ev?.currentTarget &&
-            safeInstanceOf(ev.currentTarget, 'HTMLElement') &&
-            scrollContainer
-        ) {
+        if (eventTarget && safeInstanceOf(eventTarget, 'HTMLElement') && scrollContainer) {
             const scrollContainerRect = normalizeRect(scrollContainer.getBoundingClientRect());
-            const containerRect = normalizeRect(ev.currentTarget.getBoundingClientRect());
+            const containerRect = normalizeRect(eventTarget.getBoundingClientRect());
 
             if (scrollContainerRect && containerRect) {
                 const scrollContainerVisibleTop =
