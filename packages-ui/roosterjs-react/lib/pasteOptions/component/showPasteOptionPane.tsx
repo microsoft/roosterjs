@@ -186,27 +186,24 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
  * @param position Target position
  * @param strings Localize string for this component
  * @param onPaste A callback to be called when user click on a paste button
- * @param onDismissed A callback to be called when this component is dismissed
- * @param onGetRef A callback to be called to set a reference of this component
+ * @param ref Referenace object for this component
  */
 export default function showPasteOptionPane(
     uiUtilities: UIUtilities,
     position: NodePosition,
     strings: LocalizedStrings<PasteOptionStringKeys>,
     onPaste: (key: PasteOptionButtonKeys) => void,
-    onDismissed: () => void,
-    onGetRef: (ref: PasteOptionPane) => void
+    ref: React.RefObject<PasteOptionPane>
 ) {
     let disposer: (() => void) | null = null;
     const onDismiss = () => {
         disposer?.();
         disposer = null;
-        onDismissed();
     };
 
     disposer = uiUtilities.renderComponent(
         <PasteOptionComponent
-            ref={onGetRef}
+            ref={ref}
             position={position}
             strings={strings}
             isRtl={uiUtilities.isRightToLeft()}
