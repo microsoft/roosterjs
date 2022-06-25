@@ -271,7 +271,6 @@ function parseImportFrom(content, currentFileName, queue, baseDir, projDir, exte
             imports.forEach(x => {
                 newContent = newContent.replace(
                     new RegExp(`(\\W|^)(${x})(\\W|$)`, 'gm'),
-
                     '$1' + replacedName + '.$2$3'
                 );
             });
