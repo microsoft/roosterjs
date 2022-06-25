@@ -11,11 +11,16 @@ import { IEditor } from 'roosterjs-editor-types';
 export default function setFontSize(editor: IEditor, fontSize: string) {
     // The browser provided execCommand only accepts 1-7 point value. In addition, it uses HTML <font> tag with size attribute.
     // <font> is not HTML5 standard (http://www.w3schools.com/tags/tag_font.asp).
-    applyListItemStyleWrap(editor, 'font-size', (element, isInnerNode) => {
-        element.style.fontSize = isInnerNode ? '' : fontSize;
-        let lineHeight = getComputedStyle(element, 'line-height');
-        if (lineHeight != 'normal') {
-            element.style.lineHeight = 'normal';
-        }
-    });
+    applyListItemStyleWrap(
+        editor,
+        'font-size',
+        (element, isInnerNode) => {
+            element.style.fontSize = isInnerNode ? '' : fontSize;
+            let lineHeight = getComputedStyle(element, 'line-height');
+            if (lineHeight != 'normal') {
+                element.style.lineHeight = 'normal';
+            }
+        },
+        'setFontSize'
+    );
 }

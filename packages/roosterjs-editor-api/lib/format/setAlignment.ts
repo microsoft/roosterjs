@@ -1,5 +1,6 @@
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import {
     createVListFromRegion,
     getSelectedBlockElementsInRegion,
@@ -9,7 +10,6 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     Alignment,
-    ChangeSource,
     DocumentCommand,
     ExperimentalFeatures,
     IEditor,
@@ -26,26 +26,30 @@ import type { CompatibleAlignment } from 'roosterjs-editor-types/lib/compatibleT
  * Alignment.Center, Alignment.Left, Alignment.Right
  */
 export default function setAlignment(editor: IEditor, alignment: Alignment | CompatibleAlignment) {
-    editor.addUndoSnapshot(() => {
-        const selection = editor.getSelectionRangeEx();
-        const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
-        const elementAtCursor = editor.getElementAtCursor();
+    formatUndoSnapshot(
+        editor,
+        () => {
+            const selection = editor.getSelectionRangeEx();
+            const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
+            const elementAtCursor = editor.getElementAtCursor();
 
-        if (
-            editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
-            isATable &&
-            isWholeTableSelected(new VTable(selection.table), selection.coordinates)
-        ) {
-            alignTable(selection, alignment);
-        } else if (
-            isList(elementAtCursor) &&
-            editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
-        ) {
-            alignList(editor, alignment);
-        } else {
-            alignText(editor, alignment);
-        }
-    }, ChangeSource.Format);
+            if (
+                editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
+                isATable &&
+                isWholeTableSelected(new VTable(selection.table), selection.coordinates)
+            ) {
+                alignTable(selection, alignment);
+            } else if (
+                isList(elementAtCursor) &&
+                editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
+            ) {
+                alignList(editor, alignment);
+            } else {
+                alignText(editor, alignment);
+            }
+        },
+        'rotateElement'
+    );
 }
 
 /**
@@ -95,10 +99,15 @@ function isList(element: HTMLElement) {
 }
 
 function alignList(editor: IEditor, alignment: Alignment | CompatibleAlignment) {
-    blockFormat(editor, (region, start, end) => {
-        const blocks = getSelectedBlockElementsInRegion(region);
-        const startNode = blocks[0].getStartNode();
-        const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
-        vList.setAlignment(start, end, alignment);
-    });
+    blockFormat(
+        editor,
+        (region, start, end) => {
+            const blocks = getSelectedBlockElementsInRegion(region);
+            const startNode = blocks[0].getStartNode();
+            const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
+            vList.setAlignment(start, end, alignment);
+        },
+        undefined /* beforeRunCallback */,
+        'alignList'
+    );
 }

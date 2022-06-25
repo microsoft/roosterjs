@@ -23,14 +23,18 @@ export default function changeFontSize(
     fontSizes: number[] = FONT_SIZES
 ) {
     let changeBase: 1 | -1 = change == FontSizeChange.Increase ? 1 : -1;
-    applyInlineStyle(editor, element => {
-        let pt = parseFloat(getComputedStyle(element, 'font-size'));
-        element.style.fontSize = getNewFontSize(pt, changeBase, fontSizes) + 'pt';
-        let lineHeight = getComputedStyle(element, 'line-height');
-        if (lineHeight != 'normal') {
-            element.style.lineHeight = 'normal';
-        }
-    });
+    applyInlineStyle(
+        editor,
+        element => {
+            let pt = parseFloat(getComputedStyle(element, 'font-size'));
+            element.style.fontSize = getNewFontSize(pt, changeBase, fontSizes) + 'pt';
+            let lineHeight = getComputedStyle(element, 'line-height');
+            if (lineHeight != 'normal') {
+                element.style.lineHeight = 'normal';
+            }
+        },
+        'changeFontSize'
+    );
 }
 
 /**
