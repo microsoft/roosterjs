@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
 import { EmojiFabricIconCharacterMap, EmojiFamilyKeys, EmojiList } from '../utils/emojiList';
-import { EmojiPaneStyle } from './EmojiPane';
+import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';

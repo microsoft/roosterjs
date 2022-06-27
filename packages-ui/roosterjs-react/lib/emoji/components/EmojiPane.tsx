@@ -9,7 +9,6 @@ import { Emoji } from '../type/Emoji';
 import { EmojiStringKeys } from '../type/EmojiStringKeys';
 import { FocusZone } from '@fluentui/react/lib/FocusZone';
 import { getLocalizedString, LocalizedStrings } from '../../common/index';
-import { IStyleSet } from '@fluentui/react/lib/Styling';
 import { ITextField, TextField } from '@fluentui/react/lib/TextField';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
@@ -73,31 +72,6 @@ export interface EmojiPaneState {
     currentFamily: EmojiFamilyKeys;
     search: string;
     searchInBox: string;
-}
-
-/**
- * @internal
- * EmojiPane Style classes
- */
-export interface EmojiPaneStyle {
-    quickPicker: IStyleSet;
-    tooltip: IStyleSet;
-    emojiTextInput: IStyleSet;
-    partialList: IStyleSet;
-    fullListContent: IStyleSet;
-    fullListBody: IStyleSet;
-    fullList: IStyleSet;
-    roosterEmojiPane: IStyleSet;
-    emoji: IStyleSet;
-    navBarButton: IStyleSet;
-    navBarTooltip: IStyleSet;
-    selected: IStyleSet;
-    navBar: IStyleSet;
-    statusBarDetails: IStyleSet;
-    statusBarDetailsContainer: IStyleSet;
-    statusBar: IStyleSet;
-    statusBarIcon: IStyleSet;
-    statusBarNoResultDetailsContainer: IStyleSet;
 }
 
 /**

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Emoji } from '../type/Emoji';
-import { EmojiPaneStyle } from './EmojiPane';
+import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
 import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 import { TooltipHost, TooltipOverflowMode } from '@fluentui/react/lib/Tooltip';
 /**
