@@ -12,5 +12,5 @@ import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
  * @param editor The editor instance
  */
 export default function toggleSuperscript(editor: IEditor) {
-    execCommand(editor, DocumentCommand.Superscript);
+    execCommand(editor, DocumentCommand.Superscript, 'toggleSuperscript');
 }

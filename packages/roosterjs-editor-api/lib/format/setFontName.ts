@@ -10,7 +10,12 @@ import { IEditor } from 'roosterjs-editor-types';
 export default function setFontName(editor: IEditor, fontName: string) {
     // The browser provided execCommand creates a HTML <font> tag with face attribute. <font> is not HTML5 standard
     // (http://www.w3schools.com/tags/tag_font.asp).
-    applyListItemStyleWrap(editor, 'font-family', (element, isInnerNode) => {
-        element.style.fontFamily = isInnerNode ? '' : fontName;
-    });
+    applyListItemStyleWrap(
+        editor,
+        'font-family',
+        (element, isInnerNode) => {
+            element.style.fontFamily = isInnerNode ? '' : fontName;
+        },
+        'setFontName'
+    );
 }

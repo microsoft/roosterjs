@@ -1,4 +1,5 @@
-import { ChangeSource, IEditor, QueryScope } from 'roosterjs-editor-types';
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import { IEditor, QueryScope } from 'roosterjs-editor-types';
 
 /**
  * Set image alt text for all selected images at selection. If no images is contained
@@ -11,9 +12,14 @@ import { ChangeSource, IEditor, QueryScope } from 'roosterjs-editor-types';
  */
 export default function setImageAltText(editor: IEditor, altText: string) {
     editor.focus();
-    editor.addUndoSnapshot(() => {
-        editor.queryElements('img', QueryScope.OnSelection, node =>
-            node.setAttribute('alt', altText)
-        );
-    }, ChangeSource.Format);
+
+    formatUndoSnapshot(
+        editor,
+        () => {
+            editor.queryElements('img', QueryScope.OnSelection, node =>
+                node.setAttribute('alt', altText)
+            );
+        },
+        'setImageAltText'
+    );
 }

@@ -1,11 +1,6 @@
+import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import { IEditor, PositionType, SelectionRangeTypes, TableOperation } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    IEditor,
-    PositionType,
-    SelectionRangeTypes,
-    TableOperation,
-} from 'roosterjs-editor-types';
 import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -19,20 +14,24 @@ export default function editTable(
 ) {
     let td = editor.getElementAtCursor('TD,TH') as HTMLTableCellElement;
     if (td) {
-        editor.addUndoSnapshot(() => {
-            let vtable = new VTable(td);
-            saveTableSelection(editor, vtable);
-            vtable.edit(operation);
-            vtable.writeBack();
+        formatUndoSnapshot(
+            editor,
+            () => {
+                let vtable = new VTable(td);
+                saveTableSelection(editor, vtable);
+                vtable.edit(operation);
+                vtable.writeBack();
 
-            editor.transformToDarkColor(vtable.table);
-            editor.focus();
-            let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
-            editor.select(
-                vtable.getCell(cellToSelect.newRow, cellToSelect.newCol).td,
-                PositionType.Begin
-            );
-        }, ChangeSource.Format);
+                editor.transformToDarkColor(vtable.table);
+                editor.focus();
+                let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
+                editor.select(
+                    vtable.getCell(cellToSelect.newRow, cellToSelect.newCol).td,
+                    PositionType.Begin
+                );
+            },
+            'editTable'
+        );
     }
 }
 

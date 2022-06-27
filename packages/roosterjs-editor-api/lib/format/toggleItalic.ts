@@ -10,5 +10,5 @@ import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
  * @param editor The editor instance
  */
 export default function toggleItalic(editor: IEditor) {
-    execCommand(editor, DocumentCommand.Italic);
+    execCommand(editor, DocumentCommand.Italic, 'toggleItalic');
 }
