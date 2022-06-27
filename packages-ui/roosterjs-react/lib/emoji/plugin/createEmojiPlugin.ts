@@ -9,7 +9,6 @@ import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/i
 import { MoreEmoji } from '../utils/emojiList';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
-    ChangeSource,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -108,29 +107,26 @@ class EmojiPlugin implements ReactEditorPlugin {
         // If key is space and selection is shortcut, try insert emoji
 
         const wordBeforeCursor = this.getWordBeforeCursor(event);
-
-        // TODO: 1053
-        let emoji: Emoji;
         switch (event.rawEvent.which) {
             case KeyCodes.enter:
                 const selectedEmoji = this.paneRef.current.getSelectedEmoji();
                 // check if selection is on the "..." and show full picker if so, otherwise try to apply emoji
                 if (this.tryShowFullPicker(event, selectedEmoji, wordBeforeCursor)) {
                     break;
+                } else {
+                    this.insertEmoji(selectedEmoji, wordBeforeCursor);
+                    this.handleEventOnKeyDown(event);
                 }
-                emoji = selectedEmoji;
+
                 break;
             case KeyCodes.left:
             case KeyCodes.right:
+                this.paneRef.current.navigate(event.rawEvent.which === KeyCodes.left ? -1 : 1);
                 this.handleEventOnKeyDown(event);
                 break;
             case KeyCodes.escape:
                 this.setIsSuggesting(false);
                 this.handleEventOnKeyDown(event);
-        }
-
-        if (emoji && (this.canUndoEmoji = this.insertEmoji(emoji, wordBeforeCursor))) {
-            this.handleEventOnKeyDown(event);
         }
     }
 
@@ -170,7 +166,7 @@ class EmojiPlugin implements ReactEditorPlugin {
         const wordBeforeCursor = this.getWordBeforeCursor(event);
         if (wordBeforeCursor) {
             if (this.paneRef) {
-                this.paneRef.current.setSearch(wordBeforeCursor);
+                this.paneRef.current?.setSearch(wordBeforeCursor);
             } else {
                 this.setIsSuggesting(false);
             }
@@ -193,10 +189,6 @@ class EmojiPlugin implements ReactEditorPlugin {
         }
     }
 
-    private onDismiss = () => {
-        this.emojiCalloutRef.current?.dismiss();
-    };
-
     private getCallout() {
         this.baseId++;
         const rangeNode = this.editor.getElementAtCursor();
@@ -208,7 +200,6 @@ class EmojiPlugin implements ReactEditorPlugin {
             this.onSelectFromPane,
             this.paneRef,
             this.emojiCalloutRef,
-            this.onDismiss,
             this.onHideCallout,
             this.baseId,
             this.searchBoxStrings
@@ -235,39 +226,25 @@ class EmojiPlugin implements ReactEditorPlugin {
         if (this.isSuggesting) {
             this.getCallout();
         } else if (this.emojiCalloutRef) {
-            this.onDismiss();
+            this.emojiCalloutRef.current?.dismiss();
         }
     }
 
-    private insertEmoji(emoji: Emoji, wordBeforeCursor: string): boolean {
-        let inserted = false;
-        this.editor.addUndoSnapshot();
-
+    private insertEmoji(emoji: Emoji, wordBeforeCursor: string) {
+        if (!wordBeforeCursor) {
+            return;
+        }
         const node = this.editor.getDocument().createElement('span');
         node.innerText = emoji.codePoint;
-        if (
-            wordBeforeCursor &&
-            replaceWithNode(this.editor, wordBeforeCursor, node, false /*exactMatch*/)
-        ) {
-            inserted = true;
-            this.canUndoEmoji = true;
 
-            // Update the editor cursor to be after the inserted node
-            this.editor.getDocument().defaultView.requestAnimationFrame(() => {
-                if (this.editor && this.editor.contains(node)) {
-                    this.editor.select(node, PositionType.After);
-                    this.editor.addUndoSnapshot();
-                }
-            });
-        } else {
-            inserted = this.editor.insertNode(node);
-        }
-
-        if (inserted) {
-            this.triggerChangeEvent();
-        }
-
-        return inserted;
+        this.editor.addUndoSnapshot(
+            () => {
+                replaceWithNode(this.editor, wordBeforeCursor, node, true /*exactMatch*/);
+                this.editor.select(node, PositionType.After);
+            },
+            null /*changeSource*/,
+            true /*canUndoByBackspace*/
+        );
     }
 
     private getWordBeforeCursor(event: PluginEvent): string {
@@ -275,10 +252,6 @@ class EmojiPlugin implements ReactEditorPlugin {
         const wordBeforeCursor = cursorData ? cursorData.getWordBefore() : null;
         const matches = EMOJI_BEFORE_COLON_REGEX.exec(wordBeforeCursor);
         return matches && matches.length > 2 && matches[0] === wordBeforeCursor ? matches[2] : null;
-    }
-
-    private triggerChangeEvent(): void {
-        this.editor.triggerContentChangedEvent(ChangeSource.SetContent);
     }
 
     private handleEventOnKeyDown(event: PluginDomEvent): void {

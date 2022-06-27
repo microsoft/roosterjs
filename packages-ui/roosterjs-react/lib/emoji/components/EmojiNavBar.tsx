@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { css, memoizeFunction } from '@fluentui/react/lib/Utilities';
+import { css } from '@fluentui/react/lib/Utilities';
 import { EmojiFabricIconCharacterMap, EmojiFamilyKeys, EmojiList } from '../utils/emojiList';
+import { EmojiPaneStyle } from './EmojiPane';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { Icon } from '@fluentui/react/lib/Icon';
-import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { Theme, useTheme } from '@fluentui/react/lib/Theme';
+import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 
 /**
@@ -16,21 +16,21 @@ export interface EmojiNavBarProps {
     currentSelected?: string;
     getTabId?: (selected: string) => string;
     strings: Record<string, string>;
+    classNames: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>;
 }
 
 /**
  * @internal
  */
 export default function EmojiNavBar(props: EmojiNavBarProps) {
-    const { currentSelected, getTabId, strings = {} } = props;
+    const { currentSelected, getTabId, strings = {}, classNames } = props;
     const keys = Object.keys(EmojiList) as EmojiFamilyKeys[];
     const onFamilyClick = (key: string) => {
         if (props.onClick) {
             props.onClick(key);
         }
     };
-    const theme = useTheme();
-    const classNames = getNavBarStyle(theme);
+
     return (
         // for each emoji family key, create a button to use as nav bar
         <div className={classNames.navBar} role="tablist">
@@ -65,39 +65,3 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
         </div>
     );
 }
-
-const getNavBarStyle = memoizeFunction((theme: Theme) => {
-    const pallete = theme.palette;
-    return mergeStyleSets({
-        navBar: {
-            position: 'absolute',
-            top: '-0.5px',
-            zIndex: 10,
-        },
-        navBarTooltip: {
-            display: 'inline-block',
-        },
-        navBarButton: {
-            height: '40px',
-            width: '40px',
-            border: '0',
-            borderBottom: 'solid 1px',
-            display: 'inline-block',
-            padding: '0',
-            margin: '0',
-            background: pallete.themeDark,
-
-            '&::-moz-focus-inner': {
-                border: 0,
-            },
-
-            '&:hover': {
-                cursor: 'default',
-            },
-        },
-        selected: {
-            borderBottom: '2px solid',
-            borderBottomColor: pallete.themeLighter,
-        },
-    });
-});

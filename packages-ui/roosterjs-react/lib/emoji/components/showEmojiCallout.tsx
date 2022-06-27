@@ -4,9 +4,6 @@ import { Emoji } from '../type/Emoji';
 import { EmojiPane, showEmojiPane } from './EmojiPane';
 import { EmojiStringKeys } from '../type/EmojiStringKeys';
 import { LocalizedStrings, UIUtilities } from '../../common/index';
-import { memoizeFunction } from '@fluentui/react/lib/Utilities';
-import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { Theme, useTheme } from '@fluentui/react/lib/Theme';
 
 /**
  * @internal
@@ -59,8 +56,7 @@ const EmojiICallout = React.forwardRef(function EmojiCalloutFunc(
         toggleIsCalloutVisible(false);
         dismiss();
     }, [dismiss]);
-    const theme = useTheme();
-    const classNames = getEmojiPaneClassName(theme);
+
     return (
         <>
             {isCalloutVisible && (
@@ -70,14 +66,7 @@ const EmojiICallout = React.forwardRef(function EmojiCalloutFunc(
                     isBeakVisible={false}
                     gapSpace={gap}
                     onDismiss={toogleCallout}>
-                    {showEmojiPane(
-                        onSelectFromPane,
-                        strings,
-                        classNames,
-                        paneRef,
-                        baseId,
-                        searchBoxString
-                    )}
+                    {showEmojiPane(onSelectFromPane, strings, paneRef, baseId, searchBoxString)}
                 </Callout>
             )}
         </>
@@ -102,7 +91,6 @@ export default function showEmojiCallout(
     onSelectFromPane: (emoji: Emoji, wordBeforeCursor: string) => void,
     paneRef: React.RefObject<EmojiPane>,
     emojiCalloutRef: React.RefObject<EmojiICallout>,
-    dismiss: () => void,
     onHideCallout: () => void,
     baseId: number,
     searchBoxString?: LocalizedStrings<EmojiStringKeys>
@@ -111,7 +99,6 @@ export default function showEmojiCallout(
     const onDismiss = () => {
         disposer?.();
         disposer = null;
-        dismiss();
     };
 
     disposer = uiUtilities.renderComponent(
@@ -128,76 +115,3 @@ export default function showEmojiCallout(
         />
     );
 }
-
-const calcMaxHeight = () => {
-    const buttonHeight = 40;
-    const rowsOfIcons = 6; // including family bar if shown
-    const bottomPaddingForContent = 5;
-    const maxHeightForContent = rowsOfIcons * buttonHeight + bottomPaddingForContent;
-    return maxHeightForContent.toString() + 'px';
-};
-
-const calcPaneWidth = () => {
-    const buttonWidth = 40;
-    const pivotItemCount = 7;
-    const paneHorizontalPadding = 1;
-    const paneWidth = buttonWidth * pivotItemCount + 2 * paneHorizontalPadding;
-    return paneWidth.toString() + 'px';
-};
-
-const getEmojiPaneClassName = memoizeFunction((theme: Theme) => {
-    const pallete = theme.palette;
-    return mergeStyleSets({
-        quickPicker: {
-            overflowY: 'hidden',
-            '.rooster-emoji-selected::after': {
-                content: '',
-                position: 'absolute',
-                left: '0px',
-                top: '0px',
-                bottom: '0px',
-                right: '0px',
-                zIndex: 1,
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'rgb(255, 255, 255)',
-                borderImage: 'initial',
-                outline: 'rgb(102, 102, 102) solid 1px',
-            },
-        },
-
-        tooltip: {
-            padding: '8px',
-        },
-
-        emojiTextInput: {
-            padding: '6px',
-        },
-
-        partialList: {
-            maxHeight: calcMaxHeight(),
-            overflow: 'hidden',
-            overflowY: 'scroll',
-        },
-
-        fullListContent: {
-            width: calcPaneWidth(),
-        },
-
-        fullListBody: {
-            maxHeight: calcMaxHeight(),
-            overflow: 'hidden',
-            overflowY: 'scroll',
-            height: calcMaxHeight(),
-        },
-
-        fullList: {
-            position: 'relative',
-        },
-
-        roosterEmojiPane: {
-            padding: '1px',
-            background: pallete.themeLight,
-        },
-    });
-});

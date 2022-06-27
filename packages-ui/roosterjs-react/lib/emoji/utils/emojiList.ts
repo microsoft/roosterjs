@@ -1,4 +1,5 @@
 import { Emoji } from '../type/Emoji';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 const Common1 = createEmoji('1f60a', ':) :-)');
 const common2 = createEmoji('1f609', ';) ;-)');
@@ -736,9 +737,9 @@ export const EmojiFabricIconCharacterMap = {
 export function forEachEmojiFamily(
     callback: (emojis: Emoji[], family: EmojiFamilyKeys) => boolean
 ): void {
-    const families = Object.keys(EmojiList);
+    const families = getObjectKeys(EmojiList);
     for (const family of families) {
-        if (!callback(EmojiList[family as EmojiFamilyKeys], family as EmojiFamilyKeys)) {
+        if (!callback(EmojiList[family], family)) {
             break;
         }
     }
@@ -759,7 +760,7 @@ export function forEachEmoji(callback: (emoji: Emoji) => boolean): void {
 }
 
 // get emoji code point from an emoji key
-function _getEmojiCodePoint(key: string): string {
+function getEmojiCodePoint(key: string): string {
     let unicode = parseInt(key, 16);
     if (isNaN(unicode)) {
         return null;
@@ -786,10 +787,10 @@ function createEmoji(key: string, shortcut?: string): Emoji {
         description: `emjD${key}`,
         keywords: `emjK${key}`,
         shortcut,
-        codePoint: _getEmojiCodePoint(key),
+        codePoint: getEmojiCodePoint(key),
     };
 }
 
 function createEmojiWithNoKeyword(key: string): Emoji {
-    return { key, description: `emjD${key}`, codePoint: _getEmojiCodePoint(key) };
+    return { key, description: `emjD${key}`, codePoint: getEmojiCodePoint(key) };
 }
