@@ -90,7 +90,7 @@ export default function createLink(
                 let currentInline = traverser.getNextInlineElement();
 
                 // list for removing unwanted lines
-                let deletionInlineList: Node[];
+                let deletionInlineList: Node[] = [];
 
                 while (currentInline) {
                     deletionInlineList.push(currentInline.getContainerNode());
