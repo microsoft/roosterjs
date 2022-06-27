@@ -117,6 +117,7 @@ class MainPane extends MainPaneBase {
     private snapshotPlugin: SnapshotPlugin;
     private ribbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
+    private emojiPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
@@ -395,7 +396,12 @@ class MainPane extends MainPaneBase {
         this.toggleablePlugins =
             this.toggleablePlugins || getToggleablePlugins(this.state.initState);
 
-        const plugins = [...this.toggleablePlugins, this.ribbonPlugin, this.pasteOptionPlugin];
+        const plugins = [
+            ...this.toggleablePlugins,
+            this.ribbonPlugin,
+            this.pasteOptionPlugin,
+            this.emojiPlugin,
+        ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
             arrayPush(plugins, this.getSidePanePlugins());

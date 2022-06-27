@@ -2,7 +2,6 @@ import BuildInPluginState from '../../../BuildInPluginState';
 import CodeElement from './CodeElement';
 import ContentEditCode from './ContentEditCode';
 import HyperLinkCode from './HyperLinkCode';
-import PickerPluginCode from './PickerPluginCode';
 import TableCellSelectionCode from './TableCellSelectionCode';
 import WatermarkCode from './WatermarkCode';
 import {
@@ -28,7 +27,6 @@ export default class PluginsCode extends CodeElement {
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.cutPasteListChain && new CutPasteListChainCode(),
             pluginList.tableResize && new TableResizeCode(),
-            pluginList.pickerPlugin && new PickerPluginCode(),
             pluginList.customReplace && new CustomReplaceCode(),
             pluginList.tableCellSelection && new TableCellSelectionCode(),
         ].filter(plugin => !!plugin);
