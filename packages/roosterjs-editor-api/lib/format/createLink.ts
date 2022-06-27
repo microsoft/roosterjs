@@ -98,7 +98,7 @@ export default function createLink(
                     currentInline = traverser.getNextInlineElement();
                 }
 
-                while (0 && deletionInlineList.length) {
+                while (deletionInlineList.length) {
                     editor.deleteNode(deletionInlineList.pop());
                 }
 
