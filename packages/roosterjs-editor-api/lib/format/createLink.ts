@@ -67,7 +67,6 @@ export default function createLink(
 
         editor.addUndoSnapshot(() => {
             let range = editor.getSelectionRange();
-
             let anchor: HTMLAnchorElement = null;
             if (range && range.collapsed) {
                 anchor = getAnchorNodeAtCursor(editor);
@@ -91,16 +90,14 @@ export default function createLink(
                 let currentInline = traverser.getNextInlineElement();
 
                 // list for removing unwanted lines
-                let deletionInlineList = [];
+                let deletionInlineList: Node[];
 
                 while (currentInline) {
                     deletionInlineList.push(currentInline.getContainerNode());
                     currentInline = traverser.getNextInlineElement();
                 }
 
-                while (deletionInlineList.length) {
-                    editor.deleteNode(deletionInlineList.pop());
-                }
+                deletionInlineList.forEach(node => editor.deleteNode(node));
 
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);
