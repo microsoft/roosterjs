@@ -17,7 +17,6 @@ export interface BuildInPluginList {
     tableCellSelection: boolean;
     tableResize: boolean;
     customReplace: boolean;
-    pickerPlugin: boolean;
     listEditMenu: boolean;
     imageEditMenu: boolean;
     tableEditMenu: boolean;
