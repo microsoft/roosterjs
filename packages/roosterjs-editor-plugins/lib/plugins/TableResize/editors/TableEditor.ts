@@ -77,7 +77,7 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private eventTarget?: EventTarget
+        eventTarget?: EventTarget
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
@@ -93,10 +93,7 @@ export default class TableEditor {
             editor.getZoomScale(),
             this.onSelect,
             this.onShowHelperElement,
-            this.getShouldShowTableSelectorHandler(
-                this.editor.getScrollContainer(),
-                this.eventTarget
-            )
+            this.getShouldShowTableSelectorHandler(this.editor.getScrollContainer(), eventTarget)
         );
     }
 
@@ -320,7 +317,9 @@ export default class TableEditor {
                     scrollContainer.scrollTop - scrollContainerRect.top;
 
                 return (rect: Rect) =>
-                    containerRect.top <= rect.top && scrollContainerVisibleTop <= rect.top;
+                    containerRect.top <= rect.top &&
+                    scrollContainerVisibleTop <= rect.top &&
+                    scrollContainerRect.top <= rect.top;
             }
         }
 
