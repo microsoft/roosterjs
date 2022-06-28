@@ -1,3 +1,4 @@
+import * as React from 'react';
 import showPasteOptionPane, { PasteOptionPane } from '../component/showPasteOptionPane';
 import { ButtonKeys, Buttons } from '../utils/buttons';
 import { ClipboardData, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
@@ -8,7 +9,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
     private clipboardData: ClipboardData | null = null;
     private editor: IEditor | null = null;
     private uiUtilities: UIUtilities | null = null;
-    private pasteOptionRef: PasteOptionPane | null = null;
+    private pasteOptionRef = React.createRef<PasteOptionPane>();
 
     constructor(private strings?: LocalizedStrings<PasteOptionStringKeys>) {}
 
@@ -21,16 +22,16 @@ class PasteOptionPlugin implements ReactEditorPlugin {
     }
 
     dispose() {
-        this.pasteOptionRef?.dismiss();
+        this.pasteOptionRef.current?.dismiss();
         this.editor = null;
     }
 
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.Scroll) {
-            if (this.pasteOptionRef) {
+            if (this.pasteOptionRef.current) {
                 this.showPasteOptionPane();
             }
-        } else if (this.pasteOptionRef) {
+        } else if (this.pasteOptionRef.current) {
             this.handlePasteOptionPaneEvent(event);
         } else if (event.eventType == PluginEventType.ContentChanged) {
             if (event.source == 'Paste') {
@@ -42,7 +43,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                     this.showPasteOptionPane();
                 }
             } else {
-                this.pasteOptionRef?.dismiss();
+                this.pasteOptionRef.current?.dismiss();
             }
         }
     }
@@ -53,22 +54,22 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
     private handlePasteOptionPaneEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.KeyDown) {
-            const selectedKey = this.pasteOptionRef.getSelectedKey();
+            const selectedKey = this.pasteOptionRef.current.getSelectedKey();
 
             if (!selectedKey) {
                 switch (event.rawEvent.which) {
                     case Keys.CTRL_LEFT:
-                        this.pasteOptionRef.setSelectedKey(ButtonKeys[0]);
+                        this.pasteOptionRef.current.setSelectedKey(ButtonKeys[0]);
                         cancelEvent(event.rawEvent);
                         break;
 
                     case Keys.ESCAPE:
-                        this.pasteOptionRef.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         cancelEvent(event.rawEvent);
                         break;
 
                     default:
-                        this.pasteOptionRef.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         break;
                 }
             } else {
@@ -76,7 +77,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
                 if (keyboardEvent.which != Keys.CTRL_LEFT && keyboardEvent.ctrlKey) {
                     // Dismiss the paste option when pressing hotkey CTRL+<any key>
-                    this.pasteOptionRef.dismiss();
+                    this.pasteOptionRef.current.dismiss();
                     return;
                 }
 
@@ -92,7 +93,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
                 switch (keyboardEvent.which) {
                     case Keys.ESCAPE:
-                        this.pasteOptionRef.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         break;
                     case Keys.LEFT:
                     case Keys.RIGHT:
@@ -101,7 +102,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                             (keyboardEvent.which == Keys.RIGHT) == this.uiUtilities.isRightToLeft()
                                 ? -1
                                 : 1;
-                        this.pasteOptionRef.setSelectedKey(
+                        this.pasteOptionRef.current.setSelectedKey(
                             ButtonKeys[
                                 (ButtonKeys.indexOf(selectedKey) + diff + buttonCount) % buttonCount
                             ]
@@ -114,7 +115,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                         // Noop
                         break;
                     default:
-                        this.pasteOptionRef.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         return;
                 }
 
@@ -122,10 +123,6 @@ class PasteOptionPlugin implements ReactEditorPlugin {
             }
         }
     }
-
-    private onDismissed = () => {
-        this.pasteOptionRef = null;
-    };
 
     private onPaste = (key: PasteOptionButtonKeys) => {
         if (this.clipboardData) {
@@ -149,12 +146,12 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                     break;
             }
 
-            this.pasteOptionRef?.setSelectedKey(key);
+            this.pasteOptionRef.current?.setSelectedKey(key);
         }
     };
 
     private showPasteOptionPane() {
-        this.pasteOptionRef?.dismiss();
+        this.pasteOptionRef.current?.dismiss();
 
         const focusedPosition = this.editor.getFocusedPosition();
 
@@ -163,8 +160,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
             focusedPosition,
             this.strings,
             this.onPaste,
-            this.onDismissed,
-            ref => (this.pasteOptionRef = ref)
+            this.pasteOptionRef
         );
     }
 }
