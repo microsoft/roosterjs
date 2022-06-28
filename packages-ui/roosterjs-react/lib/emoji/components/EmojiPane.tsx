@@ -269,26 +269,24 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         // note: we're using a callout since TooltipHost does not support manual trigger, and we need to show the tooltip since quick picker is shown
         // as an autocomplete menu (false focus based on transferring navigation keyboard event)
         return (
-            <>
-                <div id={listId} role="listbox">
-                    {emojiList}
-                    {emojiList && (
-                        <div
-                            id={listId}
-                            role="listbox"
-                            className={css(classNames.quickPicker, classNames.roosterEmojiPane)}>
-                            <Callout
-                                {...TooltipCalloutProps}
-                                role="tooltip"
-                                target={target}
-                                hidden={!content}
-                                className={classNames.tooltip}>
-                                {content}
-                            </Callout>
-                        </div>
-                    )}
-                </div>
-            </>
+            <div id={listId} role="listbox">
+                {emojiList}
+                {emojiList && (
+                    <div
+                        id={listId}
+                        role="listbox"
+                        className={css(classNames.quickPicker, classNames.roosterEmojiPane)}>
+                        <Callout
+                            {...TooltipCalloutProps}
+                            role="tooltip"
+                            target={target}
+                            hidden={!content}
+                            className={classNames.tooltip}>
+                            {content}
+                        </Callout>
+                    </div>
+                )}
+            </div>
         );
     };
 
