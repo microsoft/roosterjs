@@ -25,7 +25,7 @@ const initialState: BuildInPluginState = {
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
-    linkTitle: 'Ctrl+Click to follow the link: ' + UrlPlaceholder,
+    linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     experimentalFeatures: [
