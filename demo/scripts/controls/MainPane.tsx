@@ -36,6 +36,7 @@ import {
     UpdateMode,
     AllButtonKeys,
     createPasteOptionPlugin,
+    createEmojiPlugin,
 } from 'roosterjs-react';
 import {
     tableAlign,
@@ -144,6 +145,7 @@ class MainPane extends MainPaneBase {
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
+        this.emojiPlugin = createEmojiPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,

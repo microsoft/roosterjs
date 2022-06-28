@@ -22,4 +22,5 @@ export interface EmojiPaneStyle {
     statusBar: IStyleSet;
     statusBarIcon: IStyleSet;
     statusBarNoResultDetailsContainer: IStyleSet;
+    emojiSelected: IStyleSet;
 }
