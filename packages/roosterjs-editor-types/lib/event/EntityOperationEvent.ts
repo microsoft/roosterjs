@@ -3,13 +3,12 @@ import Entity from '../interface/Entity';
 import { EntityOperation } from '../enum/EntityOperation';
 import { PluginEventType } from '../enum/PluginEventType';
 import type { CompatibleEntityOperation } from '../compatibleEnum/EntityOperation';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
- * Provide a chance for plugins to handle entity related events.
- * See enum EntityOperation for more details about each operation
+ * Data of EntityOperationEvent
  */
-export default interface EntityOperationEvent
-    extends BasePluginEvent<PluginEventType.EntityOperation> {
+export interface EntityOperationEventData {
     /**
      * Operation to this entity
      */
@@ -38,3 +37,19 @@ export default interface EntityOperationEvent
      */
     contentForShadowEntity?: DocumentFragment;
 }
+
+/**
+ * Provide a chance for plugins to handle entity related events.
+ * See enum EntityOperation for more details about each operation
+ */
+export default interface EntityOperationEvent
+    extends EntityOperationEventData,
+        BasePluginEvent<PluginEventType.EntityOperation> {}
+
+/**
+ * Provide a chance for plugins to handle entity related events.
+ * See enum EntityOperation for more details about each operation
+ */
+export interface CompatibleEntityOperationEvent
+    extends EntityOperationEventData,
+        BasePluginEvent<CompatiblePluginEventType.EntityOperation> {}
