@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { css } from '@fluentui/react/lib/Utilities';
 import { Emoji } from '../type/Emoji';
 import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
 import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
@@ -29,7 +30,9 @@ export default function EmojiIcon(props: EmojiIconProps) {
         <button
             id={id}
             role="option"
-            className={classNames.emoji}
+            className={css(classNames.emoji, {
+                [classNames.emojiSelected]: isSelected,
+            })}
             onClick={onClick}
             onMouseOver={onMouseOver}
             onFocus={onFocus}
