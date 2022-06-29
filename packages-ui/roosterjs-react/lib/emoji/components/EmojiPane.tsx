@@ -271,21 +271,19 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         return (
             <div id={listId} role="listbox">
                 {emojiList}
-                {emojiList && (
-                    <div
-                        id={listId}
-                        role="listbox"
-                        className={css(classNames.quickPicker, classNames.roosterEmojiPane)}>
-                        <Callout
-                            {...TooltipCalloutProps}
-                            role="tooltip"
-                            target={target}
-                            hidden={!content}
-                            className={classNames.tooltip}>
-                            {content}
-                        </Callout>
-                    </div>
-                )}
+                <div
+                    id={listId}
+                    role="listbox"
+                    className={css(classNames.quickPicker, classNames.roosterEmojiPane)}>
+                    <Callout
+                        {...TooltipCalloutProps}
+                        role="tooltip"
+                        target={target}
+                        hidden={!content || !emojiList}
+                        className={classNames.tooltip}>
+                        {content}
+                    </Callout>
+                </div>
             </div>
         );
     };
