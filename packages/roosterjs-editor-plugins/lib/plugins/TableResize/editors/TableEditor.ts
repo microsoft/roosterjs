@@ -3,13 +3,20 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
+import {
+    getComputedStyle,
+    normalizeRect,
+    Position,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
     NodePosition,
     TableSelection,
     CreateElementData,
+    Rect,
 } from 'roosterjs-editor-types';
 
 const INSERTER_HOVER_OFFSET = 5;
@@ -69,7 +76,8 @@ export default class TableEditor {
         private onShowHelperElement?: (
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) => void
+        ) => void,
+        eventTarget?: EventTarget
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.tableResizer = createTableResizer(
@@ -84,7 +92,8 @@ export default class TableEditor {
             table,
             editor.getZoomScale(),
             this.onSelect,
-            this.onShowHelperElement
+            this.onShowHelperElement,
+            this.getShouldShowTableSelectorHandler(this.editor.getScrollContainer(), eventTarget)
         );
     }
 
@@ -271,26 +280,49 @@ export default class TableEditor {
         this.editor.focus();
         if (table) {
             const vTable = new VTable(table);
+            if (vTable.cells) {
+                const rows = vTable.cells.length - 1;
+                let lastCellIndex: number = 0;
+                vTable.cells[rows].forEach((cell, index) => {
+                    if (cell.td) {
+                        lastCellIndex = index;
+                    }
+                });
 
-            const rows = vTable.cells.length - 1;
-            let lastCellIndex: number = 0;
-            vTable.cells[rows].forEach((cell, index) => {
-                if (cell.td) {
-                    lastCellIndex = index;
-                }
-            });
-
-            const selection: TableSelection = {
-                firstCell: {
-                    x: 0,
-                    y: 0,
-                },
-                lastCell: {
-                    y: rows,
-                    x: lastCellIndex,
-                },
-            };
-            this.editor.select(table, selection);
+                const selection: TableSelection = {
+                    firstCell: {
+                        x: 0,
+                        y: 0,
+                    },
+                    lastCell: {
+                        y: rows,
+                        x: lastCellIndex,
+                    },
+                };
+                this.editor.select(table, selection);
+            }
         }
     };
+
+    private getShouldShowTableSelectorHandler(
+        scrollContainer: HTMLElement,
+        eventTarget?: EventTarget
+    ): (rect: Rect) => boolean {
+        if (eventTarget && safeInstanceOf(eventTarget, 'HTMLElement') && scrollContainer) {
+            const scrollContainerRect = normalizeRect(scrollContainer.getBoundingClientRect());
+            const containerRect = normalizeRect(eventTarget.getBoundingClientRect());
+
+            if (scrollContainerRect && containerRect) {
+                const scrollContainerVisibleTop =
+                    scrollContainer.scrollTop - scrollContainerRect.top;
+
+                return (rect: Rect) =>
+                    containerRect.top <= rect.top &&
+                    scrollContainerVisibleTop <= rect.top &&
+                    scrollContainerRect.top <= rect.top;
+            }
+        }
+
+        return () => true;
+    }
 }
