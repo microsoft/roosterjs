@@ -161,6 +161,7 @@ class EmojiPlugin implements ReactEditorPlugin {
         ) {
             this.editor.getDocument().defaultView.clearTimeout(this.timer);
             this.timer = null;
+            this.emojiCalloutRef.current?.dismiss();
         }
 
         const wordBeforeCursor = this.getWordBeforeCursor(event);
@@ -245,6 +246,8 @@ class EmojiPlugin implements ReactEditorPlugin {
             null /*changeSource*/,
             true /*canUndoByBackspace*/
         );
+
+        this.emojiCalloutRef.current?.dismiss();
     }
 
     private getWordBeforeCursor(event: PluginEvent): string {
