@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
-import { EmojiFabricIconCharacterMap, EmojiFamilyKeys, EmojiList } from '../utils/emojiList';
+import { EmojiFabricIconCharacterMap, EmojiList } from '../utils/emojiList';
 import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
@@ -24,7 +25,7 @@ export interface EmojiNavBarProps {
  */
 export default function EmojiNavBar(props: EmojiNavBarProps) {
     const { currentSelected, getTabId, strings = {}, classNames } = props;
-    const keys = Object.keys(EmojiList) as EmojiFamilyKeys[];
+    const keys = getObjectKeys(EmojiList);
     const onFamilyClick = (key: string) => {
         if (props.onClick) {
             props.onClick(key);
@@ -38,13 +39,14 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
                 {keys.map((key, index) => {
                     const selected = key === currentSelected;
                     const friendlyName = strings[key];
+
                     return (
                         <TooltipHost
                             hostClassName={classNames.navBarTooltip}
                             content={friendlyName}
                             key={key}>
                             <button
-                                className={css(classNames.navBarButton, 'emoji-nav-bar-button', {
+                                className={css(classNames.navBarButton, {
                                     [classNames.selected]: selected,
                                 })}
                                 key={key}
@@ -55,6 +57,7 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
                                 aria-label={friendlyName}
                                 data-is-focusable="true"
                                 aria-posinset={index + 1}
+                                tabIndex={0}
                                 aria-setsize={keys.length}>
                                 <Icon iconName={EmojiFabricIconCharacterMap[key]} />
                             </button>
