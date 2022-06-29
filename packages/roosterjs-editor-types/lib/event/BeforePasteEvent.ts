@@ -2,11 +2,12 @@ import BasePluginEvent from './BasePluginEvent';
 import ClipboardData from '../interface/ClipboardData';
 import HtmlSanitizerOptions from '../interface/HtmlSanitizerOptions';
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
- * Provides a chance for plugin to change the content before it is pasted into editor.
+ * Data of BeforePasteEvent
  */
-export default interface BeforePasteEvent extends BasePluginEvent<PluginEventType.BeforePaste> {
+export interface BeforePasteEventData {
     /**
      * An object contains all related data for pasting
      */
@@ -37,3 +38,17 @@ export default interface BeforePasteEvent extends BasePluginEvent<PluginEventTyp
      */
     htmlAttributes: Record<string, string>;
 }
+
+/**
+ * Provides a chance for plugin to change the content before it is pasted into editor.
+ */
+export default interface BeforePasteEvent
+    extends BeforePasteEventData,
+        BasePluginEvent<PluginEventType.BeforePaste> {}
+
+/**
+ * Provides a chance for plugin to change the content before it is pasted into editor.
+ */
+export interface CompatibleBeforePasteEvent
+    extends BeforePasteEventData,
+        BasePluginEvent<CompatiblePluginEventType.BeforePaste> {}
