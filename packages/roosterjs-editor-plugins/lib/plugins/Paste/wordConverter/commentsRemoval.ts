@@ -86,7 +86,8 @@ export default function commentsRemoval(
     });
 
     /**
-     * Remove comment related styles
+     * Remove styles related to Office Comments that can cause unwanted behaviors
+     * depending on the user client
      */
     chainSanitizerCallback(styleCallbacks, MSO_COMMENT_REFERENCE, () => false);
     chainSanitizerCallback(styleCallbacks, MSO_COMMENT_DATE, () => false);
