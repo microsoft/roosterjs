@@ -21,13 +21,10 @@ describe('listFeatures', () => {
 
     function runListPatternTest(text: string, expectedResult: boolean) {
         const root = document.createElement('div');
-        const range = document.createRange();
-        range.setStart(root, 0);
         const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
         editorIsFeatureEnabled.and.returnValue(false);
-
         const isAutoBulletTriggered = ListFeatures.autoBullet.shouldHandleEvent(null, editor, false)
             ? true
             : false;
@@ -36,11 +33,8 @@ describe('listFeatures', () => {
 
     function runTestWithNumberingStyles(text: string, expectedResult: boolean) {
         const root = document.createElement('div');
-        const range = document.createRange();
-        range.setStart(root, 0);
         const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
-        spyOn(mockedPosition, 'getRangeFromText').and.returnValue(range);
         editorIsFeatureEnabled.and.returnValue(true);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
 
@@ -57,10 +51,7 @@ describe('listFeatures', () => {
     function runTestWithBulletStyles(text: string, expectedResult: boolean) {
         const root = document.createElement('div');
         const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
-        const range = document.createRange();
-        range.setStart(root, 0);
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
-        spyOn(mockedPosition, 'getRangeFromText').and.returnValue(range);
         editorIsFeatureEnabled.and.returnValue(true);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
         const isAutoBulletTriggered = ListFeatures.autoBulletList.shouldHandleEvent(

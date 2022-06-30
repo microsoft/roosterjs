@@ -365,14 +365,11 @@ function shouldTriggerList(
     getListStyle: (text: string) => number
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
-    const textBeforeCursor = searcher.getSubStringBefore(3);
-    const isAtTheBeggingAtTheLine =
-        searcher.getRangeFromText(textBeforeCursor, true).startOffset === 0;
+    const textBeforeCursor = searcher.getSubStringBefore(4);
+    const itHasSpace = /\s/g.test(textBeforeCursor);
 
     return (
-        isAtTheBeggingAtTheLine &&
-        !searcher.getNearestNonTextInlineElement() &&
-        getListStyle(textBeforeCursor)
+        !itHasSpace && !searcher.getNearestNonTextInlineElement() && getListStyle(textBeforeCursor)
     );
 }
 
