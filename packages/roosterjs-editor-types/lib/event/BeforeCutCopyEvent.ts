@@ -1,10 +1,11 @@
 import BasePluginEvent from './BasePluginEvent';
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
- * Provides a chance for plugin to change the content before it is copied from editor.
+ * Data of BeforeCutCopyEvent
  */
-export default interface BeforeCutCopyEvent extends BasePluginEvent<PluginEventType.BeforeCutCopy> {
+export interface BeforeCutCopyEventData {
     /**
      * Raw DOM event
      */
@@ -25,3 +26,17 @@ export default interface BeforeCutCopyEvent extends BasePluginEvent<PluginEventT
      */
     isCut: boolean;
 }
+
+/**
+ * Provides a chance for plugin to change the content before it is copied from editor.
+ */
+export default interface BeforeCutCopyEvent
+    extends BeforeCutCopyEventData,
+        BasePluginEvent<PluginEventType.BeforeCutCopy> {}
+
+/**
+ * Provides a chance for plugin to change the content before it is copied from editor.
+ */
+export interface CompatibleBeforeCutCopyEvent
+    extends BeforeCutCopyEventData,
+        BasePluginEvent<CompatiblePluginEventType.BeforeCutCopy> {}
