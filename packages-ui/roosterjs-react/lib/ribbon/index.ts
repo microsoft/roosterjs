@@ -36,8 +36,6 @@ export {
     UndoButtonStringKey,
     RedoButtonStringKey,
     ClearFormatButtonStringKey,
-    TextColorKeys,
-    BackgroundColorKeys,
     AllButtonStringKeys,
     CellShadeButtonStringKey,
 } from './type/RibbonButtonStringKeys';

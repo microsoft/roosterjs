@@ -7,5 +7,11 @@ export { default as ContextMenuItem } from './types/ContextMenuItem';
 export {
     ListNumberMenuItemStringKey,
     ImageEditMenuItemStringKey,
+    TableEditInsertMenuItemStringKey,
+    TableEditDeleteMenuItemStringKey,
+    TableEditMergeMenuItemStringKey,
+    TableEditSplitMenuItemStringKey,
+    TableEditAlignMenuItemStringKey,
+    TableEditShadeMenuItemStringKey,
     TableEditMenuItemStringKey,
 } from './types/ContextMenuItemStringKeys';

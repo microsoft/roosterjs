@@ -1,3 +1,4 @@
+import { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
 import { IEditor } from 'roosterjs-editor-types';
 import { LocalizedStrings, UIUtilities } from '../../common/index';
 
@@ -25,7 +26,7 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
      * @param context A context object that passed in from context menu provider, can be anything
      */
     onClick: (
-        key: string,
+        key: TString,
         editor: IEditor,
         targetNode: Node,
         strings: LocalizedStrings<TString>,
@@ -45,4 +46,27 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
      * When click on a child item, onClick handler will be triggered with the key of the clicked child item passed in as the second parameter
      */
     subItems?: { [key in TString]?: string };
+
+    /**
+     * Custom render of drop down item
+     * @param item This menu item
+     * @param onClick click handler of this menu item
+     */
+    itemRender?: (
+        item: IContextualMenuItem,
+        onClick: (
+            e: React.MouseEvent<Element> | React.KeyboardEvent<Element>,
+            item: IContextualMenuItem
+        ) => void
+    ) => React.ReactNode;
+
+    /**
+     * CSS class name for drop down menu item
+     */
+    itemClassName?: string;
+
+    /**
+     * Use this property to pass in Fluent UI ContextMenu property directly. It will overwrite the values of other conflict properties
+     */
+    commandBarSubMenuProperties?: Partial<IContextualMenuProps>;
 }

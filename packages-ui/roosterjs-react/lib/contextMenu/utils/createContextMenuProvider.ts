@@ -78,7 +78,12 @@ class ContextMenuProviderImpl<TString extends string, TContext>
                           key: key,
                           data: key,
                           text: getLocalizedString(this.strings, key, item.subItems[key]),
+                          className: item.itemClassName,
+                          onRender: item.itemRender
+                              ? subItem => item.itemRender(subItem, () => this.onClick(item, key))
+                              : null,
                       })),
+                      ...(item.commandBarSubMenuProperties || {}),
                   }
                 : undefined,
         };
