@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.3% </span>
+                <span class="strong">22.86% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/139</span>
+                <span class='fraction'>32/140</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.42% </span>
+                <span class="strong">15.24% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/104</span>
+                <span class='fraction'>16/105</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.63% </span>
+                <span class="strong">23.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/137</span>
+                <span class='fraction'>32/138</span>
             </div>
         
             
@@ -452,7 +452,11 @@
 <a name='L387'></a><a href='#L387'>387</a>
 <a name='L388'></a><a href='#L388'>388</a>
 <a name='L389'></a><a href='#L389'>389</a>
-<a name='L390'></a><a href='#L390'>390</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L390'></a><a href='#L390'>390</a>
+<a name='L391'></a><a href='#L391'>391</a>
+<a name='L392'></a><a href='#L392'>392</a>
+<a name='L393'></a><a href='#L393'>393</a>
+<a name='L394'></a><a href='#L394'>394</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -682,6 +686,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -719,7 +724,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -821,6 +825,10 @@
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1071,6 +1079,7 @@ const AutoBulletList: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
                 let textBeforeCursor = <span class="cstat-no" title="statement not covered" >searcher.getSubStringBefore(5);</span>
                 let textRange = <span class="cstat-no" title="statement not covered" >searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);</span>
                 const listStyle = <span class="cstat-no" title="statement not covered" >getAutoBulletListStyle(textBeforeCursor);</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >                if (textRange) {</span>
 <span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, textRange);</span>
 <span class="cstat-no" title="statement not covered" >                    toggleBullet(editor, listStyle);</span>
@@ -1108,7 +1117,6 @@ const AutoNumberingList: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
                 let textBeforeCursor = <span class="cstat-no" title="statement not covered" >searcher.getSubStringBefore(5);</span>
                 let textRange = <span class="cstat-no" title="statement not covered" >searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);</span>
                 const listStyle = <span class="cstat-no" title="statement not covered" >getAutoNumberingListStyle(textBeforeCursor);</span>
-&nbsp;
 <span class="cstat-no" title="statement not covered" >                if (!textRange) {</span>
                     // no op if the range can't be found
                 } else <span class="cstat-no" title="statement not covered" >if ((regions = editor.getSelectedRegions()) &amp;&amp; regions.length == 1) {</span>
@@ -1208,8 +1216,12 @@ function shouldTriggerList(
     getListStyle: (text: string) =&gt; number
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
-    const textBeforeCursor = searcher.getSubStringBefore(5);
-    return !searcher.getNearestNonTextInlineElement() &amp;&amp; getListStyle(textBeforeCursor);
+    const textBeforeCursor = searcher.getSubStringBefore(4);
+    const itHasSpace = /\s/g.test(textBeforeCursor);
+&nbsp;
+    return (
+        !itHasSpace &amp;&amp; !searcher.getNearestNonTextInlineElement() &amp;&amp; getListStyle(textBeforeCursor)
+    );
 }
 &nbsp;
 /**
@@ -1237,7 +1249,7 @@ export const ListFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Jun 30 2022 17:23:49 GMT+0000 (Coordinated Universal Time)
+                at Thu Jun 30 2022 23:39:17 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
