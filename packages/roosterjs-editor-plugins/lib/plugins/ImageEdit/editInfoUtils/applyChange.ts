@@ -12,7 +12,6 @@ import { IEditor, PluginEventType } from 'roosterjs-editor-types';
  * @param image The image to apply the change
  * @param editInfo Edit info that contains the changed information of the image
  * @param previousSrc Last src value of the image before the change was made
- * @returns True if the image is changed, otherwise false
  */
 export default function applyChange(
     editor: IEditor,
@@ -20,7 +19,7 @@ export default function applyChange(
     editInfo: ImageEditInfo,
     previousSrc: string,
     wasResized: boolean
-): boolean {
+) {
     let newSrc = '';
 
     const initEditInfo = getEditInfoFromImage(image);
@@ -70,12 +69,6 @@ export default function applyChange(
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     image.src = newSrc;
     setImageSize(image, wasResized, targetWidth, targetHeight);
-
-    return (
-        srcChanged ||
-        editInfo.widthPx != initEditInfo.widthPx ||
-        editInfo.heightPx != initEditInfo.heightPx
-    );
 }
 
 /**

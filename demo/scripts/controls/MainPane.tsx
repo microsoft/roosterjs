@@ -19,7 +19,6 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
-import { tableEdit, TableEditOperationsStringKey } from './ribbonButtons/tableEditOperations';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
@@ -38,10 +37,6 @@ import {
     createPasteOptionPlugin,
     createEmojiPlugin,
 } from 'roosterjs-react';
-import {
-    tableAlign,
-    TableAlignmentOperationsStringKey,
-} from './ribbonButtons/tableAlignmentOperations';
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
@@ -109,9 +104,7 @@ type RibbonStringKeys =
     | DarkModeButtonStringKey
     | ZoomButtonStringKey
     | ExportButtonStringKey
-    | PopoutButtonStringKey
-    | TableEditOperationsStringKey
-    | TableAlignmentOperationsStringKey;
+    | PopoutButtonStringKey;
 
 class MainPane extends MainPaneBase {
     private mouseX: number;
@@ -153,8 +146,6 @@ class MainPane extends MainPaneBase {
             zoom,
             exportContent,
             popout,
-            tableEdit,
-            tableAlign,
         ]);
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
