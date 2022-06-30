@@ -6,10 +6,9 @@ import { TargetWindow } from 'roosterjs-editor-types';
 /**
  * @internal Export for test only
  * Try get window from the given node or range
- * @param source Source node or range
+ * @param node Source node to get window from
  */
-export function getTargetWindow<T extends TargetWindow = TargetWindow>(source: Node | Range): T {
-    const node = source && ((<Range>source).commonAncestorContainer || <Node>source);
+export function getTargetWindow<T extends TargetWindow = TargetWindow>(node: Node): T {
     const document =
         node &&
         (node.ownerDocument ||
@@ -31,6 +30,13 @@ export default function safeInstanceOf<T extends keyof W, W extends TargetWindow
     obj: any,
     typeName: T
 ): obj is W[T] {
+    if (typeName == 'Range') {
+        return (
+            Object.prototype.toString.apply(obj) == '[object Range]' &&
+            !!(<Range>obj)?.commonAncestorContainer
+        );
+    }
+
     const targetWindow = getTargetWindow<W>(obj);
     const targetType = targetWindow && (targetWindow[typeName] as any);
     const mainWindow = (window as any) as W;

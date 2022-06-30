@@ -10,5 +10,5 @@ import { DocumentCommand, IEditor } from 'roosterjs-editor-types';
  * @param editor The editor instance
  */
 export default function toggleUnderline(editor: IEditor) {
-    execCommand(editor, DocumentCommand.Underline);
+    execCommand(editor, DocumentCommand.Underline, 'toggleUnderline');
 }

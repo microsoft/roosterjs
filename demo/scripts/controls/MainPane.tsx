@@ -36,6 +36,7 @@ import {
     UpdateMode,
     AllButtonKeys,
     createPasteOptionPlugin,
+    createEmojiPlugin,
 } from 'roosterjs-react';
 import {
     tableAlign,
@@ -124,6 +125,7 @@ class MainPane extends MainPaneBase {
     private snapshotPlugin: SnapshotPlugin;
     private ribbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
+    private emojiPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
@@ -143,6 +145,7 @@ class MainPane extends MainPaneBase {
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
+        this.emojiPlugin = createEmojiPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
@@ -404,7 +407,12 @@ class MainPane extends MainPaneBase {
         this.toggleablePlugins =
             this.toggleablePlugins || getToggleablePlugins(this.state.initState);
 
-        const plugins = [...this.toggleablePlugins, this.ribbonPlugin, this.pasteOptionPlugin];
+        const plugins = [
+            ...this.toggleablePlugins,
+            this.ribbonPlugin,
+            this.pasteOptionPlugin,
+            this.emojiPlugin,
+        ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
             arrayPush(plugins, this.getSidePanePlugins());

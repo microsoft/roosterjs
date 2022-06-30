@@ -19,6 +19,8 @@ import wrap from '../utils/wrap';
 import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 
+const NOT_EDITABLE_SELECTOR = '[contenteditable=false]';
+
 const adjustSteps: ((
     root: HTMLElement,
     nodeToInsert: Node,
@@ -30,6 +32,7 @@ const adjustSteps: ((
     adjustInsertPositionForParagraph,
     adjustInsertPositionForVoidElement,
     adjustInsertPositionForMoveCursorOutOfALink,
+    adjustInsertPositionForNotEditableNode,
 ];
 
 /**
@@ -238,6 +241,43 @@ function adjustInsertPositionForMoveCursorOutOfALink(
             position = new Position(inlineElementAfter.getContainerNode(), PositionType.Before);
         }
     }
+    return position;
+}
+
+/**
+ * Adjust the position cursor out of a not contenteditable element.
+ */
+function adjustInsertPositionForNotEditableNode(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition,
+    range: Range
+): NodePosition {
+    if (!position.element.isContentEditable) {
+        let nonEditableElement: HTMLElement | undefined;
+        let lastNonEditableElement: HTMLElement | null = findClosestElementAncestor(
+            position.node,
+            root,
+            NOT_EDITABLE_SELECTOR
+        );
+
+        while (lastNonEditableElement) {
+            nonEditableElement = lastNonEditableElement;
+            lastNonEditableElement = nonEditableElement?.parentElement
+                ? findClosestElementAncestor(
+                      nonEditableElement.parentElement,
+                      root,
+                      NOT_EDITABLE_SELECTOR
+                  )
+                : null;
+        }
+
+        if (nonEditableElement) {
+            position = new Position(nonEditableElement, PositionType.After);
+            return adjustInsertPositionForNotEditableNode(root, nodeToInsert, position, range);
+        }
+    }
+
     return position;
 }
 

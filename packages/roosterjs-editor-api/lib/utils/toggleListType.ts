@@ -40,23 +40,31 @@ export default function toggleListType(
     orderedStyle?: NumberingListType | CompatibleNumberingListType,
     unorderedStyle?: BulletListType | CompatibleBulletListType
 ) {
-    blockFormat(editor, (region, start, end, chains) => {
-        const chain =
-            startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];
-        const vList =
-            chain && start.equalTo(end)
-                ? chain.createVListAtBlock(
-                      getBlockElementAtNode(region.rootNode, start.node)?.collapseToSingleElement(),
-                      startNumber
-                  )
-                : createVListFromRegion(region, includeSiblingLists);
+    blockFormat(
+        editor,
+        (region, start, end, chains) => {
+            const chain =
+                startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];
+            const vList =
+                chain && start.equalTo(end)
+                    ? chain.createVListAtBlock(
+                          getBlockElementAtNode(
+                              region.rootNode,
+                              start.node
+                          )?.collapseToSingleElement(),
+                          startNumber
+                      )
+                    : createVListFromRegion(region, includeSiblingLists);
 
-        if (vList) {
-            vList.changeListType(start, end, listType);
-            if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
-                vList.setListStyleType(orderedStyle, unorderedStyle);
+            if (vList) {
+                vList.changeListType(start, end, listType);
+                if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
+                    vList.setListStyleType(orderedStyle, unorderedStyle);
+                }
+                vList.writeBack();
             }
-            vList.writeBack();
-        }
-    });
+        },
+        undefined /* beforeRunCallback */,
+        'toggleListType'
+    );
 }

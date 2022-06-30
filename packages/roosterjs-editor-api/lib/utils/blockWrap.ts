@@ -22,7 +22,8 @@ import {
 export default function blockWrap(
     editor: IEditor,
     wrapFunction: (nodes: Node[]) => void,
-    beforeRunCallback: () => boolean
+    beforeRunCallback: () => boolean,
+    apiName?: string
 ): void {
     blockFormat(
         editor,
@@ -50,6 +51,7 @@ export default function blockWrap(
                 wrapFunction(nodes);
             }
         },
-        beforeRunCallback
+        beforeRunCallback,
+        apiName
     );
 }
