@@ -291,17 +291,15 @@ export default class ImageEdit implements EditorPlugin {
             this.clearDndHelpers();
 
             // Apply the changes, and add undo snapshot if necessary
-            if (
-                applyChange(this.editor, this.image, this.editInfo, this.lastSrc, this.wasResized)
-            ) {
-                this.editor.addUndoSnapshot(() => this.image, ChangeSource.ImageResize);
-            }
+            applyChange(this.editor, this.image, this.editInfo, this.lastSrc, this.wasResized);
 
             // Remove editing wrapper
             const wrapper = this.getImageWrapper(this.image);
             if (wrapper) {
                 this.removeWrapper(wrapper);
             }
+
+            this.editor.addUndoSnapshot(() => this.image, ChangeSource.ImageResize);
 
             if (selectImage) {
                 this.editor.select(this.image);

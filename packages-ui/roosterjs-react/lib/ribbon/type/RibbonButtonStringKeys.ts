@@ -1,66 +1,9 @@
+import { BackgroundColorKeys, TextColorKeys } from '../../colorPicker/index';
 import {
     CancelButtonStringKey,
     MenuItemSplitterKey0,
     OkButtonStringKey,
 } from '../../common/type/LocalizedStrings';
-
-/**
- * Localized string keys for text colors
- */
-export type TextColorKeys =
-    | 'textColorLightBlue'
-    | 'textColorLightGreen'
-    | 'textColorLightYellow'
-    | 'textColorLightOrange'
-    | 'textColorLightRed'
-    | 'textColorLightPurple'
-    | 'textColorBlue'
-    | 'textColorGreen'
-    | 'textColorYellow'
-    | 'textColorOrange'
-    | 'textColorRed'
-    | 'textColorPurple'
-    | 'textColorDarkBlue'
-    | 'textColorDarkGreen'
-    | 'textColorDarkYellow'
-    | 'textColorDarkOrange'
-    | 'textColorDarkRed'
-    | 'textColorDarkPurple'
-    | 'textColorDarkerBlue'
-    | 'textColorDarkerGreen'
-    | 'textColorDarkerYellow'
-    | 'textColorDarkerOrange'
-    | 'textColorDarkerRed'
-    | 'textColorDarkerPurple'
-    | 'textColorWhite'
-    | 'textColorLightGray'
-    | 'textColorGray'
-    | 'textColorDarkGray'
-    | 'textColorDarkerGray'
-    | 'textColorBlack';
-
-/**
- * Localized string keys for background colors
- */
-export type BackgroundColorKeys =
-    | 'backgroundColorCyan'
-    | 'backgroundColorGreen'
-    | 'backgroundColorYellow'
-    | 'backgroundColorOrange'
-    | 'backgroundColorRed'
-    | 'backgroundColorMagenta'
-    | 'backgroundColorLightCyan'
-    | 'backgroundColorLightGreen'
-    | 'backgroundColorLightYellow'
-    | 'backgroundColorLightOrange'
-    | 'backgroundColorLightRed'
-    | 'backgroundColorLightMagenta'
-    | 'backgroundColorWhite'
-    | 'backgroundColorLightGray'
-    | 'backgroundColorGray'
-    | 'backgroundColorDarkGray'
-    | 'backgroundColorDarkerGray'
-    | 'backgroundColorBlack';
 
 /**
  * Key of localized strings of Align center button
@@ -238,6 +181,7 @@ export type UnderlineButtonStringKey = 'buttonNameUnderline';
 export type UndoButtonStringKey = 'buttonNameUndo';
 
 /**
+ * @deprecated
  * Key of localized strings of Cell shade button
  */
 export type CellShadeButtonStringKey = 'buttonNameCellShade' | BackgroundColorKeys;

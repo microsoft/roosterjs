@@ -1,9 +1,27 @@
 import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
+import { applyCellShading, editTable } from 'roosterjs-editor-api';
 import { EditorPlugin, IEditor, TableOperation } from 'roosterjs-editor-types';
-import { editTable } from 'roosterjs-editor-api';
 import { LocalizedStrings } from '../../common/type/LocalizedStrings';
-import { TableEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
+import { ModeIndependentColor } from 'roosterjs-editor-types';
+import { renderColorPicker } from '../../colorPicker/component/renderColorPicker';
+import {
+    getColorPickerContainerClassName,
+    getColorPickerItemClassName,
+} from '../../colorPicker/utils/getClassNamesForColorPicker';
+import {
+    TableEditMenuItemStringKey,
+    TableEditInsertMenuItemStringKey,
+    TableEditDeleteMenuItemStringKey,
+    TableEditMergeMenuItemStringKey,
+    TableEditSplitMenuItemStringKey,
+    TableEditAlignMenuItemStringKey,
+    TableEditShadeMenuItemStringKey,
+} from '../types/ContextMenuItemStringKeys';
+import {
+    BackgroundColorDropDownItems,
+    BackgroundColors,
+} from '../../colorPicker/utils/backgroundColors';
 
 const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {
     menuNameTableInsertAbove: TableOperation.InsertAbove,
@@ -28,12 +46,18 @@ const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOpe
     menuNameTableAlignBottom: TableOperation.AlignCellBottom,
 };
 
+const ColorValues = {
+    ...BackgroundColors,
+    // Add this value to satisfy compiler
+    menuNameTableCellShade: <ModeIndependentColor>null,
+};
+
 function onClick(key: TableEditMenuItemStringKey, editor: IEditor) {
     editor.focus();
     editTable(editor, TableEditOperationMap[key]);
 }
 
-const TableEditInsertMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
+const TableEditInsertMenuItem: ContextMenuItem<TableEditInsertMenuItemStringKey> = {
     key: 'menuNameTableInsert',
     unlocalizedText: 'Insert',
     subItems: {
@@ -45,7 +69,7 @@ const TableEditInsertMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
     onClick,
 };
 
-const TableEditDeleteMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
+const TableEditDeleteMenuItem: ContextMenuItem<TableEditDeleteMenuItemStringKey> = {
     key: 'menuNameTableDelete',
     unlocalizedText: 'Delete',
     subItems: {
@@ -56,7 +80,7 @@ const TableEditDeleteMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
     onClick,
 };
 
-const TableEditMergeMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
+const TableEditMergeMenuItem: ContextMenuItem<TableEditMergeMenuItemStringKey> = {
     key: 'menuNameTableMerge',
     unlocalizedText: 'Merge',
     subItems: {
@@ -70,7 +94,7 @@ const TableEditMergeMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
     onClick,
 };
 
-const TableEditSplitMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
+const TableEditSplitMenuItem: ContextMenuItem<TableEditSplitMenuItemStringKey> = {
     key: 'menuNameTableSplit',
     unlocalizedText: 'Split',
     subItems: {
@@ -80,7 +104,7 @@ const TableEditSplitMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
     onClick,
 };
 
-const TableEditAlignMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
+const TableEditAlignMenuItem: ContextMenuItem<TableEditAlignMenuItemStringKey> = {
     key: 'menuNameTableAlign',
     unlocalizedText: 'Align cell',
     subItems: {
@@ -93,6 +117,20 @@ const TableEditAlignMenuItem: ContextMenuItem<TableEditMenuItemStringKey> = {
         menuNameTableAlignBottom: 'Align bottom',
     },
     onClick,
+};
+
+const TableEditCellShadeMenuItem: ContextMenuItem<TableEditShadeMenuItemStringKey> = {
+    key: 'menuNameTableCellShade',
+    unlocalizedText: 'Shading',
+    subItems: BackgroundColorDropDownItems,
+    onClick: (key, editor) => {
+        applyCellShading(editor, ColorValues[key]);
+    },
+    itemRender: (item, click) => renderColorPicker(item, ColorValues, click),
+    itemClassName: getColorPickerItemClassName(),
+    commandBarSubMenuProperties: {
+        className: getColorPickerContainerClassName(),
+    },
 };
 
 function getEditingTable(editor: IEditor, node: Node) {
@@ -117,6 +155,7 @@ export default function createTableEditMenuProvider(
             TableEditMergeMenuItem,
             TableEditSplitMenuItem,
             TableEditAlignMenuItem,
+            TableEditCellShadeMenuItem,
         ],
         strings,
         (editor, node) => !!getEditingTable(editor, node)
