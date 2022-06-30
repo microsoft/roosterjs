@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/26</span>
+                <span class='fraction'>31/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/20</span>
+                <span class='fraction'>17/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>26/26</span>
+                <span class='fraction'>28/28</span>
             </div>
         
             
@@ -149,7 +149,16 @@
 <a name='L84'></a><a href='#L84'>84</a>
 <a name='L85'></a><a href='#L85'>85</a>
 <a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,7 +166,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -165,12 +173,17 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,9 +217,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -235,16 +245,25 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ElementCallbackMap } from 'roosterjs-editor-types';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { CssStyleCallbackMap, ElementCallbackMap } from 'roosterjs-editor-types';
 import {
     chainSanitizerCallback,
-    changeElementTag,
     getStyles,
     moveChildNodes,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
 &nbsp;
+const MSO_COMMENT_PARENT = 'mso-comment-parent';
 const MSO_COMMENT_REFERENCE = 'mso-comment-reference';
+const MSO_COMMENT_DATE = 'mso-comment-date';
 const MSO_COMMENT_ANCHOR_HREF_REGEX = /#_msocom_/;
 const MSO_SPECIAL_CHARACTER = 'mso-special-character';
 const MSO_SPECIAL_CHARACTER_COMMENT = 'comment';
@@ -256,7 +275,10 @@ const MSO_ELEMENT_COMMENT_LIST = 'comment-list';
  * @internal
  * Removes comments when pasting Word content.
  */
-export default function commentsRemoval(elementCallbacks: ElementCallbackMap) {
+export default function commentsRemoval(
+    elementCallbacks: ElementCallbackMap,
+    styleCallbacks: CssStyleCallbackMap
+) {
     // 1st Step, Remove SPAN elements added after each comment.
     // Word adds multiple elements for comments as SPAN elements.
     // In this step we remove these elements:
@@ -289,10 +311,7 @@ export default function commentsRemoval(elementCallbacks: ElementCallbackMap) {
     //      &lt;a href="#_msocom_{number}"&gt;[SS3]&lt;/a&gt;
     //      In this step we remove this Anchor elements.
     chainSanitizerCallback(elementCallbacks, 'A', element =&gt; {
-        const styles = getStyles(element);
-        if (!!styles[MSO_COMMENT_REFERENCE]) {
-            changeElementTag(element, 'span');
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (
+        if (
             safeInstanceOf(element, 'HTMLAnchorElement') &amp;&amp;
             MSO_COMMENT_ANCHOR_HREF_REGEX.test(element.href)
         ) {
@@ -320,6 +339,14 @@ export default function commentsRemoval(elementCallbacks: ElementCallbackMap) {
         }
         return true;
     });
+&nbsp;
+    /**
+     * Remove styles related to Office Comments that can cause unwanted behaviors
+     * depending on the user client
+     */
+    chainSanitizerCallback(styleCallbacks, MSO_COMMENT_REFERENCE, () =&gt; false);
+    chainSanitizerCallback(styleCallbacks, MSO_COMMENT_DATE, () =&gt; false);
+    chainSanitizerCallback(styleCallbacks, MSO_COMMENT_PARENT, () =&gt; false);
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -328,7 +355,7 @@ export default function commentsRemoval(elementCallbacks: ElementCallbackMap) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Thu Jun 30 2022 17:04:13 GMT+0000 (Coordinated Universal Time)
+                at Thu Jun 30 2022 17:14:08 GMT+0000 (Coordinated Universal Time)
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
