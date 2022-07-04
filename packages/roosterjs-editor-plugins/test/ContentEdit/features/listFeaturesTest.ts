@@ -37,6 +37,7 @@ describe('listFeatures', () => {
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
         editorIsFeatureEnabled.and.returnValue(true);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
+
         const isAutoBulletTriggered = ListFeatures.autoNumberingList.shouldHandleEvent(
             null,
             editor,

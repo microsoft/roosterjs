@@ -19,7 +19,6 @@ import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
-import { tableEdit, TableEditOperationsStringKey } from './ribbonButtons/tableEditOperations';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
@@ -36,11 +35,8 @@ import {
     UpdateMode,
     AllButtonKeys,
     createPasteOptionPlugin,
+    createEmojiPlugin,
 } from 'roosterjs-react';
-import {
-    tableAlign,
-    TableAlignmentOperationsStringKey,
-} from './ribbonButtons/tableAlignmentOperations';
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
@@ -108,9 +104,7 @@ type RibbonStringKeys =
     | DarkModeButtonStringKey
     | ZoomButtonStringKey
     | ExportButtonStringKey
-    | PopoutButtonStringKey
-    | TableEditOperationsStringKey
-    | TableAlignmentOperationsStringKey;
+    | PopoutButtonStringKey;
 
 class MainPane extends MainPaneBase {
     private mouseX: number;
@@ -124,6 +118,7 @@ class MainPane extends MainPaneBase {
     private snapshotPlugin: SnapshotPlugin;
     private ribbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
+    private emojiPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
@@ -143,6 +138,7 @@ class MainPane extends MainPaneBase {
         this.snapshotPlugin = new SnapshotPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
+        this.emojiPlugin = createEmojiPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
@@ -150,8 +146,6 @@ class MainPane extends MainPaneBase {
             zoom,
             exportContent,
             popout,
-            tableEdit,
-            tableAlign,
         ]);
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
@@ -404,7 +398,12 @@ class MainPane extends MainPaneBase {
         this.toggleablePlugins =
             this.toggleablePlugins || getToggleablePlugins(this.state.initState);
 
-        const plugins = [...this.toggleablePlugins, this.ribbonPlugin, this.pasteOptionPlugin];
+        const plugins = [
+            ...this.toggleablePlugins,
+            this.ribbonPlugin,
+            this.pasteOptionPlugin,
+            this.emojiPlugin,
+        ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
             arrayPush(plugins, this.getSidePanePlugins());

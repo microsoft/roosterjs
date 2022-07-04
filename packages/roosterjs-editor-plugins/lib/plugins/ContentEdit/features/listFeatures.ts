@@ -228,6 +228,7 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
                 const listStyle = getAutoBulletListStyle(textBeforeCursor);
+
                 if (textRange) {
                     prepareAutoBullet(editor, textRange);
                     toggleBullet(editor, listStyle);
@@ -265,7 +266,6 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
                 const listStyle = getAutoNumberingListStyle(textBeforeCursor);
-
                 if (!textRange) {
                     // no op if the range can't be found
                 } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
@@ -365,8 +365,12 @@ function shouldTriggerList(
     getListStyle: (text: string) => number
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
-    const textBeforeCursor = searcher.getSubStringBefore(5);
-    return !searcher.getNearestNonTextInlineElement() && getListStyle(textBeforeCursor);
+    const textBeforeCursor = searcher.getSubStringBefore(4);
+    const itHasSpace = /\s/g.test(textBeforeCursor);
+
+    return (
+        !itHasSpace && !searcher.getNearestNonTextInlineElement() && getListStyle(textBeforeCursor)
+    );
 }
 
 /**

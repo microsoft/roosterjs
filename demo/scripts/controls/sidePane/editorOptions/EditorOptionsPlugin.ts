@@ -16,7 +16,6 @@ const initialState: BuildInPluginState = {
         tableCellSelection: true,
         tableResize: true,
         customReplace: true,
-        pickerPlugin: true,
         listEditMenu: true,
         imageEditMenu: true,
         tableEditMenu: true,

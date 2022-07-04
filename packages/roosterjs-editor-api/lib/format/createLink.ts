@@ -86,12 +86,19 @@ export default function createLink(
                 // the selection is not collapsed, use browser execCommand
                 editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
                 const traverser = editor.getSelectionTraverser();
+
                 let currentInline = traverser.getNextInlineElement();
+
+                // list for removing unwanted lines
+                let deletionInlineList: Node[] = [];
+
                 while (currentInline) {
-                    const a = currentInline.getContainerNode();
-                    a.parentElement.removeChild(a);
+                    deletionInlineList.push(currentInline.getContainerNode());
                     currentInline = traverser.getNextInlineElement();
                 }
+
+                deletionInlineList.forEach(node => editor.deleteNode(node));
+
                 anchor = getAnchorNodeAtCursor(editor);
                 updateAnchorDisplayText(anchor, displayText);
             }

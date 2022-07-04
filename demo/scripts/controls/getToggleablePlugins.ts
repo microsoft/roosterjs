@@ -1,5 +1,4 @@
 import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from './BuildInPluginState';
-import SampleColorPickerPluginDataProvider from './samplepicker/SampleColorPickerPluginDataProvider';
 import { AutoFormat } from 'roosterjs-editor-plugins/lib/AutoFormat';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
@@ -8,7 +7,6 @@ import { EditorPlugin } from 'roosterjs-editor-types';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageEdit } from 'roosterjs-editor-plugins/lib/ImageEdit';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
-import { PickerPlugin } from 'roosterjs-editor-plugins/lib/Picker';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
@@ -44,14 +42,6 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
         cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
         tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
         tableResize: pluginList.tableResize ? new TableResize() : null,
-        pickerPlugin: pluginList.pickerPlugin
-            ? new PickerPlugin(new SampleColorPickerPluginDataProvider(), {
-                  elementIdPrefix: 'samplePicker-',
-                  changeSource: 'SAMPLE_COLOR_PICKER',
-                  triggerCharacter: ':',
-                  isHorizontal: true,
-              })
-            : null,
         customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
         autoFormat: pluginList.autoFormat ? new AutoFormat() : null,
         listEditMenu:
