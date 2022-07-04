@@ -34,7 +34,11 @@ describe('ContextMenu plugin', () => {
         const items = [{}];
         triggerWithItems(items);
 
-        expect(renderer).toHaveBeenCalledWith(plugin['container'], items, plugin['onDismiss']);
+        expect(renderer).toHaveBeenCalledWith(
+            (<any>plugin).container,
+            items,
+            (<any>plugin).onDismiss
+        );
     });
 
     it('doesnt invoke the renderer if no items were provided', () => {
@@ -45,15 +49,13 @@ describe('ContextMenu plugin', () => {
 
     it('calls dismissal function when dismissed', () => {
         let onDismiss: Function | undefined = undefined;
-        renderer = renderer.and.callFake(
-            (_container, _items, onDismissFn) => void (onDismiss = onDismissFn)
-        );
+        renderer = renderer.and.callFake((_, _1, onDismissFn) => void (onDismiss = onDismissFn));
         triggerWithItems([{}]);
 
         expect(onDismiss).toBeDefined();
 
         onDismiss!?.();
 
-        expect(dismisser).toHaveBeenCalledWith(plugin['container']);
+        expect(dismisser).toHaveBeenCalledWith((<any>plugin).container);
     });
 });
