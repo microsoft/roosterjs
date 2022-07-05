@@ -201,8 +201,8 @@ function ensureUniqueId(el: HTMLElement, idPrefix: string) {
         //Ensure that there are no elements with the same ID
         let element = getElement();
         while (element) {
-            element = getElement();
             cont++;
+            element = getElement();
         }
 
         el.id = idPrefix + cont;
