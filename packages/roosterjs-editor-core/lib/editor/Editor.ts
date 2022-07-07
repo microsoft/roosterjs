@@ -5,6 +5,7 @@ import {
     ChangeSource,
     ClipboardData,
     ColorTransformDirection,
+    ContentChangedData,
     ContentPosition,
     DefaultFormat,
     DOMEventHandler,
@@ -602,9 +603,16 @@ export default class Editor implements IEditor {
     public addUndoSnapshot(
         callback?: (start: NodePosition, end: NodePosition) => any,
         changeSource?: ChangeSource | CompatibleChangeSource | string,
-        canUndoByBackspace?: boolean
+        canUndoByBackspace?: boolean,
+        additionalData?: ContentChangedData
     ) {
-        this.core.api.addUndoSnapshot(this.core, callback, changeSource, canUndoByBackspace);
+        this.core.api.addUndoSnapshot(
+            this.core,
+            callback,
+            changeSource,
+            canUndoByBackspace,
+            additionalData
+        );
     }
 
     /**
