@@ -1,4 +1,5 @@
 import {
+    ChangeSource,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -85,7 +86,7 @@ export default class AutoFormat implements EditorPlugin {
                         textRange.insertNode(nodeHyphen);
                         this.editor.select(nodeHyphen, PositionType.End);
                     },
-                    null /*changeSource*/,
+                    ChangeSource.Format,
                     true /*canUndoByBackspace*/
                 );
 
