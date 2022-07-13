@@ -6,6 +6,7 @@ export function trustedHTMLHandler(html: string): string {
         ADD_ATTR: ['name', 'content'],
         WHOLE_DOCUMENT: true,
         RETURN_TRUSTED_TYPE: true,
+        ALLOW_UNKNOWN_PROTOCOLS: true,
     });
     return <string>(<any>result);
 }
