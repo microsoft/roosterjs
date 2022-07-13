@@ -22,13 +22,20 @@ interface ShortcutCommand {
     winKey: number;
     macKey: number;
     action: (editor: IEditor) => any;
+    disabled: boolean;
 }
 
-function createCommand(winKey: number, macKey: number, action: (editor: IEditor) => any) {
+function createCommand(
+    winKey: number,
+    macKey: number,
+    action: (editor: IEditor) => any,
+    disabled: boolean = false
+) {
     return {
         winKey,
         macKey,
         action,
+        disabled,
     };
 }
 
@@ -38,7 +45,12 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.U, Keys.Meta | Keys.U, toggleUnderline),
     createCommand(Keys.Ctrl | Keys.SPACE, Keys.Meta | Keys.SPACE, clearFormat),
     createCommand(Keys.Ctrl | Keys.Z, Keys.Meta | Keys.Z, editor => editor.undo()),
-    createCommand(Keys.ALT | Keys.BACKSPACE, Keys.ALT | Keys.BACKSPACE, editor => editor.undo()),
+    createCommand(
+        Keys.ALT | Keys.BACKSPACE,
+        Keys.ALT | Keys.BACKSPACE,
+        editor => editor.undo(),
+        Browser.isMac /* Disabled for Mac */
+    ),
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
     createCommand(Keys.Ctrl | Keys.FORWARD_SLASH, Keys.Meta | Keys.FORWARD_SLASH, toggleNumbering),
@@ -85,7 +97,7 @@ const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);
-        if (command) {
+        if (command && !command.disabled) {
             command.action(editor);
             event.rawEvent.preventDefault();
             event.rawEvent.stopPropagation();
