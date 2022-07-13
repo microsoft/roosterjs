@@ -169,6 +169,8 @@ describe('TableFeature', () => {
                         editor,
                         shift ? Indentation.Decrease : Indentation.Increase
                     );
+                } else {
+                    setIndentationExpect();
                 }
             }
             it('Indent Whole Table selected', () => {
@@ -186,7 +188,7 @@ describe('TableFeature', () => {
                 runTest(true);
             });
 
-            it('Outdent Whole Table selected, but is not going to be executed because no blockquote', () => {
+            it('Outdent Whole Table selected, but is not going to be executed because table is not wrapped in a blockquote', () => {
                 runTest(true, () => {
                     expect(setIndentationFn).not.toHaveBeenCalled();
                 });
