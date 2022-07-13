@@ -22,7 +22,6 @@ interface ShortcutCommand {
     winKey: number;
     macKey: number;
     action: (editor: IEditor) => any;
-    disabled: boolean;
 }
 
 function createCommand(
@@ -31,11 +30,13 @@ function createCommand(
     action: (editor: IEditor) => any,
     disabled: boolean = false
 ) {
+    if (disabled) {
+        return null;
+    }
     return {
         winKey,
         macKey,
         action,
-        disabled,
     };
 }
 
@@ -49,7 +50,7 @@ const commands: ShortcutCommand[] = [
         Keys.ALT | Keys.BACKSPACE,
         Keys.ALT | Keys.BACKSPACE,
         editor => editor.undo(),
-        Browser.isMac /* Disabled for Mac */
+        Browser.isMac /* Option+Backspace to be handled by browsers on Mac */
     ),
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
@@ -64,7 +65,7 @@ const commands: ShortcutCommand[] = [
         Keys.Meta | Keys.Shift | Keys.COMMA,
         editor => changeFontSize(editor, FontSizeChange.Decrease)
     ),
-];
+].filter((command): command is ShortcutCommand => !!command);
 
 /**
  * DefaultShortcut edit feature, provides shortcuts for the following features:
@@ -97,7 +98,7 @@ const DefaultShortcut: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: cacheGetCommand,
     handleEvent: (event, editor) => {
         let command = cacheGetCommand(event);
-        if (command && !command.disabled) {
+        if (command) {
             command.action(editor);
             event.rawEvent.preventDefault();
             event.rawEvent.stopPropagation();
