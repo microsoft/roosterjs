@@ -21,7 +21,12 @@ export default interface CustomReplacement {
      * A callback to check if the string should be replaced
      * @param content the content where the string is
      * @param sourceString string to be replaced
+     * @param contentTag format of the string to be replaced
      * @return true, if the string should be replaced, else return false
      */
-    shouldReplace?: (replacement: CustomReplacement, content: string) => boolean;
+    shouldReplace?: (
+        replacement: CustomReplacement,
+        content: string,
+        contentTag: string
+    ) => boolean;
 }
