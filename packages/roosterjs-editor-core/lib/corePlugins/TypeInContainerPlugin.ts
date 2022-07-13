@@ -30,6 +30,13 @@ export default class TypeInContainerPlugin implements EditorPlugin {
         this.editor = null;
     }
 
+    isRangeEmpty(range: Range) {
+        if (range.collapsed && !range.startContainer.firstChild) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Handle events triggered from editor
      * @param event PluginEvent object
@@ -46,10 +53,11 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             let range = this.editor.getSelectionRange();
 
             if (
-                !range ||
-                this.editor.contains(
-                    findClosestElementAncestor(range.startContainer, null /* root */, '[style]')
-                )
+                !this.isRangeEmpty(range) &&
+                (!range ||
+                    this.editor.contains(
+                        findClosestElementAncestor(range.startContainer, null /* root */, '[style]')
+                    ))
             ) {
                 return;
             }
