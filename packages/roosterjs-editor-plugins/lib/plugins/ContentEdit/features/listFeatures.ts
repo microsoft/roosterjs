@@ -231,7 +231,7 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
 
                 if (textRange) {
                     prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor, listStyle, true /** autoFormat */);
+                    toggleBullet(editor, listStyle);
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
@@ -271,15 +271,10 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
                     const num = parseInt(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor, num, listStyle, true /** autoFormat */);
+                    toggleNumbering(editor, num, listStyle);
                 } else {
                     prepareAutoBullet(editor, textRange);
-                    toggleNumbering(
-                        editor,
-                        undefined /* startNumber*/,
-                        listStyle,
-                        true /** autoFormat */
-                    );
+                    toggleNumbering(editor, undefined /* startNumber*/, listStyle);
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
