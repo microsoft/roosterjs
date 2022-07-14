@@ -10,6 +10,7 @@ import type { CompatibleBulletListType } from 'roosterjs-editor-types/lib/compat
  * browser execCommand API
  * @param editor The editor instance
  * @param listStyle (Optional) the style of the bullet list. If not defined, the style will be set to disc.
+ * @param apiNameOverride (Optional) Set a new api name, if empty the api name will be 'toggleListType'.
  */
 export default function toggleBullet(
     editor: IEditor,

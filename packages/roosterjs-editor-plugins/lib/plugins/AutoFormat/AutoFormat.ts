@@ -16,8 +16,6 @@ export default class AutoFormat implements EditorPlugin {
     private editor: IEditor;
     private lastKeyTyped: string;
 
-    constructor() {}
-
     /**
      * Get a friendly name of this plugin
      */
