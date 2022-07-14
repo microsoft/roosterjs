@@ -1,5 +1,5 @@
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { findClosestElementAncestor, Position } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor, getTagOfNode, Position } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -30,6 +30,18 @@ export default class TypeInContainerPlugin implements EditorPlugin {
         this.editor = null;
     }
 
+    private isRangeEmpty(range: Range) {
+        if (
+            range.collapsed &&
+            range.startContainer.nodeType === Node.ELEMENT_NODE &&
+            getTagOfNode(range.startContainer) == 'DIV' &&
+            !range.startContainer.firstChild
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Handle events triggered from editor
      * @param event PluginEvent object
@@ -47,9 +59,10 @@ export default class TypeInContainerPlugin implements EditorPlugin {
 
             if (
                 !range ||
-                this.editor.contains(
-                    findClosestElementAncestor(range.startContainer, null /* root */, '[style]')
-                )
+                (!this.isRangeEmpty(range) &&
+                    this.editor.contains(
+                        findClosestElementAncestor(range.startContainer, null /* root */, '[style]')
+                    ))
             ) {
                 return;
             }
