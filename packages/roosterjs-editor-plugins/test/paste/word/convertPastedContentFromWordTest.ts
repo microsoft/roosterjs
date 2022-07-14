@@ -50,10 +50,7 @@ describe('convertPastedContentFromWord', () => {
         let source =
             '<p class="MsoNormal"><a style="mso-comment-reference:BV_4;mso-comment-date:20220420T1711;mso-comment-parent:1"></a><a style="mso-comment-reference:BV_3;mso-comment-date:20220420T1711;mso-comment-parent:1"></a></p>';
 
-        runTest(
-            source,
-            '<p><span style="mso-comment-reference:BV_4;mso-comment-date:20220420T1711;mso-comment-parent:1"></span><span style="mso-comment-reference:BV_3;mso-comment-date:20220420T1711;mso-comment-parent:1"></span></p>'
-        );
+        runTest(source, '<p><a></a><a></a></p>');
     });
 
     it('Remove Comment | mso-comment-continuation', () => {

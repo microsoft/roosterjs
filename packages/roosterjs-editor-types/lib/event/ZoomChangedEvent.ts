@@ -1,12 +1,11 @@
 import BasePluginEvent from './BasePluginEvent';
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
- * Represents an event object triggered from Editor.setZoomScale() API.
- * Plugins can handle this event when they need to do something for zoom changing.
- *
+ * Data of ZoomChangedEvent
  */
-export default interface ZoomChangedEvent extends BasePluginEvent<PluginEventType.ZoomChanged> {
+export interface ZoomChangedEventData {
     /**
      * Zoom scale value before this change
      */
@@ -17,3 +16,21 @@ export default interface ZoomChangedEvent extends BasePluginEvent<PluginEventTyp
      */
     newZoomScale: number;
 }
+
+/**
+ * Represents an event object triggered from Editor.setZoomScale() API.
+ * Plugins can handle this event when they need to do something for zoom changing.
+ *
+ */
+export default interface ZoomChangedEvent
+    extends ZoomChangedEventData,
+        BasePluginEvent<PluginEventType.ZoomChanged> {}
+
+/**
+ * Represents an event object triggered from Editor.setZoomScale() API.
+ * Plugins can handle this event when they need to do something for zoom changing.
+ *
+ */
+export interface CompatibleZoomChangedEvent
+    extends ZoomChangedEventData,
+        BasePluginEvent<CompatiblePluginEventType.ZoomChanged> {}

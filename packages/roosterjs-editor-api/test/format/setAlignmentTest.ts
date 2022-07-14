@@ -132,9 +132,10 @@ describe('setAlignment()', () => {
         editor.setContent(
             '<ul id="list"><li id="item1"><span>item 1</span></li><li id="item2"><span>item 2</span></li><li id="item3"><span>item 3</span></li></ul>'
         );
+
         const range = document.createRange();
-        range.setStart(document.getElementById('list'), 0);
-        range.setEnd(document.getElementById('list'), multipleItems ? 3 : 1);
+        range.setStart(document.getElementById('item1'), 0);
+        range.setEnd(document.getElementById(multipleItems ? 'item3' : 'item1'), 0);
         editor.select(range);
         setAlignment(editor, alignment);
         expect(editor.addUndoSnapshot).toHaveBeenCalled();

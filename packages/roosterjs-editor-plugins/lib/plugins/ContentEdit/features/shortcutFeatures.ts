@@ -24,7 +24,15 @@ interface ShortcutCommand {
     action: (editor: IEditor) => any;
 }
 
-function createCommand(winKey: number, macKey: number, action: (editor: IEditor) => any) {
+function createCommand(
+    winKey: number,
+    macKey: number,
+    action: (editor: IEditor) => any,
+    disabled: boolean = false
+) {
+    if (disabled) {
+        return null;
+    }
     return {
         winKey,
         macKey,
@@ -38,7 +46,12 @@ const commands: ShortcutCommand[] = [
     createCommand(Keys.Ctrl | Keys.U, Keys.Meta | Keys.U, toggleUnderline),
     createCommand(Keys.Ctrl | Keys.SPACE, Keys.Meta | Keys.SPACE, clearFormat),
     createCommand(Keys.Ctrl | Keys.Z, Keys.Meta | Keys.Z, editor => editor.undo()),
-    createCommand(Keys.ALT | Keys.BACKSPACE, Keys.ALT | Keys.BACKSPACE, editor => editor.undo()),
+    createCommand(
+        Keys.ALT | Keys.BACKSPACE,
+        Keys.ALT | Keys.BACKSPACE,
+        editor => editor.undo(),
+        Browser.isMac /* Option+Backspace to be handled by browsers on Mac */
+    ),
     createCommand(Keys.Ctrl | Keys.Y, Keys.Meta | Keys.Shift | Keys.Z, editor => editor.redo()),
     createCommand(Keys.Ctrl | Keys.PERIOD, Keys.Meta | Keys.PERIOD, toggleBullet),
     createCommand(Keys.Ctrl | Keys.FORWARD_SLASH, Keys.Meta | Keys.FORWARD_SLASH, toggleNumbering),
@@ -52,7 +65,7 @@ const commands: ShortcutCommand[] = [
         Keys.Meta | Keys.Shift | Keys.COMMA,
         editor => changeFontSize(editor, FontSizeChange.Decrease)
     ),
-];
+].filter((command): command is ShortcutCommand => !!command);
 
 /**
  * DefaultShortcut edit feature, provides shortcuts for the following features:

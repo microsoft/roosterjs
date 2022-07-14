@@ -3,8 +3,8 @@ import execCommand from '../utils/execCommand';
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import {
     createVListFromRegion,
+    findClosestElementAncestor,
     getSelectedBlockElementsInRegion,
-    getTagOfNode,
     isWholeTableSelected,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -48,7 +48,7 @@ export default function setAlignment(editor: IEditor, alignment: Alignment | Com
                 alignText(editor, alignment);
             }
         },
-        'rotateElement'
+        'setAlignment'
     );
 }
 
@@ -95,7 +95,7 @@ function alignText(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
 }
 
 function isList(element: HTMLElement) {
-    return ['LI', 'UL', 'OL'].indexOf(getTagOfNode(element)) > -1;
+    return findClosestElementAncestor(element, undefined /** root */, 'LI');
 }
 
 function alignList(editor: IEditor, alignment: Alignment | CompatibleAlignment) {
