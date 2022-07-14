@@ -1,4 +1,5 @@
 import {
+    ChangeSource,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -14,6 +15,8 @@ const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
 export default class AutoFormat implements EditorPlugin {
     private editor: IEditor;
     private lastKeyTyped: string;
+
+    constructor(private enableAutoHyphen: boolean = true) {}
 
     /**
      * Get a friendly name of this plugin
@@ -42,57 +45,60 @@ export default class AutoFormat implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType === PluginEventType.ContentChanged ||
-            event.eventType === PluginEventType.MouseDown ||
-            event.eventType === PluginEventType.MouseUp
-        ) {
-            this.lastKeyTyped = '';
-        }
-
-        if (event.eventType === PluginEventType.KeyDown) {
-            const keyTyped = event.rawEvent.key;
-
-            if (keyTyped.length > 1) {
+        if (this.enableAutoHyphen) {
+            if (
+                event.eventType === PluginEventType.ContentChanged ||
+                event.eventType === PluginEventType.MouseDown ||
+                event.eventType === PluginEventType.MouseUp
+            ) {
                 this.lastKeyTyped = '';
             }
 
-            if (
-                this.lastKeyTyped === '-' &&
-                !specialCharacters.test(keyTyped) &&
-                keyTyped !== ' ' &&
-                keyTyped !== '-'
-            ) {
-                const searcher = this.editor.getContentSearcherOfCursor(event);
-                const textBeforeCursor = searcher.getSubStringBefore(3);
-                const dashes = searcher.getSubStringBefore(2);
-                const isPrecededByADash = textBeforeCursor[0] === '-';
-                const isPrecededByASpace = textBeforeCursor[0] === ' ';
-                if (
-                    isPrecededByADash ||
-                    isPrecededByASpace ||
-                    specialCharacters.test(textBeforeCursor[0]) ||
-                    dashes !== '--'
-                ) {
-                    return;
+            if (event.eventType === PluginEventType.KeyDown) {
+                const keyTyped = event.rawEvent.key;
+
+                if (keyTyped.length > 1) {
+                    this.lastKeyTyped = '';
                 }
 
-                const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
-                const nodeHyphen = document.createTextNode('—');
-                this.editor.addUndoSnapshot(
-                    () => {
-                        textRange.deleteContents();
-                        textRange.insertNode(nodeHyphen);
-                        this.editor.select(nodeHyphen, PositionType.End);
-                    },
-                    null /*changeSource*/,
-                    true /*canUndoByBackspace*/
-                );
+                if (
+                    this.lastKeyTyped === '-' &&
+                    !specialCharacters.test(keyTyped) &&
+                    keyTyped !== ' ' &&
+                    keyTyped !== '-'
+                ) {
+                    const searcher = this.editor.getContentSearcherOfCursor(event);
+                    const textBeforeCursor = searcher.getSubStringBefore(3);
+                    const dashes = searcher.getSubStringBefore(2);
+                    const isPrecededByADash = textBeforeCursor[0] === '-';
+                    const isPrecededByASpace = textBeforeCursor[0] === ' ';
+                    if (
+                        isPrecededByADash ||
+                        isPrecededByASpace ||
+                        specialCharacters.test(textBeforeCursor[0]) ||
+                        dashes !== '--'
+                    ) {
+                        return;
+                    }
 
-                //After the substitution the last key typed needs to be cleaned
-                this.lastKeyTyped = '';
-            } else {
-                this.lastKeyTyped = keyTyped;
+                    const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
+                    const nodeHyphen = document.createTextNode('—');
+                    this.editor.addUndoSnapshot(
+                        () => {
+                            textRange.deleteContents();
+                            textRange.insertNode(nodeHyphen);
+                            this.editor.select(nodeHyphen, PositionType.End);
+                        },
+                        ChangeSource.Format /*changeSource*/,
+                        true /*canUndoByBackspace*/,
+                        { formatApiName: 'autoHyphen' }
+                    );
+
+                    //After the substitution the last key typed needs to be cleaned
+                    this.lastKeyTyped = '';
+                } else {
+                    this.lastKeyTyped = keyTyped;
+                }
             }
         }
     }
