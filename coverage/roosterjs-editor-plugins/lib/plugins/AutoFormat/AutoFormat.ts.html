@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/33</span>
+                <span class='fraction'>33/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.48% </span>
+                <span class="strong">84% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/21</span>
+                <span class='fraction'>21/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/6</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.63% </span>
+                <span class="strong">91.18% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>29/32</span>
+                <span class='fraction'>31/34</span>
             </div>
         
             
@@ -162,7 +162,14 @@
 <a name='L97'></a><a href='#L97'>97</a>
 <a name='L98'></a><a href='#L98'>98</a>
 <a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,6 +185,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -205,16 +214,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
@@ -248,6 +258,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -260,8 +271,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+    ChangeSource,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -277,6 +290,8 @@ const specialCharacters = /[`!@#$%^&amp;*()_+\=\[\]{};':"\\|,.&lt;&gt;\/?~]/;
 export default class AutoFormat implements EditorPlugin {
     private editor: IEditor;
     private lastKeyTyped: string;
+&nbsp;
+    constructor(private <span class="missing-if-branch" title="else path not taken" >E</span>enableAutoHyphen: boolean = true) {}
 &nbsp;
     /**
      * Get a friendly name of this plugin
@@ -305,57 +320,60 @@ export default class AutoFormat implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (
-            event.eventType === PluginEventType.ContentChanged ||
-            event.eventType === PluginEventType.MouseDown ||
-            event.eventType === PluginEventType.MouseUp
-        ) {
-            this.lastKeyTyped = '';
-        }
-&nbsp;
-        if (event.eventType === PluginEventType.KeyDown) {
-            const keyTyped = event.rawEvent.key;
-&nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (keyTyped.length &gt; 1) {
-<span class="cstat-no" title="statement not covered" >                this.lastKeyTyped = '';</span>
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.enableAutoHyphen) {
+            if (
+                event.eventType === PluginEventType.ContentChanged ||
+                event.eventType === PluginEventType.MouseDown ||
+                event.eventType === PluginEventType.MouseUp
+            ) {
+                this.lastKeyTyped = '';
             }
 &nbsp;
-            if (
-                this.lastKeyTyped === '-' &amp;&amp;
-                !specialCharacters.test(keyTyped) &amp;&amp;
-                keyTyped !== ' ' &amp;&amp;
-                keyTyped !== '-'
-            ) {
-                const searcher = this.editor.getContentSearcherOfCursor(event);
-                const textBeforeCursor = searcher.getSubStringBefore(3);
-                const dashes = searcher.getSubStringBefore(2);
-                const isPrecededByADash = textBeforeCursor[0] === '-';
-                const isPrecededByASpace = textBeforeCursor[0] === ' ';
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (
-                    isPrecededByADash ||
-                    isPrecededByASpace ||
-                    specialCharacters.test(textBeforeCursor[0]) ||
-                    dashes !== '--'
-                ) {
-<span class="cstat-no" title="statement not covered" >                    return;</span>
+            if (event.eventType === PluginEventType.KeyDown) {
+                const keyTyped = event.rawEvent.key;
+&nbsp;
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (keyTyped.length &gt; 1) {
+<span class="cstat-no" title="statement not covered" >                    this.lastKeyTyped = '';</span>
                 }
 &nbsp;
-                const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
-                const nodeHyphen = document.createTextNode('—');
-                this.editor.addUndoSnapshot(
-                    () =&gt; {
-                        textRange.deleteContents();
-                        textRange.insertNode(nodeHyphen);
-                        this.editor.select(nodeHyphen, PositionType.End);
-                    },
-                    null /*changeSource*/,
-                    true /*canUndoByBackspace*/
-                );
+                if (
+                    this.lastKeyTyped === '-' &amp;&amp;
+                    !specialCharacters.test(keyTyped) &amp;&amp;
+                    keyTyped !== ' ' &amp;&amp;
+                    keyTyped !== '-'
+                ) {
+                    const searcher = this.editor.getContentSearcherOfCursor(event);
+                    const textBeforeCursor = searcher.getSubStringBefore(3);
+                    const dashes = searcher.getSubStringBefore(2);
+                    const isPrecededByADash = textBeforeCursor[0] === '-';
+                    const isPrecededByASpace = textBeforeCursor[0] === ' ';
+                    <span class="missing-if-branch" title="if path not taken" >I</span>if (
+                        isPrecededByADash ||
+                        isPrecededByASpace ||
+                        specialCharacters.test(textBeforeCursor[0]) ||
+                        dashes !== '--'
+                    ) {
+<span class="cstat-no" title="statement not covered" >                        return;</span>
+                    }
 &nbsp;
-                //After the substitution the last key typed needs to be cleaned
-                this.lastKeyTyped = '';
-            } else {
-                this.lastKeyTyped = keyTyped;
+                    const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
+                    const nodeHyphen = document.createTextNode('—');
+                    this.editor.addUndoSnapshot(
+                        () =&gt; {
+                            textRange.deleteContents();
+                            textRange.insertNode(nodeHyphen);
+                            this.editor.select(nodeHyphen, PositionType.End);
+                        },
+                        ChangeSource.Format /*changeSource*/,
+                        true /*canUndoByBackspace*/,
+                        { formatApiName: 'autoHyphen' }
+                    );
+&nbsp;
+                    //After the substitution the last key typed needs to be cleaned
+                    this.lastKeyTyped = '';
+                } else {
+                    this.lastKeyTyped = keyTyped;
+                }
             }
         }
     }
@@ -367,7 +385,7 @@ export default class AutoFormat implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-14T17:21:47.061Z
+                at 2022-07-14T17:38:44.479Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
