@@ -253,7 +253,7 @@ function adjustInsertPositionForNotEditableNode(
     position: NodePosition,
     range: Range
 ): NodePosition {
-    if (!position.element.isContentEditable) {
+    if (!position.element?.isContentEditable) {
         let nonEditableElement: HTMLElement | undefined;
         let lastNonEditableElement: HTMLElement | null = findClosestElementAncestor(
             position.node,
