@@ -15,13 +15,16 @@ import type { CompatibleNumberingListType } from 'roosterjs-editor-types/lib/com
 export default function toggleNumbering(
     editor: IEditor,
     startNumber?: number,
-    listStyle?: NumberingListType | CompatibleNumberingListType
+    listStyle?: NumberingListType | CompatibleNumberingListType,
+    autoFormat?: boolean
 ) {
     toggleListType(
         editor,
         ListType.Ordered,
         startNumber,
         undefined /* includeSiblingLists */,
-        listStyle
+        listStyle,
+        undefined /* unorderedStyle */,
+        autoFormat
     );
 }

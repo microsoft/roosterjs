@@ -38,7 +38,8 @@ export default function toggleListType(
     startNumber?: number,
     includeSiblingLists: boolean = true,
     orderedStyle?: NumberingListType | CompatibleNumberingListType,
-    unorderedStyle?: BulletListType | CompatibleBulletListType
+    unorderedStyle?: BulletListType | CompatibleBulletListType,
+    autoFormat?: boolean
 ) {
     blockFormat(
         editor,
@@ -65,6 +66,6 @@ export default function toggleListType(
             }
         },
         undefined /* beforeRunCallback */,
-        'toggleListType'
+        autoFormat ? 'autoToggleListType' : 'toggleListType'
     );
 }
