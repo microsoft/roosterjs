@@ -31,7 +31,12 @@ export default class TypeInContainerPlugin implements EditorPlugin {
     }
 
     isRangeEmpty(range: Range) {
-        if (range.collapsed && !range.startContainer.firstChild) {
+        if (
+            range.collapsed &&
+            range.startContainer.nodeType === Node.ELEMENT_NODE &&
+            (range.startContainer as Element).tagName.toLowerCase() == 'div' &&
+            !range.startContainer.firstChild
+        ) {
             return true;
         }
         return false;
