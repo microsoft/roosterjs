@@ -14,7 +14,7 @@ import type { CompatibleBulletListType } from 'roosterjs-editor-types/lib/compat
 export default function toggleBullet(
     editor: IEditor,
     listStyle?: BulletListType | CompatibleBulletListType,
-    autoFormat?: boolean
+    apiNameOverride?: string
 ) {
     toggleListType(
         editor,
@@ -23,6 +23,6 @@ export default function toggleBullet(
         false /* includeSiblingLists */,
         undefined /** orderedStyle  */,
         listStyle,
-        autoFormat
+        apiNameOverride
     );
 }

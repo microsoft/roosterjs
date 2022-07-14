@@ -16,7 +16,7 @@ export default function toggleNumbering(
     editor: IEditor,
     startNumber?: number,
     listStyle?: NumberingListType | CompatibleNumberingListType,
-    autoFormat?: boolean
+    apiNameOverride?: string
 ) {
     toggleListType(
         editor,
@@ -25,6 +25,6 @@ export default function toggleNumbering(
         undefined /* includeSiblingLists */,
         listStyle,
         undefined /* unorderedStyle */,
-        autoFormat
+        apiNameOverride
     );
 }
