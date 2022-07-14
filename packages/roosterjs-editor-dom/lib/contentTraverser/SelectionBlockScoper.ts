@@ -35,27 +35,12 @@ export default class SelectionBlockScoper implements TraversingScoper {
         position: NodePosition | Range,
         private startFrom: ContentPosition | CompatibleContentPosition
     ) {
-        // Debugging info, will be removed later
-        let isPosition = false;
-
         if (safeInstanceOf(position, 'Range')) {
             position = Position.getStart(position);
-        } else {
-            isPosition = true;
         }
 
-        try {
-            this.position = position.normalize();
-            this.block = getBlockElementAtNode(this.rootNode, this.position.node);
-        } catch (e) {
-            throw new Error(
-                `${
-                    (e as any)?.message
-                }; isPosition: ${isPosition}; actual type: ${typeof position}; String name: ${
-                    typeof position?.toString === 'function' ? position.toString() : 'No toString()'
-                }`
-            );
-        }
+        this.position = position.normalize();
+        this.block = getBlockElementAtNode(this.rootNode, this.position.node);
     }
 
     /**
