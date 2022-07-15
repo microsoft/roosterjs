@@ -8,7 +8,6 @@ const {
     packagesPath,
     deployPath,
     roosterJsDistPath,
-    packages,
     mainPackageJson,
     packagesUiPath,
     roosterJsUiDistPath,
