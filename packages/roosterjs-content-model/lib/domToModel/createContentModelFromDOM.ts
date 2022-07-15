@@ -1,3 +1,4 @@
+import { containerProcessor } from './processors/containerProcessor';
 import { ContentModelBlockGroupType } from '../publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
@@ -14,7 +15,7 @@ export default function createContentModelFromDOM(
 ): ContentModelDocument {
     const model = createEmptyModel(root.ownerDocument!);
 
-    // TODO: Fill the model
+    containerProcessor(model, root);
 
     return model;
 }

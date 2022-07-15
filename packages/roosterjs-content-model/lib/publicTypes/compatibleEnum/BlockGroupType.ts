@@ -8,4 +8,9 @@ export enum CompatibleContentModelBlockGroupType {
      * Represents the document entry of Content Model
      */
     Document,
+
+    /**
+     * Represents a general HTML element that doesn't have a special type
+     */
+    General,
 }
