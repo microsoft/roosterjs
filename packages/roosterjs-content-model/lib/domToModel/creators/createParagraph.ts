@@ -4,7 +4,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 /**
  * @internal
  */
-export function createParagraph(isDummy: boolean): ContentModelParagraph {
+export function createParagraph(isDummy?: boolean): ContentModelParagraph {
     const result: ContentModelParagraph = {
         blockType: ContentModelBlockType.Paragraph,
         segments: [],

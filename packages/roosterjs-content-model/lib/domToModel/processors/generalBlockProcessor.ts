@@ -1,12 +1,12 @@
 import { addBlock } from '../utils/addBlock';
 import { containerProcessor } from './containerProcessor';
 import { createGeneralBlock } from '../creators/createGeneralBlock';
-import { ElementProcessor } from '../types/ElementProcessor';
+import { ElementProcessor } from './ElementProcessor';
 
 /**
  * @internal
  */
-export const generalBlockProcessor: ElementProcessor = (group, element, defaultStyle) => {
+export const generalBlockProcessor: ElementProcessor = (group, element) => {
     const block = createGeneralBlock(element);
 
     addBlock(group, block);
