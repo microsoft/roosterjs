@@ -11,12 +11,13 @@ import type { CompatibleNumberingListType } from 'roosterjs-editor-types/lib/com
  * @param editor The editor instance
  * @param startNumber (Optional) Start number of the list
  * @param listStyle (Optional) The style of the numbering list. If not defined, the style will be set to decimal.
+ * @param apiNameOverride (Optional) Set a new api name, if empty the api name will be 'toggleListType'.
  */
 export default function toggleNumbering(
     editor: IEditor,
     startNumber?: number,
     listStyle?: NumberingListType | CompatibleNumberingListType,
-    autoFormat?: boolean
+    apiNameOverride?: string
 ) {
     toggleListType(
         editor,
@@ -25,6 +26,6 @@ export default function toggleNumbering(
         undefined /* includeSiblingLists */,
         listStyle,
         undefined /* unorderedStyle */,
-        autoFormat
+        apiNameOverride
     );
 }
