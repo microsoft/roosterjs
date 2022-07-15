@@ -25,6 +25,8 @@
             "roosterjs-editor-types/lib/*": ["packages/roosterjs-editor-types/lib/*"],
             "roosterjs-color-utils": ["packages/roosterjs-color-utils/lib/index"],
             "roosterjs-color-utils/lib/*": ["packages/roosterjs-color-utils/lib/*"],
+            "roosterjs-content-model": ["packages/roosterjs-content-model/lib/index"],
+            "roosterjs-content-model/lib/*": ["packages/roosterjs-content-model/lib/*"],
             "roosterjs-react": ["packages-ui/roosterjs-react/lib/index"],
             "roosterjs-react/lib/*": ["packages-ui/roosterjs-react/lib/*"]
         }
