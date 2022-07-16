@@ -19,5 +19,5 @@ export interface ContentModelParagraph
      * Whether this block was created from a block HTML element or just some simple segment between other block elements.
      * True means it doesn't have a related block element, false means it was from a block element
      */
-    isDummy?: boolean;
+    isImplicit?: boolean;
 }

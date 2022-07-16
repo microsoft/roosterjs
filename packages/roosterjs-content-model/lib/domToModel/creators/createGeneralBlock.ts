@@ -9,7 +9,7 @@ export function createGeneralBlock(element: HTMLElement): ContentModelGeneralBlo
     return {
         blockType: ContentModelBlockType.BlockGroup,
         blockGroupType: ContentModelBlockGroupType.General,
-        node: element,
+        element: element,
         blocks: [],
     };
 }

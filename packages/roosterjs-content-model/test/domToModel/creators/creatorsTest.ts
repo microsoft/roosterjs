@@ -26,7 +26,7 @@ describe('Creators', () => {
         expect(result).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
             blockGroupType: ContentModelBlockGroupType.General,
-            node: element,
+            element: element,
             blocks: [],
         });
     });
@@ -38,7 +38,7 @@ describe('Creators', () => {
         expect(result).toEqual({
             segmentType: ContentModelSegmentType.General,
             blocks: [],
-            node: element,
+            element: element,
             blockType: ContentModelBlockType.BlockGroup,
             blockGroupType: ContentModelBlockGroupType.General,
         });
@@ -59,7 +59,7 @@ describe('Creators', () => {
         expect(result).toEqual({
             blockType: ContentModelBlockType.Paragraph,
             segments: [],
-            isDummy: true,
+            isImplicit: true,
         });
     });
 

@@ -12,7 +12,7 @@ export function createGeneralSegment(element: HTMLElement): ContentModelGeneralS
         blockGroupType: ContentModelBlockGroupType.General,
         segmentType: ContentModelSegmentType.General,
         blocks: [],
-        node: element,
+        element: element,
     };
 
     return result;

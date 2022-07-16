@@ -4,14 +4,14 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 /**
  * @internal
  */
-export function createParagraph(isDummy?: boolean): ContentModelParagraph {
+export function createParagraph(isImplicit?: boolean): ContentModelParagraph {
     const result: ContentModelParagraph = {
         blockType: ContentModelBlockType.Paragraph,
         segments: [],
     };
 
-    if (isDummy) {
-        result.isDummy = true;
+    if (isImplicit) {
+        result.isImplicit = true;
     }
 
     return result;

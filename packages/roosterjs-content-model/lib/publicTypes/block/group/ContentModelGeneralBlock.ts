@@ -10,7 +10,7 @@ export interface ContentModelGeneralBlock
         ContentModelBlockGroupType.General | CompatibleContentModelBlockGroupType.General
     > {
     /**
-     * A cloned copy of original HTML node that this model was created from
+     * A reference to original HTML node that this model was created from
      */
-    node: Node;
+    element: HTMLElement;
 }
