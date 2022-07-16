@@ -1,7 +1,6 @@
 import { containerProcessor } from './processors/containerProcessor';
-import { ContentModelBlockGroupType } from '../publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { createContentModelDocument } from './creators/createContentModelDocument';
 
 /**
  * Create Content Model from DOM node
@@ -10,21 +9,12 @@ import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDoc
  * @returns A Content Model of the given root and selection
  */
 export default function createContentModelFromDOM(
-    root: Node,
+    root: ParentNode,
     range: Range | null
 ): ContentModelDocument {
-    const model = createEmptyModel(root.ownerDocument!);
+    const model = createContentModelDocument(root.ownerDocument!);
 
     containerProcessor(model, root);
 
     return model;
-}
-
-function createEmptyModel(doc: Document): ContentModelDocument {
-    return {
-        blockGroupType: ContentModelBlockGroupType.Document,
-        blockType: ContentModelBlockType.BlockGroup,
-        blocks: [],
-        document: doc,
-    };
 }

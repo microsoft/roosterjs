@@ -9,14 +9,14 @@ import { textProcessor } from './textProcessor';
 /**
  * @internal
  */
-export function containerProcessor(group: ContentModelBlockGroup, parent: Node) {
+export function containerProcessor(group: ContentModelBlockGroup, parent: ParentNode) {
     for (let child = parent.firstChild; child; child = child.nextSibling) {
         if (isNodeOfType(child, NodeType.Element)) {
             const processor = isBlockElement(child)
                 ? generalBlockProcessor
                 : generalSegmentProcessor;
 
-            processor(group, child, {});
+            processor(group, child);
         } else if (isNodeOfType(child, NodeType.Text)) {
             const textNode = child as Text;
 

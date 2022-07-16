@@ -8,11 +8,11 @@ import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
  */
 export function createGeneralSegment(element: HTMLElement): ContentModelGeneralSegment {
     const result: ContentModelGeneralSegment = {
+        blockType: ContentModelBlockType.BlockGroup,
+        blockGroupType: ContentModelBlockGroupType.General,
         segmentType: ContentModelSegmentType.General,
         blocks: [],
         node: element,
-        blockType: ContentModelBlockType.BlockGroup,
-        blockGroupType: ContentModelBlockGroupType.General,
     };
 
     return result;
