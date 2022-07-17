@@ -19,7 +19,7 @@ describe('generalSegmentProcessor', () => {
             segmentType: ContentModelSegmentType.General,
             blockType: ContentModelBlockType.BlockGroup,
             blockGroupType: ContentModelBlockGroupType.General,
-            node: span,
+            element: span,
             blocks: [],
         };
 
@@ -33,7 +33,7 @@ describe('generalSegmentProcessor', () => {
             blocks: [
                 {
                     blockType: ContentModelBlockType.Paragraph,
-                    isDummy: true,
+                    isImplicit: true,
                     segments: [segment],
                 },
             ],

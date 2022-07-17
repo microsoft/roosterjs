@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const { rootPath, compatibleEnumPath } = require('./common');
+const { rootPath, compatibleEnumPath, contentModelCompatibleEnumPath } = require('./common');
 
 const EnumRegex = /(^\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*export const enum ([A-Za-z0-9]+)\s{([^}]+)}/gm;
 const CompatibleTypePrefix = 'Compatible';
@@ -36,8 +36,8 @@ function generateCompatibleEnumScript(enums) {
     return enums.map(generateCompatibleEnum).join('\r\n');
 }
 
-function processConstEnum() {
-    const sourceDir = path.join(rootPath, 'packages', 'roosterjs-editor-types', 'lib', 'enum');
+function processConstEnumInternal(targetPath) {
+    const sourceDir = targetPath.replace('compatibleEnum', 'enum');
     const fileNames = fs.readdirSync(sourceDir);
     let indexTs = '';
 
@@ -53,16 +53,21 @@ function processConstEnum() {
                 .map(e => `${CompatibleTypePrefix}${e.name}`)
                 .join(', ')} } from './${fileName.replace(/\.ts$/, '')}'\r\n`;
 
-            const newFullName = path.join(compatibleEnumPath, fileName);
+            const newFullName = path.join(targetPath, fileName);
 
-            fs.mkdirSync(compatibleEnumPath, { recursive: true });
+            fs.mkdirSync(targetPath, { recursive: true });
             fs.writeFileSync(newFullName, newContent);
         }
     });
 
     if (indexTs) {
-        fs.writeFileSync(path.join(compatibleEnumPath, 'index.ts'), indexTs);
+        fs.writeFileSync(path.join(targetPath, 'index.ts'), indexTs);
     }
+}
+
+function processConstEnum() {
+    processConstEnumInternal(compatibleEnumPath);
+    processConstEnumInternal(contentModelCompatibleEnumPath);
 }
 
 module.exports = processConstEnum;

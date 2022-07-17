@@ -1,20 +1,13 @@
-import { addBlock } from '../../../lib/domToModel/utils/addBlock';
-import { addSegment } from '../../../lib/domToModel/utils/addSegment';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
-import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createParagraph } from '../../../lib/domToModel/creators/createParagraph';
-import { createText } from '../../../lib/domToModel/creators/createText';
+import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 
-describe('addSegment', () => {
-    it('Add segment to empty document', () => {
+describe('textProcessor', () => {
+    it('Empty group', () => {
         const doc = createContentModelDocument(document);
-        const segment = createText('test');
-
-        addSegment(doc, segment);
+        textProcessor(doc, 'test');
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -35,13 +28,14 @@ describe('addSegment', () => {
         });
     });
 
-    it('Add segment to document contains an empty paragraph', () => {
+    it('Group with empty paragraph', () => {
         const doc = createContentModelDocument(document);
-        addBlock(doc, createParagraph());
+        doc.blocks.push({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [],
+        });
 
-        const segment = createText('test');
-
-        addSegment(doc, segment);
+        textProcessor(doc, 'test');
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -61,22 +55,19 @@ describe('addSegment', () => {
         });
     });
 
-    it('Add segment to document contains a paragraph with existing text', () => {
+    it('Group with paragraph with text segment', () => {
         const doc = createContentModelDocument(document);
-        const block: ContentModelParagraph = {
+        doc.blocks.push({
             blockType: ContentModelBlockType.Paragraph,
             segments: [
                 {
                     segmentType: ContentModelSegmentType.Text,
-                    text: 'test1',
+                    text: 'test0',
                 },
             ],
-        };
-        addBlock(doc, block);
+        });
 
-        const segment = createText('test2');
-
-        addSegment(doc, segment);
+        textProcessor(doc, 'test1');
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -87,11 +78,7 @@ describe('addSegment', () => {
                     segments: [
                         {
                             segmentType: ContentModelSegmentType.Text,
-                            text: 'test1',
-                        },
-                        {
-                            segmentType: ContentModelSegmentType.Text,
-                            text: 'test2',
+                            text: 'test0test1',
                         },
                     ],
                 },
@@ -100,30 +87,37 @@ describe('addSegment', () => {
         });
     });
 
-    it('Add segment to document contains a paragraph with other type of block', () => {
+    it('Group with paragraph with different type of segment', () => {
         const doc = createContentModelDocument(document);
-        const div = document.createElement('div');
-        const block: ContentModelGeneralBlock = {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
-            blocks: [],
-            element: div,
-        };
-        addBlock(doc, block);
+        doc.blocks.push({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [
+                {
+                    segmentType: ContentModelSegmentType.General,
+                    blockType: ContentModelBlockType.BlockGroup,
+                    blockGroupType: ContentModelBlockGroupType.General,
+                    element: null!,
+                    blocks: [],
+                },
+            ],
+        });
 
-        const segment = createText('test');
-
-        addSegment(doc, segment);
+        textProcessor(doc, 'test');
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
             blockGroupType: ContentModelBlockGroupType.Document,
             blocks: [
-                block,
                 {
                     blockType: ContentModelBlockType.Paragraph,
-                    isImplicit: true,
                     segments: [
+                        {
+                            segmentType: ContentModelSegmentType.General,
+                            blockType: ContentModelBlockType.BlockGroup,
+                            blockGroupType: ContentModelBlockGroupType.General,
+                            element: null!,
+                            blocks: [],
+                        },
                         {
                             segmentType: ContentModelSegmentType.Text,
                             text: 'test',
