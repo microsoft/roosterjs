@@ -13,7 +13,7 @@ export function createBlockFromContentModel(doc: Document, parent: Node, block: 
 
             switch (block.blockGroupType) {
                 case ContentModelBlockGroupType.General:
-                    newParent = block.node.cloneNode();
+                    newParent = block.element.cloneNode();
                     parent.appendChild(newParent);
                     break;
                 default:

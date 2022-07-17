@@ -7,7 +7,7 @@ import { createSegmentFromContent } from './createSegmentFromContent';
 export function createParagraph(doc: Document, parent: Node, paragraph: ContentModelParagraph) {
     let container: HTMLElement;
 
-    if (paragraph.isDummy) {
+    if (paragraph.isImplicit) {
         container = parent as HTMLElement;
     } else {
         container = doc.createElement('div');
