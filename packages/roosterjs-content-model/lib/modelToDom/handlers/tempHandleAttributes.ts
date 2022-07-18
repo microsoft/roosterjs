@@ -1,4 +1,4 @@
-import { getObjectKeys } from 'roosterjs-editor-dom/lib';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * @internal
