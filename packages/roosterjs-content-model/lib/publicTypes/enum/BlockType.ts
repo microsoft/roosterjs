@@ -8,6 +8,11 @@ export const enum ContentModelBlockType {
     BlockGroup,
 
     /**
+     * Represent a Table
+     */
+    Table,
+
+    /**
      * Represent a general paragraph (DIV, P, ...)
      */
     Paragraph,
