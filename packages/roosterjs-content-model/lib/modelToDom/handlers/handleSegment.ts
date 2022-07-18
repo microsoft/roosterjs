@@ -1,15 +1,11 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
-import { createBlockFromContentModel } from './createBlockFromContentModel';
+import { handleBlock } from './handleBlock';
 
 /**
  * @internal
  */
-export function createSegmentFromContent(
-    doc: Document,
-    parent: Node,
-    segment: ContentModelSegment
-) {
+export function handleSegment(doc: Document, parent: Node, segment: ContentModelSegment) {
     let element: HTMLElement | null = null;
 
     switch (segment.segmentType) {
@@ -21,7 +17,7 @@ export function createSegmentFromContent(
             break;
 
         case ContentModelSegmentType.General:
-            createBlockFromContentModel(doc, parent, segment);
+            handleBlock(doc, parent, segment);
             break;
     }
 

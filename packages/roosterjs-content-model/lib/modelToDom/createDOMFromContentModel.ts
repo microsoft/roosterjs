@@ -1,6 +1,6 @@
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
-import { createBlockFromContentModel } from './creators/createBlockFromContentModel';
-import { optimize } from './optimize/optimize';
+import { handleBlock } from './handlers/handleBlock';
+import { optimize } from './optimizers/optimize';
 import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
@@ -15,7 +15,7 @@ export default function createDOMFromContentModel(
 ): [DocumentFragment, SelectionRangeEx | undefined] {
     const fragment = model.document.createDocumentFragment();
 
-    createBlockFromContentModel(model.document, fragment, model);
+    handleBlock(model.document, fragment, model);
 
     optimize(fragment, optimizeLevel);
 

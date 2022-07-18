@@ -1,12 +1,12 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
-import { createParagraph } from './createParagraph';
+import { handleParagraph } from './handleParagraph';
 
 /**
  * @internal
  */
-export function createBlockFromContentModel(doc: Document, parent: Node, block: ContentModelBlock) {
+export function handleBlock(doc: Document, parent: Node, block: ContentModelBlock) {
     switch (block.blockType) {
         case ContentModelBlockType.BlockGroup:
             let newParent = parent;
@@ -20,13 +20,11 @@ export function createBlockFromContentModel(doc: Document, parent: Node, block: 
                     break;
             }
 
-            block.blocks.forEach(childBlock =>
-                createBlockFromContentModel(doc, newParent, childBlock)
-            );
+            block.blocks.forEach(childBlock => handleBlock(doc, newParent, childBlock));
 
             break;
         case ContentModelBlockType.Paragraph:
-            createParagraph(doc, parent, block);
+            handleParagraph(doc, parent, block);
             break;
     }
 }

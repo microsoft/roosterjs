@@ -1,10 +1,10 @@
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { createSegmentFromContent } from './createSegmentFromContent';
+import { handleSegment } from './handleSegment';
 
 /**
  * @internal
  */
-export function createParagraph(doc: Document, parent: Node, paragraph: ContentModelParagraph) {
+export function handleParagraph(doc: Document, parent: Node, paragraph: ContentModelParagraph) {
     let container: HTMLElement;
 
     if (paragraph.isImplicit) {
@@ -15,6 +15,6 @@ export function createParagraph(doc: Document, parent: Node, paragraph: ContentM
     }
 
     paragraph.segments.forEach(segment => {
-        createSegmentFromContent(doc, container, segment);
+        handleSegment(doc, container, segment);
     });
 }
