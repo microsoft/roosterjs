@@ -5,6 +5,8 @@ import { createContentModelDocument } from '../../../lib/domToModel/creators/cre
 import { createGeneralBlock } from '../../../lib/domToModel/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/domToModel/creators/createGeneralSegment';
 import { createParagraph } from '../../../lib/domToModel/creators/createParagraph';
+import { createTable } from '../../../lib/domToModel/creators/createTable';
+import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
 import { createText } from '../../../lib/domToModel/creators/createText';
 
 describe('Creators', () => {
@@ -70,6 +72,63 @@ describe('Creators', () => {
         expect(result).toEqual({
             segmentType: ContentModelSegmentType.Text,
             text: text,
+        });
+    });
+
+    it('createTable', () => {
+        const tableModel = createTable(2);
+
+        expect(tableModel).toEqual({
+            blockType: ContentModelBlockType.Table,
+            cells: [[], []],
+        });
+    });
+
+    it('createTableCell from Table Cell - no span', () => {
+        const tdModel = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, false /*isHeader*/);
+        expect(tdModel).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: false,
+        });
+    });
+
+    it('createTableCell from Table Cell - span left', () => {
+        const tdModel = createTableCell(2 /*colSpan*/, 1 /*rowSpan*/, false /*isHeader*/);
+        expect(tdModel).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blocks: [],
+            spanLeft: true,
+            spanAbove: false,
+            isHeader: false,
+        });
+    });
+
+    it('createTableCell from Table Cell - span above', () => {
+        const tdModel = createTableCell(1 /*colSpan*/, 3 /*rowSpan*/, false /*isHeader*/);
+        expect(tdModel).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blocks: [],
+            spanLeft: false,
+            spanAbove: true,
+            isHeader: false,
+        });
+    });
+
+    it('createTableCell from Table Header', () => {
+        const tdModel = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, true /*isHeader*/);
+        expect(tdModel).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: true,
         });
     });
 });

@@ -23,14 +23,4 @@ export interface ContentModelTableCell
      * Whether this cell is a table header (TH) element
      */
     isHeader?: boolean;
-
-    /**
-     * Whether this cell is selected
-     */
-    isSelected?: Boolean;
-
-    /**
-     * @deprecated Temporary used only
-     */
-    tempAttributes: Record<string, string>;
 }

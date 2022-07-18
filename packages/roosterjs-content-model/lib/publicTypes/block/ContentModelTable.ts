@@ -14,9 +14,4 @@ export interface ContentModelTable
      * Cells of this table
      */
     cells: ContentModelTableCell[][];
-
-    /**
-     * @deprecated Temporary used only
-     */
-    tempAttributes: Record<string, string>;
 }
