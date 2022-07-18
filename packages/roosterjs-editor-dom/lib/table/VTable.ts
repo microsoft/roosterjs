@@ -271,6 +271,9 @@ export default class VTable {
                     ? this.selection.lastCell.y - this.selection.firstCell.y
                     : 0;
                 this.cells.splice(firstRow, removedRows + 1);
+                if (this.cells.length === 0) {
+                    this.cells = null;
+                }
 
                 break;
             case TableOperation.DeleteColumn:
@@ -287,6 +290,9 @@ export default class VTable {
                         row.splice(removedColumns, 1);
                     });
                     deletedColumns++;
+                }
+                if (this.cells[0]?.length === 0) {
+                    this.cells = null;
                 }
                 break;
 
