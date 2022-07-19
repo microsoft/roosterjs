@@ -6,7 +6,7 @@ const BorderCollapsed = 'collapse';
 /**
  * @internal
  */
-export const tableCellSpacingHandler: FormatHandler<ContentModelTableFormat> = {
+export const tableSpacingHandler: FormatHandler<ContentModelTableFormat> = {
     parse: (format, element) => {
         format.borderCollapse = element.style.borderCollapse == BorderCollapsed;
     },

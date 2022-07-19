@@ -1,8 +1,8 @@
 import { ContentModelTableFormat } from '../publicTypes';
 import { FormatHandler } from './FormatHandler';
-import { tableCellSpacingHandler } from './table/tableSpacingHandler';
 import { tableIdHandler } from './table/tableIdHandler';
 import { tableMetadataHandler } from './table/tableMetadataHandler';
+import { tableSpacingHandler } from './table/tableSpacingHandler';
 
 /**
  * @internal
@@ -10,5 +10,5 @@ import { tableMetadataHandler } from './table/tableMetadataHandler';
 export const TableFormatHandlers: FormatHandler<ContentModelTableFormat>[] = [
     tableIdHandler,
     tableMetadataHandler,
-    tableCellSpacingHandler,
+    tableSpacingHandler,
 ];
