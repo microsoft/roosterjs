@@ -4,7 +4,7 @@ import { createTable } from '../creators/createTable';
 import { createTableCell } from '../creators/createTableCell';
 import { ElementProcessor } from './ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
-import { TableCellFormatHandlers } from 'roosterjs-content-model/lib/formatHandlers/TableCellFormatHandler';
+import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
 /**

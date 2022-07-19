@@ -4,7 +4,14 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
 import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
+import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
+
+const context: FormatContext = {
+    isDarkMode: false,
+    zoomScale: 1,
+    isRightToLeft: false,
+};
 
 describe('tableProcessor', () => {
     beforeEach(() => {
@@ -17,7 +24,7 @@ describe('tableProcessor', () => {
         const div = document.createElement('div');
         div.innerHTML = tableHTML;
 
-        tableProcessor(doc, div.firstChild as HTMLTableElement);
+        tableProcessor(doc, div.firstChild as HTMLTableElement, context);
 
         expect(doc.blocks[0]).toEqual(expectedModel);
     }
@@ -34,9 +41,11 @@ describe('tableProcessor', () => {
                         spanLeft: false,
                         isHeader: false,
                         blocks: [],
+                        format: {},
                     },
                 ],
             ],
+            format: {},
         });
     });
 
@@ -52,6 +61,7 @@ describe('tableProcessor', () => {
                 [tdModel, tdModel],
                 [tdModel, tdModel],
             ],
+            format: {},
         });
     });
 
@@ -66,6 +76,7 @@ describe('tableProcessor', () => {
                 [tdModel, tdModel],
                 [tdModel, createTableCell(2, 1, false)],
             ],
+            format: {},
         });
     });
 
@@ -78,6 +89,7 @@ describe('tableProcessor', () => {
                 [createTableCell(1, 1, false), createTableCell(2, 1, false)],
                 [createTableCell(1, 2, false), createTableCell(2, 2, false)],
             ],
+            format: {},
         });
     });
 
@@ -88,6 +100,7 @@ describe('tableProcessor', () => {
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
             cells: [[tdModel]],
+            format: {},
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
@@ -101,6 +114,7 @@ describe('tableProcessor', () => {
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
             cells: [[tdModel, tdModel]],
+            format: {},
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(2);
@@ -113,6 +127,7 @@ describe('tableProcessor', () => {
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
             cells: [[tdModel, createTableCell(2, 1, false)]],
+            format: {},
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);

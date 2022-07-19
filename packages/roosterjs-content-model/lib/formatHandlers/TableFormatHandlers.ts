@@ -1,4 +1,4 @@
-import { ContentModelTableFormat } from '../publicTypes';
+import { ContentModelTableFormat } from '../publicTypes/format/ContentModelTableFormat';
 import { FormatHandler } from './FormatHandler';
 import { tableIdHandler } from './table/tableIdHandler';
 import { tableMetadataHandler } from './table/tableMetadataHandler';

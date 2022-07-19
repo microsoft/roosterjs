@@ -5,7 +5,14 @@ import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
 import { generalSegmentProcessor } from '../../../lib/domToModel/processors/generalSegmentProcessor';
+
+const context: FormatContext = {
+    isDarkMode: false,
+    zoomScale: 1,
+    isRightToLeft: false,
+};
 
 describe('generalSegmentProcessor', () => {
     beforeEach(() => {
@@ -25,7 +32,7 @@ describe('generalSegmentProcessor', () => {
 
         spyOn(createGeneralSegment, 'createGeneralSegment').and.returnValue(segment);
 
-        generalSegmentProcessor(doc, span);
+        generalSegmentProcessor(doc, span, context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -42,6 +49,6 @@ describe('generalSegmentProcessor', () => {
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span);
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span);
+        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span, context);
     });
 });

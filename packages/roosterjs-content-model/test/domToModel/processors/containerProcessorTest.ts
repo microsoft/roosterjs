@@ -6,6 +6,13 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
+
+const context: FormatContext = {
+    isDarkMode: false,
+    zoomScale: 1,
+    isRightToLeft: false,
+};
 
 describe('containerProcessor', () => {
     let doc: ContentModelDocument;
@@ -20,7 +27,7 @@ describe('containerProcessor', () => {
     it('Process a document fragment', () => {
         const fragment = document.createDocumentFragment();
 
-        containerProcessor(doc, fragment);
+        containerProcessor(doc, fragment, context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -36,7 +43,7 @@ describe('containerProcessor', () => {
     it('Process an empty DIV', () => {
         const div = document.createElement('div');
 
-        containerProcessor(doc, div);
+        containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -53,7 +60,7 @@ describe('containerProcessor', () => {
         const div = document.createElement('div');
         div.textContent = 'test';
 
-        containerProcessor(doc, div);
+        containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -72,7 +79,7 @@ describe('containerProcessor', () => {
         const span = document.createElement('span');
         div.appendChild(span);
 
-        containerProcessor(doc, div);
+        containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -82,7 +89,11 @@ describe('containerProcessor', () => {
         });
         expect(generalBlockProcessor.generalBlockProcessor).not.toHaveBeenCalled();
         expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(doc, span);
+        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
+            doc,
+            span,
+            context
+        );
         expect(textProcessor.textProcessor).not.toHaveBeenCalled();
     });
 
@@ -95,7 +106,7 @@ describe('containerProcessor', () => {
         div.appendChild(innerDiv);
         div.appendChild(text);
 
-        containerProcessor(doc, div);
+        containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -104,9 +115,17 @@ describe('containerProcessor', () => {
             document: document,
         });
         expect(generalBlockProcessor.generalBlockProcessor).toHaveBeenCalledTimes(1);
-        expect(generalBlockProcessor.generalBlockProcessor).toHaveBeenCalledWith(doc, innerDiv);
+        expect(generalBlockProcessor.generalBlockProcessor).toHaveBeenCalledWith(
+            doc,
+            innerDiv,
+            context
+        );
         expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(doc, span);
+        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
+            doc,
+            span,
+            context
+        );
         expect(textProcessor.textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor.textProcessor).toHaveBeenCalledWith(doc, 'test');
     });
