@@ -8,8 +8,7 @@ import { ContentModelTableCell } from '../../publicTypes/block/group/ContentMode
 export function createTableCell(
     colSpan: number,
     rowSpan: number,
-    isHeader: boolean,
-    attributes?: NamedNodeMap
+    isHeader: boolean
 ): ContentModelTableCell {
     return {
         blockType: ContentModelBlockType.BlockGroup,
