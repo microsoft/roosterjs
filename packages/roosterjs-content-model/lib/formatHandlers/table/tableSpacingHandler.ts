@@ -8,7 +8,9 @@ const BorderCollapsed = 'collapse';
  */
 export const tableSpacingHandler: FormatHandler<ContentModelTableFormat> = {
     parse: (format, element) => {
-        format.borderCollapse = element.style.borderCollapse == BorderCollapsed;
+        if (element.style.borderCollapse == BorderCollapsed) {
+            format.borderCollapse = true;
+        }
     },
     apply: (format, element) => {
         if (format.borderCollapse) {

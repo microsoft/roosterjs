@@ -7,8 +7,14 @@ import { FormatHandler } from '../FormatHandler';
 export const tableCellSizeHandler: FormatHandler<ContentModelTableCellFormat> = {
     parse: (format, element, context) => {
         const size = element.getBoundingClientRect();
-        format.width = size.width / context.zoomScale;
-        format.height = size.height / context.zoomScale;
+
+        if (size?.width > 0) {
+            format.width = size.width / context.zoomScale;
+        }
+
+        if (size?.height > 0) {
+            format.height = size.height / context.zoomScale;
+        }
     },
     apply: (format, element) => {
         if (format.width! > 0) {

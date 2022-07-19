@@ -6,7 +6,9 @@ import { FormatHandler } from '../FormatHandler';
  */
 export const tableIdHandler: FormatHandler<ContentModelTableFormat> = {
     parse: (format, element) => {
-        format.id = element.id;
+        if (element.id) {
+            format.id = element.id;
+        }
     },
     apply: (format, element) => {
         if (format.id) {

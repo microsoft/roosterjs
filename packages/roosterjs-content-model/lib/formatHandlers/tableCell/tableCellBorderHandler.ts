@@ -3,8 +3,19 @@ import { FormatHandler } from '../FormatHandler';
 
 const Directions = ['top', 'right', 'bottom', 'left'];
 
-function read(element: HTMLElement, style: 'width' | 'style' | 'color') {
-    return Directions.map(dir => element.style.getPropertyValue(`border-${dir}-${style}`));
+function readStyle(element: HTMLElement, style: 'width' | 'style' | 'color') {
+    let hasValue = false;
+    const result = Directions.map(dir => {
+        const value = element.style.getPropertyValue(`border-${dir}-${style}`);
+
+        if (value) {
+            hasValue = true;
+        }
+
+        return value;
+    });
+
+    return hasValue ? result : undefined;
 }
 
 // There should be 4 items in array in the order of 'top right bottom left'.
@@ -21,7 +32,7 @@ function writeStyle(
 ) {
     let css: string | undefined;
 
-    if (styleArray && !styleArray.every(x => x == 'initial' || x == 'inherit')) {
+    if (styleArray && !styleArray.every(x => x == '' || x == 'initial' || x == 'inherit')) {
         if (styleArray.length && styleArray[1] == styleArray[3]) {
             if (styleArray[0] == styleArray[2]) {
                 if (styleArray[0] == styleArray[1]) {
@@ -47,9 +58,21 @@ function writeStyle(
  */
 export const tableCellBorderHandler: FormatHandler<ContentModelTableCellFormat> = {
     parse: (format, element) => {
-        format.borderColor = read(element, 'color');
-        format.borderWidth = read(element, 'width');
-        format.borderStyle = read(element, 'style');
+        const borderColor = readStyle(element, 'color');
+        const borderWidth = readStyle(element, 'width');
+        const borderStyle = readStyle(element, 'style');
+
+        if (borderColor) {
+            format.borderColor = borderColor;
+        }
+
+        if (borderWidth) {
+            format.borderWidth = borderWidth;
+        }
+
+        if (borderStyle) {
+            format.borderStyle = borderStyle;
+        }
     },
     apply: (format, element) => {
         writeStyle(element, format.borderColor, 'color');
