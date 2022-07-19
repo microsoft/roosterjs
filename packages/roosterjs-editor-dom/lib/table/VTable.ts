@@ -291,7 +291,11 @@ export default class VTable {
                     });
                     deletedColumns++;
                 }
-                if (this.cells[0]?.length === 0) {
+                if (
+                    !this.cells ||
+                    this.cells.length === 0 ||
+                    this.cells.every(row => row.length === 0)
+                ) {
                     this.cells = null;
                 }
                 break;
