@@ -11,3 +11,6 @@ export { ContentModelSegmentBase } from './segment/ContentModelSegmentBase';
 export { ContentModelText } from './segment/ContentModelText';
 export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './segment/ContentModelSegment';
+
+export { ContentModelTableFormat } from './format/ContentModelTableFormat';
+export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
