@@ -140,7 +140,8 @@ export default class TableEditor {
                             true /*isHorizontal*/
                         );
                     } else {
-                        this.setInserterTd(null);
+                        this.setInserterTd(null, true);
+                        this.setInserterTd(null, false);
                     }
 
                     this.setResizingTd(td);
