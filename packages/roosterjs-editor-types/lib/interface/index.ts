@@ -48,12 +48,12 @@ export { default as HtmlSanitizerOptions } from './HtmlSanitizerOptions';
 export { default as SanitizeHtmlOptions } from './SanitizeHtmlOptions';
 export { default as TargetWindowBase } from './TargetWindowBase';
 export { default as TargetWindow } from './TargetWindow';
+export { default as IEditor } from './IEditor';
 export {
-    default as IEditor,
     ContentEditFeature,
     GenericContentEditFeature,
     BuildInEditFeature,
-} from './IEditor';
+} from './ContentEditFeature';
 export { default as EditorPlugin } from './EditorPlugin';
 export { default as PluginWithState } from './PluginWithState';
 export {

@@ -43,6 +43,9 @@
         },
         {
             "path": "roosterjs/tsconfig.child.json"
+        },
+        {
+            "path": "roosterjs-content-model/tsconfig.child.json"
         }
     ],
     "include": []

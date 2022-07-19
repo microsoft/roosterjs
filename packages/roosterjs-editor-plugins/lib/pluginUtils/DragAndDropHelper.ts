@@ -1,6 +1,6 @@
-import { Browser } from 'roosterjs-editor-dom/lib';
 import Disposable from './Disposable';
 import DragAndDropHandler from './DragAndDropHandler';
+import { Browser } from 'roosterjs-editor-dom';
 
 /**
  * @internal

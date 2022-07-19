@@ -23,6 +23,13 @@ const compatibleEnumPath = path.join(
     'lib',
     'compatibleEnum'
 );
+const contentModelCompatibleEnumPath = path.join(
+    packagesPath,
+    'roosterjs-content-model',
+    'lib',
+    'publicTypes',
+    'compatibleEnum'
+);
 
 function collectPackages(startPath) {
     const packagePaths = glob.sync(
@@ -116,13 +123,20 @@ async function runWebPack(config) {
     });
 }
 
+const NoneExternalPackageNames = [
+    // For now we don't pack ContentModel code into rooster.js file,
+    // so need to bundle it together with demo site and anywhere it is used.
+    // Once ContentModel is finished, we will bundle it into rooster.js and remove from this list.
+    'roosterjs-content-model',
+];
+
 function getWebpackExternalCallback(externalLibraryPairs) {
     const externalMap = new Map([
         ['react', 'React'],
         ['react-dom', 'ReactDOM'],
         [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
         [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
-        ...packages.map(p => [p, 'roosterjs']),
+        ...packages.filter(x => NoneExternalPackageNames.indexOf(x) < 0).map(p => [p, 'roosterjs']),
         ...externalLibraryPairs,
     ]);
 
@@ -149,6 +163,7 @@ module.exports = {
     roosterJsDistPath,
     roosterJsUiDistPath,
     compatibleEnumPath,
+    contentModelCompatibleEnumPath,
     deployPath,
     runNode,
     err,
