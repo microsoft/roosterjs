@@ -1,6 +1,7 @@
 import { containerProcessor } from './processors/containerProcessor';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
 import { createContentModelDocument } from './creators/createContentModelDocument';
+import { createFormatContext } from '../formatHandlers/createFormatContext';
 
 /**
  * Create Content Model from DOM node
@@ -13,8 +14,9 @@ export default function createContentModelFromDOM(
     range: Range | null
 ): ContentModelDocument {
     const model = createContentModelDocument(root.ownerDocument!);
+    const context = createFormatContext();
 
-    containerProcessor(model, root);
+    containerProcessor(model, root, context);
 
     return model;
 }

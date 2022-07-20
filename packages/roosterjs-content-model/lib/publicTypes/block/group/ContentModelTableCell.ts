@@ -10,6 +10,12 @@ export interface ContentModelTableCell
         ContentModelBlockGroupType.TableCell | CompatibleContentModelBlockGroupType.TableCell
     > {
     /**
+     * Format of this table cell
+     * TODO: Add more formats
+     */
+    format: {};
+
+    /**
      * Whether this cell is spanned from left cell
      */
     spanLeft: boolean;

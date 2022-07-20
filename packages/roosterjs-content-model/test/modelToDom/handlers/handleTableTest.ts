@@ -1,17 +1,22 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
+import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
 
 describe('handleTable', () => {
+    let context: FormatContext;
+
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
+        context = createFormatContext();
     });
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
         const div = document.createElement('div');
-        handleTable(document, div, model);
+        handleTable(document, div, model, context);
         expect(div.innerHTML).toBe(expectedInnerHTML);
     }
 
@@ -20,6 +25,7 @@ describe('handleTable', () => {
             {
                 blockType: ContentModelBlockType.Table,
                 cells: [],
+                format: {},
             },
             ''
         );
@@ -30,6 +36,7 @@ describe('handleTable', () => {
             {
                 blockType: ContentModelBlockType.Table,
                 cells: [[], []],
+                format: {},
             },
             ''
         );
@@ -40,6 +47,7 @@ describe('handleTable', () => {
             {
                 blockType: ContentModelBlockType.Table,
                 cells: [[createTableCell(1, 1, false)]],
+                format: {},
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
         );
@@ -54,6 +62,7 @@ describe('handleTable', () => {
                     [tdModel, tdModel],
                     [tdModel, tdModel],
                 ],
+                format: {},
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -65,6 +74,7 @@ describe('handleTable', () => {
             {
                 blockType: ContentModelBlockType.Table,
                 cells: [[tdModel], [], [tdModel]],
+                format: {},
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -79,6 +89,7 @@ describe('handleTable', () => {
                     [tdModel, createTableCell(2, 1, false)],
                     [tdModel, tdModel],
                 ],
+                format: {},
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -93,6 +104,7 @@ describe('handleTable', () => {
                     [tdModel, tdModel],
                     [createTableCell(1, 2, false), tdModel],
                 ],
+                format: {},
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -106,6 +118,7 @@ describe('handleTable', () => {
                     [createTableCell(1, 1, false), createTableCell(2, 1, false)],
                     [createTableCell(1, 2, false), createTableCell(2, 2, false)],
                 ],
+                format: {},
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
         );
@@ -139,6 +152,7 @@ describe('handleTable', () => {
                         createTableCell(1, 2, false),
                     ],
                 ],
+                format: {},
             },
             '<table><tbody>' +
                 '<tr><td rowspan="2"></td><td colspan="2"></td></tr>' +
@@ -153,6 +167,7 @@ describe('handleTable', () => {
             {
                 blockType: ContentModelBlockType.Table,
                 cells: [[createTableCell(1, 1, true)], [createTableCell(1, 1, false)]],
+                format: {},
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
