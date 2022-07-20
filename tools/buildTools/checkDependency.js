@@ -13,7 +13,9 @@ function getPossibleNames(dir, objectName) {
 }
 
 function processFile(dir, filename, files, externalDependencies) {
-    if (externalDependencies.some(d => d == filename || filename.indexOf(d + '/') == 0)) {
+    if (
+        externalDependencies.some(d => (typeof d === 'string' ? d == filename : d.test(filename)))
+    ) {
         return;
     }
 
@@ -34,7 +36,14 @@ function processFile(dir, filename, files, externalDependencies) {
     if (index >= 0) {
         files = files.slice(index);
         files.push(thisFilename);
-        err(`Circular dependency: \r\n${files.join(' =>\r\n')}`);
+
+        const packageNames = files.map(findPackageName).sort();
+
+        if (packageNames[0] == packageNames[packageNames.length - 1]) {
+            return; // All packages names are the same, that is allowed
+        } else {
+            err(`Cross package circular dependency: \r\n${files.join(' =>\r\n')}`);
+        }
     }
 
     var match;
@@ -43,6 +52,7 @@ function processFile(dir, filename, files, externalDependencies) {
         var dir = path.dirname(thisFilename);
         var content = fs.readFileSync(thisFilename).toString();
         var reg = /from\s+'([^']+)';$/gm;
+
         while ((match = reg.exec(content))) {
             var nextFile = match[1];
             if (nextFile) {
@@ -61,6 +71,21 @@ function processFile(dir, filename, files, externalDependencies) {
     }
 }
 
+function findPackageName(filename) {
+    for (let i = 0; i < allPackages.length; i++) {
+        if (filename.indexOf(allPackages[i])) {
+            return allPackages[i];
+        }
+    }
+
+    err('Package name not found in file name: ' + filename);
+}
+
+const GlobalAllowedCrossPackageDependency = [
+    'roosterjs-editor-types/lib/compatibleTypes',
+    /@fluentui\/react(\/.*)?/,
+];
+
 function checkDependency() {
     allPackages.forEach(packageName => {
         const packageRoot = findPackageRoot(packageName);
@@ -74,7 +99,7 @@ function checkDependency() {
             packageRoot,
             path.join(packageName, 'lib/index'),
             [],
-            dependencies.concat(peerDependencies)
+            dependencies.concat(peerDependencies).concat(GlobalAllowedCrossPackageDependency)
         );
     });
 }

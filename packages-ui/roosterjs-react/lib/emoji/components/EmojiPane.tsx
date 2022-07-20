@@ -120,7 +120,6 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
     ref: React.Ref<EmojiPane>
 ) {
     let searchBox: ITextField;
-
     let emojiBody: HTMLElement;
     let input: HTMLInputElement;
 
@@ -182,12 +181,12 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
 
             return null;
         },
-        [index]
+        [currentEmojiList]
     );
 
     const getSelectedEmoji = React.useCallback((): Emoji => {
         return currentEmojiList[index];
-    }, [index]);
+    }, [currentEmojiList, index]);
 
     const showFullPicker = React.useCallback(
         (fullSearchText: string): void => {
@@ -230,7 +229,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         (emoji: Emoji): string => {
             return emoji ? `${listId}-${emoji.key}` : undefined;
         },
-        [index]
+        [listId]
     );
 
     React.useImperativeHandle(
@@ -257,30 +256,30 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         ]
     );
 
-    const renderQuickPicker = (props: EmojiPaneProps, currentEmojiList: Emoji[]): JSX.Element => {
+    const renderQuickPicker = (
+        props: EmojiPaneProps,
+        index: number,
+        currentEmojiList: Emoji[]
+    ): JSX.Element => {
         const { strings } = props;
         const selectedEmoji = getSelectedEmoji();
         const target = selectedEmoji ? `#${getEmojiIconId(selectedEmoji)}` : undefined;
         const content = selectedEmoji ? strings[selectedEmoji.description] : undefined;
-
+        const emojiList = renderCurrentEmojiIcons(index, currentEmojiList);
         // note: we're using a callout since TooltipHost does not support manual trigger, and we need to show the tooltip since quick picker is shown
         // as an autocomplete menu (false focus based on transferring navigation keyboard event)
         return (
             <div id={listId} role="listbox">
-                {renderCurrentEmojiIcons(currentEmojiList)}
+                {emojiList}
                 <div
                     id={listId}
                     role="listbox"
-                    className={css(
-                        classNames.quickPicker,
-                        classNames.roosterEmojiPane,
-                        'quick-picker'
-                    )}>
+                    className={css(classNames.quickPicker, classNames.roosterEmojiPane)}>
                     <Callout
                         {...TooltipCalloutProps}
                         role="tooltip"
                         target={target}
-                        hidden={!content}
+                        hidden={!content || !emojiList}
                         className={classNames.tooltip}>
                         {content}
                     </Callout>
@@ -291,6 +290,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
 
     const renderFullPicker = (
         props: EmojiPaneProps,
+        index: number,
         searchInBox: string,
         currentFamily: EmojiFamilyKeys,
         currentEmojiList: Emoji[]
@@ -333,8 +333,8 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
                     />
                 )}
                 {mode === EmojiPaneMode.Full
-                    ? renderFullList(props, currentFamily, currentEmojiList)
-                    : renderPartialList(props, currentEmojiList)}
+                    ? renderFullList(props, index, currentFamily, currentEmojiList)
+                    : renderPartialList(props, index, currentEmojiList)}
             </div>
         );
     };
@@ -396,19 +396,18 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         }
     };
 
-    const renderCurrentEmojiIcons = (currentEmojiList: Emoji[]): JSX.Element[] => {
+    const renderCurrentEmojiIcons = (index: number, currentEmojiList: Emoji[]): JSX.Element[] => {
         const { strings } = props;
-
-        return currentEmojiList.map((emoji, index) => (
+        return currentEmojiList.map((emoji, emojiIndex) => (
             <EmojiIcon
                 strings={strings}
                 id={getEmojiIconId(emoji)}
                 key={emoji.key}
-                onMouseOver={() => setIndex(index)}
-                onFocus={() => setIndex(index)}
+                onMouseOver={() => setIndex(emojiIndex)}
+                onFocus={() => setIndex(emojiIndex)}
                 emoji={emoji}
                 classNames={classNames}
-                isSelected={index === index}
+                isSelected={index === emojiIndex}
                 onClick={e => onSelect(e, emoji)}
                 aria-posinset={index + 1}
                 aria-setsize={currentEmojiList.length}
@@ -416,7 +415,11 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         ));
     };
 
-    const renderPartialList = (props: EmojiPaneProps, currentEmojiList: Emoji[]): JSX.Element => {
+    const renderPartialList = (
+        props: EmojiPaneProps,
+        index: number,
+        currentEmojiList: Emoji[]
+    ): JSX.Element => {
         const { strings, hideStatusBar, statusBarProps } = props;
         const hasResult = currentEmojiList && currentEmojiList.length > 0;
 
@@ -432,7 +435,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
                         role="listbox"
                         className={classNames.fullListContent}
                         ref={focusZoneRefCallback}>
-                        {renderCurrentEmojiIcons(currentEmojiList)}
+                        {renderCurrentEmojiIcons(index, currentEmojiList)}
                     </FocusZone>
                 </div>
                 {!hideStatusBar && (
@@ -450,6 +453,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
 
     const renderFullList = (
         props: EmojiPaneProps,
+        index: number,
         currentFamily: EmojiFamilyKeys,
         currentEmojiList: Emoji[]
     ): JSX.Element => {
@@ -479,7 +483,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
                                 role="listbox"
                                 className={classNames.fullListContent}
                                 ref={focusZoneRefCallback}>
-                                {renderCurrentEmojiIcons(currentEmojiList)}
+                                {renderCurrentEmojiIcons(index, currentEmojiList)}
                             </FocusZone>
                         </div>
                     </div>
@@ -559,16 +563,17 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
 
     const renderPane = (
         props: EmojiPaneProps,
+        index: number,
         searchInBox: string,
         currentFamily: EmojiFamilyKeys,
         currentEmojiList: Emoji[]
     ) => {
         return mode === EmojiPaneMode.Quick
-            ? renderQuickPicker(props, currentEmojiList)
-            : renderFullPicker(props, searchInBox, currentFamily, currentEmojiList);
+            ? renderQuickPicker(props, index, currentEmojiList)
+            : renderFullPicker(props, index, searchInBox, currentFamily, currentEmojiList);
     };
 
-    return <>{renderPane(props, searchInBox, currentFamily, currentEmojiList)}</>;
+    return <>{renderPane(props, index, searchInBox, currentFamily, currentEmojiList)}</>;
 });
 
 /**
@@ -613,7 +618,7 @@ const getEmojiPaneClassName = memoizeFunction((theme: Theme) => {
     return mergeStyleSets({
         quickPicker: {
             overflowY: 'hidden',
-            '.rooster-emoji-selected::after': {
+            ':after': {
                 content: '',
                 position: 'absolute',
                 left: '0px',
@@ -668,45 +673,40 @@ const getEmojiPaneClassName = memoizeFunction((theme: Theme) => {
             width: '40px',
             height: '40px',
             border: '0',
-            outline: 0,
             position: 'relative',
             background: palette.white,
             transition: 'backgorund 0.5s ease-in-out',
-            ':hover': {
-                background: palette.white,
-            },
-            '&::-moz-focus-inner': {
-                border: '0',
-            },
+        },
+
+        emojiSelected: {
+            background: palette.neutralLight,
         },
 
         navBar: {
-            position: 'absolute',
-            top: '-0.5px',
+            top: '-1px',
             zIndex: 10,
+            position: 'sticky',
         },
+
         navBarTooltip: {
             display: 'inline-block',
         },
+
         navBarButton: {
             height: '40px',
             width: '40px',
             border: '0',
             borderBottom: 'solid 1px',
+            padding: 0,
+            marginBottom: 0,
             display: 'inline-block',
-            padding: '0',
-            margin: '0',
             color: palette.themeDark,
             background: palette.white,
-
-            '&::-moz-focus-inner': {
-                border: 0,
-            },
-
             '&:hover': {
                 cursor: 'default',
             },
         },
+
         selected: {
             borderBottom: '2px solid',
             borderBottomColor: palette.themeDark,

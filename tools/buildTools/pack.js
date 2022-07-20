@@ -2,7 +2,6 @@
 
 const path = require('path');
 const {
-    packages,
     packagesPath,
     roosterJsDistPath,
     roosterJsUiDistPath,

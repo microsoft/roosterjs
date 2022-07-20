@@ -1,51 +1,37 @@
 import RibbonButton from '../../type/RibbonButton';
-import { getColorPickerDropDown, TextColors } from './colorPicker';
+import { ModeIndependentColor } from 'roosterjs-editor-types';
+import { renderColorPicker } from '../../../colorPicker/component/renderColorPicker';
 import { setTextColor } from 'roosterjs-editor-api';
-import { TextColorButtonStringKey, TextColorKeys } from '../../type/RibbonButtonStringKeys';
+import { TextColorButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import { TextColorDropDownItems, TextColors } from '../../../colorPicker/utils/textColors';
+import {
+    getColorPickerContainerClassName,
+    getColorPickerItemClassName,
+} from '../../../colorPicker/utils/getClassNamesForColorPicker';
 
-const TextColorDropDownItems: Record<TextColorKeys, string> = {
-    textColorLightBlue: 'Light blue',
-    textColorLightGreen: 'Light green',
-    textColorLightYellow: 'Light yellow',
-    textColorLightOrange: 'Light orange',
-    textColorLightRed: 'Light red',
-    textColorLightPurple: 'Light purple',
-    textColorBlue: 'Blue',
-    textColorGreen: 'Green',
-    textColorYellow: 'Yellow',
-    textColorOrange: 'Orange',
-    textColorRed: 'Red',
-    textColorPurple: 'Purple',
-    textColorDarkBlue: 'Dark blue',
-    textColorDarkGreen: 'Dark green',
-    textColorDarkYellow: 'Dark yellow',
-    textColorDarkOrange: 'Dark orange',
-    textColorDarkRed: 'Dark red',
-    textColorDarkPurple: 'Dark purple',
-    textColorDarkerBlue: 'Darker blue',
-    textColorDarkerGreen: 'Darker green',
-    textColorDarkerYellow: 'Darker yellow',
-    textColorDarkerOrange: 'Darker orange',
-    textColorDarkerRed: 'Darker red',
-    textColorDarkerPurple: 'Darker purple',
-    textColorWhite: 'White',
-    textColorLightGray: 'Light gray',
-    textColorGray: 'Gray',
-    textColorDarkGray: 'Dark gray',
-    textColorDarkerGray: 'Darker gray',
-    textColorBlack: 'Black',
+const ColorValues = {
+    ...TextColors,
+    // Add this value just to satisfy compiler
+    buttonNameTextColor: <ModeIndependentColor>null,
 };
-
 /**
  * @internal
  * "Text color" button on the format ribbon
  */
 export const textColor: RibbonButton<TextColorButtonStringKey> = {
-    dropDownMenu: getColorPickerDropDown(TextColorDropDownItems),
+    dropDownMenu: {
+        items: TextColorDropDownItems,
+        itemClassName: getColorPickerItemClassName(),
+        allowLivePreview: true,
+        itemRender: (item, onClick) => renderColorPicker(item, TextColors, onClick),
+        commandBarSubMenuProperties: {
+            className: getColorPickerContainerClassName(),
+        },
+    },
     key: 'buttonNameTextColor',
     unlocalizedText: 'Text color',
     iconName: 'FontColor',
     onClick: (editor, key) => {
-        setTextColor(editor, TextColors[key]);
+        setTextColor(editor, ColorValues[key]);
     },
 };

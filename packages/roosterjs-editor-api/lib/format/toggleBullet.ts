@@ -10,10 +10,12 @@ import type { CompatibleBulletListType } from 'roosterjs-editor-types/lib/compat
  * browser execCommand API
  * @param editor The editor instance
  * @param listStyle (Optional) the style of the bullet list. If not defined, the style will be set to disc.
+ * @param apiNameOverride (Optional) Set a new api name, if empty the api name will be 'toggleListType'.
  */
 export default function toggleBullet(
     editor: IEditor,
-    listStyle?: BulletListType | CompatibleBulletListType
+    listStyle?: BulletListType | CompatibleBulletListType,
+    apiNameOverride?: string
 ) {
     toggleListType(
         editor,
@@ -21,6 +23,7 @@ export default function toggleBullet(
         undefined /* startNumber */,
         false /* includeSiblingLists */,
         undefined /** orderedStyle  */,
-        listStyle
+        listStyle,
+        apiNameOverride
     );
 }

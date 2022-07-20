@@ -2,24 +2,24 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import BuildInPluginState from './BuildInPluginState';
+import ContentModelPlugin from './sidePane/contentModel/ContentModelPlugin';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
+import HackedEditor from './hackedEditor/HackedEditor';
 import MainPaneBase from './MainPaneBase';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
-import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
-import { tableEdit, TableEditOperationsStringKey } from './ribbonButtons/tableEditOperations';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
@@ -36,11 +36,8 @@ import {
     UpdateMode,
     AllButtonKeys,
     createPasteOptionPlugin,
+    createEmojiPlugin,
 } from 'roosterjs-react';
-import {
-    tableAlign,
-    TableAlignmentOperationsStringKey,
-} from './ribbonButtons/tableAlignmentOperations';
 
 const styles = require('./MainPane.scss');
 const PopoutRoot = 'mainPane';
@@ -108,9 +105,7 @@ type RibbonStringKeys =
     | DarkModeButtonStringKey
     | ZoomButtonStringKey
     | ExportButtonStringKey
-    | PopoutButtonStringKey
-    | TableEditOperationsStringKey
-    | TableAlignmentOperationsStringKey;
+    | PopoutButtonStringKey;
 
 class MainPane extends MainPaneBase {
     private mouseX: number;
@@ -122,6 +117,7 @@ class MainPane extends MainPaneBase {
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private snapshotPlugin: SnapshotPlugin;
+    private contentModelPlugin: ContentModelPlugin;
     private ribbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
@@ -142,8 +138,10 @@ class MainPane extends MainPaneBase {
         this.eventViewPlugin = new EventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
+        this.contentModelPlugin = new ContentModelPlugin();
         this.ribbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
+        this.emojiPlugin = createEmojiPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
@@ -151,8 +149,6 @@ class MainPane extends MainPaneBase {
             zoom,
             exportContent,
             popout,
-            tableEdit,
-            tableAlign,
         ]);
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
@@ -237,6 +233,7 @@ class MainPane extends MainPaneBase {
 
     componentDidMount() {
         this.themeMatch?.addEventListener('change', this.onThemeChange);
+        this.resetEditor();
     }
 
     componentWillUnmount() {
@@ -398,6 +395,7 @@ class MainPane extends MainPaneBase {
             this.eventViewPlugin,
             this.apiPlaygroundPlugin,
             this.snapshotPlugin,
+            this.contentModelPlugin,
         ];
     }
 
@@ -425,7 +423,7 @@ class MainPane extends MainPaneBase {
         this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new Editor(div, options),
+                new HackedEditor(div, options),
         });
     }
 }

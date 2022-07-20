@@ -12,9 +12,9 @@ describe('Table Selector Tests', () => {
     let targetId = 'tableSelectionTestId';
     let targetId2 = 'tableSelectionTestId2';
     let tableResize: TableResize;
-
+    let node: HTMLDivElement;
     beforeEach(() => {
-        let node = document.createElement('div');
+        node = document.createElement('div');
         node.id = id;
         document.body.insertBefore(node, document.body.childNodes[0]);
         tableResize = new TableResize();
@@ -42,7 +42,7 @@ describe('Table Selector Tests', () => {
         div.parentNode.removeChild(div);
     });
 
-    it('tableSelector display on mouse move inside table', () => {
+    it('Display component on mouse move inside table', () => {
         editor.setContent(
             `<table id='table1'><tr ><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table>`
         );
@@ -65,7 +65,110 @@ describe('Table Selector Tests', () => {
         });
     });
 
-    it('tableSelector on click event', () => {
+    it('Do not display component, top of table is no visible in the container.', () => {
+        //Arrange
+        editor.setContent(
+            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table><div style='height: 300px'>`
+        );
+        node.style.height = '100px';
+        node.style.overflowX = 'auto';
+        node.scrollTop = 15;
+        const target = document.getElementById(targetId);
+        const target2 = document.getElementById(targetId2);
+        editor.focus();
+        editor.select(target);
+
+        //Act
+        simulateMouseEvent('mousemove', target2);
+
+        //Assert
+        editor.runAsync(editor => {
+            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+            expect(tableSelector).toBeNull();
+        });
+    });
+
+    it('Do not display component, Top of table is no visible in the scroll container.', () => {
+        //Arrange
+        const scrollContainer = document.createElement('div');
+        document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
+        scrollContainer.append(node);
+
+        spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
+        editor.setContent(
+            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table><div style='height: 300px'>`
+        );
+        scrollContainer.style.height = '100px';
+        scrollContainer.style.overflowX = 'auto';
+        scrollContainer.scrollTop = 15;
+        const target = document.getElementById(targetId);
+        const target2 = document.getElementById(targetId2);
+        editor.focus();
+        editor.select(target);
+
+        //Act
+        simulateMouseEvent('mousemove', target2);
+
+        //Assert
+        editor.runAsync(editor => {
+            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+            expect(tableSelector).toBeNull();
+        });
+    });
+
+    it('Display component, Top of table is visible in the scroll container scrolled down.', () => {
+        //Arrange
+        const scrollContainer = document.createElement('div');
+        scrollContainer.innerHTML = '<div style="height: 300px"></div>';
+        document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
+        scrollContainer.append(node);
+
+        spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
+        editor.setContent(
+            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table>`
+        );
+        scrollContainer.style.height = '100px';
+        scrollContainer.style.overflowX = 'auto';
+        scrollContainer.scrollTop = 50;
+        const target = document.getElementById(targetId);
+        const target2 = document.getElementById(targetId2);
+        editor.focus();
+        editor.select(target);
+
+        //Act
+        simulateMouseEvent('mousemove', target2);
+
+        //Assert
+        editor.runAsync(editor => {
+            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+            expect(tableSelector).toBeDefined();
+        });
+    });
+
+    it('Scroll container equals null, display component', () => {
+        //Arrange
+        spyOn(editor, 'getScrollContainer').and.returnValue(null);
+        editor.setContent(
+            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table><div style='height: 300px'>`
+        );
+        node.style.height = '100px';
+        node.style.overflowX = 'auto';
+        node.scrollTop = 15;
+        const target = document.getElementById(targetId);
+        const target2 = document.getElementById(targetId2);
+        editor.focus();
+        editor.select(target);
+        //Act
+        simulateMouseEvent('mousemove', target2);
+
+        //Assert
+        editor.runAsync(editor => {
+            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
+            expect(tableSelector).toBeDefined();
+        });
+    });
+
+    it('On click event', () => {
         editor.setContent(
             `<div><table id=${targetId} cellspacing="0" cellpadding="1" data-rooster-table-info="{&quot;topBorderColor&quot;:&quot;#ABABAB&quot;,&quot;bottomBorderColor&quot;:&quot;#ABABAB&quot;,&quot;verticalBorderColor&quot;:&quot;#ABABAB&quot;,&quot;hasHeaderRow&quot;:false,&quot;hasFirstColumn&quot;:false,&quot;hasBandedRows&quot;:false,&quot;hasBandedColumns&quot;:false,&quot;bgColorEven&quot;:null,&quot;bgColorOdd&quot;:&quot;#ABABAB20&quot;,&quot;headerRowColor&quot;:&quot;#ABABAB&quot;,&quot;tableBorderFormat&quot;:0}" style="border-collapse: collapse;" id="tableSelected0"><tbody><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td></tr><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td></tr><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td></tr><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td></tr><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td></tr><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td></tr><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td></tr><tr><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;" scope=""><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td><td style="width: 70px; border-width: 1px; border-style: solid; border-color: rgb(171, 171, 171); background-color: transparent;"><br></td></tr></tbody></table><br></div>`
         );

@@ -1,3 +1,4 @@
+import { BackgroundColorKeys } from '../../colorPicker/index';
 import {
     CancelButtonStringKey,
     MenuItemSplitterKey0,
@@ -43,6 +44,63 @@ export type ImageEditMenuItemStringKey =
     | CancelButtonStringKey;
 
 /**
+ * Key of localized strings of Table Edit Insert menu item.
+ */
+export type TableEditInsertMenuItemStringKey =
+    | 'menuNameTableInsert'
+    | 'menuNameTableInsertAbove'
+    | 'menuNameTableInsertBelow'
+    | 'menuNameTableInsertLeft'
+    | 'menuNameTableInsertRight';
+
+/**
+ * Key of localized strings of Table Edit Delete menu item.
+ */
+export type TableEditDeleteMenuItemStringKey =
+    | 'menuNameTableDelete'
+    | 'menuNameTableDeleteTable'
+    | 'menuNameTableDeleteColumn'
+    | 'menuNameTableDeleteRow';
+
+/**
+ * Key of localized strings of Table Edit Merge menu item.
+ */
+export type TableEditMergeMenuItemStringKey =
+    | 'menuNameTableMerge'
+    | 'menuNameTableMergeAbove'
+    | 'menuNameTableMergeBelow'
+    | 'menuNameTableMergeLeft'
+    | 'menuNameTableMergeRight'
+    | 'menuNameTableMergeCells'
+    | MenuItemSplitterKey0;
+
+/**
+ * Key of localized strings of Table Edit Split menu item.
+ */
+export type TableEditSplitMenuItemStringKey =
+    | 'menuNameTableSplit'
+    | 'menuNameTableSplitHorizontally'
+    | 'menuNameTableSplitVertically';
+
+/**
+ * Key of localized strings of Table Edit Align menu item.
+ */
+export type TableEditAlignMenuItemStringKey =
+    | 'menuNameTableAlign'
+    | 'menuNameTableAlignLeft'
+    | 'menuNameTableAlignCenter'
+    | 'menuNameTableAlignRight'
+    | 'menuNameTableAlignTop'
+    | 'menuNameTableAlignMiddle'
+    | 'menuNameTableAlignBottom'
+    | MenuItemSplitterKey0;
+
+/**
+ * Key of localized strings of Table Edit Cell Shade menu item.
+ */
+export type TableEditShadeMenuItemStringKey = 'menuNameTableCellShade' | BackgroundColorKeys;
+
+/**
  * Key of localized strings of Table Edit menu item.
  * Including:
  * - Menu item "Insert"
@@ -52,29 +110,9 @@ export type ImageEditMenuItemStringKey =
  * - Menu item "Align cell"
  */
 export type TableEditMenuItemStringKey =
-    | 'menuNameTableInsert'
-    | 'menuNameTableInsertAbove'
-    | 'menuNameTableInsertBelow'
-    | 'menuNameTableInsertLeft'
-    | 'menuNameTableInsertRight'
-    | 'menuNameTableDelete'
-    | 'menuNameTableDeleteTable'
-    | 'menuNameTableDeleteColumn'
-    | 'menuNameTableDeleteRow'
-    | 'menuNameTableMerge'
-    | 'menuNameTableMergeAbove'
-    | 'menuNameTableMergeBelow'
-    | 'menuNameTableMergeLeft'
-    | 'menuNameTableMergeRight'
-    | 'menuNameTableMergeCells'
-    | 'menuNameTableSplit'
-    | 'menuNameTableSplitHorizontally'
-    | 'menuNameTableSplitVertically'
-    | 'menuNameTableAlign'
-    | 'menuNameTableAlignLeft'
-    | 'menuNameTableAlignCenter'
-    | 'menuNameTableAlignRight'
-    | 'menuNameTableAlignTop'
-    | 'menuNameTableAlignMiddle'
-    | 'menuNameTableAlignBottom'
-    | MenuItemSplitterKey0;
+    | TableEditInsertMenuItemStringKey
+    | TableEditDeleteMenuItemStringKey
+    | TableEditMergeMenuItemStringKey
+    | TableEditSplitMenuItemStringKey
+    | TableEditAlignMenuItemStringKey
+    | TableEditShadeMenuItemStringKey;

@@ -1,11 +1,12 @@
 import BasePluginEvent from './BasePluginEvent';
 import SelectionPath from '../interface/SelectionPath';
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
- * A plugin triggered right after editor has entered Shadow Edit mode
+ * Data of EnterShadowEditEvent
  */
-export interface EnterShadowEditEvent extends BasePluginEvent<PluginEventType.EnteredShadowEdit> {
+export interface EnterShadowEditEventData {
     /**
      * The document fragment of original editor content
      */
@@ -18,6 +19,26 @@ export interface EnterShadowEditEvent extends BasePluginEvent<PluginEventType.En
 }
 
 /**
+ * A plugin triggered right after editor has entered Shadow Edit mode
+ */
+export interface EnterShadowEditEvent
+    extends EnterShadowEditEventData,
+        BasePluginEvent<PluginEventType.EnteredShadowEdit> {}
+
+/**
  * A plugin triggered right before editor leave Shadow Edit mode
  */
 export interface LeaveShadowEditEvent extends BasePluginEvent<PluginEventType.LeavingShadowEdit> {}
+
+/**
+ * A plugin triggered right after editor has entered Shadow Edit mode
+ */
+export interface CompatibleEnterShadowEditEvent
+    extends EnterShadowEditEventData,
+        BasePluginEvent<CompatiblePluginEventType.EnteredShadowEdit> {}
+
+/**
+ * A plugin triggered right before editor leave Shadow Edit mode
+ */
+export interface CompatibleLeaveShadowEditEvent
+    extends BasePluginEvent<CompatiblePluginEventType.LeavingShadowEdit> {}

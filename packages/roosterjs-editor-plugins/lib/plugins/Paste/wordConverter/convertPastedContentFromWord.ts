@@ -60,5 +60,5 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
         return true;
     });
 
-    commentsRemoval(sanitizingOption.elementCallbacks);
+    commentsRemoval(sanitizingOption.elementCallbacks, sanitizingOption.cssStyleCallbacks);
 }

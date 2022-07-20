@@ -3,12 +3,12 @@ import ContentChangedData from '../interface/ContentChangedData';
 import { ChangeSource } from '../enum/ChangeSource';
 import { PluginEventType } from '../enum/PluginEventType';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
+import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
- * Represents a change to the editor made by another plugin
+ * Data of ContentChangedEvent
  */
-export default interface ContentChangedEvent
-    extends BasePluginEvent<PluginEventType.ContentChanged> {
+export interface ContentChangedEventData {
     /**
      * Source of the change
      */
@@ -24,3 +24,17 @@ export default interface ContentChangedEvent
      */
     additionalData?: ContentChangedData;
 }
+
+/**
+ * Represents a change to the editor made by another plugin
+ */
+export default interface ContentChangedEvent
+    extends ContentChangedEventData,
+        BasePluginEvent<PluginEventType.ContentChanged> {}
+
+/**
+ * Represents a change to the editor made by another plugin
+ */
+export interface CompatibleContentChangedEvent
+    extends ContentChangedEventData,
+        BasePluginEvent<CompatiblePluginEventType.ContentChanged> {}
