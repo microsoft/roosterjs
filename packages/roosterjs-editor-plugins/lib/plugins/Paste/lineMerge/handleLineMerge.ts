@@ -29,10 +29,11 @@ export default function handleLineMerge(root: Node) {
     }
 
     if (blocks.length > 0) {
+        const blocksLength = blocks.length - 1;
         processBlock(blocks[0]);
-        processBlock(blocks[blocks.length - 1]);
+        processBlock(blocks[blocksLength]);
         checkAndAddBr(root, blocks[0], true /*isFirst*/);
-        checkAndAddBr(root, blocks[blocks.length - 1], false /*isFirst*/);
+        checkAndAddBr(root, blocks[blocksLength], false /*isFirst*/, blocks[0]);
     }
 }
 
@@ -55,7 +56,12 @@ function processBlock(block: { start: Node; end: Node }) {
     }
 }
 
-function checkAndAddBr(root: Node, block: { start: Node; end: Node }, isFirst: boolean) {
+function checkAndAddBr(
+    root: Node,
+    block: { start: Node; end: Node },
+    isFirst: boolean,
+    firstBlock?: { start: Node; end: Node }
+) {
     const blockElement = getBlockElementAtNode(root, block.start);
     const sibling = isFirst
         ? getNextLeafSibling(root, block.end)
@@ -66,5 +72,19 @@ function checkAndAddBr(root: Node, block: { start: Node; end: Node }, isFirst: b
             block.start.ownerDocument.createElement('br'),
             isFirst ? block.end.nextSibling : block.start
         );
+    } else if (
+        firstBlock &&
+        firstBlock.end == firstBlock.start &&
+        getTagOfNode(firstBlock.end) == 'SPAN'
+    ) {
+        // If the first block and the last block are Siblings, add a BR before so the only two
+        // lines that are being pasted are not merged. https://github.com/microsoft/roosterjs/issues/1100
+        const previousSibling = getPreviousLeafSibling(root, block.start);
+        if (firstBlock.end.contains(previousSibling)) {
+            block.start.parentNode?.insertBefore(
+                block.start.ownerDocument.createElement('br'),
+                block.start
+            );
+        }
     }
 }
