@@ -67,24 +67,29 @@ function checkAndAddBr(
         ? getNextLeafSibling(root, block.end)
         : getPreviousLeafSibling(root, block.start);
 
+    if (!sibling) {
+        return;
+    }
+
     if (blockElement?.contains(sibling)) {
-        (isFirst ? block.end : block.start).parentNode?.insertBefore(
-            block.start.ownerDocument.createElement('br'),
-            isFirst ? block.end.nextSibling : block.start
-        );
+        const br = block.start.ownerDocument?.createElement('br');
+        if (br) {
+            const blockToUse = isFirst ? block.end : block.start;
+            blockToUse.parentNode?.insertBefore(br, isFirst ? block.end.nextSibling : block.start);
+        }
     } else if (
         firstBlock &&
         firstBlock.end == firstBlock.start &&
         getTagOfNode(firstBlock.end) == 'SPAN'
     ) {
         // If the first block and the last block are Siblings, add a BR before so the only two
-        // lines that are being pasted are not merged. https://github.com/microsoft/roosterjs/issues/1100
+        // lines that are being pasted are not merged.
         const previousSibling = getPreviousLeafSibling(root, block.start);
         if (firstBlock.end.contains(previousSibling)) {
-            block.start.parentNode?.insertBefore(
-                block.start.ownerDocument.createElement('br'),
-                block.start
-            );
+            const br = block.start.ownerDocument?.createElement('br');
+            if (br) {
+                block.start.parentNode?.insertBefore(br, block.start);
+            }
         }
     }
 }
