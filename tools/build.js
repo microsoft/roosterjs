@@ -10,6 +10,7 @@ const checkDependencyStep = require('./buildTools/checkDependency');
 const cleanStep = require('./buildTools/clean');
 const normalizeStep = require('./buildTools/normalize');
 const buildAmdStep = require('./buildTools/buildAmd');
+const buildMjsStep = require('./buildTools/buildMjs');
 const buildCommonJsStep = require('./buildTools/buildCommonJs');
 const pack = require('./buildTools/pack');
 const dts = require('./buildTools/dts');
@@ -22,6 +23,7 @@ const allTasks = [
     normalizeStep,
     checkDependencyStep,
     buildAmdStep,
+    buildMjsStep,
     buildCommonJsStep,
     pack.commonJsDebug,
     pack.commonJsProduction,
@@ -47,6 +49,7 @@ const commands = [
     'clean', // Clean target folder
     'normalize', // Normalize package.json files
     'buildamd', // Build in AMD mode
+    'buildmjs', // Build in ESM/MJS mode
     'buildcommonjs', // Build in CommonJs mode
     'pack', // Run webpack to generate standalone .js files
     'packprod', // Run webpack to generate standalone .js files in production mode

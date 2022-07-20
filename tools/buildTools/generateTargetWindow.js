@@ -51,5 +51,5 @@ function generateTargetWindow() {
 module.exports = {
     message: 'Generating TargetWindowBase.g.ts...',
     callback: generateTargetWindow,
-    enabled: options => options.buildcommonjs || options.buildamd,
+    enabled: options => options.buildcommonjs || options.buildamd || options.buildmjs,
 };
