@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.89% </span>
+                <span class="strong">82.68% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>104/127</span>
+                <span class='fraction'>105/127</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.45% </span>
+                <span class="strong">63.1% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>51/83</span>
+                <span class='fraction'>53/84</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.6% </span>
+                <span class="strong">82.4% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>102/125</span>
+                <span class='fraction'>103/125</span>
             </div>
         
             
@@ -391,7 +391,11 @@
 <a name='L326'></a><a href='#L326'>326</a>
 <a name='L327'></a><a href='#L327'>327</a>
 <a name='L328'></a><a href='#L328'>328</a>
-<a name='L329'></a><a href='#L329'>329</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L329'></a><a href='#L329'>329</a>
+<a name='L330'></a><a href='#L330'>330</a>
+<a name='L331'></a><a href='#L331'>331</a>
+<a name='L332'></a><a href='#L332'>332</a>
+<a name='L333'></a><a href='#L333'>333</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -576,24 +580,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -607,11 +615,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -904,10 +912,14 @@ export default class TableEditor {
         }
     }
 &nbsp;
+    /**
+     * create or remove TableInserter
+     * @param td td to attach to, set this to null to remove inserters (both horizontal and vertical)
+     */
     private setInserterTd(td: HTMLTableCellElement, isHorizontal?: boolean) {
         const inserter = isHorizontal ? <span class="branch-0 cbranch-no" title="branch not covered" >this.horizontalInserter </span>: this.verticalInserter;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (inserter &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >inserter.node != td)</span> {
-<span class="cstat-no" title="statement not covered" >            this.disposeTableInserter();</span>
+        if (td === null || (inserter &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >inserter.node != td)</span>) {
+            this.disposeTableInserter();
         }
 &nbsp;
         if (!this.horizontalInserter &amp;&amp; !this.verticalInserter &amp;&amp; td) {
@@ -1054,7 +1066,7 @@ export default class TableEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-19T23:23:58.579Z
+                at 2022-07-20T18:23:28.113Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
