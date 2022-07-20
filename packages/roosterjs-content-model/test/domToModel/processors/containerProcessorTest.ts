@@ -6,19 +6,16 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
-
-const context: FormatContext = {
-    isDarkMode: false,
-    zoomScale: 1,
-    isRightToLeft: false,
-};
 
 describe('containerProcessor', () => {
     let doc: ContentModelDocument;
+    let context: FormatContext;
 
     beforeEach(() => {
         doc = createContentModelDocument(document);
+        context = createFormatContext();
         spyOn(generalBlockProcessor, 'generalBlockProcessor');
         spyOn(generalSegmentProcessor, 'generalSegmentProcessor');
         spyOn(textProcessor, 'textProcessor');

@@ -1,17 +1,22 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
+import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
 
 describe('handleTable', () => {
+    let context: FormatContext;
+
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
+        context = createFormatContext();
     });
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
         const div = document.createElement('div');
-        handleTable(document, div, model);
+        handleTable(document, div, model, context);
         expect(div.innerHTML).toBe(expectedInnerHTML);
     }
 

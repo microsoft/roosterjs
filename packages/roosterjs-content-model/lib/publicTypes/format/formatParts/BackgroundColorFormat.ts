@@ -5,5 +5,5 @@ export interface BackgroundColorFormat {
     /**
      * Background color
      */
-    shadeColor?: string;
+    backgroundColor?: string;
 }

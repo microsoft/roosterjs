@@ -5,17 +5,15 @@ import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
 import { generalSegmentProcessor } from '../../../lib/domToModel/processors/generalSegmentProcessor';
 
-const context: FormatContext = {
-    isDarkMode: false,
-    zoomScale: 1,
-    isRightToLeft: false,
-};
-
 describe('generalSegmentProcessor', () => {
+    let context: FormatContext;
+
     beforeEach(() => {
+        context = createFormatContext(false, 1, false);
         spyOn(containerProcessor, 'containerProcessor');
     });
 

@@ -3,18 +3,16 @@ import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBl
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
 import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
-const context: FormatContext = {
-    isDarkMode: false,
-    zoomScale: 1,
-    isRightToLeft: false,
-};
-
 describe('tableProcessor', () => {
+    let context: FormatContext;
+
     beforeEach(() => {
+        context = createFormatContext(false, 1, false);
         spyOn(containerProcessor, 'containerProcessor');
     });
 

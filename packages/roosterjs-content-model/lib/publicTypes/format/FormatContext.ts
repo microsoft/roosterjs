@@ -16,4 +16,11 @@ export interface FormatContext {
      * Whether current content is from right to left
      */
     isRightToLeft: boolean;
+
+    /**
+     * Calculate color for dark mode
+     * @param lightColor Light mode color
+     * @returns Dark mode color calculated from lightColor
+     */
+    getDarkColor?: (lightColor: string) => string;
 }
