@@ -5,7 +5,7 @@ import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
 import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 import { generalBlockProcessor } from '../../../lib/domToModel/processors/generalBlockProcessor';
 
 describe('generalBlockProcessor', () => {

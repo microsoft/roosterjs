@@ -6,7 +6,7 @@ import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/Con
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
 import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 import { generalSegmentProcessor } from '../../../lib/domToModel/processors/generalSegmentProcessor';
 
 describe('generalSegmentProcessor', () => {

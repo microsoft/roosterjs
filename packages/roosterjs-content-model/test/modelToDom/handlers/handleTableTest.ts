@@ -3,7 +3,7 @@ import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
-import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
 
 describe('handleTable', () => {

@@ -1,5 +1,5 @@
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { FormatContext } from '../../publicTypes/format/FormatContext';
+import { FormatContext } from '../../formatHandlers/FormatContext';
 import { handleSegment } from './handleSegment';
 
 /**

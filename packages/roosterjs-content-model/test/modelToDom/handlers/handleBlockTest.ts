@@ -3,7 +3,7 @@ import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBl
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 
 describe('handleBlock', () => {

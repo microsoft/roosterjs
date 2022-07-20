@@ -1,5 +1,5 @@
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { FormatContext } from '../../publicTypes/format/FormatContext';
+import { FormatContext } from '../../formatHandlers/FormatContext';
 import { generalBlockProcessor } from './generalBlockProcessor';
 import { generalSegmentProcessor } from './generalSegmentProcessor';
 import { getProcessor } from './getProcessor';

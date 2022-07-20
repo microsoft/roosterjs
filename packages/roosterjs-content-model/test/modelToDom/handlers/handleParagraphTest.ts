@@ -5,7 +5,7 @@ import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentMod
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/publicTypes/format/FormatContext';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagraph';
 
 describe('handleParagraph', () => {

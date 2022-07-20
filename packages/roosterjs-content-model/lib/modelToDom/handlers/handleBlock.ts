@@ -1,7 +1,7 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
-import { FormatContext } from '../../publicTypes/format/FormatContext';
+import { FormatContext } from '../../formatHandlers/FormatContext';
 import { handleParagraph } from './handleParagraph';
 import { handleTable } from './handleTable';
 

@@ -1,5 +1,5 @@
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { FormatContext } from '../../publicTypes/format/FormatContext';
+import { FormatContext } from '../../formatHandlers/FormatContext';
 
 /**
  * @internal
