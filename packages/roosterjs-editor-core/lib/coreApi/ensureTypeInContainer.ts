@@ -29,13 +29,14 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
 ) => {
     const table = findClosestElementAncestor(position.node, core.contentDiv, 'table');
     let td: HTMLElement | null;
-    const block = getBlockElementAtNode(core.contentDiv, position.node);
-    let formatNode: HTMLElement | null;
 
     if (table && (td = table.querySelector('td,th'))) {
         position = new Position(td, PositionType.Begin);
     }
     position = position.normalize();
+
+    const block = getBlockElementAtNode(core.contentDiv, position.node);
+    let formatNode: HTMLElement | null;
 
     if (block) {
         formatNode = block.collapseToSingleElement();
