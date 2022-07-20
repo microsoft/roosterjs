@@ -11,7 +11,11 @@ const makeReplacement = (
     sourceString: string,
     replacementHTML: string,
     matchSourceCaseSensitive: boolean,
-    shouldReplace?: (replacement: CustomReplacement, content: string, contentTag: string) => boolean
+    shouldReplace?: (
+        replacement: CustomReplacement,
+        content: string,
+        contentTag?: string
+    ) => boolean
 ): CustomReplacement => ({
     sourceString,
     replacementHTML,
@@ -99,7 +103,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
         const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
-        const sourceTag = range.commonAncestorContainer.parentElement.tagName;
+        const sourceTag = this.editor.getElementAtCursor().tagName;
 
         const replacement = this.getMatchingReplacement(stringToSearch);
         if (replacement == null) {
@@ -147,6 +151,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
             const [sourceMatch, replacementMatch] = replacement.matchSourceCaseSensitive
                 ? [originalStringToSearch, replacement.sourceString]
                 : [lowerCaseStringToSearch, replacement.sourceString.toLocaleLowerCase()];
+
             if (
                 sourceMatch.substring(sourceMatch.length - replacementMatch.length) ==
                 replacementMatch

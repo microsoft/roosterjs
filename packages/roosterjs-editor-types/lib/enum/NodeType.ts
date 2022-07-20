@@ -10,6 +10,11 @@ export const enum NodeType {
     Element = 1,
 
     /**
+     * An Attribute node such as name="value".
+     */
+    Attribute = 2,
+
+    /**
      * The actual Text of Element or Attr.
      */
     Text = 3,

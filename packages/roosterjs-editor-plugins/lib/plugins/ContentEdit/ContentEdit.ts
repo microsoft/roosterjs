@@ -1,5 +1,5 @@
 import getAllFeatures from './getAllFeatures';
-import { getObjectKeys } from 'roosterjs-editor-dom/lib';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import {
     ContentEditFeatureSettings,
     EditorPlugin,

@@ -31,6 +31,7 @@ import type {
  * @param includeSiblingLists Sets wether the operation should include Sibling Lists, by default true
  * @param orderedStyle (Optional) the style of an ordered. If not defined, the style will be set to decimal.
  * @param unorderedStyle (Optional) the style of an unordered list. If not defined, the style will be set to disc.
+ * @param apiNameOverride (Optional) Set a new api name, if empty the api name will be 'toggleListType'.
  */
 export default function toggleListType(
     editor: IEditor,
@@ -38,7 +39,8 @@ export default function toggleListType(
     startNumber?: number,
     includeSiblingLists: boolean = true,
     orderedStyle?: NumberingListType | CompatibleNumberingListType,
-    unorderedStyle?: BulletListType | CompatibleBulletListType
+    unorderedStyle?: BulletListType | CompatibleBulletListType,
+    apiNameOverride?: string
 ) {
     blockFormat(
         editor,
@@ -65,6 +67,6 @@ export default function toggleListType(
             }
         },
         undefined /* beforeRunCallback */,
-        'toggleListType'
+        apiNameOverride || 'toggleListType'
     );
 }

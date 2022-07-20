@@ -1,4 +1,5 @@
 import {
+    ChangeSource,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -85,8 +86,9 @@ export default class AutoFormat implements EditorPlugin {
                         textRange.insertNode(nodeHyphen);
                         this.editor.select(nodeHyphen, PositionType.End);
                     },
-                    null /*changeSource*/,
-                    true /*canUndoByBackspace*/
+                    ChangeSource.Format /*changeSource*/,
+                    true /*canUndoByBackspace*/,
+                    { formatApiName: 'autoHyphen' }
                 );
 
                 //After the substitution the last key typed needs to be cleaned
