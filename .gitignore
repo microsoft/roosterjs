@@ -16,3 +16,4 @@ dist/
 
 # Temp files
 packages/roosterjs-editor-types/lib/compatibleEnum/
+packages/roosterjs-content-model/lib/publicTypes/compatibleEnum/
