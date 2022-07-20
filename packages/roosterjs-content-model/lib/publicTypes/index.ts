@@ -14,3 +14,11 @@ export { ContentModelSegment } from './segment/ContentModelSegment';
 
 export { ContentModelTableFormat } from './format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
+
+export { ContentModelAlignmentFormat } from './format/formatParts/ContentModelAlignmentFormat';
+export { ContentModelBackgroundColorFormat } from './format/formatParts/ContentModelBackgroundColorFormat';
+export { ContentModelBorderFormat } from './format/formatParts/ContentModelBorderFormat';
+export { ContentModelIdFormat } from './format/formatParts/ContentModelIdFormat';
+export { ContentModelMetadataFormat } from './format/formatParts/ContentModelMetadataFormat';
+export { ContentModelSizeFormat } from './format/formatParts/ContentModelSizeFormat';
+export { ContentModelSpacingFormat } from './format/formatParts/ContentModelSpacingFormat';

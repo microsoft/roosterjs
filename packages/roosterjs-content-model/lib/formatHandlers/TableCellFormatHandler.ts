@@ -1,16 +1,16 @@
+import { alignmentFormatHandler } from './common/alignmentFormatHandler';
+import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
+import { borderFormatHandler } from './common/borderFormatHandler';
 import { ContentModelTableCellFormat } from '../publicTypes/format/ContentModelTableCellFormat';
 import { FormatHandler } from './FormatHandler';
-import { tableCellAlignmentHandler } from './tableCell/tableCellAlignmentHandler';
-import { tableCellBorderHandler } from './tableCell/tableCellBorderHandler';
-import { tableCellShadeHandler } from './tableCell/tableCellShadeHandler';
-import { tableCellSizeHandler } from './tableCell/tableCellSizeHandler';
+import { sizeFormatHandler } from './common/sizeFormatHandler';
 
 /**
  * @internal
  */
 export const TableCellFormatHandlers: FormatHandler<ContentModelTableCellFormat>[] = [
-    tableCellSizeHandler,
-    tableCellBorderHandler,
-    tableCellShadeHandler,
-    tableCellAlignmentHandler,
+    sizeFormatHandler,
+    borderFormatHandler,
+    backgroundColorFormatHandler,
+    alignmentFormatHandler,
 ];

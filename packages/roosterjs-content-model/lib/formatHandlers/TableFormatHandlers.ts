@@ -1,14 +1,16 @@
+import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { ContentModelTableFormat } from '../publicTypes/format/ContentModelTableFormat';
 import { FormatHandler } from './FormatHandler';
-import { tableIdHandler } from './table/tableIdHandler';
-import { tableMetadataHandler } from './table/tableMetadataHandler';
-import { tableSpacingHandler } from './table/tableSpacingHandler';
+import { idFormatHandler } from './common/idFormatHandler';
+import { tableMetadataFormatHandler } from './table/tableMetadataFormatHandler';
+import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 
 /**
  * @internal
  */
 export const TableFormatHandlers: FormatHandler<ContentModelTableFormat>[] = [
-    tableIdHandler,
-    tableMetadataHandler,
-    tableSpacingHandler,
+    idFormatHandler,
+    tableMetadataFormatHandler,
+    tableSpacingFormatHandler,
+    backgroundColorFormatHandler,
 ];

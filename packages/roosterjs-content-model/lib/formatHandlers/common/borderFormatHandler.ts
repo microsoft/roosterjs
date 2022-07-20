@@ -1,4 +1,4 @@
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { ContentModelBorderFormat } from '../../publicTypes/format/formatParts/ContentModelBorderFormat';
 import { FormatHandler } from '../FormatHandler';
 
 const Directions = ['top', 'right', 'bottom', 'left'];
@@ -56,7 +56,7 @@ function writeStyle(
 /**
  * @internal
  */
-export const tableCellBorderHandler: FormatHandler<ContentModelTableCellFormat> = {
+export const borderFormatHandler: FormatHandler<ContentModelBorderFormat> = {
     parse: (format, element) => {
         const borderColor = readStyle(element, 'color');
         const borderWidth = readStyle(element, 'width');

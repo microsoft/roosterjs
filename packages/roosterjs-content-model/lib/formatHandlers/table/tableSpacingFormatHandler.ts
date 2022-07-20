@@ -1,4 +1,4 @@
-import { ContentModelTableFormat } from '../../publicTypes/format/ContentModelTableFormat';
+import { ContentModelSpacingFormat } from '../../publicTypes/format/formatParts/ContentModelSpacingFormat';
 import { FormatHandler } from '../FormatHandler';
 
 const BorderCollapsed = 'collapse';
@@ -6,7 +6,7 @@ const BorderCollapsed = 'collapse';
 /**
  * @internal
  */
-export const tableSpacingHandler: FormatHandler<ContentModelTableFormat> = {
+export const tableSpacingFormatHandler: FormatHandler<ContentModelSpacingFormat> = {
     parse: (format, element) => {
         if (element.style.borderCollapse == BorderCollapsed) {
             format.borderCollapse = true;

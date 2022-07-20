@@ -1,4 +1,4 @@
-import { ContentModelTableFormat } from '../../publicTypes/format/ContentModelTableFormat';
+import { ContentModelMetadataFormat } from '../../publicTypes/format/formatParts/ContentModelMetadataFormat';
 import { FormatHandler } from '../FormatHandler';
 import { TableFormat } from 'roosterjs-editor-types';
 import {
@@ -46,7 +46,7 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
 /**
  * @internal
  */
-export const tableMetadataHandler: FormatHandler<ContentModelTableFormat> = {
+export const tableMetadataFormatHandler: FormatHandler<ContentModelMetadataFormat<TableFormat>> = {
     parse: (format, element) => {
         const metadata = getMetadata(element, TableFormatMetadata);
 

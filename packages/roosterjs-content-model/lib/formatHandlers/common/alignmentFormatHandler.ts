@@ -1,10 +1,10 @@
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { ContentModelAlignmentFormat } from '../../publicTypes/format/formatParts/ContentModelAlignmentFormat';
 import { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal
  */
-export const tableCellAlignmentHandler: FormatHandler<ContentModelTableCellFormat> = {
+export const alignmentFormatHandler: FormatHandler<ContentModelAlignmentFormat> = {
     parse: (format, element, context) => {
         const horizontalAlign = element.style.textAlign;
         const verticalAlign = element.style.verticalAlign;

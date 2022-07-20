@@ -1,11 +1,11 @@
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { ContentModelBackgroundColorFormat } from '../../publicTypes/format/formatParts/ContentModelBackgroundColorFormat';
 import { DarkModeDatasetNames } from 'roosterjs-editor-types';
 import { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal
  */
-export const tableCellShadeHandler: FormatHandler<ContentModelTableCellFormat> = {
+export const backgroundColorFormatHandler: FormatHandler<ContentModelBackgroundColorFormat> = {
     parse: (format, element, context) => {
         const shadeColor =
             (context.isDarkMode &&

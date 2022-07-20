@@ -1,10 +1,10 @@
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { ContentModelSizeFormat } from '../../publicTypes/format/formatParts/ContentModelSizeFormat';
 import { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal
  */
-export const tableCellSizeHandler: FormatHandler<ContentModelTableCellFormat> = {
+export const sizeFormatHandler: FormatHandler<ContentModelSizeFormat> = {
     parse: (format, element, context) => {
         const size = element.getBoundingClientRect();
 
