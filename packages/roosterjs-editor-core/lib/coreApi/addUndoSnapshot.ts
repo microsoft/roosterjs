@@ -24,10 +24,10 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
-    callback: (start: NodePosition, end: NodePosition) => any,
+    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | undefined,
     changeSource: ChangeSource | CompatibleChangeSource | string,
     canUndoByBackspace: boolean,
-    additionalData: ContentChangedData = undefined
+    additionalData?: ContentChangedData
 ) => {
     const undoState = core.undo;
     const isNested = undoState.isNested;
@@ -87,7 +87,7 @@ function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) 
                       type: SelectionRangeTypes.TableSelection,
                       tableId: rangeEx.table.id,
                       isDarkMode,
-                      ...rangeEx.coordinates,
+                      ...rangeEx.coordinates!,
                   }
                 : {
                       type: SelectionRangeTypes.Normal,

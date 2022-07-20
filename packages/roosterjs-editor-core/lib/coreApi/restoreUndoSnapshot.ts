@@ -10,8 +10,8 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
     if (core.undo.hasNewContent && step < 0) {
         core.api.addUndoSnapshot(
             core,
-            null /*callback*/,
-            null /*changeSource*/,
+            undefined /*callback*/,
+            'restoreUndoSnapshot' /*changeSource*/,
             false /*canUndoByBackspace*/
         );
     }
@@ -25,7 +25,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
                 core,
                 snapshot.html,
                 true /*triggerContentChangedEvent*/,
-                snapshot.metadata
+                snapshot.metadata ?? undefined
             );
         } finally {
             core.undo.isRestoring = false;

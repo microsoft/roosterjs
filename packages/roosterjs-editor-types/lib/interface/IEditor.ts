@@ -418,7 +418,7 @@ export default interface IEditor {
      * @param additionalData Optional parameter to provide additional data related to the ContentChanged Event.
      */
     addUndoSnapshot(
-        callback?: (start: NodePosition, end: NodePosition) => any,
+        callback?: (start: NodePosition | null, end: NodePosition | null) => any,
         changeSource?: ChangeSource | CompatibleChangeSource | string,
         canUndoByBackspace?: boolean,
         additionalData?: ContentChangedData
