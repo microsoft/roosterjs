@@ -1,7 +1,7 @@
 /**
  * Format of background color
  */
-export interface ContentModelBackgroundColorFormat {
+export interface BackgroundColorFormat {
     /**
      * Background color
      */

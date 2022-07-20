@@ -1,11 +1,11 @@
-import { ContentModelBackgroundColorFormat } from '../../publicTypes/format/formatParts/ContentModelBackgroundColorFormat';
+import { BackgroundColorFormat } from '../../publicTypes/format/formatParts/BackgroundColorFormat';
 import { DarkModeDatasetNames } from 'roosterjs-editor-types';
 import { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal
  */
-export const backgroundColorFormatHandler: FormatHandler<ContentModelBackgroundColorFormat> = {
+export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> = {
     parse: (format, element, context) => {
         const shadeColor =
             (context.isDarkMode &&

@@ -1,10 +1,10 @@
-import { ContentModelSizeFormat } from '../../publicTypes/format/formatParts/ContentModelSizeFormat';
 import { FormatHandler } from '../FormatHandler';
+import { SizeFormat } from '../../publicTypes/format/formatParts/SizeFormat';
 
 /**
  * @internal
  */
-export const sizeFormatHandler: FormatHandler<ContentModelSizeFormat> = {
+export const sizeFormatHandler: FormatHandler<SizeFormat> = {
     parse: (format, element, context) => {
         const size = element.getBoundingClientRect();
 

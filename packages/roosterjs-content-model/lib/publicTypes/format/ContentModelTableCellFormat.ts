@@ -1,13 +1,15 @@
-import { ContentModelAlignmentFormat } from './formatParts/ContentModelAlignmentFormat';
-import { ContentModelBackgroundColorFormat } from './formatParts/ContentModelBackgroundColorFormat';
-import { ContentModelBorderFormat } from './formatParts/ContentModelBorderFormat';
-import { ContentModelSizeFormat } from './formatParts/ContentModelSizeFormat';
+import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
+import { BorderFormat } from './formatParts/BorderFormat';
+import { HorizontalAlignFormat } from './formatParts/HorizontalAlignFormat';
+import { SizeFormat } from './formatParts/SizeFormat';
+import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 
 /**
  * Format of table cell
  */
 export interface ContentModelTableCellFormat
-    extends ContentModelSizeFormat,
-        ContentModelBorderFormat,
-        ContentModelBackgroundColorFormat,
-        ContentModelAlignmentFormat {}
+    extends SizeFormat,
+        BorderFormat,
+        BackgroundColorFormat,
+        HorizontalAlignFormat,
+        VerticalAlignFormat {}

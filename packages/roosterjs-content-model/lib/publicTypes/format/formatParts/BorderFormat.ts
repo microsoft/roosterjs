@@ -1,7 +1,7 @@
 /**
  * Format of border
  */
-export interface ContentModelBorderFormat {
+export interface BorderFormat {
     /**
      * Border width array in pixel, in order: [top, right, bottom, left]
      */

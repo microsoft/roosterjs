@@ -15,10 +15,11 @@ export { ContentModelSegment } from './segment/ContentModelSegment';
 export { ContentModelTableFormat } from './format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
 
-export { ContentModelAlignmentFormat } from './format/formatParts/ContentModelAlignmentFormat';
-export { ContentModelBackgroundColorFormat } from './format/formatParts/ContentModelBackgroundColorFormat';
-export { ContentModelBorderFormat } from './format/formatParts/ContentModelBorderFormat';
-export { ContentModelIdFormat } from './format/formatParts/ContentModelIdFormat';
-export { ContentModelMetadataFormat } from './format/formatParts/ContentModelMetadataFormat';
-export { ContentModelSizeFormat } from './format/formatParts/ContentModelSizeFormat';
-export { ContentModelSpacingFormat } from './format/formatParts/ContentModelSpacingFormat';
+export { HorizontalAlignFormat } from './format/formatParts/HorizontalAlignFormat';
+export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
+export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
+export { BorderFormat } from './format/formatParts/BorderFormat';
+export { IdFormat } from './format/formatParts/IdFormat';
+export { MetadataFormat } from './format/formatParts/MetadataFormat';
+export { SizeFormat } from './format/formatParts/SizeFormat';
+export { SpacingFormat } from './format/formatParts/SpacingFormat';

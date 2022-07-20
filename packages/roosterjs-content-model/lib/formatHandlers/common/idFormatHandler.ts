@@ -1,10 +1,10 @@
-import { ContentModelIdFormat } from '../../publicTypes/format/formatParts/ContentModelIdFormat';
 import { FormatHandler } from '../FormatHandler';
+import { IdFormat } from '../../publicTypes/format/formatParts/IdFormat';
 
 /**
  * @internal
  */
-export const idFormatHandler: FormatHandler<ContentModelIdFormat> = {
+export const idFormatHandler: FormatHandler<IdFormat> = {
     parse: (format, element) => {
         if (element.id) {
             format.id = element.id;

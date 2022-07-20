@@ -1,7 +1,7 @@
 /**
  * Format for element with metadata
  */
-export interface ContentModelMetadataFormat<T> {
+export interface MetadataFormat<T> {
     /**
      * Metadata of this element
      */

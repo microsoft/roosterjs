@@ -1,7 +1,7 @@
 /**
  * Format of element size
  */
-export interface ContentModelSizeFormat {
+export interface SizeFormat {
     /**
      * Width in pixel
      */
