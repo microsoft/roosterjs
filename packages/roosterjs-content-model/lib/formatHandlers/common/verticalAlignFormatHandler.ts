@@ -6,7 +6,7 @@ import { VerticalAlignFormat } from '../../publicTypes/format/formatParts/Vertic
  */
 export const verticalAlignFormatHandler: FormatHandler<VerticalAlignFormat> = {
     parse: (format, element) => {
-        const align = element.style.verticalAlign;
+        const align = element.style.verticalAlign || element.getAttribute('valign');
 
         switch (align) {
             case 'baseline':

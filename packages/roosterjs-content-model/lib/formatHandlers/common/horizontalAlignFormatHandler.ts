@@ -1,12 +1,27 @@
 import { FormatHandler } from '../FormatHandler';
 import { HorizontalAlignFormat } from '../../publicTypes/format/formatParts/HorizontalAlignFormat';
 
+const ResultMap = {
+    start: {
+        ltr: 'left',
+        rtl: 'right',
+    },
+    center: {
+        ltr: 'center',
+        rtl: 'center',
+    },
+    end: {
+        ltr: 'right',
+        rtl: 'left',
+    },
+};
+
 /**
  * @internal
  */
 export const horizontalAlignFormatHandler: FormatHandler<HorizontalAlignFormat> = {
     parse: (format, element, context) => {
-        const align = element.style.textAlign;
+        const align = element.style.textAlign || element.getAttribute('align');
 
         switch (align) {
             case 'center':
@@ -27,9 +42,10 @@ export const horizontalAlignFormatHandler: FormatHandler<HorizontalAlignFormat> 
                 break;
         }
     },
-    apply: (format, element) => {
+    apply: (format, element, context) => {
         if (format.horizontalAlign) {
-            element.style.textAlign = format.horizontalAlign;
+            element.style.textAlign =
+                ResultMap[format.horizontalAlign][context.isRightToLeft ? 'rtl' : 'ltr'];
         }
     },
 };

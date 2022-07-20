@@ -16,7 +16,7 @@ export const tableSpacingFormatHandler: FormatHandler<SpacingFormat> = {
         if (format.borderCollapse) {
             element.style.borderCollapse = BorderCollapsed;
             element.style.borderSpacing = '0';
-            element.style.boxShadow = 'border-box';
+            element.style.boxSizing = 'border-box';
         }
     },
 };

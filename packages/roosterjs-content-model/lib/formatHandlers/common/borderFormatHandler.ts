@@ -32,8 +32,11 @@ function writeStyle(
 ) {
     let css: string | undefined;
 
-    if (styleArray && !styleArray.every(x => x == '' || x == 'initial' || x == 'inherit')) {
-        if (styleArray.length && styleArray[1] == styleArray[3]) {
+    if (
+        styleArray &&
+        !styleArray.every(x => x == '' || x == 'initial' || x == 'inherit' || x == 'transparent')
+    ) {
+        if (styleArray.length >= 4 && styleArray[1] == styleArray[3]) {
             if (styleArray[0] == styleArray[2]) {
                 if (styleArray[0] == styleArray[1]) {
                     css = styleArray[0];
