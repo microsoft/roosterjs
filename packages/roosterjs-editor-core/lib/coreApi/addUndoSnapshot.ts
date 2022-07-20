@@ -24,8 +24,8 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
-    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | undefined,
-    changeSource: ChangeSource | CompatibleChangeSource | string,
+    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
+    changeSource: ChangeSource | CompatibleChangeSource | string | null,
     canUndoByBackspace: boolean,
     additionalData?: ContentChangedData
 ) => {
