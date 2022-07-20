@@ -15,7 +15,13 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
     },
     apply: (format, element, context) => {
         if (format.backgroundColor) {
-            setColor(element, format.backgroundColor, true /*isBackground*/, context.isDarkMode);
+            setColor(
+                element,
+                format.backgroundColor,
+                true /*isBackground*/,
+                context.isDarkMode,
+                context.getDarkColor
+            );
         }
     },
 };
