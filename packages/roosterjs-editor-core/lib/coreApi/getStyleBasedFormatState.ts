@@ -35,7 +35,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
                   darkModeColor: styles[2],
                   lightModeColor:
                       ogTextColorNode.dataset[DarkModeDatasetNames.OriginalStyleColor] ||
-                      ogTextColorNode.dataset[DarkModeDatasetNames.OriginalAttributeColor],
+                      ogTextColorNode.dataset[DarkModeDatasetNames.OriginalAttributeColor] ||
+                      styles[2],
               }
             : undefined,
         backgroundColors: ogBackgroundColorNode
@@ -47,7 +48,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
                       ] ||
                       ogBackgroundColorNode.dataset[
                           DarkModeDatasetNames.OriginalAttributeBackgroundColor
-                      ],
+                      ] ||
+                      styles[3],
               }
             : undefined,
     };

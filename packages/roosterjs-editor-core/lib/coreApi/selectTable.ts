@@ -42,17 +42,16 @@ export const selectTable: SelectTable = (
 
         const ranges = select(core, table, coordinates);
         if (!isMergedCell(table, coordinates)) {
-            core.api.selectRange(
-                core,
-                createRange(
-                    new Position(
-                        table.rows
-                            .item(coordinates.firstCell.y)
-                            .cells.item(coordinates.firstCell.x),
-                        PositionType.Begin
-                    )
-                )
-            );
+            const cellToSelect = table.rows
+                .item(coordinates.firstCell.y)
+                ?.cells.item(coordinates.firstCell.x);
+
+            if (cellToSelect) {
+                core.api.selectRange(
+                    core,
+                    createRange(new Position(cellToSelect, PositionType.Begin))
+                );
+            }
         }
 
         return {
@@ -102,7 +101,7 @@ function buildCss(
         return result;
     });
 
-    vTable.cells.forEach((row, rowIndex) => {
+    vTable.cells?.forEach((row, rowIndex) => {
         let tdCount = 0;
         let thCount = 0;
         firstSelected = null;
@@ -118,8 +117,9 @@ function buildCss(
                 : rowIndex + 1;
 
         for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-            if (row[cellIndex].td) {
-                const tag = getTagOfNode(row[cellIndex].td);
+            const cell = row[cellIndex].td;
+            if (cell) {
+                const tag = getTagOfNode(cell);
 
                 if (tag == 'TD') {
                     tdCount++;
@@ -135,7 +135,7 @@ function buildCss(
                         css += ',';
                     }
 
-                    removeImportant(row[cellIndex].td);
+                    removeImportant(cell);
 
                     const selector = generateCssFromCell(
                         contentDivSelector,
@@ -177,7 +177,7 @@ function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSel
         styleElement.id = STYLE_ID + core.contentDiv.id;
     }
 
-    styleElement.sheet.insertRule(css);
+    styleElement.sheet?.insertRule(css);
 
     return ranges;
 }
@@ -256,7 +256,7 @@ function removeImportant(cell: HTMLTableCellElement) {
     }
 }
 
-function areValidCoordinates(input: TableSelection) {
+function areValidCoordinates(input?: TableSelection): input is TableSelection {
     if (input) {
         const { firstCell, lastCell } = input || {};
         if (firstCell && lastCell) {
@@ -269,11 +269,11 @@ function areValidCoordinates(input: TableSelection) {
     return false;
 }
 
-function isValidCoordinate(input: number) {
+function isValidCoordinate(input: number): boolean {
     return (!!input || input == 0) && input > -1;
 }
 
 function isMergedCell(table: HTMLTableElement, coordinates: TableSelection): boolean {
     const { firstCell } = coordinates;
-    return !(table.rows.item(firstCell.y) && table.rows.item(firstCell.y).cells.item(firstCell.x));
+    return !(table.rows.item(firstCell.y) && table.rows.item(firstCell.y)?.cells.item(firstCell.x));
 }
