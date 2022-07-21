@@ -1,6 +1,8 @@
 export { ContentModelBlockBase } from './block/ContentModelBlockBase';
+export { ContentModelTable } from './block/ContentModelTable';
 export { ContentModelBlockGroupBase } from './block/group/ContentModelBlockGroupBase';
 export { ContentModelDocument } from './block/group/ContentModelDocument';
+export { ContentModelTableCell } from './block/group/ContentModelTableCell';
 export { ContentModelGeneralBlock } from './block/group/ContentModelGeneralBlock';
 export { ContentModelBlockGroup } from './block/group/ContentModelBlockGroup';
 export { ContentModelBlock } from './block/ContentModelBlock';

@@ -183,9 +183,13 @@ export default class TableEditor {
         }
     }
 
+    /**
+     * create or remove TableInserter
+     * @param td td to attach to, set this to null to remove inserters (both horizontal and vertical)
+     */
     private setInserterTd(td: HTMLTableCellElement, isHorizontal?: boolean) {
         const inserter = isHorizontal ? this.horizontalInserter : this.verticalInserter;
-        if (inserter && inserter.node != td) {
+        if (td === null || (inserter && inserter.node != td)) {
             this.disposeTableInserter();
         }
 

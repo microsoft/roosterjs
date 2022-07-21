@@ -20,7 +20,7 @@ import {
     EmojiFamilyStrings,
     EmojiKeywordStrings,
 } from '../type/EmojiStrings';
-import React = require('react');
+import * as React from 'react';
 
 const KEYCODE_COLON = 186;
 const KEYCODE_COLON_FIREFOX = 59;
