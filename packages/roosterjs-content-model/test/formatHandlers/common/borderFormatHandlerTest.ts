@@ -129,7 +129,7 @@ describe('borderFormatHandler.apply', () => {
 
         borderFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div style="border-color: red;"></div>');
+        expect(div.outerHTML).toEqual('<div style="border-top-color: red;"></div>');
     });
 
     it('Has border color - two values', () => {
@@ -137,7 +137,9 @@ describe('borderFormatHandler.apply', () => {
 
         borderFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div style="border-color: red green;"></div>');
+        expect(div.outerHTML).toEqual(
+            '<div style="border-top-color: red; border-right-color: green;"></div>'
+        );
     });
 
     it('Has border color - three values', () => {
@@ -145,7 +147,9 @@ describe('borderFormatHandler.apply', () => {
 
         borderFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div style="border-color: red green blue;"></div>');
+        expect(div.outerHTML).toEqual(
+            '<div style="border-top-color: red; border-right-color: green; border-bottom-color: blue;"></div>'
+        );
     });
 
     it('Has border color - four values - same value', () => {

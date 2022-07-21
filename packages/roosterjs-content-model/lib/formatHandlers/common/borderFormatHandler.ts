@@ -30,29 +30,13 @@ function writeStyle(
     styleArray: string[] | undefined,
     style: 'width' | 'style' | 'color'
 ) {
-    let css: string | undefined;
-
     if (
         styleArray &&
         !styleArray.every(x => x == '' || x == 'initial' || x == 'inherit' || x == 'transparent')
     ) {
-        if (styleArray.length >= 4 && styleArray[1] == styleArray[3]) {
-            if (styleArray[0] == styleArray[2]) {
-                if (styleArray[0] == styleArray[1]) {
-                    css = styleArray[0];
-                } else {
-                    css = `${styleArray[0]} ${styleArray[1]}`;
-                }
-            } else {
-                css = `${styleArray[0]} ${styleArray[1]} ${styleArray[2]}`;
-            }
-        } else {
-            css = styleArray.join(' ');
+        for (let i = 0; i < Directions.length; i++) {
+            element.style.setProperty(`border-${Directions[i]}-${style}`, styleArray[i]);
         }
-    }
-
-    if (css) {
-        element.style.setProperty('border-' + style, css);
     }
 }
 
