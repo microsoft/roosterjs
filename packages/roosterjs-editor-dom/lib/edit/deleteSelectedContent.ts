@@ -8,7 +8,7 @@ import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
 import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
-import { findParentEntity } from '../entity/getEntityFromElement';
+import { findParentEntity } from '..';
 
 /**
  * Delete selected content, and return the new position to select
