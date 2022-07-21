@@ -15,7 +15,7 @@ export { ContentModelSegment } from './segment/ContentModelSegment';
 export { ContentModelTableFormat } from './format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
 
-export { HorizontalAlignFormat } from './format/formatParts/HorizontalAlignFormat';
+export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
 export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
 export { BorderFormat } from './format/formatParts/BorderFormat';

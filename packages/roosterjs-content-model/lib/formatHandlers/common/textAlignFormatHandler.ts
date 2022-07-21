@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { HorizontalAlignFormat } from '../../publicTypes/format/formatParts/HorizontalAlignFormat';
+import { TextAlignFormat } from '../../publicTypes/format/formatParts/TextAlignFormat';
 
 const ResultMap = {
     start: {
@@ -19,33 +19,33 @@ const ResultMap = {
 /**
  * @internal
  */
-export const horizontalAlignFormatHandler: FormatHandler<HorizontalAlignFormat> = {
+export const textAlignFormatHandler: FormatHandler<TextAlignFormat> = {
     parse: (format, element, context) => {
         const align = element.style.textAlign || element.getAttribute('align');
 
         switch (align) {
             case 'center':
-                format.horizontalAlign = 'center';
+                format.textAlign = 'center';
                 break;
 
             case 'left':
-                format.horizontalAlign = context.isRightToLeft ? 'end' : 'start';
+                format.textAlign = context.isRightToLeft ? 'end' : 'start';
                 break;
 
             case 'right':
-                format.horizontalAlign = context.isRightToLeft ? 'start' : 'end';
+                format.textAlign = context.isRightToLeft ? 'start' : 'end';
                 break;
 
             case 'start':
             case 'end':
-                format.horizontalAlign = align;
+                format.textAlign = align;
                 break;
         }
     },
     apply: (format, element, context) => {
-        if (format.horizontalAlign) {
+        if (format.textAlign) {
             element.style.textAlign =
-                ResultMap[format.horizontalAlign][context.isRightToLeft ? 'rtl' : 'ltr'];
+                ResultMap[format.textAlign][context.isRightToLeft ? 'rtl' : 'ltr'];
         }
     },
 };
