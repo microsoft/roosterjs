@@ -1,9 +1,12 @@
+import * as blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
+import * as setIndentation from 'roosterjs-editor-api/lib/format/setIndentation';
 import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
-import { IEditor } from 'roosterjs-editor-types';
+import * as toggleListType from 'roosterjs-editor-api/lib/utils/toggleListType';
+import { IEditor, Indentation, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
 import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
 
-describe('listFeatures', () => {
+describe('listFeatures | AutoBullet', () => {
     let editor: IEditor;
     const TEST_ID = 'listFeatureTests';
     let editorSearchCursorSpy: any;
@@ -16,6 +19,10 @@ describe('listFeatures', () => {
     });
 
     afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
         editor.dispose();
     });
 
@@ -134,5 +141,510 @@ describe('listFeatures', () => {
         runTestWithNumberingStyles('1#', false);
         runTestWithNumberingStyles(' ', false);
         runTestWithNumberingStyles('', false);
+    });
+});
+
+describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
+    let editor: IEditor;
+    const TEST_ID = 'listFeatureTests';
+    let setIndentationFn: jasmine.Spy;
+    const getKeyboardEvent = (shiftKey: boolean) =>
+        new KeyboardEvent('keydown', {
+            shiftKey,
+            altKey: false,
+            ctrlKey: false,
+        });
+    let list: HTMLOListElement;
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+        list = editor.getDocument().getElementById(TEST_ID) as HTMLOListElement;
+        editor.setContent(`<ol id="${TEST_ID}"><li>1</li><li>2</li><li>3</li></ol>`);
+        editor.focus();
+        setIndentationFn = spyOn(setIndentation, 'default');
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    function runTestShouldHandleEvent(
+        indent: boolean,
+        shiftKeyPressed: boolean,
+        shouldHandle: boolean
+    ) {
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(shiftKeyPressed),
+        };
+        let triggered: boolean;
+        if (indent) {
+            triggered = ListFeatures.indentWhenTab.shouldHandleEvent(keyboardEvent, editor, false)
+                ? true
+                : false;
+        } else {
+            triggered = ListFeatures.outdentWhenShiftTab.shouldHandleEvent(
+                keyboardEvent,
+                editor,
+                false
+            )
+                ? true
+                : false;
+        }
+        expect(triggered).toBe(shouldHandle);
+    }
+
+    function runTestHandleEvent(shiftKeyPressed: boolean) {
+        const range = document.createRange();
+        range.setStart(list, 0);
+        range.setEnd(list, 1);
+        editor.select(range);
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(shiftKeyPressed),
+        };
+        if (shiftKeyPressed) {
+            ListFeatures.outdentWhenShiftTab.handleEvent(keyboardEvent, editor);
+        } else {
+            ListFeatures.indentWhenTab.handleEvent(keyboardEvent, editor);
+        }
+
+        expect(setIndentationFn).toHaveBeenCalled();
+        expect(setIndentationFn).toHaveBeenCalledWith(
+            editor,
+            shiftKeyPressed ? Indentation.Decrease : Indentation.Increase
+        );
+    }
+
+    it('should not handle event | indent', () => {
+        runTestShouldHandleEvent(true, true, false);
+    });
+
+    it('should handle event | indent', () => {
+        runTestShouldHandleEvent(true, false, true);
+    });
+
+    it('should not handle event | outdent', () => {
+        runTestShouldHandleEvent(false, true, true);
+    });
+
+    it('should handle event | outdent', () => {
+        runTestShouldHandleEvent(false, false, false);
+    });
+
+    it('should handle indent | indent', () => {
+        runTestHandleEvent(false);
+    });
+
+    it('should handle indent | outdent', () => {
+        runTestHandleEvent(true);
+    });
+});
+
+describe('listFeatures | MergeInNewLine', () => {
+    let editor: IEditor;
+    const TEST_ID = 'listFeatureTests';
+    const ITEM_1 = 'ITEM_1';
+    const ITEM_2 = 'ITEM_2';
+    let blockFormatFn: jasmine.Spy;
+    let toggleListTypeFn: jasmine.Spy;
+    const getKeyboardEvent = (shiftKey: boolean) =>
+        new KeyboardEvent('keydown', {
+            shiftKey,
+            altKey: false,
+            ctrlKey: false,
+        });
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+        editor.setContent(
+            `<ol id="${TEST_ID}"><li id="${ITEM_1}">1</li><li id="${ITEM_2}" >2</li><li>3</li></ol>`
+        );
+        editor.focus();
+        blockFormatFn = spyOn(blockFormat, 'default');
+        toggleListTypeFn = spyOn(toggleListType, 'default');
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    function runTestShouldHandleEvent(isAtBeginning: boolean, shouldHandle: boolean) {
+        const item = editor.getDocument().getElementById(ITEM_2) as HTMLLIElement;
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+        const range = document.createRange();
+        range.setStart(item, 0);
+        if (isAtBeginning) {
+            range.collapse();
+        } else {
+            range.setEnd(item, 1);
+        }
+        editor.select(range);
+
+        const triggered = ListFeatures.mergeInNewLineWhenBackspaceOnFirstChar.shouldHandleEvent(
+            keyboardEvent,
+            editor,
+            false
+        )
+            ? true
+            : false;
+        expect(triggered).toBe(shouldHandle);
+    }
+
+    function runTestHandleEvent(isFirstElement: boolean) {
+        const item = editor
+            .getDocument()
+            .getElementById(isFirstElement ? ITEM_1 : ITEM_2) as HTMLLIElement;
+        const range = document.createRange();
+        range.setStart(item, 0);
+        range.setEnd(item, 0);
+        editor.select(range);
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+        ListFeatures.mergeInNewLineWhenBackspaceOnFirstChar.handleEvent(keyboardEvent, editor);
+        if (isFirstElement) {
+            expect(toggleListTypeFn).toHaveBeenCalled();
+            expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, null, true);
+        } else {
+            expect(blockFormatFn).toHaveBeenCalled();
+        }
+    }
+
+    it('should handle event', () => {
+        runTestShouldHandleEvent(true, true);
+    });
+
+    it('should not handle event', () => {
+        runTestShouldHandleEvent(false, false);
+    });
+
+    it('should handle block format', () => {
+        runTestHandleEvent(false);
+    });
+
+    it('should handle toggle List', () => {
+        runTestHandleEvent(true);
+    });
+});
+
+describe('listFeatures | OutdentWhenBackOn1stEmptyLine', () => {
+    let editor: IEditor;
+    const TEST_ID = 'listFeatureTests';
+    const ITEM_1 = 'ITEM_1';
+    let toggleListTypeFn: jasmine.Spy;
+    const getKeyboardEvent = (shiftKey: boolean) =>
+        new KeyboardEvent('keydown', {
+            shiftKey,
+            altKey: false,
+            ctrlKey: false,
+        });
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+        toggleListTypeFn = spyOn(toggleListType, 'default');
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    function runTestShouldHandleEvent(content: string, shouldHandle: boolean) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1) as HTMLLIElement;
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+        const range = document.createRange();
+        range.setStart(item, 0);
+        range.collapse();
+        editor.select(range);
+        const triggered = ListFeatures.outdentWhenBackspaceOnEmptyFirstLine.shouldHandleEvent(
+            keyboardEvent,
+            editor,
+            false
+        )
+            ? true
+            : false;
+        expect(triggered).toBe(shouldHandle);
+    }
+
+    function runTestHandleEvent(content: string) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1) as HTMLLIElement;
+        const range = document.createRange();
+        range.setStart(item, 0);
+        range.collapse();
+        editor.select(range);
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+        ListFeatures.outdentWhenBackspaceOnEmptyFirstLine.handleEvent(keyboardEvent, editor);
+        expect(toggleListTypeFn).toHaveBeenCalled();
+        expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, null, true);
+    }
+
+    it('should not handle event', () => {
+        runTestShouldHandleEvent(
+            `<ol id="${TEST_ID}"><li >1</li><li id="${ITEM_1}" >2</li><li>3</li></ol>`,
+            false
+        );
+    });
+
+    it('should  handle event', () => {
+        runTestShouldHandleEvent(`<ol id="${TEST_ID}"><li id="${ITEM_1}"></li></ol>`, true);
+    });
+
+    it('should handle toggle List', () => {
+        runTestHandleEvent(`<ol id="${TEST_ID}"><li id="${ITEM_1}"></li></ol>`);
+    });
+});
+
+describe('listFeatures | MaintainListChainWhenDelete', () => {
+    let editor: IEditor;
+    const TEST_ID = 'listFeatureTests';
+    const ITEM_1 = 'ITEM_1';
+    const ITEM_2 = 'ITEM_2';
+    const getKeyboardEvent = (shiftKey: boolean) =>
+        new KeyboardEvent('keydown', {
+            shiftKey,
+            altKey: false,
+            ctrlKey: false,
+        });
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    function runTestHandleEvent(content: string) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1);
+        const range = document.createRange();
+        range.setStart(item, 0);
+        range.collapse();
+        editor.select(range);
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+
+        const runAsync = spyOn(editor, 'runAsync');
+        ListFeatures.maintainListChainWhenDelete.handleEvent(keyboardEvent, editor);
+        expect(runAsync).toHaveBeenCalled();
+    }
+
+    it('should handle toggle List', () => {
+        runTestHandleEvent(
+            `<ol id="${TEST_ID}"><li id="${ITEM_1}">1</li><li id="${ITEM_2}">1</li></ol>`
+        );
+    });
+});
+
+describe('listFeatures | OutdentWhenEnterOnEmptyLine', () => {
+    let editor: IEditor;
+    const TEST_ID = 'listFeatureTests';
+    const ITEM_1 = 'ITEM_1';
+    let toggleListTypeFn: jasmine.Spy;
+    const getKeyboardEvent = (shiftKey: boolean) =>
+        new KeyboardEvent('keydown', {
+            shiftKey,
+            altKey: false,
+            ctrlKey: false,
+        });
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+        toggleListTypeFn = spyOn(toggleListType, 'default');
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    function runTestShouldHandleEvent(content: string, shiftKey: boolean, shouldHandle: boolean) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1) as HTMLLIElement;
+        if (item) {
+            const range = document.createRange();
+            range.setStart(item, 0);
+            range.collapse();
+            editor.select(range);
+        }
+
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(shiftKey),
+        };
+
+        const triggered = ListFeatures.outdentWhenEnterOnEmptyLine.shouldHandleEvent(
+            keyboardEvent,
+            editor,
+            false
+        )
+            ? true
+            : false;
+        expect(triggered).toBe(shouldHandle);
+    }
+
+    function runTestHandleEvent(content: string) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1) as HTMLLIElement;
+        const range = document.createRange();
+        range.setStart(item, 0);
+        range.collapse();
+        editor.select(range);
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+        ListFeatures.outdentWhenBackspaceOnEmptyFirstLine.handleEvent(keyboardEvent, editor);
+        expect(toggleListTypeFn).toHaveBeenCalled();
+        expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, null, true);
+    }
+
+    it('should handle event', () => {
+        runTestShouldHandleEvent(`<ol id="${TEST_ID}"><li id="${ITEM_1}"></li></ol>`, false, true);
+    });
+
+    it('should not handle event | node not empty', () => {
+        runTestShouldHandleEvent(
+            `<ol id="${TEST_ID}"><li >1</li><li id="${ITEM_1}" >2</li><li>3</li></ol>`,
+            true,
+            false
+        );
+    });
+
+    it('should not handle event | shift key', () => {
+        runTestShouldHandleEvent(
+            `<ol id="${TEST_ID}"><li >1</li><li id="${ITEM_1}" >2</li><li>3</li></ol>`,
+            true,
+            false
+        );
+    });
+
+    it('should handle toggle List', () => {
+        runTestHandleEvent(`<ol id="${TEST_ID}"><li id="${ITEM_1}"></li></ol>`);
+    });
+});
+
+describe('listFeatures | MaintainListChain', () => {
+    let editor: IEditor;
+    const TEST_ID = 'listFeatureTests';
+    const ITEM_1 = 'ITEM_1';
+    const getKeyboardEvent = (shiftKey: boolean) =>
+        new KeyboardEvent('keydown', {
+            shiftKey,
+            altKey: false,
+            ctrlKey: false,
+        });
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    function runTestShouldHandleEvent(content: string, shouldHandle: boolean) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(TEST_ID);
+        if (item) {
+            const range = document.createRange();
+            range.setStart(item, 0);
+            range.setEnd(item, 1);
+            editor.select(range);
+        }
+
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+
+        const triggered = ListFeatures.maintainListChain.shouldHandleEvent(
+            keyboardEvent,
+            editor,
+            false
+        )
+            ? true
+            : false;
+        expect(triggered).toBe(shouldHandle);
+    }
+
+    function runTestHandleEvent(content: string) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1);
+        if (item) {
+            const range = document.createRange();
+            range.setStart(item, 1);
+            range.collapse();
+            editor.select(range);
+        }
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+
+        const runAsync = spyOn(editor, 'runAsync');
+        ListFeatures.maintainListChain.handleEvent(keyboardEvent, editor);
+        expect(runAsync).toHaveBeenCalled();
+    }
+
+    it('should handle event', () => {
+        runTestShouldHandleEvent(
+            `<ol id="${TEST_ID}"><li >1</li><li id="${ITEM_1}" >2</li><li>3</li></ol>`,
+            true
+        );
+    });
+
+    it('should not  handle event', () => {
+        runTestShouldHandleEvent(`<span id="${ITEM_1}">1</span>`, false);
+    });
+
+    it('should handle editor async', () => {
+        runTestHandleEvent(
+            `<ol id="${TEST_ID}"><li >1</li><li id="${ITEM_1}" >2</li><li>3</li></ol>`
+        );
     });
 });
