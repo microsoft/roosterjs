@@ -1,3 +1,5 @@
+import IEditor from './IEditor';
+
 /**
  * An interface to define a replacement rule for CustomReplace plugin
  */
@@ -21,12 +23,12 @@ export default interface CustomReplacement {
      * A callback to check if the string should be replaced
      * @param content the content where the string is
      * @param replacement string to be replaced
-     * @param contentTag tagName of the html element that contains the string
+     * @param sourceEditor reference to the editor, allows for more complex replacement rules
      * @return true, if the string should be replaced, else return false
      */
     shouldReplace?: (
         replacement: CustomReplacement,
         content: string,
-        contentTag?: string
+        sourceEditor?: IEditor
     ) => boolean;
 }

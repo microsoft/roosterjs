@@ -14,7 +14,7 @@ const makeReplacement = (
     shouldReplace?: (
         replacement: CustomReplacement,
         content: string,
-        contentTag?: string
+        sourceEditor?: IEditor
     ) => boolean
 ): CustomReplacement => ({
     sourceString,
@@ -103,7 +103,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
         const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
-        const sourceTag = this.editor.getElementAtCursor().tagName;
+        const sourceEditor = this.editor;
 
         const replacement = this.getMatchingReplacement(stringToSearch);
         if (replacement == null) {
@@ -112,7 +112,7 @@ export default class CustomReplacePlugin implements EditorPlugin {
 
         if (
             replacement.shouldReplace &&
-            !replacement.shouldReplace(replacement, searcher.getWordBefore(), sourceTag)
+            !replacement.shouldReplace(replacement, searcher.getWordBefore(), sourceEditor)
         ) {
             return;
         }
