@@ -12,7 +12,7 @@ export const getSelectionRange: GetSelectionRange = (
     core: EditorCore,
     tryGetFromCache: boolean
 ) => {
-    let result: Range = null;
+    let result: Range | null = null;
 
     if (core.lifecycle.shadowEditFragment) {
         result =

@@ -28,14 +28,15 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
     keyboardEvent?: KeyboardEvent
 ) => {
     const table = findClosestElementAncestor(position.node, core.contentDiv, 'table');
-    let td: HTMLElement;
+    let td: HTMLElement | null;
+
     if (table && (td = table.querySelector('td,th'))) {
         position = new Position(td, PositionType.Begin);
     }
     position = position.normalize();
 
     const block = getBlockElementAtNode(core.contentDiv, position.node);
-    let formatNode: HTMLElement;
+    let formatNode: HTMLElement | null;
 
     if (block) {
         formatNode = block.collapseToSingleElement();
@@ -66,7 +67,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
         });
 
         // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-        position = new Position(formatNode.firstChild, PositionType.Begin);
+        position = new Position(formatNode.firstChild!, PositionType.Begin);
     }
 
     if (formatNode) {
