@@ -39,6 +39,8 @@ const regExport = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)(default\s+([0-9a-zA
 
 const AllowedCrossPackageImport = {
     'roosterjs-editor-types/lib/compatibleTypes': 'roosterjs-editor-types/lib/compatibleTypes.d.ts',
+    'roosterjs-content-model/lib/compatibleTypes':
+        'roosterjs-content-model/lib/compatibleTypes.d.ts',
 };
 
 function enqueue(queue, filename, exports) {

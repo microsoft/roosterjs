@@ -50,6 +50,7 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
         return {
             ...baseProps,
             model: null,
+            serializer: 'friendly',
             onUpdateModel: this.onGetModel,
             onCreateDOM: this.onCreateDOM,
         };

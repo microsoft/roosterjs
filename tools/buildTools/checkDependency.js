@@ -83,6 +83,7 @@ function findPackageName(filename) {
 
 const GlobalAllowedCrossPackageDependency = [
     'roosterjs-editor-types/lib/compatibleTypes',
+    'roosterjs-content-model/lib/compatibleTypes',
     /@fluentui\/react(\/.*)?/,
 ];
 
