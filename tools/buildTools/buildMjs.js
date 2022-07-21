@@ -19,7 +19,7 @@ function buildMjs() {
             ` -p ${path.join(
                 packagesPath,
                 'tsconfig.build.json'
-            )} -t es5 --moduleResolution node -m esnext`,
+            )} -t es5 --moduleResolution node -m esnext --preserveConstEnums`,
         packagesPath
     );
     runNode(
@@ -27,7 +27,7 @@ function buildMjs() {
             ` -p ${path.join(
                 packagesUiPath,
                 'tsconfig.json'
-            )} -t es5 --moduleResolution node -m esnext`,
+            )} -t es5 --moduleResolution node -m esnext --preserveConstEnums`,
         packagesPath
     );
 
