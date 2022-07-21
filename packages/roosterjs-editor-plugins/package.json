@@ -6,5 +6,6 @@
         "roosterjs-editor-dom": "",
         "roosterjs-editor-api": ""
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "module": "./lib-mjs/index.ts"
 }

@@ -4,5 +4,6 @@
     "dependencies": {
         "@types/dom-inputevent": "^1.0.3"
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "module": "./lib-mjs/index.ts"
 }

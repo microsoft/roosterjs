@@ -10,5 +10,6 @@
         "roosterjs-editor-plugins": "",
         "roosterjs-color-utils": ""
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "module": "./lib-mjs/index.ts"
 }

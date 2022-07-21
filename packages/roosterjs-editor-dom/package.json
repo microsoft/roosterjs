@@ -4,5 +4,6 @@
     "dependencies": {
         "roosterjs-editor-types": ""
     },
-    "main": "./lib/index.ts"
+    "main": "./lib/index.ts",
+    "module": "./lib-mjs/index.ts"
 }
