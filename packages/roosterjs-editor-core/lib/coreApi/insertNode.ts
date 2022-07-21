@@ -24,7 +24,7 @@ import {
 function getInitialRange(
     core: EditorCore,
     option: InsertOption
-): { range: Range; rangeToRestore: Range } {
+): { range: Range | null; rangeToRestore: Range | null } {
     // Selection start replaces based on the current selection.
     // Range inserts based on a provided range.
     // Both have the potential to use the current selection to restore cursor position
@@ -61,7 +61,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
     }
 
     if (option.position == ContentPosition.Outside) {
-        contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
+        contentDiv.parentNode?.insertBefore(node, contentDiv.nextSibling);
         return true;
     }
 
@@ -75,7 +75,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                 case ContentPosition.End: {
                     let isBegin = option.position == ContentPosition.Begin;
                     let block = getFirstLastBlockElement(contentDiv, isBegin);
-                    let insertedNode: Node | Node[];
+                    let insertedNode: Node | Node[] | undefined;
                     if (block) {
                         let refNode = isBegin ? block.getStartNode() : block.getEndNode();
                         if (
@@ -90,12 +90,12 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                                 // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
                                 // because insertBefore() returns an empty DocumentFragment
                                 insertedNode = toArray(node.childNodes);
-                                refNode.parentNode.insertBefore(
+                                refNode.parentNode?.insertBefore(
                                     node,
                                     isBegin ? refNode : refNode.nextSibling
                                 );
                             } else {
-                                insertedNode = refNode.parentNode.insertBefore(
+                                insertedNode = refNode.parentNode?.insertBefore(
                                     node,
                                     isBegin ? refNode : refNode.nextSibling
                                 );
@@ -146,7 +146,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     }
 
                     let pos = Position.getStart(range);
-                    let blockElement: BlockElement;
+                    let blockElement: BlockElement | null;
 
                     if (
                         option.insertOnNewLine &&
@@ -166,7 +166,10 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                             new Position(nodeForCursor, PositionType.After).normalize()
                         );
                     }
-                    core.api.selectRange(core, rangeToRestore);
+
+                    if (rangeToRestore) {
+                        core.api.selectRange(core, rangeToRestore);
+                    }
 
                     break;
             }

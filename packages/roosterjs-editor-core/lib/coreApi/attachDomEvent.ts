@@ -19,9 +19,10 @@ export const attachDomEvent: AttachDomEvent = (
     core: EditorCore,
     eventMap: Record<string, DOMEventHandler>
 ) => {
-    const disposers = getObjectKeys(eventMap || {}).map(eventName => {
-        const { pluginEventType, beforeDispatch } = extractHandler(eventMap[eventName]);
-        let onEvent = (event: UIEvent) => {
+    const disposers = getObjectKeys(eventMap || {}).map(key => {
+        const { pluginEventType, beforeDispatch } = extractHandler(eventMap[key]);
+        const eventName = key as keyof HTMLElementEventMap;
+        let onEvent = (event: HTMLElementEventMap[typeof eventName]) => {
             if (beforeDispatch) {
                 beforeDispatch(event);
             }
@@ -36,7 +37,9 @@ export const attachDomEvent: AttachDomEvent = (
                 );
             }
         };
+
         core.contentDiv.addEventListener(eventName, onEvent);
+
         return () => {
             core.contentDiv.removeEventListener(eventName, onEvent);
         };

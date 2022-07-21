@@ -51,13 +51,12 @@ export const createPasteFragment: CreatePasteFragment = (
     const { fragment, sanitizingOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     const document = core.contentDiv.ownerDocument;
-    let doc: HTMLDocument;
+    let doc: Document | undefined = rawHtml
+        ? new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html')
+        : undefined;
 
     // Step 2: Retrieve Metadata from Html and the Html that was copied.
-    if (
-        rawHtml &&
-        (doc = new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html'))?.body
-    ) {
+    if (rawHtml && doc?.body) {
         const attributes = doc.querySelector('html')?.attributes;
         (attributes ? toArray(attributes) : []).reduce((attrs, attr) => {
             attrs[attr.name] = attr.value;
@@ -74,7 +73,7 @@ export const createPasteFragment: CreatePasteFragment = (
         for (let i = 0; i < doc?.body.childNodes.length; i++) {
             const node = doc?.body.childNodes.item(i);
             if (node.nodeType == Node.TEXT_NODE) {
-                const trimmedString = node.nodeValue.replace(/(\r\n|\r|\n)/gm, '').trim();
+                const trimmedString = node.nodeValue?.replace(/(\r\n|\r|\n)/gm, '').trim();
                 if (!trimmedString) {
                     continue;
                 }
@@ -87,7 +86,7 @@ export const createPasteFragment: CreatePasteFragment = (
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
         processStyles(doc, style => {
-            doc.head.appendChild(style);
+            doc?.head.appendChild(style);
             sanitizingOption.additionalGlobalStyleNodes.push(style);
         });
 
@@ -116,7 +115,7 @@ export const createPasteFragment: CreatePasteFragment = (
         img.src = imageDataUri;
         fragment.appendChild(img);
     } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
-        moveChildNodes(fragment, doc.body);
+        moveChildNodes(fragment, doc?.body);
 
         if (applyCurrentStyle && position) {
             const format = getCurrentFormat(core, position.node);
