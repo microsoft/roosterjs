@@ -1,10 +1,16 @@
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { FormatContext } from '../../formatHandlers/FormatContext';
 import { handleBlock } from './handleBlock';
 
 /**
  * @internal
  */
-export function handleTable(doc: Document, parent: Node, table: ContentModelTable) {
+export function handleTable(
+    doc: Document,
+    parent: Node,
+    table: ContentModelTable,
+    context: FormatContext
+) {
     if (table.cells.length == 0 || table.cells.every(c => c.length == 0)) {
         // Empty table, do not create TABLE element and just return
         return;
@@ -46,7 +52,7 @@ export function handleTable(doc: Document, parent: Node, table: ContentModelTabl
                     td.colSpan = colSpan;
                 }
 
-                handleBlock(doc, td, cell);
+                handleBlock(doc, td, cell, context);
             }
         }
     }
