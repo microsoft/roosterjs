@@ -47,17 +47,17 @@ export function setColor(
             : getDarkColor?.(color) || color
         : originalColor;
 
-    if (isBackground) {
-        element.style.backgroundColor = effectiveColor;
-    } else {
-        element.style.color = effectiveColor;
-    }
-
     if (isDarkMode) {
         element.dataset[
             isBackground
                 ? DarkModeDatasetNames.OriginalStyleBackgroundColor
                 : DarkModeDatasetNames.OriginalStyleColor
         ] = originalColor;
+    }
+
+    if (isBackground) {
+        element.style.backgroundColor = effectiveColor;
+    } else {
+        element.style.color = effectiveColor;
     }
 }

@@ -115,6 +115,6 @@ describe('backgroundColorFormatHandler.apply', () => {
 
         backgroundColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe('<div style="background-color: green;" data-ogsb="red"></div>');
+        expect(div.outerHTML).toBe('<div data-ogsb="red" style="background-color: green;"></div>');
     });
 });
