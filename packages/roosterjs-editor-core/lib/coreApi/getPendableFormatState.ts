@@ -75,10 +75,10 @@ function queryCommandStateFromDOM(
     core: EditorCore,
     currentPosition: NodePosition
 ): PendableFormatState {
-    let node = currentPosition.node;
+    let node: Node | null = currentPosition.node;
     let formatState: PendableFormatState = {};
     let pendableKeys: PendableFormatNames[] = [];
-    while (contains(core.contentDiv, node)) {
+    while (node && contains(core.contentDiv, node)) {
         const tag = getTagOfNode(node);
         const style = node.nodeType == NodeType.Element && (node as HTMLElement).style;
         if (tag && style) {

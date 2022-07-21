@@ -18,12 +18,12 @@ export default interface DOMEventPluginState {
     /**
      * Cached selection range
      */
-    selectionRange: Range;
+    selectionRange: Range | null;
 
     /**
      * Table selection range
      */
-    tableSelectionRange: TableSelectionRange;
+    tableSelectionRange: TableSelectionRange | null;
 
     /**
      * stop propagation of a printable keyboard event

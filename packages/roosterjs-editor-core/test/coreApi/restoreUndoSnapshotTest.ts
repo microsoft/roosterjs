@@ -2,7 +2,7 @@ import createEditorCore from './createMockEditorCore';
 import { restoreUndoSnapshot } from '../../lib/coreApi/restoreUndoSnapshot';
 
 describe('restoreUndoSnapshot', () => {
-    let div: HTMLDivElement;
+    let div: HTMLDivElement | null;
 
     beforeEach(() => {
         div = document.createElement('div');
@@ -10,7 +10,7 @@ describe('restoreUndoSnapshot', () => {
     });
 
     afterEach(() => {
-        document.body.removeChild(div);
+        document.body.removeChild(div!);
         div = null;
     });
 
@@ -24,7 +24,7 @@ describe('restoreUndoSnapshot', () => {
             metadata,
         });
 
-        const core = createEditorCore(div, {
+        const core = createEditorCore(div!, {
             coreApiOverride: {
                 addUndoSnapshot,
                 setContent,
@@ -51,7 +51,7 @@ describe('restoreUndoSnapshot', () => {
             metadata,
         });
 
-        const core = createEditorCore(div, {
+        const core = createEditorCore(div!, {
             coreApiOverride: {
                 addUndoSnapshot,
                 setContent,
