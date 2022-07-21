@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">95.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>57/60</span>
+                <span class='fraction'>58/61</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.89% </span>
+                <span class="strong">81.82% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>56/63</span>
+                <span class='fraction'>63/77</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.74% </span>
+                <span class="strong">94.83% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>54/57</span>
+                <span class='fraction'>55/58</span>
             </div>
         
             
@@ -241,7 +241,10 @@
 <a name='L176'></a><a href='#L176'>176</a>
 <a name='L177'></a><a href='#L177'>177</a>
 <a name='L178'></a><a href='#L178'>178</a>
-<a name='L179'></a><a href='#L179'>179</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -409,7 +412,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">30x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -445,7 +451,7 @@ import {
 function getInitialRange(
     core: EditorCore,
     option: InsertOption
-): { range: Range; rangeToRestore: Range } {
+): { range: Range | null; rangeToRestore: Range | null } {
     // Selection start replaces based on the current selection.
     // Range inserts based on a provided range.
     // Both have the potential to use the current selection to restore cursor position
@@ -482,7 +488,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
     }
 &nbsp;
     if (option.position == ContentPosition.Outside) {
-        contentDiv.parentNode.insertBefore(node, contentDiv.nextSibling);
+        contentDiv.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>nsertBefore(node, contentDiv.nextSibling);
         return true;
     }
 &nbsp;
@@ -496,7 +502,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                 case ContentPosition.End: {
                     let isBegin = option.position == ContentPosition.Begin;
                     let block = getFirstLastBlockElement(contentDiv, isBegin);
-                    let insertedNode: Node | Node[];
+                    let insertedNode: Node | Node[] | undefined;
                     if (block) {
                         let refNode = isBegin ? block.getStartNode() : block.getEndNode();
                         if (
@@ -511,12 +517,12 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                                 // if the node to be inserted is DocumentFragment, use its childNodes as insertedNode
                                 // because insertBefore() returns an empty DocumentFragment
 <span class="cstat-no" title="statement not covered" >                                insertedNode = toArray(node.childNodes);</span>
-<span class="cstat-no" title="statement not covered" >                                refNode.parentNode.insertBefore(</span>
+<span class="cstat-no" title="statement not covered" >                                refNode.parentNode?.insertBefore(</span>
                                     node,
                                     isBegin ? refNode : refNode.nextSibling
                                 );
                             } else {
-                                insertedNode = refNode.parentNode.insertBefore(
+                                insertedNode = refNode.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>nsertBefore(
                                     node,
                                     isBegin ? refNode : refNode.nextSibling
                                 );
@@ -567,7 +573,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     }
 &nbsp;
                     let pos = Position.getStart(range);
-                    let blockElement: BlockElement;
+                    let blockElement: BlockElement | null;
 &nbsp;
                     if (
                         option.insertOnNewLine &amp;&amp;
@@ -587,7 +593,10 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                             new Position(nodeForCursor, PositionType.After).normalize()
                         );
                     }
-                    core.api.selectRange(core, rangeToRestore);
+&nbsp;
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (rangeToRestore) {
+                        core.api.selectRange(core, rangeToRestore);
+                    }
 &nbsp;
                     break;
             }
@@ -604,7 +613,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-20T22:54:51.400Z
+                at 2022-07-21T14:33:45.467Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

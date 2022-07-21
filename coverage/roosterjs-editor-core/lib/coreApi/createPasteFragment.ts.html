@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.39% </span>
+                <span class="strong">85.56% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>76/89</span>
+                <span class='fraction'>77/90</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.36% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>58/78</span>
+                <span class='fraction'>69/92</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.9% </span>
+                <span class="strong">87.06% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>73/84</span>
+                <span class='fraction'>74/85</span>
             </div>
         
             
@@ -280,8 +280,7 @@
 <a name='L215'></a><a href='#L215'>215</a>
 <a name='L216'></a><a href='#L216'>216</a>
 <a name='L217'></a><a href='#L217'>217</a>
-<a name='L218'></a><a href='#L218'>218</a>
-<a name='L219'></a><a href='#L219'>219</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L218'></a><a href='#L218'>218</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -334,13 +333,12 @@
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -552,13 +550,12 @@ export const createPasteFragment: CreatePasteFragment = (
     const { fragment, sanitizingOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     const document = core.contentDiv.ownerDocument;
-    let doc: HTMLDocument;
+    let doc: Document | undefined = rawHtml
+        ? new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html')
+        : undefined;
 &nbsp;
     // Step 2: Retrieve Metadata from Html and the Html that was copied.
-    if (
-        rawHtml &amp;&amp;
-        (doc = new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html'))<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ody
-    ) {
+    if (rawHtml &amp;&amp; doc<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ody) {
         const attributes = doc.querySelector('html')<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>ttributes;
         (attributes ? toArray(attributes) : <span class="branch-1 cbranch-no" title="branch not covered" >[])</span>.reduce((attrs, attr) =&gt; {
             attrs[attr.name] = attr.value;
@@ -575,7 +572,7 @@ export const createPasteFragment: CreatePasteFragment = (
         for (let i = 0; i &lt; doc<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ody.childNodes.length; i++) {
             const node = doc<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ody.childNodes.item(i);
             if (node.nodeType == Node.TEXT_NODE) {
-                const trimmedString = node.nodeValue.replace(/(\r\n|\r|\n)/gm, '').trim();
+                const trimmedString = node.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>eplace(/(\r\n|\r|\n)/gm, '').trim();
                 if (!trimmedString) {
                     continue;
                 }
@@ -588,7 +585,7 @@ export const createPasteFragment: CreatePasteFragment = (
         // Move all STYLE nodes into header, and save them into sanitizing options.
         // Because if we directly move them into a fragment, all sheets under STYLE will be lost.
         processStyles(doc, style =&gt; {
-            doc.head.appendChild(style);
+            doc<span class="branch-0 cbranch-no" title="branch not covered" >?.h</span>ead.appendChild(style);
             sanitizingOption.additionalGlobalStyleNodes.push(style);
         });
 &nbsp;
@@ -617,7 +614,7 @@ export const createPasteFragment: CreatePasteFragment = (
         img.src = imageDataUri;
         fragment.appendChild(img);
     } else if (!pasteAsText &amp;&amp; rawHtml &amp;&amp; doc ? doc.body : false) {
-        moveChildNodes(fragment, doc.body);
+        moveChildNodes(fragment, doc<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>ody);
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (applyCurrentStyle &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >position)</span> {
             const format = <span class="cstat-no" title="statement not covered" >getCurrentFormat(core, position.node);</span>
@@ -724,7 +721,7 @@ function processStyles(node: ParentNode, callback: (style: HTMLStyleElement) =&g
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-20T22:54:51.400Z
+                at 2022-07-21T14:33:45.467Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
