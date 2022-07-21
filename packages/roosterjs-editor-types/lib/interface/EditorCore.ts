@@ -75,8 +75,8 @@ export default interface EditorCore extends PluginState {
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
-    callback: (start: NodePosition, end: NodePosition) => any,
-    changeSource: ChangeSource | CompatibleChangeSource | string,
+    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
+    changeSource: ChangeSource | CompatibleChangeSource | string | null,
     canUndoByBackspace: boolean,
     additionalData?: ContentChangedData
 ) => void;
@@ -106,7 +106,7 @@ export type CreatePasteFragment = (
     position: NodePosition,
     pasteAsText: boolean,
     applyCurrentStyle: boolean
-) => DocumentFragment;
+) => DocumentFragment | null;
 
 /**
  * Ensure user will type into a container element rather than into the editor content DIV directly
@@ -143,7 +143,7 @@ export type GetContent = (
  * @param tryGetFromCache Set to true to retrieve the selection range from cache if editor doesn't own the focus now
  * @returns A Range object of the selection range
  */
-export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range;
+export type GetSelectionRange = (core: EditorCore, tryGetFromCache: boolean) => Range | null;
 
 /**
  * Get current selection range
@@ -236,7 +236,7 @@ export type TransformColor = (
     core: EditorCore,
     rootNode: Node,
     includeSelf: boolean,
-    callback: () => void,
+    callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) => void;
@@ -261,7 +261,7 @@ export type SelectTable = (
     core: EditorCore,
     table: HTMLTableElement,
     coordinates?: TableSelection
-) => TableSelectionRange;
+) => TableSelectionRange | null;
 
 /**
  * The interface for the map of core API.

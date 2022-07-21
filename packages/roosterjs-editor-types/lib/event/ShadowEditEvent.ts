@@ -15,7 +15,7 @@ export interface EnterShadowEditEventData {
     /**
      * The selection path of original editor content
      */
-    selectionPath: SelectionPath;
+    selectionPath: SelectionPath | null;
 }
 
 /**

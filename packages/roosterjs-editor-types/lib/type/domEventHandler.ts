@@ -13,13 +13,13 @@ export interface DOMEventHandlerObject {
     /**
      * Type of plugin event. The DOM event will be mapped with this plugin event type
      */
-    pluginEventType: PluginEventType | CompatiblePluginEventType;
+    pluginEventType: PluginEventType | CompatiblePluginEventType | null;
 
     /**
      * Handler function. Besides the mapped plugin event type, this function will also be triggered
      * when correlated DOM event is fired
      */
-    beforeDispatch: DOMEventHandlerFunction;
+    beforeDispatch: DOMEventHandlerFunction | null;
 }
 
 /**
