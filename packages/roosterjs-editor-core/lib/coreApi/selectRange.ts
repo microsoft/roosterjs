@@ -57,11 +57,18 @@ function restorePendingFormatState(core: EditorCore) {
         let formatState = getPendableFormatState(document);
         getObjectKeys(PendableFormatCommandMap).forEach(key => {
             if (!!pendingFormatState.pendableFormatState[key] != formatState[key]) {
-                document.execCommand(PendableFormatCommandMap[key], false, null);
+                document.execCommand(
+                    PendableFormatCommandMap[key],
+                    false /* showUI */,
+                    undefined /* value */
+                );
             }
         });
 
         const range = getSelectionRange(core, true /*tryGetFromCache*/);
-        pendingFormatState.pendableFormatPosition = range && Position.getStart(range);
+        let position: Position | null = range && Position.getStart(range);
+        if (position) {
+            pendingFormatState.pendableFormatPosition = position;
+        }
     }
 }

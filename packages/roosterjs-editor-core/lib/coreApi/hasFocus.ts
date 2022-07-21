@@ -9,7 +9,7 @@ import { EditorCore, HasFocus } from 'roosterjs-editor-types';
  */
 export const hasFocus: HasFocus = (core: EditorCore) => {
     let activeElement = core.contentDiv.ownerDocument.activeElement;
-    return (
+    return !!(
         activeElement && contains(core.contentDiv, activeElement, true /*treatSameNodeAsContain*/)
     );
 };

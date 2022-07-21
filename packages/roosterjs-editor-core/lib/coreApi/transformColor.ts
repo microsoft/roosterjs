@@ -44,7 +44,7 @@ export const transformColor: TransformColor = (
     core: EditorCore,
     rootNode: Node,
     includeSelf: boolean,
-    callback: () => void,
+    callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) => {
@@ -74,9 +74,12 @@ function transformToLightMode(elements: HTMLElement[]) {
             delete element.dataset[names[ColorAttributeEnum.CssDataSet]];
 
             // Some elements might have set attribute colors. We need to reset these as well.
-            const value = element.dataset[names[ColorAttributeEnum.HtmlDataSet]];
+            let value = getValueOrDefault(
+                element.dataset[names[ColorAttributeEnum.HtmlDataSet]],
+                null
+            );
 
-            if (getValueOrDefault(value, null)) {
+            if (value) {
                 element.setAttribute(names[ColorAttributeEnum.HtmlColor], value);
             } else {
                 element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
@@ -87,7 +90,10 @@ function transformToLightMode(elements: HTMLElement[]) {
     });
 }
 
-function transformToDarkMode(elements: HTMLElement[], getDarkColor: (color: string) => string) {
+function transformToDarkMode(
+    elements: HTMLElement[],
+    getDarkColor: (color: string | null) => string
+) {
     ColorAttributeName.forEach(names => {
         elements
             .map(element => {
@@ -115,7 +121,12 @@ function transformToDarkMode(elements: HTMLElement[], getDarkColor: (color: stri
                     : null;
             })
             .filter(x => !!x)
-            .forEach(({ element, styleColor, attrColor, newColor }) => {
+            .forEach(entry => {
+                if (!entry) {
+                    return;
+                }
+
+                const { element, styleColor, attrColor, newColor } = entry;
                 element.style.setProperty(
                     names[ColorAttributeEnum.CssColor],
                     newColor,
@@ -131,7 +142,7 @@ function transformToDarkMode(elements: HTMLElement[], getDarkColor: (color: stri
     });
 }
 
-function getValueOrDefault(value: string, defaultValue: string | null) {
+function getValueOrDefault(value: string | undefined, defaultValue: string | null) {
     return value && value != 'undefined' && value != 'null' ? value : defaultValue;
 }
 
