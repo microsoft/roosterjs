@@ -8,6 +8,7 @@ import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
 import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
+import { findParentEntity } from '../entity/getEntityFromElement';
 
 /**
  * Delete selected content, and return the new position to select
@@ -63,7 +64,12 @@ export default function deleteSelectedContent(root: HTMLElement, range: Range) {
         .filter(x => !!x);
 
     // 3. Delete all nodes that we found
-    nodesToDelete.forEach(node => node.parentNode?.removeChild(node));
+    nodesToDelete.forEach(node => {
+        const entity = findParentEntity(<HTMLElement>node, root);
+        if (entity ? !entity.isReadonly : true) {
+            node.parentNode?.removeChild(node);
+        }
+    });
 
     // 4. Merge lines for each region, so that after we don't see extra line breaks
     nodesPairToMerge.forEach(nodes => {
