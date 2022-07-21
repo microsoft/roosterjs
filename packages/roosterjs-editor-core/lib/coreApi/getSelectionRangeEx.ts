@@ -13,12 +13,12 @@ import {
  * @returns A Range object of the selection range
  */
 export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
-    let result: SelectionRangeEx = null;
+    let result: SelectionRangeEx | null = null;
     if (core.lifecycle.shadowEditFragment) {
         const { shadowEditTableSelectionPath, shadowEditSelectionPath } = core.lifecycle;
 
-        if (shadowEditTableSelectionPath?.length > 0) {
-            const ranges = core.lifecycle.shadowEditTableSelectionPath.map(path =>
+        if ((shadowEditTableSelectionPath?.length || 0) > 0) {
+            const ranges = core.lifecycle.shadowEditTableSelectionPath!.map(path =>
                 createRange(core.contentDiv, path.start, path.end)
             );
 
@@ -31,7 +31,7 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                     core.contentDiv,
                     'table'
                 ) as HTMLTableElement,
-                coordinates: null,
+                coordinates: undefined,
             };
         } else {
             const shadowRange =

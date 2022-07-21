@@ -26,7 +26,7 @@ export default interface LifecyclePluginState {
     /**
      * Calculate dark mode color from light mode color
      */
-    getDarkColor: (lightColor: string) => string;
+    getDarkColor: (lightColor: string | null) => string;
 
     /**
      * External content transform function to help do color transform for existing content
@@ -41,15 +41,15 @@ export default interface LifecyclePluginState {
     /**
      * Cached document fragment for original content
      */
-    shadowEditFragment: DocumentFragment;
+    shadowEditFragment: DocumentFragment | null;
 
     /**
      * Cached selection path for original content
      */
-    shadowEditSelectionPath: SelectionPath;
+    shadowEditSelectionPath: SelectionPath | null;
 
     /**
      * Cached table selection path for original content
      */
-    shadowEditTableSelectionPath: SelectionPath[];
+    shadowEditTableSelectionPath: SelectionPath[] | null;
 }

@@ -38,7 +38,7 @@ export interface TableSelectionRange
     /**
      * Coordinates of first and last Cell
      */
-    coordinates: TableSelection;
+    coordinates: TableSelection | undefined;
 }
 
 /**
