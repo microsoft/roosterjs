@@ -14,6 +14,7 @@ export function createTableCell(
         blockType: ContentModelBlockType.BlockGroup,
         blockGroupType: ContentModelBlockGroupType.TableCell,
         blocks: [],
+        format: {},
         spanLeft: colSpan > 1,
         spanAbove: rowSpan > 1,
         isHeader,

@@ -81,6 +81,7 @@ describe('Creators', () => {
         expect(tableModel).toEqual({
             blockType: ContentModelBlockType.Table,
             cells: [[], []],
+            format: {},
         });
     });
 
@@ -93,6 +94,7 @@ describe('Creators', () => {
             spanLeft: false,
             spanAbove: false,
             isHeader: false,
+            format: {},
         });
     });
 
@@ -105,6 +107,7 @@ describe('Creators', () => {
             spanLeft: true,
             spanAbove: false,
             isHeader: false,
+            format: {},
         });
     });
 
@@ -117,6 +120,7 @@ describe('Creators', () => {
             spanLeft: false,
             spanAbove: true,
             isHeader: false,
+            format: {},
         });
     });
 
@@ -129,6 +133,7 @@ describe('Creators', () => {
             spanLeft: false,
             spanAbove: false,
             isHeader: true,
+            format: {},
         });
     });
 });

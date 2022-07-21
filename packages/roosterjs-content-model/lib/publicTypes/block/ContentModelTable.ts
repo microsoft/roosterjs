@@ -11,6 +11,12 @@ export interface ContentModelTable
         ContentModelBlockType.Table | CompatibleContentModelBlockType.Table
     > {
     /**
+     * Format of this table
+     * TODO: Add more formats
+     */
+    format: {};
+
+    /**
      * Cells of this table
      */
     cells: ContentModelTableCell[][];

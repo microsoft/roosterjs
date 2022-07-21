@@ -2,19 +2,23 @@ import * as handleParagraph from '../../../lib/modelToDom/handlers/handleParagra
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
+    let context: FormatContext;
 
     beforeEach(() => {
+        context = createFormatContext();
         spyOn(handleParagraph, 'handleParagraph');
     });
 
     function runTest(block: ContentModelBlock, expectedInnerHTML: string) {
         parent = document.createElement('div');
 
-        handleBlock(document, parent, block);
+        handleBlock(document, parent, block, context);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
     }
@@ -28,7 +32,12 @@ describe('handleBlock', () => {
         runTest(paragraph, '');
 
         expect(handleParagraph.handleParagraph).toHaveBeenCalledTimes(1);
-        expect(handleParagraph.handleParagraph).toHaveBeenCalledWith(document, parent, paragraph);
+        expect(handleParagraph.handleParagraph).toHaveBeenCalledWith(
+            document,
+            parent,
+            paragraph,
+            context
+        );
     });
 
     it('General block without child', () => {
@@ -61,6 +70,11 @@ describe('handleBlock', () => {
         runTest(block, '<span></span>');
 
         expect(handleParagraph.handleParagraph).toHaveBeenCalledTimes(1);
-        expect(handleParagraph.handleParagraph).toHaveBeenCalledWith(document, element, paragraph);
+        expect(handleParagraph.handleParagraph).toHaveBeenCalledWith(
+            document,
+            element,
+            paragraph,
+            context
+        );
     });
 });
