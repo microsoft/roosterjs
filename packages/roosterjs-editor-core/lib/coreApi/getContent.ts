@@ -25,7 +25,7 @@ export const getContent: GetContent = (
     core: EditorCore,
     mode: GetContentMode | CompatibleGetContentMode
 ): string => {
-    let content = '';
+    let content: string | null = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
 
@@ -81,11 +81,13 @@ export const getContent: GetContent = (
     } else {
         content = getHtmlWithSelectionPath(
             root,
-            includeSelectionMarker && core.api.getSelectionRange(core, true /*tryGetFromCache*/)
+            includeSelectionMarker
+                ? core.api.getSelectionRange(core, true /*tryGetFromCache*/)
+                : null
         );
     }
 
-    return content;
+    return content ?? '';
 };
 
 function cloneNode(node: HTMLElement | DocumentFragment): HTMLElement {

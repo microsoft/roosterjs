@@ -21,8 +21,11 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
 
             shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
             shadowEditTableSelectionPath =
-                selection?.type == SelectionRangeTypes.TableSelection &&
-                selection.ranges.map(range => getSelectionPath(contentDiv, range));
+                (selection?.type == SelectionRangeTypes.TableSelection &&
+                    selection.ranges
+                        .map(range => getSelectionPath(contentDiv, range))
+                        .map(w => w!!)) ||
+                null;
             shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
 
             moveChildNodes(shadowEditFragment, contentDiv);
@@ -43,7 +46,9 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
         }
 
         moveChildNodes(contentDiv);
-        contentDiv.appendChild(lifecycle.shadowEditFragment.cloneNode(true /*deep*/));
+        if (lifecycle.shadowEditFragment) {
+            contentDiv.appendChild(lifecycle.shadowEditFragment.cloneNode(true /*deep*/));
+        }
     } else {
         lifecycle.shadowEditFragment = null;
         lifecycle.shadowEditSelectionPath = null;
@@ -58,7 +63,9 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             );
 
             moveChildNodes(contentDiv);
-            contentDiv.appendChild(shadowEditFragment);
+            if (shadowEditFragment) {
+                contentDiv.appendChild(shadowEditFragment);
+            }
             core.api.focus(core);
 
             if (shadowEditSelectionPath) {

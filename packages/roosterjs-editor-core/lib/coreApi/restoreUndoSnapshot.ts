@@ -25,7 +25,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
                 core,
                 snapshot.html,
                 true /*triggerContentChangedEvent*/,
-                snapshot.metadata
+                snapshot.metadata ?? undefined
             );
         } finally {
             core.undo.isRestoring = false;

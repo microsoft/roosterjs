@@ -10,7 +10,7 @@ import getSelectionPath from './getSelectionPath';
  */
 export default function getHtmlWithSelectionPath(
     rootNode: HTMLElement | DocumentFragment,
-    range: Range
+    range: Range | null
 ): string {
     if (!rootNode) {
         return '';
