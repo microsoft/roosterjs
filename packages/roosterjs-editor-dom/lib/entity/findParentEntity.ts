@@ -1,5 +1,6 @@
-import { getEntityFromElement, getEntitySelector } from '..';
 import { Entity } from 'roosterjs-editor-types';
+import getEntityFromElement from './getEntityFromElement';
+import getEntitySelector from './getEntitySelector';
 
 /**
  * Queries for all available entities under [root] and verifies if [element] is contained in any of them
