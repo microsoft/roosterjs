@@ -1,4 +1,5 @@
 import { Entity } from 'roosterjs-editor-types';
+import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import getEntityFromElement from './getEntityFromElement';
 import getEntitySelector from './getEntitySelector';
 
@@ -9,10 +10,7 @@ import getEntitySelector from './getEntitySelector';
  * @returns An entity, if found. Or null
  */
 export default function findParentEntity(element: HTMLElement, root: HTMLElement): Entity | null {
-    for (const node of Array.from(root.querySelectorAll(getEntitySelector()))) {
-        if (node.contains(element)) {
-            return getEntityFromElement(<HTMLElement>node);
-        }
-    }
-    return null;
+    const entityElement = findClosestElementAncestor(element, root, getEntitySelector());
+
+    return entityElement && getEntityFromElement(entityElement);
 }
