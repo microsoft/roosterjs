@@ -1,4 +1,5 @@
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { FormatContext } from '../../formatHandlers/FormatContext';
 import { generalBlockProcessor } from './generalBlockProcessor';
 import { generalSegmentProcessor } from './generalSegmentProcessor';
 import { getProcessor } from './getProcessor';
@@ -10,14 +11,18 @@ import { textProcessor } from './textProcessor';
 /**
  * @internal
  */
-export function containerProcessor(group: ContentModelBlockGroup, parent: ParentNode) {
+export function containerProcessor(
+    group: ContentModelBlockGroup,
+    parent: ParentNode,
+    context: FormatContext
+) {
     for (let child = parent.firstChild; child; child = child.nextSibling) {
         if (isNodeOfType(child, NodeType.Element)) {
             const processor =
                 getProcessor(child.tagName) ||
                 (isBlockElement(child) ? generalBlockProcessor : generalSegmentProcessor);
 
-            processor(group, child);
+            processor(group, child, context);
         } else if (isNodeOfType(child, NodeType.Text)) {
             const textNode = child as Text;
 

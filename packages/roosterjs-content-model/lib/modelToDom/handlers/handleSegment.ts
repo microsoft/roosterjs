@@ -1,11 +1,17 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
+import { FormatContext } from '../../formatHandlers/FormatContext';
 import { handleBlock } from './handleBlock';
 
 /**
  * @internal
  */
-export function handleSegment(doc: Document, parent: Node, segment: ContentModelSegment) {
+export function handleSegment(
+    doc: Document,
+    parent: Node,
+    segment: ContentModelSegment,
+    context: FormatContext
+) {
     let element: HTMLElement | null = null;
 
     switch (segment.segmentType) {
@@ -17,7 +23,7 @@ export function handleSegment(doc: Document, parent: Node, segment: ContentModel
             break;
 
         case ContentModelSegmentType.General:
-            handleBlock(doc, parent, segment);
+            handleBlock(doc, parent, segment, context);
             break;
     }
 
