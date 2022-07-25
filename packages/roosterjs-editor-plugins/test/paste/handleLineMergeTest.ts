@@ -128,4 +128,11 @@ describe('handleLineMerge', () => {
             '<div>line1<div>line2<br>line3</div>line4</div>'
         );
     });
+
+    it('Avoid merge when two pasted lines are going to be merged', () => {
+        runTest(
+            '<div><span>asdsad</span><span>asdsadsa</span></div><div><span>asdsad</span></div>',
+            '<span><span>asdsad</span><span>asdsadsa</span></span><br><span><span>asdsad</span></span>'
+        );
+    });
 });
