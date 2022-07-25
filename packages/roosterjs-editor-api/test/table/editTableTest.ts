@@ -60,7 +60,9 @@ describe('editTable', () => {
         const target = document.getElementById(TEST_ELEMENT_ID) as HTMLTableElement;
         spyOn(editor, 'getElementAtCursor').and.returnValue(target);
         editTable(editor, operation);
-        expect(editor.getContent()).toBe(expectedTable);
+        editor.runAsync(() => {
+            expect(editor.getContent()).toBe(expectedTable);
+        });
     }
 
     it('editTable | default', () => {

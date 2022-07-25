@@ -72,7 +72,9 @@ describe('formatTable  ', () => {
         const target = document.getElementById(TEST_ELEMENT_ID) as HTMLTableElement;
         spyOn(editor, 'getElementAtCursor').and.returnValue(target);
         formatTable(editor, format);
-        expect(editor.getContent()).toBe(expectedTable);
+        editor.runAsync(() => {
+            expect(editor.getContent()).toBe(expectedTable);
+        });
     }
 
     it('formatTable | default', () => {
