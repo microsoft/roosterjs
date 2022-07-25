@@ -3,6 +3,7 @@ import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentMod
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { createParagraph } from '../creators/createParagraph';
 
 /**
@@ -19,5 +20,20 @@ export function addSegment(group: ContentModelBlockGroup, newSegment: ContentMod
         addBlock(group, paragraph);
     }
 
-    paragraph.segments.push(newSegment);
+    const lastSegment = paragraph.segments[paragraph.segments.length - 1];
+
+    if (newSegment.segmentType == ContentModelSegmentType.SelectionMarker) {
+        if (!lastSegment || !lastSegment.isSelected) {
+            paragraph.segments.push(newSegment);
+        }
+    } else {
+        if (
+            newSegment.isSelected &&
+            lastSegment?.segmentType == ContentModelSegmentType.SelectionMarker
+        ) {
+            paragraph.segments.pop();
+        }
+
+        paragraph.segments.push(newSegment);
+    }
 }

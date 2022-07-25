@@ -16,7 +16,7 @@ export default class HackedEditor extends Editor {
     getContentModel(): ContentModelDocument {
         return createContentModelFromDOM(
             this.contentDiv,
-            this.getSelectionRange(),
+            this.getSelectionRangeEx(),
             this.isDarkMode(),
             this.getZoomScale(),
             getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',

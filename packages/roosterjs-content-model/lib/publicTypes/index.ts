@@ -8,6 +8,7 @@ export { ContentModelBlockGroup } from './block/group/ContentModelBlockGroup';
 export { ContentModelBlock } from './block/ContentModelBlock';
 export { ContentModelParagraph } from './block/ContentModelParagraph';
 export { ContentModelSegmentBase } from './segment/ContentModelSegmentBase';
+export { ContentModelSelectionMarker } from './segment/ContentModelSelectionMarker';
 export { ContentModelText } from './segment/ContentModelText';
 export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './segment/ContentModelSegment';

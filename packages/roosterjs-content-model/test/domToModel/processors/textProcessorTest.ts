@@ -2,12 +2,20 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 
 describe('textProcessor', () => {
+    let context: FormatContext;
+
+    beforeEach(() => {
+        context = createFormatContext();
+    });
+
     it('Empty group', () => {
         const doc = createContentModelDocument(document);
-        textProcessor(doc, 'test');
+        textProcessor(doc, 'test', context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -35,7 +43,7 @@ describe('textProcessor', () => {
             segments: [],
         });
 
-        textProcessor(doc, 'test');
+        textProcessor(doc, 'test', context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -67,7 +75,7 @@ describe('textProcessor', () => {
             ],
         });
 
-        textProcessor(doc, 'test1');
+        textProcessor(doc, 'test1', context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
@@ -102,7 +110,7 @@ describe('textProcessor', () => {
             ],
         });
 
-        textProcessor(doc, 'test');
+        textProcessor(doc, 'test', context);
 
         expect(doc).toEqual({
             blockType: ContentModelBlockType.BlockGroup,
