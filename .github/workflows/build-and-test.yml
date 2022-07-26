@@ -42,7 +42,7 @@ jobs:
             - name: Test with Chrome
               uses: GabrielBB/xvfb-action@v1
               with:
-                  run: npm run-script test:chrome
+                  run: npm run-script test
     test-on-firefox:
         runs-on: ubuntu-latest
         steps:
@@ -65,4 +65,4 @@ jobs:
             - name: Test with Firefox
               uses: GabrielBB/xvfb-action@v1
               with:
-                  run: npm run-script test
+                  run: npm run-script test:firefox
