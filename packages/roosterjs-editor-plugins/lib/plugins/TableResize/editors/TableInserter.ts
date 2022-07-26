@@ -1,6 +1,6 @@
 import Disposable from '../../../pluginUtils/Disposable';
 import TableEditFeature from './TableEditorFeature';
-import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import { createElement, normalizeRect, safeInstanceOf, VTable } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, TableOperation } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -24,6 +24,7 @@ export default function createTableInserter(
 ): TableEditFeature {
     const table = editor.getElementAtCursor('table', td);
     const tdRect = normalizeRect(td.getBoundingClientRect());
+    const tr = editor.getElementAtCursor('tr', td);
     const tableRect = table ? normalizeRect(table.getBoundingClientRect()) : null;
 
     // set inserter position
@@ -47,7 +48,7 @@ export default function createTableInserter(
                     : tdRect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
             }px`;
             div.style.top = `${tdRect.bottom - 8}px`;
-            (div.firstChild as HTMLElement).style.width = `${tableRect.right - tableRect.left}px`;
+            (div.firstChild as HTMLElement).style.width = `${calculateWidth(tr)}px`;
         } else {
             div.style.left = `${isRTL ? tdRect.left : tdRect.right - 8}px`;
             div.style.top = `${
@@ -63,6 +64,18 @@ export default function createTableInserter(
         return { div, featureHandler: handler, node: td };
     }
 }
+
+const calculateWidth = (tr: HTMLElement) => {
+    let width = 0;
+    tr.childNodes.forEach(td => {
+        if (safeInstanceOf(td, 'HTMLTableCellElement')) {
+            const tdRect = normalizeRect(td.getBoundingClientRect());
+            const tdWidth = tdRect.right - tdRect.left;
+            width = width + tdWidth;
+        }
+    });
+    return width;
+};
 
 class TableInsertHandler implements Disposable {
     constructor(
