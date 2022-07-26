@@ -68,6 +68,7 @@ export default class TableEditor {
     private isRTL: boolean;
     private start: NodePosition;
     private end: NodePosition;
+    private isEditing: boolean;
 
     constructor(
         private editor: IEditor,
@@ -95,6 +96,7 @@ export default class TableEditor {
             this.onShowHelperElement,
             this.getShouldShowTableSelectorHandler(this.editor.getScrollContainer(), eventTarget)
         );
+        this.isEditing = false;
     }
 
     dispose() {
@@ -102,6 +104,10 @@ export default class TableEditor {
         this.disposeCellResizers();
         this.disposeTableInserter();
         this.disposeTableSelector();
+    }
+
+    isDisposable(): boolean {
+        return !this.isEditing;
     }
 
     onMouseMove(x: number, y: number) {
@@ -251,19 +257,24 @@ export default class TableEditor {
         this.editor.select(this.start, this.end);
         this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
         this.onChanged();
+        this.isEditing = false;
+
         return false;
     };
 
     private onStartTableResize = () => {
+        this.isEditing = true;
         this.onStartResize();
     };
 
     private onStartCellResize = () => {
+        this.isEditing = true;
         this.disposeTableResizer();
         this.onStartResize();
     };
 
     private onStartResize() {
+        this.isEditing = true;
         const range = this.editor.getSelectionRange();
 
         if (range) {

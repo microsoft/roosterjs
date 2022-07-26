@@ -106,7 +106,11 @@ export default class TableResize implements EditorPlugin {
     };
 
     private setTableEditor(table: HTMLTableElement, e?: MouseEvent) {
-        if (this.tableEditor && table != this.tableEditor.table) {
+        if (
+            this.tableEditor &&
+            this.tableEditor.isDisposable() &&
+            table != this.tableEditor.table
+        ) {
             this.tableEditor.dispose();
             this.tableEditor = null;
         }
