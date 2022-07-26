@@ -3,7 +3,6 @@ import { Position, VListChain } from 'roosterjs-editor-dom';
 import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
     ClipboardData,
-    DOMEventHandlerFunction,
     IEditor,
     Keys,
     PluginEvent,
@@ -15,25 +14,17 @@ import { CutPasteListChain } from '../../lib/CutPasteListChain';
 describe('cutPasteListChain tests', () => {
     let editor: IEditor;
     let plugin: CutPasteListChain;
-    let handler: Record<string, DOMEventHandlerFunction> | null;
     let addDomEventHandler: jasmine.Spy;
 
     beforeEach(() => {
         spyOn(VListChain, 'createListChains').and.callThrough();
         spyOn(experimentCommitListChains, 'default').and.callFake(() => {});
 
-        handler = null;
         plugin = new CutPasteListChain();
 
         addDomEventHandler = jasmine
             .createSpy('addDomEventHandler')
-            .and.callFake((handlerParam: Record<string, DOMEventHandlerFunction>) => {
-                handler = handlerParam;
-                return () => {
-                    handler = null;
-                };
-            });
-
+            .and.returnValue(jasmine.createSpy('disposer'));
         editor = <IEditor>(<any>{
             addDomEventHandler,
             getSelectionRange: () => <Range>{ collapsed: false },
@@ -111,15 +102,29 @@ describe('cutPasteListChain tests', () => {
         return pluginEvent;
     }
 
-    it('caches the list chain with cut', () => {
-        const testString: string = 'this is a test';
+    function createStringElement(text: string) {
         const contentDiv = document.createElement('div');
-        contentDiv.innerHTML = testString;
+        contentDiv.innerHTML = text;
+        return contentDiv;
+    }
 
-        const expectedText: string = testString;
+    function createListElement() {
+        const contentDiv = document.createElement('div');
+        const ol = document.createElement('ol');
 
-        const pluginEvent = createPluginEventBeforeCutCopy(contentDiv);
+        const li1 = document.createElement('li');
+        li1.appendChild(document.createTextNode('123'));
+        const li2 = document.createElement('li');
+        li2.appendChild(document.createTextNode('456'));
 
+        ol.appendChild(li1);
+        ol.appendChild(li2);
+
+        contentDiv.appendChild(ol);
+        return contentDiv;
+    }
+
+    function setGetSelectedRegions(contentDiv: HTMLElement) {
         editor.getSelectedRegions = () => [
             {
                 rootNode: contentDiv,
@@ -130,6 +135,16 @@ describe('cutPasteListChain tests', () => {
                 fullSelectionEnd: new Position(contentDiv.firstChild, 3),
             },
         ];
+    }
+
+    it('caches the list chain with cut', () => {
+        const testString: string = 'this is a test';
+        const contentDiv = createStringElement(testString);
+        const expectedText: string = testString;
+
+        const pluginEvent = createPluginEventBeforeCutCopy(contentDiv);
+
+        setGetSelectedRegions(contentDiv);
 
         plugin.onPluginEvent(pluginEvent);
         expect(VListChain.createListChains).toHaveBeenCalled();
@@ -138,22 +153,12 @@ describe('cutPasteListChain tests', () => {
 
     it('caches the list chain with paste', () => {
         const testString: string = 'this is a test';
-        const contentDiv = document.createElement('div');
-        contentDiv.innerHTML = testString;
+        const contentDiv = createStringElement(testString);
         const expectedText: string = testString;
 
         const pluginEvent = createPluginEventBeforePaste(testString);
 
-        editor.getSelectedRegions = () => [
-            {
-                rootNode: contentDiv,
-                nodeBefore: null,
-                nodeAfter: null,
-                skipTags: [],
-                fullSelectionStart: new Position(contentDiv.firstChild, 0),
-                fullSelectionEnd: new Position(contentDiv.firstChild, 3),
-            },
-        ];
+        setGetSelectedRegions(contentDiv);
 
         plugin.onPluginEvent(pluginEvent);
         expect(VListChain.createListChains).toHaveBeenCalled();
@@ -162,20 +167,10 @@ describe('cutPasteListChain tests', () => {
 
     it('not call experimentCommitListChains with non-list element', () => {
         const testString: string = 'this is a test';
-        const contentDiv = document.createElement('div');
-        contentDiv.innerHTML = 'This is a test';
+        const contentDiv = createStringElement(testString);
         const pasteEvent = createPluginEventBeforePaste(testString);
 
-        editor.getSelectedRegions = () => [
-            {
-                rootNode: contentDiv,
-                nodeBefore: null,
-                nodeAfter: null,
-                skipTags: [],
-                fullSelectionStart: new Position(contentDiv.firstChild, 0),
-                fullSelectionEnd: new Position(contentDiv.firstChild, 3),
-            },
-        ];
+        setGetSelectedRegions(contentDiv);
 
         plugin.onPluginEvent(pasteEvent);
 
@@ -189,29 +184,9 @@ describe('cutPasteListChain tests', () => {
     });
 
     it('calls experimentCommitListChains with list element', () => {
-        const contentDiv = document.createElement('div');
-        const ol = document.createElement('ol');
+        const contentDiv = createListElement();
 
-        const li1 = document.createElement('li');
-        li1.appendChild(document.createTextNode('123'));
-        const li2 = document.createElement('li');
-        li2.appendChild(document.createTextNode('456'));
-
-        ol.appendChild(li1);
-        ol.appendChild(li2);
-
-        contentDiv.appendChild(ol);
-
-        editor.getSelectedRegions = () => [
-            {
-                rootNode: contentDiv,
-                nodeBefore: null,
-                nodeAfter: null,
-                skipTags: [],
-                fullSelectionStart: new Position(contentDiv.firstChild, 0),
-                fullSelectionEnd: new Position(contentDiv.firstChild, 3),
-            },
-        ];
+        setGetSelectedRegions(contentDiv);
 
         const testString: string = 'this is a test';
         const pasteEvent = createPluginEventBeforePaste(testString);
