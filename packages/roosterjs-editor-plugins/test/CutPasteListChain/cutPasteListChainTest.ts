@@ -11,6 +11,7 @@ import { CutPasteListChain } from '../../lib/CutPasteListChain';
 import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
 import { VListChain } from 'roosterjs-editor-dom';
 //import * as VListChain from 'roosterjs-editor-dom/lib/list/VListChain';
+import * as experimentCommitListChains from 'roosterjs-editor-api/lib/experiment/experimentCommitListChains';
 
 describe('Table Resizer/Inserter tests', () => {
     let editor: IEditor;
@@ -23,46 +24,8 @@ describe('Table Resizer/Inserter tests', () => {
     beforeEach(() => {
         editor = TestHelper.initEditor(TEST_ID);
         spyOn(VListChain, 'createListChains').and.callThrough();
+        spyOn(experimentCommitListChains, 'default').and.callThrough();
         plugin = new CutPasteListChain();
-
-        //handler = null;
-        /*addDomEventHandler = jasmine
-            .createSpy('addDomEventHandler')
-            .and.callFake((handlerParam: Record<string, DOMEventHandlerFunction>) => {
-                handler = handlerParam;
-                return () => {
-                    handler = null;
-                };
-            });*/
-
-        /*editor = <IEditor>(<any>{
-            ...editor,
-            addDomEventHandler,
-            addUndoSnapshot: (f: () => void) => f(),
-            insertNode: (node: HTMLElement) => {
-                document.body.appendChild(node);
-            },
-            runAsync: (callback: () => void) => {
-                handler.resizeCells = callback;
-            },
-            getDocument: () => document,
-            select: () => {},
-            getDefaultFormat: () => {
-                return {
-                    backgroundColor: 'black',
-                };
-            },
-            isDarkMode: () => false,
-            queryElements: (table: string, callback: (table: HTMLTableElement) => void) => {
-                const tables = document.getElementsByTagName(table);
-                const tableList = Array.from(tables);
-                tableList.forEach(table => {
-                    callback(table as HTMLTableElement);
-                });
-            },
-            dispose: () => {},
-        });*/
-
         plugin.initialize(editor);
     });
 
@@ -144,13 +107,11 @@ describe('Table Resizer/Inserter tests', () => {
         expect(root.innerHTML).toBe(expectedText);
     });
 
-    /*it('calls experimentCommitListChains with ContentChanged', () => {
+    it('not call experimentCommitListChains with ContentChanged', () => {
         const testString: string = 'this is a test';
-        const root = document.createElement('div');
-        root.innerHTML = testString;
 
-        const cutEvent = createPluginEventBeforeCutCopy(root);
-        plugin.onPluginEvent(cutEvent);
+        const pasteEvent = createPluginEventBeforePaste(testString);
+        plugin.onPluginEvent(pasteEvent);
 
         const contentChangedEvent: PluginEvent = {
             eventType: PluginEventType.ContentChanged,
@@ -158,6 +119,6 @@ describe('Table Resizer/Inserter tests', () => {
         };
         plugin.onPluginEvent(contentChangedEvent);
 
-        expect(expectedChangeSource).toHaveBeenCalled();
-    });*/
+        expect(experimentCommitListChains.default).not.toHaveBeenCalled();
+    });
 });
