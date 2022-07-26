@@ -21,7 +21,6 @@ export default function formatTable(
                 let vtable = new VTable(table);
                 vtable.applyFormat(format);
                 vtable.writeBack();
-
                 editor.transformToDarkColor(vtable.table);
                 editor.focus();
                 editor.select(start, end);
