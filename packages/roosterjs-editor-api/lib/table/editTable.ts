@@ -18,11 +18,12 @@ export default function editTable(
             editor,
             () => {
                 let vtable = new VTable(td);
+
                 saveTableSelection(editor, vtable);
                 vtable.edit(operation);
                 vtable.writeBack();
-
                 editor.transformToDarkColor(vtable.table);
+
                 editor.focus();
                 let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
                 editor.select(

@@ -1,4 +1,5 @@
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { createFormatContext } from '../formatHandlers/createFormatContext';
 import { handleBlock } from './handlers/handleBlock';
 import { optimize } from './optimizers/optimize';
 import { SelectionRangeEx } from 'roosterjs-editor-types';
@@ -14,8 +15,9 @@ export default function createDOMFromContentModel(
     optimizeLevel: number = 2
 ): [DocumentFragment, SelectionRangeEx | undefined] {
     const fragment = model.document.createDocumentFragment();
+    const context = createFormatContext();
 
-    handleBlock(model.document, fragment, model);
+    handleBlock(model.document, fragment, model, context);
 
     optimize(fragment, optimizeLevel);
 

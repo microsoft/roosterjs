@@ -18,7 +18,7 @@ import { ElementProcessor } from './ElementProcessor';
  * 5. When write back to DOM, we create TD/TH elements for those non-spanned cells, and mark its colSpan/rowSpan value according
  * its neighbour cell's spanLeft/spanAbove attribute
  */
-export const tableProcessor: ElementProcessor = (group, element) => {
+export const tableProcessor: ElementProcessor = (group, element, context) => {
     const tableElement = element as HTMLTableElement;
     const table = createTable(tableElement.rows.length);
 
@@ -39,7 +39,7 @@ export const tableProcessor: ElementProcessor = (group, element) => {
                     table.cells[row + rowSpan - 1][targetCol] = cell;
 
                     if (hasTd) {
-                        containerProcessor(cell, td);
+                        containerProcessor(cell, td, context);
                     }
                 }
             }
