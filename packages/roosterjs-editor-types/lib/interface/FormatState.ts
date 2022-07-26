@@ -54,6 +54,11 @@ export interface ElementBasedFormatState {
     isNumbering?: boolean;
 
     /**
+     * TEST
+     */
+    isMultiline?: boolean;
+
+    /**
      * Whether the text is in block quote
      */
     isBlockQuote?: boolean;

@@ -34,6 +34,7 @@ import { underline } from './buttons/underline';
 import { undo } from './buttons/undo';
 
 const KnownRibbonButtons: { [key in KnownRibbonButtonKey]: RibbonButton<AllButtonStringKeys> } = {
+    [KnownRibbonButtonKey.InsertLink]: insertLink,
     [KnownRibbonButtonKey.Bold]: bold,
     [KnownRibbonButtonKey.Italic]: italic,
     [KnownRibbonButtonKey.Underline]: underline,
@@ -51,7 +52,6 @@ const KnownRibbonButtons: { [key in KnownRibbonButtonKey]: RibbonButton<AllButto
     [KnownRibbonButtonKey.AlignLeft]: alignLeft,
     [KnownRibbonButtonKey.AlignCenter]: alignCenter,
     [KnownRibbonButtonKey.AlignRight]: alignRight,
-    [KnownRibbonButtonKey.InsertLink]: insertLink,
     [KnownRibbonButtonKey.RemoveLink]: removeLink,
     [KnownRibbonButtonKey.InsertTable]: insertTable,
     [KnownRibbonButtonKey.InsertImage]: insertImage,
@@ -71,6 +71,7 @@ const KnownRibbonButtons: { [key in KnownRibbonButtonKey]: RibbonButton<AllButto
  * An array of keys of all known ribbon buttons
  */
 export const AllButtonKeys = [
+    KnownRibbonButtonKey.InsertLink,
     KnownRibbonButtonKey.Bold,
     KnownRibbonButtonKey.Italic,
     KnownRibbonButtonKey.Underline,
@@ -88,7 +89,6 @@ export const AllButtonKeys = [
     KnownRibbonButtonKey.AlignLeft,
     KnownRibbonButtonKey.AlignCenter,
     KnownRibbonButtonKey.AlignRight,
-    KnownRibbonButtonKey.InsertLink,
     KnownRibbonButtonKey.RemoveLink,
     KnownRibbonButtonKey.InsertTable,
     KnownRibbonButtonKey.InsertImage,

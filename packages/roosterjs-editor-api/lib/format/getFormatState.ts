@@ -20,6 +20,35 @@ export function getElementBasedFormatState(
     event?: PluginEvent
 ): ElementBasedFormatState {
     let listTag = getTagOfNode(editor.getElementAtCursor('OL,UL', null /*startFrom*/, event));
+
+    let uuu = editor.getBlockTraverser();
+    let ppp = editor.getSelectionRange();
+    let STRT = null;
+    let END = null;
+    let multiline = false;
+    if (ppp) {
+        let p_str = ppp.toString();
+        console.log(p_str, p_str.length);
+        STRT = ppp.startContainer.textContent;
+        let s_blk = editor.getBlockElementAtNode(ppp.startContainer);
+        END = ppp.endContainer.textContent;
+        let e_blk = editor.getBlockElementAtNode(ppp.endContainer);
+        console.log('Text', STRT, '#', END);
+        console.log('Block', s_blk, '#', e_blk, '=', e_blk.equals(s_blk));
+        multiline = e_blk.equals(s_blk);
+    }
+    if (uuu && false) {
+        //console.log(uuu);
+        let xx = uuu.getNextBlockElement();
+        if (!xx) {
+            console.log('no next');
+        }
+        while (xx) {
+            console.log('X', xx.getTextContent());
+            xx = uuu.getNextBlockElement();
+        }
+    }
+
     let headerTag = getTagOfNode(
         editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', null /*startFrom*/, event)
     );
@@ -27,6 +56,7 @@ export function getElementBasedFormatState(
     return {
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
+        isMultiline: multiline,
         headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
