@@ -1,6 +1,6 @@
 import Disposable from '../../../pluginUtils/Disposable';
 import TableEditFeature from './TableEditorFeature';
-import { createElement, normalizeRect, safeInstanceOf, VTable } from 'roosterjs-editor-dom';
+import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, TableOperation } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -24,7 +24,7 @@ export default function createTableInserter(
 ): TableEditFeature {
     const table = editor.getElementAtCursor('table', td);
     const tdRect = normalizeRect(td.getBoundingClientRect());
-    const tr = editor.getElementAtCursor('tr', td);
+    const tr = editor.getElementAtCursor('tr', td) as HTMLTableRowElement;
     const tableRect = table ? normalizeRect(table.getBoundingClientRect()) : null;
 
     // set inserter position
@@ -65,15 +65,14 @@ export default function createTableInserter(
     }
 }
 
-const calculateWidth = (tr: HTMLElement) => {
+const calculateWidth = (tr: HTMLTableRowElement) => {
     let width = 0;
-    tr.childNodes.forEach(td => {
-        if (safeInstanceOf(td, 'HTMLTableCellElement')) {
-            const tdRect = normalizeRect(td.getBoundingClientRect());
-            const tdWidth = tdRect.right - tdRect.left;
-            width = width + tdWidth;
-        }
-    });
+    const rowSize = tr.cells.length;
+    for (let i = 0; i <= rowSize; i++) {
+        const td = tr.cells.item(i);
+        const tdWidth = td?.getBoundingClientRect()?.width || 0;
+        width = width + tdWidth;
+    }
     return width;
 };
 
