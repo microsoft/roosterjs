@@ -1,25 +1,14 @@
-import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
-import {
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    DOMEventHandlerFunction,
-    Keys,
-    ClipboardData,
-} from 'roosterjs-editor-types';
-import { CutPasteListChain } from '../../lib/CutPasteListChain';
-import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
-import { VListChain } from 'roosterjs-editor-dom';
-//import * as VListChain from 'roosterjs-editor-dom/lib/list/VListChain';
 import * as experimentCommitListChains from 'roosterjs-editor-api/lib/experiment/experimentCommitListChains';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
+import { VListChain } from 'roosterjs-editor-dom';
+import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
+import { ClipboardData, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { CutPasteListChain } from '../../lib/CutPasteListChain';
 
-describe('Table Resizer/Inserter tests', () => {
+describe('cutPasteListChain tests', () => {
     let editor: IEditor;
     let plugin: CutPasteListChain;
-    const TEST_ID = 'inserterTest';
-
-    //let handler: Record<string, DOMEventHandlerFunction> | null;
-    //let addDomEventHandler: jasmine.Spy;
+    const TEST_ID = 'cutPasteListChain';
 
     beforeEach(() => {
         editor = TestHelper.initEditor(TEST_ID);
@@ -42,7 +31,7 @@ describe('Table Resizer/Inserter tests', () => {
         expect(pluginName).toBe(expectedName);
     });
 
-    function createPluginEventBeforeCutCopy(root: HTMLElement) {
+    function createPluginEventBeforeCutCopy(root: HTMLDivElement) {
         const range = DomTestHelper.createRangeFromChildNodes(root);
 
         const pluginEvent: PluginEvent = {
@@ -72,7 +61,19 @@ describe('Table Resizer/Inserter tests', () => {
             eventType: PluginEventType.BeforePaste,
             clipboardData,
             fragment: null,
-            sanitizingOption: {},
+            sanitizingOption: {
+                elementCallbacks: {},
+                attributeCallbacks: {},
+                cssStyleCallbacks: {},
+                additionalTagReplacements: {},
+                additionalAllowedAttributes: [],
+                additionalAllowedCssClasses: [],
+                additionalDefaultStyleValues: {},
+                additionalGlobalStyleNodes: [],
+                additionalPredefinedCssForElement: {},
+                preserveHtmlComments: false,
+                unknownTagReplacement: null,
+            },
             htmlBefore: null,
             htmlAfter: null,
             htmlAttributes: {},
@@ -83,8 +84,9 @@ describe('Table Resizer/Inserter tests', () => {
 
     it('caches the list chain with cut', () => {
         const testString: string = 'this is a test';
-        const root = document.createElement('div');
+        const root = (document.getElementById('cutPasteListChain') as HTMLDivElement)!;
         root.innerHTML = testString;
+
         const expectedText: string = testString;
 
         const pluginEvent = createPluginEventBeforeCutCopy(root);
@@ -96,7 +98,7 @@ describe('Table Resizer/Inserter tests', () => {
 
     it('caches the list chain with paste', () => {
         const testString: string = 'this is a test';
-        const root = document.createElement('div');
+        const root = (document.getElementById('cutPasteListChain') as HTMLDivElement)!;
         root.innerHTML = testString;
         const expectedText: string = testString;
 
