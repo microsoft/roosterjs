@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { addRangeToSelection, safeInstanceOf } from 'roosterjs-editor-dom';
-import { ContentModelDocument, createDOMFromContentModel } from 'roosterjs-content-model';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import { ContentModelDocument } from 'roosterjs-content-model';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./ContentModelPane.scss');
@@ -12,6 +11,7 @@ export interface ContentModelPaneState {
 
 export interface ContentModelPaneProps extends ContentModelPaneState, SidePaneElementProps {
     onUpdateModel: () => ContentModelDocument;
+    onCreateDOM: (model: ContentModelDocument) => void;
 }
 
 export default class ContentModelPane extends React.Component<
@@ -57,22 +57,7 @@ export default class ContentModelPane extends React.Component<
     }
 
     private onCreateDOM = () => {
-        const [fragment, selection] = createDOMFromContentModel(this.state.model);
-        const win = window.open('about:blank');
-
-        win.document.body.appendChild(fragment);
-
-        if (selection) {
-            switch (selection.type) {
-                case SelectionRangeTypes.Normal:
-                    addRangeToSelection(selection.ranges[0]);
-                    break;
-
-                case SelectionRangeTypes.TableSelection:
-                    // TODO
-                    break;
-            }
-        }
+        this.props.onCreateDOM(this.state.model);
     };
 
     private onRefresh = () => {
