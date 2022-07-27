@@ -6,6 +6,7 @@ import { createFormatContext } from '../../../lib/formatHandlers/createFormatCon
 import { createGeneralBlock } from '../../../lib/domToModel/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/domToModel/creators/createGeneralSegment';
 import { createParagraph } from '../../../lib/domToModel/creators/createParagraph';
+import { createSelectionMarker } from '../../../lib/domToModel/creators/createSelectionMarker';
 import { createTable } from '../../../lib/domToModel/creators/createTable';
 import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
 import { createText } from '../../../lib/domToModel/creators/createText';
@@ -54,6 +55,22 @@ describe('Creators', () => {
         });
     });
 
+    it('createGeneralSegment with selection', () => {
+        context.isInSelection = true;
+
+        const element = document.createElement('div');
+        const result = createGeneralSegment(element, context);
+
+        expect(result).toEqual({
+            segmentType: ContentModelSegmentType.General,
+            blocks: [],
+            element: element,
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.General,
+            isSelected: true,
+        });
+    });
+
     it('createParagraph - not dummy block', () => {
         const result = createParagraph(false);
 
@@ -80,6 +97,20 @@ describe('Creators', () => {
         expect(result).toEqual({
             segmentType: ContentModelSegmentType.Text,
             text: text,
+        });
+    });
+
+    it('createText with selection', () => {
+        context.isInSelection = true;
+
+        const text = 'test';
+        const result = createText(text, context);
+
+        expect(result).toEqual({
+            segmentType: ContentModelSegmentType.Text,
+            text: text,
+
+            isSelected: true,
         });
     });
 
@@ -142,6 +173,31 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: {},
+        });
+    });
+
+    it('createTableCell with selection', () => {
+        context.isInSelection = true;
+
+        const tdModel = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, true /*isHeader*/, context);
+        expect(tdModel).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: true,
+            format: {},
+            isSelected: true,
+        });
+    });
+
+    it('createSelectionMarker', () => {
+        const marker = createSelectionMarker(context);
+
+        expect(marker).toEqual({
+            segmentType: ContentModelSegmentType.SelectionMarker,
+            isSelected: true,
         });
     });
 });

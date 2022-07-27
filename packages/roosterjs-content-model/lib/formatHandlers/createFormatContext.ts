@@ -34,7 +34,7 @@ export function createFormatContext(
             break;
 
         case SelectionRangeTypes.TableSelection:
-            if (range.coordinates) {
+            if (range.coordinates && range.table) {
                 context.tableSelection = {
                     table: range.table,
                     firstCell: { ...range.coordinates.firstCell },

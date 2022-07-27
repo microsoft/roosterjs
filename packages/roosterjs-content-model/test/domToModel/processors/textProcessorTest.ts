@@ -136,4 +136,96 @@ describe('textProcessor', () => {
             document: document,
         });
     });
+
+    it('Handle text with selection 1', () => {
+        const doc = createContentModelDocument(document);
+        doc.blocks.push({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test1',
+                },
+            ],
+        });
+
+        context.isInSelection = true;
+
+        textProcessor(doc, 'test2', context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test1',
+                },
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test2',
+                    isSelected: true,
+                },
+            ],
+        });
+    });
+
+    it('Handle text with selection 2', () => {
+        const doc = createContentModelDocument(document);
+        doc.blocks.push({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test1',
+                    isSelected: true,
+                },
+            ],
+        });
+
+        textProcessor(doc, 'test2', context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test1',
+                    isSelected: true,
+                },
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test2',
+                },
+            ],
+        });
+    });
+
+    it('Handle text with selection 3', () => {
+        const doc = createContentModelDocument(document);
+        doc.blocks.push({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test1',
+                    isSelected: true,
+                },
+            ],
+        });
+
+        context.isInSelection = true;
+
+        textProcessor(doc, 'test2', context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: ContentModelBlockType.Paragraph,
+            segments: [
+                {
+                    segmentType: ContentModelSegmentType.Text,
+                    text: 'test1test2',
+                    isSelected: true,
+                },
+            ],
+        });
+    });
 });
