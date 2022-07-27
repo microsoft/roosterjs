@@ -22,6 +22,10 @@ export function handleSegment(
             element.appendChild(txt);
             break;
 
+        case ContentModelSegmentType.Br:
+            element = doc.createElement('br');
+            break;
+
         case ContentModelSegmentType.General:
             handleBlock(doc, parent, segment, context);
             break;

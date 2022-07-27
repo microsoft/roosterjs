@@ -3,6 +3,7 @@ import HackedEditor from '../../hackedEditor/HackedEditor';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { addRangeToSelection } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model';
+import { createRibbonPlugin, RibbonPlugin } from 'roosterjs-react';
 import { SidePaneElementProps } from '../SidePaneElement';
 import {
     ChangeSource,
@@ -16,17 +17,22 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
     ContentModelPane,
     ContentModelPaneProps
 > {
+    private contentModelRibbon: RibbonPlugin;
+
     constructor() {
         super(ContentModelPane, 'contentModel', 'Content Model (Under development)');
+        this.contentModelRibbon = createRibbonPlugin();
     }
 
     initialize(editor: IEditor): void {
         super.initialize(editor);
 
+        this.contentModelRibbon.initialize(editor);
         editor.getDocument().addEventListener('selectionchange', this.onModelChange);
     }
 
     dispose(): void {
+        this.contentModelRibbon.dispose();
         this.editor.getDocument().removeEventListener('selectionchange', this.onModelChange);
 
         super.dispose();
@@ -40,6 +46,8 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
         ) {
             this.onModelChange();
         }
+
+        this.contentModelRibbon.onPluginEvent(e);
     }
 
     private onGetModel = () => {
@@ -50,6 +58,7 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
         return {
             ...baseProps,
             model: null,
+            ribbonPlugin: this.contentModelRibbon,
             onUpdateModel: this.onGetModel,
             onCreateDOM: this.onCreateDOM,
         };

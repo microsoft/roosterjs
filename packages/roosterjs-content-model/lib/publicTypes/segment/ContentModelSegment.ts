@@ -1,3 +1,4 @@
+import { ContentModelBr } from './ContentModelBr';
 import { ContentModelGeneralSegment } from './ContentModelGeneralSegment';
 import { ContentModelSelectionMarker } from './ContentModelSelectionMarker';
 import { ContentModelText } from './ContentModelText';
@@ -8,4 +9,5 @@ import { ContentModelText } from './ContentModelText';
 export type ContentModelSegment =
     | ContentModelSelectionMarker
     | ContentModelText
+    | ContentModelBr
     | ContentModelGeneralSegment;

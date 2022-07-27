@@ -5,3 +5,5 @@ export { default as createContentModelFromDOM } from './domToModel/createContent
 export { default as createDOMFromContentModel } from './modelToDom/createDOMFromContentModel';
 export * from './publicTypes/index';
 export * from './publicTypes/enum/index';
+
+export { default as insertTable } from './formatApi/table/insertTable';
