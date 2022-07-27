@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.55% </span>
+                <span class="strong">95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>56/58</span>
+                <span class='fraction'>57/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76.67% </span>
+                <span class="strong">68.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>23/30</span>
+                <span class='fraction'>24/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/11</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.3% </span>
+                <span class="strong">94.64% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>52/54</span>
+                <span class='fraction'>53/56</span>
             </div>
         
             
@@ -208,7 +208,11 @@
 <a name='L143'></a><a href='#L143'>143</a>
 <a name='L144'></a><a href='#L144'>144</a>
 <a name='L145'></a><a href='#L145'>145</a>
-<a name='L146'></a><a href='#L146'>146</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -316,12 +320,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -334,6 +337,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
@@ -410,7 +418,7 @@ export default class TableResize implements EditorPlugin {
     dispose() {
         this.onMouseMoveDisposer();
         this.invalidateTableRects();
-        this.setTableEditor(null);
+        this.disposeTableEditor();
         this.editor = null;
     }
 &nbsp;
@@ -461,9 +469,8 @@ export default class TableResize implements EditorPlugin {
     };
 &nbsp;
     private setTableEditor(table: HTMLTableElement, e?: MouseEvent) {
-        if (this.tableEditor &amp;&amp; table != this.tableEditor.table) {
-            this.tableEditor.dispose();
-            this.tableEditor = null;
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (this.tableEditor &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!this.tableEditor.isEditing() </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >table != this.tableEditor.table)</span> {
+<span class="cstat-no" title="statement not covered" >            this.disposeTableEditor();</span>
         }
 &nbsp;
         if (!this.tableEditor &amp;&amp; table) {
@@ -480,6 +487,11 @@ export default class TableResize implements EditorPlugin {
     private invalidateTableRects = () =&gt; {
         this.tableRectMap = null;
     };
+&nbsp;
+    private disposeTableEditor() {
+        this.tableEditor<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>ispose();
+        this.tableEditor = null;
+    }
 &nbsp;
     private ensureTableRects() {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.tableRectMap) {
@@ -505,7 +517,7 @@ export default class TableResize implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-27T03:06:44.137Z
+                at 2022-07-27T16:50:23.439Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
