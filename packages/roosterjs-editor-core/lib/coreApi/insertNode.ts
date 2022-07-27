@@ -156,6 +156,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                     } else {
                         pos = adjustInsertPosition(contentDiv, node, pos, range);
                     }
+
                     let nodeForCursor =
                         node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
                     range = createRange(pos);
