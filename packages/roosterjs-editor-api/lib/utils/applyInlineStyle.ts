@@ -4,7 +4,6 @@ import {
     getEntityFromElement,
     getEntitySelector,
     getTagOfNode,
-    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 import { IEditor, NodeType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 
@@ -27,9 +26,7 @@ export default function applyInlineStyle(
     const entitySelector = getEntitySelector();
 
     const entitySafeCallback = (element: HTMLElement, isInnerNode?: boolean) => {
-        const parentEntityElement: HTMLElement | null = safeInstanceOf(element, 'HTMLElement')
-            ? editor.getElementAtCursor(entitySelector, element)
-            : null;
+        const parentEntityElement = editor.getElementAtCursor(entitySelector, element);
         const parentEntity = parentEntityElement && getEntityFromElement(parentEntityElement);
         if (!parentEntity || !parentEntity.isReadonly) {
             callback(element, isInnerNode);
