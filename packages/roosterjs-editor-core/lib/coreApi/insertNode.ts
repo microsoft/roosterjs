@@ -182,19 +182,9 @@ function adjustInsertPositionNewLine(blockElement: BlockElement, core: EditorCor
     let tempPos = new Position(blockElement.getEndNode(), PositionType.After);
     if (safeInstanceOf(tempPos.node, 'HTMLTableRowElement')) {
         const div = core.contentDiv.ownerDocument.createElement('div');
-        div.id = 'newLineInTd';
-        insertNode(core, div, {
-            position: ContentPosition.SelectionStart,
-            insertOnNewLine: false,
-            updateCursor: true,
-            replaceSelection: true,
-        });
-
-        const insertedDiv = pos.element.querySelector('#newLineInTd');
-        if (insertedDiv) {
-            tempPos = new Position(insertedDiv, PositionType.Begin);
-            insertedDiv.removeAttribute('id');
-        }
+        const range = createRange(pos);
+        range.insertNode(div);
+        tempPos = new Position(div, PositionType.Begin);
     }
     return tempPos;
 }
