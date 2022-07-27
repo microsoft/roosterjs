@@ -7,8 +7,10 @@ import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
+import findClosestElementAncestor from '../utils/findClosestElementAncestor';
+import getEntityFromElement from '../entity/getEntityFromElement';
+import getEntitySelector from '../entity/getEntitySelector';
 import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
-import { findClosestElementAncestor, getEntityFromElement, getEntitySelector } from '..';
 
 /**
  * Delete selected content, and return the new position to select
