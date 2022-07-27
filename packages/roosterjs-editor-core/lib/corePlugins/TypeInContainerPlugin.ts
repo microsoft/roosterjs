@@ -1,5 +1,5 @@
+import { Browser, findClosestElementAncestor, getTagOfNode, Position } from 'roosterjs-editor-dom';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { findClosestElementAncestor, getTagOfNode, Position } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -70,9 +70,20 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             if (range.collapsed) {
                 this.editor.ensureTypeInContainer(Position.getStart(range), event.rawEvent);
             } else {
-                this.editor.runAsync(editor => {
-                    editor.ensureTypeInContainer(editor.getFocusedPosition(), event.rawEvent);
-                });
+                const callback = () => {
+                    if (this.editor) {
+                        this.editor.ensureTypeInContainer(
+                            this.editor.getFocusedPosition(),
+                            event.rawEvent
+                        );
+                    }
+                };
+
+                if (Browser.isMobileOrTablet) {
+                    this.editor.getDocument().defaultView.setTimeout(callback, 100);
+                } else {
+                    this.editor.runAsync(callback);
+                }
             }
         }
     }

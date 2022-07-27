@@ -44,7 +44,8 @@ describe('TableFeature', () => {
     });
 
     afterEach(() => {
-        let element = document.getElementById(TEST_ID);
+        TestHelper.removeElement(TEST_ID);
+        let element = document.getElementById(TEST_ELEMENT_ID);
         if (element) {
             element.parentElement?.removeChild(element);
         }

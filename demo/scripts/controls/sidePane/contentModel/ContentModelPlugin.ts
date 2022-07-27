@@ -1,8 +1,16 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import HackedEditor from '../../hackedEditor/HackedEditor';
 import SidePanePluginImpl from '../SidePanePluginImpl';
-import { ChangeSource, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { addRangeToSelection } from 'roosterjs-editor-dom';
+import { ContentModelDocument } from 'roosterjs-content-model';
 import { SidePaneElementProps } from '../SidePaneElement';
+import {
+    ChangeSource,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 export default class ContentModelPlugin extends SidePanePluginImpl<
     ContentModelPane,
@@ -43,6 +51,7 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
             ...baseProps,
             model: null,
             onUpdateModel: this.onGetModel,
+            onCreateDOM: this.onCreateDOM,
         };
     }
 
@@ -51,6 +60,27 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
             const model = this.onGetModel();
             component.setContentModel(model);
         });
+    };
+
+    private onCreateDOM = (model: ContentModelDocument) => {
+        if (isHackedEditor(this.editor)) {
+            const [fragment, selection] = this.editor.getDOMFromContentModel(model);
+            const win = window.open('about:blank');
+
+            win.document.body.appendChild(fragment);
+
+            if (selection) {
+                switch (selection.type) {
+                    case SelectionRangeTypes.Normal:
+                        addRangeToSelection(selection.ranges[0]);
+                        break;
+
+                    case SelectionRangeTypes.TableSelection:
+                        // TODO
+                        break;
+                }
+            }
+        }
     };
 }
 
