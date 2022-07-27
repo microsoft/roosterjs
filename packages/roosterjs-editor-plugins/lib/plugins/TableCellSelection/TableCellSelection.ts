@@ -1,5 +1,4 @@
 import normalizeTableSelection from './utils/normalizeTableSelection';
-import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
 import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import {
@@ -17,6 +16,7 @@ import {
     PluginMouseDownEvent,
     PositionType,
     SelectionRangeTypes,
+    TableOperation,
     TableSelection,
 } from 'roosterjs-editor-types';
 import {
@@ -188,17 +188,24 @@ export default class TableCellSelection implements EditorPlugin {
                 clonedVTable.selection = this.tableRange;
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
-
                 event.range.selectNode(clonedTable);
 
                 if (event.isCut) {
-                    forEachSelectedCell(this.vTable, cell => {
-                        if (cell?.td) {
-                            deleteNodeContents(cell.td, this.editor);
-                        }
-                    });
+                    this.deleteTableColumns(selection.table, selection.coordinates);
                 }
             }
+        }
+    }
+
+    private deleteTableColumns(table: HTMLTableElement, selection: TableSelection) {
+        const isWholeColumnSelection = table.rows.length - 1 === selection.lastCell.y;
+
+        if (isWholeColumnSelection) {
+            const selectedVTable = new VTable(table);
+            selectedVTable.selection = selection;
+            selectedVTable.edit(TableOperation.DeleteColumn);
+            selectedVTable.writeBack();
+            this.editor.select(selectedVTable.table, PositionType.After);
         }
     }
 

@@ -172,7 +172,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             const selection = <SelectionRangeEx>range;
             switch (selection.type) {
                 case SelectionRangeTypes.TableSelection:
-                    this.editor.select(selection.table, selection.coordinates);
+                    if (isCopy) {
+                        this.editor.select(selection.table, selection.coordinates);
+                    }
                     break;
                 case SelectionRangeTypes.Normal:
                     const range = selection.ranges?.[0];

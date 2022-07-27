@@ -185,6 +185,11 @@ export default class VTable {
      * @param operation Table operation
      */
     edit(operation: TableOperation | CompatibleTableOperation) {
+        if (this.selection && (this.row === undefined || this.col == undefined)) {
+            this.col = 0;
+            this.row = 0;
+        }
+
         if (!this.table || !this.cells || this.row === undefined || this.col == undefined) {
             return;
         }
