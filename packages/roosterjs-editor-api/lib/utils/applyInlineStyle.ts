@@ -26,13 +26,13 @@ export default function applyInlineStyle(
 
     const entitySelector = getEntitySelector();
 
-    const entitySafeCallback = (element: HTMLElement | Node, isInnerNode?: boolean) => {
+    const entitySafeCallback = (element: HTMLElement, isInnerNode?: boolean) => {
         const parentEntityElement: HTMLElement | null = safeInstanceOf(element, 'HTMLElement')
             ? editor.getElementAtCursor(entitySelector, element)
             : null;
         const parentEntity = parentEntityElement && getEntityFromElement(parentEntityElement);
         if (!parentEntity || !parentEntity.isReadonly) {
-            callback(<HTMLElement>element, isInnerNode);
+            callback(element, isInnerNode);
         }
     };
 
@@ -45,7 +45,7 @@ export default function applyInlineStyle(
                 (getTagOfNode(node.firstChild) == 'BR' && !node.firstChild.nextSibling));
         if (isEmptySpan) {
             editor.addUndoSnapshot();
-            entitySafeCallback(<HTMLElement>node);
+            entitySafeCallback(node as HTMLElement);
         } else {
             let isZWSNode =
                 node &&
