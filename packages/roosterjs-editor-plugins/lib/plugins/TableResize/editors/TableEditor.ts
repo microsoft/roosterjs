@@ -120,7 +120,13 @@ export default class TableEditor {
                 const lessThanRight = this.isRTL ? x >= tdRect.right : x <= tdRect.right;
 
                 if (lessThanRight && lessThanBottom) {
-                    if (i == 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                    const allCellsMergedBefore =
+                        this.table.rows[0]?.cells.length === 1 &&
+                        this.table.rows[i - 1]?.cells.length <= 1;
+                    if (
+                        (i == 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET) ||
+                        allCellsMergedBefore
+                    ) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
                         this.setInserterTd(

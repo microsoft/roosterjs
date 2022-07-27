@@ -22,7 +22,7 @@ export default function createTableInserter(
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
 ): TableEditFeature {
-    const table = editor.getElementAtCursor('table', td);
+    const table = editor.getElementAtCursor('table', td) as HTMLTableElement;
     const tdRect = normalizeRect(td.getBoundingClientRect());
     const tr = editor.getElementAtCursor('tr', td) as HTMLTableRowElement;
     const tableRect = table ? normalizeRect(table.getBoundingClientRect()) : null;
@@ -54,7 +54,7 @@ export default function createTableInserter(
             div.style.top = `${
                 tdRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
             }px`;
-            (div.firstChild as HTMLElement).style.height = `${tableRect.bottom - tableRect.top}px`;
+            (div.firstChild as HTMLElement).style.height = `${calculateHeight(tr, table)}px`;
         }
 
         document.body.appendChild(div);
@@ -74,6 +74,21 @@ const calculateWidth = (tr: HTMLTableRowElement) => {
         width = width + tdWidth;
     }
     return width;
+};
+
+const calculateHeight = (tr: HTMLTableRowElement, table: HTMLTableElement) => {
+    let height = 0;
+    const startIndex = tr?.rowIndex;
+    if (startIndex >= 0) {
+        const columnSize = table.rows.length;
+        for (let i = startIndex; i <= columnSize; i++) {
+            const row = table.rows.item(i);
+            const trWidth = row?.getBoundingClientRect()?.height || 0;
+            height = height + trWidth;
+        }
+    }
+
+    return height;
 };
 
 class TableInsertHandler implements Disposable {
