@@ -2,6 +2,7 @@ import createRange from '../lib/selection/createRange';
 import getInlineElementAtNode from '../lib/inlineElements/getInlineElementAtNode';
 import NodeBlockElement from '../lib/blockElements/NodeBlockElement';
 import StartEndBlockElement from '../lib/blockElements/StartEndBlockElement';
+import { Browser } from '../lib/utils/Browser';
 import { InlineElement, NodePosition } from 'roosterjs-editor-types';
 
 // Create element with content and id and insert the element in the DOM
@@ -103,14 +104,12 @@ export function htmlToDom(html: string): Node[] {
     return [].slice.call(element.childNodes);
 }
 
-declare var __karma__: any;
-
 export function itFirefoxOnly(
     expectation: string,
     assertion?: jasmine.ImplementationCallback,
     timeout?: number
 ) {
-    const func = __karma__.config.browser == 'Chrome' ? xit : it;
+    const func = Browser.isFirefox ? it : xit;
     return func(expectation, assertion, timeout);
 }
 
@@ -119,6 +118,6 @@ export function itChromeOnly(
     assertion?: jasmine.ImplementationCallback,
     timeout?: number
 ) {
-    const func = __karma__.config.browser == 'Chrome' ? it : xit;
+    const func = Browser.isChrome ? it : xit;
     return func(expectation, assertion, timeout);
 }
