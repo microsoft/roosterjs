@@ -23,18 +23,22 @@ export function getElementBasedFormatState(
 
     let uuu = editor.getBlockTraverser();
     let ppp = editor.getSelectionRange();
-    let STRT = null;
-    let END = null;
+
+    /*let lll = editor.getContentSearcherOfCursor();
+    if (lll) lll.forEachTextInlineElement(lline => console.log(lline.getTextContent()));
+    console.log('>', lll);*/
+    //let STRT = null;
+    //let; END = null;
     let multiline = false;
     if (ppp) {
-        let p_str = ppp.toString();
-        console.log(p_str, p_str.length);
-        STRT = ppp.startContainer.textContent;
+        //let p_str = ppp.toString();
+        //console.log(p_str, p_str.length);
+        //STRT = ppp.startContainer.textContent;
         let s_blk = editor.getBlockElementAtNode(ppp.startContainer);
-        END = ppp.endContainer.textContent;
+        //END = ppp.endContainer.textContent;
         let e_blk = editor.getBlockElementAtNode(ppp.endContainer);
-        console.log('Text', STRT, '#', END);
-        console.log('Block', s_blk, '#', e_blk, '=', e_blk.equals(s_blk));
+        //console.log('Text', STRT, '#', END);
+        //console.log('Block', s_blk, '#', e_blk, '=', e_blk.equals(s_blk));
         multiline = e_blk.equals(s_blk);
     }
     if (uuu && false) {
