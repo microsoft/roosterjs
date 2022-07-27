@@ -152,11 +152,10 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                         option.insertOnNewLine &&
                         (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
                     ) {
-                        pos = new Position(blockElement.getEndNode(), PositionType.After);
+                        pos = adjustInsertPositionNewLine(blockElement, core, pos);
                     } else {
                         pos = adjustInsertPosition(contentDiv, node, pos, range);
                     }
-
                     let nodeForCursor =
                         node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
                     range = createRange(pos);
@@ -179,3 +178,23 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
 
     return true;
 };
+function adjustInsertPositionNewLine(blockElement: BlockElement, core: EditorCore, pos: Position) {
+    let tempPos = new Position(blockElement.getEndNode(), PositionType.After);
+    if (safeInstanceOf(tempPos.node, 'HTMLTableRowElement')) {
+        const div = core.contentDiv.ownerDocument.createElement('div');
+        div.id = 'newLineInTd';
+        insertNode(core, div, {
+            position: ContentPosition.SelectionStart,
+            insertOnNewLine: false,
+            updateCursor: true,
+            replaceSelection: true,
+        });
+
+        const insertedDiv = pos.element.querySelector('#newLineInTd');
+        if (insertedDiv) {
+            tempPos = new Position(insertedDiv, PositionType.Begin);
+            insertedDiv.removeAttribute('id');
+        }
+    }
+    return tempPos;
+}
