@@ -130,4 +130,37 @@ describe('tableProcessor', () => {
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
     });
+
+    it('Process table with selection', () => {
+        const tableHTML = '<table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>';
+        const tdModel = createTableCell(1, 1, false, context);
+        const doc = createContentModelDocument(document);
+        const div = document.createElement('div');
+
+        div.innerHTML = tableHTML;
+        context.tableSelection = {
+            table: div.firstChild as HTMLTableElement,
+            firstCell: {
+                x: 1,
+                y: 0,
+            },
+            lastCell: {
+                x: 1,
+                y: 1,
+            },
+        };
+
+        tableProcessor(doc, div.firstChild as HTMLTableElement, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: ContentModelBlockType.Table,
+            cells: [
+                [tdModel, { ...tdModel, isSelected: true }],
+                [tdModel, { ...tdModel, isSelected: true }],
+            ],
+            format: {},
+        });
+
+        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(4);
+    });
 });
