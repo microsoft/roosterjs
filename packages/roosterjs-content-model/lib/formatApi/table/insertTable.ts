@@ -7,6 +7,15 @@ import { createFormatContextFromEditor } from '../utils/createFormatContextFromE
 import { createTable } from '../../domToModel/creators/createTable';
 import { createTableCell } from '../../domToModel/creators/createTableCell';
 
+/**
+ * Insert table into editor at current selection
+ * @param editor The editor instance
+ * @param columns Number of columns in table, it also controls the default table cell width:
+ * if columns &lt;= 4, width = 120px; if columns &lt;= 6, width = 100px; else width = 70px
+ * @param rows Number of rows in table
+ * @param format (Optional) The table format. If not passed, the default format will be applied:
+ * background color: #FFF; border color: #ABABAB
+ */
 export default function insertTable(
     editor: IEditor,
     columns: number,
