@@ -5,7 +5,6 @@ import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 
 describe('insertTable', () => {
     it('insert 1*1 table', () => {
-        console.log('test');
         const context: FormatContext = {
             isDarkMode: false,
             isInSelection: false,
