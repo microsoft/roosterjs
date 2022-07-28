@@ -19,14 +19,14 @@ const characters: Record<string, number> = {
     '.': Character.Dot,
     '-': Character.Dash,
     ')': Character.Parenthesis,
-    '(': Character.DoubleParenthesis,
 };
 
-const identifyCharacter = (text: string, secondSeparator?: string) => {
-    const charType = characters[text];
-    return charType === Character.DoubleParenthesis && secondSeparator !== ')'
-        ? undefined
-        : charType;
+const numberingTriggers: Record<string, number> = {
+    '1': NumberingTypes.Decimal,
+    i: NumberingTypes.LowerRoman,
+    I: NumberingTypes.UpperRoman,
+    a: NumberingTypes.LowerAlpha,
+    A: NumberingTypes.UpperAlpha,
 };
 
 const identifyNumberingType = (text: string) => {
@@ -90,16 +90,19 @@ const DecimalsTypes: Record<number, number> = {
     [Character.DoubleParenthesis]: NumberingListType.DecimalDoubleParenthesis,
 };
 
-const identifyNumberingListType = (numbering: string): NumberingListType | null => {
-    // If the marker length is 3, the marker style is double parenthis such as (1), (A). Then the number is second character of the string and the separator is first character and last character.
-    const separator = numbering.length === 3 ? numbering[0] : numbering[1];
-    const secondSeparator = numbering.length === 3 ? numbering[2] : undefined;
-    const char = identifyCharacter(separator, secondSeparator);
+const identifyNumberingListType = (
+    numbering: string,
+    isDoubleParenthesis: boolean,
+    num?: number
+): NumberingListType | null => {
+    const separatorCharacter = isDoubleParenthesis
+        ? Character.DoubleParenthesis
+        : characters[numbering[1]];
     // if separator is not valid, no need to check if the number is valid.
-    if (char) {
+    if (separatorCharacter) {
         const number = numbering.length === 3 ? numbering[1] : numbering[0];
-        const numberingType = identifyNumberingType(number);
-        return numberingType ? numberingListTypes[numberingType](char) : null;
+        const numberingType = num ? identifyNumberingType(number) : numberingTriggers[number];
+        return numberingType ? numberingListTypes[numberingType](separatorCharacter) : null;
     }
     return null;
 };
@@ -109,9 +112,17 @@ const identifyNumberingListType = (numbering: string): NumberingListType | null 
  * @param textBeforeCursor The trigger character
  * @returns The style of a numbering list triggered by a string
  */
-export default function getAutoNumberingListStyle(textBeforeCursor: string): NumberingListType {
+export default function getAutoNumberingListStyle(
+    textBeforeCursor: string,
+    num?: number
+): NumberingListType {
     const trigger = textBeforeCursor.trim();
     // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
-    const numberingType = trigger.length > 1 ? identifyNumberingListType(trigger) : null;
+    // If the marker length is 3, the marker style is double parenthesis such as (1), (A).
+    const isDoubleParenthesis = trigger.length === 3 && trigger[0] === '(' && trigger[2] === ')';
+    const numberingType =
+        trigger.length === 2 || isDoubleParenthesis
+            ? identifyNumberingListType(trigger, isDoubleParenthesis, num)
+            : null;
     return numberingType;
 }
