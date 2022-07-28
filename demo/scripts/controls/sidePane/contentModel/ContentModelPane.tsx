@@ -2,8 +2,9 @@ import * as React from 'react';
 import { ContentModelDocument } from 'roosterjs-content-model';
 import { getExportButton } from './buttons/export';
 import { getRefreshButton } from './buttons/refresh';
+import { getTableFormat } from './buttons/tableFormat';
 import { insertTable } from './buttons/insertTable';
-import { InsertTableButtonStringKey, Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
+import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { SidePaneElementProps } from '../SidePaneElement';
 
@@ -16,6 +17,7 @@ export interface ContentModelPaneState {
 export interface ContentModelPaneProps extends ContentModelPaneState, SidePaneElementProps {
     onUpdateModel: () => ContentModelDocument;
     onCreateDOM: (model: ContentModelDocument) => void;
+    onFormatTable: (key: string) => void;
     ribbonPlugin: RibbonPlugin;
 }
 
@@ -23,9 +25,7 @@ export default class ContentModelPane extends React.Component<
     ContentModelPaneProps,
     ContentModelPaneState
 > {
-    private contentModelButtons: RibbonButton<
-        InsertTableButtonStringKey | 'buttonNameRefresh' | 'buttonNameExport'
-    >[];
+    private contentModelButtons: RibbonButton<any>[];
 
     constructor(props: ContentModelPaneProps) {
         super(props);
@@ -34,6 +34,7 @@ export default class ContentModelPane extends React.Component<
             getRefreshButton(this.onRefresh),
             getExportButton(this.onCreateDOM),
             insertTable,
+            getTableFormat(this.props.onFormatTable),
         ];
 
         this.state = {

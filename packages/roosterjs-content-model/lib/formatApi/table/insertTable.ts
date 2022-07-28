@@ -1,3 +1,4 @@
+import applyTableFormat from './applyTableFormat';
 import createDOMFromContentModel from '../../modelToDom/createDOMFromContentModel';
 import { addSegment } from '../../domToModel/utils/addSegment';
 import { ChangeSource, IEditor, TableFormat } from 'roosterjs-editor-types';
@@ -38,13 +39,11 @@ export default function insertTable(
             addSegment(cell, createBr(context));
             row.push(cell);
 
-            // Temporary set gray border, will do table format later
-            cell.format.borderColor = ['gray', 'gray', 'gray', 'gray'];
-            cell.format.borderStyle = ['solid', 'solid', 'solid', 'solid'];
-            cell.format.borderWidth = ['1px', '1px', '1px', '1px'];
             cell.format.width = width;
         }
     });
+
+    applyTableFormat(table, format);
 
     const [fragment] = createDOMFromContentModel(
         doc,

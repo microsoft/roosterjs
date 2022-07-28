@@ -13,14 +13,15 @@ export default class HackedEditor extends Editor {
         super(contentDiv, options);
     }
 
-    getContentModel(): ContentModelDocument {
+    getContentModel(startNode?: HTMLElement): ContentModelDocument {
         return createContentModelFromDOM(
             this.contentDiv,
             this.getSelectionRangeEx(),
             this.isDarkMode(),
             this.getZoomScale(),
             getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
-            getDarkColor
+            getDarkColor,
+            startNode
         );
     }
 

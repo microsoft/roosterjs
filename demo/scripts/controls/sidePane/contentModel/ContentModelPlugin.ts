@@ -2,9 +2,14 @@ import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import HackedEditor from '../../hackedEditor/HackedEditor';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { addRangeToSelection } from 'roosterjs-editor-dom';
-import { ContentModelDocument } from 'roosterjs-content-model';
 import { createRibbonPlugin, RibbonPlugin } from 'roosterjs-react';
+import { PREDEFINED_STYLES } from '../shared/PredefinedTableStyles';
 import { SidePaneElementProps } from '../SidePaneElement';
+import {
+    applyTableFormat,
+    ContentModelBlockType,
+    ContentModelDocument,
+} from 'roosterjs-content-model';
 import {
     ChangeSource,
     IEditor,
@@ -61,6 +66,7 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
             ribbonPlugin: this.contentModelRibbon,
             onUpdateModel: this.onGetModel,
             onCreateDOM: this.onCreateDOM,
+            onFormatTable: this.onFormatTable,
         };
     }
 
@@ -90,6 +96,27 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
                 }
             }
         }
+    };
+
+    private onFormatTable = (key: string) => {
+        const table = this.editor.queryElements('table')[0];
+        const format = PREDEFINED_STYLES[key]?.('#ABABAB', '#ABABAB20');
+        const parent = table.parentNode;
+
+        this.editor.addUndoSnapshot(() => {
+            if (table && isHackedEditor(this.editor) && format && parent) {
+                const model = this.editor.getContentModel(table);
+                const tableModel = model.blocks[0];
+
+                if (tableModel?.blockType == ContentModelBlockType.Table) {
+                    applyTableFormat(tableModel, format);
+
+                    const [newFragment] = this.editor.getDOMFromContentModel(model);
+
+                    parent.replaceChild(newFragment, table);
+                }
+            }
+        }, ChangeSource.Format);
     };
 }
 

@@ -14,7 +14,7 @@ export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment
 export { ContentModelSegment } from './segment/ContentModelSegment';
 
 export { ContentModelTableFormat } from './format/ContentModelTableFormat';
-export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
+export { ContentModelTableCellFormat, TableCellFormat } from './format/ContentModelTableCellFormat';
 
 export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
 export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';

@@ -7,6 +7,7 @@ import { ContentModelSegment } from '../publicTypes/segment/ContentModelSegment'
 import { ContentModelSegmentType } from '../publicTypes/enum/SegmentType';
 import { createContentModelDocument } from './creators/createContentModelDocument';
 import { createFormatContext } from '../formatHandlers/createFormatContext';
+import { processElement } from './processors/processElement';
 import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
@@ -25,7 +26,8 @@ export default function createContentModelFromDOM(
     isDarkMode: boolean,
     zoomScale: number,
     isRtl: boolean,
-    getDarkColor: (lightColor: string) => string
+    getDarkColor: (lightColor: string) => string,
+    onlyProcessNode?: HTMLElement
 ): ContentModelDocument {
     const model = createContentModelDocument(root.ownerDocument!);
     const context = createFormatContext(
@@ -36,7 +38,11 @@ export default function createContentModelFromDOM(
         range || undefined
     );
 
-    containerProcessor(model, root, context);
+    if (onlyProcessNode) {
+        processElement(model, onlyProcessNode, context);
+    } else {
+        containerProcessor(model, root, context);
+    }
     normalizeModel(model);
 
     return model;
