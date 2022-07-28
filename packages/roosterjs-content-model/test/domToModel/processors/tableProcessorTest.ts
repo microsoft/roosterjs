@@ -51,7 +51,7 @@ describe('tableProcessor', () => {
         const tdHTML = '<td></td>';
         const trHTML = `<tr>${tdHTML}${tdHTML}</tr>`;
         const tableHTML = `<table>${trHTML}${trHTML}</table>`;
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel = createTableCell(1, 1, false, context);
 
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
@@ -66,13 +66,13 @@ describe('tableProcessor', () => {
     it('Process a 2*2 table with merged cell', () => {
         const tableHTML =
             '<table><tr><td></td><td></td></tr><tr><td colspan="2"></td></tr></table>';
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel = createTableCell(1, 1, false, context);
 
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
             cells: [
                 [tdModel, tdModel],
-                [tdModel, createTableCell(2, 1, false)],
+                [tdModel, createTableCell(2, 1, false, context)],
             ],
             format: {},
         });
@@ -84,8 +84,8 @@ describe('tableProcessor', () => {
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
             cells: [
-                [createTableCell(1, 1, false), createTableCell(2, 1, false)],
-                [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                [createTableCell(1, 1, false, context), createTableCell(2, 1, false, context)],
+                [createTableCell(1, 2, false, context), createTableCell(2, 2, false, context)],
             ],
             format: {},
         });
@@ -93,7 +93,7 @@ describe('tableProcessor', () => {
 
     it('Process a 1*1 table with text content', () => {
         const tableHTML = '<table><tr><td>test</td></tr></table>';
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel = createTableCell(1, 1, false, context);
 
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
@@ -107,7 +107,7 @@ describe('tableProcessor', () => {
     it('Process a 1*2 table with element content', () => {
         const tableHTML =
             '<table><tr><td><span>test</span></td><td><span>test</span></td></tr></table>';
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel = createTableCell(1, 1, false, context);
 
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
@@ -120,14 +120,47 @@ describe('tableProcessor', () => {
 
     it('Process a 1*2 table with element content in merged cell', () => {
         const tableHTML = '<table><tr><td colspan="2"><span>test</span></td></tr></table>';
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel = createTableCell(1, 1, false, context);
 
         runTest(tableHTML, {
             blockType: ContentModelBlockType.Table,
-            cells: [[tdModel, createTableCell(2, 1, false)]],
+            cells: [[tdModel, createTableCell(2, 1, false, context)]],
             format: {},
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('Process table with selection', () => {
+        const tableHTML = '<table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>';
+        const tdModel = createTableCell(1, 1, false, context);
+        const doc = createContentModelDocument(document);
+        const div = document.createElement('div');
+
+        div.innerHTML = tableHTML;
+        context.tableSelection = {
+            table: div.firstChild as HTMLTableElement,
+            firstCell: {
+                x: 1,
+                y: 0,
+            },
+            lastCell: {
+                x: 1,
+                y: 1,
+            },
+        };
+
+        tableProcessor(doc, div.firstChild as HTMLTableElement, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: ContentModelBlockType.Table,
+            cells: [
+                [tdModel, { ...tdModel, isSelected: true }],
+                [tdModel, { ...tdModel, isSelected: true }],
+            ],
+            format: {},
+        });
+
+        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(4);
     });
 });

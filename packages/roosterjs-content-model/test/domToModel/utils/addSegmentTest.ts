@@ -6,13 +6,21 @@ import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/C
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { createParagraph } from '../../../lib/domToModel/creators/createParagraph';
 import { createText } from '../../../lib/domToModel/creators/createText';
+import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
 
 describe('addSegment', () => {
+    let context: FormatContext;
+
+    beforeEach(() => {
+        context = createFormatContext();
+    });
+
     it('Add segment to empty document', () => {
         const doc = createContentModelDocument(document);
-        const segment = createText('test');
+        const segment = createText('test', context);
 
         addSegment(doc, segment);
 
@@ -37,9 +45,9 @@ describe('addSegment', () => {
 
     it('Add segment to document contains an empty paragraph', () => {
         const doc = createContentModelDocument(document);
-        addBlock(doc, createParagraph());
+        addBlock(doc, createParagraph(false));
 
-        const segment = createText('test');
+        const segment = createText('test', context);
 
         addSegment(doc, segment);
 
@@ -74,7 +82,7 @@ describe('addSegment', () => {
         };
         addBlock(doc, block);
 
-        const segment = createText('test2');
+        const segment = createText('test2', context);
 
         addSegment(doc, segment);
 
@@ -111,7 +119,7 @@ describe('addSegment', () => {
         };
         addBlock(doc, block);
 
-        const segment = createText('test');
+        const segment = createText('test', context);
 
         addSegment(doc, segment);
 
