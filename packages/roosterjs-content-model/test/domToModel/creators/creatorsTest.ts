@@ -200,7 +200,6 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: {},
-            isSelected: true,
         });
     });
 
