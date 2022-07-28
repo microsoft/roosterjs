@@ -127,6 +127,20 @@ describe('Creators', () => {
         });
     });
 
+    it('createText with selection', () => {
+        context.isInSelection = true;
+
+        const text = 'test';
+        const result = createText(text, context);
+
+        expect(result).toEqual({
+            segmentType: ContentModelSegmentType.Text,
+            text: text,
+
+            isSelected: true,
+        });
+    });
+
     it('createTable', () => {
         const tableModel = createTable(2);
 
@@ -186,6 +200,16 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: {},
+            isSelected: true,
+        });
+    });
+
+    it('createSelectionMarker', () => {
+        const marker = createSelectionMarker(context);
+
+        expect(marker).toEqual({
+            segmentType: ContentModelSegmentType.SelectionMarker,
+            isSelected: true,
         });
     });
 
