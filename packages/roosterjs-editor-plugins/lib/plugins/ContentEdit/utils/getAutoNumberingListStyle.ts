@@ -93,7 +93,7 @@ const DecimalsTypes: Record<number, number> = {
 const identifyNumberingListType = (
     numbering: string,
     isDoubleParenthesis: boolean,
-    num?: number
+    startNumber?: number
 ): NumberingListType | null => {
     const separatorCharacter = isDoubleParenthesis
         ? Character.DoubleParenthesis
@@ -101,7 +101,9 @@ const identifyNumberingListType = (
     // if separator is not valid, no need to check if the number is valid.
     if (separatorCharacter) {
         const number = numbering.length === 3 ? numbering[1] : numbering[0];
-        const numberingType = num ? identifyNumberingType(number) : numberingTriggers[number];
+        const numberingType = startNumber
+            ? identifyNumberingType(number)
+            : numberingTriggers[number];
         return numberingType ? numberingListTypes[numberingType](separatorCharacter) : null;
     }
     return null;
@@ -110,11 +112,12 @@ const identifyNumberingListType = (
 /**
  * @internal
  * @param textBeforeCursor The trigger character
+ * @param startNumber (Optional) Start number of the list
  * @returns The style of a numbering list triggered by a string
  */
 export default function getAutoNumberingListStyle(
     textBeforeCursor: string,
-    num?: number
+    startNumber?: number
 ): NumberingListType {
     const trigger = textBeforeCursor.trim();
     // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
@@ -122,7 +125,7 @@ export default function getAutoNumberingListStyle(
     const isDoubleParenthesis = trigger.length === 3 && trigger[0] === '(' && trigger[2] === ')';
     const numberingType =
         trigger.length === 2 || isDoubleParenthesis
-            ? identifyNumberingListType(trigger, isDoubleParenthesis, num)
+            ? identifyNumberingListType(trigger, isDoubleParenthesis, startNumber)
             : null;
     return numberingType;
 }
