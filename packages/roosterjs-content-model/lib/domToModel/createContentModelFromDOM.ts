@@ -26,7 +26,7 @@ export default function createContentModelFromDOM(
     isDarkMode: boolean,
     zoomScale: number,
     isRtl: boolean,
-    getDarkColor: (lightColor: string) => string,
+    getDarkColor?: (lightColor: string) => string,
     onlyProcessNode?: HTMLElement
 ): ContentModelDocument {
     const model = createContentModelDocument(root.ownerDocument!);

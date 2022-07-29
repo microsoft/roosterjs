@@ -1,8 +1,11 @@
-import { applyTableFormat, ContentModelBlockType } from 'roosterjs-content-model';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { isHackedEditor } from '../../../hackedEditor/isHackedEditor';
 import { PREDEFINED_STYLES } from '../../shared/PredefinedTableStyles';
 import { RibbonButton } from 'roosterjs-react';
+import {
+    applyTableFormat,
+    ContentModelBlockType,
+    isContentModelEditor,
+} from 'roosterjs-content-model';
 
 export const formatTable: RibbonButton<'ribbonButtonTableFormat'> = {
     key: 'ribbonButtonTableFormat',
@@ -30,14 +33,14 @@ export const formatTable: RibbonButton<'ribbonButtonTableFormat'> = {
         const parent = table.parentNode;
 
         editor.addUndoSnapshot(() => {
-            if (table && isHackedEditor(editor) && format && parent) {
+            if (table && isContentModelEditor(editor) && format && parent) {
                 const model = editor.getContentModel(table);
                 const tableModel = model.blocks[0];
 
                 if (tableModel?.blockType == ContentModelBlockType.Table) {
                     applyTableFormat(tableModel, format);
 
-                    const [newFragment] = editor.getDOMFromContentModel(model);
+                    const newFragment = editor.getDOMFromContentModel(model);
 
                     parent.replaceChild(newFragment, table);
                 }

@@ -1,17 +1,9 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
-import { addRangeToSelection } from 'roosterjs-editor-dom';
-import { ContentModelDocument } from 'roosterjs-content-model';
+import { ChangeSource, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { ContentModelDocument, isContentModelEditor } from 'roosterjs-content-model';
 import { createRibbonPlugin, RibbonPlugin } from 'roosterjs-react';
-import { isHackedEditor } from '../../hackedEditor/isHackedEditor';
 import { SidePaneElementProps } from '../SidePaneElement';
-import {
-    ChangeSource,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
 
 export default class ContentModelPlugin extends SidePanePluginImpl<
     ContentModelPane,
@@ -51,7 +43,7 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
     }
 
     private onGetModel = () => {
-        return isHackedEditor(this.editor) ? this.editor.getContentModel() : null;
+        return isContentModelEditor(this.editor) ? this.editor.getContentModel() : null;
     };
 
     protected getComponentProps(baseProps: SidePaneElementProps): ContentModelPaneProps {
@@ -72,23 +64,11 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
     };
 
     private onCreateDOM = (model: ContentModelDocument) => {
-        if (isHackedEditor(this.editor)) {
-            const [fragment, selection] = this.editor.getDOMFromContentModel(model);
+        if (isContentModelEditor(this.editor)) {
+            const fragment = this.editor.getDOMFromContentModel(model);
             const win = window.open('about:blank');
 
             win.document.body.appendChild(fragment);
-
-            if (selection) {
-                switch (selection.type) {
-                    case SelectionRangeTypes.Normal:
-                        addRangeToSelection(selection.ranges[0]);
-                        break;
-
-                    case SelectionRangeTypes.TableSelection:
-                        // TODO
-                        break;
-                }
-            }
         }
     };
 }

@@ -24,3 +24,5 @@ export { IdFormat } from './format/formatParts/IdFormat';
 export { MetadataFormat } from './format/formatParts/MetadataFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
 export { SpacingFormat } from './format/formatParts/SpacingFormat';
+
+export { IExperimentalContentModelEditor } from './IExperimentalContentModelEditor';
