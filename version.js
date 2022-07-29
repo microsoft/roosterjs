@@ -1,1 +1,1 @@
-window.roosterJsVer = "v8.28.0git";
+window.roosterJsVer = "v8.28.0";
