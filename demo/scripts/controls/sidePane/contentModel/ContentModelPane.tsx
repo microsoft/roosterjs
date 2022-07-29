@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ContentModelDocument } from 'roosterjs-content-model';
+import { formatTable } from './buttons/formatTable';
 import { getExportButton } from './buttons/export';
 import { getRefreshButton } from './buttons/refresh';
-import { getTableFormat } from './buttons/tableFormat';
 import { insertTable } from './buttons/insertTable';
 import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
@@ -17,7 +17,6 @@ export interface ContentModelPaneState {
 export interface ContentModelPaneProps extends ContentModelPaneState, SidePaneElementProps {
     onUpdateModel: () => ContentModelDocument;
     onCreateDOM: (model: ContentModelDocument) => void;
-    onFormatTable: (key: string) => void;
     ribbonPlugin: RibbonPlugin;
 }
 
@@ -34,7 +33,7 @@ export default class ContentModelPane extends React.Component<
             getRefreshButton(this.onRefresh),
             getExportButton(this.onCreateDOM),
             insertTable,
-            getTableFormat(this.props.onFormatTable),
+            formatTable,
         ];
 
         this.state = {
