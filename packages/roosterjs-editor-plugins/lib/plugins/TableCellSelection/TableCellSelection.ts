@@ -189,7 +189,6 @@ export default class TableCellSelection implements EditorPlugin {
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
                 event.range.selectNode(clonedTable);
-
                 if (event.isCut) {
                     this.deleteTableColumns(selection.table, selection.coordinates);
                 }
@@ -199,7 +198,6 @@ export default class TableCellSelection implements EditorPlugin {
 
     private deleteTableColumns(table: HTMLTableElement, selection: TableSelection) {
         const isWholeColumnSelection = table.rows.length - 1 === selection.lastCell.y;
-
         if (isWholeColumnSelection) {
             const selectedVTable = new VTable(table);
             selectedVTable.selection = selection;

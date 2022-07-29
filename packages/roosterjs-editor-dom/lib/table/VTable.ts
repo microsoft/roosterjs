@@ -55,16 +55,13 @@ export default class VTable {
     col: number | undefined;
 
     /**
-     * Selected range of cells with the coordinates of the first and last cell selected.
-     */
-    selection: TableSelection | null = null;
-
-    /**
      * Current format of the table
      */
     formatInfo: Required<TableFormat> | null = null;
 
     private trs: HTMLTableRowElement[] = [];
+
+    private _selection: TableSelection | null = null;
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
@@ -116,6 +113,22 @@ export default class VTable {
                 this.normalizeSize(typeof zoomScale == 'number' ? n => n / zoomScale : zoomScale);
             }
         }
+    }
+
+    /**
+     * Selected range of cells with the coordinates of the first and last cell selected.
+     */
+    public get selection(): TableSelection | null {
+        return this._selection || null;
+    }
+
+    public set selection(value: TableSelection | null) {
+        if (value) {
+            const { firstCell } = value;
+            this.row = firstCell?.y;
+            this.col = firstCell?.x;
+        }
+        this._selection = value;
     }
 
     /**
@@ -185,21 +198,16 @@ export default class VTable {
      * @param operation Table operation
      */
     edit(operation: TableOperation | CompatibleTableOperation) {
-        if (this.selection && (this.row === undefined || this.col == undefined)) {
-            this.col = 0;
-            this.row = 0;
-        }
-
         if (!this.table || !this.cells || this.row === undefined || this.col == undefined) {
             return;
         }
 
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
-        const firstRow = this.selection ? this.selection.firstCell.y : this.row;
-        const lastRow = this.selection ? this.selection.lastCell.y : this.row;
-        const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
-        const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
+        const firstRow = this._selection ? this._selection.firstCell.y || 0 : this.row;
+        const lastRow = this._selection ? this._selection.lastCell.y || 0 : this.row;
+        const firstColumn = this._selection ? this._selection.firstCell.x || 0 : this.col;
+        const lastColumn = this._selection ? this._selection.lastCell.x || 0 : this.col;
         switch (operation) {
             case TableOperation.InsertAbove:
                 for (let i = firstRow; i <= lastRow; i++) {
@@ -272,8 +280,8 @@ export default class VTable {
                         }
                     });
                 }
-                const removedRows = this.selection
-                    ? this.selection.lastCell.y - this.selection.firstCell.y
+                const removedRows = this._selection
+                    ? this._selection.lastCell.y - this._selection.firstCell.y
                     : 0;
                 this.cells.splice(firstRow, removedRows + 1);
                 if (this.cells.length === 0) {
@@ -289,7 +297,7 @@ export default class VTable {
                         if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
                             nextCell.td = cell.td;
                         }
-                        const removedColumns = this.selection
+                        const removedColumns = this._selection
                             ? colIndex - deletedColumns
                             : this.col!;
                         row.splice(removedColumns, 1);
