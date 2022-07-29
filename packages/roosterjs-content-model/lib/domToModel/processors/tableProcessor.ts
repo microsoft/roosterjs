@@ -24,6 +24,8 @@ import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 export const tableProcessor: ElementProcessor = (group, element, context) => {
     const tableElement = element as HTMLTableElement;
     const table = createTable(tableElement.rows.length);
+    const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
+    const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
     parseFormat(tableElement, TableFormatHandlers, table.format, context);
     addBlock(group, table);
@@ -35,10 +37,18 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
             const td = tr.cells[sourceCol];
 
+            if (hasTableSelection) {
+                context.isInSelection =
+                    row >= firstCell.y &&
+                    row <= lastCell.y &&
+                    sourceCol >= firstCell.x &&
+                    sourceCol <= lastCell.x;
+            }
+
             for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
                     const hasTd = colSpan == 1 && rowSpan == 1;
-                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH');
+                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH', context);
 
                     table.cells[row + rowSpan - 1][targetCol] = cell;
 
@@ -47,6 +57,10 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                         containerProcessor(cell, td, context);
                     }
                 }
+            }
+
+            if (hasTableSelection) {
+                context.isInSelection = false;
             }
         }
     }

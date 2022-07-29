@@ -11,4 +11,9 @@ export interface ContentModelSegmentBase<
      * Type of this segment
      */
     segmentType: T;
+
+    /**
+     * Whether this segment is selected
+     */
+    isSelected?: boolean;
 }
