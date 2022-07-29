@@ -6,5 +6,5 @@ export default function isContentModelEditor(
 ): editor is IExperimentalContentModelEditor {
     const experimentalEditor = editor as IExperimentalContentModelEditor;
 
-    return !!experimentalEditor.getDOMFromContentModel && !experimentalEditor.getContentModel;
+    return !!experimentalEditor.getDOMFromContentModel && !!experimentalEditor.getContentModel;
 }

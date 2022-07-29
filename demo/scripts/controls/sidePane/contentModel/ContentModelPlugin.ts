@@ -1,8 +1,9 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
-import { ChangeSource, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelDocument, isContentModelEditor } from 'roosterjs-content-model';
 import { createRibbonPlugin, RibbonPlugin } from 'roosterjs-react';
+import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { isContentModelEditor } from 'roosterjs-content-model';
+import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 export default class ContentModelPlugin extends SidePanePluginImpl<
@@ -31,44 +32,26 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
     }
 
     onPluginEvent(e: PluginEvent) {
-        if (
-            e.eventType == PluginEventType.ContentChanged &&
-            (e.source == ChangeSource.SwitchToDarkMode ||
-                e.source == ChangeSource.SwitchToLightMode)
-        ) {
+        if (e.eventType == PluginEventType.ContentChanged || e.eventType == PluginEventType.Input) {
             this.onModelChange();
         }
 
         this.contentModelRibbon.onPluginEvent(e);
     }
 
-    private onGetModel = () => {
-        return isContentModelEditor(this.editor) ? this.editor.getContentModel() : null;
-    };
-
     protected getComponentProps(baseProps: SidePaneElementProps): ContentModelPaneProps {
         return {
             ...baseProps,
             model: null,
             ribbonPlugin: this.contentModelRibbon,
-            onUpdateModel: this.onGetModel,
-            onCreateDOM: this.onCreateDOM,
         };
     }
 
     private onModelChange = () => {
         this.getComponent(component => {
-            const model = this.onGetModel();
+            const model = isContentModelEditor(this.editor) ? this.editor.getContentModel() : null;
             component.setContentModel(model);
+            setCurrentContentModel(this.editor, model);
         });
-    };
-
-    private onCreateDOM = (model: ContentModelDocument) => {
-        if (isContentModelEditor(this.editor)) {
-            const fragment = this.editor.getDOMFromContentModel(model);
-            const win = window.open('about:blank');
-
-            win.document.body.appendChild(fragment);
-        }
     };
 }
