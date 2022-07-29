@@ -26,8 +26,11 @@ describe('insertTable', () => {
                 expect(additionalData.formatApiName).toBe('insertTable');
             },
             insertNode: (node: Node) => {
-                expect((node.firstChild as HTMLElement).outerHTML).toBe(
-                    '<table style="border-collapse: collapse; border-spacing: 0px; box-sizing: border-box;"><tbody><tr><td style="width: 120px; border-color: gray; border-width: 1px; border-style: solid;"><br></td></tr></tbody></table>'
+                const table = node.firstChild as HTMLElement;
+                expect(table.tagName).toBe('TABLE');
+                expect(table.dataset.editingInfo).toBeDefined();
+                expect(table.innerHTML).toBe(
+                    '<tbody><tr><td style="width: 120px; border-color: rgb(171, 171, 171); border-width: 1px; border-style: solid;"><br></td></tr></tbody>'
                 );
             },
         } as IEditor;
