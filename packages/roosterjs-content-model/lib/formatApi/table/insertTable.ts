@@ -1,12 +1,11 @@
 import applyTableFormat from './applyTableFormat';
-import createDOMFromContentModel from '../../modelToDom/createDOMFromContentModel';
 import { addSegment } from '../../domToModel/utils/addSegment';
-import { ChangeSource, IEditor, TableFormat } from 'roosterjs-editor-types';
+import { ChangeSource, TableFormat } from 'roosterjs-editor-types';
 import { createBr } from '../../domToModel/creators/createBr';
 import { createContentModelDocument } from '../../domToModel/creators/createContentModelDocument';
-import { createFormatContextFromEditor } from '../utils/createFormatContextFromEditor';
 import { createTable } from '../../domToModel/creators/createTable';
 import { createTableCell } from '../../domToModel/creators/createTableCell';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
  * Insert table into editor at current selection
@@ -18,13 +17,12 @@ import { createTableCell } from '../../domToModel/creators/createTableCell';
  * background color: #FFF; border color: #ABABAB
  */
 export default function insertTable(
-    editor: IEditor,
+    editor: IExperimentalContentModelEditor,
     columns: number,
     rows: number,
     format?: TableFormat
 ) {
-    // TODO: Let editor provide Content Model Context
-    const context = createFormatContextFromEditor(editor, false /*isRtl*/);
+    const context = editor.createFormatContext();
     const doc = createContentModelDocument(editor.getDocument());
     const table = createTable(rows);
     const width = getTableCellWidth(columns);
@@ -45,13 +43,7 @@ export default function insertTable(
 
     applyTableFormat(table, format);
 
-    const [fragment] = createDOMFromContentModel(
-        doc,
-        context.isDarkMode,
-        context.zoomScale,
-        context.isDarkMode,
-        context.getDarkColor
-    );
+    const fragment = editor.getDOMFromContentModel(doc);
 
     editor.addUndoSnapshot(
         () => {

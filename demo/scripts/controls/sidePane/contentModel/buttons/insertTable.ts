@@ -1,5 +1,5 @@
 import { getButtons, KnownRibbonButtonKey } from 'roosterjs-react';
-import { insertTable as insertTableApi } from 'roosterjs-content-model';
+import { insertTable as insertTableApi, isContentModelEditor } from 'roosterjs-content-model';
 import { InsertTableButtonStringKey, RibbonButton } from 'roosterjs-react';
 
 const originalPasteButton: RibbonButton<InsertTableButtonStringKey> = getButtons([
@@ -9,8 +9,10 @@ const originalPasteButton: RibbonButton<InsertTableButtonStringKey> = getButtons
 export const insertTable: RibbonButton<InsertTableButtonStringKey> = {
     ...originalPasteButton,
     onClick: (editor, key) => {
-        const { row, col } = parseKey(key);
-        insertTableApi(editor, col, row);
+        if (isContentModelEditor(editor)) {
+            const { row, col } = parseKey(key);
+            insertTableApi(editor, col, row);
+        }
     },
 };
 

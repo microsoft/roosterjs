@@ -1,10 +1,16 @@
-import createContentModelFromDOM from '../domToModel/createContentModelFromDOM';
-import createDOMFromContentModel from '../modelToDom/createDOMFromContentModel';
+import { containerProcessor } from '../domToModel/processors/containerProcessor';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { createContentModelDocument } from '../domToModel/creators/createContentModelDocument';
+import { createFormatContext } from '../formatHandlers/createFormatContext';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
+import { FormatContext } from '../formatHandlers/FormatContext';
 import { getComputedStyles } from 'roosterjs-editor-dom';
+import { handleBlock } from '../modelToDom/handlers/handleBlock';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
+import { normalizeModel } from '../modelApi/normalizeContentModel';
+import { optimize } from '../modelToDom/optimizers/optimize';
+import { singleElementProcessor } from '../domToModel/processors/singleElementProcessor';
 
 /**
  * !!! This is a temporary interface and will be removed in the future !!!
@@ -20,25 +26,39 @@ export default class ExperimentalContentModelEditor extends Editor
         this.getDarkColor = options?.getDarkColor;
     }
 
-    getContentModel(startNode?: HTMLElement): ContentModelDocument {
-        return createContentModelFromDOM(
-            this.contentDiv,
-            this.getSelectionRangeEx(),
+    createFormatContext(): FormatContext {
+        return createFormatContext(
             this.isDarkMode(),
             this.getZoomScale(),
             getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
             this.getDarkColor,
-            startNode
+            this.getSelectionRangeEx()
         );
     }
 
+    getContentModel(startNode?: HTMLElement): ContentModelDocument {
+        const model = createContentModelDocument(this.getDocument());
+        const context = this.createFormatContext();
+
+        if (startNode) {
+            singleElementProcessor(model, startNode, context);
+        } else {
+            containerProcessor(model, this.contentDiv, context);
+        }
+
+        normalizeModel(model);
+
+        return model;
+    }
+
     getDOMFromContentModel(model: ContentModelDocument): DocumentFragment {
-        return createDOMFromContentModel(
-            model,
-            this.isDarkMode(),
-            this.getZoomScale(),
-            getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
-            this.getDarkColor
-        )[0];
+        const fragment = model.document.createDocumentFragment();
+        const context = this.createFormatContext();
+
+        handleBlock(model.document, fragment, model, context);
+
+        optimize(fragment, 2 /*optimizeLevel*/);
+
+        return fragment;
     }
 }

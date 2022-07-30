@@ -1,4 +1,5 @@
 import { ContentModelDocument } from './block/group/ContentModelDocument';
+import { FormatContext } from '../formatHandlers/FormatContext';
 import { IEditor } from 'roosterjs-editor-types';
 
 /**
@@ -7,6 +8,8 @@ import { IEditor } from 'roosterjs-editor-types';
  * An interface of editor with Content Model support (in experiment)
  */
 export interface IExperimentalContentModelEditor extends IEditor {
+    createFormatContext(): FormatContext;
+
     /**
      * Create Content Model from DOM tree in this editor
      * @param startNode Optional start node. If provided, Content Model will be created from this node (including itself),
