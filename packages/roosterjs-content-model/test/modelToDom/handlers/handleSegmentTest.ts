@@ -42,6 +42,16 @@ describe('handleSegment', () => {
         );
     });
 
+    it('Br segment', () => {
+        runTest(
+            {
+                segmentType: ContentModelSegmentType.Br,
+            },
+            '<br>',
+            0
+        );
+    });
+
     it('general segment', () => {
         const segment: ContentModelSegment = {
             segmentType: ContentModelSegmentType.General,
