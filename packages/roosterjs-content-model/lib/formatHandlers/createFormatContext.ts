@@ -1,3 +1,4 @@
+import { ContentModelContext } from '../publicTypes/ContentModelContext';
 import { FormatContext } from './FormatContext';
 import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 
@@ -5,17 +6,16 @@ import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
  * @internal
  */
 export function createFormatContext(
-    isDarkMode: boolean = false,
-    zoomScale: number = 1,
-    isRightToLeft: boolean = false,
-    getDarkColor?: (lightColor: string) => string,
+    contentModelContext?: ContentModelContext,
     range?: SelectionRangeEx
 ): FormatContext {
     const context: FormatContext = {
-        isDarkMode,
-        zoomScale,
-        isRightToLeft,
-        getDarkColor,
+        contentModelContext: contentModelContext || {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+            getDarkColor: undefined,
+        },
         isInSelection: false,
     };
 

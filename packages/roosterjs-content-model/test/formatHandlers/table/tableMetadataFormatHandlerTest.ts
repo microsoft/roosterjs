@@ -1,5 +1,4 @@
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { ContentModelContext } from '../../../lib/publicTypes';
 import { MetadataFormat } from '../../../lib/publicTypes/format/formatParts/MetadataFormat';
 import { TableBorderFormat, TableFormat } from 'roosterjs-editor-types';
 import { tableMetadataFormatHandler } from '../../../lib/formatHandlers/table/tableMetadataFormatHandler';
@@ -7,12 +6,16 @@ import { tableMetadataFormatHandler } from '../../../lib/formatHandlers/table/ta
 describe('tableMetadataFormatHandler.parse', () => {
     let div: HTMLElement;
     let format: MetadataFormat<TableFormat>;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     function runTest(metadata: any, expectedValue: MetadataFormat<TableFormat>) {
@@ -86,12 +89,16 @@ describe('tableMetadataFormatHandler.parse', () => {
 describe('tableMetadataFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: MetadataFormat<TableFormat>;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     function runTest(tableFormat: TableFormat | null, expectedValue: any) {

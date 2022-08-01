@@ -12,7 +12,7 @@ describe('tableProcessor', () => {
     let context: FormatContext;
 
     beforeEach(() => {
-        context = createFormatContext(false, 1, false);
+        context = createFormatContext();
         spyOn(containerProcessor, 'containerProcessor');
     });
 

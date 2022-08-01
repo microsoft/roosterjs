@@ -13,7 +13,7 @@ describe('generalSegmentProcessor', () => {
     let context: FormatContext;
 
     beforeEach(() => {
-        context = createFormatContext(false, 1, false);
+        context = createFormatContext();
         spyOn(containerProcessor, 'containerProcessor');
     });
 

@@ -1,48 +1,13 @@
-import { containerProcessor } from './processors/containerProcessor';
 import { ContentModelBlock } from '../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelBlockType } from '../publicTypes/enum/BlockType';
-import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
 import { ContentModelSegment } from '../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../publicTypes/enum/SegmentType';
-import { createContentModelDocument } from './creators/createContentModelDocument';
-import { createFormatContext } from '../formatHandlers/createFormatContext';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
- * Create Content Model from DOM node
- * @param root Root node of the DOM tree. This node itself will not be included in the Content Model
- * @param range Selection range
- * @param isDarkMode Whether the content is in dark mode
- * @param zoomScale Zoom scale value of the content
- * @param isRtl Whether the content is from right to left
- * @param getDarkColor A callback function used for calculate dark mode color from light mode color
- * @returns A Content Model of the given root and selection
+ * @internal
  */
-export default function createContentModelFromDOM(
-    root: ParentNode,
-    range: SelectionRangeEx | null,
-    isDarkMode: boolean,
-    zoomScale: number,
-    isRtl: boolean,
-    getDarkColor: (lightColor: string) => string
-): ContentModelDocument {
-    const model = createContentModelDocument(root.ownerDocument!);
-    const context = createFormatContext(
-        isDarkMode,
-        zoomScale,
-        isRtl,
-        getDarkColor,
-        range || undefined
-    );
-
-    containerProcessor(model, root, context);
-    normalizeModel(model);
-
-    return model;
-}
-
-function normalizeModel(group: ContentModelBlockGroup) {
+export function normalizeModel(group: ContentModelBlockGroup) {
     for (let i = group.blocks.length - 1; i >= 0; i--) {
         const block = group.blocks[i];
 
