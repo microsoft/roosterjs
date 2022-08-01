@@ -27,7 +27,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    parseFormat(tableElement, TableFormatHandlers, table.format, context);
+    parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
     addBlock(group, table);
 
     for (let row = 0; row < tableElement.rows.length; row++) {
@@ -53,7 +53,12 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                     table.cells[row + rowSpan - 1][targetCol] = cell;
 
                     if (hasTd) {
-                        parseFormat(td, TableCellFormatHandlers, cell.format, context);
+                        parseFormat(
+                            td,
+                            TableCellFormatHandlers,
+                            cell.format,
+                            context.contentModelContext
+                        );
                         containerProcessor(cell, td, context);
                     }
                 }

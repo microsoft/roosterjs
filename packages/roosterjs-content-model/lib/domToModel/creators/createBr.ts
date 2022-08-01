@@ -1,11 +1,11 @@
 import { ContentModelBr } from '../../publicTypes/segment/ContentModelBr';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
-import { FormatContext } from '../../formatHandlers/FormatContext';
+import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
  * @internal
  */
-export function createBr(context: FormatContext): ContentModelBr {
+export function createBr(context: DomToModelContext): ContentModelBr {
     const result: ContentModelBr = {
         segmentType: ContentModelSegmentType.Br,
     };

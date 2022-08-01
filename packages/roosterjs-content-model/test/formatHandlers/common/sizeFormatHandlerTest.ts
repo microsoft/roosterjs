@@ -1,15 +1,18 @@
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { ContentModelContext } from '../../../lib/publicTypes';
 import { SizeFormat } from '../../../lib/publicTypes/format/formatParts/SizeFormat';
 import { sizeFormatHandler } from '../../../lib/formatHandlers/common/sizeFormatHandler';
 
 describe('sizeFormatHandler.parse', () => {
     let format: SizeFormat;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     it('Not able to get size', () => {
@@ -46,12 +49,16 @@ describe('sizeFormatHandler.parse', () => {
 describe('sizeFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: SizeFormat;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     it('No size', () => {

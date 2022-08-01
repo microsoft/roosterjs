@@ -1,17 +1,20 @@
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { ContentModelContext } from '../../../lib/publicTypes';
 import { VerticalAlignFormat } from '../../../lib/publicTypes/format/formatParts/VerticalAlignFormat';
 import { verticalAlignFormatHandler } from '../../../lib/formatHandlers/common/verticalAlignFormatHandler';
 
 describe('verticalAlignFormatHandler.parse', () => {
     let div: HTMLElement;
     let format: VerticalAlignFormat;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     function runTest(
@@ -65,12 +68,16 @@ describe('verticalAlignFormatHandler.parse', () => {
 describe('verticalAlignFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: VerticalAlignFormat;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     it('No alignment', () => {

@@ -1,16 +1,19 @@
 import { BackgroundColorFormat } from '../../../lib/publicTypes/format/formatParts/BackgroundColorFormat';
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 
 describe('backgroundColorFormatHandler.parse', () => {
     let div: HTMLElement;
-    let context: FormatContext;
+    let context: ContentModelContext;
     let format: BackgroundColorFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
         format = {};
     });
 
@@ -85,12 +88,17 @@ describe('backgroundColorFormatHandler.parse', () => {
 
 describe('backgroundColorFormatHandler.apply', () => {
     let div: HTMLElement;
-    let context: FormatContext;
+    let context: ContentModelContext;
     let format: BackgroundColorFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
+
         format = {};
     });
 

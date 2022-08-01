@@ -1,7 +1,7 @@
 import { addSegment } from '../utils/addSegment';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
-import { FormatContext } from '../../formatHandlers/FormatContext';
+import { DomToModelContext } from '../context/DomToModelContext';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
 import { singleElementProcessor } from './singleElementProcessor';
@@ -13,7 +13,7 @@ import { textProcessor } from './textProcessor';
 export function containerProcessor(
     group: ContentModelBlockGroup,
     parent: ParentNode,
-    context: FormatContext
+    context: DomToModelContext
 ) {
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
     let index = 0;
@@ -42,7 +42,11 @@ export function containerProcessor(
     }
 }
 
-function textNodeProcessor(group: ContentModelBlockGroup, textNode: Text, context: FormatContext) {
+function textNodeProcessor(
+    group: ContentModelBlockGroup,
+    textNode: Text,
+    context: DomToModelContext
+) {
     let txt = textNode.nodeValue || '';
     let [txtStartOffset, txtEndOffset] = getRegularSelectionOffsets(context, textNode);
 
@@ -71,7 +75,7 @@ function textNodeProcessor(group: ContentModelBlockGroup, textNode: Text, contex
 }
 
 function getRegularSelectionOffsets(
-    context: FormatContext,
+    context: DomToModelContext,
     currentContainer: Node
 ): [number, number] {
     let startOffset =

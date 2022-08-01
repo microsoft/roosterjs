@@ -3,7 +3,7 @@ import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createBr } from '../../../lib/domToModel/creators/createBr';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createGeneralBlock } from '../../../lib/domToModel/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/domToModel/creators/createGeneralSegment';
 import { createParagraph } from '../../../lib/domToModel/creators/createParagraph';
@@ -11,13 +11,13 @@ import { createSelectionMarker } from '../../../lib/domToModel/creators/createSe
 import { createTable } from '../../../lib/domToModel/creators/createTable';
 import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
 import { createText } from '../../../lib/domToModel/creators/createText';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 
 describe('Creators', () => {
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createFormatContext();
+        context = createDomToModelContext();
     });
 
     it('createContentModelDocument', () => {

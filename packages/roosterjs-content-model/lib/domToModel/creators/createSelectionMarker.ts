@@ -1,11 +1,11 @@
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
-import { FormatContext } from '../../formatHandlers/FormatContext';
+import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
  * @internal
  */
-export function createSelectionMarker(context: FormatContext): ContentModelSelectionMarker {
+export function createSelectionMarker(context: DomToModelContext): ContentModelSelectionMarker {
     return {
         segmentType: ContentModelSegmentType.SelectionMarker,
         isSelected: true,

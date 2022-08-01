@@ -6,16 +6,16 @@ import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/C
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createParagraph } from '../../../lib/domToModel/creators/createParagraph';
 import { createText } from '../../../lib/domToModel/creators/createText';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 
 describe('addSegment', () => {
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createFormatContext();
+        context = createDomToModelContext();
     });
 
     it('Add segment to empty document', () => {

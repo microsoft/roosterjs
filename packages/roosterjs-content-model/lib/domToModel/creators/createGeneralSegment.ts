@@ -2,14 +2,14 @@ import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupTyp
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
-import { FormatContext } from '../../formatHandlers/FormatContext';
+import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
  * @internal
  */
 export function createGeneralSegment(
     element: HTMLElement,
-    context: FormatContext
+    context: DomToModelContext
 ): ContentModelGeneralSegment {
     const result: ContentModelGeneralSegment = {
         blockType: ContentModelBlockType.BlockGroup,

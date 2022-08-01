@@ -3,14 +3,14 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 
 describe('brProcessor', () => {
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createFormatContext();
+        context = createDomToModelContext();
     });
 
     it('Regular Br', () => {

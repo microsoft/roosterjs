@@ -8,17 +8,17 @@ import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createText } from '../../../lib/domToModel/creators/createText';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 
 describe('containerProcessor', () => {
     let doc: ContentModelDocument;
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         doc = createContentModelDocument(document);
-        context = createFormatContext();
+        context = createDomToModelContext();
         spyOn(generalBlockProcessor, 'generalBlockProcessor');
         spyOn(generalSegmentProcessor, 'generalSegmentProcessor');
         spyOn(textProcessor, 'textProcessor');
@@ -133,11 +133,11 @@ describe('containerProcessor', () => {
 
 describe('containerProcessor', () => {
     let doc: ContentModelDocument;
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         doc = createContentModelDocument(document);
-        context = createFormatContext();
+        context = createDomToModelContext();
         spyOn(generalSegmentProcessor, 'generalSegmentProcessor').and.callFake(
             (group, element, context) => {
                 const segment = createText(element.textContent!, context) as any;
