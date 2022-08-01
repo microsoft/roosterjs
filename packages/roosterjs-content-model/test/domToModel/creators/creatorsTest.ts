@@ -1,6 +1,7 @@
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
+import { createBr } from '../../../lib/domToModel/creators/createBr';
 import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
 import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
 import { createGeneralBlock } from '../../../lib/domToModel/creators/createGeneralBlock';
@@ -27,6 +28,18 @@ describe('Creators', () => {
             blockGroupType: ContentModelBlockGroupType.Document,
             blocks: [],
             document: document,
+        });
+    });
+
+    it('createContentModelDocument with different document', () => {
+        const anotherDoc = ({} as any) as Document;
+        const result = createContentModelDocument(anotherDoc);
+
+        expect(result).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.Document,
+            blocks: [],
+            document: anotherDoc,
         });
     });
 
@@ -197,6 +210,25 @@ describe('Creators', () => {
 
         expect(marker).toEqual({
             segmentType: ContentModelSegmentType.SelectionMarker,
+            isSelected: true,
+        });
+    });
+
+    it('createBr', () => {
+        const br = createBr(context);
+
+        expect(br).toEqual({
+            segmentType: ContentModelSegmentType.Br,
+        });
+    });
+
+    it('createBr with selection', () => {
+        context.isInSelection = true;
+
+        const br = createBr(context);
+
+        expect(br).toEqual({
+            segmentType: ContentModelSegmentType.Br,
             isSelected: true,
         });
     });

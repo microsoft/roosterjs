@@ -2,12 +2,9 @@ import { addSegment } from '../utils/addSegment';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { FormatContext } from '../../formatHandlers/FormatContext';
-import { generalBlockProcessor } from './generalBlockProcessor';
-import { generalSegmentProcessor } from './generalSegmentProcessor';
-import { getProcessor } from './getProcessor';
-import { isBlockElement } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
+import { singleElementProcessor } from './singleElementProcessor';
 import { textProcessor } from './textProcessor';
 
 /**
@@ -36,28 +33,16 @@ export function containerProcessor(
         }
 
         if (isNodeOfType(child, NodeType.Element)) {
-            processElement(group, child, context);
+            singleElementProcessor(group, child, context);
         } else if (isNodeOfType(child, NodeType.Text)) {
-            processText(group, child, context);
+            textNodeProcessor(group, child, context);
         }
 
         index++;
     }
 }
 
-function processElement(
-    group: ContentModelBlockGroup,
-    element: HTMLElement,
-    context: FormatContext
-) {
-    const processor =
-        getProcessor(element.tagName) ||
-        (isBlockElement(element) ? generalBlockProcessor : generalSegmentProcessor);
-
-    processor(group, element, context);
-}
-
-function processText(group: ContentModelBlockGroup, textNode: Text, context: FormatContext) {
+function textNodeProcessor(group: ContentModelBlockGroup, textNode: Text, context: FormatContext) {
     let txt = textNode.nodeValue || '';
     let [txtStartOffset, txtEndOffset] = getRegularSelectionOffsets(context, textNode);
 

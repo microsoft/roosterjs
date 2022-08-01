@@ -1,10 +1,6 @@
-import { FormatHandler } from '../FormatHandler';
-import { MetadataFormat } from '../../publicTypes/format/formatParts/MetadataFormat';
+import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
 import { TableFormat } from 'roosterjs-editor-types';
 import {
-    getMetadata,
-    setMetadata,
-    removeMetadata,
     createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
@@ -19,7 +15,7 @@ const NullStringDefinition = createStringDefinition(
 
 const BooleanDefinition = createBooleanDefinition(false /** isOptional */);
 
-const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
+const TableFormatDefinition = createObjectDefinition<Required<TableFormat>>(
     {
         topBorderColor: NullStringDefinition,
         bottomBorderColor: NullStringDefinition,
@@ -46,19 +42,6 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
 /**
  * @internal
  */
-export const tableMetadataFormatHandler: FormatHandler<MetadataFormat<TableFormat>> = {
-    parse: (format, element) => {
-        const metadata = getMetadata(element, TableFormatMetadata);
-
-        if (metadata) {
-            format.metadata = metadata;
-        }
-    },
-    apply: (format, element) => {
-        if (format.metadata) {
-            setMetadata(element, format.metadata, TableFormatMetadata);
-        } else {
-            removeMetadata(element);
-        }
-    },
-};
+export const tableMetadataFormatHandler = createMetadataFormatHandler<TableFormat>(
+    TableFormatDefinition
+);
