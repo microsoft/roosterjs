@@ -44,6 +44,20 @@ describe('sizeFormatHandler.parse', () => {
         sizeFormatHandler.parse(format, fake, context);
         expect(format).toEqual({ width: 10, height: 20 });
     });
+
+    it('UseBorderBox', () => {
+        const fake = ({
+            getBoundingClientRect: () => ({
+                width: 0,
+                height: 0,
+            }),
+            style: {
+                boxSizing: 'border-box',
+            },
+        } as any) as HTMLElement;
+        sizeFormatHandler.parse(format, fake, context);
+        expect(format).toEqual({ useBorderBox: true });
+    });
 });
 
 describe('sizeFormatHandler.apply', () => {
@@ -83,5 +97,11 @@ describe('sizeFormatHandler.apply', () => {
         format.height = 20;
         sizeFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="width: 10px; height: 20px;"></div>');
+    });
+
+    it('UseBorderBox', () => {
+        format.useBorderBox = true;
+        sizeFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="box-sizing: border-box;"></div>');
     });
 });

@@ -15,6 +15,10 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         if (size?.height > 0) {
             format.height = size.height / context.zoomScale;
         }
+
+        if (element.style?.boxSizing == 'border-box') {
+            format.useBorderBox = true;
+        }
     },
     apply: (format, element) => {
         if (format.width! > 0) {
@@ -24,6 +28,8 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
             element.style.height = format.height + 'px';
         }
 
-        element.style.boxSizing = 'border-box';
+        if (format.useBorderBox) {
+            element.style.boxSizing = 'border-box';
+        }
     },
 };
