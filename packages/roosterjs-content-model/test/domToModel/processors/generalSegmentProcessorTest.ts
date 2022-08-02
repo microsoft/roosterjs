@@ -1,10 +1,10 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
-import * as createGeneralSegment from '../../../lib/domToModel/creators/createGeneralSegment';
+import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 import { generalSegmentProcessor } from '../../../lib/domToModel/processors/generalSegmentProcessor';
@@ -45,7 +45,7 @@ describe('generalSegmentProcessor', () => {
             document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
-        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, context);
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span);
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
         expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span, context);
     });

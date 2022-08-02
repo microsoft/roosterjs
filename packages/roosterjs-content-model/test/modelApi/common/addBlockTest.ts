@@ -1,8 +1,8 @@
-import { addBlock } from '../../../lib/domToModel/utils/addBlock';
+import { addBlock } from '../../../lib/modelApi/common/addBlock';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 
 describe('addBlock', () => {
     it('add simple block', () => {

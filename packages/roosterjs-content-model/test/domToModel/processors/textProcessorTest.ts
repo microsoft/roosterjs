@@ -1,7 +1,7 @@
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';

@@ -1,8 +1,8 @@
-import { ContentModelBlock } from '../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../publicTypes/block/group/ContentModelBlockGroup';
-import { ContentModelBlockType } from '../publicTypes/enum/BlockType';
-import { ContentModelSegment } from '../publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../publicTypes/enum/SegmentType';
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 
 /**
  * @internal
