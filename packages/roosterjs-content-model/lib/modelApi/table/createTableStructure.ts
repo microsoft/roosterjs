@@ -24,6 +24,7 @@ export function createTableStructure(
     addBlock(parent, table);
 
     table.format.borderCollapse = true;
+    table.format.useBorderBox = true;
     table.cells.forEach(row => {
         for (let i = 0; i < columns; i++) {
             const cell = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, false /*isHeader*/, context);
@@ -32,6 +33,7 @@ export function createTableStructure(
             row.push(cell);
 
             cell.format.width = width;
+            cell.format.useBorderBox = true;
         }
     });
 
