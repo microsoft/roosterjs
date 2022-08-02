@@ -1,19 +1,19 @@
 import RibbonButton from '../../type/RibbonButton';
-import { ModeIndependentColor } from 'roosterjs-editor-types';
 import { renderColorPicker } from '../../../colorPicker/component/renderColorPicker';
 import { setTextColor } from 'roosterjs-editor-api';
 import { TextColorButtonStringKey } from '../../type/RibbonButtonStringKeys';
-import { TextColorDropDownItems, TextColors } from '../../../colorPicker/utils/textColors';
+import {
+    getTextColorValue,
+    TextColorDropDownItems,
+    TextColors,
+} from '../../../colorPicker/utils/textColors';
 import {
     getColorPickerContainerClassName,
     getColorPickerItemClassName,
 } from '../../../colorPicker/utils/getClassNamesForColorPicker';
 
-const ColorValues = {
-    ...TextColors,
-    // Add this value just to satisfy compiler
-    buttonNameTextColor: <ModeIndependentColor>null,
-};
+const Key: 'buttonNameTextColor' = 'buttonNameTextColor';
+
 /**
  * @internal
  * "Text color" button on the format ribbon
@@ -28,10 +28,13 @@ export const textColor: RibbonButton<TextColorButtonStringKey> = {
             className: getColorPickerContainerClassName(),
         },
     },
-    key: 'buttonNameTextColor',
+    key: Key,
     unlocalizedText: 'Text color',
     iconName: 'FontColor',
     onClick: (editor, key) => {
-        setTextColor(editor, ColorValues[key]);
+        // This check will always be true, add it here just to satisfy compiler
+        if (key != Key) {
+            setTextColor(editor, getTextColorValue(key));
+        }
     },
 };

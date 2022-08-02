@@ -1,6 +1,5 @@
 import RibbonButton from '../../type/RibbonButton';
 import { BackgroundColorButtonStringKey } from '../../type/RibbonButtonStringKeys';
-import { ModeIndependentColor } from 'roosterjs-editor-types';
 import { renderColorPicker } from '../../../colorPicker/component/renderColorPicker';
 import { setBackgroundColor } from 'roosterjs-editor-api';
 import {
@@ -10,13 +9,10 @@ import {
 import {
     BackgroundColorDropDownItems,
     BackgroundColors,
+    getBackgroundColorValue,
 } from '../../../colorPicker/utils/backgroundColors';
 
-const ColorValues = {
-    ...BackgroundColors,
-    // Add this value just to satisfy compiler
-    buttonNameBackgroundColor: <ModeIndependentColor>null,
-};
+const Key: 'buttonNameBackgroundColor' = 'buttonNameBackgroundColor';
 
 /**
  * @internal
@@ -32,10 +28,13 @@ export const backgroundColor: RibbonButton<BackgroundColorButtonStringKey> = {
             className: getColorPickerContainerClassName(),
         },
     },
-    key: 'buttonNameBackgroundColor',
+    key: Key,
     unlocalizedText: 'Background color',
     iconName: 'FabricTextHighlight',
     onClick: (editor, key) => {
-        setBackgroundColor(editor, ColorValues[key]);
+        // This check will always be true, add it here just to satisfy compiler
+        if (key != Key) {
+            setBackgroundColor(editor, getBackgroundColorValue(key));
+        }
     },
 };

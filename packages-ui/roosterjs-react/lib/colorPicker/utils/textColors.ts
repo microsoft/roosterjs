@@ -73,4 +73,13 @@ const TextColorDropDownItems: Record<TextColorKeys, string> = {
     textColorBlack: 'Black',
 };
 
-export { TextColors, TextColorDropDownItems };
+/**
+ * Get mode independent color value of text color from the given color key
+ * @param key The key to get color from
+ * @returns A model independent color value of the given key
+ */
+function getTextColorValue(key: TextColorKeys): ModeIndependentColor {
+    return TextColors[key];
+}
+
+export { TextColors, TextColorDropDownItems, getTextColorValue };
