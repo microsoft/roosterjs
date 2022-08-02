@@ -67,7 +67,12 @@ const BorderFormatters: Record<TableBorderFormat, ShouldUseTransparentBorder> = 
         firstRow,
         lastColumn,
         lastRow,
-    }) => [!firstRow, lastColumn == firstColumn, !lastRow && !firstRow, !firstColumn],
+    }) => [
+        !firstRow,
+        (!lastColumn && !firstColumn) || (firstColumn && firstRow),
+        !lastRow && !firstRow,
+        !firstColumn,
+    ],
     [TableBorderFormat.NO_HEADER_BORDERS]: ({ firstRow, firstColumn, lastColumn }) => [
         firstRow,
         firstRow || lastColumn,
