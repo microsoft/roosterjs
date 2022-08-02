@@ -30,10 +30,7 @@ function writeStyle(
     styleArray: string[] | undefined,
     style: 'width' | 'style' | 'color'
 ) {
-    if (
-        styleArray &&
-        !styleArray.every(x => x == '' || x == 'initial' || x == 'inherit' || x == 'transparent')
-    ) {
+    if (styleArray && !styleArray.every(x => x == '' || x == 'initial' || x == 'inherit')) {
         for (let i = 0; i < Directions.length; i++) {
             element.style.setProperty(`border-${Directions[i]}-${style}`, styleArray[i]);
         }
