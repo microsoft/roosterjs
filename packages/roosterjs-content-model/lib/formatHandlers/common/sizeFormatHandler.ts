@@ -23,5 +23,7 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         if (format.height! > 0) {
             element.style.height = format.height + 'px';
         }
+
+        element.style.boxSizing = 'border-box';
     },
 };
