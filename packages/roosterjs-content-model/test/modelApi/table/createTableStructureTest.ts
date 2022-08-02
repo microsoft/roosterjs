@@ -37,6 +37,7 @@ describe('createTableStructure', () => {
                         ],
                         format: {
                             width: 120,
+                            useBorderBox: true,
                         },
                         spanAbove: false,
                         spanLeft: false,
@@ -44,7 +45,7 @@ describe('createTableStructure', () => {
                     },
                 ],
             ],
-            format: { borderCollapse: true },
+            format: { borderCollapse: true, useBorderBox: true },
         });
     });
 
