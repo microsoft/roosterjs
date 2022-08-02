@@ -1,17 +1,20 @@
 import { BorderFormat } from '../../../lib/publicTypes/format/formatParts/BorderFormat';
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { ContentModelContext } from '../../../lib/publicTypes';
 
 describe('borderFormatHandler.parse', () => {
     let div: HTMLElement;
     let format: BorderFormat;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     it('No border', () => {
@@ -86,12 +89,16 @@ describe('borderFormatHandler.parse', () => {
 describe('borderFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: BorderFormat;
-    let context: FormatContext;
+    let context: ContentModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createFormatContext();
+        context = {
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+        };
     });
 
     it('No border', () => {

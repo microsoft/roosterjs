@@ -1,11 +1,11 @@
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
-import { FormatContext } from '../../formatHandlers/FormatContext';
+import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
  * @internal
  */
-export function createText(text: string, context: FormatContext): ContentModelText {
+export function createText(text: string, context: DomToModelContext): ContentModelText {
     const result: ContentModelText = {
         segmentType: ContentModelSegmentType.Text,
         text: text,

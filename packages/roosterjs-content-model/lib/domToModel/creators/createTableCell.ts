@@ -1,7 +1,7 @@
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
-import { FormatContext } from '../../formatHandlers/FormatContext';
+import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
  * @internal
@@ -10,7 +10,7 @@ export function createTableCell(
     colSpan: number,
     rowSpan: number,
     isHeader: boolean,
-    context: FormatContext
+    context: DomToModelContext
 ): ContentModelTableCell {
     const result: ContentModelTableCell = {
         blockType: ContentModelBlockType.BlockGroup,
