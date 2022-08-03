@@ -34,7 +34,7 @@ describe('backgroundColorFormatHandler.parse', () => {
         div.style.backgroundColor = 'transparent';
         backgroundColorFormatHandler.parse(format, div, context);
 
-        expect(format.backgroundColor).toBeUndefined();
+        expect(format.backgroundColor).toBe('transparent');
     });
 
     it('Simple attribute color', () => {
