@@ -267,14 +267,14 @@ describe('applyTableFormat', () => {
                     [B, T, B, T],
                 ],
                 [
-                    [T, B, T, T],
+                    [T, B, T, B],
                     [B, B, B, B],
                     [B, B, B, B],
                     [B, B, B, B],
                 ],
                 [
                     [T, B, T, B],
-                    [B, T, B, T],
+                    [B, B, B, B],
                     [B, B, B, B],
                     [B, B, B, B],
                 ],
