@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>40/40</span>
+                <span class='fraction'>39/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/31</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -133,9 +133,7 @@
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -175,8 +173,6 @@
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,6 +184,10 @@
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">17x</span>
@@ -201,16 +201,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addBlock } from '../utils/addBlock';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addBlock } from '../../modelApi/common/addBlock';
 import { containerProcessor } from './containerProcessor';
-import { createTable } from '../creators/createTable';
-import { createTableCell } from '../creators/createTableCell';
+import { createTable } from '../../modelApi/creators/createTable';
+import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from './ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
@@ -245,19 +241,21 @@ export const tableProcessor: ElementProcessor = (group, element, context) =&gt; 
             for (; table.cells[row][targetCol]; targetCol++) {}
 &nbsp;
             const td = tr.cells[sourceCol];
-&nbsp;
-            if (hasTableSelection) {
-                context.isInSelection =
-                    row &gt;= firstCell.y &amp;&amp;
-                    row &lt;= lastCell.y &amp;&amp;
-                    sourceCol &gt;= firstCell.x &amp;&amp;
-                    sourceCol &lt;= lastCell.x;
-            }
+            const isCellSelected =
+                hasTableSelection &amp;&amp;
+                row &gt;= firstCell.y &amp;&amp;
+                row &lt;= lastCell.y &amp;&amp;
+                sourceCol &gt;= firstCell.x &amp;&amp;
+                sourceCol &lt;= lastCell.x;
 &nbsp;
             for (let colSpan = 1; colSpan &lt;= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan &lt;= td.rowSpan; rowSpan++) {
                     const hasTd = colSpan == 1 &amp;&amp; rowSpan == 1;
-                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH', context);
+                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH');
+&nbsp;
+                    if (isCellSelected) {
+                        cell.isSelected = true;
+                    }
 &nbsp;
                     table.cells[row + rowSpan - 1][targetCol] = cell;
 &nbsp;
@@ -272,10 +270,6 @@ export const tableProcessor: ElementProcessor = (group, element, context) =&gt; 
                     }
                 }
             }
-&nbsp;
-            if (hasTableSelection) {
-                context.isInSelection = false;
-            }
         }
     }
 };
@@ -286,7 +280,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) =&gt; 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-02T02:33:26.702Z
+                at 2022-08-03T16:34:38.795Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

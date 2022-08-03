@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model/lib/domToModel/creators/createTableCell.ts</title>
+    <title>Code coverage report for roosterjs-content-model/lib/modelApi/common/addSegment.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/domToModel/creators</a> createTableCell.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/modelApi/common</a> addSegment.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">95% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>19/20</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -93,9 +93,16 @@
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -106,52 +113,72 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">61x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">61x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">61x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addBlock } from './addBlock';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
-import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
-import { DomToModelContext } from '../context/DomToModelContext';
+import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
+import { createParagraph } from '../creators/createParagraph';
 &nbsp;
 /**
  * @internal
  */
-export function createTableCell(
-    colSpan: number,
-    rowSpan: number,
-    isHeader: boolean,
-    context: DomToModelContext
-): ContentModelTableCell {
-    const result: ContentModelTableCell = {
-        blockType: ContentModelBlockType.BlockGroup,
-        blockGroupType: ContentModelBlockGroupType.TableCell,
-        blocks: [],
-        format: {},
-        spanLeft: colSpan &gt; 1,
-        spanAbove: rowSpan &gt; 1,
-        isHeader,
-    };
+export function addSegment(group: ContentModelBlockGroup, newSegment: ContentModelSegment) {
+    const lastBlock = group.blocks[group.blocks.length - 1];
+    let paragraph: ContentModelParagraph;
 &nbsp;
-    if (context.isInSelection) {
-        result.isSelected = true;
+    if (lastBlock?.blockType == ContentModelBlockType.Paragraph) {
+        paragraph = lastBlock;
+    } else {
+        paragraph = createParagraph(true);
+        addBlock(group, paragraph);
     }
 &nbsp;
-    return result;
+    const lastSegment = paragraph.segments[paragraph.segments.length - 1];
+&nbsp;
+    if (newSegment.segmentType == ContentModelSegmentType.SelectionMarker) {
+        if (!lastSegment || !lastSegment.isSelected) {
+            paragraph.segments.push(newSegment);
+        }
+    } else {
+        if (
+            newSegment.isSelected &amp;&amp;
+            lastSegment<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>egmentType == ContentModelSegmentType.SelectionMarker
+        ) {
+            paragraph.segments.pop();
+        }
+&nbsp;
+        paragraph.segments.push(newSegment);
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -160,7 +187,7 @@ export function createTableCell(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-02T02:33:26.702Z
+                at 2022-08-03T16:34:38.795Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
