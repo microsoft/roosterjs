@@ -1,7 +1,6 @@
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
-import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
  * @internal
@@ -9,10 +8,9 @@ import { DomToModelContext } from '../context/DomToModelContext';
 export function createTableCell(
     colSpan: number,
     rowSpan: number,
-    isHeader: boolean,
-    context: DomToModelContext
+    isHeader: boolean
 ): ContentModelTableCell {
-    const result: ContentModelTableCell = {
+    return {
         blockType: ContentModelBlockType.BlockGroup,
         blockGroupType: ContentModelBlockGroupType.TableCell,
         blocks: [],
@@ -21,10 +19,4 @@ export function createTableCell(
         spanAbove: rowSpan > 1,
         isHeader,
     };
-
-    if (context.isInSelection) {
-        result.isSelected = true;
-    }
-
-    return result;
 }

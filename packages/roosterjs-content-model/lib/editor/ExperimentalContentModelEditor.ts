@@ -1,7 +1,7 @@
 import { containerProcessor } from '../domToModel/processors/containerProcessor';
 import { ContentModelContext } from '../publicTypes/ContentModelContext';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
-import { createContentModelDocument } from '../domToModel/creators/createContentModelDocument';
+import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { Editor } from 'roosterjs-editor-core';
@@ -9,7 +9,7 @@ import { EditorOptions } from 'roosterjs-editor-types';
 import { getComputedStyles } from 'roosterjs-editor-dom';
 import { handleBlock } from '../modelToDom/handlers/handleBlock';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
-import { normalizeModel } from '../modelApi/normalizeContentModel';
+import { normalizeModel } from '../modelApi/common/normalizeContentModel';
 import { optimize } from '../modelToDom/optimizers/optimize';
 import { singleElementProcessor } from '../domToModel/processors/singleElementProcessor';
 

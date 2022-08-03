@@ -1,8 +1,8 @@
-import { addSegment } from '../utils/addSegment';
+import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
-import { createText } from '../creators/createText';
+import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
@@ -26,7 +26,13 @@ export function textProcessor(
         ) {
             lastSegment.text += text;
         } else {
-            addSegment(group, createText(text, context));
+            const textModel = createText(text);
+
+            if (context.isInSelection) {
+                textModel.isSelected = true;
+            }
+
+            addSegment(group, textModel);
         }
     }
 }

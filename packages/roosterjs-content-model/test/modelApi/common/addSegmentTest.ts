@@ -1,26 +1,18 @@
-import { addBlock } from '../../../lib/domToModel/utils/addBlock';
-import { addSegment } from '../../../lib/domToModel/utils/addSegment';
+import { addBlock } from '../../../lib/modelApi/common/addBlock';
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { createParagraph } from '../../../lib/domToModel/creators/createParagraph';
-import { createText } from '../../../lib/domToModel/creators/createText';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createText } from '../../../lib/modelApi/creators/createText';
 
 describe('addSegment', () => {
-    let context: DomToModelContext;
-
-    beforeEach(() => {
-        context = createDomToModelContext();
-    });
-
     it('Add segment to empty document', () => {
         const doc = createContentModelDocument(document);
-        const segment = createText('test', context);
+        const segment = createText('test');
 
         addSegment(doc, segment);
 
@@ -47,7 +39,7 @@ describe('addSegment', () => {
         const doc = createContentModelDocument(document);
         addBlock(doc, createParagraph(false));
 
-        const segment = createText('test', context);
+        const segment = createText('test');
 
         addSegment(doc, segment);
 
@@ -82,7 +74,7 @@ describe('addSegment', () => {
         };
         addBlock(doc, block);
 
-        const segment = createText('test2', context);
+        const segment = createText('test2');
 
         addSegment(doc, segment);
 
@@ -119,7 +111,7 @@ describe('addSegment', () => {
         };
         addBlock(doc, block);
 
-        const segment = createText('test', context);
+        const segment = createText('test');
 
         addSegment(doc, segment);
 

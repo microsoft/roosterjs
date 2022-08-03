@@ -1,15 +1,15 @@
 import * as generalBlockProcessor from '../../../lib/domToModel/processors/generalBlockProcessor';
 import * as generalSegmentProcessor from '../../../lib/domToModel/processors/generalSegmentProcessor';
 import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
-import { addSegment } from '../../../lib/domToModel/utils/addSegment';
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { createText } from '../../../lib/domToModel/creators/createText';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 
 describe('containerProcessor', () => {
@@ -140,7 +140,11 @@ describe('containerProcessor', () => {
         context = createDomToModelContext();
         spyOn(generalSegmentProcessor, 'generalSegmentProcessor').and.callFake(
             (group, element, context) => {
-                const segment = createText(element.textContent!, context) as any;
+                const segment = createText(element.textContent!) as any;
+
+                if (context.isInSelection) {
+                    segment.isSelected = true;
+                }
 
                 addSegment(group, segment);
             }

@@ -1,7 +1,7 @@
-import { addBlock } from '../utils/addBlock';
+import { addBlock } from '../../modelApi/common/addBlock';
 import { containerProcessor } from './containerProcessor';
-import { createTable } from '../creators/createTable';
-import { createTableCell } from '../creators/createTableCell';
+import { createTable } from '../../modelApi/creators/createTable';
+import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from './ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
@@ -36,19 +36,21 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
             for (; table.cells[row][targetCol]; targetCol++) {}
 
             const td = tr.cells[sourceCol];
-
-            if (hasTableSelection) {
-                context.isInSelection =
-                    row >= firstCell.y &&
-                    row <= lastCell.y &&
-                    sourceCol >= firstCell.x &&
-                    sourceCol <= lastCell.x;
-            }
+            const isCellSelected =
+                hasTableSelection &&
+                row >= firstCell.y &&
+                row <= lastCell.y &&
+                sourceCol >= firstCell.x &&
+                sourceCol <= lastCell.x;
 
             for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
                     const hasTd = colSpan == 1 && rowSpan == 1;
-                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH', context);
+                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH');
+
+                    if (isCellSelected) {
+                        cell.isSelected = true;
+                    }
 
                     table.cells[row + rowSpan - 1][targetCol] = cell;
 
@@ -62,10 +64,6 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                         containerProcessor(cell, td, context);
                     }
                 }
-            }
-
-            if (hasTableSelection) {
-                context.isInSelection = false;
             }
         }
     }

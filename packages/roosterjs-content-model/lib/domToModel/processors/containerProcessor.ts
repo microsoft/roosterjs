@@ -1,6 +1,6 @@
-import { addSegment } from '../utils/addSegment';
+import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { createSelectionMarker } from '../creators/createSelectionMarker';
+import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { DomToModelContext } from '../context/DomToModelContext';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
@@ -22,12 +22,12 @@ export function containerProcessor(
         if (index == nodeStartOffset) {
             context.isInSelection = true;
 
-            addSegment(group, createSelectionMarker(context));
+            addSegment(group, createSelectionMarker());
         }
 
         if (index == nodeEndOffset) {
             if (!context.regularSelection!.isSelectionCollapsed) {
-                addSegment(group, createSelectionMarker(context));
+                addSegment(group, createSelectionMarker());
             }
             context.isInSelection = false;
         }
@@ -54,7 +54,7 @@ function textNodeProcessor(
         textProcessor(group, txt.substring(0, txtStartOffset), context);
         context.isInSelection = true;
 
-        addSegment(group, createSelectionMarker(context));
+        addSegment(group, createSelectionMarker());
 
         txt = txt.substring(txtStartOffset);
         txtEndOffset -= txtStartOffset;
@@ -64,7 +64,7 @@ function textNodeProcessor(
         textProcessor(group, txt.substring(0, txtEndOffset), context);
 
         if (!context.regularSelection!.isSelectionCollapsed) {
-            addSegment(group, createSelectionMarker(context));
+            addSegment(group, createSelectionMarker());
         }
 
         context.isInSelection = false;
