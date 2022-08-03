@@ -1,6 +1,6 @@
-import { addBlock } from '../utils/addBlock';
+import { addBlock } from '../../modelApi/common/addBlock';
 import { containerProcessor } from './containerProcessor';
-import { createGeneralBlock } from '../creators/createGeneralBlock';
+import { createGeneralBlock } from '../../modelApi/creators/createGeneralBlock';
 import { ElementProcessor } from './ElementProcessor';
 
 /**
