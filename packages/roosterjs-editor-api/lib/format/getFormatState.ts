@@ -20,43 +20,14 @@ export function getElementBasedFormatState(
     event?: PluginEvent
 ): ElementBasedFormatState {
     let listTag = getTagOfNode(editor.getElementAtCursor('OL,UL', null /*startFrom*/, event));
+    let range = editor.getSelectionRange();
 
-    let uuu = editor.getBlockTraverser();
-    let ppp = editor.getSelectionRange();
-
-    /*let lll = editor.getContentSearcherOfCursor();
-    if (lll) lll.forEachTextInlineElement(lline => console.log(lline.getTextContent()));
-    console.log('>', lll);*/
-    //let STRT = null;
-    //let; END = null;
+    // Check if selection is multiline, spans more than one block
     let multiline = false;
-    if (ppp) {
-        console.log(ppp, '%%%');
-        //let p_str = ppp.toString();
-        //console.log(p_str, p_str.length);
-        //STRT = ppp.startContainer.textContent;
-        let s_blk = editor.getBlockElementAtNode(ppp.startContainer);
-        //END = ppp.endContainer.textContent;
-        let e_blk = editor.getBlockElementAtNode(ppp.endContainer);
-        //console.log('Text', STRT, '#', END);
-        //console.log('Block', s_blk, '#', e_blk, '=', e_blk.equals(s_blk));
-        multiline = e_blk.equals(s_blk);
-        addEventListener('click', function (evt) {
-            if (evt.detail === 3) {
-                multiline = false;
-            }
-        });
-    }
-    if (uuu && false) {
-        //console.log(uuu);
-        let xx = uuu.getNextBlockElement();
-        if (!xx) {
-            console.log('no next');
-        }
-        while (xx) {
-            console.log('X', xx.getTextContent());
-            xx = uuu.getNextBlockElement();
-        }
+    if (range) {
+        let startingBlock = editor.getBlockElementAtNode(range.startContainer);
+        let endingBlock = editor.getBlockElementAtNode(range.endContainer);
+        multiline = endingBlock.equals(startingBlock);
     }
 
     let headerTag = getTagOfNode(
