@@ -54,11 +54,6 @@ export interface ElementBasedFormatState {
     isNumbering?: boolean;
 
     /**
-     * TEST
-     */
-    isMultiline?: boolean;
-
-    /**
      * Whether the text is in block quote
      */
     isBlockQuote?: boolean;
@@ -67,6 +62,11 @@ export interface ElementBasedFormatState {
      * Whether unlink command can be called to the text
      */
     canUnlink?: boolean;
+
+    /**
+     * Whether the text is multiline
+     */
+    isMultiline?: boolean;
 
     /**
      * Whether add image alt text command can be called to the text

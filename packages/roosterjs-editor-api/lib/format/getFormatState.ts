@@ -31,6 +31,7 @@ export function getElementBasedFormatState(
     //let; END = null;
     let multiline = false;
     if (ppp) {
+        console.log(ppp, '%%%');
         //let p_str = ppp.toString();
         //console.log(p_str, p_str.length);
         //STRT = ppp.startContainer.textContent;
@@ -40,6 +41,11 @@ export function getElementBasedFormatState(
         //console.log('Text', STRT, '#', END);
         //console.log('Block', s_blk, '#', e_blk, '=', e_blk.equals(s_blk));
         multiline = e_blk.equals(s_blk);
+        addEventListener('click', function (evt) {
+            if (evt.detail === 3) {
+                multiline = false;
+            }
+        });
     }
     if (uuu && false) {
         //console.log(uuu);
