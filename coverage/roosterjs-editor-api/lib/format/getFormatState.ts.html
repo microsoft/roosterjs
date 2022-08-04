@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.86% </span>
+                <span class="strong">23.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/7</span>
+                <span class='fraction'>3/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.86% </span>
+                <span class="strong">23.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/7</span>
+                <span class='fraction'>3/13</span>
             </div>
         
             
@@ -120,7 +120,18 @@
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -142,11 +153,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -199,6 +221,16 @@ export function <span class="fstat-no" title="function not covered" >getElementB
     event?: PluginEvent
 ): ElementBasedFormatState {
     let listTag = <span class="cstat-no" title="statement not covered" >getTagOfNode(editor.getElementAtCursor('OL,UL', null /*startFrom*/, event));</span>
+&nbsp;
+    // Check if selection is multiline, spans more than one block
+    let range = <span class="cstat-no" title="statement not covered" >editor.getSelectionRange();</span>
+    let multiline = <span class="cstat-no" title="statement not covered" >false;</span>
+<span class="cstat-no" title="statement not covered" >    if (range &amp;&amp; !range.collapsed) {</span>
+        let startingBlock = <span class="cstat-no" title="statement not covered" >editor.getBlockElementAtNode(range.startContainer);</span>
+        let endingBlock = <span class="cstat-no" title="statement not covered" >editor.getBlockElementAtNode(range.endContainer);</span>
+<span class="cstat-no" title="statement not covered" >        multiline = !endingBlock.equals(startingBlock);</span>
+    }
+&nbsp;
     let headerTag = <span class="cstat-no" title="statement not covered" >getTagOfNode(</span>
         editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', null /*startFrom*/, event)
     );
@@ -206,6 +238,7 @@ export function <span class="fstat-no" title="function not covered" >getElementB
 <span class="cstat-no" title="statement not covered" >    return {</span>
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
+        isMultilineSelection: multiline,
         headerLevel: (headerTag &amp;&amp; parseInt(headerTag[1])) || 0,
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
@@ -241,7 +274,7 @@ export default function <span class="fstat-no" title="function not covered" >get
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-03T23:55:14.890Z
+                at 2022-08-04T21:50:48.453Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
