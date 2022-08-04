@@ -124,7 +124,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - with initial, transparent and inherit values', () => {
-        format.borderColor = ['', 'inherit', 'initial', 'transparent'];
+        format.borderColor = ['', 'inherit', 'initial'];
 
         borderFormatHandler.apply(format, div, context);
 
