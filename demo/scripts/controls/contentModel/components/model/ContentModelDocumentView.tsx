@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContentModelBlockView } from './ContentModelBlockView';
+import { BlockGroupContentView } from './BlockGroupContentView';
 import { ContentModelDocument, hasSelectionInBlock } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
 
@@ -8,13 +8,7 @@ const styles = require('./ContentModelDocumentView.scss');
 export function ContentModelDocumentView(props: { doc: ContentModelDocument }) {
     const { doc } = props;
     const getContent = React.useCallback(() => {
-        return (
-            <>
-                {doc.blocks.map(block => (
-                    <ContentModelBlockView block={block} />
-                ))}
-            </>
-        );
+        return <BlockGroupContentView group={doc} />;
     }, [doc]);
 
     return (

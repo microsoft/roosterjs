@@ -29,10 +29,10 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
     const getContent = React.useCallback(() => {
         return (
             <>
-                {table.cells.map(row => (
-                    <div className={styles.tableRow}>
-                        {row.map(cell => (
-                            <ContentModelBlockView block={cell} />
+                {table.cells.map((row, i) => (
+                    <div className={styles.tableRow} key={i}>
+                        {row.map((cell, j) => (
+                            <ContentModelBlockView block={cell} key={j} />
                         ))}
                     </div>
                 ))}
@@ -48,6 +48,7 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
         <ContentModelView
             title="Table"
             subTitle={`${table.cells.length} x ${table.cells[0]?.length || 0}`}
+            isExpanded={true}
             className={styles.modelTable}
             hasSelection={hasSelectionInBlock(table)}
             jsonSource={table}

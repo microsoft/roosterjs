@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
+import { BlockGroupContentView } from './BlockGroupContentView';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
-import { ContentModelBlockView } from './ContentModelBlockView';
 import { ContentModelView } from '../ContentModelView';
 import { createMetadataFormatRenderer } from '../format/formatPart/MetadataFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
@@ -83,9 +83,7 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
                     />
                     Span Above
                 </div>
-                {cell.blocks.map(block => (
-                    <ContentModelBlockView block={block} />
-                ))}
+                <BlockGroupContentView group={cell} />
             </>
         );
     }, [cell, isHeader, spanAbove, spanLeft]);

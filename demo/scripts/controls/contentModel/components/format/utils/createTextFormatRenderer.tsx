@@ -91,6 +91,7 @@ function TextFormatItem<T>(props: {
             content = (
                 <input
                     type="number"
+                    className={styles.numberValue}
                     ref={singleLineBox}
                     value={value}
                     onChange={onSingleLineChange}
@@ -128,6 +129,13 @@ export function createTextFormatRenderer<T>(
     type: 'text' | 'number' | 'color' | 'multiline' = 'text'
 ): FormatRenderer<T> {
     return (format: T) => (
-        <TextFormatItem name={name} getter={getter} setter={setter} format={format} type={type} />
+        <TextFormatItem
+            name={name}
+            getter={getter}
+            setter={setter}
+            format={format}
+            type={type}
+            key={name}
+        />
     );
 }

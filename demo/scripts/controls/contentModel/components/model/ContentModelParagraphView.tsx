@@ -10,8 +10,8 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
     const getContent = React.useCallback(() => {
         return (
             <>
-                {paragraph.segments.map(segment => (
-                    <ContentModelSegmentView segment={segment} />
+                {paragraph.segments.map((segment, index) => (
+                    <ContentModelSegmentView segment={segment} key={index} />
                 ))}
             </>
         );

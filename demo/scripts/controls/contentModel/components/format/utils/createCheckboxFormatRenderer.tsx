@@ -35,6 +35,12 @@ export function createCheckboxFormatRenderer<T>(
     setter?: (format: T, newValue: boolean) => void
 ): FormatRenderer<T> {
     return (format: T) => (
-        <CheckboxFormatItem name={name} getter={getter} setter={setter} format={format} />
+        <CheckboxFormatItem
+            name={name}
+            getter={getter}
+            setter={setter}
+            format={format}
+            key={name}
+        />
     );
 }

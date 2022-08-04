@@ -16,6 +16,7 @@
 .formatValue {
     display: table-cell;
     margin: 2px;
+    overflow-x: hidden;
 }
 
 .errorMessage {
@@ -34,4 +35,8 @@
 .multiLineValue {
     width: 95%;
     height: 80px;
+}
+
+.numberValue {
+    width: 50px;
 }

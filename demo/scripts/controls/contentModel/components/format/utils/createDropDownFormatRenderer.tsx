@@ -28,7 +28,9 @@ function DropDownFormatItem<TFormat, TOption extends string>(props: {
                 <select ref={dropDown} value={value === undefined ? '' : value} onChange={onChange}>
                     <option value=""></option>
                     {options.map(o => (
-                        <option value={o}>{o}</option>
+                        <option value={o} key={o}>
+                            {o}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -49,6 +51,7 @@ export function createDropDownFormatRenderer<T, O extends string>(
             setter={setter}
             format={format}
             options={options}
+            key={name}
         />
     );
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContentModelBlockView } from './ContentModelBlockView';
+import { BlockGroupContentView } from './BlockGroupContentView';
 import { ContentModelView } from '../ContentModelView';
 import {
     ContentModelGeneralBlock,
@@ -13,13 +13,7 @@ const styles = require('./ContentModelGeneralView.scss');
 export function ContentModelGeneralView(props: { model: ContentModelGeneralBlock }) {
     const { model } = props;
     const getContent = React.useCallback(() => {
-        return (
-            <>
-                {model.blocks.map(block => (
-                    <ContentModelBlockView block={block} />
-                ))}
-            </>
-        );
+        return <BlockGroupContentView group={model} />;
     }, [model]);
 
     return (
