@@ -1,7 +1,7 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
-import { FormatContext } from '../../formatHandlers/FormatContext';
 import { handleBlock } from './handleBlock';
+import { ModelToDomContext } from '../context/ModelToDomContext';
 
 /**
  * @internal
@@ -10,7 +10,7 @@ export function handleSegment(
     doc: Document,
     parent: Node,
     segment: ContentModelSegment,
-    context: FormatContext
+    context: ModelToDomContext
 ) {
     let element: HTMLElement | null = null;
 
@@ -20,6 +20,10 @@ export function handleSegment(
 
             element = doc.createElement('span');
             element.appendChild(txt);
+            break;
+
+        case ContentModelSegmentType.Br:
+            element = doc.createElement('br');
             break;
 
         case ContentModelSegmentType.General:

@@ -1,8 +1,11 @@
-import { addBlock } from '../utils/addBlock';
+import { addBlock } from '../../modelApi/common/addBlock';
 import { containerProcessor } from './containerProcessor';
-import { createTable } from '../creators/createTable';
-import { createTableCell } from '../creators/createTableCell';
+import { createTable } from '../../modelApi/creators/createTable';
+import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from './ElementProcessor';
+import { parseFormat } from '../utils/parseFormat';
+import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
+import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
 /**
  * @internal
@@ -21,7 +24,10 @@ import { ElementProcessor } from './ElementProcessor';
 export const tableProcessor: ElementProcessor = (group, element, context) => {
     const tableElement = element as HTMLTableElement;
     const table = createTable(tableElement.rows.length);
+    const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
+    const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
+    parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
     addBlock(group, table);
 
     for (let row = 0; row < tableElement.rows.length; row++) {
@@ -30,15 +36,31 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
             for (; table.cells[row][targetCol]; targetCol++) {}
 
             const td = tr.cells[sourceCol];
+            const isCellSelected =
+                hasTableSelection &&
+                row >= firstCell.y &&
+                row <= lastCell.y &&
+                sourceCol >= firstCell.x &&
+                sourceCol <= lastCell.x;
 
             for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
                     const hasTd = colSpan == 1 && rowSpan == 1;
                     const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH');
 
+                    if (isCellSelected) {
+                        cell.isSelected = true;
+                    }
+
                     table.cells[row + rowSpan - 1][targetCol] = cell;
 
                     if (hasTd) {
+                        parseFormat(
+                            td,
+                            TableCellFormatHandlers,
+                            cell.format,
+                            context.contentModelContext
+                        );
                         containerProcessor(cell, td, context);
                     }
                 }

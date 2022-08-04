@@ -23,9 +23,9 @@ function normalize() {
             if (packageJson.dependencies[dep]) {
                 // No op, keep the specified value
             } else if (knownCustomizedPackages[dep]) {
-                packageJson.dependencies[dep] = knownCustomizedPackages[dep];
+                packageJson.dependencies[dep] = '^' + knownCustomizedPackages[dep];
             } else if (packages.indexOf(dep) > -1) {
-                packageJson.dependencies[dep] = mainPackageJson.version;
+                packageJson.dependencies[dep] = '^' + mainPackageJson.version;
             } else if (mainPackageJson.dependencies && mainPackageJson.dependencies[dep]) {
                 packageJson.dependencies[dep] = mainPackageJson.dependencies[dep];
             } else if (!packageJson.dependencies[dep]) {

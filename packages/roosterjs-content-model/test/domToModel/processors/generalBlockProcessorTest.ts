@@ -1,19 +1,19 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
-import * as createGeneralBlock from '../../../lib/domToModel/creators/createGeneralBlock';
+import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 import { generalBlockProcessor } from '../../../lib/domToModel/processors/generalBlockProcessor';
 
 describe('generalBlockProcessor', () => {
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         spyOn(containerProcessor, 'containerProcessor');
-        context = createFormatContext();
+        context = createDomToModelContext();
     });
 
     it('Process a DIV element', () => {

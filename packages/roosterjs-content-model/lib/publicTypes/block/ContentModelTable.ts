@@ -1,6 +1,7 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
 import { ContentModelBlockType } from '../enum/BlockType';
 import { ContentModelTableCell } from './group/ContentModelTableCell';
+import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
 import type { CompatibleContentModelBlockType } from '../compatibleEnum/BlockType';
 
 /**
@@ -12,9 +13,8 @@ export interface ContentModelTable
     > {
     /**
      * Format of this table
-     * TODO: Add more formats
      */
-    format: {};
+    format: ContentModelTableFormat;
 
     /**
      * Cells of this table

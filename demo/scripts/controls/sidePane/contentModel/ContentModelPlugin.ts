@@ -1,7 +1,8 @@
 import ContentModelPane, { ContentModelPaneProps } from './ContentModelPane';
-import HackedEditor from '../../hackedEditor/HackedEditor';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { ChangeSource, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { ContentModelDocument } from 'roosterjs-content-model';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 export default class ContentModelPlugin extends SidePanePluginImpl<
@@ -35,7 +36,7 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
     }
 
     private onGetModel = () => {
-        return isHackedEditor(this.editor) ? this.editor.getContentModel() : null;
+        return isContentModelEditor(this.editor) ? this.editor.createContentModel() : null;
     };
 
     protected getComponentProps(baseProps: SidePaneElementProps): ContentModelPaneProps {
@@ -43,6 +44,7 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
             ...baseProps,
             model: null,
             onUpdateModel: this.onGetModel,
+            onCreateDOM: this.onCreateDOM,
         };
     }
 
@@ -52,8 +54,13 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
             component.setContentModel(model);
         });
     };
-}
 
-function isHackedEditor(editor: IEditor | null): editor is HackedEditor {
-    return editor && !!(<HackedEditor>editor).getContentModel;
+    private onCreateDOM = (model: ContentModelDocument) => {
+        if (isContentModelEditor(this.editor)) {
+            const fragment = this.editor.createFragmentFromContentModel(model);
+            const win = window.open('about:blank');
+
+            win.document.body.appendChild(fragment);
+        }
+    };
 }
