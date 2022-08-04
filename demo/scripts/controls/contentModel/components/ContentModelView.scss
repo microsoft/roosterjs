@@ -1,0 +1,59 @@
+.modelWrapper {
+    margin-bottom: 2px;
+    display: flex;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12pt;
+    border: solid 2px #ccc;
+
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+
+    &.childSelected {
+        border-color: #0aa;
+    }
+
+    .selected {
+        border-color: #00f;
+    }
+}
+
+.titleBar {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 3px 0 0 0;
+    height: 20px;
+
+    &:hover .buttonGroup {
+        display: block;
+    }
+}
+
+.title {
+    font-weight: bold;
+    padding: 0 5px;
+    float: left;
+}
+
+.subTitle {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.buttonGroup {
+    float: right;
+    display: none;
+}
+
+.titleWithBorder {
+    border-bottom: solid 1px #888;
+}
+
+.expandedBody {
+    background-color: #fff;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+}
