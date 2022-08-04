@@ -20,14 +20,14 @@ export function getElementBasedFormatState(
     event?: PluginEvent
 ): ElementBasedFormatState {
     let listTag = getTagOfNode(editor.getElementAtCursor('OL,UL', null /*startFrom*/, event));
-    let range = editor.getSelectionRange();
 
     // Check if selection is multiline, spans more than one block
+    let range = editor.getSelectionRange();
     let multiline = false;
-    if (range) {
+    if (range && !range.collapsed) {
         let startingBlock = editor.getBlockElementAtNode(range.startContainer);
         let endingBlock = editor.getBlockElementAtNode(range.endContainer);
-        multiline = endingBlock.equals(startingBlock);
+        multiline = !endingBlock.equals(startingBlock);
     }
 
     let headerTag = getTagOfNode(
@@ -37,7 +37,7 @@ export function getElementBasedFormatState(
     return {
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
-        isMultiline: multiline,
+        isMultilineSelection: multiline,
         headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],

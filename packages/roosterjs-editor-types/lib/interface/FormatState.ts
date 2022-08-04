@@ -64,9 +64,9 @@ export interface ElementBasedFormatState {
     canUnlink?: boolean;
 
     /**
-     * Whether the text is multiline
+     * Whether the selected text is multiline
      */
-    isMultiline?: boolean;
+    isMultilineSelection?: boolean;
 
     /**
      * Whether add image alt text command can be called to the text
