@@ -1,14 +1,10 @@
+import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
+import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
 import { hasSelectionInBlock } from '../selection/hasSelectionInBlock';
 import { TableOperation } from 'roosterjs-editor-types';
-import {
-    ContentModelBlockGroupType,
-    ContentModelBlockType,
-} from 'roosterjs-content-model/lib/publicTypes/enum';
-import {
-    ContentModelTableCell,
-    ContentModelTableCellFormat,
-} from 'roosterjs-content-model/lib/publicTypes';
 
 const TextAlignValueMap: Partial<Record<TableOperation, 'start' | 'center' | 'end'>> = {
     [TableOperation.AlignCellLeft]: 'start',

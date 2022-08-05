@@ -1,12 +1,10 @@
 import { addSegment } from '../../modelApi/common/addSegment';
 import { arrayPush } from 'roosterjs-editor-dom';
+import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
+import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from 'roosterjs-content-model/lib/publicTypes';
+import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
 import { createBr } from '../../modelApi/creators/createBr';
-import {
-    ContentModelBlockType,
-    ContentModelSegmentType,
-} from 'roosterjs-content-model/lib/publicTypes/enum';
 
 /**
  * @internal

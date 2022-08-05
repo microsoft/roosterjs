@@ -1,9 +1,9 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource, TableOperation } from 'roosterjs-editor-types';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
-import { executeTableOperation } from 'roosterjs-content-model/lib/modelApi/table/executeTableOperation';
+import { executeTableOperation } from '../../modelApi/table/executeTableOperation';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { normalizeTable } from 'roosterjs-content-model/lib/modelApi/table/normalizeTable';
+import { normalizeTable } from '../../modelApi/table/normalizeTable';
 
 /**
  * Format current focused table with the given format
