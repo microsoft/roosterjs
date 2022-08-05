@@ -56,7 +56,7 @@ class RibbonPluginImpl implements RibbonPlugin {
                 break;
 
             case PluginEventType.KeyDown:
-            case PluginEventType.MouseDown:
+            case PluginEventType.MouseUp:
                 this.delayUpdate();
                 break;
         }
