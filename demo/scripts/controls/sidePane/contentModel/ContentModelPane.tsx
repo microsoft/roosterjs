@@ -48,13 +48,13 @@ export default class ContentModelPane extends React.Component<
     }
 
     render() {
-        return this.state.model ? (
+        return (
             <>
                 <Ribbon buttons={this.contentModelButtons} plugin={this.props.ribbonPlugin} />
                 <div className={styles.contentModel}>
                     {this.state.model ? <ContentModelDocumentView doc={this.state.model} /> : null}
                 </div>
             </>
-        ) : null;
+        );
     }
 }
