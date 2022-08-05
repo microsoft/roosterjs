@@ -9,6 +9,8 @@ import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventTyp
 export default interface PendingFormatStateChangedEvent
     extends BasePluginEvent<PluginEventType.PendingFormatStateChanged> {
     formatState: PendableFormatState;
+
+    formatCallback?: (element: HTMLElement, isInnerNode?: boolean) => any;
 }
 
 /**
@@ -17,4 +19,6 @@ export default interface PendingFormatStateChangedEvent
 export interface CompatiblePendingFormatStateChangedEvent
     extends BasePluginEvent<CompatiblePluginEventType.PendingFormatStateChanged> {
     formatState: PendableFormatState;
+
+    formatCallback?: (element: HTMLElement, isInnerNode?: boolean) => any;
 }

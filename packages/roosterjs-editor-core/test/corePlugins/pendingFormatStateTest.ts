@@ -21,6 +21,7 @@ describe('PendingFormatStatePlugin', () => {
         expect(state).toEqual({
             pendableFormatPosition: null,
             pendableFormatState: null,
+            pendableFormatSpan: null,
         });
     });
 

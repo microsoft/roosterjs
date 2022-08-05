@@ -14,4 +14,6 @@ export default interface PendingFormatStatePluginState {
      * The position of last pendable format state changing
      */
     pendableFormatPosition: NodePosition;
+
+    pendableFormatSpan: HTMLElement;
 }

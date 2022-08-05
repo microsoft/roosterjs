@@ -1,8 +1,12 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
-import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
-import { IEditor, NodeType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
-
-const ZERO_WIDTH_SPACE = '\u200B';
+import { getTagOfNode } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    IEditor,
+    PluginEventType,
+    PositionType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -29,23 +33,29 @@ export default function applyInlineStyle(
             editor.addUndoSnapshot();
             callback(node as HTMLElement);
         } else {
-            let isZWSNode =
-                node &&
-                node.nodeType == NodeType.Text &&
-                node.nodeValue == ZERO_WIDTH_SPACE &&
-                getTagOfNode(node.parentNode) == 'SPAN';
+            editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
+                formatState: {},
+                formatCallback: callback,
+            });
+            editor.triggerContentChangedEvent(ChangeSource.Format);
 
-            if (!isZWSNode) {
-                editor.addUndoSnapshot();
-                // Create a new text node to hold the selection.
-                // Some content is needed to position selection into the span
-                // for here, we inject ZWS - zero width space
-                node = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
-                range.insertNode(node);
-            }
+            // let isZWSNode =
+            //     node &&
+            //     node.nodeType == NodeType.Text &&
+            //     node.nodeValue == ZERO_WIDTH_SPACE &&
+            //     getTagOfNode(node.parentNode) == 'SPAN';
 
-            applyTextStyle(node, callback);
-            editor.select(node, PositionType.End);
+            // if (!isZWSNode) {
+            //     editor.addUndoSnapshot();
+            //     // Create a new text node to hold the selection.
+            //     // Some content is needed to position selection into the span
+            //     // for here, we inject ZWS - zero width space
+            //     node = editor.getDocument().createTextNode(ZERO_WIDTH_SPACE);
+            //     range.insertNode(node);
+            // }
+
+            // applyTextStyle(node, callback);
+            // editor.select(node, PositionType.End);
         }
     } else {
         // This is start and end node that get the style. The start and end needs to be recorded so that selection

@@ -9,10 +9,12 @@ const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.Origina
  * Get style based format state from current selection, including font name/size and colors
  * @param core The EditorCore objects
  * @param node The node to get style from
+ * @param override Styles that will override the style we get from computed styles
  */
 export const getStyleBasedFormatState: GetStyleBasedFormatState = (
     core: EditorCore,
-    node: Node
+    node: Node,
+    override: string[] = []
 ) => {
     if (!node) {
         return {};
@@ -26,10 +28,10 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
         isDarkMode && findClosestElementAncestor(node, root, ORIGINAL_STYLE_BACK_COLOR_SELECTOR);
 
     return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        textColor: styles[2],
-        backgroundColor: styles[3],
+        fontName: override[0] || styles[0],
+        fontSize: override[1] || styles[1],
+        textColor: override[2] || styles[2],
+        backgroundColor: override[3] || styles[3],
         textColors: ogTextColorNode
             ? {
                   darkModeColor: styles[2],

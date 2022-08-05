@@ -80,6 +80,7 @@ describe('Editor', () => {
         expect(core.pendingFormatState).toEqual({
             pendableFormatPosition: null,
             pendableFormatState: null,
+            pendableFormatSpan: null,
         });
         expect(core.undo.isRestoring).toBeFalse();
         expect(core.undo.hasNewContent).toBeFalse();
@@ -188,6 +189,7 @@ describe('Editor', () => {
         expect(core.pendingFormatState).toEqual({
             pendableFormatPosition: null,
             pendableFormatState: null,
+            pendableFormatSpan: null,
         });
         expect(core.undo.isRestoring).toBeFalse();
         expect(core.undo.hasNewContent).toBeFalse();

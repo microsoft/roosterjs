@@ -5,7 +5,10 @@ import {
     PluginEvent,
     PluginEventType,
     PluginWithState,
+    PositionType,
 } from 'roosterjs-editor-types';
+
+const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
  * @internal
@@ -25,6 +28,7 @@ export default class PendingFormatStatePlugin
         this.state = {
             pendableFormatPosition: null,
             pendableFormatState: null,
+            pendableFormatSpan: null,
         };
     }
 
@@ -67,7 +71,12 @@ export default class PendingFormatStatePlugin
             case PluginEventType.PendingFormatStateChanged:
                 // Got PendingFormatStateChanged event, cache current position and pending format
                 this.state.pendableFormatPosition = this.getCurrentPosition();
-                this.state.pendableFormatState = event.formatState;
+                this.state.pendableFormatState =
+                    event.formatState || this.state.pendableFormatState;
+                this.state.pendableFormatSpan = event.formatCallback
+                    ? this.createPendingFormatSpan(event.formatCallback)
+                    : null;
+
                 break;
             case PluginEventType.KeyDown:
             case PluginEventType.MouseDown:
@@ -82,16 +91,46 @@ export default class PendingFormatStatePlugin
                     this.clear();
                 }
                 break;
+
+            case PluginEventType.KeyPress:
+                if (this.state.pendableFormatSpan) {
+                    this.editor.insertNode(this.state.pendableFormatSpan);
+                    this.editor.select(
+                        this.state.pendableFormatSpan,
+                        PositionType.Before,
+                        this.state.pendableFormatSpan,
+                        PositionType.End
+                    );
+                    this.clear();
+                }
+                break;
         }
     }
 
     private clear() {
         this.state.pendableFormatPosition = null;
         this.state.pendableFormatState = null;
+        this.state.pendableFormatSpan = null;
     }
 
     private getCurrentPosition() {
         let range = this.editor.getSelectionRange();
         return range && Position.getStart(range).normalize();
+    }
+
+    private createPendingFormatSpan(
+        callback: (element: HTMLElement, isInnerNode?: boolean) => any
+    ) {
+        let span = this.state.pendableFormatSpan;
+
+        if (!span) {
+            const doc = this.editor.getDocument();
+            span = doc.createElement('span');
+            span.appendChild(doc.createTextNode(ZERO_WIDTH_SPACE));
+        }
+
+        callback(span);
+
+        return span;
     }
 }
