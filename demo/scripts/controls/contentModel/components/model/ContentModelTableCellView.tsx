@@ -8,6 +8,7 @@ import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
+import { useProperty } from '../../hooks/useProperty';
 import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignFormatRenderer';
 import {
     ContentModelTableCell,
@@ -31,9 +32,9 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
     const checkboxHeader = React.useRef<HTMLInputElement>(null);
     const checkboxSpanLeft = React.useRef<HTMLInputElement>(null);
     const checkboxSpanAbove = React.useRef<HTMLInputElement>(null);
-    const [isHeader, setIsHeader] = React.useState<boolean>(cell.isHeader);
-    const [spanLeft, setSpanLeft] = React.useState<boolean>(cell.spanLeft);
-    const [spanAbove, setSpanAbove] = React.useState<boolean>(cell.spanAbove);
+    const [isHeader, setIsHeader] = useProperty(cell.isHeader);
+    const [spanLeft, setSpanLeft] = useProperty(cell.spanLeft);
+    const [spanAbove, setSpanAbove] = useProperty(cell.spanAbove);
 
     const onHeaderChanged = React.useCallback(() => {
         const value = checkboxHeader.current.checked;
@@ -61,7 +62,7 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
                         type="checkbox"
                         checked={isHeader}
                         ref={checkboxHeader}
-                        onClick={onHeaderChanged}
+                        onChange={onHeaderChanged}
                     />
                     Header
                 </div>
@@ -70,7 +71,7 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
                         type="checkbox"
                         checked={spanLeft}
                         ref={checkboxSpanLeft}
-                        onClick={onSpanLeftChanged}
+                        onChange={onSpanLeftChanged}
                     />
                     Span Left
                 </div>
@@ -79,7 +80,7 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
                         type="checkbox"
                         checked={spanAbove}
                         ref={checkboxSpanAbove}
-                        onClick={onSpanAboveChanged}
+                        onChange={onSpanAboveChanged}
                     />
                     Span Above
                 </div>

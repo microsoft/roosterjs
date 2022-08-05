@@ -1,40 +1,24 @@
 import * as React from 'react';
 import { ContentModelText } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
+import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelTextView.scss');
 
-function useProperty<T, V>(obj: T, propertyGetter: (obj: T) => V): [V, (value: V) => void] {
-    const [value, setValue] = React.useState(propertyGetter(obj));
-
-    React.useEffect(() => {
-        setValue(propertyGetter(obj));
-    }, [propertyGetter(obj)]);
-
-    return [value, setValue];
-}
-
-function getText(text: ContentModelText) {
-    return text.text;
-}
-
 export function ContentModelTextView(props: { text: ContentModelText }) {
     const { text } = props;
+    const [value, setValue] = useProperty(text.text);
+
     const textArea = React.useRef<HTMLTextAreaElement>(null);
-    const [value, setValue] = useProperty(text, getText);
     const onChange = React.useCallback(() => {
-        const value = textArea.current.value;
-        text.text = value;
-        setValue(value);
-    }, [text]);
+        const newValue = textArea.current.value;
+        text.text = newValue;
+        setValue(newValue);
+    }, [text, setValue]);
 
     const getContent = React.useCallback(() => {
-        return (
-            <textarea ref={textArea} onChange={onChange}>
-                {value}
-            </textarea>
-        );
-    }, [text]);
+        return <textarea ref={textArea} onChange={onChange} value={value} />;
+    }, [text, value]);
 
     return (
         <ContentModelView

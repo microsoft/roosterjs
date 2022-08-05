@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ButtonGroup } from './ButtonGroup';
 import { ContentModelJson } from './model/ContentModelJson';
 import { css } from '@fluentui/react/lib/Utilities';
+import { useProperty } from '../hooks/useProperty';
 
 const styles = require('./ContentModelView.scss');
 
@@ -27,7 +28,7 @@ export function ContentModelView(props: {
         getContent,
         getFormat,
     } = props;
-    const [bodyState, setBodyState] = React.useState<'collapsed' | 'children' | 'format' | 'json'>(
+    const [bodyState, setBodyState] = useProperty<'collapsed' | 'children' | 'format' | 'json'>(
         isExpanded ? 'children' : 'collapsed'
     );
 

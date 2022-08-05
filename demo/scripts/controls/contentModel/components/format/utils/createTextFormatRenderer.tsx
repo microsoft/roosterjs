@@ -1,6 +1,7 @@
 import * as Color from 'color';
 import * as React from 'react';
 import { FormatRenderer } from './FormatRenderer';
+import { useProperty } from '../../../hooks/useProperty';
 
 const styles = require('../FormatView.scss');
 
@@ -12,20 +13,29 @@ function TextFormatItem<T>(props: {
     type: 'text' | 'number' | 'color' | 'multiline';
 }) {
     const { name, getter, setter, format, type } = props;
-    const singleLineBox = React.useRef<HTMLInputElement>(null);
-    const multiLineBox = React.useRef<HTMLTextAreaElement>(null);
+    const textBox = React.useRef<HTMLInputElement & HTMLTextAreaElement>(null);
     const colorValueBox = React.useRef<HTMLInputElement>(null);
-
-    const [value, setValue] = React.useState(getter(format));
     const [errorMessage, setErrorMessage] = React.useState<string>(null);
+
+    let initValue = getter(format);
+
+    if (type == 'color' && initValue) {
+        try {
+            const color = Color(initValue);
+            initValue = color.hex();
+        } catch {}
+    }
+
+    const [value, setValue] = useProperty(initValue);
 
     const updateValue = React.useCallback(
         (newValue: string) => {
+            setErrorMessage(null);
+
             if (type == 'color') {
                 try {
                     const color = Color(newValue);
                     newValue = color.hex();
-                    setErrorMessage(null);
                 } catch {
                     setErrorMessage('Invalid color value');
                 }
@@ -42,12 +52,8 @@ function TextFormatItem<T>(props: {
         [setter, format, setErrorMessage]
     );
 
-    const onSingleLineChange = React.useCallback(() => {
-        updateValue(singleLineBox.current.value);
-    }, [updateValue]);
-
-    const onMultiLineChange = React.useCallback(() => {
-        updateValue(multiLineBox.current.value);
+    const onTextBoxChange = React.useCallback(() => {
+        updateValue(textBox.current.value);
     }, [updateValue]);
 
     const onColorValueChange = React.useCallback(() => {
@@ -60,13 +66,7 @@ function TextFormatItem<T>(props: {
         case 'color':
             content = (
                 <>
-                    <input
-                        type="color"
-                        ref={singleLineBox}
-                        value={value}
-                        onChange={onSingleLineChange}
-                    />
-                    Value:
+                    <input type="color" ref={textBox} value={value} onChange={onTextBoxChange} />
                     <input
                         type="text"
                         className={styles.colorValue}
@@ -80,11 +80,11 @@ function TextFormatItem<T>(props: {
         case 'multiline':
             content = (
                 <textarea
-                    ref={multiLineBox}
-                    onChange={onMultiLineChange}
-                    className={styles.multiLineValue}>
-                    {value}
-                </textarea>
+                    ref={textBox}
+                    onChange={onTextBoxChange}
+                    className={styles.multiLineValue}
+                    value={value}
+                />
             );
             break;
         case 'number':
@@ -92,9 +92,9 @@ function TextFormatItem<T>(props: {
                 <input
                     type="number"
                     className={styles.numberValue}
-                    ref={singleLineBox}
+                    ref={textBox}
                     value={value}
-                    onChange={onSingleLineChange}
+                    onChange={onTextBoxChange}
                 />
             );
             break;
@@ -103,9 +103,9 @@ function TextFormatItem<T>(props: {
                 <input
                     type="text"
                     className={styles.textValue}
-                    ref={singleLineBox}
+                    ref={textBox}
                     value={value}
-                    onChange={onSingleLineChange}
+                    onChange={onTextBoxChange}
                 />
             );
             break;

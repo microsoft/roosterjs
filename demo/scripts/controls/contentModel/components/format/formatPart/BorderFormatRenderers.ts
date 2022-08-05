@@ -1,6 +1,18 @@
 import { BorderFormat } from 'roosterjs-content-model';
+import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
+
+type BorderStyle = 'dashed' | 'dotted' | 'double' | 'groove' | 'none' | 'outset' | 'solid';
+const BorderStyleValues: BorderStyle[] = [
+    'dashed',
+    'dotted',
+    'double',
+    'groove',
+    'none',
+    'outset',
+    'solid',
+];
 
 export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
     createTextFormatRenderer<BorderFormat>(
@@ -36,33 +48,37 @@ export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
         }
     ),
 
-    createTextFormatRenderer<BorderFormat>(
+    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
         'Style-top',
-        format => format.borderStyle[0],
+        BorderStyleValues,
+        format => format.borderStyle[0] as BorderStyle,
         (format, value) => {
             format.borderStyle[0] = value;
             return undefined;
         }
     ),
-    createTextFormatRenderer<BorderFormat>(
+    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
         'Style-right',
-        format => format.borderStyle[1],
+        BorderStyleValues,
+        format => format.borderStyle[1] as BorderStyle,
         (format, value) => {
             format.borderStyle[1] = value;
             return undefined;
         }
     ),
-    createTextFormatRenderer<BorderFormat>(
+    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
         'Style-bottom',
-        format => format.borderStyle[2],
+        BorderStyleValues,
+        format => format.borderStyle[2] as BorderStyle,
         (format, value) => {
             format.borderStyle[2] = value;
             return undefined;
         }
     ),
-    createTextFormatRenderer<BorderFormat>(
+    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
         'Style-left',
-        format => format.borderStyle[3],
+        BorderStyleValues,
+        format => format.borderStyle[3] as BorderStyle,
         (format, value) => {
             format.borderStyle[3] = value;
             return undefined;
