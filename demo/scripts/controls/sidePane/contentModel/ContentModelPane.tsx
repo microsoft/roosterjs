@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { ContentModelDocument } from 'roosterjs-content-model';
+import { exportButton } from './buttons/exportButton';
+import { formatTableButton } from './buttons/formatTableButton';
+import { insertTableButton } from './buttons/insertTableButton';
+import { refreshButton } from './buttons/refreshButton';
+import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { setTableCellShadeButton } from './buttons/setTableCellShadeButton';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./ContentModelPane.scss');
@@ -10,16 +16,25 @@ export interface ContentModelPaneState {
 }
 
 export interface ContentModelPaneProps extends ContentModelPaneState, SidePaneElementProps {
-    onUpdateModel: () => ContentModelDocument;
-    onCreateDOM: (model: ContentModelDocument) => void;
+    ribbonPlugin: RibbonPlugin;
 }
 
 export default class ContentModelPane extends React.Component<
     ContentModelPaneProps,
     ContentModelPaneState
 > {
+    private contentModelButtons: RibbonButton<any>[];
+
     constructor(props: ContentModelPaneProps) {
         super(props);
+
+        this.contentModelButtons = [
+            refreshButton,
+            exportButton,
+            insertTableButton,
+            formatTableButton,
+            setTableCellShadeButton,
+        ];
 
         this.state = {
             model: null,
@@ -33,35 +48,27 @@ export default class ContentModelPane extends React.Component<
     }
 
     render() {
-        return this.state.model ? (
+        return (
             <>
-                <div>
-                    <button onClick={this.onRefresh}>Refresh Content Model</button>&nbsp;
-                    <button onClick={this.onCreateDOM}>Create DOM tree</button>
-                </div>
-                <div className={styles.contentModel}>
-                    <pre>
-                        {JSON.stringify(
-                            this.state.model,
-                            (key, value) => {
-                                return safeInstanceOf(value, 'Node')
-                                    ? Object.prototype.toString.apply(value)
-                                    : value;
-                            },
-                            2
-                        )}
-                    </pre>
-                </div>
+                <Ribbon buttons={this.contentModelButtons} plugin={this.props.ribbonPlugin} />
+                {this.state.model ? (
+                    <>
+                        <div className={styles.contentModel}>
+                            <pre>
+                                {JSON.stringify(
+                                    this.state.model,
+                                    (key, value) => {
+                                        return safeInstanceOf(value, 'Node')
+                                            ? Object.prototype.toString.apply(value)
+                                            : value;
+                                    },
+                                    2
+                                )}
+                            </pre>
+                        </div>
+                    </>
+                ) : null}
             </>
-        ) : null;
+        );
     }
-
-    private onCreateDOM = () => {
-        this.props.onCreateDOM(this.state.model);
-    };
-
-    private onRefresh = () => {
-        const model = this.props.onUpdateModel();
-        this.setContentModel(model);
-    };
 }
