@@ -2,6 +2,7 @@ import { backgroundColorFormatHandler } from './common/backgroundColorFormatHand
 import { ContentModelTableFormat } from '../publicTypes/format/ContentModelTableFormat';
 import { FormatHandler } from './FormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
+import { marginFormatHandler } from './paragraph/marginFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { tableMetadataFormatHandler } from './table/tableMetadataFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
@@ -14,5 +15,6 @@ export const TableFormatHandlers: FormatHandler<ContentModelTableFormat>[] = [
     sizeFormatHandler,
     tableMetadataFormatHandler,
     tableSpacingFormatHandler,
+    marginFormatHandler,
     backgroundColorFormatHandler,
 ];

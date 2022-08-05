@@ -6,6 +6,7 @@ import { createMetadataFormatRenderer } from '../format/formatPart/MetadataForma
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
+import { MarginFormatRenderers } from '../format/formatPart/MarginFormatRenderers';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import {
@@ -21,6 +22,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     SpacingFormatRenderer,
     BackgroundColorFormatRenderer,
     createMetadataFormatRenderer(null),
+    ...MarginFormatRenderers,
     ...SizeFormatRenderers,
 ];
 

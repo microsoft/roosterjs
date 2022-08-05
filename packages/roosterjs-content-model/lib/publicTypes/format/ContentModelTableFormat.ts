@@ -1,5 +1,6 @@
 import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { IdFormat } from './formatParts/IdFormat';
+import { MarginFormat } from './formatParts/MarginFormat';
 import { MetadataFormat } from './formatParts/MetadataFormat';
 import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
@@ -13,4 +14,5 @@ export interface ContentModelTableFormat
         SizeFormat,
         SpacingFormat,
         BackgroundColorFormat,
+        MarginFormat,
         MetadataFormat<TableFormat> {}

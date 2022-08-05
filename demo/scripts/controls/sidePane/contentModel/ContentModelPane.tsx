@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ContentModelDocument } from 'roosterjs-content-model';
 import { ContentModelDocumentView } from '../../contentModel/components/model/ContentModelDocumentView';
+import { editTableButton } from './buttons/editTableButton';
 import { exportButton } from './buttons/exportButton';
 import { formatTableButton } from './buttons/formatTableButton';
 import { insertTableButton } from './buttons/insertTableButton';
@@ -34,6 +35,7 @@ export default class ContentModelPane extends React.Component<
             insertTableButton,
             formatTableButton,
             setTableCellShadeButton,
+            editTableButton,
         ];
 
         this.state = {
