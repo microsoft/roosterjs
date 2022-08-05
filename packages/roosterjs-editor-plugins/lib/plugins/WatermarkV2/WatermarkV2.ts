@@ -7,9 +7,9 @@ import {
 } from 'roosterjs-editor-types';
 import { kebabCase } from './utils';
 
-const ENTITY_TYPE = 'PLACEHOLDER_WRAPPER';
-const PLACEHOLDER_ATTR = 'data-rooster-placeholder';
-const STYLE_ID = 'placeholderStyle';
+const ENTITY_TYPE = 'WATERMARK_WRAPPER';
+const WATERMARK_ATTR = 'data-rooster-watermark';
+const STYLE_ID = 'watermarkStyle';
 
 const DEFAULT_STYLE = {
     color: 'rgba(0,0,0,0.3)',
@@ -18,21 +18,21 @@ const DEFAULT_STYLE = {
 };
 
 /**
- * A placeholder plugin (yet another Watermark plugin)
+ * Yet another Watermark plugin
  */
-export default class Placeholder implements EditorPlugin {
+export default class WatermarkV2 implements EditorPlugin {
     private editor: IEditor;
 
     /**
-     * Create an instance of Placeholder plugin
-     * @param placeholder The placeholder string
-     * @param style placeholder style
+     * Create an instance of Watermark plugin
+     * @param watermark The watermark string
+     * @param style watermark style
      */
-    constructor(private placeholder: string, private readonly style?: CSSStyleDeclaration) {
+    constructor(private watermark: string, private readonly style?: CSSStyleDeclaration) {
         this.style = {
             ...DEFAULT_STYLE,
             ...this.style,
-            content: `attr(${PLACEHOLDER_ATTR})`, // key trick
+            content: `attr(${WATERMARK_ATTR})`, // key trick
         };
     }
 
@@ -40,7 +40,7 @@ export default class Placeholder implements EditorPlugin {
      * Get a friendly name of this plugin
      */
     getName() {
-        return 'Placeholder';
+        return 'WatermarkV2';
     }
 
     /**
@@ -70,7 +70,7 @@ export default class Placeholder implements EditorPlugin {
                 selector = `#${id}`;
             }
         }
-        const rule = `${selector}[${PLACEHOLDER_ATTR}]:before {${cssText};}`;
+        const rule = `${selector}[${WATERMARK_ATTR}]:before {${cssText};}`;
         styleElement.sheet.insertRule(rule);
     }
 
@@ -99,14 +99,14 @@ export default class Placeholder implements EditorPlugin {
             (event.eventType == PluginEventType.ContentChanged &&
                 (<Entity>event.data)?.type != ENTITY_TYPE)
         ) {
-            this.showHidePlaceholder();
+            this.showHideWatermark();
         }
     }
 
-    private showHidePlaceholder = () => {
+    private showHideWatermark = () => {
         this.editor.setEditorDomAttribute(
-            PLACEHOLDER_ATTR,
-            isEmpty(this.editor) ? this.placeholder : null
+            WATERMARK_ATTR,
+            isEmpty(this.editor) ? this.watermark : null
         );
     };
 }
