@@ -1,0 +1,18 @@
+.button {
+    height: 20px;
+    vertical-align: top;
+    padding: 2px;
+    border-width: 1px;
+    border-color: #888;
+    background-color: #ccc;
+
+    &:hover {
+        background-color: white;
+    }
+}
+
+.buttonChecked {
+    font-weight: bold;
+    background-color: #eee;
+    border-bottom: none;
+}
