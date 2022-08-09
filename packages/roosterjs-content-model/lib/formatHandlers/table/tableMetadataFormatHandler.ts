@@ -1,10 +1,14 @@
-import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
+import { FormatHandler } from '../FormatHandler';
 import { TableFormat } from 'roosterjs-editor-types';
 import {
     createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
     createStringDefinition,
+    getMetadata,
+    getObjectKeys,
+    removeMetadata,
+    setMetadata,
 } from 'roosterjs-editor-dom';
 
 const NullStringDefinition = createStringDefinition(
@@ -42,6 +46,35 @@ const TableFormatDefinition = createObjectDefinition<Required<TableFormat>>(
 /**
  * @internal
  */
-export const tableMetadataFormatHandler = createMetadataFormatHandler<TableFormat>(
-    TableFormatDefinition
-);
+export const tableMetadataFormatHandler: FormatHandler<TableFormat> = {
+    parse: (format, element) => {
+        const metadata = getMetadata(element, TableFormatDefinition);
+
+        if (metadata) {
+            Object.assign(format, metadata);
+        }
+    },
+    apply: (format, element) => {
+        const metadata = {
+            topBorderColor: format.topBorderColor,
+            bottomBorderColor: format.bottomBorderColor,
+            verticalBorderColor: format.verticalBorderColor,
+            hasHeaderRow: format.hasHeaderRow,
+            headerRowColor: format.headerRowColor,
+            hasFirstColumn: format.hasFirstColumn,
+            hasBandedColumns: format.hasBandedColumns,
+            hasBandedRows: format.hasBandedRows,
+            bgColorEven: format.bgColorEven,
+            bgColorOdd: format.bgColorOdd,
+            tableBorderFormat: format.tableBorderFormat,
+            keepCellShade: format.keepCellShade,
+        };
+
+        if (
+            getObjectKeys(metadata).every(key => typeof metadata[key] === 'undefined') ||
+            !setMetadata(element, metadata, TableFormatDefinition)
+        ) {
+            removeMetadata(element);
+        }
+    },
+};

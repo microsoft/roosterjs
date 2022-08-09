@@ -2,12 +2,12 @@ import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { ContentModelBlockView } from './ContentModelBlockView';
 import { ContentModelView } from '../ContentModelView';
-import { createMetadataFormatRenderer } from '../format/formatPart/MetadataFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
+import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
 import {
     ContentModelTable,
     ContentModelTableFormat,
@@ -20,8 +20,8 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     IdFormatRenderer,
     SpacingFormatRenderer,
     BackgroundColorFormatRenderer,
-    createMetadataFormatRenderer(null),
     ...SizeFormatRenderers,
+    ...TableMetadataFormatRenders,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {

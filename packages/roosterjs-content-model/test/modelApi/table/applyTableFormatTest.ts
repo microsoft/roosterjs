@@ -65,7 +65,7 @@ describe('applyTableFormat', () => {
                 );
 
                 expect(table.cells[row][col].format.borderColor).toEqual(
-                    expectedBorderColors[row][col],
+                    expectedBorderColors[row][col].join(' '),
                     `BorderColor Row=${row} Col=${col}`
                 );
             }

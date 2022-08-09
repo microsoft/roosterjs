@@ -1,6 +1,5 @@
 import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { IdFormat } from './formatParts/IdFormat';
-import { MetadataFormat } from './formatParts/MetadataFormat';
 import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { TableFormat } from 'roosterjs-editor-types';
@@ -13,4 +12,4 @@ export interface ContentModelTableFormat
         SizeFormat,
         SpacingFormat,
         BackgroundColorFormat,
-        MetadataFormat<TableFormat> {}
+        TableFormat {}

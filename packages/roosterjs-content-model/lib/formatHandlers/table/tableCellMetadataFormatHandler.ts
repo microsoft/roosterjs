@@ -1,8 +1,15 @@
-import { createBooleanDefinition, createObjectDefinition } from 'roosterjs-editor-dom';
-import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
-import { TableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { FormatHandler } from '../FormatHandler';
+import { TableCellMetadataFormat } from '../../publicTypes/format/formatParts/TableCellMetadataFormat';
+import {
+    createBooleanDefinition,
+    createObjectDefinition,
+    getMetadata,
+    getObjectKeys,
+    removeMetadata,
+    setMetadata,
+} from 'roosterjs-editor-dom';
 
-const TableCellFormatDefinition = createObjectDefinition<Required<TableCellFormat>>(
+const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableCellMetadataFormat>>(
     {
         bgColorOverride: createBooleanDefinition(true /** isOptional */),
     },
@@ -12,6 +19,24 @@ const TableCellFormatDefinition = createObjectDefinition<Required<TableCellForma
 /**
  * @internal
  */
-export const tableCellMetadataFormatHandler = createMetadataFormatHandler<TableCellFormat>(
-    TableCellFormatDefinition
-);
+export const tableCellMetadataFormatHandler: FormatHandler<TableCellMetadataFormat> = {
+    parse: (format, element) => {
+        const metadata = getMetadata(element, TableCellMetadataFormatDefinition);
+
+        if (metadata) {
+            format.bgColorOverride = metadata.bgColorOverride;
+        }
+    },
+    apply: (format, element) => {
+        const metadata = {
+            bgColorOverride: format.bgColorOverride,
+        };
+
+        if (
+            getObjectKeys(metadata).every(key => typeof metadata[key] === 'undefined') ||
+            !setMetadata(element, metadata, TableCellMetadataFormatDefinition)
+        ) {
+            removeMetadata(element);
+        }
+    },
+};

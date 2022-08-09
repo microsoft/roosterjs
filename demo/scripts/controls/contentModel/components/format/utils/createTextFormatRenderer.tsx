@@ -139,3 +139,29 @@ export function createTextFormatRenderer<T>(
         />
     );
 }
+
+export function createTextFormatRendererGroup<T, V extends string>(
+    names: V[],
+    getter: (format: T) => string[],
+    setter?: (format: T, name: V, newValue: string) => string | undefined,
+    type: 'text' | 'number' | 'color' | 'multiline' = 'text'
+): FormatRenderer<T> {
+    return (format: T) => {
+        const initValues = getter(format);
+
+        return (
+            <>
+                {names.map((name, index) => (
+                    <TextFormatItem
+                        name={name}
+                        getter={() => initValues[index]}
+                        setter={(format, newValue) => setter?.(format, name, newValue)}
+                        format={format}
+                        type={type}
+                        key={name}
+                    />
+                ))}
+            </>
+        );
+    };
+}

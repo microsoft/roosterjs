@@ -29,7 +29,7 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context);
 
         expect(format).toEqual({
-            borderColor: ['red', 'red', 'red', 'red'],
+            borderColor: 'red',
         });
     });
 
@@ -39,7 +39,7 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context);
 
         expect(format).toEqual({
-            borderWidth: ['1px', '1px', '1px', '1px'],
+            borderWidth: '1px',
         });
     });
 
@@ -49,7 +49,7 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context);
 
         expect(format).toEqual({
-            borderStyle: ['solid', 'solid', 'solid', 'solid'],
+            borderStyle: 'solid',
         });
     });
 
@@ -59,7 +59,7 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context);
 
         expect(format).toEqual({
-            borderWidth: ['1px', '2px', '3px', '4px'],
+            borderWidth: '1px 2px 3px 4px',
         });
     });
 
@@ -69,7 +69,7 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context);
 
         expect(format).toEqual({
-            borderWidth: ['1px', '2px', '3px', '4px'],
+            borderWidth: '1px 2px 3px 4px',
         });
     });
 
@@ -79,9 +79,9 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context);
 
         expect(format).toEqual({
-            borderWidth: ['1px', '1px', '1px', '1px'],
-            borderColor: ['black', 'black', 'black', 'black'],
-            borderStyle: ['solid', 'solid', 'solid', 'solid'],
+            borderWidth: '1px',
+            borderColor: 'black',
+            borderStyle: 'solid',
         });
     });
 });
@@ -108,7 +108,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - empty array', () => {
-        format.borderColor = [];
+        format.borderColor = '';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -116,7 +116,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - empty values', () => {
-        format.borderColor = ['', '', '', ''];
+        format.borderColor = '';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -124,7 +124,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - with initial, transparent and inherit values', () => {
-        format.borderColor = ['', 'inherit', 'initial'];
+        format.borderColor = 'inherit initial';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -132,35 +132,31 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - one value', () => {
-        format.borderColor = ['red'];
+        format.borderColor = 'red';
 
         borderFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div style="border-top-color: red;"></div>');
+        expect(div.outerHTML).toEqual('<div style="border-color: red;"></div>');
     });
 
     it('Has border color - two values', () => {
-        format.borderColor = ['red', 'green'];
+        format.borderColor = 'red green';
 
         borderFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual(
-            '<div style="border-top-color: red; border-right-color: green;"></div>'
-        );
+        expect(div.outerHTML).toEqual('<div style="border-color: red green;"></div>');
     });
 
     it('Has border color - three values', () => {
-        format.borderColor = ['red', 'green', 'blue'];
+        format.borderColor = 'red green blue';
 
         borderFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual(
-            '<div style="border-top-color: red; border-right-color: green; border-bottom-color: blue;"></div>'
-        );
+        expect(div.outerHTML).toEqual('<div style="border-color: red green blue;"></div>');
     });
 
     it('Has border color - four values - same value', () => {
-        format.borderColor = ['red', 'red', 'red', 'red'];
+        format.borderColor = 'red red red red';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -168,7 +164,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - four values - different values 1', () => {
-        format.borderColor = ['red', 'red', 'red', 'green'];
+        format.borderColor = 'red red red green';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -176,7 +172,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - four values - different values 2', () => {
-        format.borderColor = ['red', 'red', 'green', 'green'];
+        format.borderColor = 'red red green green';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -184,7 +180,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - four values - different values 3', () => {
-        format.borderColor = ['red', 'red', 'green', 'red'];
+        format.borderColor = 'red red green red';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -192,7 +188,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - four values - different values 4', () => {
-        format.borderColor = ['red', 'green', 'red', 'red'];
+        format.borderColor = 'red green red red';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -200,7 +196,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - four values - different values 5', () => {
-        format.borderColor = ['red', 'green', 'red', 'green'];
+        format.borderColor = 'red green red green';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -208,7 +204,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border color - four values - different values 6', () => {
-        format.borderColor = ['red', 'green', 'blue', 'yellow'];
+        format.borderColor = 'red green blue yellow';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -216,7 +212,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border style', () => {
-        format.borderStyle = ['solid', 'solid', 'solid', 'solid'];
+        format.borderStyle = 'solid solid solid solid';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -224,7 +220,7 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has border width', () => {
-        format.borderWidth = ['1px', '2px', '3px', '4px'];
+        format.borderWidth = '1px 2px 3px 4px';
 
         borderFormatHandler.apply(format, div, context);
 
@@ -232,9 +228,9 @@ describe('borderFormatHandler.apply', () => {
     });
 
     it('Has everything', () => {
-        format.borderColor = ['red', 'blue', 'green', 'yellow'];
-        format.borderStyle = ['solid', 'none', 'dashed', 'dotted'];
-        format.borderWidth = ['1px', '2px', '3px', '4px'];
+        format.borderColor = 'red blue green yellow';
+        format.borderStyle = 'solid none dashed dotted';
+        format.borderWidth = '1px 2px 3px 4px';
 
         borderFormatHandler.apply(format, div, context);
 
