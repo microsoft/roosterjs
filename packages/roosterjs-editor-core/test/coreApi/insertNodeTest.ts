@@ -458,7 +458,6 @@ describe('insertNode', () => {
             updateCursor: true,
             replaceSelection: true,
         });
-        debugger;
         expect(div.innerHTML).toBe(
             '<div id="div"><table></table><br><table id="table1"></table></div>'
         );
