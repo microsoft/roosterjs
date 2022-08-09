@@ -1,7 +1,7 @@
 /**
  * Format of margin
  */
-export interface MarginFormat {
+export type MarginFormat = {
     /**
      * Margin on top
      */
@@ -21,4 +21,4 @@ export interface MarginFormat {
      * Margin on right
      */
     marginRight?: string;
-}
+};

@@ -14,3 +14,5 @@ export { default as editTable } from './publicApi/table/editTable';
 
 export { hasSelectionInBlock } from './modelApi/selection/hasSelectionInBlock';
 export { hasSelectionInSegment } from './modelApi/selection/hasSelectionInSegment';
+
+export { extractBorderValues } from './domUtils/extractBorderValues';

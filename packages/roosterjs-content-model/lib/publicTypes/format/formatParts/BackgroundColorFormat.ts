@@ -1,9 +1,9 @@
 /**
  * Format of background color
  */
-export interface BackgroundColorFormat {
+export type BackgroundColorFormat = {
     /**
      * Background color
      */
     backgroundColor?: string;
-}
+};

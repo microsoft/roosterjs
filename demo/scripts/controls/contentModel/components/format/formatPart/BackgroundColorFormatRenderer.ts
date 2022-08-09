@@ -1,8 +1,8 @@
 import { BackgroundColorFormat } from 'roosterjs-content-model';
-import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
+import { createColorFormatRenderer } from '../utils/createColorFormatRender';
 import { FormatRenderer } from '../utils/FormatRenderer';
 
-export const BackgroundColorFormatRenderer: FormatRenderer<BackgroundColorFormat> = createTextFormatRenderer<
+export const BackgroundColorFormatRenderer: FormatRenderer<BackgroundColorFormat> = createColorFormatRenderer<
     BackgroundColorFormat
 >(
     'Back color',
@@ -10,6 +10,5 @@ export const BackgroundColorFormatRenderer: FormatRenderer<BackgroundColorFormat
     (format, value) => {
         format.backgroundColor = value;
         return undefined;
-    },
-    'color'
+    }
 );

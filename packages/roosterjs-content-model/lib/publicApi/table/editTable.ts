@@ -99,9 +99,7 @@ export default function editTable(
                     }
 
                     normalizeTable(tableModel);
-                    applyTableFormat(tableModel, {
-                        keepCellShade: true,
-                    });
+                    applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
 
                     const newFragment = editor.createFragmentFromContentModel(model);
 
