@@ -38,7 +38,21 @@ export default function deleteSelectedContent(root: HTMLElement, range: Range) {
                 return null;
             }
 
-            const { startContainer, endContainer, startOffset, endOffset } = regionRange;
+            const {
+                startContainer,
+                endContainer,
+                startOffset,
+                endOffset,
+                commonAncestorContainer,
+            } = regionRange;
+
+            // Disallow merging of readonly elements
+            if (
+                safeInstanceOf(commonAncestorContainer, 'HTMLElement') &&
+                !commonAncestorContainer.isContentEditable
+            ) {
+                return null;
+            }
 
             // Make sure there are node before and after the merging point.
             // This is required by mergeBlocksInRegion API.
