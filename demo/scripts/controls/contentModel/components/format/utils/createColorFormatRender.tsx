@@ -88,7 +88,7 @@ function ColorFormatItem<T>(props: {
 export function createColorFormatRenderer<T>(
     name: string,
     getter: (format: T) => string,
-    setter?: (format: T, newValue: string) => string | undefined
+    setter?: (format: T, newValue: string) => void
 ): FormatRenderer<T> {
     return (format: T) => (
         <ColorFormatItem name={name} getter={getter} setter={setter} format={format} key={name} />
@@ -98,7 +98,7 @@ export function createColorFormatRenderer<T>(
 export function createColorFormatRendererGroup<T, V extends string>(
     names: V[],
     getter: (format: T) => string[],
-    setter?: (format: T, name: V, newValue: string) => string | undefined
+    setter?: (format: T, name: V, newValue: string) => void
 ): FormatRenderer<T> {
     return (format: T) => {
         const initValues = getter(format);

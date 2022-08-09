@@ -1,4 +1,4 @@
-import { extractBorderValues } from '../../lib/domUtils/extractBorderValues';
+import { combineBorderValue, extractBorderValues } from '../../lib/domUtils/borderValues';
 
 describe('extractBorderValues', () => {
     it('empty string', () => {
@@ -31,6 +31,15 @@ describe('extractBorderValues', () => {
         ]);
     });
 
+    it('Five values', () => {
+        expect(extractBorderValues('test1 test2 test3 test4 test5')).toEqual([
+            'test1',
+            'test2',
+            'test3',
+            'test4',
+        ]);
+    });
+
     it('value with ()', () => {
         expect(extractBorderValues('test1 ( ) test2 (test 3)')).toEqual([
             'test1',
@@ -47,5 +56,23 @@ describe('extractBorderValues', () => {
             'rgb(1, 2, 3)',
             'transparent',
         ]);
+    });
+});
+
+describe('combineBorderValue', () => {
+    it('empty array', () => {
+        expect(combineBorderValue([], 'default')).toEqual('');
+    });
+
+    it('array with partial values', () => {
+        expect(combineBorderValue(['a', undefined!, 'b'], 'default')).toEqual('a default b');
+    });
+
+    it('array with full values', () => {
+        expect(combineBorderValue(['a', 'b', 'c', 'd'], 'default')).toEqual('a b c d');
+    });
+
+    it('array with extract values', () => {
+        expect(combineBorderValue(['a', 'b', 'c', 'd', 'e'], 'default')).toEqual('a b c d');
     });
 });

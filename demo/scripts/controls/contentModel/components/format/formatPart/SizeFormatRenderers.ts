@@ -7,27 +7,18 @@ export const SizeFormatRenderers: FormatRenderer<SizeFormat>[] = [
     createTextFormatRenderer<SizeFormat>(
         'Width',
         format => format.width + '',
-        (format, value) => {
-            format.width = parseFloat(value);
-            return undefined;
-        },
+        (format, value) => (format.width = parseFloat(value)),
         'number'
     ),
     createTextFormatRenderer<SizeFormat>(
         'Height',
         format => format.height + '',
-        (format, value) => {
-            format.height = parseFloat(value);
-            return undefined;
-        },
+        (format, value) => (format.height = parseFloat(value)),
         'number'
     ),
     createCheckboxFormatRenderer<SizeFormat>(
         'UseBorderBox',
         format => format.useBorderBox,
-        (format, value) => {
-            format.useBorderBox = value;
-            return undefined;
-        }
+        (format, value) => (format.useBorderBox = value)
     ),
 ];

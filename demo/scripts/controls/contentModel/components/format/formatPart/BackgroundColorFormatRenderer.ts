@@ -7,8 +7,5 @@ export const BackgroundColorFormatRenderer: FormatRenderer<BackgroundColorFormat
 >(
     'Back color',
     format => format.backgroundColor,
-    (format, value) => {
-        format.backgroundColor = value;
-        return undefined;
-    }
+    (format, value) => (format.backgroundColor = value)
 );

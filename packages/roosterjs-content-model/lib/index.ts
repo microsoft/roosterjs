@@ -14,4 +14,4 @@ export { default as setTableCellShade } from './publicApi/table/setTableCellShad
 export { hasSelectionInBlock } from './modelApi/selection/hasSelectionInBlock';
 export { hasSelectionInSegment } from './modelApi/selection/hasSelectionInSegment';
 
-export { extractBorderValues } from './domUtils/extractBorderValues';
+export { extractBorderValues, combineBorderValue, BorderIndex } from './domUtils/borderValues';

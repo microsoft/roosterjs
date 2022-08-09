@@ -75,7 +75,7 @@ function TextFormatItem<T>(props: {
 export function createTextFormatRenderer<T>(
     name: string,
     getter: (format: T) => string,
-    setter?: (format: T, newValue: string) => string | undefined,
+    setter?: (format: T, newValue: string) => void,
     type: 'text' | 'number' | 'multiline' = 'text'
 ): FormatRenderer<T> {
     return (format: T) => (
