@@ -1,10 +1,11 @@
 import { ContentModelContext } from '../../publicTypes/ContentModelContext';
+import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { FormatHandler } from '../../formatHandlers/FormatHandler';
 
 /**
  * @internal
  */
-export function parseFormat<T>(
+export function parseFormat<T extends ContentModelFormatBase>(
     element: HTMLElement,
     handlers: FormatHandler<T>[],
     format: T,

@@ -1,7 +1,7 @@
 /**
  * Format of element size
  */
-export interface SizeFormat {
+export type SizeFormat = {
     /**
      * Width in pixel
      */
@@ -16,4 +16,4 @@ export interface SizeFormat {
      * Whether use border-box for this element
      */
     useBorderBox?: boolean;
-}
+};
