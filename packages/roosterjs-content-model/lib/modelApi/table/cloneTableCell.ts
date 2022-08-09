@@ -6,7 +6,7 @@ import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentMod
 /**
  * @internal
  */
-export function cloneCell(cell: ContentModelTableCell): ContentModelTableCell {
+export function cloneTableCell(cell: ContentModelTableCell): ContentModelTableCell {
     const newCell: ContentModelTableCell = {
         blockType: ContentModelBlockType.BlockGroup,
         blockGroupType: ContentModelBlockGroupType.TableCell,

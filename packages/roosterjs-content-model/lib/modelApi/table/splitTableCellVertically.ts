@@ -1,4 +1,4 @@
-import { cloneCell } from './cloneCell';
+import { cloneTableCell } from './cloneTableCell';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { getSelectedCells } from './getSelectedCells';
 
@@ -12,7 +12,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
         for (let rowIndex = sel.lastRow; rowIndex >= sel.firstRow; rowIndex--) {
             const row = table.cells[rowIndex];
             const newRow = row.map((cell, colIndex) => {
-                const newCell = cloneCell(cell);
+                const newCell = cloneTableCell(cell);
 
                 if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
                     newCell.spanAbove = true;

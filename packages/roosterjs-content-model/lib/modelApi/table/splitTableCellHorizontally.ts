@@ -1,4 +1,4 @@
-import { cloneCell } from './cloneCell';
+import { cloneTableCell } from './cloneTableCell';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { getSelectedCells } from './getSelectedCells';
 
@@ -13,7 +13,7 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
             table.cells.forEach((row, rowIndex) => {
                 const cell = row[colIndex];
                 if (cell) {
-                    const newCell = cloneCell(cell);
+                    const newCell = cloneTableCell(cell);
 
                     if (rowIndex < sel.firstRow || rowIndex > sel.lastRow) {
                         newCell.spanLeft = true;

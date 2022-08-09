@@ -1,13 +1,18 @@
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { getSelectedCells } from './getSelectedCells';
 import { TableOperation } from 'roosterjs-editor-types';
+import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
  */
 export function mergeTableColumn(
     table: ContentModelTable,
-    operation: TableOperation.MergeLeft | TableOperation.MergeRight
+    operation:
+        | TableOperation.MergeLeft
+        | TableOperation.MergeRight
+        | CompatibleTableOperation.MergeLeft
+        | CompatibleTableOperation.MergeRight
 ) {
     const sel = getSelectedCells(table);
     const mergeLeft = operation == TableOperation.MergeLeft;

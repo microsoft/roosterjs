@@ -1,6 +1,7 @@
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { getSelectedCells } from './getSelectedCells';
 import { TableOperation } from 'roosterjs-editor-types';
+import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const TextAlignValueMap: Partial<Record<TableOperation, 'start' | 'center' | 'end'>> = {
     [TableOperation.AlignCellLeft]: 'start',
@@ -26,6 +27,12 @@ export function alignTableCell(
         | TableOperation.AlignCellTop
         | TableOperation.AlignCellMiddle
         | TableOperation.AlignCellBottom
+        | CompatibleTableOperation.AlignCellCenter
+        | CompatibleTableOperation.AlignCellLeft
+        | CompatibleTableOperation.AlignCellRight
+        | CompatibleTableOperation.AlignCellTop
+        | CompatibleTableOperation.AlignCellMiddle
+        | CompatibleTableOperation.AlignCellBottom
 ) {
     const sel = getSelectedCells(table);
 
