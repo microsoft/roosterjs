@@ -33,6 +33,7 @@ const adjustSteps: ((
     adjustInsertPositionForVoidElement,
     adjustInsertPositionForMoveCursorOutOfALink,
     adjustInsertPositionForNotEditableNode,
+    adjustInsertPositionForTable,
 ];
 
 /**
@@ -275,6 +276,42 @@ function adjustInsertPositionForNotEditableNode(
         if (nonEditableElement) {
             position = new Position(nonEditableElement, PositionType.After);
             return adjustInsertPositionForNotEditableNode(root, nodeToInsert, position, range);
+        }
+    }
+
+    return position;
+}
+
+/**
+ * Adjust the position of a table to be one line after another table.
+ */
+function adjustInsertPositionForTable(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition,
+    range: Range
+): NodePosition {
+    if (
+        (nodeToInsert.childNodes.length == 1 &&
+            getTagOfNode(nodeToInsert.childNodes[0]) == 'TABLE') ||
+        getTagOfNode(nodeToInsert) == 'TABLE'
+    ) {
+        const { element, offset } = position;
+        const previousElementSibling = element.previousElementSibling;
+        const prevElement =
+            offset - 1 >= 0
+                ? element.childNodes.item(offset - 1)
+                : previousElementSibling?.childNodes.item(
+                      previousElementSibling.childElementCount - 1
+                  );
+        if (prevElement && getTagOfNode(prevElement) == 'TABLE' && element?.isContentEditable) {
+            let range = createRange(prevElement);
+            range.collapse(false /* toStart */);
+            const br = root.ownerDocument.createElement('br');
+            range.insertNode(br);
+
+            range = createRange(br);
+            position = Position.getEnd(range);
         }
     }
 
