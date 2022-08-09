@@ -7,9 +7,6 @@ import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
-import findClosestElementAncestor from '../utils/findClosestElementAncestor';
-import getEntityFromElement from '../entity/getEntityFromElement';
-import getEntitySelector from '../entity/getEntitySelector';
 import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
 
 /**
@@ -65,15 +62,10 @@ export default function deleteSelectedContent(root: HTMLElement, range: Range) {
         })
         .filter(x => !!x);
 
-    // 3. Delete all nodes that we found
-    const entitySelector = getEntitySelector();
-    nodesToDelete.forEach(node => {
-        const entityElement = findClosestElementAncestor(node, root, entitySelector);
-        const entity = entityElement && getEntityFromElement(entityElement);
-        if (entity ? !entity.isReadonly : true) {
-            node.parentNode?.removeChild(node);
-        }
-    });
+    // 3. Delete all nodes that we found, whose parent is editable
+    nodesToDelete.forEach(
+        node => node.parentElement?.isContentEditable && node.parentElement.removeChild(node)
+    );
 
     // 4. Merge lines for each region, so that after we don't see extra line breaks
     nodesPairToMerge.forEach(nodes => {

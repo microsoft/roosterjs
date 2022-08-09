@@ -1,10 +1,5 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
-import {
-    applyTextStyle,
-    getEntityFromElement,
-    getEntitySelector,
-    getTagOfNode,
-} from 'roosterjs-editor-dom';
+import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
 import { IEditor, NodeType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
@@ -23,15 +18,8 @@ export default function applyInlineStyle(
     editor.focus();
     let selection = editor.getSelectionRangeEx();
 
-    const entitySelector = getEntitySelector();
-
-    const entitySafeCallback = (element: HTMLElement, isInnerNode?: boolean) => {
-        const parentEntityElement = editor.getElementAtCursor(entitySelector, element);
-        const parentEntity = parentEntityElement && getEntityFromElement(parentEntityElement);
-        if (!parentEntity || !parentEntity.isReadonly) {
-            callback(element, isInnerNode);
-        }
-    };
+    const safeCallback = (element: HTMLElement, isInnerNode?: boolean) =>
+        element.isContentEditable && callback(element, isInnerNode);
 
     if (selection && selection.areAllCollapsed) {
         const range = selection.ranges[0];
@@ -42,7 +30,7 @@ export default function applyInlineStyle(
                 (getTagOfNode(node.firstChild) == 'BR' && !node.firstChild.nextSibling));
         if (isEmptySpan) {
             editor.addUndoSnapshot();
-            entitySafeCallback(node as HTMLElement);
+            safeCallback(node as HTMLElement);
         } else {
             let isZWSNode =
                 node &&
@@ -59,7 +47,7 @@ export default function applyInlineStyle(
                 range.insertNode(node);
             }
 
-            applyTextStyle(node, entitySafeCallback);
+            applyTextStyle(node, safeCallback);
             editor.select(node, PositionType.End);
         }
     } else {
@@ -76,7 +64,7 @@ export default function applyInlineStyle(
                     while (inlineElement) {
                         let nextInlineElement = contentTraverser.getNextInlineElement();
                         inlineElement.applyStyle((element, isInnerNode) => {
-                            entitySafeCallback(element, isInnerNode);
+                            safeCallback(element, isInnerNode);
                             firstNode = firstNode || element;
                             lastNode = element;
                         });
