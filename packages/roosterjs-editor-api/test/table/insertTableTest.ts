@@ -30,7 +30,7 @@ describe('InsertTable', () => {
         });
     });
 
-    it('Insert Table after other table', () => {
+    TestHelper.itChromeOnly('Insert Table after other table', () => {
         editor.setContent(`<div id="${testElementId}"><table><tr><td></td></tr></table></div>`);
         const target = document.getElementById(testElementId);
         const range = new Range();
