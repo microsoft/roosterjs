@@ -1,4 +1,4 @@
-import { BorderFormat, extractBorderValues } from 'roosterjs-content-model';
+import { BorderFormat, combineBorderValue, extractBorderValues } from 'roosterjs-content-model';
 import { createColorFormatRendererGroup } from '../utils/createColorFormatRender';
 import { createDropDownFormatRendererGroup } from '../utils/createDropDownFormatRenderer';
 import { createTextFormatRendererGroup } from '../utils/createTextFormatRenderer';
@@ -45,8 +45,7 @@ export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
         (format, name, value) => {
             const values = extractBorderValues(format.borderWidth);
             values[BorderWidthNames.indexOf(name)] = value;
-            format.borderWidth = values.join(' ');
-            return undefined;
+            format.borderWidth = combineBorderValue(values, '0');
         }
     ),
     createDropDownFormatRendererGroup<BorderFormat, BorderStyle, BorderStyleName>(
@@ -56,8 +55,7 @@ export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
         (format, name, value) => {
             const values = extractBorderValues(format.borderStyle);
             values[BorderStyleNames.indexOf(name)] = value;
-            format.borderStyle = values.join(' ');
-            return undefined;
+            format.borderStyle = combineBorderValue(values, 'none');
         }
     ),
     createColorFormatRendererGroup<BorderFormat, BorderColorName>(
@@ -66,8 +64,7 @@ export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
         (format, name, value) => {
             const values = extractBorderValues(format.borderColor);
             values[BorderColorNames.indexOf(name)] = value;
-            format.borderColor = values.join(' ');
-            return undefined;
+            format.borderColor = combineBorderValue(values, 'transparent');
         }
     ),
 ];

@@ -11,24 +11,17 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
         format => format.topBorderColor,
         (format, value) => {
             format.topBorderColor = value;
-            return undefined;
         }
     ),
     createColorFormatRenderer<TableMetadataFormat>(
         'BottomBorderColor',
         format => format.bottomBorderColor,
-        (format, value) => {
-            format.bottomBorderColor = value;
-            return undefined;
-        }
+        (format, value) => (format.bottomBorderColor = value)
     ),
     createColorFormatRenderer<TableMetadataFormat>(
         'VerticalBorderColor',
         format => format.verticalBorderColor,
-        (format, value) => {
-            format.verticalBorderColor = value;
-            return undefined;
-        }
+        (format, value) => (format.verticalBorderColor = value)
     ),
     createCheckboxFormatRenderer<TableMetadataFormat>(
         'HasHeaderRow',
@@ -38,10 +31,7 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
     createColorFormatRenderer<TableMetadataFormat>(
         'HeaderRowColor',
         format => format.headerRowColor,
-        (format, value) => {
-            format.headerRowColor = value;
-            return undefined;
-        }
+        (format, value) => (format.headerRowColor = value)
     ),
     createCheckboxFormatRenderer<TableMetadataFormat>(
         'HasFirstColumn',
@@ -61,18 +51,12 @@ export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] =
     createColorFormatRenderer<TableMetadataFormat>(
         'BgColorEven',
         format => format.bgColorEven,
-        (format, value) => {
-            format.bgColorEven = value;
-            return undefined;
-        }
+        (format, value) => (format.bgColorEven = value)
     ),
     createColorFormatRenderer<TableMetadataFormat>(
         'BgColorOdd',
         format => format.bgColorOdd,
-        (format, value) => {
-            format.bgColorOdd = value;
-            return undefined;
-        }
+        (format, value) => (format.bgColorOdd = value)
     ),
     createDropDownFormatRenderer<TableMetadataFormat, keyof typeof CompatibleTableBorderFormat>(
         'TableBorderFormat',

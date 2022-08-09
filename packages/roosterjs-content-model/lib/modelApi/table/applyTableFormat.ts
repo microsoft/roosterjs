@@ -1,6 +1,6 @@
+import { BorderIndex, combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
-import { extractBorderValues } from '../../domUtils/extractBorderValues';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
@@ -130,18 +130,21 @@ function formatBorders(cells: ContentModelTableCell[][], format: TableMetadataFo
             // Set to default value first
             cell.format.borderStyle = 'solid';
             cell.format.borderWidth = '1px';
-            cell.format.borderColor = [
-                getBorder(format.topBorderColor, transparentBorderMatrix[0]),
-                getBorder(format.verticalBorderColor, transparentBorderMatrix[1]),
-                getBorder(format.bottomBorderColor, transparentBorderMatrix[2]),
-                getBorder(format.verticalBorderColor, transparentBorderMatrix[3]),
-            ].join(' ');
+            cell.format.borderColor = combineBorderValue(
+                [
+                    getBorder(format.topBorderColor, transparentBorderMatrix[0]),
+                    getBorder(format.verticalBorderColor, transparentBorderMatrix[1]),
+                    getBorder(format.bottomBorderColor, transparentBorderMatrix[2]),
+                    getBorder(format.verticalBorderColor, transparentBorderMatrix[3]),
+                ],
+                'transparent'
+            );
         });
     });
 }
 
 function getBorder(style: string | null | undefined, alwaysUseTransparent: boolean) {
-    return (!alwaysUseTransparent && style) || 'transparent';
+    return (!alwaysUseTransparent && style) || '';
 }
 
 function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableMetadataFormat) {
@@ -173,13 +176,6 @@ function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableM
     });
 }
 
-const enum BorderIndex {
-    Top = 0,
-    Right = 1,
-    Bottom = 2,
-    Left = 3,
-}
-
 function setFirstColumnFormat(
     cells: ContentModelTableCell[][],
     format: Partial<TableMetadataFormat>
@@ -200,7 +196,7 @@ function setFirstColumnFormat(
                     borders[BorderIndex.Bottom] = 'transparent';
                 }
 
-                cell.format.borderColor = borders.join(' ');
+                cell.format.borderColor = combineBorderValue(borders, 'transparent');
             } else {
                 cell.isHeader = false;
             }
@@ -225,7 +221,7 @@ function setHeaderRowFormat(cells: ContentModelTableCell[][], format: TableMetad
             borders[BorderIndex.Right] = format.headerRowColor;
             borders[BorderIndex.Left] = format.headerRowColor;
 
-            cell.format.borderColor = borders.join(' ');
+            cell.format.borderColor = combineBorderValue(borders, 'transparent');
         }
     });
 }
