@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "8.27.1",
+    "version": "8.28.1",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
@@ -20,17 +20,16 @@
         "build": "node tools/build.js clean checkdep normalize tslint buildcommonjs dts packprod builddemo",
         "build:ci": "node tools/build.js --noProgressBar clean checkdep normalize tslint buildcommonjs buildamd buildmjs dts pack packprod builddemo builddoc",
         "start": "node tools/start.js",
-        "test": "node tools/build.js normalize & karma start",
-        "test:chrome": "node tools/build.js normalize & karma start",
+        "test": "node tools/build.js normalize & karma start --chrome",
+        "test:chrome": "node tools/build.js normalize & karma start --chrome",
         "test:firefox": "node tools/build.js normalize & karma start --firefox",
-        "test:debug": "node tools/build.js normalize & karma start --no-single-run",
-        "test:coverage": "node tools/build.js normalize & karma start --coverage",
+        "test:debug": "node tools/build.js normalize & karma start --no-single-run --chrome",
+        "test:coverage": "node tools/build.js normalize & karma start --coverage --firefox --chrome",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd buildmjs dts pack packprod builddemo builddoc publish"
     },
     "devDependencies": {
         "@microsoft/loader-load-themed-styles": "1.8.11",
         "@types/color": "3.0.0",
-        "@types/dom-inputevent": "1.0.5",
         "@types/dompurify": "2.2.3",
         "@types/jasmine": "3.5.10",
         "@types/node": "13.13.4",

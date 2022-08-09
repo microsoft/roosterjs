@@ -1,6 +1,6 @@
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { FormatContext } from '../../formatHandlers/FormatContext';
 import { handleSegment } from './handleSegment';
+import { ModelToDomContext } from '../context/ModelToDomContext';
 
 /**
  * @internal
@@ -9,7 +9,7 @@ export function handleParagraph(
     doc: Document,
     parent: Node,
     paragraph: ContentModelParagraph,
-    context: FormatContext
+    context: ModelToDomContext
 ) {
     let container: HTMLElement;
 

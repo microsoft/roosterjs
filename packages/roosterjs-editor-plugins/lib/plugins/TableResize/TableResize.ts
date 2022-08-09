@@ -55,7 +55,7 @@ export default class TableResize implements EditorPlugin {
     dispose() {
         this.onMouseMoveDisposer();
         this.invalidateTableRects();
-        this.setTableEditor(null);
+        this.disposeTableEditor();
         this.editor = null;
     }
 
@@ -106,9 +106,8 @@ export default class TableResize implements EditorPlugin {
     };
 
     private setTableEditor(table: HTMLTableElement, e?: MouseEvent) {
-        if (this.tableEditor && table != this.tableEditor.table) {
-            this.tableEditor.dispose();
-            this.tableEditor = null;
+        if (this.tableEditor && !this.tableEditor.isEditing() && table != this.tableEditor.table) {
+            this.disposeTableEditor();
         }
 
         if (!this.tableEditor && table) {
@@ -125,6 +124,11 @@ export default class TableResize implements EditorPlugin {
     private invalidateTableRects = () => {
         this.tableRectMap = null;
     };
+
+    private disposeTableEditor() {
+        this.tableEditor?.dispose();
+        this.tableEditor = null;
+    }
 
     private ensureTableRects() {
         if (!this.tableRectMap) {

@@ -1,5 +1,5 @@
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { FormatContext } from '../../formatHandlers/FormatContext';
+import { DomToModelContext } from '../context/DomToModelContext';
 
 /**
  * @internal
@@ -7,5 +7,5 @@ import { FormatContext } from '../../formatHandlers/FormatContext';
 export type ElementProcessor = (
     group: ContentModelBlockGroup,
     element: HTMLElement,
-    context: FormatContext
+    context: DomToModelContext
 ) => void;

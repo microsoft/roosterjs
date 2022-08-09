@@ -1,5 +1,6 @@
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import { ContentModelBlockGroupType } from '../../enum/BlockGroupType';
+import { ContentModelTableCellFormat } from '../../format/ContentModelTableCellFormat';
 import type { CompatibleContentModelBlockGroupType } from '../../compatibleEnum/BlockGroupType';
 
 /**
@@ -11,9 +12,8 @@ export interface ContentModelTableCell
     > {
     /**
      * Format of this table cell
-     * TODO: Add more formats
      */
-    format: {};
+    format: ContentModelTableCellFormat;
 
     /**
      * Whether this cell is spanned from left cell
@@ -29,4 +29,9 @@ export interface ContentModelTableCell
      * Whether this cell is a table header (TH) element
      */
     isHeader?: boolean;
+
+    /**
+     * Whether this cell is selected
+     */
+    isSelected?: boolean;
 }

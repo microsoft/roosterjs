@@ -7,7 +7,6 @@ import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
-import HackedEditor from './hackedEditor/HackedEditor';
 import MainPaneBase from './MainPaneBase';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
@@ -15,6 +14,7 @@ import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
+import { ExperimentalContentModelEditor } from 'roosterjs-content-model';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
@@ -423,7 +423,7 @@ class MainPane extends MainPaneBase {
         this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new HackedEditor(div, options),
+                new ExperimentalContentModelEditor(div, options),
         });
     }
 }

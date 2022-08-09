@@ -50,4 +50,13 @@ const BackgroundColorDropDownItems: Record<BackgroundColorKeys, string> = {
     backgroundColorBlack: 'Black',
 };
 
-export { BackgroundColors, BackgroundColorDropDownItems };
+/**
+ * Get mode independent color value of background color from the given color key
+ * @param key The key to get color from
+ * @returns A model independent color value of the given key
+ */
+function getBackgroundColorValue(key: BackgroundColorKeys): ModeIndependentColor {
+    return BackgroundColors[key];
+}
+
+export { BackgroundColors, BackgroundColorDropDownItems, getBackgroundColorValue };
