@@ -29,4 +29,15 @@ describe('InsertTable', () => {
             expect(table.isContentEditable).toBe(true);
         });
     });
+
+    it('Remove background color on insert table', () => {
+        editor.setContent(`<span id="${testElementId}" style='background-color: purple'></span>`);
+        const target = document.getElementById(testElementId);
+        const range = new Range();
+        range.setStart(target!, 0);
+        editor.select(range);
+        insertTable(editor, 1, 1);
+
+        expect(target?.style.backgroundColor).toBe('transparent');
+    });
 });
