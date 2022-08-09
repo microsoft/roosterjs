@@ -36,7 +36,11 @@ export function extractBorderValues(combinedBorder: string): string[] {
     return result.slice(0, 4);
 }
 
-/** Combine border value array back to string */
+/**
+ * Combine border value array back to string
+ * @param values Input string values
+ * @param initialValue Initial value for those items without valid value
+ */
 export function combineBorderValue(values: string[], initialValue: string): string {
     return values
         .slice(0, 4)
