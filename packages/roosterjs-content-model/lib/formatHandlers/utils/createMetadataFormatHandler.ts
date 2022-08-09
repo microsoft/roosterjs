@@ -1,25 +1,30 @@
 import { Definition } from 'roosterjs-editor-types';
 import { FormatHandler } from '../FormatHandler';
-import { getMetadata, removeMetadata, setMetadata } from 'roosterjs-editor-dom';
-import { MetadataFormat } from '../../publicTypes/format/formatParts/MetadataFormat';
+import { getMetadata, getObjectKeys, removeMetadata, setMetadata } from 'roosterjs-editor-dom';
 
 /**
  * @internal
  */
-export function createMetadataFormatHandler<T>(
-    definition: Definition<T>
-): FormatHandler<MetadataFormat<T>> {
+export function createMetadataFormatHandler<T extends Object>(
+    definition: Definition<T>,
+    onApply?: (format: T) => T
+): FormatHandler<T> {
     return {
         parse: (format, element) => {
             const metadata = getMetadata(element, definition);
 
             if (metadata) {
-                format.metadata = metadata;
+                Object.assign(format, metadata);
             }
         },
         apply: (format, element) => {
-            if (format.metadata) {
-                setMetadata(element, format.metadata, definition);
+            const metadata = onApply?.(format) || format;
+
+            if (
+                metadata &&
+                !getObjectKeys(metadata).every(key => typeof metadata[key] === 'undefined')
+            ) {
+                setMetadata(element, metadata, definition);
             } else {
                 removeMetadata(element);
             }

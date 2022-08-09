@@ -1,6 +1,7 @@
-import { BorderFormat } from 'roosterjs-content-model';
-import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
-import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
+import { BorderFormat, extractBorderValues } from 'roosterjs-content-model';
+import { createColorFormatRendererGroup } from '../utils/createColorFormatRender';
+import { createDropDownFormatRendererGroup } from '../utils/createDropDownFormatRenderer';
+import { createTextFormatRendererGroup } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
 
 type BorderStyle = 'dashed' | 'dotted' | 'double' | 'groove' | 'none' | 'outset' | 'solid';
@@ -14,111 +15,59 @@ const BorderStyleValues: BorderStyle[] = [
     'solid',
 ];
 
+type BorderWidthName = 'Width-top' | 'Width-right' | 'Width-Bottom' | 'Width-Left';
+type BorderStyleName = 'Style-top' | 'Style-right' | 'Style-Bottom' | 'Style-Left';
+type BorderColorName = 'Color-top' | 'Color-right' | 'Color-Bottom' | 'Color-Left';
+
+const BorderWidthNames: BorderWidthName[] = [
+    'Width-top',
+    'Width-right',
+    'Width-Bottom',
+    'Width-Left',
+];
+const BorderStyleNames: BorderStyleName[] = [
+    'Style-top',
+    'Style-right',
+    'Style-Bottom',
+    'Style-Left',
+];
+const BorderColorNames: BorderColorName[] = [
+    'Color-top',
+    'Color-right',
+    'Color-Bottom',
+    'Color-Left',
+];
+
 export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
-    createTextFormatRenderer<BorderFormat>(
-        'Width-top',
-        format => format.borderWidth[0],
-        (format, value) => {
-            format.borderWidth[0] = value;
+    createTextFormatRendererGroup<BorderFormat, BorderWidthName>(
+        BorderWidthNames,
+        format => extractBorderValues(format.borderWidth),
+        (format, name, value) => {
+            const values = extractBorderValues(format.borderWidth);
+            values[BorderWidthNames.indexOf(name)] = value;
+            format.borderWidth = values.join(' ');
             return undefined;
         }
     ),
-    createTextFormatRenderer<BorderFormat>(
-        'Width-right',
-        format => format.borderWidth[1],
-        (format, value) => {
-            format.borderWidth[1] = value;
-            return undefined;
-        }
-    ),
-    createTextFormatRenderer<BorderFormat>(
-        'Width-bottom',
-        format => format.borderWidth[2],
-        (format, value) => {
-            format.borderWidth[2] = value;
-            return undefined;
-        }
-    ),
-    createTextFormatRenderer<BorderFormat>(
-        'Width-left',
-        format => format.borderWidth[3],
-        (format, value) => {
-            format.borderWidth[3] = value;
-            return undefined;
-        }
-    ),
-
-    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
-        'Style-top',
+    createDropDownFormatRendererGroup<BorderFormat, BorderStyle, BorderStyleName>(
+        BorderStyleNames,
         BorderStyleValues,
-        format => format.borderStyle[0] as BorderStyle,
-        (format, value) => {
-            format.borderStyle[0] = value;
+        format => extractBorderValues(format.borderStyle) as BorderStyle[],
+        (format, name, value) => {
+            const values = extractBorderValues(format.borderStyle);
+            values[BorderStyleNames.indexOf(name)] = value;
+            format.borderStyle = values.join(' ');
             return undefined;
         }
     ),
-    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
-        'Style-right',
-        BorderStyleValues,
-        format => format.borderStyle[1] as BorderStyle,
-        (format, value) => {
-            format.borderStyle[1] = value;
+    createColorFormatRendererGroup<BorderFormat, BorderColorName>(
+        BorderColorNames,
+        format => extractBorderValues(format.borderColor),
+        (format, name, value) => {
+            const values = extractBorderValues(format.borderColor);
+            values[BorderColorNames.indexOf(name)] = value;
+            format.borderColor = values.join(' ');
             return undefined;
         }
-    ),
-    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
-        'Style-bottom',
-        BorderStyleValues,
-        format => format.borderStyle[2] as BorderStyle,
-        (format, value) => {
-            format.borderStyle[2] = value;
-            return undefined;
-        }
-    ),
-    createDropDownFormatRenderer<BorderFormat, BorderStyle>(
-        'Style-left',
-        BorderStyleValues,
-        format => format.borderStyle[3] as BorderStyle,
-        (format, value) => {
-            format.borderStyle[3] = value;
-            return undefined;
-        }
-    ),
-
-    createTextFormatRenderer<BorderFormat>(
-        'Color-top',
-        format => format.borderColor[0],
-        (format, value) => {
-            format.borderColor[0] = value;
-            return undefined;
-        },
-        'color'
-    ),
-    createTextFormatRenderer<BorderFormat>(
-        'Color-right',
-        format => format.borderColor[1],
-        (format, value) => {
-            format.borderColor[1] = value;
-            return undefined;
-        },
-        'color'
-    ),
-    createTextFormatRenderer<BorderFormat>(
-        'Color-bottom',
-        format => format.borderColor[2],
-        (format, value) => {
-            format.borderColor[2] = value;
-            return undefined;
-        },
-        'color'
-    ),
-    createTextFormatRenderer<BorderFormat>(
-        'Color-left',
-        format => format.borderColor[3],
-        (format, value) => {
-            format.borderColor[3] = value;
-            return undefined;
-        },
-        'color'
     ),
 ];

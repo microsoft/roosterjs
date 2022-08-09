@@ -1,4 +1,3 @@
-import * as Color from 'color';
 import * as React from 'react';
 import { FormatRenderer } from './FormatRenderer';
 import { useProperty } from '../../../hooks/useProperty';
@@ -9,74 +8,28 @@ function TextFormatItem<T>(props: {
     name: string;
     format: T;
     getter: (format: T) => string;
-    setter?: (format: T, newValue: string) => string;
-    type: 'text' | 'number' | 'color' | 'multiline';
+    setter?: (format: T, newValue: string) => void;
+    type: 'text' | 'number' | 'multiline';
 }) {
     const { name, getter, setter, format, type } = props;
     const textBox = React.useRef<HTMLInputElement & HTMLTextAreaElement>(null);
-    const colorValueBox = React.useRef<HTMLInputElement>(null);
-    const [errorMessage, setErrorMessage] = React.useState<string>(null);
-
-    let initValue = getter(format);
-
-    if (type == 'color' && initValue) {
-        try {
-            const color = Color(initValue);
-            initValue = color.hex();
-        } catch {}
-    }
-
-    const [value, setValue] = useProperty(initValue);
+    const [value, setValue] = useProperty(getter(format));
 
     const updateValue = React.useCallback(
         (newValue: string) => {
-            setErrorMessage(null);
-
-            if (type == 'color') {
-                try {
-                    const color = Color(newValue);
-                    newValue = color.hex();
-                } catch {
-                    setErrorMessage('Invalid color value');
-                }
-            }
-
             setValue(newValue);
-
-            const errOverride = setter?.(format, newValue) || null;
-
-            if (errOverride) {
-                setErrorMessage(errOverride);
-            }
+            setter?.(format, newValue);
         },
-        [setter, format, setErrorMessage]
+        [setter, format]
     );
 
     const onTextBoxChange = React.useCallback(() => {
         updateValue(textBox.current.value);
     }, [updateValue]);
 
-    const onColorValueChange = React.useCallback(() => {
-        updateValue(colorValueBox.current.value);
-    }, [updateValue]);
-
     let content: JSX.Element;
 
     switch (type) {
-        case 'color':
-            content = (
-                <>
-                    <input type="color" ref={textBox} value={value} onChange={onTextBoxChange} />
-                    <input
-                        type="text"
-                        className={styles.colorValue}
-                        ref={colorValueBox}
-                        value={value}
-                        onChange={onColorValueChange}
-                    />
-                </>
-            );
-            break;
         case 'multiline':
             content = (
                 <textarea
@@ -114,10 +67,7 @@ function TextFormatItem<T>(props: {
     return (
         <div className={styles.formatRow}>
             <div className={styles.formatName}>{name}</div>
-            <div className={styles.formatValue}>
-                {content}
-                <br /> <span className={styles.errorMessage}>{errorMessage}</span>
-            </div>
+            <div className={styles.formatValue}>{content}</div>
         </div>
     );
 }
@@ -126,7 +76,7 @@ export function createTextFormatRenderer<T>(
     name: string,
     getter: (format: T) => string,
     setter?: (format: T, newValue: string) => string | undefined,
-    type: 'text' | 'number' | 'color' | 'multiline' = 'text'
+    type: 'text' | 'number' | 'multiline' = 'text'
 ): FormatRenderer<T> {
     return (format: T) => (
         <TextFormatItem
@@ -138,4 +88,30 @@ export function createTextFormatRenderer<T>(
             key={name}
         />
     );
+}
+
+export function createTextFormatRendererGroup<T, V extends string>(
+    names: V[],
+    getter: (format: T) => string[],
+    setter?: (format: T, name: V, newValue: string) => void,
+    type: 'text' | 'number' | 'multiline' = 'text'
+): FormatRenderer<T> {
+    return (format: T) => {
+        const initValues = getter(format);
+
+        return (
+            <>
+                {names.map((name, index) => (
+                    <TextFormatItem
+                        name={name}
+                        getter={() => initValues[index]}
+                        setter={(format, newValue) => setter?.(format, name, newValue)}
+                        format={format}
+                        type={type}
+                        key={name}
+                    />
+                ))}
+            </>
+        );
+    };
 }
