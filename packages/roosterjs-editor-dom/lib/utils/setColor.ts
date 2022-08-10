@@ -14,6 +14,7 @@ const enum ColorTones {
 const DARK_COLORS_LIGHTNESS = 20;
 //If the value of the lightness is more than 80, the color is bright
 const BRIGHT_COLORS_LIGHTNESS = 80;
+const TRANSPARENT_COLOR = 'transparent';
 
 /**
  * Set text color or background color to the given element
@@ -46,7 +47,7 @@ export default function setColor(
             const dataSetName = isBackgroundColor
                 ? DarkModeDatasetNames.OriginalStyleBackgroundColor
                 : DarkModeDatasetNames.OriginalStyleColor;
-            if (!isDarkMode) {
+            if (!isDarkMode || color == TRANSPARENT_COLOR) {
                 delete element.dataset[dataSetName];
             } else if (modeIndependentColor) {
                 element.dataset[dataSetName] = modeIndependentColor.lightModeColor;
