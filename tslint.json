@@ -78,5 +78,8 @@
     "rulesDirectory": [
         "node_modules/tslint-microsoft-contrib",
         "node_modules/tslint-eslint-rules/dist/rules"
-    ]
+    ],
+    "compilerOptions": {
+        "modeResolution": "node"
+    }
 }

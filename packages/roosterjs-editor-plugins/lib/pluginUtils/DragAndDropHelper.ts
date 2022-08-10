@@ -106,6 +106,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
     };
 
     private onMouseMove = (e: MouseEvent) => {
+        //debugger;
         e.preventDefault();
         const [pageX, pageY] = MOUSE_EVENT_INFO.getPageXY(e);
         const deltaX = (pageX - this.initX) / this.zoomScale;
@@ -118,7 +119,6 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
     private onMouseUp = (e: MouseEvent) => {
         e.preventDefault();
         this.removeDocumentEvents();
-
         if (this.handler.onDragEnd?.(this.context, e, this.initValue)) {
             this.onSubmit?.(this.context, this.trigger);
         }
