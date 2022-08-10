@@ -1,35 +1,53 @@
 import DragAndDropContext from 'roosterjs-editor-types';
 import DragAndDropHelper from '../../lib/pluginUtils/DragAndDropHelper';
+import { Browser } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions } from 'roosterjs-editor-types';
 import { IEditor } from 'roosterjs-editor-types';
 //import * as TestHelper from '../TestHelper';
 
+interface DragAndDropContext {
+    node: HTMLDivElement;
+}
+
+interface DragAndDropInitValue {
+    originalRect: DOMRect;
+}
+
 describe('DragAndDropHelper', () => {
     let editor: IEditor;
     let id = 'DragAndDropHelperId';
-    let dndHelper: DragAndDropHelper<DragAndDropContext, any>;
+    let dndHelper: DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>;
+
     beforeEach(() => {
         let node = document.createElement('div');
         node.id = id;
+        node.style.width = '50px';
+        node.style.height = '50px';
+        node.style.backgroundColor = 'red';
+        node.style.position = 'fixed';
+
         document.body.insertBefore(node, document.body.childNodes[0]);
-        let options: EditorOptions = {
-            plugins: [],
-            defaultFormat: {
-                fontFamily: 'Calibri,Arial,Helvetica,sans-serif',
-                fontSize: '11pt',
-                textColor: '#000000',
-            },
-            corePluginOverride: {},
-        };
 
-        editor = new Editor(node as HTMLDivElement, options);
-
-        /*const context: DragAndDropContext = {editor.getZoomScale()};
-        dndHelper = new DragAndDropHelper<DragAndDropContext, any>(
+        dndHelper = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
             node,
-            context,
-        );*/
+            { node },
+            () => {},
+            {
+                onDragEnd(context, event, initValue) {
+                    return true;
+                },
+                onDragStart(context, event) {
+                    return { originalRect: context.node.getBoundingClientRect() };
+                },
+                onDragging(context, event, initValue, deltaX, deltaY) {
+                    context.node.style.left = event.pageX + 'px';
+                    context.node.style.top = event.pageY + 'px';
+                    return true;
+                },
+            },
+            1
+        );
     });
 
     afterEach(() => {});
@@ -39,20 +57,49 @@ describe('DragAndDropHelper', () => {
     }
 
     it('should replace', () => {
+        //1 Mouse DOwn Div
+
+        //2 Mouse Move Move
+
+        //3 Mouse Up Event
         runTest();
     });
 });
 
-function simulateTouchEvent(type: string, target: HTMLElement) {
+function simulateMouseEvent(type: string, target: HTMLElement, shiftKey: boolean = false) {
     const rect = target.getBoundingClientRect();
-    let lll: Touch[] = [
-        new Touch({ identifier: 0, target: target, clientX: rect.left, clientY: rect.top }),
-    ];
-    var event = new TouchEvent(type, {
+    var event = new MouseEvent(type, {
         view: window,
         bubbles: true,
         cancelable: true,
-        touches: lll,
+        clientX: rect.left,
+        clientY: rect.top,
+        shiftKey,
     });
     target.dispatchEvent(event);
+}
+
+function simulateKeyDownEvent(
+    whichInput: number,
+    shiftKey: boolean = true,
+    ctrlKey: boolean = false
+) {
+    const evt = new KeyboardEvent('keydown', {
+        shiftKey,
+        altKey: false,
+        ctrlKey,
+        cancelable: true,
+        which: whichInput,
+    });
+
+    if (!Browser.isFirefox) {
+        //Chromium hack to add which to the event as there is a bug in Webkit
+        //https://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key/10520017#10520017
+        Object.defineProperty(evt, 'which', {
+            get: function () {
+                return whichInput;
+            },
+        });
+    }
+    return evt;
 }
