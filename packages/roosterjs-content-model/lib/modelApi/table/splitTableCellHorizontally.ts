@@ -22,10 +22,14 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
 
                     if (rowIndex < sel.firstRow || rowIndex > sel.lastRow) {
                         newCell.spanLeft = true;
-                        newCell.format.width = 0;
+
+                        if (newCell.format.width) {
+                            newCell.format.width = 0;
+                        }
                     } else {
                         cell.format.width! /= 2;
                         newCell.format.width! /= 2;
+                        newCell.isSelected = cell.isSelected;
                     }
                     row.splice(colIndex + 1, 0, newCell);
                 }

@@ -21,10 +21,13 @@ export function splitTableCellVertically(table: ContentModelTable) {
 
                 if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
                     newCell.spanAbove = true;
-                    newCell.format.height = 0;
+                    if (newCell.format.height) {
+                        newCell.format.height = 0;
+                    }
                 } else {
                     cell.format.height! /= 2;
                     newCell.format.height! /= 2;
+                    newCell.isSelected = cell.isSelected;
                 }
 
                 return newCell;

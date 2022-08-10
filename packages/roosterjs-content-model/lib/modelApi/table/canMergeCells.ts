@@ -7,8 +7,16 @@ export function canMergeCells(
     lastRow: number,
     lastCol: number
 ): boolean {
-    const noSpanAbove = cells[firstRow].every(cell => !cell.spanAbove);
-    const noSpanLeft = cells.every(row => !row[firstCol].spanLeft);
+    const noSpanAbove =
+        firstCol == lastCol ||
+        cells[firstRow].every(
+            (cell, colIndex) => colIndex < firstCol || colIndex > lastCol || !cell.spanAbove
+        );
+    const noSpanLeft =
+        firstRow == lastRow ||
+        cells.every(
+            (row, rowIndex) => rowIndex < firstRow || rowIndex > lastRow || !row[firstCol].spanLeft
+        );
 
     const noDifferentBelowSpan = cells[lastRow]
         .map((_, colIndex) =>
