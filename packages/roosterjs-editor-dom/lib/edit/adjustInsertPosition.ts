@@ -1,5 +1,6 @@
 import changeElementTag from '../utils/changeElementTag';
 import contains from '../utils/contains';
+import ContentTraverser from '../contentTraverser/ContentTraverser';
 import createRange from '../selection/createRange';
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
@@ -16,8 +17,14 @@ import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import VTable from '../table/VTable';
 import wrap from '../utils/wrap';
-import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
+import {
+    BlockElement,
+    NodePosition,
+    NodeType,
+    PositionType,
+    QueryScope,
+} from 'roosterjs-editor-types';
 
 const NOT_EDITABLE_SELECTOR = '[contenteditable=false]';
 
@@ -296,22 +303,32 @@ function adjustInsertPositionForTable(
             getTagOfNode(nodeToInsert.childNodes[0]) == 'TABLE') ||
         getTagOfNode(nodeToInsert) == 'TABLE'
     ) {
-        const { element, offset } = position;
-        const previousElementSibling = element.previousElementSibling;
-        const prevElement =
-            offset - 1 >= 0
-                ? element.childNodes.item(offset - 1)
-                : previousElementSibling?.childNodes.item(
-                      previousElementSibling.childElementCount - 1
-                  );
-        if (prevElement && getTagOfNode(prevElement) == 'TABLE' && element?.isContentEditable) {
-            let range = createRange(prevElement);
-            range.collapse(false /* toStart */);
-            const br = root.ownerDocument.createElement('br');
-            range.insertNode(br);
+        const { element } = position;
 
-            range = createRange(br);
-            position = Position.getEnd(range);
+        const posBefore = new Position(element, PositionType.Before);
+        const rangeToTraverse = createRange(posBefore, position);
+        const contentTraverser = ContentTraverser.createSelectionTraverser(root, rangeToTraverse);
+
+        let blockElement = contentTraverser && contentTraverser.currentBlockElement;
+        let nextBlockElement: BlockElement | null = blockElement;
+
+        while (!nextBlockElement) {
+            nextBlockElement = contentTraverser.getNextBlockElement();
+            if (nextBlockElement) {
+                blockElement = nextBlockElement;
+            }
+        }
+
+        const prevElement = blockElement?.getEndNode();
+
+        if (prevElement && findClosestElementAncestor(prevElement, root, 'TABLE')) {
+            let tempRange = createRange(position);
+            tempRange.collapse(false /* toStart */);
+            const br = root.ownerDocument.createElement('br');
+            tempRange.insertNode(br);
+
+            tempRange = createRange(br);
+            position = Position.getEnd(tempRange);
         }
     }
 
