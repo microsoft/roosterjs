@@ -56,3 +56,28 @@ export function createDropDownFormatRenderer<T, O extends string>(
         />
     );
 }
+
+export function createDropDownFormatRendererGroup<T, O extends string, V extends string>(
+    names: V[],
+    options: O[],
+    getter: (format: T) => O[],
+    setter?: (format: T, name: V, newValue: O) => void
+): FormatRenderer<T> {
+    return (format: T) => {
+        const initValues = getter(format);
+        return (
+            <>
+                {names.map((name, index) => (
+                    <DropDownFormatItem
+                        name={name}
+                        getter={() => initValues[index]}
+                        setter={(format, newValue) => setter?.(format, name, newValue)}
+                        format={format}
+                        options={options}
+                        key={name}
+                    />
+                ))}
+            </>
+        );
+    };
+}

@@ -3,7 +3,8 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/ContentModelTableCell';
-import { TableBorderFormat, TableFormat } from 'roosterjs-editor-types';
+import { TableBorderFormat } from 'roosterjs-editor-types';
+import { TableMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableMetadataFormat';
 
 const T = 'transparent';
 
@@ -49,7 +50,7 @@ describe('applyTableFormat', () => {
     }
 
     function runTest(
-        format: TableFormat | undefined,
+        format: TableMetadataFormat | undefined,
         exportedBackgroundColors: string[][],
         expectedBorderColors: string[][][]
     ) {
@@ -65,7 +66,7 @@ describe('applyTableFormat', () => {
                 );
 
                 expect(table.cells[row][col].format.borderColor).toEqual(
-                    expectedBorderColors[row][col],
+                    expectedBorderColors[row][col].join(' '),
                     `BorderColor Row=${row} Col=${col}`
                 );
             }

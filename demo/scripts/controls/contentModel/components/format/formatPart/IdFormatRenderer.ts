@@ -5,8 +5,5 @@ import { IdFormat } from 'roosterjs-content-model';
 export const IdFormatRenderer: FormatRenderer<IdFormat> = createTextFormatRenderer<IdFormat>(
     'Id',
     format => format.id,
-    (format, value) => {
-        format.id = value;
-        return undefined;
-    }
+    (format, value) => (format.id = value)
 );

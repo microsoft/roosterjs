@@ -1,9 +1,10 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
-import { ChangeSource, TableFormat } from 'roosterjs-editor-types';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
+import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**
  * Insert table into editor at current selection
@@ -18,7 +19,7 @@ export default function insertTable(
     editor: IExperimentalContentModelEditor,
     columns: number,
     rows: number,
-    format?: TableFormat
+    format?: TableMetadataFormat
 ) {
     editor.addUndoSnapshot(
         () => {
