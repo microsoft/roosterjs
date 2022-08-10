@@ -1,11 +1,10 @@
 import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
-import { MetadataFormat } from '../../../lib/publicTypes/format/formatParts/MetadataFormat';
-import { TableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
+import { TableCellMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableCellMetadataFormat';
 import { tableCellMetadataFormatHandler } from '../../../lib/formatHandlers/table/tableCellMetadataFormatHandler';
 
 describe('tableCellMetadataFormatHandler.parse', () => {
     let div: HTMLElement;
-    let format: MetadataFormat<TableCellFormat>;
+    let format: TableCellMetadataFormat;
     let context: ContentModelContext;
 
     beforeEach(() => {
@@ -18,7 +17,7 @@ describe('tableCellMetadataFormatHandler.parse', () => {
         };
     });
 
-    function runTest(metadata: any, expectedValue: MetadataFormat<TableCellFormat>) {
+    function runTest(metadata: any, expectedValue: TableCellMetadataFormat) {
         if (metadata) {
             div.dataset.editingInfo = JSON.stringify(metadata);
         }
@@ -34,25 +33,20 @@ describe('tableCellMetadataFormatHandler.parse', () => {
     });
 
     it('Empty value', () => {
-        runTest(
-            {},
-            {
-                metadata: {},
-            }
-        );
+        runTest({}, {});
     });
 
     it('Full valid value', () => {
-        const tableCellFormat: TableCellFormat = {
+        const tableCellFormat: TableCellMetadataFormat = {
             bgColorOverride: true,
         };
-        runTest(tableCellFormat, { metadata: tableCellFormat });
+        runTest(tableCellFormat, tableCellFormat);
     });
 });
 
 describe('tableCellMetadataFormatHandler.apply', () => {
     let div: HTMLElement;
-    let format: MetadataFormat<TableCellFormat>;
+    let format: TableCellMetadataFormat;
     let context: ContentModelContext;
 
     beforeEach(() => {
@@ -65,9 +59,9 @@ describe('tableCellMetadataFormatHandler.apply', () => {
         };
     });
 
-    function runTest(tableCellFormat: TableCellFormat | null, expectedValue: any) {
+    function runTest(tableCellFormat: TableCellMetadataFormat | null, expectedValue: any) {
         if (tableCellFormat) {
-            format.metadata = tableCellFormat;
+            format = tableCellFormat;
         }
 
         tableCellMetadataFormatHandler.apply(format, div, context);
@@ -85,11 +79,11 @@ describe('tableCellMetadataFormatHandler.apply', () => {
     });
 
     it('Empty value', () => {
-        runTest({}, {});
+        runTest({}, null);
     });
 
     it('Full value', () => {
-        const tableCellFormat: TableCellFormat = {
+        const tableCellFormat: TableCellMetadataFormat = {
             bgColorOverride: true,
         };
 
@@ -100,7 +94,7 @@ describe('tableCellMetadataFormatHandler.apply', () => {
         runTest(
             ({
                 bgColorOverride: 'test',
-            } as any) as TableCellFormat,
+            } as any) as TableCellMetadataFormat,
             null
         );
     });

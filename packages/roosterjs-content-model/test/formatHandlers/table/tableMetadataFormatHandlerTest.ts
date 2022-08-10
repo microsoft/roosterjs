@@ -1,11 +1,11 @@
 import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
-import { MetadataFormat } from '../../../lib/publicTypes/format/formatParts/MetadataFormat';
-import { TableBorderFormat, TableFormat } from 'roosterjs-editor-types';
+import { TableBorderFormat } from 'roosterjs-editor-types';
+import { TableMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableMetadataFormat';
 import { tableMetadataFormatHandler } from '../../../lib/formatHandlers/table/tableMetadataFormatHandler';
 
 describe('tableMetadataFormatHandler.parse', () => {
     let div: HTMLElement;
-    let format: MetadataFormat<TableFormat>;
+    let format: TableMetadataFormat;
     let context: ContentModelContext;
 
     beforeEach(() => {
@@ -18,7 +18,7 @@ describe('tableMetadataFormatHandler.parse', () => {
         };
     });
 
-    function runTest(metadata: any, expectedValue: MetadataFormat<TableFormat>) {
+    function runTest(metadata: any, expectedValue: TableMetadataFormat) {
         if (metadata) {
             div.dataset.editingInfo = JSON.stringify(metadata);
         }
@@ -38,7 +38,7 @@ describe('tableMetadataFormatHandler.parse', () => {
     });
 
     it('Full valid value', () => {
-        const tableFormat: TableFormat = {
+        const tableFormat: TableMetadataFormat = {
             topBorderColor: 'red',
             bottomBorderColor: 'blue',
             verticalBorderColor: 'green',
@@ -50,13 +50,12 @@ describe('tableMetadataFormatHandler.parse', () => {
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
             tableBorderFormat: TableBorderFormat.DEFAULT,
-            keepCellShade: true,
         };
-        runTest(tableFormat, { metadata: tableFormat });
+        runTest(tableFormat, tableFormat);
     });
 
     it('Null value', () => {
-        const tableFormat: TableFormat = {
+        const tableFormat: TableMetadataFormat = {
             topBorderColor: null,
             bottomBorderColor: null,
             verticalBorderColor: null,
@@ -68,13 +67,12 @@ describe('tableMetadataFormatHandler.parse', () => {
             bgColorEven: null,
             bgColorOdd: null,
             tableBorderFormat: undefined,
-            keepCellShade: undefined,
         };
         runTest(tableFormat, {});
     });
 
     it('Partial valid value 1', () => {
-        const tableFormat: TableFormat = {
+        const tableFormat: TableMetadataFormat = {
             topBorderColor: 'red',
             bottomBorderColor: 'blue',
             verticalBorderColor: 'green',
@@ -88,7 +86,7 @@ describe('tableMetadataFormatHandler.parse', () => {
 
 describe('tableMetadataFormatHandler.apply', () => {
     let div: HTMLElement;
-    let format: MetadataFormat<TableFormat>;
+    let format: TableMetadataFormat;
     let context: ContentModelContext;
 
     beforeEach(() => {
@@ -101,9 +99,9 @@ describe('tableMetadataFormatHandler.apply', () => {
         };
     });
 
-    function runTest(tableFormat: TableFormat | null, expectedValue: any) {
+    function runTest(tableFormat: TableMetadataFormat | null, expectedValue: any) {
         if (tableFormat) {
-            format.metadata = tableFormat;
+            format = tableFormat;
         }
 
         tableMetadataFormatHandler.apply(format, div, context);
@@ -125,7 +123,7 @@ describe('tableMetadataFormatHandler.apply', () => {
     });
 
     it('Full value', () => {
-        const tableFormat: TableFormat = {
+        const tableFormat: TableMetadataFormat = {
             topBorderColor: 'red',
             bottomBorderColor: 'blue',
             verticalBorderColor: 'green',
@@ -137,7 +135,6 @@ describe('tableMetadataFormatHandler.apply', () => {
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
             tableBorderFormat: TableBorderFormat.DEFAULT,
-            keepCellShade: true,
         };
 
         runTest(tableFormat, tableFormat);
@@ -147,7 +144,7 @@ describe('tableMetadataFormatHandler.apply', () => {
         runTest(
             ({
                 topBorderColor: 1,
-            } as any) as TableFormat,
+            } as any) as TableMetadataFormat,
             null
         );
     });

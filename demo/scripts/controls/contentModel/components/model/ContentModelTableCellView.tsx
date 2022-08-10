@@ -3,10 +3,10 @@ import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundCo
 import { BlockGroupContentView } from './BlockGroupContentView';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelView } from '../ContentModelView';
-import { createMetadataFormatRenderer } from '../format/formatPart/MetadataFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
+import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignFormatRenderer';
@@ -24,7 +24,7 @@ const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = 
     BackgroundColorFormatRenderer,
     TextAlignFormatRenderer,
     VerticalAlignFormatRenderer,
-    createMetadataFormatRenderer(null),
+    TableCellMetadataFormatRender,
 ];
 
 export function ContentModelTableCellView(props: { cell: ContentModelTableCell }) {
