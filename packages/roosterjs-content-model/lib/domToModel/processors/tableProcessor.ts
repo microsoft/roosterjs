@@ -46,7 +46,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
             for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
                     const hasTd = colSpan == 1 && rowSpan == 1;
-                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH');
+                    const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
 
                     if (isCellSelected) {
                         cell.isSelected = true;

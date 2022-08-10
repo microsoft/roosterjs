@@ -1,6 +1,7 @@
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
+import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
@@ -148,6 +149,36 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: {},
+        });
+    });
+
+    it('createTableCell with format', () => {
+        const format: ContentModelTableCellFormat = {
+            textAlign: 'start',
+        };
+        const tdModel = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, true /*isHeader*/, format);
+
+        expect(tdModel).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: true,
+            format: { textAlign: 'start' },
+        });
+
+        // Change original format object should not impact the created table cell
+        format.textAlign = 'end';
+
+        expect(tdModel).toEqual({
+            blockType: ContentModelBlockType.BlockGroup,
+            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blocks: [],
+            spanLeft: false,
+            spanAbove: false,
+            isHeader: true,
+            format: { textAlign: 'start' },
         });
     });
 
