@@ -51,14 +51,21 @@ export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
             : Math.max(base.heightPx + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
 
         if (shouldPreserveRatio && ratio > 0) {
-            newHeight = Math.min(newHeight, newWidth / ratio);
-            newWidth = Math.min(newWidth, newHeight * ratio);
-
-            if (newWidth < newHeight * ratio) {
+            if (ratio > 1) {
+                // first sure newHeight is right，calculate newWidth
                 newWidth = newHeight * ratio;
-            } else {
+                if (newWidth < options.minWidth) {
+                  newWidth = options.minWidth;
+                  newHeight = newWidth / ratio;
+                }
+              } else {
+                // first sure newWidth is right，calculate newHeight
                 newHeight = newWidth / ratio;
-            }
+                if (newHeight < options.minHeight) {
+                  newHeight = options.minHeight;
+                  newWidth = newHeight * ratio;
+                }
+              }
         }
 
         editInfo.widthPx = newWidth;

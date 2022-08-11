@@ -36,6 +36,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.TableAlignment,
         ExperimentalFeatures.AdaptiveHandlesResizer,
         ExperimentalFeatures.ListItemAlignment,
+        ExperimentalFeatures.PendingStyleBasedFormat,
     ],
     isRtl: false,
 };

@@ -1,6 +1,14 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
 import { applyTextStyle, getTagOfNode } from 'roosterjs-editor-dom';
-import { IEditor, NodeType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    ExperimentalFeatures,
+    IEditor,
+    NodeType,
+    PluginEventType,
+    PositionType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
@@ -31,6 +39,12 @@ export default function applyInlineStyle(
         if (isEmptySpan) {
             editor.addUndoSnapshot();
             safeCallback(node as HTMLElement);
+        } else if (editor.isFeatureEnabled(ExperimentalFeatures.PendingStyleBasedFormat)) {
+            editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
+                formatState: {},
+                formatCallback: safeCallback,
+            });
+            editor.triggerContentChangedEvent(ChangeSource.Format);
         } else {
             let isZWSNode =
                 node &&
