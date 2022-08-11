@@ -15,5 +15,9 @@ export default interface PendingFormatStatePluginState {
      */
     pendableFormatPosition: NodePosition;
 
+    /**
+     * A temporary SPAN element to hold pending format change. it will be inserted into content when user type something,
+     * or discard if focus position is moved
+     */
     pendableFormatSpan: HTMLElement;
 }

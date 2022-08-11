@@ -95,7 +95,7 @@ describe('changeFontSize', () => {
         expect(editor.getContent()).toBe(decreaseResult);
     }
 
-    xit('empty editor', () => {
+    it('empty editor', () => {
         runTest(
             '',
             `<span style="font-size: 14pt;">${ZERO_WIDTH_SPACE}</span>`,

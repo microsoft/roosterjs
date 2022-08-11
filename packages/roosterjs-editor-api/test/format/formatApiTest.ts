@@ -49,7 +49,7 @@ describe('FormatUtils', () => {
         expect(document.execCommand).toHaveBeenCalledWith('subscript', false, null);
     });
 
-    xit('setTextColor() triggers the applyInlineStyle method in editor', () => {
+    it('setTextColor() triggers the applyInlineStyle method in editor', () => {
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
@@ -65,7 +65,7 @@ describe('FormatUtils', () => {
         expect(element.style.color).toBe(mockColor);
     });
 
-    xit('setBackgroundColor() triggers the applyInlineStyle method in editor', () => {
+    it('setBackgroundColor() triggers the applyInlineStyle method in editor', () => {
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
@@ -81,7 +81,7 @@ describe('FormatUtils', () => {
         expect(element.style.backgroundColor).toBe(mockColor);
     });
 
-    xit('setFontName() triggers the applyInlineStyle method in editor', () => {
+    it('setFontName() triggers the applyInlineStyle method in editor', () => {
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
@@ -97,7 +97,7 @@ describe('FormatUtils', () => {
         expect(element.style.fontFamily).toBe(mockFontName);
     });
 
-    xit('setFontSize() triggers the applyInlineStyle method in editor', () => {
+    it('setFontSize() triggers the applyInlineStyle method in editor', () => {
         spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 

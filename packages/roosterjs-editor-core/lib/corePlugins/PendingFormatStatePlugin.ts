@@ -84,7 +84,13 @@ export default class PendingFormatStatePlugin
 
                 break;
             case PluginEventType.KeyDown:
-                if (isCharacterValue(event.rawEvent) && this.state.pendableFormatSpan) {
+            case PluginEventType.MouseDown:
+            case PluginEventType.ContentChanged:
+                if (
+                    event.eventType == PluginEventType.KeyDown &&
+                    isCharacterValue(event.rawEvent) &&
+                    this.state.pendableFormatSpan
+                ) {
                     this.editor.insertNode(this.state.pendableFormatSpan);
                     this.editor.select(
                         this.state.pendableFormatSpan,
@@ -94,26 +100,18 @@ export default class PendingFormatStatePlugin
                     );
                     this.clear();
                 } else if (
-                    (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) ||
+                    (event.eventType == PluginEventType.KeyDown &&
+                        event.rawEvent.which >= Keys.PAGEUP &&
+                        event.rawEvent.which <= Keys.DOWN) ||
                     (this.state.pendableFormatPosition &&
                         !this.state.pendableFormatPosition.equalTo(this.getCurrentPosition()))
                 ) {
+                    // If content or position is changed (by keyboard, mouse, or code),
+                    // check if current position is still the same with the cached one (if exist),
+                    // and clear cached format if position is changed since it is out-of-date now
                     this.clear();
                 }
 
-                break;
-
-            case PluginEventType.MouseDown:
-            case PluginEventType.ContentChanged:
-                // If content or position is changed (by keyboard, mouse, or code),
-                // check if current position is still the same with the cached one (if exist),
-                // and clear cached format if position is changed since it is out-of-date now
-                if (
-                    this.state.pendableFormatPosition &&
-                    !this.state.pendableFormatPosition.equalTo(this.getCurrentPosition())
-                ) {
-                    this.clear();
-                }
                 break;
         }
     }
