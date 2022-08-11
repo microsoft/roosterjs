@@ -8,10 +8,9 @@ import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 /**
  * Format of table cell
  */
-export interface ContentModelTableCellFormat
-    extends SizeFormat,
-        BorderFormat,
-        BackgroundColorFormat,
-        TextAlignFormat,
-        VerticalAlignFormat,
-        TableCellMetadataFormat {}
+export type ContentModelTableCellFormat = SizeFormat &
+    BorderFormat &
+    BackgroundColorFormat &
+    TextAlignFormat &
+    VerticalAlignFormat &
+    TableCellMetadataFormat;

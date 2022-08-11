@@ -1,3 +1,4 @@
+import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { Definition } from 'roosterjs-editor-types';
 import { FormatHandler } from '../FormatHandler';
 import { getMetadata, getObjectKeys, removeMetadata, setMetadata } from 'roosterjs-editor-dom';
@@ -5,7 +6,7 @@ import { getMetadata, getObjectKeys, removeMetadata, setMetadata } from 'rooster
 /**
  * @internal
  */
-export function createMetadataFormatHandler<T extends Object>(
+export function createMetadataFormatHandler<T extends ContentModelFormatBase>(
     definition: Definition<T>,
     onApply?: (format: T) => T
 ): FormatHandler<T> {
