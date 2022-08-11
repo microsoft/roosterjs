@@ -117,7 +117,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {
                             backgroundColor: 'red',
-                            metadata: { bgColorOverride: true },
+                            bgColorOverride: true,
                         },
                         isSelected: true,
                     },
@@ -129,7 +129,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {
                             backgroundColor: 'red',
-                            metadata: { bgColorOverride: true },
+                            bgColorOverride: true,
                         },
                         isSelected: true,
                     },
@@ -207,7 +207,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {
                             backgroundColor: 'red',
-                            metadata: { bgColorOverride: true },
+                            bgColorOverride: true,
                         },
                     },
                 ],
@@ -281,7 +281,7 @@ describe('setTableCellBackgroundColor', () => {
                         ],
                         spanAbove: false,
                         spanLeft: false,
-                        format: { backgroundColor: 'red', metadata: { bgColorOverride: true } },
+                        format: { backgroundColor: 'red', bgColorOverride: true },
                         isSelected: true,
                     },
                 ],

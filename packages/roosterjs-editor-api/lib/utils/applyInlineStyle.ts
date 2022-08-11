@@ -22,6 +22,9 @@ export default function applyInlineStyle(
     editor.focus();
     let selection = editor.getSelectionRangeEx();
 
+    const safeCallback = (element: HTMLElement, isInnerNode?: boolean) =>
+        element.isContentEditable && callback(element, isInnerNode);
+
     if (selection && selection.areAllCollapsed) {
         const range = selection.ranges[0];
         let node = range.startContainer;
@@ -31,7 +34,7 @@ export default function applyInlineStyle(
                 (getTagOfNode(node.firstChild) == 'BR' && !node.firstChild.nextSibling));
         if (isEmptySpan) {
             editor.addUndoSnapshot();
-            callback(node as HTMLElement);
+            safeCallback(node as HTMLElement);
         } else {
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
                 formatState: {},
@@ -54,7 +57,7 @@ export default function applyInlineStyle(
             //     range.insertNode(node);
             // }
 
-            // applyTextStyle(node, callback);
+            // applyTextStyle(node, safeCallback);
             // editor.select(node, PositionType.End);
         }
     } else {
@@ -71,7 +74,7 @@ export default function applyInlineStyle(
                     while (inlineElement) {
                         let nextInlineElement = contentTraverser.getNextInlineElement();
                         inlineElement.applyStyle((element, isInnerNode) => {
-                            callback(element, isInnerNode);
+                            safeCallback(element, isInnerNode);
                             firstNode = firstNode || element;
                             lastNode = element;
                         });

@@ -33,5 +33,5 @@ export interface ContentModelTableCell
     /**
      * Whether this cell is selected
      */
-    isSelected?: Boolean;
+    isSelected?: boolean;
 }
