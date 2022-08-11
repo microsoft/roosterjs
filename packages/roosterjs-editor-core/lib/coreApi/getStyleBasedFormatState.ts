@@ -40,7 +40,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
             : findClosestElementAncestor(node, root, ORIGINAL_STYLE_COLOR_SELECTOR));
     const ogBackgroundColorNode =
         isDarkMode &&
-        (override[2]
+        (override[3]
             ? pendableFormatSpan
             : findClosestElementAncestor(node, root, ORIGINAL_STYLE_BACK_COLOR_SELECTOR));
 
