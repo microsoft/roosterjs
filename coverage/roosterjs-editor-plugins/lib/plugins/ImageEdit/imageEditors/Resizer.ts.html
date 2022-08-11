@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.02% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/86</span>
+                <span class='fraction'>36/90</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.46% </span>
+                <span class="strong">37.68% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/65</span>
+                <span class='fraction'>26/69</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.46% </span>
+                <span class="strong">38.37% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/82</span>
+                <span class='fraction'>33/86</span>
             </div>
         
             
@@ -310,7 +310,14 @@
 <a name='L245'></a><a href='#L245'>245</a>
 <a name='L246'></a><a href='#L246'>246</a>
 <a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -364,12 +371,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -610,14 +624,21 @@ export const Resizer: DragAndDropHandler&lt;DragAndDropContext, ResizeInfo&gt; =
             : Math.max(base.heightPx + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
 &nbsp;
         if (shouldPreserveRatio &amp;&amp; ratio &gt; 0) {
-            newHeight = Math.min(newHeight, newWidth / ratio);
-            newWidth = Math.min(newWidth, newHeight * ratio);
-&nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (newWidth &lt; newHeight * ratio) {
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (ratio &gt; 1) {
+                // first sure newHeight is right，calculate newWidth
 <span class="cstat-no" title="statement not covered" >                newWidth = newHeight * ratio;</span>
-            } else {
+<span class="cstat-no" title="statement not covered" >                if (newWidth &lt; options.minWidth) {</span>
+<span class="cstat-no" title="statement not covered" >                  newWidth = options.minWidth;</span>
+<span class="cstat-no" title="statement not covered" >                  newHeight = newWidth / ratio;</span>
+                }
+              } else {
+                // first sure newWidth is right，calculate newHeight
                 newHeight = newWidth / ratio;
-            }
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (newHeight &lt; options.minHeight) {
+<span class="cstat-no" title="statement not covered" >                  newHeight = options.minHeight;</span>
+<span class="cstat-no" title="statement not covered" >                  newWidth = newHeight * ratio;</span>
+                }
+              }
         }
 &nbsp;
         editInfo.widthPx = newWidth;
@@ -811,7 +832,7 @@ const setHandleStyle: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-11T21:11:57.156Z
+                at 2022-08-11T22:47:43.018Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
