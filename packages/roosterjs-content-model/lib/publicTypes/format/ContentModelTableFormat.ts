@@ -7,9 +7,8 @@ import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
 /**
  * Format of Table
  */
-export interface ContentModelTableFormat
-    extends IdFormat,
-        SizeFormat,
-        SpacingFormat,
-        BackgroundColorFormat,
-        TableMetadataFormat {}
+export type ContentModelTableFormat = IdFormat &
+    SizeFormat &
+    SpacingFormat &
+    BackgroundColorFormat &
+    TableMetadataFormat;

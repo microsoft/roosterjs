@@ -4,7 +4,7 @@ import type { CompatibleTableBorderFormat } from 'roosterjs-editor-types/lib/com
 /**
  * Format of table that stored as metadata
  */
-export interface TableMetadataFormat {
+export type TableMetadataFormat = {
     /**
      * Top border color for each row
      */
@@ -59,4 +59,4 @@ export interface TableMetadataFormat {
      * Table Borders Type
      */
     tableBorderFormat?: TableBorderFormat | CompatibleTableBorderFormat;
-}
+};

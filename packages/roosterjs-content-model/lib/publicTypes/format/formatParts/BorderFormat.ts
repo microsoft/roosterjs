@@ -1,7 +1,7 @@
 /**
  * Format of border
  */
-export interface BorderFormat {
+export type BorderFormat = {
     /**
      * Border width in order: "top right bottom left"
      */
@@ -16,4 +16,4 @@ export interface BorderFormat {
      * Border color in order: "top right bottom left"
      */
     borderColor?: string;
-}
+};
