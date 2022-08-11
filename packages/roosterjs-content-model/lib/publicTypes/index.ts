@@ -26,6 +26,7 @@ export { SizeFormat } from './format/formatParts/SizeFormat';
 export { SpacingFormat } from './format/formatParts/SpacingFormat';
 export { TableCellMetadataFormat } from './format/formatParts/TableCellMetadataFormat';
 export { TableMetadataFormat } from './format/formatParts/TableMetadataFormat';
+export { ContentModelFormatBase } from './format/ContentModelFormatBase';
 
 export { IExperimentalContentModelEditor } from './IExperimentalContentModelEditor';
 export { ContentModelContext } from './ContentModelContext';
