@@ -1,8 +1,9 @@
 import { TableBorderFormat, TableFormat } from 'roosterjs-editor-types';
+import { TableMetadataFormat } from 'roosterjs-content-model';
 
 export const PREDEFINED_STYLES: Record<
     string,
-    (color?: string, lightColor?: string) => TableFormat
+    (color?: string, lightColor?: string) => TableFormat & TableMetadataFormat
 > = {
     DEFAULT: (color, lightColor) =>
         createTableFormat(
@@ -172,7 +173,7 @@ export function createTableFormat(
     bgColorEven?: string,
     bgColorOdd?: string,
     headerRowColor?: string
-): TableFormat {
+): TableFormat & TableMetadataFormat {
     return {
         topBorderColor: topBorder,
         bottomBorderColor: bottomBorder,
