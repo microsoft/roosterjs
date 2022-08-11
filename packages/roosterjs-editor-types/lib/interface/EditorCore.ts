@@ -156,13 +156,8 @@ export type GetSelectionRangeEx = (core: EditorCore) => SelectionRangeEx;
  * Get style based format state from current selection, including font name/size and colors
  * @param core The EditorCore objects
  * @param node The node to get style from
- * @param override Styles that will override the style we get from computed styles
  */
-export type GetStyleBasedFormatState = (
-    core: EditorCore,
-    node: Node,
-    override?: string[]
-) => StyleBasedFormatState;
+export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
 
 /**
  * Get the pendable format such as underline and bold

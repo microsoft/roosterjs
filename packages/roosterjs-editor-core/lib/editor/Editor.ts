@@ -803,24 +803,11 @@ export default class Editor implements IEditor {
      * Get style based format state from current selection, including font name/size and colors
      */
     public getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
-        let override: string[] | undefined;
-
         if (!node) {
-            const pendableFormatSpan = this.core.pendingFormatState.pendableFormatSpan;
-
-            if (pendableFormatSpan) {
-                override = [
-                    pendableFormatSpan.style.fontFamily,
-                    pendableFormatSpan.style.fontSize,
-                    pendableFormatSpan.style.color,
-                    pendableFormatSpan.style.backgroundColor,
-                ];
-            }
-
             const range = this.getSelectionRange();
             node = range && Position.getStart(range).normalize().node;
         }
-        return this.core.api.getStyleBasedFormatState(this.core, node, override);
+        return this.core.api.getStyleBasedFormatState(this.core, node);
     }
 
     /**

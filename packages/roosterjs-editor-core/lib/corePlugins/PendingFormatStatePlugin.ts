@@ -1,6 +1,7 @@
-import { Position } from 'roosterjs-editor-dom';
+import { isCharacterValue, Position, setColor } from 'roosterjs-editor-dom';
 import {
     IEditor,
+    Keys,
     PendingFormatStatePluginState,
     PluginEvent,
     PluginEventType,
@@ -69,16 +70,39 @@ export default class PendingFormatStatePlugin
     onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
             case PluginEventType.PendingFormatStateChanged:
-                // Got PendingFormatStateChanged event, cache current position and pending format
-                this.state.pendableFormatPosition = this.getCurrentPosition();
-                this.state.pendableFormatState =
-                    event.formatState || this.state.pendableFormatState;
-                this.state.pendableFormatSpan = event.formatCallback
-                    ? this.createPendingFormatSpan(event.formatCallback)
-                    : null;
+                // Got PendingFormatStateChanged event, cache current position and pending format if a format is passed in
+                // otherwise clear existing pending format.
+                if (event.formatState) {
+                    this.state.pendableFormatPosition = this.getCurrentPosition();
+                    this.state.pendableFormatState = event.formatState;
+                    this.state.pendableFormatSpan = event.formatCallback
+                        ? this.createPendingFormatSpan(event.formatCallback)
+                        : null;
+                } else {
+                    this.clear();
+                }
 
                 break;
             case PluginEventType.KeyDown:
+                if (isCharacterValue(event.rawEvent) && this.state.pendableFormatSpan) {
+                    this.editor.insertNode(this.state.pendableFormatSpan);
+                    this.editor.select(
+                        this.state.pendableFormatSpan,
+                        PositionType.Before,
+                        this.state.pendableFormatSpan,
+                        PositionType.End
+                    );
+                    this.clear();
+                } else if (
+                    (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) ||
+                    (this.state.pendableFormatPosition &&
+                        !this.state.pendableFormatPosition.equalTo(this.getCurrentPosition()))
+                ) {
+                    this.clear();
+                }
+
+                break;
+
             case PluginEventType.MouseDown:
             case PluginEventType.ContentChanged:
                 // If content or position is changed (by keyboard, mouse, or code),
@@ -88,19 +112,6 @@ export default class PendingFormatStatePlugin
                     this.state.pendableFormatPosition &&
                     !this.state.pendableFormatPosition.equalTo(this.getCurrentPosition())
                 ) {
-                    this.clear();
-                }
-                break;
-
-            case PluginEventType.KeyPress:
-                if (this.state.pendableFormatSpan) {
-                    this.editor.insertNode(this.state.pendableFormatSpan);
-                    this.editor.select(
-                        this.state.pendableFormatSpan,
-                        PositionType.Before,
-                        this.state.pendableFormatSpan,
-                        PositionType.End
-                    );
                     this.clear();
                 }
                 break;
@@ -124,9 +135,29 @@ export default class PendingFormatStatePlugin
         let span = this.state.pendableFormatSpan;
 
         if (!span) {
+            const currentStyle = this.editor.getStyleBasedFormatState();
             const doc = this.editor.getDocument();
+            const isDarkMode = this.editor.isDarkMode();
+
             span = doc.createElement('span');
+            span.contentEditable = 'true';
             span.appendChild(doc.createTextNode(ZERO_WIDTH_SPACE));
+
+            span.style.fontFamily = currentStyle.fontName;
+            span.style.fontSize = currentStyle.fontSize;
+
+            setColor(
+                span,
+                currentStyle.textColors || currentStyle.textColor,
+                false /*isBackground*/,
+                isDarkMode
+            );
+            setColor(
+                span,
+                currentStyle.backgroundColors || currentStyle.backgroundColor,
+                true /*isBackground*/,
+                isDarkMode
+            );
         }
 
         callback(span);
