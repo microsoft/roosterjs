@@ -1,5 +1,6 @@
 import changeElementTag from '../utils/changeElementTag';
 import contains from '../utils/contains';
+import ContentTraverser from '../contentTraverser/ContentTraverser';
 import createRange from '../selection/createRange';
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
@@ -16,8 +17,14 @@ import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import VTable from '../table/VTable';
 import wrap from '../utils/wrap';
-import { NodePosition, NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
+import {
+    BlockElement,
+    NodePosition,
+    NodeType,
+    PositionType,
+    QueryScope,
+} from 'roosterjs-editor-types';
 
 const NOT_EDITABLE_SELECTOR = '[contenteditable=false]';
 
@@ -33,6 +40,7 @@ const adjustSteps: ((
     adjustInsertPositionForVoidElement,
     adjustInsertPositionForMoveCursorOutOfALink,
     adjustInsertPositionForNotEditableNode,
+    adjustInsertPositionForTable,
 ];
 
 /**
@@ -275,6 +283,52 @@ function adjustInsertPositionForNotEditableNode(
         if (nonEditableElement) {
             position = new Position(nonEditableElement, PositionType.After);
             return adjustInsertPositionForNotEditableNode(root, nodeToInsert, position, range);
+        }
+    }
+
+    return position;
+}
+
+/**
+ * Adjust the position of a table to be one line after another table.
+ */
+function adjustInsertPositionForTable(
+    root: HTMLElement,
+    nodeToInsert: Node,
+    position: NodePosition,
+    range: Range
+): NodePosition {
+    if (
+        (nodeToInsert.childNodes.length == 1 &&
+            getTagOfNode(nodeToInsert.childNodes[0]) == 'TABLE') ||
+        getTagOfNode(nodeToInsert) == 'TABLE'
+    ) {
+        const { element } = position;
+
+        const posBefore = new Position(element, PositionType.Before);
+        const rangeToTraverse = createRange(posBefore, position);
+        const contentTraverser = ContentTraverser.createSelectionTraverser(root, rangeToTraverse);
+
+        let blockElement = contentTraverser && contentTraverser.currentBlockElement;
+        let nextBlockElement: BlockElement | null = blockElement;
+
+        while (!nextBlockElement) {
+            nextBlockElement = contentTraverser.getNextBlockElement();
+            if (nextBlockElement) {
+                blockElement = nextBlockElement;
+            }
+        }
+
+        const prevElement = blockElement?.getEndNode();
+
+        if (prevElement && findClosestElementAncestor(prevElement, root, 'TABLE')) {
+            let tempRange = createRange(position);
+            tempRange.collapse(false /* toStart */);
+            const br = root.ownerDocument.createElement('br');
+            tempRange.insertNode(br);
+
+            tempRange = createRange(br);
+            position = Position.getEnd(tempRange);
         }
     }
 

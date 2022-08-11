@@ -17,22 +17,41 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
     if (!node) {
         return {};
     }
+
+    let override: string[] = [];
+    const pendableFormatSpan = core.pendingFormatState.pendableFormatSpan;
+
+    if (pendableFormatSpan) {
+        override = [
+            pendableFormatSpan.style.fontFamily,
+            pendableFormatSpan.style.fontSize,
+            pendableFormatSpan.style.color,
+            pendableFormatSpan.style.backgroundColor,
+        ];
+    }
+
     const styles = node ? getComputedStyles(node) : [];
     const isDarkMode = core.lifecycle.isDarkMode;
     const root = core.contentDiv;
     const ogTextColorNode =
-        isDarkMode && findClosestElementAncestor(node, root, ORIGINAL_STYLE_COLOR_SELECTOR);
+        isDarkMode &&
+        (override[2]
+            ? pendableFormatSpan
+            : findClosestElementAncestor(node, root, ORIGINAL_STYLE_COLOR_SELECTOR));
     const ogBackgroundColorNode =
-        isDarkMode && findClosestElementAncestor(node, root, ORIGINAL_STYLE_BACK_COLOR_SELECTOR);
+        isDarkMode &&
+        (override[3]
+            ? pendableFormatSpan
+            : findClosestElementAncestor(node, root, ORIGINAL_STYLE_BACK_COLOR_SELECTOR));
 
     return {
-        fontName: styles[0],
-        fontSize: styles[1],
-        textColor: styles[2],
-        backgroundColor: styles[3],
+        fontName: override[0] || styles[0],
+        fontSize: override[1] || styles[1],
+        textColor: override[2] || styles[2],
+        backgroundColor: override[3] || styles[3],
         textColors: ogTextColorNode
             ? {
-                  darkModeColor: styles[2],
+                  darkModeColor: override[2] || styles[2],
                   lightModeColor:
                       ogTextColorNode.dataset[DarkModeDatasetNames.OriginalStyleColor] ||
                       ogTextColorNode.dataset[DarkModeDatasetNames.OriginalAttributeColor] ||
@@ -41,7 +60,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
             : undefined,
         backgroundColors: ogBackgroundColorNode
             ? {
-                  darkModeColor: styles[3],
+                  darkModeColor: override[3] || styles[3],
                   lightModeColor:
                       ogBackgroundColorNode.dataset[
                           DarkModeDatasetNames.OriginalStyleBackgroundColor

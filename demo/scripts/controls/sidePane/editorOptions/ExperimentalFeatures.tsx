@@ -24,6 +24,8 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Align list elements elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.AutoFormatList]:
         'Trigger formatting by a especial characters. Ex: (A), 1. i).',
+    [ExperimentalFeatures.PendingStyleBasedFormat]:
+        'Use pending style format to do formatting when selection is collapsed',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
