@@ -440,4 +440,26 @@ describe('insertNode', () => {
             expect(range.endOffset).toBe(0);
         }
     );
+
+    it('Add a line between tables', () => {
+        const core = createEditorCore(div, {});
+        const node = document.createElement('table');
+        node.id = 'table1';
+        div.contentEditable = 'true';
+        div.innerHTML = '<div id="div"><table></table></div>';
+        div.focus();
+        const sel = document.createRange();
+        sel.setStart(document.getElementById('div')!, 1);
+        addRange(sel);
+
+        insertNode(core, node, {
+            position: ContentPosition.SelectionStart,
+            insertOnNewLine: false,
+            updateCursor: true,
+            replaceSelection: true,
+        });
+        expect(div.innerHTML).toBe(
+            '<div id="div"><table></table><br><table id="table1"></table></div>'
+        );
+    });
 });
