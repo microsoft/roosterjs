@@ -1,5 +1,28 @@
 import { ContentModelContext } from '../../publicTypes/ContentModelContext';
-import { Coordinates, NodePosition } from 'roosterjs-editor-types';
+import { Coordinates } from 'roosterjs-editor-types';
+
+/**
+ * @internal
+ * Represents internal data structure for a selection position, combined by block and segment node
+ */
+export interface BlockAndSegmentNode {
+    /**
+     * The block element of the selection. When segment is null, it represents the start position of this block element,
+     * otherwise block element will be ignored and we can always retrieve position from segment node
+     */
+    block: HTMLElement | null;
+
+    /**
+     * Segment node of this position. When provided, it represents the position right after this node
+     */
+    segment: Node | null;
+
+    /**
+     * Whether this position info is finalized. A finalized position info means we are sure this is the final result.
+     * Otherwise it means this position is still in progress and it can be replaced later
+     */
+    isFinalized?: boolean;
+}
 
 /**
  * @internal
@@ -9,22 +32,17 @@ export interface RegularSelection {
     /**
      * Start position of selection
      */
-    start?: NodePosition;
+    start?: BlockAndSegmentNode;
 
     /**
      * End position of selection
      */
-    end?: NodePosition;
+    end?: BlockAndSegmentNode;
 
     /**
-     * Current node for Content Model block
+     * Current navigating position
      */
-    currentBlockNode?: HTMLElement | null;
-
-    /**
-     * Current node for Content Model segment
-     */
-    currentSegmentNode?: Node | null;
+    current: BlockAndSegmentNode;
 }
 
 /**
@@ -60,7 +78,7 @@ export interface ModelToDomContext {
     /**
      * Regular selection info
      */
-    regularSelection?: RegularSelection;
+    regularSelection: RegularSelection;
 
     /**
      * Table selection info

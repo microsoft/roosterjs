@@ -1,9 +1,7 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
-import { getSelectionPosition } from '../utils/getSelectionPosition';
 import { handleBlock } from './handleBlock';
 import { ModelToDomContext } from '../context/ModelToDomContext';
-import { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -14,20 +12,25 @@ export function handleSegment(
     segment: ContentModelSegment,
     context: ModelToDomContext
 ) {
-    let pos: NodePosition | undefined;
+    const regularSelection = context.regularSelection;
 
-    const regularSelection = context.regularSelection || {};
-
-    if (!regularSelection.start && segment.isSelected) {
-        pos = getSelectionPosition(regularSelection);
-        regularSelection.start = pos;
+    // If start position is not set yet, and current segment is in selection, set start position and finalized it
+    if (segment.isSelected && !regularSelection.start) {
+        regularSelection.start = {
+            ...regularSelection.current,
+            isFinalized: true,
+        };
     }
 
-    if (regularSelection.start && !regularSelection.end && !segment.isSelected) {
-        regularSelection.end = pos || getSelectionPosition(regularSelection);
+    // If end position is not set, or it is not finalized, and current segment is not in selection, set end position and finalized it
+    // since we know there won't be another segment in selection.
+    // If there is other selection, it means the content model is in bad state, selections are not continuous. we should ignore further selection.
+    if (!segment.isSelected && regularSelection.start && !regularSelection.end?.isFinalized) {
+        regularSelection.end = {
+            ...regularSelection.current,
+            isFinalized: true,
+        };
     }
-
-    context.regularSelection = regularSelection;
 
     let element: HTMLElement | null = null;
 
@@ -37,16 +40,16 @@ export function handleSegment(
 
             element = doc.createElement('span');
             element.appendChild(txt);
-            regularSelection.currentSegmentNode = txt;
+            regularSelection.current.segment = txt;
             break;
 
         case ContentModelSegmentType.Br:
             element = doc.createElement('br');
-            regularSelection.currentSegmentNode = element;
+            regularSelection.current.segment = element;
             break;
 
         case ContentModelSegmentType.General:
-            regularSelection.currentSegmentNode = segment.element;
+            regularSelection.current.segment = segment.element;
 
             handleBlock(doc, parent, segment, context);
             break;
@@ -54,5 +57,13 @@ export function handleSegment(
 
     if (element) {
         parent.appendChild(element);
+    }
+
+    // If end position is not set, or it is not finalized, and current segment is in selection, set end position but do not finalize it.
+    // Because next segment may also be in selection, or this may be the last segment. But we don't know such info here.
+    if (segment.isSelected && !regularSelection.end?.isFinalized) {
+        regularSelection.end = {
+            ...regularSelection.current,
+        };
     }
 }

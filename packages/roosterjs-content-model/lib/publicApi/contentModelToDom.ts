@@ -1,13 +1,17 @@
+import { BlockAndSegmentNode, ModelToDomContext } from '../modelToDom/context/ModelToDomContext';
 import { ContentModelContext } from '../publicTypes/ContentModelContext';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
-import { createRange } from 'roosterjs-editor-dom';
-import { getSelectionPosition } from '../modelToDom/utils/getSelectionPosition';
+import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { handleBlock } from '../modelToDom/handlers/handleBlock';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
-import { ModelToDomContext } from '../modelToDom/context/ModelToDomContext';
-import { NodeType, SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { optimize } from '../modelToDom/optimizers/optimize';
+import {
+    NodePosition,
+    NodeType,
+    SelectionRangeEx,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 /**
  * Create DOM tree fragment from Content Model document
@@ -34,39 +38,61 @@ export default function contentModelToDom(
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {
-    if (context.tableSelection?.table) {
+    const {
+        regularSelection: { start, end },
+        tableSelection,
+    } = context;
+    if (tableSelection?.table) {
         return {
             type: SelectionRangeTypes.TableSelection,
             ranges: [],
             areAllCollapsed: false,
-            table: context.tableSelection.table,
+            table: tableSelection.table,
             coordinates: {
-                firstCell: context.tableSelection.firstCell,
-                lastCell: context.tableSelection.lastCell,
+                firstCell: tableSelection.firstCell,
+                lastCell: tableSelection.lastCell,
             },
         };
     }
 
-    if (context.regularSelection?.start) {
-        if (isNodeOfType(context.regularSelection.start.node, NodeType.DocumentFragment)) {
-            context.regularSelection.start = context.regularSelection.start.normalize();
+    if (start && end) {
+        const startPosition = calcPosition(start);
+        const endPosition = calcPosition(end);
+        const range = startPosition && endPosition && createRange(startPosition, endPosition);
+
+        if (range) {
+            return {
+                type: SelectionRangeTypes.Normal,
+                ranges: [range],
+                areAllCollapsed: range.collapsed,
+            };
         }
-
-        context.regularSelection.end =
-            context.regularSelection.end || getSelectionPosition(context.regularSelection);
-
-        if (isNodeOfType(context.regularSelection.end!.node, NodeType.DocumentFragment)) {
-            context.regularSelection.end = context.regularSelection.end!.normalize();
-        }
-
-        const range = createRange(context.regularSelection.start, context.regularSelection.end);
-
-        return {
-            type: SelectionRangeTypes.Normal,
-            ranges: [range],
-            areAllCollapsed: range.collapsed,
-        };
     }
 
     return null;
+}
+
+function calcPosition(pos: BlockAndSegmentNode): NodePosition | undefined {
+    let result: NodePosition | undefined;
+
+    if (pos.block) {
+        if (!pos.segment) {
+            result = new Position(pos.block, 0);
+        } else if (isNodeOfType(pos.segment, NodeType.Text)) {
+            result = new Position(pos.segment, pos.segment.nodeValue?.length || 0);
+        } else {
+            result = new Position(
+                pos.segment.parentNode!,
+                toArray(pos.segment.parentNode!.childNodes as NodeListOf<Node>).indexOf(
+                    pos.segment!
+                ) + 1
+            );
+        }
+    }
+
+    if (isNodeOfType(result?.node, NodeType.DocumentFragment)) {
+        result = result?.normalize();
+    }
+
+    return result;
 }
