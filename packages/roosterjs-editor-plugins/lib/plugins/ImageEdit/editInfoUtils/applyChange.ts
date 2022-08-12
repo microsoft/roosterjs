@@ -87,11 +87,5 @@ function setImageSize(
         image.height = targetHeight;
         image.style.width = targetWidth + 'px';
         image.style.height = targetHeight + 'px';
-    } else {
-        image.style.maxWidth = '100%';
-        image.style.height = 'initial';
-        image.style.width = 'initial';
-        image.removeAttribute('height');
-        image.removeAttribute('width');
     }
 }
