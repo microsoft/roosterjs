@@ -20,6 +20,12 @@ export function handleParagraph(
         parent.appendChild(container);
     }
 
+    const regularSelection = context.regularSelection || {};
+
+    regularSelection.currentBlockNode = container;
+    regularSelection.currentSegmentNode = null;
+    context.regularSelection = regularSelection;
+
     paragraph.segments.forEach(segment => {
         handleSegment(doc, container, segment, context);
     });

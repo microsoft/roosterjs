@@ -1,17 +1,11 @@
-import { containerProcessor } from '../domToModel/processors/containerProcessor';
+import contentModelToDom from '../publicApi/contentModelToDom';
+import domToContentModel from '../publicApi/domToContentModel';
 import { ContentModelContext } from '../publicTypes/ContentModelContext';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
-import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
-import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
-import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions } from 'roosterjs-editor-types';
-import { getComputedStyles } from 'roosterjs-editor-dom';
-import { handleBlock } from '../modelToDom/handlers/handleBlock';
+import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { getComputedStyles, Position } from 'roosterjs-editor-dom';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
-import { normalizeModel } from '../modelApi/common/normalizeContentModel';
-import { optimize } from '../modelToDom/optimizers/optimize';
-import { singleElementProcessor } from '../domToModel/processors/singleElementProcessor';
 
 /**
  * !!! This is a temporary interface and will be removed in the future !!!
@@ -50,38 +44,47 @@ export default class ExperimentalContentModelEditor extends Editor
      * otherwise it will create Content Model for the whole content in editor.
      */
     createContentModel(startNode?: HTMLElement): ContentModelDocument {
-        const model = createContentModelDocument(this.getDocument());
-        const contentModelContext = this.createContentModelContext();
-
-        const domToModelContext = createDomToModelContext(
-            contentModelContext,
+        return domToContentModel(
+            startNode || this.contentDiv,
+            this.createContentModelContext(),
+            !!startNode,
             this.getSelectionRangeEx()
         );
-
-        if (startNode) {
-            singleElementProcessor(model, startNode, domToModelContext);
-        } else {
-            containerProcessor(model, this.contentDiv, domToModelContext);
-        }
-
-        normalizeModel(model);
-
-        return model;
     }
 
     /**
-     * Create DOM fragment from Content Model
-     * @param model The Content Model to create fragment from
+     * Set content with content model
+     * @param model The content model to set
+     * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
      */
-    createFragmentFromContentModel(model: ContentModelDocument): DocumentFragment {
-        const fragment = model.document.createDocumentFragment();
-        const contentModelContext = this.createContentModelContext();
-        const modelToDomContext = createModelToDomContext(contentModelContext);
+    setContentModel(
+        model: ContentModelDocument,
+        mergingCallback: (fragment: DocumentFragment) => void = this.defaultMergingCallback
+    ) {
+        const [fragment, range] = contentModelToDom(model, this.createContentModelContext());
 
-        handleBlock(model.document, fragment, model, modelToDomContext);
+        switch (range?.type) {
+            case SelectionRangeTypes.Normal:
+                const start = Position.getStart(range.ranges[0]);
+                const end = Position.getEnd(range.ranges[0]);
 
-        optimize(fragment, 2 /*optimizeLevel*/);
+                mergingCallback(fragment);
+                this.select(start, end);
+                break;
 
-        return fragment;
+            case SelectionRangeTypes.TableSelection:
+                mergingCallback(fragment);
+                this.select(range.table, range.coordinates);
+                break;
+
+            case undefined:
+                mergingCallback(fragment);
+                break;
+        }
     }
+
+    private defaultMergingCallback = (fragment: DocumentFragment) => {
+        this.setContent('');
+        this.insertNode(fragment);
+    };
 }

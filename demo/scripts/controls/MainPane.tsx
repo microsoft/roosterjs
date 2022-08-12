@@ -16,13 +16,24 @@ import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExperimentalContentModelEditor } from 'roosterjs-content-model';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
+import { formatTableButton } from './ribbonButtons/contentModel/formatTableButton';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { insertTableButton } from './ribbonButtons/contentModel/insertTableButton';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
+import { setTableCellShadeButton } from './ribbonButtons/contentModel/setTableCellShadeButton';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
+import {
+    tableAlignCellButton,
+    tableAlignTableButton,
+    tableDeleteButton,
+    tableInsertButton,
+    tableMergeButton,
+    tableSplitButton,
+} from './ribbonButtons/contentModel/tableEditButtons';
 import {
     AllButtonStringKeys,
     createRibbonPlugin,
@@ -119,12 +130,24 @@ class MainPane extends MainPaneBase {
     private snapshotPlugin: SnapshotPlugin;
     private contentModelPlugin: ContentModelPlugin;
     private ribbonPlugin: RibbonPlugin;
+    private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
+    private contentModelRibbonButtons: RibbonButton<any>[] = [
+        insertTableButton,
+        formatTableButton,
+        setTableCellShadeButton,
+        tableInsertButton,
+        tableDeleteButton,
+        tableMergeButton,
+        tableSplitButton,
+        tableAlignCellButton,
+        tableAlignTableButton,
+    ];
 
     private content: string = '';
 
@@ -140,6 +163,7 @@ class MainPane extends MainPaneBase {
         this.snapshotPlugin = new SnapshotPlugin();
         this.contentModelPlugin = new ContentModelPlugin();
         this.ribbonPlugin = createRibbonPlugin();
+        this.contentModelRibbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
@@ -159,6 +183,7 @@ class MainPane extends MainPaneBase {
             isDarkMode: this.themeMatch?.matches || false,
             editorCreator: null,
             isRtl: false,
+            showContentModelRibbon: false,
         };
     }
 
@@ -231,6 +256,12 @@ class MainPane extends MainPaneBase {
         });
     }
 
+    toggleContentModelRibbon(): void {
+        this.setState({
+            showContentModelRibbon: !this.state.showContentModelRibbon,
+        });
+    }
+
     componentDidMount() {
         this.themeMatch?.addEventListener('change', this.onThemeChange);
         this.resetEditor();
@@ -293,6 +324,16 @@ class MainPane extends MainPaneBase {
         );
     }
 
+    private renderContentModelRibbon() {
+        return (
+            <Ribbon
+                buttons={this.contentModelRibbonButtons}
+                plugin={this.contentModelRibbonPlugin}
+                dir={this.state.isRtl ? 'rtl' : 'ltr'}
+            />
+        );
+    }
+
     private renderPopout() {
         return (
             <>
@@ -304,6 +345,8 @@ class MainPane extends MainPaneBase {
                             theme={this.state.isDarkMode ? DarkTheme : LightTheme}>
                             <div className={styles.mainPane}>
                                 {this.renderRibbon(true /*isPopout*/)}
+                                {this.state.showContentModelRibbon &&
+                                    this.renderContentModelRibbon()}
                                 <div className={styles.body}>{this.renderEditor()}</div>
                             </div>
                         </ThemeProvider>
@@ -406,6 +449,7 @@ class MainPane extends MainPaneBase {
         const plugins = [
             ...this.toggleablePlugins,
             this.ribbonPlugin,
+            this.contentModelRibbonPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
         ];
