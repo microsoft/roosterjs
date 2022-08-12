@@ -1,9 +1,6 @@
 import DragAndDropContext from 'roosterjs-editor-types';
 import DragAndDropHelper from '../../lib/pluginUtils/DragAndDropHelper';
 import { Browser } from 'roosterjs-editor-dom';
-import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions } from 'roosterjs-editor-types';
-import { IEditor } from 'roosterjs-editor-types';
 //import * as TestHelper from '../TestHelper';
 
 interface DragAndDropContext {
@@ -15,89 +12,107 @@ interface DragAndDropInitValue {
 }
 
 describe('DragAndDropHelper |', () => {
-    let editor: IEditor;
     let id = 'DragAndDropHelperId';
     let dndHelper: DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>;
 
     beforeEach(() => {
-        let s = Browser;
-        spyOn(s, 'isMobileOrTablet').and.returnValue(true);
+        //Empty Div for dragging
         let node = document.createElement('div');
         node.id = id;
+        //Start as black square
         node.style.width = '50px';
         node.style.height = '50px';
         node.style.backgroundColor = 'black';
         node.style.position = 'fixed';
 
+        //Put node on top of body
         document.body.insertBefore(node, document.body.childNodes[0]);
+    });
 
+    //Creates the DragAndDropHelper for testing
+    function creteDnD(node: HTMLDivElement, mobile: boolean) {
         dndHelper = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
             node,
             { node },
             () => {},
             {
                 onDragEnd(context, event, initValue) {
+                    //Red indicates dragging stopped
                     context.node.style.backgroundColor = 'red';
                     return true;
                 },
                 onDragStart(context, event) {
-                    console.log(event.type);
+                    //Green indicates dragging started
                     context.node.style.backgroundColor = 'green';
                     return { originalRect: context.node.getBoundingClientRect() };
                 },
                 onDragging(context, event, initValue, deltaX, deltaY) {
+                    //Yellow indicates dragging is happening
                     context.node.style.backgroundColor = 'yellow';
                     context.node.style.left = event.pageX + 'px';
                     context.node.style.top = event.pageY + 'px';
                     return true;
                 },
             },
-            1
+            1,
+            mobile
         );
-
-        console.log(dndHelper);
-    });
-
-    afterEach(() => {});
-
-    function runTest() {
-        //debugger;
     }
 
+    afterEach(() => {
+        dndHelper.dispose();
+    });
+
     it('mouse movement', () => {
+        // Arrange
         const target = document.getElementById(id);
-        //1 Mouse DOwn Div
-        simulateMouseEvent('mousedown', target);
-        debugger;
-        expect(target?.style.backgroundColor).toBe('green');
-        //2 Mouse Move Move
+        creteDnD(target, false);
         let targetEnd = target;
         targetEnd.style.top = 50 + 'px';
+
+        // Act
+        simulateMouseEvent('mousedown', target);
+
+        // Assert
+        expect(target?.style.backgroundColor).toBe('green');
+
+        // Act
         simulateMouseEvent('mousemove', targetEnd);
-        debugger;
+
+        // Assert
         expect(target?.style.backgroundColor).toBe('yellow');
+
+        // Act
         simulateMouseEvent('mouseup', targetEnd);
-        debugger;
-        //3 Mouse Up Event
+
+        // Assert
         expect(target?.style.top).toBe('50px');
         expect(target?.style.backgroundColor).toBe('red');
     });
 
     it('touch movement', () => {
+        // Arrange
         const target = document.getElementById(id);
-        //1 Mouse DOwn Div
-        simulateTouchEvent('touchstart', target);
-        debugger;
-        expect(target?.style.backgroundColor).toBe('green');
-        //2 Mouse Move Move
+        creteDnD(target, true);
         let targetEnd = target;
         targetEnd.style.left = 50 + 'px';
+
+        // Act
+        simulateTouchEvent('touchstart', target);
+
+        // Assert
+        expect(target?.style.backgroundColor).toBe('green');
+
+        // Act
         simulateTouchEvent('touchmove', targetEnd);
-        debugger;
+
+        // Assert
         expect(target?.style.backgroundColor).toBe('yellow');
+
+        // Act
         simulateTouchEvent('touchend', targetEnd);
-        debugger;
-        //3 Mouse Up Event
+
+        // Assert
         expect(target?.style.left).toBe('50px');
         expect(target?.style.backgroundColor).toBe('red');
     });
@@ -128,29 +143,4 @@ function simulateTouchEvent(type: string, target: HTMLElement) {
         targetTouches: touchList,
     });
     target.dispatchEvent(event);
-}
-
-function simulateKeyDownEvent(
-    whichInput: number,
-    shiftKey: boolean = true,
-    ctrlKey: boolean = false
-) {
-    const evt = new KeyboardEvent('keydown', {
-        shiftKey,
-        altKey: false,
-        ctrlKey,
-        cancelable: true,
-        which: whichInput,
-    });
-
-    if (!Browser.isFirefox) {
-        //Chromium hack to add which to the event as there is a bug in Webkit
-        //https://stackoverflow.com/questions/10455626/keydown-simulation-in-chrome-fires-normally-but-not-the-correct-key/10520017#10520017
-        Object.defineProperty(evt, 'which', {
-            get: function () {
-                return whichInput;
-            },
-        });
-    }
-    return evt;
 }
