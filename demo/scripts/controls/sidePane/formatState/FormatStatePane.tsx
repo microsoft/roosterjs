@@ -54,6 +54,11 @@ export default class FormatStatePane extends React.Component<
                                     color: format.textColor,
                                     backgroundColor: format.backgroundColor,
                                 }}>{`${format.textColor} / ${format.backgroundColor}`}</span>
+                            <span
+                                style={{
+                                    color: format.textColor,
+                                    backgroundColor: format.effectiveBackgroundColor,
+                                }}>{`(${format.effectiveBackgroundColor})`}</span>
                         </td>
                     </tr>
                     <tr>

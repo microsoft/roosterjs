@@ -104,6 +104,11 @@ export interface StyleBasedFormatState {
     backgroundColor?: string;
 
     /**
+     * Effective background color based on ancestors styles
+     */
+    effectiveBackgroundColor?: string;
+
+    /**
      * Mode independent background color for dark mode
      */
     backgroundColors?: ModeIndependentColor;

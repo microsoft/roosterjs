@@ -1,5 +1,9 @@
 import { DarkModeDatasetNames, EditorCore, GetStyleBasedFormatState } from 'roosterjs-editor-types';
-import { findClosestElementAncestor, getComputedStyles } from 'roosterjs-editor-dom';
+import {
+    findClosestElementAncestor,
+    getComputedStyles,
+    getEffectiveBackgroundColor,
+} from 'roosterjs-editor-dom';
 
 const ORIGINAL_STYLE_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.OriginalStyleColor}],[data-${DarkModeDatasetNames.OriginalAttributeColor}]`;
 const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.OriginalStyleBackgroundColor}],[data-${DarkModeDatasetNames.OriginalAttributeBackgroundColor}]`;
@@ -31,6 +35,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
     }
 
     const styles = node ? getComputedStyles(node) : [];
+    const effectiveBackgroundColor = getEffectiveBackgroundColor(node, core.contentDiv);
     const isDarkMode = core.lifecycle.isDarkMode;
     const root = core.contentDiv;
     const ogTextColorNode =
@@ -49,6 +54,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
         fontSize: override[1] || styles[1],
         textColor: override[2] || styles[2],
         backgroundColor: override[3] || styles[3],
+        effectiveBackgroundColor: effectiveBackgroundColor,
         textColors: ogTextColorNode
             ? {
                   darkModeColor: override[2] || styles[2],

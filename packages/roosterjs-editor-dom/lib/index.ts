@@ -23,6 +23,7 @@ export { default as contains } from './utils/contains';
 export { default as findClosestElementAncestor } from './utils/findClosestElementAncestor';
 export { default as fromHtml } from './utils/fromHtml';
 export { default as getComputedStyles, getComputedStyle } from './utils/getComputedStyles';
+export { default as getEffectiveBackgroundColor } from './utils/getEffectiveBackgroundColor';
 export {
     default as getPendableFormatState,
     PendableFormatCommandMap,
