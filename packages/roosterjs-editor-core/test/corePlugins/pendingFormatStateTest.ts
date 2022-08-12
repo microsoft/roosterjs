@@ -21,6 +21,7 @@ describe('PendingFormatStatePlugin', () => {
         expect(state).toEqual({
             pendableFormatPosition: null,
             pendableFormatState: null,
+            pendableFormatSpan: null,
         });
     });
 
@@ -31,7 +32,7 @@ describe('PendingFormatStatePlugin', () => {
         state.pendableFormatState = <any>{};
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
-            rawEvent: null,
+            rawEvent: ({} as any) as KeyboardEvent,
         });
         expect(state.pendableFormatPosition).toBeNull();
         expect(state.pendableFormatState).toBeNull();
@@ -46,7 +47,7 @@ describe('PendingFormatStatePlugin', () => {
         state.pendableFormatState = formatState;
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
-            rawEvent: null,
+            rawEvent: ({} as any) as KeyboardEvent,
         });
 
         expect(state.pendableFormatPosition).toBe(position);
