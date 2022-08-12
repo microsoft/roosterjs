@@ -195,6 +195,7 @@ class MainPane extends MainPaneBase {
                 className={styles.mainPane}>
                 <TitleBar className={styles.noGrow} />
                 {!this.state.popoutWindow && this.renderRibbon(false /*isPopout*/)}
+                {this.state.showContentModelRibbon && this.renderContentModelRibbon()}
                 <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
                     {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
                 </div>
