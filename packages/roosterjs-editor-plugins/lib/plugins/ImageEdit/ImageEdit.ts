@@ -364,7 +364,11 @@ export default class ImageEdit implements EditorPlugin {
 
         wrapper.style.position = 'relative';
         wrapper.style.maxWidth = '100%';
-        wrapper.style.verticalAlign = 'bottom';
+        // keep the same vertical align
+        const originalVerticalAlign = this.image?.style.verticalAlign;
+        if (originalVerticalAlign) {
+          wrapper.style.verticalAlign = originalVerticalAlign;
+        }
         wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         // Cache current src so that we can compare it after edit see if src is changed
