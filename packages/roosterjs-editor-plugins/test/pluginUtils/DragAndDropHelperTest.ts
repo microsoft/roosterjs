@@ -1,10 +1,7 @@
-import DragAndDropContext from 'roosterjs-editor-types';
 import DragAndDropHelper from '../../lib/pluginUtils/DragAndDropHelper';
-import { Browser } from 'roosterjs-editor-dom';
-//import * as TestHelper from '../TestHelper';
 
 interface DragAndDropContext {
-    node: HTMLDivElement;
+    node: HTMLElement;
 }
 
 interface DragAndDropInitValue {
@@ -30,23 +27,23 @@ describe('DragAndDropHelper |', () => {
     });
 
     //Creates the DragAndDropHelper for testing
-    function creteDnD(node: HTMLDivElement, mobile: boolean) {
+    function creteDnD(node: HTMLElement, mobile: boolean) {
         dndHelper = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
             node,
             { node },
             () => {},
             {
-                onDragEnd(context, event, initValue) {
+                onDragEnd(context: DragAndDropContext) {
                     //Red indicates dragging stopped
                     context.node.style.backgroundColor = 'red';
                     return true;
                 },
-                onDragStart(context, event) {
+                onDragStart(context: DragAndDropContext) {
                     //Green indicates dragging started
                     context.node.style.backgroundColor = 'green';
                     return { originalRect: context.node.getBoundingClientRect() };
                 },
-                onDragging(context, event, initValue, deltaX, deltaY) {
+                onDragging(context: DragAndDropContext, event: MouseEvent) {
                     //Yellow indicates dragging is happening
                     context.node.style.backgroundColor = 'yellow';
                     context.node.style.left = event.pageX + 'px';
