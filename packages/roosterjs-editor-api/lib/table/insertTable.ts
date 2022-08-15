@@ -40,7 +40,7 @@ export default function insertTable(
         editor,
         () => {
             const element = editor.getElementAtCursor();
-            if (element.style.backgroundColor) {
+            if (element?.style.backgroundColor) {
                 setBackgroundColor(editor, 'transparent');
             }
             let vtable = new VTable(table);
