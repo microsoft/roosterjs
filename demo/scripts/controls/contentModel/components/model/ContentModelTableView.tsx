@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
+import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelBlockView } from './ContentModelBlockView';
 import { ContentModelView } from '../ContentModelView';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
-import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
 import {
@@ -22,7 +22,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     SpacingFormatRenderer,
     BackgroundColorFormatRenderer,
     MarginFormatRenderer,
-    ...SizeFormatRenderers,
+    ...BorderFormatRenderers,
     ...TableMetadataFormatRenders,
 ];
 

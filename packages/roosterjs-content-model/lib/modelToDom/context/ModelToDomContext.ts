@@ -16,12 +16,6 @@ export interface BlockAndSegmentNode {
      * Segment node of this position. When provided, it represents the position right after this node
      */
     segment: Node | null;
-
-    /**
-     * Whether this position info is finalized. A finalized position info means we are sure this is the final result.
-     * Otherwise it means this position is still in progress and it can be replaced later
-     */
-    isFinalized?: boolean;
 }
 
 /**

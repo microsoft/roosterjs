@@ -40,8 +40,8 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                 hasTableSelection &&
                 row >= firstCell.y &&
                 row <= lastCell.y &&
-                sourceCol >= firstCell.x &&
-                sourceCol <= lastCell.x;
+                targetCol >= firstCell.x &&
+                targetCol <= lastCell.x;
 
             for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
@@ -61,6 +61,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                             cell.format,
                             context.contentModelContext
                         );
+
                         containerProcessor(cell, td, context);
                     }
                 }

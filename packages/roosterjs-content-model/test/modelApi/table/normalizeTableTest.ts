@@ -161,7 +161,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 240, useBorderBox: true },
+                        format: { width: 120, useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -238,7 +238,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 240, useBorderBox: true },
+                        format: { width: 120, useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -295,7 +295,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 240, useBorderBox: true },
+                        format: { width: 120, useBorderBox: true },
                         blocks: [block1, block2],
                     },
                     {
@@ -376,7 +376,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, height: undefined, useBorderBox: true },
+                        format: { width: 120, height: 0, useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -404,7 +404,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, height: undefined, useBorderBox: true },
+                        format: { width: 120, height: 0, useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -475,7 +475,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 240, height: undefined, useBorderBox: true },
+                        format: { width: 120, height: 0, useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,

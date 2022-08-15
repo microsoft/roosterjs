@@ -14,21 +14,10 @@ export function handleSegment(
 ) {
     const regularSelection = context.regularSelection;
 
-    // If start position is not set yet, and current segment is in selection, set start position and finalized it
+    // If start position is not set yet, and current segment is in selection, set start position
     if (segment.isSelected && !regularSelection.start) {
         regularSelection.start = {
             ...regularSelection.current,
-            isFinalized: true,
-        };
-    }
-
-    // If end position is not set, or it is not finalized, and current segment is not in selection, set end position and finalized it
-    // since we know there won't be another segment in selection.
-    // If there is other selection, it means the content model is in bad state, selections are not continuous. we should ignore further selection.
-    if (!segment.isSelected && regularSelection.start && !regularSelection.end?.isFinalized) {
-        regularSelection.end = {
-            ...regularSelection.current,
-            isFinalized: true,
         };
     }
 
@@ -59,9 +48,9 @@ export function handleSegment(
         parent.appendChild(element);
     }
 
-    // If end position is not set, or it is not finalized, and current segment is in selection, set end position but do not finalize it.
-    // Because next segment may also be in selection, or this may be the last segment. But we don't know such info here.
-    if (segment.isSelected && !regularSelection.end?.isFinalized) {
+    // If end position is not set, or it is not finalized, and current segment is still in selection, set end position
+    // If there is other selection, we will overwrite regularSelection.end when we process that segment
+    if (segment.isSelected && regularSelection.start) {
         regularSelection.end = {
             ...regularSelection.current,
         };

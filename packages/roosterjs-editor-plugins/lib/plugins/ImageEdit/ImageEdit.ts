@@ -365,9 +365,11 @@ export default class ImageEdit implements EditorPlugin {
         wrapper.style.position = 'relative';
         wrapper.style.maxWidth = '100%';
         // keep the same vertical align
-        const originalVerticalAlign = this.image.ownerDocument.defaultView.getComputedStyle(this.image).getPropertyValue('vertical-align');
+        const originalVerticalAlign = this.image.ownerDocument.defaultView
+            .getComputedStyle(this.image)
+            .getPropertyValue('vertical-align');
         if (originalVerticalAlign) {
-          wrapper.style.verticalAlign = originalVerticalAlign;
+            wrapper.style.verticalAlign = originalVerticalAlign;
         }
         wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
