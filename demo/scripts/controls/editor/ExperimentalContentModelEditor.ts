@@ -1,11 +1,13 @@
-import contentModelToDom from '../publicApi/contentModelToDom';
-import domToContentModel from '../publicApi/domToContentModel';
-import { ContentModelContext } from '../publicTypes/ContentModelContext';
-import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { getComputedStyles, Position } from 'roosterjs-editor-dom';
-import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
+import {
+    ContentModelContext,
+    ContentModelDocument,
+    contentModelToDom,
+    domToContentModel,
+    IExperimentalContentModelEditor,
+} from 'roosterjs-content-model';
 
 /**
  * !!! This is a temporary interface and will be removed in the future !!!

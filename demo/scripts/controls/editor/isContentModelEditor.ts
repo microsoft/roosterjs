@@ -1,5 +1,5 @@
 import { IEditor } from 'roosterjs-editor-types';
-import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
+import { IExperimentalContentModelEditor } from 'roosterjs-content-model';
 
 export default function isContentModelEditor(
     editor: IEditor
