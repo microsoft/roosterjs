@@ -1,4 +1,5 @@
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
+import { combineBorderValue } from '../../../lib/domUtils/borderValues';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
@@ -66,7 +67,7 @@ describe('applyTableFormat', () => {
                 );
 
                 expect(table.cells[row][col].format.borderColor).toEqual(
-                    expectedBorderColors[row][col].join(' '),
+                    combineBorderValue(expectedBorderColors[row][col], ''),
                     `BorderColor Row=${row} Col=${col}`
                 );
             }

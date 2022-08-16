@@ -19,7 +19,8 @@ export const BorderIndex = {
  * @param combinedBorder The integrated border style string
  * @returns An array with the splitted values
  */
-export function extractBorderValues(combinedBorder: string): string[] {
+export function extractBorderValues(combinedBorder?: string): string[] {
+    combinedBorder = combinedBorder || '';
     let match = BorderValuesRegex.exec(combinedBorder);
     const result: string[] = [];
 

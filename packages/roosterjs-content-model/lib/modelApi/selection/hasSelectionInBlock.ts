@@ -15,12 +15,12 @@ export function hasSelectionInBlock(block: ContentModelBlock): boolean {
             return block.cells.some(row => row.some(hasSelectionInBlock));
 
         case ContentModelBlockType.BlockGroup:
-            if (block.blocks.some(hasSelectionInBlock)) {
+            if (block.blockGroupType == ContentModelBlockGroupType.TableCell && block.isSelected) {
                 return true;
             }
 
-            if (block.blockGroupType == ContentModelBlockGroupType.TableCell) {
-                return !!block.isSelected;
+            if (block.blocks.some(hasSelectionInBlock)) {
+                return true;
             }
 
             return false;

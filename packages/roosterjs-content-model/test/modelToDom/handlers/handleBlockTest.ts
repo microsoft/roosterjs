@@ -2,16 +2,16 @@ import * as handleParagraph from '../../../lib/modelToDom/handlers/handleParagra
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
+import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
-    let context: DomToModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
-        context = createDomToModelContext();
+        context = createModelToDomContext();
         spyOn(handleParagraph, 'handleParagraph');
     });
 
