@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DialogItem from '../type/DialogItem';
 import InputDialog from '../component/InputDialog';
+import { renderReactComponent } from '../../common/utils/renderReactComponent';
 import {
     CancelButtonStringKey,
     LocalizedStrings,
@@ -45,6 +46,6 @@ export default function showInputDialog<Strings extends string, ItemNames extend
             />
         );
 
-        disposer = uiUtilities.renderComponent(component);
+        disposer = renderReactComponent(uiUtilities, component);
     });
 }
