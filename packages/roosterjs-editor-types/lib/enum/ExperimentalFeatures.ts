@@ -28,17 +28,17 @@ export const enum ExperimentalFeatures {
     MergePastedLine = 'MergePastedLine',
 
     /**
-     * Resize an image horizontally or vertically
+     * @deprecated This feature is always enabled
      */
     SingleDirectionResize = 'SingleDirectionResize',
 
     /**
-     * Try retrieve link preview information when paste
+     * @deprecated This feature is always enabled
      */
     PasteWithLinkPreview = 'PasteWithLinkPreview',
 
     /**
-     * Rotate an inline image (requires ImageEdit plugin)
+     * @deprecated This feature is always enabled
      */
     ImageRotate = 'ImageRotate',
 
