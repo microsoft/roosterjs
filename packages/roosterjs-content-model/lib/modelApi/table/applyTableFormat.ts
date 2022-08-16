@@ -153,24 +153,26 @@ function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableM
 
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
-            const color = hasBandedColumns
-                ? colIndex % 2 === 0
-                    ? format.bgColorEven
-                    : format.bgColorOdd
-                : hasBandedRows
-                ? rowIndex % 2 === 0
-                    ? format.bgColorEven
-                    : format.bgColorOdd
-                : shouldColorWholeTable
-                ? format.bgColorOdd
-                : null;
+            if (!cell.format.bgColorOverride) {
+                const color = hasBandedColumns
+                    ? colIndex % 2 === 0
+                        ? format.bgColorEven
+                        : format.bgColorOdd
+                    : hasBandedRows
+                    ? rowIndex % 2 === 0
+                        ? format.bgColorEven
+                        : format.bgColorOdd
+                    : shouldColorWholeTable
+                    ? format.bgColorOdd
+                    : null;
 
-            if (color && !cell.format.bgColorOverride) {
-                cell.format.backgroundColor = color;
+                if (color && !cell.format.bgColorOverride) {
+                    cell.format.backgroundColor = color;
 
-                // TODO: format text color
-            } else {
-                delete cell.format.backgroundColor;
+                    // TODO: format text color
+                } else {
+                    delete cell.format.backgroundColor;
+                }
             }
         });
     });
