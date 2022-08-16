@@ -1,6 +1,7 @@
 import { addSegment } from '../../modelApi/common/addSegment';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
@@ -23,10 +24,6 @@ export function normalizeTable(table: ContentModelTable) {
                 addSegment(cell, createBr());
             }
 
-            if (typeof cell.format.width === 'undefined') {
-                cell.format.width = getTableCellWidth(row.length);
-            }
-
             if (rowIndex == 0) {
                 cell.spanAbove = false;
             } else {
@@ -35,6 +32,10 @@ export function normalizeTable(table: ContentModelTable) {
 
             if (colIndex == 0) {
                 cell.spanLeft = false;
+            }
+
+            if (!cell.spanLeft && typeof cell.format.width === 'undefined') {
+                cell.format.width = getTableCellWidth(row.length);
             }
 
             cell.format.useBorderBox = true;
@@ -51,7 +52,7 @@ export function normalizeTable(table: ContentModelTable) {
             const leftCell = row[colIndex - 1];
             if (cell && leftCell && cell.spanLeft) {
                 tryMoveBlocks(leftCell, cell);
-                leftCell.format.width = leftCell.format.width! + cell.format.width! || undefined;
+                leftCell.format.width = (leftCell.format.width || 0) + (cell.format.width || 0);
                 cell.format.width = 0;
             }
         });
@@ -69,7 +70,7 @@ export function normalizeTable(table: ContentModelTable) {
             if (aboveCell && cell.spanAbove) {
                 tryMoveBlocks(aboveCell, cell);
                 aboveCell.format.height =
-                    aboveCell.format.height! + cell.format.height! || undefined;
+                    (aboveCell.format.height || 0) + (cell.format.height || 0);
                 cell.format.height = 0;
             }
         });
@@ -93,14 +94,20 @@ function getTableCellWidth(columns: number): number {
 function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentModelTableCell) {
     const onlyHasEmptyOrBr = sourceCell.blocks.every(
         block =>
-            block.blockType == ContentModelBlockType.Paragraph &&
-            (block.segments.length == 0 ||
-                (block.segments.length == 1 &&
-                    block.segments[0].segmentType == ContentModelSegmentType.Br))
+            block.blockType == ContentModelBlockType.Paragraph && hasOnlyBrSegment(block.segments)
     );
 
     if (!onlyHasEmptyOrBr) {
         arrayPush(targetCell.blocks, sourceCell.blocks);
         sourceCell.blocks = [];
     }
+}
+
+function hasOnlyBrSegment(segments: ContentModelSegment[]): boolean {
+    segments = segments.filter(s => s.segmentType != ContentModelSegmentType.SelectionMarker);
+
+    return (
+        segments.length == 0 ||
+        (segments.length == 1 && segments[0].segmentType == ContentModelSegmentType.Br)
+    );
 }

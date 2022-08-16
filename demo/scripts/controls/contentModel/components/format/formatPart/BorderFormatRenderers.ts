@@ -1,4 +1,5 @@
 import { BorderFormat, combineBorderValue, extractBorderValues } from 'roosterjs-content-model';
+import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
 import { createColorFormatRendererGroup } from '../utils/createColorFormatRender';
 import { createDropDownFormatRendererGroup } from '../utils/createDropDownFormatRenderer';
 import { createTextFormatRendererGroup } from '../utils/createTextFormatRenderer';
@@ -66,5 +67,11 @@ export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
             values[BorderColorNames.indexOf(name)] = value;
             format.borderColor = combineBorderValue(values, 'transparent');
         }
+    ),
+
+    createCheckboxFormatRenderer<BorderFormat>(
+        'UseBorderBox',
+        format => format.useBorderBox,
+        (format, value) => (format.useBorderBox = value)
     ),
 ];

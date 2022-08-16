@@ -23,7 +23,10 @@ export function mergeTableColumn(
 
         if (mergingColIndex > 0 && mergingColIndex < table.cells[0].length) {
             for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
+                const cell = table.cells[rowIndex]?.[mergingColIndex];
+
                 if (
+                    cell &&
                     canMergeCells(
                         table.cells,
                         rowIndex,
@@ -32,10 +35,16 @@ export function mergeTableColumn(
                         mergingColIndex
                     )
                 ) {
-                    const cell = table.cells[rowIndex]?.[mergingColIndex];
+                    cell.spanLeft = true;
 
-                    if (cell) {
-                        cell.spanLeft = true;
+                    let newSelectedCol = mergingColIndex;
+
+                    while (table.cells[rowIndex]?.[newSelectedCol]?.spanLeft) {
+                        newSelectedCol--;
+                    }
+
+                    if (table.cells[rowIndex]?.[newSelectedCol]) {
+                        table.cells[rowIndex][newSelectedCol].isSelected = true;
                     }
                 }
             }

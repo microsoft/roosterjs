@@ -21,6 +21,10 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
         if (borderStyle) {
             format.borderStyle = borderStyle;
         }
+
+        if (element.style?.boxSizing == 'border-box') {
+            format.useBorderBox = true;
+        }
     },
     apply: (format, element) => {
         if (format.borderColor) {
@@ -33,6 +37,10 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
 
         if (format.borderStyle) {
             element.style.borderStyle = format.borderStyle;
+        }
+
+        if (format.useBorderBox) {
+            element.style.boxSizing = 'border-box';
         }
     },
 };

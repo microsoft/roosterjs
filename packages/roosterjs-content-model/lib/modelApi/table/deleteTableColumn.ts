@@ -1,5 +1,6 @@
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { getSelectedCells } from './getSelectedCells';
+import { setSelectionToTable } from '../selection/setSelectionToTable';
 
 /**
  * @internal
@@ -18,5 +19,7 @@ export function deleteTableColumn(table: ContentModelTable) {
 
             table.cells[rowIndex].splice(sel.firstCol, sel.lastCol - sel.firstCol + 1);
         }
+
+        setSelectionToTable(table.cells, sel);
     }
 }

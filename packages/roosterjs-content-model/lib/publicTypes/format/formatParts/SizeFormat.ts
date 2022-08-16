@@ -11,9 +11,4 @@ export type SizeFormat = {
      * Height in pixel
      */
     height?: number;
-
-    /**
-     * Whether use border-box for this element
-     */
-    useBorderBox?: boolean;
 };
