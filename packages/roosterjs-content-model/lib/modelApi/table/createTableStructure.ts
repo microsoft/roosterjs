@@ -18,7 +18,7 @@ export function createTableStructure(
 
     table.cells.forEach(row => {
         for (let i = 0; i < columns; i++) {
-            const cell = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, false /*isHeader*/);
+            const cell = createTableCell();
 
             row.push(cell);
         }

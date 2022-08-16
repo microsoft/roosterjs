@@ -1,6 +1,10 @@
 import { combineBorderValue, extractBorderValues } from '../../lib/domUtils/borderValues';
 
 describe('extractBorderValues', () => {
+    it('undefined string', () => {
+        expect(extractBorderValues(undefined)).toEqual(['', '', '', '']);
+    });
+
     it('empty string', () => {
         expect(extractBorderValues('')).toEqual(['', '', '', '']);
     });

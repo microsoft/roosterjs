@@ -40,13 +40,13 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                 hasTableSelection &&
                 row >= firstCell.y &&
                 row <= lastCell.y &&
-                sourceCol >= firstCell.x &&
-                sourceCol <= lastCell.x;
+                targetCol >= firstCell.x &&
+                targetCol <= lastCell.x;
 
             for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
                     const hasTd = colSpan == 1 && rowSpan == 1;
-                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH');
+                    const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
 
                     if (isCellSelected) {
                         cell.isSelected = true;
@@ -61,6 +61,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                             cell.format,
                             context.contentModelContext
                         );
+
                         containerProcessor(cell, td, context);
                     }
                 }

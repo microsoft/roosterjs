@@ -1,4 +1,3 @@
-import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
 import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
 import { SizeFormat } from 'roosterjs-content-model';
@@ -15,10 +14,5 @@ export const SizeFormatRenderers: FormatRenderer<SizeFormat>[] = [
         format => format.height + '',
         (format, value) => (format.height = parseFloat(value)),
         'number'
-    ),
-    createCheckboxFormatRenderer<SizeFormat>(
-        'UseBorderBox',
-        format => format.useBorderBox,
-        (format, value) => (format.useBorderBox = value)
     ),
 ];
