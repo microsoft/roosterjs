@@ -37,6 +37,3 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   BRANCH: gh-pages
                   FOLDER: dist/deploy
-
-            - name: Publish
-              run: node tools/build.js publish --token ${{ secrets.NPM_TOKEN }}
