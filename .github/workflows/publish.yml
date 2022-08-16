@@ -19,7 +19,7 @@ jobs:
                   node-version: 'v14.18.2'
 
             - name: Install dependencies
-              run: yarn
+              run: npm install
 
             - name: Build
               run: npm run-script build:ci
