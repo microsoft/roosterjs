@@ -68,20 +68,8 @@ export default function applyChange(
     // Write back the change to image, and set its new size
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     image.src = newSrc;
-    setImageSize(image, wasResized, targetWidth, targetHeight);
-}
 
-/**
- * @param img The current image.
- * @param wasResized the current resize state of the image
- */
-function setImageSize(
-    image: HTMLImageElement,
-    wasResized: boolean,
-    targetWidth: number,
-    targetHeight: number
-) {
-    if (wasResized) {
+    if (wasResized || state == ImageEditInfoState.FullyChanged) {
         image.style.maxWidth = 'initial';
         image.width = targetWidth;
         image.height = targetHeight;
