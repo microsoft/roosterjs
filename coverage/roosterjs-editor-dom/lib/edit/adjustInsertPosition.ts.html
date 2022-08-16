@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.29% </span>
+                <span class="strong">69.53% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>88/127</span>
+                <span class='fraction'>89/128</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.71% </span>
+                <span class="strong">45.77% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>64/140</span>
+                <span class='fraction'>65/142</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.29% </span>
+                <span class="strong">69.53% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>88/127</span>
+                <span class='fraction'>89/128</span>
             </div>
         
             
@@ -424,7 +424,10 @@
 <a name='L359'></a><a href='#L359'>359</a>
 <a name='L360'></a><a href='#L360'>360</a>
 <a name='L361'></a><a href='#L361'>361</a>
-<a name='L362'></a><a href='#L362'>362</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L362'></a><a href='#L362'>362</a>
+<a name='L363'></a><a href='#L363'>363</a>
+<a name='L364'></a><a href='#L364'>364</a>
+<a name='L365'></a><a href='#L365'>365</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -736,6 +739,8 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -755,6 +760,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1097,25 +1103,28 @@ function adjustInsertPositionForTable(
         const contentTraverser = ContentTraverser.createSelectionTraverser(root, rangeToTraverse);
 &nbsp;
         let blockElement = contentTraverser &amp;&amp; contentTraverser.currentBlockElement;
-        let nextBlockElement: BlockElement | null = blockElement;
 &nbsp;
-        while (!nextBlockElement) {
-<span class="cstat-no" title="statement not covered" >            nextBlockElement = contentTraverser.getNextBlockElement();</span>
-<span class="cstat-no" title="statement not covered" >            if (nextBlockElement) {</span>
-<span class="cstat-no" title="statement not covered" >                blockElement = nextBlockElement;</span>
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (blockElement) {
+            let nextBlockElement: BlockElement | null = blockElement;
+&nbsp;
+            while (!nextBlockElement) {
+<span class="cstat-no" title="statement not covered" >                nextBlockElement = contentTraverser.getNextBlockElement();</span>
+<span class="cstat-no" title="statement not covered" >                if (nextBlockElement) {</span>
+<span class="cstat-no" title="statement not covered" >                    blockElement = nextBlockElement;</span>
+                }
             }
-        }
 &nbsp;
-        const prevElement = blockElement<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etEndNode();
+            const prevElement = blockElement<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etEndNode();
 &nbsp;
-        if (prevElement &amp;&amp; findClosestElementAncestor(prevElement, root, 'TABLE')) {
-            let tempRange = createRange(position);
-            tempRange.collapse(false /* toStart */);
-            const br = root.ownerDocument.createElement('br');
-            tempRange.insertNode(br);
+            if (prevElement &amp;&amp; findClosestElementAncestor(prevElement, root, 'TABLE')) {
+                let tempRange = createRange(position);
+                tempRange.collapse(false /* toStart */);
+                const br = root.ownerDocument.createElement('br');
+                tempRange.insertNode(br);
 &nbsp;
-            tempRange = createRange(br);
-            position = Position.getEnd(tempRange);
+                tempRange = createRange(br);
+                position = Position.getEnd(tempRange);
+            }
         }
     }
 &nbsp;
@@ -1153,7 +1162,7 @@ function <span class="fstat-no" title="function not covered" >safeRemove(</span>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-08-16T18:46:29.364Z
+                at 2022-08-16T23:04:49.270Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
