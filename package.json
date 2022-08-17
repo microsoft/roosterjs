@@ -1,6 +1,6 @@
 {
     "name": "roosterjs",
-    "version": "8.27.1",
+    "version": "0.0.0",
     "description": "Framework-independent javascript editor",
     "repository": {
         "type": "git",
@@ -30,7 +30,6 @@
     "devDependencies": {
         "@microsoft/loader-load-themed-styles": "1.8.11",
         "@types/color": "3.0.0",
-        "@types/dom-inputevent": "1.0.5",
         "@types/dompurify": "2.2.3",
         "@types/jasmine": "3.5.10",
         "@types/node": "13.13.4",

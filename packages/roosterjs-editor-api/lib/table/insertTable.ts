@@ -1,4 +1,5 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import setBackgroundColor from '../format/setBackgroundColor';
 import { IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
 import { Position, VTable } from 'roosterjs-editor-dom';
 
@@ -38,6 +39,10 @@ export default function insertTable(
     formatUndoSnapshot(
         editor,
         () => {
+            const element = editor.getElementAtCursor();
+            if (element?.style.backgroundColor) {
+                setBackgroundColor(editor, 'transparent');
+            }
             let vtable = new VTable(table);
             vtable.applyFormat(format);
             vtable.writeBack();

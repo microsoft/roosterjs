@@ -9,7 +9,7 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
     parse: (format, element, context) => {
         const backgroundColor = getColor(element, true /*isBackground*/, context.isDarkMode);
 
-        if (backgroundColor && backgroundColor != 'transparent') {
+        if (backgroundColor) {
             format.backgroundColor = backgroundColor;
         }
     },

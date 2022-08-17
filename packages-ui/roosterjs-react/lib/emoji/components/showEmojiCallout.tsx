@@ -4,6 +4,7 @@ import { Emoji } from '../type/Emoji';
 import { EmojiPane, showEmojiPane } from './EmojiPane';
 import { EmojiStringKeys } from '../type/EmojiStringKeys';
 import { LocalizedStrings, UIUtilities } from '../../common/index';
+import { renderReactComponent } from '../../common/utils/renderReactComponent';
 
 /**
  * @internal
@@ -101,7 +102,8 @@ export default function showEmojiCallout(
         disposer = null;
     };
 
-    disposer = uiUtilities.renderComponent(
+    disposer = renderReactComponent(
+        uiUtilities,
         <EmojiICallout
             ref={emojiCalloutRef}
             cursorRect={cursorRect}

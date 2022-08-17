@@ -138,4 +138,11 @@ describe('deleteSelectedContent', () => {
             '<b><div style="color:red">li<span style="color:blue;font-size:20px"><i>ne3</i></span></div><div style="color:green; font-size: 20px">line4</div></b><!--{"start":[0,0,0,2],"end":[0,0,0,2]}-->'
         );
     });
+
+    it('Readonly entities', () => {
+        runTest(
+            '<div contenteditable="false">hello there</div><!--{"start":[0,0,2],"end":[0,0,4]}-->',
+            '<div contenteditable="false">hello there</div><!--{"start":[0,0,2],"end":[0,0,2]}-->'
+        );
+    });
 });

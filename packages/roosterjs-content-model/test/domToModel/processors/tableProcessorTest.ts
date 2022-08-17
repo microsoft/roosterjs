@@ -2,17 +2,17 @@ import * as containerProcessor from '../../../lib/domToModel/processors/containe
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { createTableCell } from '../../../lib/domToModel/creators/createTableCell';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
 describe('tableProcessor', () => {
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createFormatContext(false, 1, false);
+        context = createDomToModelContext();
         spyOn(containerProcessor, 'containerProcessor');
     });
 
@@ -129,5 +129,38 @@ describe('tableProcessor', () => {
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('Process table with selection', () => {
+        const tableHTML = '<table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>';
+        const tdModel = createTableCell(1, 1, false);
+        const doc = createContentModelDocument(document);
+        const div = document.createElement('div');
+
+        div.innerHTML = tableHTML;
+        context.tableSelection = {
+            table: div.firstChild as HTMLTableElement,
+            firstCell: {
+                x: 1,
+                y: 0,
+            },
+            lastCell: {
+                x: 1,
+                y: 1,
+            },
+        };
+
+        tableProcessor(doc, div.firstChild as HTMLTableElement, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: ContentModelBlockType.Table,
+            cells: [
+                [tdModel, { ...tdModel, isSelected: true }],
+                [tdModel, { ...tdModel, isSelected: true }],
+            ],
+            format: {},
+        });
+
+        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(4);
     });
 });

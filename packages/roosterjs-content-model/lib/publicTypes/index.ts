@@ -8,7 +8,9 @@ export { ContentModelBlockGroup } from './block/group/ContentModelBlockGroup';
 export { ContentModelBlock } from './block/ContentModelBlock';
 export { ContentModelParagraph } from './block/ContentModelParagraph';
 export { ContentModelSegmentBase } from './segment/ContentModelSegmentBase';
+export { ContentModelSelectionMarker } from './segment/ContentModelSelectionMarker';
 export { ContentModelText } from './segment/ContentModelText';
+export { ContentModelBr } from './segment/ContentModelBr';
 export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './segment/ContentModelSegment';
 
@@ -20,6 +22,12 @@ export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
 export { BorderFormat } from './format/formatParts/BorderFormat';
 export { IdFormat } from './format/formatParts/IdFormat';
-export { MetadataFormat } from './format/formatParts/MetadataFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
 export { SpacingFormat } from './format/formatParts/SpacingFormat';
+export { TableCellMetadataFormat } from './format/formatParts/TableCellMetadataFormat';
+export { TableMetadataFormat } from './format/formatParts/TableMetadataFormat';
+export { ContentModelFormatBase } from './format/ContentModelFormatBase';
+export { MarginFormat } from './format/formatParts/MarginFormat';
+
+export { IExperimentalContentModelEditor } from './IExperimentalContentModelEditor';
+export { ContentModelContext } from './ContentModelContext';

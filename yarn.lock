@@ -394,12 +394,7 @@
   "integrity" "sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw=="
   "resolved" "https://registry.npmjs.org/@types/cors/-/cors-2.8.12.tgz"
   "version" "2.8.12"
-
-"@types/dom-inputevent@1.0.5":
-  "integrity" "sha512-oL8NzIAn1J8vsIigjEM2qip6PUBRkb1kE+3gbM+NvSCzrScgz+Ixymuv9Z9jmktVjeHWMJc9zhP49YBUBeCTaQ=="
-  "resolved" "https://registry.npmjs.org/@types/dom-inputevent/-/dom-inputevent-1.0.5.tgz"
-  "version" "1.0.5"
-
+  
 "@types/dompurify@2.2.3":
   "integrity" "sha512-CLtc2mZK8+axmrz1JqtpklO/Kvn38arGc8o1l3UVopZaXXuer9ONdZwJ/9f226GrhRLtUmLr9WrvZsRSNpS8og=="
   "resolved" "https://registry.npmjs.org/@types/dompurify/-/dompurify-2.2.3.tgz"

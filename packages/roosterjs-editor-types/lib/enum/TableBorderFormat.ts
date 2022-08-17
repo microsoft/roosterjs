@@ -73,4 +73,9 @@ export const enum TableBorderFormat {
      *    |
      */
     ESPECIAL_TYPE_3,
+
+    /**
+     * No border
+     */
+    CLEAR,
 }

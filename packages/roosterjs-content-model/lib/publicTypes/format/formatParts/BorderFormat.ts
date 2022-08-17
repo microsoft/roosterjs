@@ -1,19 +1,24 @@
 /**
  * Format of border
  */
-export interface BorderFormat {
+export type BorderFormat = {
     /**
-     * Border width array in pixel, in order: [top, right, bottom, left]
+     * Border width in order: "top right bottom left"
      */
-    borderWidth?: string[];
+    borderWidth?: string;
 
     /**
-     * Border style array in pixel, in order: [top, right, bottom, left]
+     * Border style in order: "top right bottom left"
      */
-    borderStyle?: string[];
+    borderStyle?: string;
 
     /**
-     * Border color array in pixel, in order: [top, right, bottom, left]
+     * Border color in order: "top right bottom left"
      */
-    borderColor?: string[];
-}
+    borderColor?: string;
+
+    /**
+     * Whether use border-box for this element
+     */
+    useBorderBox?: boolean;
+};

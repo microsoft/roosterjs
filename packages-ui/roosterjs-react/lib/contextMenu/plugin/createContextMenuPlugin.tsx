@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ContextMenu } from 'roosterjs-editor-plugins';
 import { ContextualMenu, IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { ReactEditorPlugin, UIUtilities } from '../../common/index';
+import { renderReactComponent } from '../../common/utils/renderReactComponent';
 
 function normalizeItems(items: IContextualMenuItem[]) {
     let dividerKey = 0;
@@ -24,7 +25,8 @@ class ContextMenuPlugin extends ContextMenu<IContextualMenuItem> implements Reac
                 const normalizedITems = normalizeItems(items);
 
                 if (normalizedITems.length > 0) {
-                    this.disposer = this.uiUtilities.renderComponent(
+                    this.disposer = renderReactComponent(
+                        this.uiUtilities,
                         <ContextualMenu
                             target={container}
                             onDismiss={onDismiss}

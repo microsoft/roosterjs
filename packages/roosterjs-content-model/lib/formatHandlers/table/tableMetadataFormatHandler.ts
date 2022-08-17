@@ -1,10 +1,6 @@
-import { FormatHandler } from '../FormatHandler';
-import { MetadataFormat } from '../../publicTypes/format/formatParts/MetadataFormat';
-import { TableFormat } from 'roosterjs-editor-types';
+import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
+import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 import {
-    getMetadata,
-    setMetadata,
-    removeMetadata,
     createBooleanDefinition,
     createNumberDefinition,
     createObjectDefinition,
@@ -19,7 +15,7 @@ const NullStringDefinition = createStringDefinition(
 
 const BooleanDefinition = createBooleanDefinition(false /** isOptional */);
 
-const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
+const TableFormatDefinition = createObjectDefinition<Required<TableMetadataFormat>>(
     {
         topBorderColor: NullStringDefinition,
         bottomBorderColor: NullStringDefinition,
@@ -37,7 +33,6 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
             0 /* first table border format */,
             7 /* last table border format */
         ),
-        keepCellShade: BooleanDefinition,
     },
     false /* isOptional */,
     true /** allowNull */
@@ -46,19 +41,19 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
 /**
  * @internal
  */
-export const tableMetadataFormatHandler: FormatHandler<MetadataFormat<TableFormat>> = {
-    parse: (format, element) => {
-        const metadata = getMetadata(element, TableFormatMetadata);
-
-        if (metadata) {
-            format.metadata = metadata;
-        }
-    },
-    apply: (format, element) => {
-        if (format.metadata) {
-            setMetadata(element, format.metadata, TableFormatMetadata);
-        } else {
-            removeMetadata(element);
-        }
-    },
-};
+export const tableMetadataFormatHandler = createMetadataFormatHandler<TableMetadataFormat>(
+    TableFormatDefinition,
+    format => ({
+        topBorderColor: format.topBorderColor,
+        bottomBorderColor: format.bottomBorderColor,
+        verticalBorderColor: format.verticalBorderColor,
+        hasHeaderRow: format.hasHeaderRow,
+        headerRowColor: format.headerRowColor,
+        hasFirstColumn: format.hasFirstColumn,
+        hasBandedColumns: format.hasBandedColumns,
+        hasBandedRows: format.hasBandedRows,
+        bgColorEven: format.bgColorEven,
+        bgColorOdd: format.bgColorOdd,
+        tableBorderFormat: format.tableBorderFormat,
+    })
+);

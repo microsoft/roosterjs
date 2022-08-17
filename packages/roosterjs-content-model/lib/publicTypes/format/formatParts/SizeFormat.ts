@@ -1,7 +1,7 @@
 /**
  * Format of element size
  */
-export interface SizeFormat {
+export type SizeFormat = {
     /**
      * Width in pixel
      */
@@ -11,4 +11,4 @@ export interface SizeFormat {
      * Height in pixel
      */
     height?: number;
-}
+};
