@@ -3,10 +3,6 @@ import * as React from 'react';
 const styles = require('./TitleBar.scss');
 const github = require('./iconmonstr-github-1.svg');
 
-interface WindowHack extends Window {
-    roosterJsVer: string;
-}
-
 export interface TitleBarProps {
     className?: string;
 }
@@ -19,9 +15,7 @@ export default class TitleBar extends React.Component<TitleBarProps, {}> {
                 <div className={styles.title}>
                     <span className={styles.titleText}>RoosterJs Demo Site</span>
                 </div>
-                <div className={styles.version}>
-                    {((window as any) as WindowHack).roosterJsVer || ''}
-                </div>
+                <div className={styles.version}></div>
                 <div className={styles.links}>
                     <a
                         href="https://github.com/Microsoft/roosterjs/wiki"
