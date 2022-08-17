@@ -19,18 +19,7 @@ export function containerProcessor(
     let index = 0;
 
     for (let child = parent.firstChild; child; child = child.nextSibling) {
-        if (index == nodeStartOffset) {
-            context.isInSelection = true;
-
-            addSegment(group, createSelectionMarker());
-        }
-
-        if (index == nodeEndOffset) {
-            if (!context.regularSelection!.isSelectionCollapsed) {
-                addSegment(group, createSelectionMarker());
-            }
-            context.isInSelection = false;
-        }
+        handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 
         if (isNodeOfType(child, NodeType.Element)) {
             singleElementProcessor(group, child, context);
@@ -39,6 +28,29 @@ export function containerProcessor(
         }
 
         index++;
+    }
+
+    handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+}
+
+function handleSelection(
+    index: number,
+    context: DomToModelContext,
+    group: ContentModelBlockGroup,
+    nodeStartOffset: number,
+    nodeEndOffset: number
+) {
+    if (index == nodeStartOffset) {
+        context.isInSelection = true;
+
+        addSegment(group, createSelectionMarker());
+    }
+
+    if (index == nodeEndOffset) {
+        if (!context.regularSelection!.isSelectionCollapsed) {
+            addSegment(group, createSelectionMarker());
+        }
+        context.isInSelection = false;
     }
 }
 

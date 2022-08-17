@@ -21,8 +21,12 @@ export interface IExperimentalContentModelEditor extends IEditor {
     createContentModel(startNode?: HTMLElement): ContentModelDocument;
 
     /**
-     * Create DOM fragment from Content Model
-     * @param model The Content Model to create fragment from
+     * Set content with content model
+     * @param model The content model to set
+     * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
      */
-    createFragmentFromContentModel(model: ContentModelDocument): DocumentFragment;
+    setContentModel(
+        model: ContentModelDocument,
+        mergingCallback?: (fragment: DocumentFragment) => void
+    ): void;
 }

@@ -11,5 +11,11 @@ export function createModelToDomContext(
             zoomScale: 1,
             getDarkColor: undefined,
         },
+        regularSelection: {
+            current: {
+                block: null,
+                segment: null,
+            },
+        },
     };
 }
