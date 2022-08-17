@@ -95,4 +95,10 @@ export const enum ExperimentalFeatures {
      * when selection is collapsed. Instead, we will hold the pending format in memory and only apply it when type something
      */
     PendingStyleBasedFormat = 'PendingStyleBasedFormat',
+
+    /**
+     * Normalize list to make sure it can be displayed correctly in other client
+     * e.g. We will move list items with "display: block" into previous list item and change tag to be DIV
+     */
+    NormalizeList = 'NormalizeList',
 }
