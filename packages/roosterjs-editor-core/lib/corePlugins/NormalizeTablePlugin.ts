@@ -1,6 +1,13 @@
-import { getTagOfNode, moveChildNodes, toArray } from 'roosterjs-editor-dom';
+import {
+    changeElementTag,
+    getTagOfNode,
+    moveChildNodes,
+    safeInstanceOf,
+    toArray,
+} from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
+    ExperimentalFeatures,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -9,6 +16,8 @@ import {
 
 /**
  * @internal
+ * TODO: Rename this plugin since it is not only for table now
+ *
  * NormalizeTable plugin makes sure each table in editor has TBODY/THEAD/TFOOT tag around TR tags
  *
  * When we retrieve HTML content using innerHTML, browser will always add TBODY around TR nodes if there is not.
@@ -69,6 +78,12 @@ export default class NormalizeTablePlugin implements EditorPlugin {
             case PluginEventType.KeyDown:
                 if (event.rawEvent.shiftKey) {
                     this.normalizeTableFromEvent(event.rawEvent);
+                }
+                break;
+
+            case PluginEventType.ExtractContentWithDom:
+                if (this.editor.isFeatureEnabled(ExperimentalFeatures.NormalizeList)) {
+                    normalizeListsForExport(event.clonedRoot);
                 }
                 break;
         }
@@ -151,4 +166,16 @@ function normalizeTables(tables: HTMLTableElement[]) {
     });
 
     return isDOMChanged;
+}
+
+function normalizeListsForExport(root: ParentNode) {
+    toArray(root.querySelectorAll('li')).forEach(li => {
+        const prevElement = li.previousSibling;
+
+        if (li.style.display == 'block' && safeInstanceOf(prevElement, 'HTMLLIElement')) {
+            delete li.style.display;
+
+            prevElement.appendChild(changeElementTag(li, 'div'));
+        }
+    });
 }
