@@ -6,7 +6,6 @@
     "include": ["./lib/**/*.ts"],
     "references": [
         { "path": "../roosterjs-editor-types/tsconfig.child.json" },
-        { "path": "../roosterjs-editor-dom/tsconfig.child.json" },
-        { "path": "../roosterjs-editor-core/tsconfig.child.json" }
+        { "path": "../roosterjs-editor-dom/tsconfig.child.json" }
     ]
 }
