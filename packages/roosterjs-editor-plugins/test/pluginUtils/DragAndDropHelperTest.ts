@@ -129,15 +129,7 @@ function simulateMouseEvent(type: string, target: HTMLElement, shiftKey: boolean
 }
 
 function simulateTouchEvent(type: string, target: HTMLElement) {
-    const rect = target.getBoundingClientRect();
-    let touchList: Touch[] = [
-        new Touch({ identifier: 0, target: target, clientX: rect.left, clientY: rect.top }),
-    ];
-    var event = new TouchEvent(type, {
-        view: window,
-        bubbles: true,
-        cancelable: true,
-        targetTouches: touchList,
-    });
+    var event = new TouchEvent(type);
+
     target.dispatchEvent(event);
 }
