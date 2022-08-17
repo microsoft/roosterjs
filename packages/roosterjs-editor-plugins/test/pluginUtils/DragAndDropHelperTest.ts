@@ -129,7 +129,7 @@ function simulateMouseEvent(type: string, target: HTMLElement, shiftKey: boolean
 }
 
 function simulateTouchEvent(type: string, target: HTMLElement) {
-    var event = new TouchEvent(type);
+    var event = (new Event(type) as any) as TouchEvent;
 
     target.dispatchEvent(event);
 }
