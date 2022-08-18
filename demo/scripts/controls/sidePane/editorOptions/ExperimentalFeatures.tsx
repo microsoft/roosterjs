@@ -22,6 +22,8 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Trigger formatting by a especial characters. Ex: (A), 1. i).',
     [ExperimentalFeatures.PendingStyleBasedFormat]:
         'Use pending style format to do formatting when selection is collapsed',
+    [ExperimentalFeatures.NormalizeList]:
+        'Normalize list to make sure it can be displayed correctly in other client',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
