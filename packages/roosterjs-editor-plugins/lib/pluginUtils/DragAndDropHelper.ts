@@ -67,6 +67,8 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
      * so that the handler object knows which element it is triggered from.
      * @param onSubmit A callback that will be invoked when event handler in handler object returns true
      * @param handler The event handler object, see DragAndDropHandler interface for more information
+     * @param zoomScale The zoom scale of the editor
+     * @param forceMobile A boolean to force the use of touch controls for the helper
      */
     constructor(
         private trigger: HTMLElement,
@@ -74,15 +76,12 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
         private zoomScale: number,
-        private forceMobile?: boolean /* For testing touch behaviour*/
+        forceMobile?: boolean
     ) {
-        if (this.forceMobile) {
-            this.dndMouse = MOUSE_EVENT_INFO_MOBILE;
-        } else {
-            this.dndMouse = Browser.isMobileOrTablet
+        this.dndMouse =
+            forceMobile || Browser.isMobileOrTablet
                 ? MOUSE_EVENT_INFO_MOBILE
                 : MOUSE_EVENT_INFO_DESKTOP;
-        }
         trigger.addEventListener(this.dndMouse.MOUSEDOWN, this.onMouseDown);
     }
 
