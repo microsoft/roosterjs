@@ -40,7 +40,6 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
 );
 
 /**
- * @internal
  * Get the format info of a table
  * If the table does not have a info saved, it will be retrieved from the css styles
  * @param table The table that has the info
