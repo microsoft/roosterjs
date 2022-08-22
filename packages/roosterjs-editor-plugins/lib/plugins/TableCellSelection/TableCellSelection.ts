@@ -197,7 +197,8 @@ export default class TableCellSelection implements EditorPlugin {
     }
 
     private deleteTableColumns(table: HTMLTableElement, selection: TableSelection) {
-        const isWholeColumnSelection = table.rows.length - 1 === selection.lastCell.y;
+        const isWholeColumnSelection =
+            table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0;
         if (isWholeColumnSelection) {
             const selectedVTable = new VTable(table);
             selectedVTable.selection = selection;
