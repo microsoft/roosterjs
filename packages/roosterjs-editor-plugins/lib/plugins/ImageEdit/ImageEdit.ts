@@ -60,15 +60,6 @@ const DirectionRad = (Math.PI * 2) / DIRECTIONS;
 const DirectionOrder = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 
 /**
- * Map the experimental features to image edit operations to help determine which operation is allowed
- */
-const FeatureToOperationMap = {
-    [ExperimentalFeatures.SingleDirectionResize]: ImageEditOperation.SideResize,
-    [ExperimentalFeatures.ImageRotate]: ImageEditOperation.Rotate,
-    [ExperimentalFeatures.ImageCrop]: ImageEditOperation.Crop,
-};
-
-/**
  * Default image edit options
  */
 const DefaultOptions: Required<ImageEditOptions> = {
@@ -79,6 +70,9 @@ const DefaultOptions: Required<ImageEditOptions> = {
     minRotateDeg: 5,
     imageSelector: 'img',
     rotateIconHTML: null,
+    disableCrop: false,
+    disableRotate: false,
+    disableSideResize: false,
 };
 
 /**
@@ -117,7 +111,7 @@ export default class ImageEdit implements EditorPlugin {
     private disposer: () => void;
 
     // Allowed editing operations
-    private allowedOperations: ImageEditOperation = ImageEditOperation.CornerResize;
+    private allowedOperations: ImageEditOperation;
 
     // Current editing image
     private image: HTMLImageElement;
@@ -150,6 +144,12 @@ export default class ImageEdit implements EditorPlugin {
             ...DefaultOptions,
             ...(options || {}),
         };
+
+        this.allowedOperations =
+            ImageEditOperation.CornerResize |
+            (this.options.disableCrop ? 0 : ImageEditOperation.Crop) |
+            (this.options.disableRotate ? 0 : ImageEditOperation.Rotate) |
+            (this.options.disableSideResize ? 0 : ImageEditOperation.SideResize);
     }
 
     /**
@@ -166,13 +166,6 @@ export default class ImageEdit implements EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler('blur', this.onBlur);
-
-        // Read current enabled features from editor to determine which editing operations are allowed
-        getObjectKeys(FeatureToOperationMap).forEach(key => {
-            this.allowedOperations |= this.editor.isFeatureEnabled(key)
-                ? FeatureToOperationMap[key]
-                : 0;
-        });
     }
 
     /**
@@ -257,6 +250,15 @@ export default class ImageEdit implements EditorPlugin {
                 });
                 break;
         }
+    }
+
+    /**
+     * Check if the given image edit operation is allowed by this pluign
+     * @param operation The image edit operation to check
+     * @returns True means it is allowed, otherwise false
+     */
+    isOperationAllowed(operation: ImageEditOperation): boolean {
+        return !!(this.allowedOperations & operation);
     }
 
     /**
@@ -364,7 +366,13 @@ export default class ImageEdit implements EditorPlugin {
 
         wrapper.style.position = 'relative';
         wrapper.style.maxWidth = '100%';
-        wrapper.style.verticalAlign = 'bottom';
+        // keep the same vertical align
+        const originalVerticalAlign = this.image.ownerDocument.defaultView
+            .getComputedStyle(this.image)
+            .getPropertyValue('vertical-align');
+        if (originalVerticalAlign) {
+            wrapper.style.verticalAlign = originalVerticalAlign;
+        }
         wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         // Cache current src so that we can compare it after edit see if src is changed

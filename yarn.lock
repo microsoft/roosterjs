@@ -411,11 +411,6 @@
   resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.12.tgz#6b2c510a7ad7039e98e7b8d3d6598f4359e5c080"
   integrity sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==
 
-"@types/dom-inputevent@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@types/dom-inputevent/-/dom-inputevent-1.0.5.tgz#c880fa9b4482b49accc107e4a950117a1af7a61b"
-  integrity sha512-oL8NzIAn1J8vsIigjEM2qip6PUBRkb1kE+3gbM+NvSCzrScgz+Ixymuv9Z9jmktVjeHWMJc9zhP49YBUBeCTaQ==
-
 "@types/dompurify@2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@types/dompurify/-/dompurify-2.2.3.tgz#6e89677a07902ac1b6821c345f34bd85da239b08"

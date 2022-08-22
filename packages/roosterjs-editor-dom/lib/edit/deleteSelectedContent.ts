@@ -38,7 +38,21 @@ export default function deleteSelectedContent(root: HTMLElement, range: Range) {
                 return null;
             }
 
-            const { startContainer, endContainer, startOffset, endOffset } = regionRange;
+            const {
+                startContainer,
+                endContainer,
+                startOffset,
+                endOffset,
+                commonAncestorContainer,
+            } = regionRange;
+
+            // Disallow merging of readonly elements
+            if (
+                safeInstanceOf(commonAncestorContainer, 'HTMLElement') &&
+                !commonAncestorContainer.isContentEditable
+            ) {
+                return null;
+            }
 
             // Make sure there are node before and after the merging point.
             // This is required by mergeBlocksInRegion API.
@@ -62,8 +76,10 @@ export default function deleteSelectedContent(root: HTMLElement, range: Range) {
         })
         .filter(x => !!x);
 
-    // 3. Delete all nodes that we found
-    nodesToDelete.forEach(node => node.parentNode?.removeChild(node));
+    // 3. Delete all nodes that we found, whose parent is editable
+    nodesToDelete.forEach(
+        node => node.parentElement?.isContentEditable && node.parentElement.removeChild(node)
+    );
 
     // 4. Merge lines for each region, so that after we don't see extra line breaks
     nodesPairToMerge.forEach(nodes => {

@@ -31,7 +31,7 @@ export function selectNode(node: Node) {
 }
 
 // Add range to the document's selection
-function addRange(range: Range) {
+export function addRange(range: Range) {
     let sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);

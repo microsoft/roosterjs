@@ -3,17 +3,17 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
+import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
 
 describe('handleSegment', () => {
     let parent: HTMLElement;
-    let context: FormatContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
-        context = createFormatContext();
+        context = createModelToDomContext();
     });
 
     function runTest(
@@ -38,6 +38,16 @@ describe('handleSegment', () => {
                 text: 'test',
             },
             '<span>test</span>',
+            0
+        );
+    });
+
+    it('Br segment', () => {
+        runTest(
+            {
+                segmentType: ContentModelSegmentType.Br,
+            },
+            '<br>',
             0
         );
     });

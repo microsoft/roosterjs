@@ -1,19 +1,19 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
-import * as createGeneralSegment from '../../../lib/domToModel/creators/createGeneralSegment';
+import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
 import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createContentModelDocument } from '../../../lib/domToModel/creators/createContentModelDocument';
-import { createFormatContext } from '../../../lib/formatHandlers/createFormatContext';
-import { FormatContext } from '../../../lib/formatHandlers/FormatContext';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 import { generalSegmentProcessor } from '../../../lib/domToModel/processors/generalSegmentProcessor';
 
 describe('generalSegmentProcessor', () => {
-    let context: FormatContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createFormatContext(false, 1, false);
+        context = createDomToModelContext();
         spyOn(containerProcessor, 'containerProcessor');
     });
 

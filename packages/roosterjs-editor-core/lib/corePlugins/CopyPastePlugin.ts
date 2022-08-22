@@ -14,7 +14,6 @@ import {
     GetContentMode,
     IEditor,
     PluginEventType,
-    ExperimentalFeatures,
     PluginWithState,
     KnownCreateElementDataIndex,
     SelectionRangeEx,
@@ -119,9 +118,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             event as ClipboardEvent,
             clipboardData => this.editor?.paste(clipboardData),
             {
-                allowLinkPreview: this.editor?.isFeatureEnabled(
-                    ExperimentalFeatures.PasteWithLinkPreview
-                ),
                 allowedCustomPasteType: this.state.allowedCustomPasteType,
                 getTempDiv: () => {
                     range = this.editor?.getSelectionRange();

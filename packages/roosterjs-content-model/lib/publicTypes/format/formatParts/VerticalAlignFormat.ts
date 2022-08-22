@@ -1,9 +1,9 @@
 /**
  * Format of vertical alignment
  */
-export interface VerticalAlignFormat {
+export type VerticalAlignFormat = {
     /**
      * Vertical alignment
      */
     verticalAlign?: 'top' | 'middle' | 'bottom';
-}
+};

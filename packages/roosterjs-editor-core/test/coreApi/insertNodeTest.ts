@@ -1,8 +1,8 @@
 import createEditorCore from './createMockEditorCore';
+import { addRange, itFirefoxOnly, selectNode } from '../TestHelper';
 import { ContentPosition } from 'roosterjs-editor-types';
 import { getSelectionRange } from '../../lib/coreApi/getSelectionRange';
 import { insertNode } from '../../lib/coreApi/insertNode';
-import { itFirefoxOnly, selectNode } from '../TestHelper';
 
 describe('insertNode', () => {
     let div: HTMLDivElement;
@@ -345,4 +345,121 @@ describe('insertNode', () => {
             expect(range.endOffset).toBe(0);
         }
     );
+
+    itFirefoxOnly('Insert Node in new line when selection inside of a table cell', () => {
+        const core = createEditorCore(div, {});
+        const node = document.createElement('span');
+        node.id = 'span1';
+        div.contentEditable = 'true';
+        div.innerHTML = '<div><table><tr><td><span id="span2"></span></td></tr></table></div>';
+        div.focus();
+        selectNode(document.getElementById('span2')!);
+        insertNode(core, node, {
+            position: ContentPosition.SelectionStart,
+            insertOnNewLine: true,
+            updateCursor: true,
+            replaceSelection: true,
+        });
+
+        expect(div.innerHTML).toBe(
+            '<div><table><tbody><tr><td><div><span id="span1"></span></div></td></tr></tbody></table></div>'
+        );
+
+        const range = getSelectionRange(core, false);
+        const span2 = document.getElementById('span1');
+
+        expect(range.startContainer).toBe(span2);
+        expect(range.endContainer).toBe(span2);
+        expect(range.startOffset).toBe(0);
+        expect(range.endOffset).toBe(0);
+    });
+
+    itFirefoxOnly(
+        'Insert Node in new line when selection inside of a table cell between spans',
+        () => {
+            const core = createEditorCore(div, {});
+            const node = document.createElement('span');
+            node.id = 'span1';
+            div.contentEditable = 'true';
+            div.innerHTML =
+                '<div><table><tr><td><span>Test1</span><span id="span2"></span><span>Test2</span></td></tr></table></div>';
+            div.focus();
+            selectNode(document.getElementById('span2')!);
+            insertNode(core, node, {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: true,
+                updateCursor: true,
+                replaceSelection: true,
+            });
+
+            expect(div.innerHTML).toBe(
+                '<div><table><tbody><tr><td><span>Test1</span><div><span id="span1"></span></div><span>Test2</span></td></tr></tbody></table></div>'
+            );
+
+            const range = getSelectionRange(core, false);
+            const span2 = document.getElementById('span1');
+
+            expect(range.startContainer).toBe(span2);
+            expect(range.endContainer).toBe(span2);
+            expect(range.startOffset).toBe(0);
+            expect(range.endOffset).toBe(0);
+        }
+    );
+
+    itFirefoxOnly(
+        'Insert Node in new line when selection inside of a table cell between spans',
+        () => {
+            const core = createEditorCore(div, {});
+            const node = document.createElement('span');
+            node.id = 'span1';
+            div.contentEditable = 'true';
+            div.innerHTML =
+                '<div><table><tr><td><span id="span2">Test1</span></td></tr></table></div>';
+            div.focus();
+            const sel = document.createRange();
+            sel.setStart(document.getElementById('span2')!.firstChild!, 2);
+            addRange(sel);
+
+            insertNode(core, node, {
+                position: ContentPosition.SelectionStart,
+                insertOnNewLine: true,
+                updateCursor: true,
+                replaceSelection: true,
+            });
+
+            expect(div.innerHTML).toBe(
+                '<div><table><tbody><tr><td><span id="span2">Te<div><span id="span1"></span></div>st1</span></td></tr></tbody></table></div>'
+            );
+
+            const range = getSelectionRange(core, false);
+            const span2 = document.getElementById('span1');
+
+            expect(range.startContainer).toBe(span2);
+            expect(range.endContainer).toBe(span2);
+            expect(range.startOffset).toBe(0);
+            expect(range.endOffset).toBe(0);
+        }
+    );
+
+    it('Add a line between tables', () => {
+        const core = createEditorCore(div, {});
+        const node = document.createElement('table');
+        node.id = 'table1';
+        div.contentEditable = 'true';
+        div.innerHTML = '<div id="div"><table></table></div>';
+        div.focus();
+        const sel = document.createRange();
+        sel.setStart(document.getElementById('div')!, 1);
+        addRange(sel);
+
+        insertNode(core, node, {
+            position: ContentPosition.SelectionStart,
+            insertOnNewLine: false,
+            updateCursor: true,
+            replaceSelection: true,
+        });
+        expect(div.innerHTML).toBe(
+            '<div id="div"><table></table><br><table id="table1"></table></div>'
+        );
+    });
 });

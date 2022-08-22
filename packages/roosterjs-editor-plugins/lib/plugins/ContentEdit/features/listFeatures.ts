@@ -265,11 +265,12 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 let searcher = editor.getContentSearcherOfCursor();
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-                const listStyle = getAutoNumberingListStyle(textBeforeCursor);
+
                 if (!textRange) {
                     // no op if the range can't be found
                 } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
                     const num = parseInt(textBeforeCursor);
+                    const listStyle = getAutoNumberingListStyle(textBeforeCursor, num);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
                         editor,
@@ -278,6 +279,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                         'autoToggleList' /** apiNameOverride */
                     );
                 } else {
+                    const listStyle = getAutoNumberingListStyle(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
                         editor,

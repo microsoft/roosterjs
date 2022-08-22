@@ -28,14 +28,11 @@ const initialState: BuildInPluginState = {
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     experimentalFeatures: [
-        ExperimentalFeatures.PasteWithLinkPreview,
-        ExperimentalFeatures.SingleDirectionResize,
-        ExperimentalFeatures.ImageRotate,
-        ExperimentalFeatures.ImageCrop,
         ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.TableAlignment,
         ExperimentalFeatures.AdaptiveHandlesResizer,
         ExperimentalFeatures.ListItemAlignment,
+        ExperimentalFeatures.PendingStyleBasedFormat,
     ],
     isRtl: false,
 };

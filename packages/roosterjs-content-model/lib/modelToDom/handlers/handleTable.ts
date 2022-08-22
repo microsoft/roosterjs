@@ -1,7 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { FormatContext } from '../../formatHandlers/FormatContext';
 import { handleBlock } from './handleBlock';
+import { ModelToDomContext } from '../context/ModelToDomContext';
 import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
@@ -12,7 +12,7 @@ export function handleTable(
     doc: Document,
     parent: Node,
     table: ContentModelTable,
-    context: FormatContext
+    context: ModelToDomContext
 ) {
     if (table.cells.length == 0 || table.cells.every(c => c.length == 0)) {
         // Empty table, do not create TABLE element and just return
@@ -21,7 +21,7 @@ export function handleTable(
 
     const tableNode = doc.createElement('table');
     parent.appendChild(tableNode);
-    applyFormat(tableNode, TableFormatHandlers, table.format, context);
+    applyFormat(tableNode, TableFormatHandlers, table.format, context.contentModelContext);
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
@@ -38,10 +38,25 @@ export function handleTable(
         for (let col = 0; col < table.cells[row].length; col++) {
             const cell = table.cells[row][col];
 
+            if (cell.isSelected) {
+                context.tableSelection = context.tableSelection || {
+                    table: tableNode,
+                    firstCell: { x: col, y: row },
+                    lastCell: { x: col, y: row },
+                };
+
+                if (context.tableSelection.table == tableNode) {
+                    const lastCell = context.tableSelection.lastCell;
+
+                    lastCell.x = Math.max(lastCell.x, col);
+                    lastCell.y = Math.max(lastCell.y, row);
+                }
+            }
+
             if (!cell.spanAbove && !cell.spanLeft) {
                 const td = doc.createElement(cell.isHeader ? 'th' : 'td');
                 tr.appendChild(td);
-                applyFormat(td, TableCellFormatHandlers, cell.format, context);
+                applyFormat(td, TableCellFormatHandlers, cell.format, context.contentModelContext);
 
                 let rowSpan = 1;
                 let colSpan = 1;

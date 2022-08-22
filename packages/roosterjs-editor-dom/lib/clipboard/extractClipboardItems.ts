@@ -27,6 +27,7 @@ const ContentHandlers: {
         (data.rawHtml = Browser.isEdge ? workaroundForEdge(value) : value),
     [ContentType.PlainText]: (data, value) => (data.text = value),
     [OTHER_TEXT_TYPE]: (data, value, type?) => !!type && (data.customValues[type] = value),
+    [ContentTypePrefix.Text + EDGE_LINK_PREVIEW]: tryParseLinkPreview,
 };
 
 /**
@@ -53,12 +54,6 @@ export default function extractClipboardItems(
         rawHtml: null,
         customValues: {},
     };
-
-    const contentHandlers = { ...ContentHandlers };
-
-    if (options?.allowLinkPreview) {
-        contentHandlers[ContentTypePrefix.Text + EDGE_LINK_PREVIEW] = tryParseLinkPreview;
-    }
 
     return Promise.all(
         (items || []).map(item => {
@@ -89,7 +84,7 @@ export default function extractClipboardItems(
             } else {
                 const customType = getAllowedCustomType(type, options?.allowedCustomPasteType);
                 const handler =
-                    contentHandlers[type] || (customType ? contentHandlers[OTHER_TEXT_TYPE] : null);
+                    ContentHandlers[type] || (customType ? ContentHandlers[OTHER_TEXT_TYPE] : null);
                 return new Promise<void>(resolve =>
                     handler
                         ? item.getAsString(value => {
