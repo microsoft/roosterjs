@@ -16,7 +16,7 @@ jobs:
                   node-version: 'v14.18.2'
 
             - name: Install dependencies
-              run: npm install
+              run: yarn
 
             - name: Build
               run: npm run-script build:ci
@@ -34,7 +34,7 @@ jobs:
                   node-version: 'v14.18.2'
 
             - name: Install dependencies
-              run: npm install
+              run: yarn
 
             - name: Install Chrome
               uses: browser-actions/setup-chrome@latest
@@ -57,7 +57,7 @@ jobs:
                   node-version: 'v14.18.2'
 
             - name: Install dependencies
-              run: npm install
+              run: yarn
 
             - name: Install Firefox
               uses: browser-actions/setup-firefox@latest
