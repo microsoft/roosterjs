@@ -1,6 +1,8 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource } from 'roosterjs-editor-types';
+import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
+import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
@@ -21,23 +23,24 @@ export default function insertTable(
     rows: number,
     format?: TableMetadataFormat
 ) {
+    const doc = createContentModelDocument(editor.getDocument());
+    const table = createTableStructure(doc, columns, rows);
+
+    normalizeTable(table);
+    applyTableFormat(table, format);
+
+    const firstBlock = table.cells[0]?.[0]?.blocks[0];
+
+    if (firstBlock?.blockType == ContentModelBlockType.Paragraph) {
+        firstBlock.segments.unshift(createSelectionMarker());
+    }
+
     editor.addUndoSnapshot(
         () => {
-            const doc = createContentModelDocument(editor.getDocument());
-
-            const table = createTableStructure(doc, columns, rows);
-
-            normalizeTable(table);
-            applyTableFormat(table, format);
-
-            const fragment = editor.createFragmentFromContentModel(doc);
-
-            editor.insertNode(fragment);
+            editor.setContentModel(doc, fragment => editor.insertNode(fragment));
         },
         ChangeSource.Format,
         false /*canUndoByBackspace*/,
-        {
-            formatApiName: 'insertTable',
-        }
+        { formatApiName: 'insertTable' }
     );
 }

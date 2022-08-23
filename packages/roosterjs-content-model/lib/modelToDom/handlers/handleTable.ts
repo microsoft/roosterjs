@@ -38,6 +38,21 @@ export function handleTable(
         for (let col = 0; col < table.cells[row].length; col++) {
             const cell = table.cells[row][col];
 
+            if (cell.isSelected) {
+                context.tableSelection = context.tableSelection || {
+                    table: tableNode,
+                    firstCell: { x: col, y: row },
+                    lastCell: { x: col, y: row },
+                };
+
+                if (context.tableSelection.table == tableNode) {
+                    const lastCell = context.tableSelection.lastCell;
+
+                    lastCell.x = Math.max(lastCell.x, col);
+                    lastCell.y = Math.max(lastCell.y, row);
+                }
+            }
+
             if (!cell.spanAbove && !cell.spanLeft) {
                 const td = doc.createElement(cell.isHeader ? 'th' : 'td');
                 tr.appendChild(td);

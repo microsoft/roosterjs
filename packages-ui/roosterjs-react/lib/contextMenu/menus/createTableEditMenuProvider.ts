@@ -17,6 +17,7 @@ import {
     TableEditSplitMenuItemStringKey,
     TableEditAlignMenuItemStringKey,
     TableEditShadeMenuItemStringKey,
+    TableEditAlignTableMenuItemStringKey,
 } from '../types/ContextMenuItemStringKeys';
 import {
     BackgroundColorDropDownItems,
@@ -44,6 +45,9 @@ const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOpe
     menuNameTableAlignTop: TableOperation.AlignCellTop,
     menuNameTableAlignMiddle: TableOperation.AlignCellMiddle,
     menuNameTableAlignBottom: TableOperation.AlignCellBottom,
+    menuNameTableAlignTableLeft: TableOperation.AlignLeft,
+    menuNameTableAlignTableCenter: TableOperation.AlignCenter,
+    menuNameTableAlignTableRight: TableOperation.AlignRight,
 };
 
 const ColorValues = {
@@ -119,6 +123,17 @@ const TableEditAlignMenuItem: ContextMenuItem<TableEditAlignMenuItemStringKey> =
     onClick,
 };
 
+const TableEditAlignTableMenuItem: ContextMenuItem<TableEditAlignTableMenuItemStringKey> = {
+    key: 'menuNameTableAlignTable',
+    unlocalizedText: 'Align table',
+    subItems: {
+        menuNameTableAlignTableLeft: 'Align left',
+        menuNameTableAlignTableCenter: 'Align center',
+        menuNameTableAlignTableRight: 'Align right',
+    },
+    onClick,
+};
+
 const TableEditCellShadeMenuItem: ContextMenuItem<TableEditShadeMenuItemStringKey> = {
     key: 'menuNameTableCellShade',
     unlocalizedText: 'Shading',
@@ -155,6 +170,7 @@ export default function createTableEditMenuProvider(
             TableEditMergeMenuItem,
             TableEditSplitMenuItem,
             TableEditAlignMenuItem,
+            TableEditAlignTableMenuItem,
             TableEditCellShadeMenuItem,
         ],
         strings,

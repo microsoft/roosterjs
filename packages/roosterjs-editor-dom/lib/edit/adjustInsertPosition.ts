@@ -310,25 +310,28 @@ function adjustInsertPositionForTable(
         const contentTraverser = ContentTraverser.createSelectionTraverser(root, rangeToTraverse);
 
         let blockElement = contentTraverser && contentTraverser.currentBlockElement;
-        let nextBlockElement: BlockElement | null = blockElement;
 
-        while (!nextBlockElement) {
-            nextBlockElement = contentTraverser.getNextBlockElement();
-            if (nextBlockElement) {
-                blockElement = nextBlockElement;
+        if (blockElement) {
+            let nextBlockElement: BlockElement | null = blockElement;
+
+            while (!nextBlockElement) {
+                nextBlockElement = contentTraverser.getNextBlockElement();
+                if (nextBlockElement) {
+                    blockElement = nextBlockElement;
+                }
             }
-        }
 
-        const prevElement = blockElement?.getEndNode();
+            const prevElement = blockElement?.getEndNode();
 
-        if (prevElement && findClosestElementAncestor(prevElement, root, 'TABLE')) {
-            let tempRange = createRange(position);
-            tempRange.collapse(false /* toStart */);
-            const br = root.ownerDocument.createElement('br');
-            tempRange.insertNode(br);
+            if (prevElement && findClosestElementAncestor(prevElement, root, 'TABLE')) {
+                let tempRange = createRange(position);
+                tempRange.collapse(false /* toStart */);
+                const br = root.ownerDocument.createElement('br');
+                tempRange.insertNode(br);
 
-            tempRange = createRange(br);
-            position = Position.getEnd(tempRange);
+                tempRange = createRange(br);
+                position = Position.getEnd(tempRange);
+            }
         }
     }
 
