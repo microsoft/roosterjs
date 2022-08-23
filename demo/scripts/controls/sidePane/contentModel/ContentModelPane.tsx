@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { ContentModelDocument } from 'roosterjs-content-model';
 import { ContentModelDocumentView } from '../../contentModel/components/model/ContentModelDocumentView';
+import { contentModelRibbonButton } from './buttons/contentModelRibbonButton';
 import { exportButton } from './buttons/exportButton';
-import { formatTableButton } from './buttons/formatTableButton';
-import { insertTableButton } from './buttons/insertTableButton';
 import { refreshButton } from './buttons/refreshButton';
 import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
-import { setTableCellShadeButton } from './buttons/setTableCellShadeButton';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const styles = require('./ContentModelPane.scss');
@@ -28,13 +26,7 @@ export default class ContentModelPane extends React.Component<
     constructor(props: ContentModelPaneProps) {
         super(props);
 
-        this.contentModelButtons = [
-            refreshButton,
-            exportButton,
-            insertTableButton,
-            formatTableButton,
-            setTableCellShadeButton,
-        ];
+        this.contentModelButtons = [refreshButton, exportButton, contentModelRibbonButton];
 
         this.state = {
             model: null,

@@ -14,23 +14,16 @@ export default function formatTable(
     format: TableMetadataFormat
 ) {
     const table = editor.getElementAtCursor('TABLE');
-    const parent = table?.parentNode;
+    const model = editor.createContentModel(table);
+    const tableModel = model.blocks[0];
 
-    editor.focus();
+    if (tableModel?.blockType == ContentModelBlockType.Table) {
+        applyTableFormat(tableModel, format);
 
-    if (parent) {
         editor.addUndoSnapshot(
             () => {
-                const model = editor.createContentModel(table);
-                const tableModel = model.blocks[0];
-
-                if (tableModel?.blockType == ContentModelBlockType.Table) {
-                    applyTableFormat(tableModel, format);
-
-                    const newFragment = editor.createFragmentFromContentModel(model);
-
-                    parent.replaceChild(newFragment, table);
-                }
+                editor.focus();
+                editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
             },
             ChangeSource.Format,
             false /*canUndoByBackspace*/,
