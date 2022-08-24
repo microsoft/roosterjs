@@ -384,4 +384,11 @@ describe('wordOnlineHandler', () => {
             );
         });
     });
+
+    it('Keep the start property on lists and try to reuse the Word provided marker style', () => {
+        runTest(
+            '<html><body><div>Test</div><ol start="1"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ul></ol><div>Test</div><ol start="3"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ol></body></html>',
+            '<div>Test</div><ol start="1"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ol><div>Test</div><ol start="3"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ol>'
+        );
+    });
 });
