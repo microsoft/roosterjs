@@ -26,9 +26,9 @@ export function getElementBasedFormatState(
     let multiline = false;
 
     if (range && !range.collapsed) {
-        const startingBlock = editor.getBlockElementAtNode(range.startContainer);
-        const endingBlock = editor.getBlockElementAtNode(range.endContainer);
-        multiline = endingBlock ? !endingBlock.equals(startingBlock) : false;
+        let startingBlock = editor.getBlockElementAtNode(range.startContainer);
+        let endingBlock = editor.getBlockElementAtNode(range.endContainer);
+        multiline = endingBlock && startingBlock ? !endingBlock.equals(startingBlock) : false;
     }
 
     const headerTag = getTagOfNode(
