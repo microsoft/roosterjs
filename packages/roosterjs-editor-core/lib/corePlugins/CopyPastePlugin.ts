@@ -79,8 +79,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     private onCutCopy(event: Event, isCut: boolean) {
         const selection = this.editor.getSelectionRangeEx();
         if (selection && !selection.areAllCollapsed) {
+            const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
-            const newRange = this.createNewRange(selection, tempDiv);
+            const newRange = this.createNewRange(selection, tempDiv, html);
 
             if (newRange) {
                 addRangeToSelection(newRange);
@@ -190,14 +191,13 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         }
     }
 
-    private createNewRange(selection: SelectionRangeEx, tempDiv: HTMLDivElement) {
-        const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
+    private createNewRange(selection: SelectionRangeEx, tempDiv: HTMLDivElement, html: string) {
         const metadata = setHtmlWithMetadata(tempDiv, html, this.editor.getTrustedHTMLHandler());
         if (selection.type === SelectionRangeTypes.TableSelection) {
             const tempTable = tempDiv.querySelector(`#${selection.table.id}`);
             return createRange(tempTable);
         } else {
-            return metadata && metadata.type === SelectionRangeTypes.Normal
+            return metadata?.type === SelectionRangeTypes.Normal
                 ? createRange(tempDiv, metadata.start, metadata.end)
                 : null;
         }
