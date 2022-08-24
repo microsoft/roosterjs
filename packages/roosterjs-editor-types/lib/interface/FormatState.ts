@@ -1,4 +1,5 @@
 import ModeIndependentColor from './ModeIndependentColor';
+import TableFormat from './TableFormat';
 
 /**
  * Format states that can have pending state.
@@ -82,6 +83,16 @@ export interface ElementBasedFormatState {
      * Whether the cursor is in table
      */
     isInTable?: boolean;
+
+    /**
+     * Format of table, if there is table at cursor position
+     */
+    tableFormat?: TableFormat;
+
+    /**
+     * If there is a table, whether the table has header row
+     */
+    tableHasHeader?: boolean;
 }
 
 /**
