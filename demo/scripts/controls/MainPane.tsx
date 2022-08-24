@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import BuildInPluginState from './BuildInPluginState';
 import ContentModelPlugin from './sidePane/contentModel/ContentModelPlugin';
+import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import ExperimentalContentModelEditor from './editor/ExperimentalContentModelEditor';
@@ -16,24 +17,13 @@ import { arrayPush } from 'roosterjs-editor-dom';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
-import { formatTableButton } from './ribbonButtons/contentModel/formatTableButton';
 import { getDarkColor } from 'roosterjs-color-utils';
-import { insertTableButton } from './ribbonButtons/contentModel/insertTableButton';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
-import { setTableCellShadeButton } from './ribbonButtons/contentModel/setTableCellShadeButton';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
-import {
-    tableAlignCellButton,
-    tableAlignTableButton,
-    tableDeleteButton,
-    tableInsertButton,
-    tableMergeButton,
-    tableSplitButton,
-} from './ribbonButtons/contentModel/tableEditButtons';
 import {
     AllButtonStringKeys,
     createRibbonPlugin,
@@ -137,17 +127,6 @@ class MainPane extends MainPaneBase {
     private toggleablePlugins: EditorPlugin[] | null = null;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
-    private contentModelRibbonButtons: RibbonButton<any>[] = [
-        insertTableButton,
-        formatTableButton,
-        setTableCellShadeButton,
-        tableInsertButton,
-        tableDeleteButton,
-        tableMergeButton,
-        tableSplitButton,
-        tableAlignCellButton,
-        tableAlignTableButton,
-    ];
 
     private content: string = '';
 
@@ -327,10 +306,9 @@ class MainPane extends MainPaneBase {
 
     private renderContentModelRibbon() {
         return (
-            <Ribbon
-                buttons={this.contentModelRibbonButtons}
-                plugin={this.contentModelRibbonPlugin}
-                dir={this.state.isRtl ? 'rtl' : 'ltr'}
+            <ContentModelRibbon
+                ribbonPlugin={this.contentModelRibbonPlugin}
+                isRtl={this.state.isRtl}
             />
         );
     }
