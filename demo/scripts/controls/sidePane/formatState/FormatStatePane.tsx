@@ -80,6 +80,7 @@ export default class FormatStatePane extends React.Component<
                             {this.renderSpan(format.canUnlink, 'In Link')}
                             {this.renderSpan(format.canAddImageAltText, 'In Image')}
                             {this.renderSpan(format.isInTable, 'In Table')}
+                            {this.renderSpan(format.tableHasHeader, 'Table Has Header')}
                             <span
                                 className={
                                     format.headerLevel == 0 && styles.inactive

@@ -11,8 +11,8 @@ import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBa
  */
 export default function setTableCellShade(editor: IExperimentalContentModelEditor, color: string) {
     const table = editor.getElementAtCursor('TABLE');
-    const model = editor.createContentModel(table);
-    const tableModel = model.blocks[0];
+    const model = table && editor.createContentModel(table);
+    const tableModel = model?.blocks[0];
 
     if (tableModel?.blockType == ContentModelBlockType.Table) {
         normalizeTable(tableModel);
