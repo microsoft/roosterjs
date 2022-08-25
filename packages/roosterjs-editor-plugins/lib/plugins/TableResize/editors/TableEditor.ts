@@ -145,8 +145,15 @@ export default class TableEditor {
                             : x <= tdRect.left + INSERTER_HOVER_OFFSET) &&
                         isOnLeftOrRight
                     ) {
+                        const tdAbove = this.table.rows[i - 1]?.cells[0];
+                        const tdAboveRect = normalizeRect(tdAbove.getBoundingClientRect());
+
+                        const isTdAboveMerged = this.isRTL
+                            ? tdAboveRect?.right !== tdRect.right
+                            : tdAboveRect?.left !== tdRect.left;
+
                         this.setInserterTd(
-                            y > (tdRect.top + tdRect.bottom) / 2
+                            y > (tdRect.top + tdRect.bottom) / 2 || isTdAboveMerged
                                 ? td
                                 : this.table.rows[i - 1]?.cells[0],
                             true /*isHorizontal*/
