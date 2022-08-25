@@ -190,10 +190,9 @@ export default class TableCellSelection implements EditorPlugin {
                 clonedVTable.selection = this.tableRange;
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
-                event.range.selectNode(clonedTable);
 
                 if (event.isCut) {
-                    this.editor.focus();
+                    this.editor.select(clonedTable);
                     forEachSelectedCell(this.vTable, cell => {
                         if (cell?.td) {
                             deleteNodeContents(cell.td, this.editor);
@@ -201,6 +200,8 @@ export default class TableCellSelection implements EditorPlugin {
                     });
                     this.deleteTableColumns(selection.table, selection.coordinates);
                 }
+
+                event.range.selectNode(clonedTable);
             }
         }
     }
