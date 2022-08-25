@@ -14,6 +14,15 @@ export interface ContentModelTable
         >,
         ContentModelWithFormat<ContentModelTableFormat> {
     /**
+     * Widths of each column
+     */
+    widths: number[];
+
+    /**
+     * Heights of each row
+     */
+    heights: number[];
+    /**
      * Cells of this table
      */
     cells: ContentModelTableCell[][];

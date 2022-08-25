@@ -29,6 +29,11 @@ export function insertTableColumn(
                     createTableCell(cell.spanLeft, cell.spanAbove, cell.isHeader, cell.format)
                 );
             });
+            table.widths.splice(
+                insertLeft ? sel.firstCol : sel.lastCol + 1,
+                0,
+                table.widths[insertLeft ? sel.firstCol : sel.lastCol]
+            );
         }
     }
 }
