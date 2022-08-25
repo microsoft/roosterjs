@@ -81,11 +81,15 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         if (selection && !selection.areAllCollapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
-            const newRange = this.createNewRange(selection, tempDiv, html);
-
-            if (newRange) {
-                addRangeToSelection(newRange);
-            }
+            const metadata = setHtmlWithMetadata(
+                tempDiv,
+                html,
+                this.editor.getTrustedHTMLHandler()
+            );
+            const newRange =
+                metadata?.type === SelectionRangeTypes.Normal
+                    ? createRange(tempDiv, metadata.start, metadata.end)
+                    : null;
 
             this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
@@ -93,6 +97,10 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 rawEvent: event as ClipboardEvent,
                 isCut,
             });
+
+            if (newRange) {
+                addRangeToSelection(newRange);
+            }
 
             this.editor.runAsync(editor => {
                 this.cleanUpAndRestoreSelection(tempDiv, selection, !isCut /* isCopy */);
@@ -188,18 +196,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 range.collapse();
             }
             this.editor.select(range);
-        }
-    }
-
-    private createNewRange(selection: SelectionRangeEx, tempDiv: HTMLDivElement, html: string) {
-        const metadata = setHtmlWithMetadata(tempDiv, html, this.editor.getTrustedHTMLHandler());
-        if (selection.type === SelectionRangeTypes.TableSelection) {
-            const tempTable = tempDiv.querySelector(`#${selection.table.id}`);
-            return createRange(tempTable);
-        } else {
-            return metadata?.type === SelectionRangeTypes.Normal
-                ? createRange(tempDiv, metadata.start, metadata.end)
-                : null;
         }
     }
 }
