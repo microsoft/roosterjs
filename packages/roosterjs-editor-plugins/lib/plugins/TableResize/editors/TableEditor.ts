@@ -116,6 +116,7 @@ export default class TableEditor {
             let j = 0;
             for (; j < tr.cells.length; j++) {
                 const td = tr.cells[j];
+                const table = normalizeRect(this.table.getBoundingClientRect());
                 const tdRect = normalizeRect(td.getBoundingClientRect());
 
                 if (!tdRect) {
@@ -126,7 +127,11 @@ export default class TableEditor {
                 const lessThanRight = this.isRTL ? x >= tdRect.right : x <= tdRect.right;
 
                 if (lessThanRight && lessThanBottom) {
-                    if (i == 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                    const isOnTableTop = i === 0;
+                    const isOnLeftOrRight = this.isRTL
+                        ? tdRect.right >= table.right && tdRect.right <= table.right + 1
+                        : tdRect.left >= table.left && tdRect.left <= table.left + 1;
+                    if (i == 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET && isOnTableTop) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
                         this.setInserterTd(
@@ -137,7 +142,8 @@ export default class TableEditor {
                         j == 0 &&
                         (this.isRTL
                             ? x >= tdRect.right - INSERTER_HOVER_OFFSET
-                            : x <= tdRect.left + INSERTER_HOVER_OFFSET)
+                            : x <= tdRect.left + INSERTER_HOVER_OFFSET) &&
+                        isOnLeftOrRight
                     ) {
                         this.setInserterTd(
                             y > (tdRect.top + tdRect.bottom) / 2
