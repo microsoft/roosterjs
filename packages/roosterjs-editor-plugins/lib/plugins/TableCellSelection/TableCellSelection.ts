@@ -27,6 +27,7 @@ import {
     VTable,
     Position,
     contains,
+    isWholeTableSelected,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
@@ -190,7 +191,9 @@ export default class TableCellSelection implements EditorPlugin {
                 removeCellsOutsideSelection(clonedVTable);
                 clonedVTable.writeBack();
                 event.range.selectNode(clonedTable);
+
                 if (event.isCut) {
+                    this.editor.focus();
                     forEachSelectedCell(this.vTable, cell => {
                         if (cell?.td) {
                             deleteNodeContents(cell.td, this.editor);
@@ -203,14 +206,15 @@ export default class TableCellSelection implements EditorPlugin {
     }
 
     private deleteTableColumns(table: HTMLTableElement, selection: TableSelection) {
-        const isWholeColumnSelection =
-            table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0;
-        if (isWholeColumnSelection) {
-            const selectedVTable = new VTable(table);
-            selectedVTable.selection = selection;
+        const selectedVTable = new VTable(table);
+        selectedVTable.selection = selection;
+        const wholeTableSelected = isWholeTableSelected(selectedVTable, selection);
+        if (wholeTableSelected) {
+            selectedVTable.edit(TableOperation.DeleteTable);
+            selectedVTable.writeBack();
+        } else if (table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0) {
             selectedVTable.edit(TableOperation.DeleteColumn);
             selectedVTable.writeBack();
-            this.editor.select(selectedVTable.table, PositionType.After);
         }
     }
 

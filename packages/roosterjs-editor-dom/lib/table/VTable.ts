@@ -204,10 +204,10 @@ export default class VTable {
 
         let currentRow = this.cells[this.row];
         let currentCell = currentRow[this.col];
-        const firstRow = this.tableSelection ? this.tableSelection.firstCell.y || 0 : this.row;
-        const lastRow = this.tableSelection ? this.tableSelection.lastCell.y || 0 : this.row;
-        const firstColumn = this.tableSelection ? this.tableSelection.firstCell.x || 0 : this.col;
-        const lastColumn = this.tableSelection ? this.tableSelection.lastCell.x || 0 : this.col;
+        const firstRow = this.selection ? this.selection.firstCell.y : this.row;
+        const lastRow = this.selection ? this.selection.lastCell.y : this.row;
+        const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
+        const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
 
         switch (operation) {
             case TableOperation.InsertAbove:
