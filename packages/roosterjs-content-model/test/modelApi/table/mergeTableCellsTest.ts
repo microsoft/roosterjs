@@ -13,6 +13,8 @@ describe('mergeTableCells', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -37,6 +39,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -66,6 +70,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -97,6 +103,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, false]);
@@ -128,6 +136,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -159,6 +169,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, true]);
@@ -190,6 +202,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, false]);
@@ -221,6 +235,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -252,6 +268,8 @@ describe('mergeTableCells', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, true]);

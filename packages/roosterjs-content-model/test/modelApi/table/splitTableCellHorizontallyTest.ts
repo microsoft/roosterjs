@@ -13,6 +13,8 @@ describe('splitTableCellHorizontally', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -37,6 +39,8 @@ describe('splitTableCellHorizontally', () => {
                 [cells[0], cells[1]],
                 [cells[2], cells[3]],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -54,6 +58,8 @@ describe('splitTableCellHorizontally', () => {
 
         table.cells[0].push(cells[0], cells[1]);
         table.cells[1].push(cells[2], cells[3]);
+        table.widths = [100, 100];
+        table.heights = [200, 200];
 
         cells[0].isSelected = true;
 
@@ -66,6 +72,8 @@ describe('splitTableCellHorizontally', () => {
                 [cells[0], cells[0], cells[1]],
                 [cells[2], { ...cells[2], spanLeft: true }, cells[3]],
             ],
+            widths: [50, 50, 100],
+            heights: [200, 200],
         });
     });
 
@@ -80,6 +88,8 @@ describe('splitTableCellHorizontally', () => {
 
         table.cells[0].push(cells[0], cells[1]);
         table.cells[1].push(cells[2], cells[3]);
+        table.widths = [100, 100];
+        table.heights = [200, 200];
 
         cells[0].isSelected = true;
         cells[1].isSelected = true;
@@ -98,6 +108,8 @@ describe('splitTableCellHorizontally', () => {
                     { ...cells[3], spanLeft: true },
                 ],
             ],
+            widths: [50, 50, 50, 50],
+            heights: [200, 200],
         });
     });
 
@@ -112,6 +124,8 @@ describe('splitTableCellHorizontally', () => {
 
         table.cells[0].push(cells[0], cells[1]);
         table.cells[1].push(cells[2], cells[3]);
+        table.widths = [100, 100];
+        table.heights = [200, 200];
 
         cells[0].isSelected = true;
         cells[2].isSelected = true;
@@ -125,6 +139,8 @@ describe('splitTableCellHorizontally', () => {
                 [cells[0], cells[0], cells[1]],
                 [cells[2], cells[2], cells[3]],
             ],
+            widths: [50, 50, 100],
+            heights: [200, 200],
         });
     });
 
@@ -139,6 +155,8 @@ describe('splitTableCellHorizontally', () => {
 
         table.cells[0].push(cells[0], cells[1]);
         table.cells[1].push(cells[2], cells[3]);
+        table.widths = [100, 100];
+        table.heights = [200, 200];
 
         cells[0].isSelected = true;
         cells[1].isSelected = true;
@@ -154,6 +172,8 @@ describe('splitTableCellHorizontally', () => {
                 [cells[0], cells[0], cells[1], cells[1]],
                 [cells[2], cells[2], cells[3], cells[3]],
             ],
+            widths: [50, 50, 50, 50],
+            heights: [200, 200],
         });
     });
 });
