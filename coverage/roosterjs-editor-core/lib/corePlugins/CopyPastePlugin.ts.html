@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.19% </span>
+                <span class="strong">89.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>66/74</span>
+                <span class='fraction'>67/75</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60.42% </span>
+                <span class="strong">61.11% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>29/48</span>
+                <span class='fraction'>33/54</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.73% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>63/71</span>
+                <span class='fraction'>64/72</span>
             </div>
         
             
@@ -253,7 +253,13 @@
 <a name='L194'></a><a href='#L194'>194</a>
 <a name='L195'></a><a href='#L195'>195</a>
 <a name='L196'></a><a href='#L196'>196</a>
-<a name='L197'></a><a href='#L197'>197</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -342,14 +348,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -453,9 +463,10 @@
     addRangeToSelection,
     createElement,
     extractClipboardEvent,
-    setHtmlWithSelectionPath,
     moveChildNodes,
     Browser,
+    setHtmlWithMetadata,
+    createRange,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -531,15 +542,15 @@ export default class CopyPastePlugin implements PluginWithState&lt;CopyPastePlug
         <span class="missing-if-branch" title="else path not taken" >E</span>if (selection &amp;&amp; !selection.areAllCollapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
-            const newRange = setHtmlWithSelectionPath(
+            const metadata = setHtmlWithMetadata(
                 tempDiv,
                 html,
                 this.editor.getTrustedHTMLHandler()
             );
-&nbsp;
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
-                addRangeToSelection(newRange);
-            }
+            const newRange =
+                metadata<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>ype === SelectionRangeTypes.Normal
+                    ? createRange(tempDiv, metadata.start, metadata.end)
+                    : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
 &nbsp;
             this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
@@ -547,6 +558,10 @@ export default class CopyPastePlugin implements PluginWithState&lt;CopyPastePlug
                 rawEvent: event as ClipboardEvent,
                 isCut,
             });
+&nbsp;
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
+                addRangeToSelection(newRange);
+            }
 &nbsp;
             this.editor.runAsync(editor =&gt; {
                 this.cleanUpAndRestoreSelection(tempDiv, selection, !isCut /* isCopy */);
@@ -652,7 +667,7 @@ export default class CopyPastePlugin implements PluginWithState&lt;CopyPastePlug
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Aug 24 2022 20:29:27 GMT+0000 (Coordinated Universal Time)
+                at Thu Aug 25 2022 18:47:02 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
