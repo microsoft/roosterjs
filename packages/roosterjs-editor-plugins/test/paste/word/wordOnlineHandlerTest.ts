@@ -2,17 +2,7 @@ import convertPastedContentFromWordOnline from '../../../lib/plugins/Paste/offic
 
 describe('wordOnlineHandler', () => {
     function runTest(html: string, expectedInnerHtml: string) {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const fragment = doc.createDocumentFragment();
-        while (doc.body.firstChild) {
-            fragment.appendChild(doc.body.firstChild);
-        }
-
-        convertPastedContentFromWordOnline(fragment);
-
-        while (fragment.firstChild) {
-            doc.body.appendChild(fragment.firstChild);
-        }
+        const doc = sanitizeContent(html);
 
         expect(doc.body.innerHTML).toBe(expectedInnerHtml);
     }
@@ -386,9 +376,56 @@ describe('wordOnlineHandler', () => {
     });
 
     it('Keep the start property on lists and try to reuse the Word provided marker style', () => {
-        runTest(
-            '<html><body><div>Test</div><ol start="1"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ul></ol><div>Test</div><ol start="3"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ol></body></html>',
-            '<div>Test</div><ol start="1"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ol><div>Test</div><ol start="3"><li data-leveltext="%1.">Test</li><ul><li data-leveltext="o">Test</li></ul></ol>'
+        const doc = sanitizeContent(
+            '<html><body><div><p><span><span>Test</span></span><span>&nbsp;</span></p></div><div class="ListContainerWrapper"><ol start="1"><li data-aria-level="1" data-aria-posinset="1" aria-setsize="-1" data-listid="1" data-leveltext="%1."><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ol></div><div class="ListContainerWrapper"><ul><li data-aria-level="2" data-aria-posinset="1" aria-setsize="-1" data-listid="1" data-leveltext="▫"><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ul></div><div><p><span><span>Test</span></span><span>&nbsp;</span></p></div><div class="ListContainerWrapper"><ol start="2"><li data-aria-level="1" data-aria-posinset="2" aria-setsize="-1" data-listid="1" data-leveltext="%1."><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ol></div><div class="ListContainerWrapper"><ul><li data-aria-level="2" data-aria-posinset="2" aria-setsize="-1" data-listid="1" data-leveltext="▫"><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ul></div></body></html>'
         );
+
+        doc.querySelectorAll('ul li').forEach(el => {
+            if (el.getAttribute('data-leveltext')) {
+                expect((el as HTMLElement).style.listStyleType).toContain(
+                    el.getAttribute('data-leveltext')!
+                );
+            }
+        });
+
+        const orderedLists = doc.querySelectorAll('ol');
+        expect(orderedLists.length).toBe(2);
+        expect(orderedLists[0].start).toBe(1);
+        expect(orderedLists[1].start).toBe(2);
+    });
+
+    it('Keep the start property on lists and remove marker style that is not reusable', () => {
+        const notUsableMarker = String.fromCharCode(10);
+        const doc = sanitizeContent(
+            `<html><body><div><p><span><span>Test</span></span><span>&nbsp;</span></p></div><div class="ListContainerWrapper"><ol start="1"><li data-aria-level="1" data-aria-posinset="1" aria-setsize="-1" data-listid="1" data-leveltext="%1."><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ol></div><div class="ListContainerWrapper"><ul><li data-aria-level="2" data-aria-posinset="1" aria-setsize="-1" data-listid="1" data-leveltext="${notUsableMarker}"><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ul></div><div><p><span><span>Test</span></span><span>&nbsp;</span></p></div><div class="ListContainerWrapper"><ol start="2"><li data-aria-level="1" data-aria-posinset="2" aria-setsize="-1" data-listid="1" data-leveltext="%1."><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ol></div><div class="ListContainerWrapper"><ul><li data-aria-level="2" data-aria-posinset="2" aria-setsize="-1" data-listid="1" data-leveltext="${notUsableMarker}"><p><span><span>Test</span></span><span>&nbsp;</span></p></li></ul></div></body></html>`
+        );
+
+        doc.querySelectorAll('ul li').forEach(el => {
+            if (el.getAttribute('data-leveltext')) {
+                expect((el as HTMLElement).style.listStyleType).not.toContain(
+                    el.getAttribute('data-leveltext')!
+                );
+            }
+        });
+
+        const orderedLists = doc.querySelectorAll('ol');
+        expect(orderedLists.length).toBe(2);
+        expect(orderedLists[0].start).toBe(1);
+        expect(orderedLists[1].start).toBe(2);
     });
 });
+
+function sanitizeContent(html: string) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const fragment = doc.createDocumentFragment();
+    while (doc.body.firstChild) {
+        fragment.appendChild(doc.body.firstChild);
+    }
+
+    convertPastedContentFromWordOnline(fragment);
+
+    while (fragment.firstChild) {
+        doc.body.appendChild(fragment.firstChild);
+    }
+    return doc;
+}

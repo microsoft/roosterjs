@@ -17,21 +17,10 @@ const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 const IMAGE_CONTAINER_ELEMENT_CLASS_NAME = 'WACImageContainer';
 
 //When the list style is a symbol and the value is not in the clipboard, WordOnline
-const INVALID_LIST_STYLE_CHAR_CODES = [
-    '61623', //''
-    '61607', //''
-    '61611', //''
-    '61614', //''
-    '61483', //''
-    '61485', //''
-    '61664', //''
-    '61558', //''
-    '61656', //''
-    '61514', //''
-    '61516', //''
-    '61692', //''
-    '61691', //''
-    '61553', //''
+const VALID_LIST_STYLE_CHAR_CODES = [
+    '111', //'o'
+    '9643', //'▫'
+    '9830', //'♦'
 ];
 
 /**
@@ -292,7 +281,11 @@ function insertListItem(
 
     // Try to reuse the List Marker
     let style = itemToInsert.getAttribute('data-leveltext');
-    if (listType == 'UL' && style && INVALID_LIST_STYLE_CHAR_CODES.indexOf(style) == -1) {
+    if (
+        listType == 'UL' &&
+        style &&
+        VALID_LIST_STYLE_CHAR_CODES.indexOf(style.charCodeAt(0).toString()) > -1
+    ) {
         itemToInsert.style.listStyleType = `"${style}  "`;
     }
 
