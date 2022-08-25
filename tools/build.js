@@ -2,7 +2,6 @@
 
 // Utilities
 const ProgressBar = require('progress');
-const { mainPackageJson } = require('./buildTools/common');
 
 // Steps
 const tslintStep = require('./buildTools/tslint');
@@ -87,7 +86,7 @@ class Runner {
 
     run() {
         (async () => {
-            console.log(`Start building roosterjs version ${mainPackageJson.version}\n`);
+            console.log(`Start building roosterjs\n`);
 
             const bar = this.getUI();
 

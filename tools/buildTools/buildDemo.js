@@ -92,8 +92,6 @@ async function buildDemoSite() {
         path.resolve(sourcePathRoot, 'index.html'),
         path.resolve(deployPath, 'index.html')
     );
-    var outputFilename = path.join(deployPath, 'version.js');
-    fs.writeFileSync(outputFilename, `window.roosterJsVer = "v${mainPackageJson.version}";`);
 }
 
 module.exports = {
