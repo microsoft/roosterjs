@@ -55,8 +55,8 @@ describe('insertTableRow', () => {
         const cell1 = createTableCell();
         cell1.isSelected = true;
         table.cells[0].push(cell1);
-        table.widths = [0];
-        table.heights = [0];
+        table.widths = [100];
+        table.heights = [200];
 
         const cell2 = { ...cell1 };
         delete cell2.isSelected;
@@ -66,8 +66,8 @@ describe('insertTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell2], [cell1]],
-            widths: [0],
-            heights: [0, 0],
+            widths: [100],
+            heights: [200, 200],
         });
 
         insertTableRow(table, TableOperation.InsertBelow);
@@ -75,8 +75,8 @@ describe('insertTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell2], [cell1], [cell2]],
-            widths: [0],
-            heights: [0, 0, 0],
+            widths: [100],
+            heights: [200, 200, 200],
         });
     });
 
@@ -88,8 +88,8 @@ describe('insertTableRow', () => {
         cell2.isSelected = true;
         table.cells[0].push(cell1);
         table.cells[1].push(cell2);
-        table.widths = [0];
-        table.heights = [0, 0];
+        table.widths = [100];
+        table.heights = [200, 300];
 
         const cell3 = { ...cell1 };
         delete cell3.isSelected;
@@ -102,8 +102,8 @@ describe('insertTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell3], [cell3], [cell1], [cell2]],
-            widths: [0],
-            heights: [0, 0, 0, 0],
+            widths: [100],
+            heights: [200, 200, 200, 300],
         });
 
         insertTableRow(table, TableOperation.InsertBelow);
@@ -111,8 +111,8 @@ describe('insertTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell3], [cell3], [cell1], [cell2], [cell4], [cell4]],
-            widths: [0],
-            heights: [0, 0, 0, 0, 0, 0],
+            widths: [100],
+            heights: [200, 200, 200, 300, 300, 300],
         });
     });
 
@@ -124,8 +124,8 @@ describe('insertTableRow', () => {
         cell1.isSelected = true;
         cell2.isSelected = true;
         table.cells[0].push(cell1, cell2);
-        table.widths = [0, 0];
-        table.heights = [0];
+        table.widths = [100, 200];
+        table.heights = [300];
 
         const cell3 = { ...cell1 };
         delete cell3.isSelected;
@@ -141,8 +141,8 @@ describe('insertTableRow', () => {
                 [cell3, cell4],
                 [cell1, cell2],
             ],
-            widths: [0, 0],
-            heights: [0, 0],
+            widths: [100, 200],
+            heights: [300, 300],
         });
 
         insertTableRow(table, TableOperation.InsertBelow);
@@ -154,8 +154,8 @@ describe('insertTableRow', () => {
                 [cell1, cell2],
                 [cell3, cell4],
             ],
-            widths: [0, 0],
-            heights: [0, 0, 0],
+            widths: [100, 200],
+            heights: [300, 300, 300],
         });
     });
 
@@ -180,8 +180,8 @@ describe('insertTableRow', () => {
         table.cells[1].push(cell4, cell5, cell6);
         table.cells[2].push(cell7, cell8, cell9);
         table.cells[3].push(cell10, cell11, cell12);
-        table.widths = [0, 0, 0];
-        table.heights = [0, 0, 0, 0];
+        table.widths = [100, 200, 300];
+        table.heights = [400, 500, 600, 700];
 
         const cell5Clone = { ...cell5 };
         const cell9Clone = { ...cell9 };
@@ -200,8 +200,8 @@ describe('insertTableRow', () => {
                 [cell7, cell8, cell9],
                 [cell10, cell11, cell12],
             ],
-            widths: [0, 0, 0],
-            heights: [0, 0, 0, 0, 0, 0],
+            widths: [100, 200, 300],
+            heights: [400, 500, 500, 500, 600, 700],
         });
 
         insertTableRow(table, TableOperation.InsertBelow);
@@ -218,8 +218,8 @@ describe('insertTableRow', () => {
                 [cell7, cell8, cell9Clone],
                 [cell10, cell11, cell12],
             ],
-            widths: [0, 0, 0],
-            heights: [0, 0, 0, 0, 0, 0, 0, 0],
+            widths: [100, 200, 300],
+            heights: [400, 500, 500, 500, 600, 600, 600, 700],
         });
     });
 });

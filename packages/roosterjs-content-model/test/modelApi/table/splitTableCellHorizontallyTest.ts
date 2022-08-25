@@ -176,4 +176,37 @@ describe('splitTableCellHorizontally', () => {
             heights: [200, 200],
         });
     });
+
+    it('Split with min width', () => {
+        const table = createTable(2);
+        const cells = [
+            createTableCell(false, false, false, { backgroundColor: '1' }),
+            createTableCell(false, false, false, { backgroundColor: '2' }),
+            createTableCell(false, false, false, { backgroundColor: '3' }),
+            createTableCell(false, false, false, { backgroundColor: '4' }),
+        ];
+
+        table.cells[0].push(cells[0], cells[1]);
+        table.cells[1].push(cells[2], cells[3]);
+        table.widths = [100, 50];
+        table.heights = [200, 200];
+
+        cells[0].isSelected = true;
+        cells[1].isSelected = true;
+        cells[2].isSelected = true;
+        cells[3].isSelected = true;
+
+        splitTableCellHorizontally(table);
+
+        expect(table).toEqual({
+            blockType: ContentModelBlockType.Table,
+            format: {},
+            cells: [
+                [cells[0], cells[0], cells[1], cells[1]],
+                [cells[2], cells[2], cells[3], cells[3]],
+            ],
+            widths: [50, 50, 30, 30],
+            heights: [200, 200],
+        });
+    });
 });

@@ -87,8 +87,8 @@ describe('insertTableColumn', () => {
         cell1.isSelected = true;
         cell2.isSelected = true;
         table.cells[0].push(cell1, cell2);
-        table.widths = [0, 0];
-        table.heights = [0];
+        table.widths = [100, 200];
+        table.heights = [300];
 
         const cell3 = { ...cell1 };
         delete cell3.isSelected;
@@ -101,8 +101,8 @@ describe('insertTableColumn', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell3, cell3, cell1, cell2]],
-            widths: [0, 0, 0, 0],
-            heights: [0],
+            widths: [100, 100, 100, 200],
+            heights: [300],
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -110,8 +110,8 @@ describe('insertTableColumn', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell3, cell3, cell1, cell2, cell4, cell4]],
-            widths: [0, 0, 0, 0, 0, 0],
-            heights: [0],
+            widths: [100, 100, 100, 200, 200, 200],
+            heights: [300],
         });
     });
 
@@ -124,8 +124,8 @@ describe('insertTableColumn', () => {
         cell2.isSelected = true;
         table.cells[0].push(cell1);
         table.cells[1].push(cell2);
-        table.widths = [0];
-        table.heights = [0, 0];
+        table.widths = [100];
+        table.heights = [200, 300];
 
         const cell3 = { ...cell1 };
         delete cell3.isSelected;
@@ -141,8 +141,8 @@ describe('insertTableColumn', () => {
                 [cell3, cell1],
                 [cell4, cell2],
             ],
-            widths: [0, 0],
-            heights: [0, 0],
+            widths: [100, 100],
+            heights: [200, 300],
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -153,8 +153,8 @@ describe('insertTableColumn', () => {
                 [cell3, cell1, cell3],
                 [cell4, cell2, cell4],
             ],
-            widths: [0, 0, 0],
-            heights: [0, 0],
+            widths: [100, 100, 100],
+            heights: [200, 300],
         });
     });
 
@@ -178,8 +178,8 @@ describe('insertTableColumn', () => {
         table.cells[0].push(cell1, cell2, cell3, cell4);
         table.cells[1].push(cell5, cell6, cell7, cell8);
         table.cells[2].push(cell9, cell10, cell11, cell12);
-        table.widths = [0, 0, 0, 0];
-        table.heights = [0, 0, 0];
+        table.widths = [100, 200, 300, 400];
+        table.heights = [500, 600, 700];
 
         const cell6Clone = { ...cell6 };
         const cell11Clone = { ...cell11 };
@@ -195,8 +195,8 @@ describe('insertTableColumn', () => {
                 [cell5, cell6Clone, cell6Clone, cell6, cell7, cell8],
                 [cell9, cell10, cell10, cell10, cell11, cell12],
             ],
-            widths: [0, 0, 0, 0, 0, 0],
-            heights: [0, 0, 0],
+            widths: [100, 200, 200, 200, 300, 400],
+            heights: [500, 600, 700],
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -208,8 +208,8 @@ describe('insertTableColumn', () => {
                 [cell5, cell6Clone, cell6Clone, cell6, cell7, cell7, cell7, cell8],
                 [cell9, cell10, cell10, cell10, cell11, cell11Clone, cell11Clone, cell12],
             ],
-            widths: [0, 0, 0, 0, 0, 0, 0, 0],
-            heights: [0, 0, 0],
+            widths: [100, 200, 200, 200, 300, 300, 300, 400],
+            heights: [500, 600, 700],
         });
     });
 });
