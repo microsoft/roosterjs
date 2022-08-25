@@ -281,8 +281,8 @@ export default class VTable {
                         }
                     });
                 }
-                const removedRows = this.tableSelection
-                    ? this.tableSelection.lastCell.y - this.tableSelection.firstCell.y
+                const removedRows = this.selection
+                    ? this.selection.lastCell.y - this.selection.firstCell.y
                     : 0;
                 this.cells.splice(firstRow, removedRows + 1);
                 if (this.cells.length === 0) {
@@ -298,7 +298,7 @@ export default class VTable {
                         if (cell.td && cell.td.colSpan > 1 && nextCell.spanLeft) {
                             nextCell.td = cell.td;
                         }
-                        const removedColumns = this.tableSelection
+                        const removedColumns = this.selection
                             ? colIndex - deletedColumns
                             : this.col!;
                         row.splice(removedColumns, 1);
