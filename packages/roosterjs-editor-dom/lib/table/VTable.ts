@@ -208,7 +208,6 @@ export default class VTable {
         const lastRow = this.selection ? this.selection.lastCell.y : this.row;
         const firstColumn = this.selection ? this.selection.firstCell.x : this.col;
         const lastColumn = this.selection ? this.selection.lastCell.x : this.col;
-
         switch (operation) {
             case TableOperation.InsertAbove:
                 for (let i = firstRow; i <= lastRow; i++) {
