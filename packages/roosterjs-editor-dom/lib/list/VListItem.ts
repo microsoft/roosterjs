@@ -207,13 +207,8 @@ export default class VListItem {
      */
     outdent(preventItemRemoval: boolean = false) {
         const expectedLength = preventItemRemoval ? 2 : 1;
-        const listTypesLength = this.listTypes.length;
-        if (listTypesLength > expectedLength) {
+        if (this.listTypes.length > expectedLength) {
             this.listTypes.pop();
-        }
-
-        if (this.listTypes[listTypesLength - 1] == ListType.Ordered) {
-            this.node.style.listStyleType = '';
         }
     }
 
