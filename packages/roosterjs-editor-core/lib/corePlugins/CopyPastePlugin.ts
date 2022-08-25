@@ -2,9 +2,10 @@ import {
     addRangeToSelection,
     createElement,
     extractClipboardEvent,
-    setHtmlWithSelectionPath,
     moveChildNodes,
     Browser,
+    setHtmlWithMetadata,
+    createRange,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -80,15 +81,15 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         if (selection && !selection.areAllCollapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
-            const newRange = setHtmlWithSelectionPath(
+            const metadata = setHtmlWithMetadata(
                 tempDiv,
                 html,
                 this.editor.getTrustedHTMLHandler()
             );
-
-            if (newRange) {
-                addRangeToSelection(newRange);
-            }
+            const newRange =
+                metadata?.type === SelectionRangeTypes.Normal
+                    ? createRange(tempDiv, metadata.start, metadata.end)
+                    : null;
 
             this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
@@ -96,6 +97,10 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 rawEvent: event as ClipboardEvent,
                 isCut,
             });
+
+            if (newRange) {
+                addRangeToSelection(newRange);
+            }
 
             this.editor.runAsync(editor => {
                 this.cleanUpAndRestoreSelection(tempDiv, selection, !isCut /* isCopy */);
