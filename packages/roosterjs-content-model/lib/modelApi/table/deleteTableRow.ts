@@ -16,7 +16,9 @@ export function deleteTableRow(table: ContentModelTable) {
                 cellInNextRow.spanAbove = cellInNextRow.spanAbove && cell.spanAbove;
             }
         });
+
         table.cells.splice(sel.firstRow, sel.lastRow - sel.firstRow + 1);
+        table.heights.splice(sel.firstRow, sel.lastRow - sel.firstRow + 1);
 
         setSelectionToTable(table.cells, sel);
     }

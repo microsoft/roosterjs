@@ -22,16 +22,7 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
             ) {
                 table.cells.forEach((row, rowIndex) => {
                     if (rowIndex >= sel.firstRow && rowIndex <= sel.lastRow) {
-                        const cell = row[colIndex];
-                        const rightCell = row[colIndex + 1];
-
-                        rightCell.spanLeft = false;
-
-                        if (cell.format.width) {
-                            // Delete existing width to let other cell determine the width
-                            delete rightCell.format.width;
-                            delete cell.format.width;
-                        }
+                        row[colIndex + 1].spanLeft = false;
                     }
                 });
             } else {
@@ -47,19 +38,16 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
 
                         if (rowIndex < sel.firstRow || rowIndex > sel.lastRow) {
                             newCell.spanLeft = true;
-
-                            if (newCell.format.width) {
-                                newCell.format.width = 0;
-                            }
                         } else {
-                            const newWidth = Math.max(cell.format.width! / 2, MIN_WIDTH);
-                            cell.format.width = newWidth;
-                            newCell.format.width = newWidth;
                             newCell.isSelected = cell.isSelected;
                         }
                         row.splice(colIndex + 1, 0, newCell);
                     }
                 });
+
+                const newWidth = Math.max(table.widths[colIndex] / 2, MIN_WIDTH);
+
+                table.widths.splice(colIndex, 1, newWidth, newWidth);
             }
         }
     }

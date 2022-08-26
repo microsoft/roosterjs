@@ -16,6 +16,13 @@ const WORD_ONLINE_IDENTIFYING_SELECTOR =
 const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 const IMAGE_CONTAINER_ELEMENT_CLASS_NAME = 'WACImageContainer';
 
+//When the list style is a symbol and the value is not in the clipboard, WordOnline
+const VALID_LIST_STYLE_CHAR_CODES = [
+    '111', //'o'
+    '9643', //'▫'
+    '9830', //'♦'
+];
+
 /**
  * @internal
  */
@@ -102,7 +109,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
             let listType: 'OL' | 'UL' = getContainerListType(listItemContainer); // list type that is contained by iterator.
             // Initialize processed element with proper listType if this is the first element
             if (!convertedListElement) {
-                convertedListElement = doc.createElement(listType);
+                convertedListElement = createNewList(listItemContainer, doc, listType);
             }
 
             // Get all list items(<li>) in the current iterator element.
@@ -117,7 +124,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
                 // and keep the processing going.
                 if (getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
                     insertConvertedListToDoc(convertedListElement, fragment, itemBlock);
-                    convertedListElement = doc.createElement(listType);
+                    convertedListElement = createNewList(listItemContainer, doc, listType);
                 }
                 insertListItem(convertedListElement, item, listType, doc);
             });
@@ -155,6 +162,15 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
             });
         }
     });
+}
+
+function createNewList(listItemContainer: Element, doc: Document, tag: 'OL' | 'UL') {
+    const newList = doc.createElement(tag);
+    const startAttribute = listItemContainer.firstElementChild?.getAttribute('start');
+    if (startAttribute) {
+        newList.setAttribute('start', startAttribute);
+    }
+    return newList;
 }
 
 /**
@@ -254,14 +270,25 @@ function getContainerListType(listItemContainer: Element): 'OL' | 'UL' | null {
 function insertListItem(
     listRootElement: Element,
     itemToInsert: HTMLElement,
-    listType: string,
+    listType: 'UL' | 'OL',
     doc: HTMLDocument
 ): void {
     if (!listType) {
         return;
     }
     // Get item level from 'data-aria-level' attribute
-    let itemLevel = parseInt(itemToInsert.getAttribute('data-aria-level'));
+    let itemLevel = parseInt(itemToInsert.getAttribute('data-aria-level') ?? '');
+
+    // Try to reuse the List Marker
+    let style = itemToInsert.getAttribute('data-leveltext');
+    if (
+        listType == 'UL' &&
+        style &&
+        VALID_LIST_STYLE_CHAR_CODES.indexOf(style.charCodeAt(0).toString()) > -1
+    ) {
+        itemToInsert.style.listStyleType = `"${style}  "`;
+    }
+
     let curListLevel = listRootElement; // Level iterator to find the correct place for the current element.
     // if the itemLevel is 1 it means the level iterator is at the correct place.
     while (itemLevel > 1) {
