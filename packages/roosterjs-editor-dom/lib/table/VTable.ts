@@ -151,7 +151,7 @@ export default class VTable {
     }
 
     private recalculateCellHeight(td: HTMLTableCellElement) {
-        if (this.isAEmptyCell(td) && td.rowSpan > 1) {
+        if (this.isAEmptyCell(td) && td.rowSpan && td.rowSpan > 1) {
             for (let i = 1; i < td.rowSpan; i++) {
                 const br = document.createElement('br');
                 td.appendChild(br);
