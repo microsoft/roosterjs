@@ -47,6 +47,8 @@ describe('applyTableFormat', () => {
             blockType: ContentModelBlockType.Table,
             cells: createCells(row, column),
             format: {},
+            widths: [0],
+            heights: [0],
         };
     }
 

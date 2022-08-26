@@ -20,6 +20,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [],
+            heights: [],
         });
     });
 
@@ -40,7 +42,7 @@ describe('normalizeTable', () => {
                         spanAbove: false,
                         spanLeft: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -59,6 +61,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [120],
+            heights: [22],
         });
     });
 
@@ -89,7 +93,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -105,7 +109,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -119,6 +123,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [120],
+            heights: [22, 22],
         });
     });
 
@@ -161,7 +167,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -189,7 +195,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -208,6 +214,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [120, 120, 120],
+            heights: [22],
         });
     });
 
@@ -238,7 +246,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -252,6 +260,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [120, 120],
+            heights: [22],
         });
     });
 
@@ -295,7 +305,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [block1, block2],
                     },
                     {
@@ -304,7 +314,7 @@ describe('normalizeTable', () => {
                         spanLeft: true,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 0, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [],
                     },
                 ],
@@ -315,7 +325,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [block3],
                     },
                     {
@@ -324,7 +334,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [block4],
                     },
                 ],
@@ -333,6 +343,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [120, 120],
+            heights: [22, 22],
         });
     });
 
@@ -376,7 +388,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, height: 0, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -404,7 +416,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, height: 0, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -432,6 +444,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [120, 120],
+            heights: [22, 22],
         });
     });
 
@@ -475,7 +489,7 @@ describe('normalizeTable', () => {
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
-                        format: { width: 120, height: 0, useBorderBox: true },
+                        format: { useBorderBox: true },
                         blocks: [
                             {
                                 blockType: ContentModelBlockType.Paragraph,
@@ -521,6 +535,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
+            widths: [120, 120],
+            heights: [22, 22],
         });
     });
 });

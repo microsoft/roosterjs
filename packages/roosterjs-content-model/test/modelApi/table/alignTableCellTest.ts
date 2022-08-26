@@ -43,6 +43,8 @@ describe('alignTableCell', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         });
     });
 

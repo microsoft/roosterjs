@@ -60,7 +60,7 @@ describe('DragAndDropHelper |', () => {
         dndHelper.dispose();
     });
 
-    it('mouse movement', () => {
+    xit('mouse movement', () => {
         // Arrange
         const target = document.getElementById(id);
         creteDnD(target, false);

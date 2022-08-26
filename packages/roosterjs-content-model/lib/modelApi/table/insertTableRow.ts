@@ -27,6 +27,11 @@ export function insertTableRow(
                     createTableCell(cell.spanLeft, cell.spanAbove, cell.isHeader, cell.format)
                 )
             );
+            table.heights.splice(
+                insertAbove ? sel.firstRow : sel.lastRow + 1,
+                0,
+                table.heights[insertAbove ? sel.firstRow : sel.lastRow]
+            );
         }
     }
 }

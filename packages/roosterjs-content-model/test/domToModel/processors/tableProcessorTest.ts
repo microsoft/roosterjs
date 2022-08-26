@@ -44,6 +44,8 @@ describe('tableProcessor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
@@ -60,6 +62,8 @@ describe('tableProcessor', () => {
                 [tdModel, tdModel],
             ],
             format: {},
+            widths: [0, 0],
+            heights: [0, 0],
         });
     });
 
@@ -75,6 +79,8 @@ describe('tableProcessor', () => {
                 [tdModel, createTableCell(2, 1, false)],
             ],
             format: {},
+            widths: [0, 0],
+            heights: [0, 0],
         });
     });
 
@@ -88,6 +94,8 @@ describe('tableProcessor', () => {
                 [createTableCell(1, 2, false), createTableCell(2, 2, false)],
             ],
             format: {},
+            widths: [0, 0],
+            heights: [0, 0],
         });
     });
 
@@ -99,6 +107,8 @@ describe('tableProcessor', () => {
             blockType: ContentModelBlockType.Table,
             cells: [[tdModel]],
             format: {},
+            widths: [0],
+            heights: [0],
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
@@ -113,6 +123,8 @@ describe('tableProcessor', () => {
             blockType: ContentModelBlockType.Table,
             cells: [[tdModel, tdModel]],
             format: {},
+            widths: [0, 0],
+            heights: [0],
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(2);
@@ -126,6 +138,8 @@ describe('tableProcessor', () => {
             blockType: ContentModelBlockType.Table,
             cells: [[tdModel, createTableCell(2, 1, false)]],
             format: {},
+            widths: [0, 0],
+            heights: [0],
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
@@ -159,6 +173,8 @@ describe('tableProcessor', () => {
                 [tdModel, { ...tdModel, isSelected: true }],
             ],
             format: {},
+            widths: [0, 0],
+            heights: [0, 0],
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(4);

@@ -97,6 +97,8 @@ describe('Creators', () => {
             blockType: ContentModelBlockType.Table,
             cells: [[], []],
             format: {},
+            widths: [],
+            heights: [],
         });
     });
 
