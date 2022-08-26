@@ -10,6 +10,8 @@ describe('setTableCellBackgroundColor', () => {
             blockType: ContentModelBlockType.Table,
             cells: [],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -18,6 +20,8 @@ describe('setTableCellBackgroundColor', () => {
             blockType: ContentModelBlockType.Table,
             cells: [],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
@@ -37,6 +41,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -56,6 +62,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
@@ -93,6 +101,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -136,6 +146,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
@@ -173,6 +185,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -213,6 +227,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
@@ -240,6 +256,8 @@ describe('setTableCellBackgroundColor', () => {
                                         },
                                     ],
                                 ],
+                                widths: [0],
+                                heights: [0],
                             },
                         ],
                         spanAbove: false,
@@ -250,6 +268,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -277,6 +297,8 @@ describe('setTableCellBackgroundColor', () => {
                                         },
                                     ],
                                 ],
+                                widths: [0],
+                                heights: [0],
                             },
                         ],
                         spanAbove: false,
@@ -287,6 +309,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 });

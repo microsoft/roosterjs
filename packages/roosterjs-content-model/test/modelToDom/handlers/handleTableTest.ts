@@ -26,6 +26,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [],
                 format: {},
+                widths: [],
+                heights: [],
             },
             ''
         );
@@ -37,6 +39,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[], []],
                 format: {},
+                widths: [],
+                heights: [],
             },
             ''
         );
@@ -48,6 +52,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[createTableCell(1, 1, false)]],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
         );
@@ -63,6 +69,8 @@ describe('handleTable', () => {
                     [tdModel, tdModel],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -75,6 +83,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[tdModel], [], [tdModel]],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -90,6 +100,8 @@ describe('handleTable', () => {
                     [tdModel, tdModel],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -105,6 +117,8 @@ describe('handleTable', () => {
                     [createTableCell(1, 2, false), tdModel],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -119,6 +133,8 @@ describe('handleTable', () => {
                     [createTableCell(1, 2, false), createTableCell(2, 2, false)],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
         );
@@ -153,6 +169,8 @@ describe('handleTable', () => {
                     ],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody>' +
                 '<tr><td rowspan="2"></td><td colspan="2"></td></tr>' +
@@ -168,6 +186,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[createTableCell(1, 1, true)], [createTableCell(1, 1, false)]],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );

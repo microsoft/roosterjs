@@ -40,6 +40,8 @@ describe('hasSelectionInBlock', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         };
 
         const result = hasSelectionInBlock(block);
@@ -63,6 +65,8 @@ describe('hasSelectionInBlock', () => {
                     },
                 ],
             ],
+            widths: [],
+            heights: [],
         };
 
         const result = hasSelectionInBlock(block);
@@ -95,6 +99,8 @@ describe('hasSelectionInBlock', () => {
                     },
                 ],
             ],
+            widths: [],
+            heights: [],
         };
 
         const result = hasSelectionInBlock(block);
@@ -128,6 +134,8 @@ describe('hasSelectionInBlock', () => {
                     },
                 ],
             ],
+            widths: [],
+            heights: [],
         };
 
         const result = hasSelectionInBlock(block);

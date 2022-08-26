@@ -16,5 +16,7 @@ export function createTable(rowCount: number): ContentModelTable {
         blockType: ContentModelBlockType.Table,
         cells: rows,
         format: {},
+        widths: [],
+        heights: [],
     };
 }
