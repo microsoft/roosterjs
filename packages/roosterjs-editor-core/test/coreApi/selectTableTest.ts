@@ -69,6 +69,29 @@ describe('selectTable |', () => {
         );
     });
 
+    it('Select TH and TR in the same row', () => {
+        div.innerHTML =
+            '<div><table><tr><th>Test</th><td>Test</td></tr><tr><th>Test</th><td>Test</td></tr></table><br></div>';
+        table = div.querySelector('table');
+
+        selectTable(core, table, <TableSelection>{
+            firstCell: { x: 0, y: 0 },
+            lastCell: { x: 1, y: 1 },
+        });
+
+        expect(div.outerHTML).toBe(
+            '<div id="contentDiv_0"><div><table id="tableSelected0"><tbody><tr><th>Test</th><td>Test</td></tr><tr><th>Test</th><td>Test</td></tr></tbody></table><br></div></div>'
+        );
+        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
+        expect(style).toBeDefined();
+        expect(style.sheet.cssRules[0]).toBeDefined();
+        expect(style.sheet.cssRules[0].cssText).toEqual(
+            Browser.isFirefox
+                ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TH:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TH:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > th:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > th:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        );
+    });
+
     it('Select Table Cells THEAD, TBODY', () => {
         div.innerHTML = buildTableHTML(true /* tbody */, true /* thead */);
 
