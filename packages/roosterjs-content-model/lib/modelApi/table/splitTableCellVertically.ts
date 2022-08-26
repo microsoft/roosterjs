@@ -23,15 +23,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
             ) {
                 belowRow.forEach((belowCell, colIndex) => {
                     if (colIndex >= sel.firstCol && colIndex <= sel.lastCol) {
-                        const cell = row[colIndex];
-
                         belowCell.spanAbove = false;
-
-                        if (cell.format.height) {
-                            // Delete existing height to let other cells determine the height
-                            delete belowCell.format.height;
-                            delete cell.format.height;
-                        }
                     }
                 });
             } else {
@@ -45,13 +37,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
 
                     if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
                         newCell.spanAbove = true;
-                        if (newCell.format.height) {
-                            newCell.format.height = 0;
-                        }
                     } else {
-                        const newHeight = Math.max((cell.format.height! /= 2), MIN_HEIGHT);
-                        cell.format.height = newHeight;
-                        newCell.format.height = newHeight;
                         newCell.isSelected = cell.isSelected;
                     }
 
@@ -59,6 +45,9 @@ export function splitTableCellVertically(table: ContentModelTable) {
                 });
 
                 table.cells.splice(rowIndex + 1, 0, newRow);
+
+                const newHeight = Math.max((table.heights[rowIndex] /= 2), MIN_HEIGHT);
+                table.heights.splice(rowIndex, 1, newHeight, newHeight);
             }
         }
     }

@@ -11,6 +11,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -25,6 +27,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1, cell2]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -41,6 +45,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -60,6 +66,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1], [cell3]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -79,6 +87,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1], [cell2]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -99,6 +109,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -119,6 +131,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -140,6 +154,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1], [cell3], [cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanAbove).toBeFalse();
@@ -165,6 +181,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1], [cell3], [cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanAbove).toBeFalse();
@@ -190,6 +208,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1], [cell3], [cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanAbove).toBeFalse();
@@ -215,6 +235,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell1], [cell2], [cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanAbove).toBeFalse();
@@ -238,6 +260,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell3, cell4]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -257,6 +281,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell3, cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell3.spanLeft).toBeFalse();
@@ -279,6 +305,8 @@ describe('deleteTableRow', () => {
             blockType: ContentModelBlockType.Table,
             format: {},
             cells: [[cell3, cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell3.spanLeft).toBeFalse();
@@ -310,6 +338,8 @@ describe('deleteTableRow', () => {
                 [cell4, cell5, cell6],
                 [cell7, cell8, cell9],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cell4.spanLeft).toBeFalse();
