@@ -129,7 +129,7 @@ export default class TableEditor {
                 if (lessThanRight && lessThanBottom) {
                     const isOnTableTop = i === 0;
                     const isOnLeftOrRight = this.isRTL
-                        ? tdRect.right >= tableRect.right && tdRect.right <= tableRect.right + 1
+                        ? tdRect.right <= tableRect.right && tdRect.right >= tableRect.right - 1
                         : tdRect.left >= tableRect.left && tdRect.left <= tableRect.left + 1;
                     if (i == 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET && isOnTableTop) {
                         const center = (tdRect.left + tdRect.right) / 2;
@@ -148,14 +148,15 @@ export default class TableEditor {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = normalizeRect(tdAbove.getBoundingClientRect());
 
-                        const isTdAboveMerged = this.isRTL
-                            ? tdAboveRect?.right !== tdRect.right
-                            : tdAboveRect?.left !== tdRect.left;
+                        const isTdNotAboveMerged =
+                            this.isRTL && tdAboveRect
+                                ? tdAboveRect.right === tdRect.right
+                                : tdAboveRect.left === tdRect.left;
 
                         this.setInserterTd(
-                            y > (tdRect.top + tdRect.bottom) / 2 || isTdAboveMerged
-                                ? td
-                                : this.table.rows[i - 1]?.cells[0],
+                            y < (tdRect.top + tdRect.bottom) / 2 && isTdNotAboveMerged
+                                ? tdAbove
+                                : td,
                             true /*isHorizontal*/
                         );
                     } else {
