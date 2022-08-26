@@ -96,6 +96,15 @@ export type TableEditAlignMenuItemStringKey =
     | MenuItemSplitterKey0;
 
 /**
+ * Key of localized strings of Table Edit Align table menu item.
+ */
+export type TableEditAlignTableMenuItemStringKey =
+    | 'menuNameTableAlignTable'
+    | 'menuNameTableAlignTableLeft'
+    | 'menuNameTableAlignTableCenter'
+    | 'menuNameTableAlignTableRight';
+
+/**
  * Key of localized strings of Table Edit Cell Shade menu item.
  */
 export type TableEditShadeMenuItemStringKey = 'menuNameTableCellShade' | BackgroundColorKeys;
@@ -115,4 +124,5 @@ export type TableEditMenuItemStringKey =
     | TableEditMergeMenuItemStringKey
     | TableEditSplitMenuItemStringKey
     | TableEditAlignMenuItemStringKey
-    | TableEditShadeMenuItemStringKey;
+    | TableEditShadeMenuItemStringKey
+    | TableEditAlignTableMenuItemStringKey;

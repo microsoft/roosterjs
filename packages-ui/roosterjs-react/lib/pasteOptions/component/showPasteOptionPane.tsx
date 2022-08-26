@@ -7,6 +7,7 @@ import { Icon } from '@fluentui/react/lib/Icon';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
+import { renderReactComponent } from '../../common/utils/renderReactComponent';
 import { Theme, useTheme } from '@fluentui/react/lib/Theme';
 import type { PasteOptionButtonKeys, PasteOptionStringKeys } from '../type/PasteOptionStringKeys';
 import type { NodePosition } from 'roosterjs-editor-types';
@@ -201,7 +202,8 @@ export default function showPasteOptionPane(
         disposer = null;
     };
 
-    disposer = uiUtilities.renderComponent(
+    disposer = renderReactComponent(
+        uiUtilities,
         <PasteOptionComponent
             ref={ref}
             position={position}

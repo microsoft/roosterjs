@@ -48,4 +48,19 @@ export default interface ImageEditOptions {
      * @default A predefined SVG icon
      */
     rotateIconHTML?: string;
+
+    /**
+     * Whether side resizing (single direction resizing) is disabled. @default false
+     */
+    disableSideResize?: boolean;
+
+    /**
+     * Whether image rotate is disabled. @default false
+     */
+    disableRotate?: boolean;
+
+    /**
+     * Whether image crop is disabled. @default false
+     */
+    disableCrop?: boolean;
 }

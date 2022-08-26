@@ -26,6 +26,8 @@ describe('createTableStructure', () => {
                 ],
             ],
             format: {},
+            widths: [],
+            heights: [],
         });
     });
 

@@ -38,6 +38,21 @@ export function handleTable(
         for (let col = 0; col < table.cells[row].length; col++) {
             const cell = table.cells[row][col];
 
+            if (cell.isSelected) {
+                context.tableSelection = context.tableSelection || {
+                    table: tableNode,
+                    firstCell: { x: col, y: row },
+                    lastCell: { x: col, y: row },
+                };
+
+                if (context.tableSelection.table == tableNode) {
+                    const lastCell = context.tableSelection.lastCell;
+
+                    lastCell.x = Math.max(lastCell.x, col);
+                    lastCell.y = Math.max(lastCell.y, row);
+                }
+            }
+
             if (!cell.spanAbove && !cell.spanLeft) {
                 const td = doc.createElement(cell.isHeader ? 'th' : 'td');
                 tr.appendChild(td);
@@ -45,9 +60,18 @@ export function handleTable(
 
                 let rowSpan = 1;
                 let colSpan = 1;
+                let width = table.widths[col];
+                let height = table.heights[row];
 
-                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {}
-                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {}
+                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {
+                    height += table.heights[row + rowSpan];
+                }
+                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {
+                    width += table.widths[col + colSpan];
+                }
+
+                td.style.width = width + 'px';
+                td.style.height = height + 'px';
 
                 if (rowSpan > 1) {
                     td.rowSpan = rowSpan;

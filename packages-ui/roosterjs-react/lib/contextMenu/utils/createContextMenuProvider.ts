@@ -55,7 +55,9 @@ class ContextMenuProviderImpl<TString extends string, TContext>
 
         return this.shouldAddMenuItems(this.editor, node)
             ? this.items
-                  .filter(item => !item.shouldShow || item.shouldShow(this.editor, node))
+                  .filter(
+                      item => !item.shouldShow || item.shouldShow(this.editor, node, this.context)
+                  )
                   .map(item => this.convertMenuItems(item))
             : [];
     }
