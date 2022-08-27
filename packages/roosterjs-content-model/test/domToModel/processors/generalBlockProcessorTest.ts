@@ -1,7 +1,5 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -20,8 +18,8 @@ describe('generalBlockProcessor', () => {
         const doc = createContentModelDocument(document);
         const div = document.createElement('div');
         const block: ContentModelGeneralBlock = {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             element: div,
             blocks: [],
         };
@@ -30,8 +28,8 @@ describe('generalBlockProcessor', () => {
         generalBlockProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [block],
             document: document,
         });

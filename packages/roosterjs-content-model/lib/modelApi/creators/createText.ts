@@ -1,4 +1,3 @@
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 
 /**
@@ -6,7 +5,7 @@ import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
  */
 export function createText(text: string): ContentModelText {
     return {
-        segmentType: ContentModelSegmentType.Text,
+        segmentType: 'Text',
         text: text,
     };
 }

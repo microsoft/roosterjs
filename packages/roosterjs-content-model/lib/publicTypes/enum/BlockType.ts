@@ -1,19 +1,18 @@
 /**
  * Type of Block in Content Model
  */
-export const enum ContentModelBlockType {
+export type ContentModelBlockType =
     /**
      * Represent a Block Group
      */
-    BlockGroup,
+    | 'BlockGroup'
 
     /**
      * Represent a Table
      */
-    Table,
+    | 'Table'
 
     /**
      * Represent a general paragraph (DIV, P, ...)
      */
-    Paragraph,
-}
+    | 'Paragraph';

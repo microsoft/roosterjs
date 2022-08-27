@@ -1,4 +1,4 @@
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { VerticalAlignFormat } from '../../../lib/publicTypes/format/formatParts/VerticalAlignFormat';
 import { verticalAlignFormatHandler } from '../../../lib/formatHandlers/common/verticalAlignFormatHandler';
 
