@@ -1,8 +1,5 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
@@ -34,7 +31,7 @@ describe('handleSegment', () => {
     it('Text segment', () => {
         runTest(
             {
-                segmentType: ContentModelSegmentType.Text,
+                segmentType: 'Text',
                 text: 'test',
             },
             '<span>test</span>',
@@ -45,7 +42,7 @@ describe('handleSegment', () => {
     it('Br segment', () => {
         runTest(
             {
-                segmentType: ContentModelSegmentType.Br,
+                segmentType: 'Br',
             },
             '<br>',
             0
@@ -54,9 +51,9 @@ describe('handleSegment', () => {
 
     it('general segment', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.General,
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [],
             element: null!,
         };

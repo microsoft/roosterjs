@@ -1,6 +1,5 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
@@ -31,7 +30,7 @@ export default function insertTable(
 
     const firstBlock = table.cells[0]?.[0]?.blocks[0];
 
-    if (firstBlock?.blockType == ContentModelBlockType.Paragraph) {
+    if (firstBlock?.blockType == 'Paragraph') {
         firstBlock.segments.unshift(createSelectionMarker());
     }
 
