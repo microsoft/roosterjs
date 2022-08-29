@@ -1,4 +1,4 @@
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { SizeFormat } from '../../../lib/publicTypes/format/formatParts/SizeFormat';
 import { sizeFormatHandler } from '../../../lib/formatHandlers/common/sizeFormatHandler';
 

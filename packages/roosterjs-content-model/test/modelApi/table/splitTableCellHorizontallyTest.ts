@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { splitTableCellHorizontally } from '../../../lib/modelApi/table/splitTableCellHorizontally';
@@ -10,7 +9,7 @@ describe('splitTableCellHorizontally', () => {
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -33,7 +32,7 @@ describe('splitTableCellHorizontally', () => {
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -66,7 +65,7 @@ describe('splitTableCellHorizontally', () => {
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[0], cells[1]],
@@ -97,7 +96,7 @@ describe('splitTableCellHorizontally', () => {
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[0], cells[1], cells[1]],
@@ -133,7 +132,7 @@ describe('splitTableCellHorizontally', () => {
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[0], cells[1]],
@@ -166,7 +165,7 @@ describe('splitTableCellHorizontally', () => {
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[0], cells[1], cells[1]],
@@ -199,7 +198,7 @@ describe('splitTableCellHorizontally', () => {
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[0], cells[1], cells[1]],

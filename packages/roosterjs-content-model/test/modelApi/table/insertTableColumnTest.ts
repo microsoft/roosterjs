@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { insertTableColumn } from '../../../lib/modelApi/table/insertTableColumn';
@@ -9,7 +8,7 @@ describe('insertTableColumn', () => {
         const table = createTable(0);
         insertTableColumn(table, TableOperation.InsertLeft);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -18,7 +17,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertRight);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -33,7 +32,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertLeft);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1]],
             widths: [],
@@ -42,7 +41,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertRight);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1]],
             widths: [],
@@ -63,7 +62,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertLeft);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2, cell1]],
             widths: [100, 100],
@@ -72,7 +71,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertRight);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2, cell1, cell2]],
             widths: [100, 100, 100],
@@ -98,7 +97,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertLeft);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell3, cell3, cell1, cell2]],
             widths: [100, 100, 100, 200],
@@ -107,7 +106,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertRight);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell3, cell3, cell1, cell2, cell4, cell4]],
             widths: [100, 100, 100, 200, 200, 200],
@@ -135,7 +134,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertLeft);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell3, cell1],
@@ -147,7 +146,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertRight);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell3, cell1, cell3],
@@ -188,7 +187,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertLeft);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell1, cell2, cell2, cell2, cell3, cell4],
@@ -201,7 +200,7 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, TableOperation.InsertRight);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell1, cell2, cell2, cell2, cell3, cell3, cell3, cell4],

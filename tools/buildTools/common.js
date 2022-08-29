@@ -23,13 +23,6 @@ const compatibleEnumPath = path.join(
     'lib',
     'compatibleEnum'
 );
-const contentModelCompatibleEnumPath = path.join(
-    packagesPath,
-    'roosterjs-content-model',
-    'lib',
-    'publicTypes',
-    'compatibleEnum'
-);
 
 function collectPackages(startPath) {
     const packagePaths = glob.sync(
@@ -163,7 +156,6 @@ module.exports = {
     roosterJsDistPath,
     roosterJsUiDistPath,
     compatibleEnumPath,
-    contentModelCompatibleEnumPath,
     deployPath,
     runNode,
     err,
