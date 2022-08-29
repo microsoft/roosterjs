@@ -151,7 +151,7 @@ export default class VTable {
     }
 
     private recalculateCellHeight(td: HTMLTableCellElement) {
-        if (this.isAEmptyCell(td) && td.rowSpan && td.rowSpan > 1) {
+        if (this.isEmptyCell(td) && td.rowSpan > 1) {
             for (let i = 1; i < td.rowSpan; i++) {
                 const br = document.createElement('br');
                 td.appendChild(br);
@@ -499,12 +499,12 @@ export default class VTable {
         }
     }
 
-    private isAEmptyCell(td: HTMLTableCellElement) {
+    private isEmptyCell(td: HTMLTableCellElement) {
         return td.childElementCount === 1 && getTagOfNode(td.firstChild) === 'BR';
     }
 
     private mergeCellContents(cellTd: HTMLTableCellElement, nextCellTd: HTMLTableCellElement) {
-        if (this.isAEmptyCell(nextCellTd)) {
+        if (this.isEmptyCell(nextCellTd)) {
             moveChildNodes(cellTd, nextCellTd, false /*keepExistingChildren*/);
         } else {
             const br = document.createElement('br');
