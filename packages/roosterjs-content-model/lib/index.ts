@@ -32,6 +32,7 @@ export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './publicTypes/format/ContentModelTableCellFormat';
+export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegmentFormat';
 
 export { TextAlignFormat } from './publicTypes/format/formatParts/TextAlignFormat';
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';

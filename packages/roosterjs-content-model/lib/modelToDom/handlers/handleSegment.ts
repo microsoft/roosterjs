@@ -1,6 +1,8 @@
+import { applyFormat } from '../utils/applyFormat';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { handleBlock } from './handleBlock';
 import { ModelToDomContext } from '../context/ModelToDomContext';
+import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
 /**
  * @internal
@@ -29,6 +31,14 @@ export function handleSegment(
             element = doc.createElement('span');
             element.appendChild(txt);
             regularSelection.current.segment = txt;
+
+            applyFormat(
+                element,
+                SegmentFormatHandlers,
+                segment.format,
+                context.contentModelContext
+            );
+
             break;
 
         case 'Br':
@@ -37,8 +47,6 @@ export function handleSegment(
             break;
 
         case 'General':
-            regularSelection.current.segment = segment.element;
-
             handleBlock(doc, parent, segment, context);
             break;
     }

@@ -165,9 +165,14 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'Text', text: 'test2', isSelected: true },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -190,10 +195,14 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'SelectionMarker', isSelected: true },
-                { segmentType: 'Text', text: 'test2' },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2', format: {} },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -216,9 +225,14 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'Text', text: 'test2', isSelected: true },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -241,16 +255,20 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'SelectionMarker', isSelected: true },
-                { segmentType: 'Text', text: 'test2test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
         });
     });
 
     // Skip this test for now, we will reenable it once we are ready to write e2e test case of creating model from dom
-    xit('Process a DIV with mixed selection', () => {
+    it('Process a DIV with mixed selection', () => {
         const div = document.createElement('div');
         div.innerHTML = '<span>test1</span>test2test3';
         context.regularSelection = {
@@ -267,9 +285,13 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'Text', text: 'test2', isSelected: true },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1test2', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });

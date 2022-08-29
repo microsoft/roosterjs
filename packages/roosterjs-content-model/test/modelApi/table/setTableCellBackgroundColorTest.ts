@@ -171,6 +171,7 @@ describe('setTableCellBackgroundColor', () => {
                                     {
                                         segmentType: 'SelectionMarker',
                                         isSelected: true,
+                                        format: {},
                                     },
                                 ],
                             },
@@ -210,6 +211,7 @@ describe('setTableCellBackgroundColor', () => {
                                     {
                                         segmentType: 'SelectionMarker',
                                         isSelected: true,
+                                        format: {},
                                     },
                                 ],
                             },

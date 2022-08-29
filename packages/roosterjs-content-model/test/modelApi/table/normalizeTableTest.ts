@@ -47,6 +47,7 @@ describe('normalizeTable', () => {
                                 segments: [
                                     {
                                         segmentType: 'Br',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -172,6 +173,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text1',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -181,6 +183,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text2',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -200,6 +203,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text3',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -393,6 +397,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text1',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -402,6 +407,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text3',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -421,6 +427,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text2',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -430,6 +437,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text4',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -494,6 +502,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text1',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -503,6 +512,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text2',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -512,6 +522,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text3',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -521,6 +532,7 @@ describe('normalizeTable', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'text4',
+                                        format: {},
                                     },
                                 ],
                             },
