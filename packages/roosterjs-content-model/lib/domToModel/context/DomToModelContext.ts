@@ -1,4 +1,5 @@
 import { ContentModelContext } from '../../publicTypes/ContentModelContext';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { Coordinates } from 'roosterjs-editor-types';
 
 /**
@@ -90,4 +91,9 @@ export interface DomToModelContext {
      * Image selection provided by editor
      */
     imageSelection?: ImageSelection;
+
+    /**
+     * Format of current segment
+     */
+    segmentFormat: ContentModelSegmentFormat;
 }

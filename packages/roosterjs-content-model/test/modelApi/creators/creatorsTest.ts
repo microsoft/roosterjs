@@ -55,6 +55,7 @@ describe('Creators', () => {
             element: element,
             blockType: 'BlockGroup',
             blockGroupType: 'General',
+            format: {},
         });
     });
 
@@ -83,6 +84,7 @@ describe('Creators', () => {
 
         expect(result).toEqual({
             segmentType: 'Text',
+            format: {},
             text: text,
         });
     });
@@ -187,6 +189,7 @@ describe('Creators', () => {
         expect(marker).toEqual({
             segmentType: 'SelectionMarker',
             isSelected: true,
+            format: {},
         });
     });
 
@@ -195,6 +198,7 @@ describe('Creators', () => {
 
         expect(br).toEqual({
             segmentType: 'Br',
+            format: {},
         });
     });
 });

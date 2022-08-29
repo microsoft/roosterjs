@@ -30,7 +30,7 @@ describe('verticalAlignFormatHandler.parse', () => {
             div.setAttribute('valign', attrValue);
         }
 
-        verticalAlignFormatHandler.parse(format, div, context);
+        verticalAlignFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             verticalAlign: expectedValue,
@@ -38,7 +38,7 @@ describe('verticalAlignFormatHandler.parse', () => {
     }
 
     it('No alignment', () => {
-        verticalAlignFormatHandler.parse(format, div, context);
+        verticalAlignFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 

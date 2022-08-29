@@ -1,5 +1,6 @@
 import * as generalBlockProcessor from '../../../lib/domToModel/processors/generalBlockProcessor';
 import * as generalSegmentProcessor from '../../../lib/domToModel/processors/generalSegmentProcessor';
+import * as knownSegmentProcessor from '../../../lib/domToModel/processors/knownSegmentProcessor';
 import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
@@ -19,6 +20,7 @@ describe('containerProcessor', () => {
         spyOn(generalBlockProcessor, 'generalBlockProcessor');
         spyOn(generalSegmentProcessor, 'generalSegmentProcessor');
         spyOn(textProcessor, 'textProcessor');
+        spyOn(knownSegmentProcessor, 'knownSegmentProcessor').and.callThrough();
     });
 
     it('Process a document fragment', () => {
@@ -85,8 +87,8 @@ describe('containerProcessor', () => {
             document: document,
         });
         expect(generalBlockProcessor.generalBlockProcessor).not.toHaveBeenCalled();
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
+        expect(knownSegmentProcessor.knownSegmentProcessor).toHaveBeenCalledTimes(1);
+        expect(knownSegmentProcessor.knownSegmentProcessor).toHaveBeenCalledWith(
             doc,
             span,
             context
@@ -117,8 +119,8 @@ describe('containerProcessor', () => {
             innerDiv,
             context
         );
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
+        expect(knownSegmentProcessor.knownSegmentProcessor).toHaveBeenCalledTimes(1);
+        expect(knownSegmentProcessor.knownSegmentProcessor).toHaveBeenCalledWith(
             doc,
             span,
             context
@@ -165,9 +167,14 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'Text', text: 'test2', isSelected: true },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -190,10 +197,13 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'SelectionMarker', isSelected: true },
-                { segmentType: 'Text', text: 'test2' },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -216,9 +226,14 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'Text', text: 'test2', isSelected: true },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -241,16 +256,20 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'SelectionMarker', isSelected: true },
-                { segmentType: 'Text', text: 'test2test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
         });
     });
 
     // Skip this test for now, we will reenable it once we are ready to write e2e test case of creating model from dom
-    xit('Process a DIV with mixed selection', () => {
+    it('Process a DIV with mixed selection', () => {
         const div = document.createElement('div');
         div.innerHTML = '<span>test1</span>test2test3';
         context.regularSelection = {
@@ -267,9 +286,14 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1' },
-                { segmentType: 'Text', text: 'test2', isSelected: true },
-                { segmentType: 'Text', text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });

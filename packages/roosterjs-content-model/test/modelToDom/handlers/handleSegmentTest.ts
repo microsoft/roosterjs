@@ -33,6 +33,7 @@ describe('handleSegment', () => {
             {
                 segmentType: 'Text',
                 text: 'test',
+                format: {},
             },
             '<span>test</span>',
             0
@@ -43,6 +44,7 @@ describe('handleSegment', () => {
         runTest(
             {
                 segmentType: 'Br',
+                format: {},
             },
             '<br>',
             0
@@ -56,6 +58,7 @@ describe('handleSegment', () => {
             blockGroupType: 'General',
             blocks: [],
             element: null!,
+            format: {},
         };
         runTest(segment, '', 1);
         expect(handleBlock.handleBlock).toHaveBeenCalledWith(document, parent, segment, context);

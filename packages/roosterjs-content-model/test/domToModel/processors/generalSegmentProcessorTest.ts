@@ -23,6 +23,7 @@ describe('generalSegmentProcessor', () => {
             blockGroupType: 'General',
             element: span,
             blocks: [],
+            format: {},
         };
 
         spyOn(createGeneralSegment, 'createGeneralSegment').and.returnValue(segment);
@@ -42,7 +43,7 @@ describe('generalSegmentProcessor', () => {
             document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
-        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span);
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
         expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span, context);
     });

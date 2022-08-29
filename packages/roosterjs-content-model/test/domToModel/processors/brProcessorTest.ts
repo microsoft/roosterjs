@@ -26,6 +26,7 @@ describe('brProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Br',
+                            format: {},
                         },
                     ],
                 },
