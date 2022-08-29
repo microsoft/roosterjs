@@ -1,5 +1,3 @@
-import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
 
 /**
@@ -7,8 +5,8 @@ import { ContentModelDocument } from '../../publicTypes/block/group/ContentModel
  */
 export function createContentModelDocument(doc: Document): ContentModelDocument {
     return {
-        blockType: ContentModelBlockType.BlockGroup,
-        blockGroupType: ContentModelBlockGroupType.Document,
+        blockType: 'BlockGroup',
+        blockGroupType: 'Document',
         blocks: [],
         document: doc,
     };

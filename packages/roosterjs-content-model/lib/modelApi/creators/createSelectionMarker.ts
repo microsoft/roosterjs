@@ -1,4 +1,3 @@
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
 
 /**
@@ -6,7 +5,7 @@ import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentMo
  */
 export function createSelectionMarker(): ContentModelSelectionMarker {
     return {
-        segmentType: ContentModelSegmentType.SelectionMarker,
+        segmentType: 'SelectionMarker',
         isSelected: true,
     };
 }

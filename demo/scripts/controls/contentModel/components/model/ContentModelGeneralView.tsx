@@ -4,7 +4,6 @@ import { ContentModelView } from '../ContentModelView';
 import {
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,
-    ContentModelSegmentType,
     hasSelectionInBlock,
 } from 'roosterjs-content-model';
 
@@ -30,5 +29,5 @@ export function ContentModelGeneralView(props: { model: ContentModelGeneralBlock
 }
 
 function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {
-    return (block as ContentModelGeneralSegment).segmentType == ContentModelSegmentType.General;
+    return (block as ContentModelGeneralSegment).segmentType == 'General';
 }
