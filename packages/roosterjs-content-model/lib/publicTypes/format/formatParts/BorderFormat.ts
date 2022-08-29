@@ -16,4 +16,9 @@ export type BorderFormat = {
      * Border color in order: "top right bottom left"
      */
     borderColor?: string;
+
+    /**
+     * Whether use border-box for this element
+     */
+    useBorderBox?: boolean;
 };

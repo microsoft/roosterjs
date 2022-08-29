@@ -1,0 +1,28 @@
+name: Publish
+on:
+    push:
+        branches:
+            - release
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2.3.1
+              with:
+                  ref: release
+                  persist-credentials: false
+
+            - name: Set Node Version
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 'v14.18.2'
+
+            - name: Install dependencies
+              run: yarn
+
+            - name: Build
+              run: npm run-script build:ci
+
+            - name: Publish
+              run: node tools/build.js publish --token ${{ secrets.NPM_TOKEN }}

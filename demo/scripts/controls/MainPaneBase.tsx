@@ -10,6 +10,7 @@ export interface MainPaneBaseState {
     isDarkMode: boolean;
     editorCreator: (div: HTMLDivElement, options: EditorOptions) => IEditor;
     isRtl: boolean;
+    showContentModelRibbon: boolean;
 }
 
 export default abstract class MainPaneBase extends React.Component<{}, MainPaneBaseState> {
@@ -36,4 +37,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
     abstract toggleDarkMode(): void;
 
     abstract setPageDirection(isRtl: boolean): void;
+
+    abstract toggleContentModelRibbon(): void;
 }

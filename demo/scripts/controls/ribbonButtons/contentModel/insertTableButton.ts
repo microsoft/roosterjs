@@ -1,5 +1,6 @@
+import isContentModelEditor from '../../editor/isContentModelEditor';
 import { getButtons, KnownRibbonButtonKey } from 'roosterjs-react';
-import { insertTable as insertTableApi, isContentModelEditor } from 'roosterjs-content-model';
+import { insertTable } from 'roosterjs-content-model';
 import { InsertTableButtonStringKey, RibbonButton } from 'roosterjs-react';
 
 const originalPasteButton: RibbonButton<InsertTableButtonStringKey> = getButtons([
@@ -11,7 +12,7 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
     onClick: (editor, key) => {
         if (isContentModelEditor(editor)) {
             const { row, col } = parseKey(key);
-            insertTableApi(editor, col, row);
+            insertTable(editor, col, row);
         }
     },
 };

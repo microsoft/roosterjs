@@ -30,6 +30,9 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
     parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
     addBlock(group, table);
 
+    const columnPositions: number[] = [0];
+    const rowPositions: number[] = [0];
+
     for (let row = 0; row < tableElement.rows.length; row++) {
         const tr = tableElement.rows[row];
         for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
@@ -40,13 +43,27 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                 hasTableSelection &&
                 row >= firstCell.y &&
                 row <= lastCell.y &&
-                sourceCol >= firstCell.x &&
-                sourceCol <= lastCell.x;
+                targetCol >= firstCell.x &&
+                targetCol <= lastCell.x;
+
+            const colEnd = targetCol + td.colSpan;
+            const rowEnd = row + td.rowSpan;
+
+            if (columnPositions[colEnd] === undefined || rowPositions[rowEnd] === undefined) {
+                const rect = td.getBoundingClientRect();
+
+                if (columnPositions[colEnd] === undefined) {
+                    columnPositions[colEnd] = columnPositions[targetCol] + rect.width;
+                }
+                if (rowPositions[rowEnd] === undefined) {
+                    rowPositions[rowEnd] = rowPositions[row] + rect.height;
+                }
+            }
 
             for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
                 for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
                     const hasTd = colSpan == 1 && rowSpan == 1;
-                    const cell = createTableCell(colSpan, rowSpan, td.tagName == 'TH');
+                    const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
 
                     if (isCellSelected) {
                         cell.isSelected = true;
@@ -61,10 +78,30 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                             cell.format,
                             context.contentModelContext
                         );
+
                         containerProcessor(cell, td, context);
                     }
                 }
             }
         }
     }
+
+    table.widths = calcSizes(columnPositions);
+    table.heights = calcSizes(rowPositions);
 };
+
+function calcSizes(positions: number[]): number[] {
+    let result: number[] = [];
+    let lastPos = positions[positions.length - 1];
+
+    for (let i = positions.length - 2; i >= 0; i--) {
+        if (positions[i] === undefined) {
+            result[i] = 0;
+        } else {
+            result[i] = lastPos - positions[i];
+            lastPos = positions[i];
+        }
+    }
+
+    return result;
+}

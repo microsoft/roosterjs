@@ -8,29 +8,24 @@ import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableM
  * Format current focused table with the given format
  * @param editor The editor instance
  * @param format The table format to apply
+ * @param keepCellShade Whether keep existing shade color when apply format if there is a manually set shade color
  */
 export default function formatTable(
     editor: IExperimentalContentModelEditor,
-    format: TableMetadataFormat
+    format: TableMetadataFormat,
+    keepCellShade?: boolean
 ) {
     const table = editor.getElementAtCursor('TABLE');
-    const parent = table?.parentNode;
+    const model = table && editor.createContentModel(table);
+    const tableModel = model?.blocks[0];
 
-    editor.focus();
+    if (tableModel?.blockType == ContentModelBlockType.Table) {
+        applyTableFormat(tableModel, format, keepCellShade);
 
-    if (parent) {
         editor.addUndoSnapshot(
             () => {
-                const model = editor.createContentModel(table);
-                const tableModel = model.blocks[0];
-
-                if (tableModel?.blockType == ContentModelBlockType.Table) {
-                    applyTableFormat(tableModel, format);
-
-                    const newFragment = editor.createFragmentFromContentModel(model);
-
-                    parent.replaceChild(newFragment, table);
-                }
+                editor.focus();
+                editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
             },
             ChangeSource.Format,
             false /*canUndoByBackspace*/,

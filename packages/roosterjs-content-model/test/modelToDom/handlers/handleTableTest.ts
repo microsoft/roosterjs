@@ -1,17 +1,17 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
+import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
 
 describe('handleTable', () => {
-    let context: DomToModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
-        context = createDomToModelContext();
+        context = createModelToDomContext();
     });
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
@@ -26,6 +26,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [],
                 format: {},
+                widths: [],
+                heights: [],
             },
             ''
         );
@@ -37,6 +39,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[], []],
                 format: {},
+                widths: [],
+                heights: [],
             },
             ''
         );
@@ -48,6 +52,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[createTableCell(1, 1, false)]],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
         );
@@ -63,6 +69,8 @@ describe('handleTable', () => {
                     [tdModel, tdModel],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -75,6 +83,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[tdModel], [], [tdModel]],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -90,6 +100,8 @@ describe('handleTable', () => {
                     [tdModel, tdModel],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -105,6 +117,8 @@ describe('handleTable', () => {
                     [createTableCell(1, 2, false), tdModel],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -119,6 +133,8 @@ describe('handleTable', () => {
                     [createTableCell(1, 2, false), createTableCell(2, 2, false)],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
         );
@@ -153,6 +169,8 @@ describe('handleTable', () => {
                     ],
                 ],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody>' +
                 '<tr><td rowspan="2"></td><td colspan="2"></td></tr>' +
@@ -168,6 +186,8 @@ describe('handleTable', () => {
                 blockType: ContentModelBlockType.Table,
                 cells: [[createTableCell(1, 1, true)], [createTableCell(1, 1, false)]],
                 format: {},
+                widths: [],
+                heights: [],
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );

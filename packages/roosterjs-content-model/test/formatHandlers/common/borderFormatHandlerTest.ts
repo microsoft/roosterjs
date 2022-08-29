@@ -84,6 +84,20 @@ describe('borderFormatHandler.parse', () => {
             borderStyle: 'solid',
         });
     });
+
+    it('UseBorderBox', () => {
+        const fake = ({
+            getBoundingClientRect: () => ({
+                width: 0,
+                height: 0,
+            }),
+            style: {
+                boxSizing: 'border-box',
+            },
+        } as any) as HTMLElement;
+        borderFormatHandler.parse(format, fake, context);
+        expect(format).toEqual({ useBorderBox: true });
+    });
 });
 
 describe('borderFormatHandler.apply', () => {
@@ -237,5 +251,11 @@ describe('borderFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual(
             '<div style="border-color: red blue green yellow; border-width: 1px 2px 3px 4px; border-style: solid none dashed dotted;"></div>'
         );
+    });
+
+    it('UseBorderBox', () => {
+        format.useBorderBox = true;
+        borderFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="box-sizing: border-box;"></div>');
     });
 });

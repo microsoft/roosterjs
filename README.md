@@ -112,10 +112,6 @@ Install via NPM or Yarn:
 
 `yarn add roosterjs`
 
-or
-
-`npm install roosterjs --save`
-
 You can also install sub packages separately:
 
 `yarn add roosterjs-editor-core`
@@ -124,21 +120,9 @@ You can also install sub packages separately:
 
 `...`
 
-or
-
-`npm install roosterjs-editor-core --save`
-
-`npm install roosterjs-editor-api --save`
-
-`...`
-
 In order to run the code below, you may also need to install [webpack](https://webpack.js.org/):
 
 `yarn add webpack -g`
-
-or
-
-`npm install webpack -g`
 
 ## Usage
 
@@ -230,12 +214,6 @@ To build the sample site code yourself, follow these instructions:
 
     ```cmd
     yarn
-    ```
-
-    or
-
-    ```cmd
-    npm install
     ```
 
 2. Build the source code, and start the sample editor:

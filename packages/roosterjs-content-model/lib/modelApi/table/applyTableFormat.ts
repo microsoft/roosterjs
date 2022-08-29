@@ -1,6 +1,7 @@
 import { BorderIndex, combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
@@ -36,7 +37,7 @@ export function applyTableFormat(
     Object.assign(format, effectiveMetadata);
 
     if (!keepCellShade) {
-        deleteCellBackgroundColorOverride(cells, effectiveMetadata);
+        deleteCellBackgroundColorOverride(cells);
     }
 
     formatBorders(cells, effectiveMetadata);
@@ -45,10 +46,7 @@ export function applyTableFormat(
     setHeaderRowFormat(cells, effectiveMetadata);
 }
 
-function deleteCellBackgroundColorOverride(
-    cells: ContentModelTableCell[][],
-    format: TableMetadataFormat
-) {
+function deleteCellBackgroundColorOverride(cells: ContentModelTableCell[][]) {
     cells.forEach(row => {
         row.forEach(cell => {
             delete cell.format.bgColorOverride;
@@ -153,24 +151,20 @@ function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableM
 
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
-            const color = hasBandedColumns
-                ? colIndex % 2 === 0
-                    ? format.bgColorEven
-                    : format.bgColorOdd
-                : hasBandedRows
-                ? rowIndex % 2 === 0
-                    ? format.bgColorEven
-                    : format.bgColorOdd
-                : shouldColorWholeTable
-                ? format.bgColorOdd
-                : null;
+            if (!cell.format.bgColorOverride) {
+                const color = hasBandedColumns
+                    ? colIndex % 2 === 0
+                        ? format.bgColorEven
+                        : format.bgColorOdd
+                    : hasBandedRows
+                    ? rowIndex % 2 === 0
+                        ? format.bgColorEven
+                        : format.bgColorOdd
+                    : shouldColorWholeTable
+                    ? format.bgColorOdd
+                    : null;
 
-            if (color && !cell.format.bgColorOverride) {
-                cell.format.backgroundColor = color;
-
-                // TODO: format text color
-            } else {
-                delete cell.format.backgroundColor;
+                setBackgroundColor(cell.format, color);
             }
         });
     });
@@ -188,8 +182,8 @@ function setFirstColumnFormat(
 
                 if (rowIndex !== 0 && !cell.format.bgColorOverride) {
                     borders[BorderIndex.Top] = 'transparent';
-                    delete cell.format.backgroundColor;
-                    // TODO: Set text color
+
+                    setBackgroundColor(cell.format, null /*color*/);
                 }
 
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
@@ -209,11 +203,7 @@ function setHeaderRowFormat(cells: ContentModelTableCell[][], format: TableMetad
         cell.isHeader = format.hasHeaderRow;
 
         if (format.hasHeaderRow && format.headerRowColor) {
-            if (!cell.format.bgColorOverride) {
-                cell.format.backgroundColor = format.headerRowColor;
-
-                // TODO: Set text color
-            }
+            setBackgroundColor(cell.format, format.headerRowColor);
 
             const borders = extractBorderValues(cell.format.borderColor!);
 
@@ -224,4 +214,14 @@ function setHeaderRowFormat(cells: ContentModelTableCell[][], format: TableMetad
             cell.format.borderColor = combineBorderValue(borders, 'transparent');
         }
     });
+}
+
+function setBackgroundColor(format: ContentModelTableCellFormat, color: string | null | undefined) {
+    if (color && !format.bgColorOverride) {
+        format.backgroundColor = color;
+
+        // TODO: Handle text color when background color is dark
+    } else {
+        delete format.backgroundColor;
+    }
 }

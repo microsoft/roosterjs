@@ -1,6 +1,7 @@
 import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
 import showInputDialog from '../../inputDialog/utils/showInputDialog';
+import { EditorPlugin, IEditor, ImageEditOperation } from 'roosterjs-editor-types';
 import { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
 import { LocalizedStrings } from '../../common/type/LocalizedStrings';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
@@ -11,12 +12,6 @@ import {
     resetImage,
     resizeByPercentage,
 } from 'roosterjs-editor-plugins';
-import {
-    ExperimentalFeatures,
-    IEditor,
-    ImageEditOperation,
-    EditorPlugin,
-} from 'roosterjs-editor-types';
 
 const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     key: 'menuNameImageAltText',
@@ -90,9 +85,9 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
 const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageCrop',
     unlocalizedText: 'Crop image',
-    shouldShow: (editor, node) => {
+    shouldShow: (_, node, imageEdit) => {
         return (
-            editor.isFeatureEnabled(ExperimentalFeatures.ImageCrop) &&
+            imageEdit.isOperationAllowed(ImageEditOperation.Crop) &&
             canRegenerateImage(node as HTMLImageElement)
         );
     },

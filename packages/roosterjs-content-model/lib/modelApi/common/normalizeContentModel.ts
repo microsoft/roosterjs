@@ -45,5 +45,14 @@ function isEmptySegment(segment: ContentModelSegment) {
 }
 
 function isEmptyBlock(block: ContentModelBlock) {
-    return block.blockType == ContentModelBlockType.Paragraph && block.segments.length == 0;
+    switch (block.blockType) {
+        case ContentModelBlockType.Paragraph:
+            return block.segments.length == 0;
+
+        case ContentModelBlockType.Table:
+            return block.cells.length == 0 || block.cells.every(row => row.length == 0);
+
+        default:
+            return false;
+    }
 }

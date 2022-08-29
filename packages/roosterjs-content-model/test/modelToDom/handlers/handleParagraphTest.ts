@@ -4,18 +4,18 @@ import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagraph';
+import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
 
 describe('handleParagraph', () => {
     let parent: HTMLElement;
-    let context: DomToModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         spyOn(handleSegment, 'handleSegment');
         parent = document.createElement('div');
-        context = createDomToModelContext();
+        context = createModelToDomContext();
     });
 
     function runTest(

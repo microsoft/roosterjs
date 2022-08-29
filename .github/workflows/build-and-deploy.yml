@@ -18,7 +18,7 @@ jobs:
                   node-version: 'v14.18.2'
 
             - name: Install dependencies
-              run: npm install
+              run: yarn
 
             - name: Build
               run: npm run-script build:ci
@@ -37,6 +37,3 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   BRANCH: gh-pages
                   FOLDER: dist/deploy
-
-            - name: Publish
-              run: node tools/build.js publish --token ${{ secrets.NPM_TOKEN }}

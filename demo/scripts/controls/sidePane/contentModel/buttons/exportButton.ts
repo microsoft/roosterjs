@@ -1,5 +1,6 @@
+import isContentModelEditor from '../../../editor/isContentModelEditor';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { getCurrentContentModel } from '../currentModel';
-import { isContentModelEditor } from 'roosterjs-content-model';
 import { RibbonButton } from 'roosterjs-react';
 
 export const exportButton: RibbonButton<'buttonNameExport'> = {
@@ -10,10 +11,10 @@ export const exportButton: RibbonButton<'buttonNameExport'> = {
         const model = getCurrentContentModel(editor);
 
         if (model && isContentModelEditor(editor)) {
-            const fragment = editor.createFragmentFromContentModel(model);
-            const win = window.open('about:blank');
-
-            win.document.body.appendChild(fragment);
+            editor.addUndoSnapshot(() => {
+                editor.focus();
+                editor.setContentModel(model);
+            }, ChangeSource.SetContent);
         }
     },
 };

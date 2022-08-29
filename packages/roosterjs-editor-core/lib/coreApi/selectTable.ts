@@ -103,7 +103,6 @@ function buildCss(
 
     vTable.cells?.forEach((row, rowIndex) => {
         let tdCount = 0;
-        let thCount = 0;
         firstSelected = null;
         lastSelected = null;
 
@@ -120,13 +119,7 @@ function buildCss(
             const cell = row[cellIndex].td;
             if (cell) {
                 const tag = getTagOfNode(cell);
-
-                if (tag == 'TD') {
-                    tdCount++;
-                }
-                if (tag == 'TH') {
-                    thCount++;
-                }
+                tdCount++;
 
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
                     if (isFirst) {
@@ -143,7 +136,7 @@ function buildCss(
                         middleElSelector,
                         currentRow,
                         tag,
-                        tag == 'TD' ? tdCount : thCount
+                        tdCount
                     );
                     css += selector;
                     firstSelected = firstSelected || table.querySelector(selector);

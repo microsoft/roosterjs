@@ -3,17 +3,17 @@ import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockG
 import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
+import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
 
 describe('handleSegment', () => {
     let parent: HTMLElement;
-    let context: DomToModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
-        context = createDomToModelContext();
+        context = createModelToDomContext();
     });
 
     function runTest(

@@ -20,6 +20,11 @@ export function handleParagraph(
         parent.appendChild(container);
     }
 
+    context.regularSelection.current = {
+        block: container,
+        segment: null,
+    };
+
     paragraph.segments.forEach(segment => {
         handleSegment(doc, container, segment, context);
     });
