@@ -3,10 +3,7 @@ import * as generalSegmentProcessor from '../../../lib/domToModel/processors/gen
 import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createText } from '../../../lib/modelApi/creators/createText';
@@ -30,8 +27,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, fragment, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -46,8 +43,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -63,8 +60,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -82,8 +79,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -109,8 +106,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -166,11 +163,11 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2', isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1' },
+                { segmentType: 'Text', text: 'test2', isSelected: true },
+                { segmentType: 'Text', text: 'test3' },
             ],
             isImplicit: true,
         });
@@ -191,12 +188,12 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.SelectionMarker, isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1' },
+                { segmentType: 'SelectionMarker', isSelected: true },
+                { segmentType: 'Text', text: 'test2' },
+                { segmentType: 'Text', text: 'test3' },
             ],
             isImplicit: true,
         });
@@ -217,11 +214,11 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2', isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1' },
+                { segmentType: 'Text', text: 'test2', isSelected: true },
+                { segmentType: 'Text', text: 'test3' },
             ],
             isImplicit: true,
         });
@@ -242,11 +239,11 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.SelectionMarker, isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2test3' },
+                { segmentType: 'Text', text: 'test1' },
+                { segmentType: 'SelectionMarker', isSelected: true },
+                { segmentType: 'Text', text: 'test2test3' },
             ],
             isImplicit: true,
         });
@@ -268,11 +265,11 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2', isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1' },
+                { segmentType: 'Text', text: 'test2', isSelected: true },
+                { segmentType: 'Text', text: 'test3' },
             ],
             isImplicit: true,
         });

@@ -1,5 +1,4 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { handleBlock } from './handleBlock';
 import { ModelToDomContext } from '../context/ModelToDomContext';
 
@@ -24,7 +23,7 @@ export function handleSegment(
     let element: HTMLElement | null = null;
 
     switch (segment.segmentType) {
-        case ContentModelSegmentType.Text:
+        case 'Text':
             const txt = doc.createTextNode(segment.text);
 
             element = doc.createElement('span');
@@ -32,12 +31,12 @@ export function handleSegment(
             regularSelection.current.segment = txt;
             break;
 
-        case ContentModelSegmentType.Br:
+        case 'Br':
             element = doc.createElement('br');
             regularSelection.current.segment = element;
             break;
 
-        case ContentModelSegmentType.General:
+        case 'General':
             regularSelection.current.segment = segment.element;
 
             handleBlock(doc, parent, segment, context);
