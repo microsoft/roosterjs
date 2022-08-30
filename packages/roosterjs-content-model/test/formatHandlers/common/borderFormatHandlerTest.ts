@@ -1,6 +1,6 @@
 import { BorderFormat } from '../../../lib/publicTypes/format/formatParts/BorderFormat';
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 
 describe('borderFormatHandler.parse', () => {
     let div: HTMLElement;

@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { splitTableCellVertically } from '../../../lib/modelApi/table/splitTableCellVertically';
@@ -10,7 +9,7 @@ describe('splitTableCellVertically', () => {
         splitTableCellVertically(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -33,7 +32,7 @@ describe('splitTableCellVertically', () => {
         splitTableCellVertically(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -66,7 +65,7 @@ describe('splitTableCellVertically', () => {
         splitTableCellVertically(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -98,7 +97,7 @@ describe('splitTableCellVertically', () => {
         splitTableCellVertically(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -130,7 +129,7 @@ describe('splitTableCellVertically', () => {
         splitTableCellVertically(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -165,7 +164,7 @@ describe('splitTableCellVertically', () => {
         splitTableCellVertically(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -200,7 +199,7 @@ describe('splitTableCellVertically', () => {
         splitTableCellVertically(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],

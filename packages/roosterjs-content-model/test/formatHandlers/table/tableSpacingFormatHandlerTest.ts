@@ -1,4 +1,4 @@
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { SpacingFormat } from '../../../lib/publicTypes/format/formatParts/SpacingFormat';
 import { tableSpacingFormatHandler } from '../../../lib/formatHandlers/table/tableSpacingFormatHandler';
 

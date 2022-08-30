@@ -64,6 +64,9 @@ export default function addSnapshot<T>(
         if (isAutoCompleteSnapshot) {
             snapshots.autoCompleteIndex = snapshots.currentIndex;
         }
+    } else if (currentSnapshot && compare(snapshot, currentSnapshot)) {
+        // replace the currentSnapshot, to update other data such as metadata
+        snapshots.snapshots.splice(snapshots.currentIndex, 1, snapshot);
     }
 }
 

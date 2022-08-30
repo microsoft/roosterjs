@@ -1,6 +1,4 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { hasSelectionInSegment } from './hasSelectionInSegment';
 
 /**
@@ -8,14 +6,14 @@ import { hasSelectionInSegment } from './hasSelectionInSegment';
  */
 export function hasSelectionInBlock(block: ContentModelBlock): boolean {
     switch (block.blockType) {
-        case ContentModelBlockType.Paragraph:
+        case 'Paragraph':
             return block.segments.some(hasSelectionInSegment);
 
-        case ContentModelBlockType.Table:
+        case 'Table':
             return block.cells.some(row => row.some(hasSelectionInBlock));
 
-        case ContentModelBlockType.BlockGroup:
-            if (block.blockGroupType == ContentModelBlockGroupType.TableCell && block.isSelected) {
+        case 'BlockGroup':
+            if (block.blockGroupType == 'TableCell' && block.isSelected) {
                 return true;
             }
 
