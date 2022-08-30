@@ -1,9 +1,14 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
+import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
+import * as stackSegmentFormat from '../../../lib/domToModel/utils/stackSegmentFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
+import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
+import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
 describe('tableProcessor', () => {
@@ -176,5 +181,95 @@ describe('tableProcessor', () => {
         });
 
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(4);
+    });
+});
+
+describe('tableProcessor with format', () => {
+    let context: DomToModelContext;
+
+    beforeEach(() => {
+        context = createDomToModelContext();
+    });
+
+    it('Process table and check segment format', () => {
+        const doc = createContentModelDocument(document);
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const br = document.createElement('br');
+
+        table.appendChild(tr);
+        tr.appendChild(td);
+        td.appendChild(br);
+
+        context.segmentFormat = { a: 'b' } as any;
+
+        spyOn(stackSegmentFormat, 'stackSegmentFormat').and.callThrough();
+        spyOn(parseFormat, 'parseFormat').and.callFake((element, handlers, format, context) => {
+            if (element == table) {
+                if (handlers == TableFormatHandlers) {
+                    (<any>format).format1 = 'table';
+                } else if (handlers == SegmentFormatHandlers) {
+                    (<any>format).format2 = 'tableSegment';
+                }
+            } else if (element == td) {
+                if (handlers == TableCellFormatHandlers) {
+                    (<any>format).format3 = 'td';
+                } else if (handlers == SegmentFormatHandlers) {
+                    (<any>format).format4 = 'tdSegment';
+                }
+            }
+        });
+
+        tableProcessor(doc, table, context);
+
+        expect(stackSegmentFormat.stackSegmentFormat).toHaveBeenCalledTimes(2);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
+        expect(context.segmentFormat).toEqual({ a: 'b' } as any);
+        expect(doc).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        isImplicit: true,
+                                        segments: [
+                                            {
+                                                segmentType: 'Br',
+                                                format: {
+                                                    a: 'b',
+                                                    format2: 'tableSegment',
+                                                    format4: 'tdSegment',
+                                                } as any,
+                                            },
+                                        ],
+                                    },
+                                ],
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                format: {
+                                    format3: 'td',
+                                } as any,
+                            },
+                        ],
+                    ],
+                    widths: [0],
+                    heights: [0],
+                    format: {
+                        format1: 'table',
+                    } as any,
+                },
+            ],
+        });
     });
 });

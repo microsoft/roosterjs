@@ -240,4 +240,24 @@ describe('textProcessor', () => {
             ],
         });
     });
+
+    it('Handle text with format', () => {
+        const doc = createContentModelDocument(document);
+
+        context.segmentFormat = { a: 'b' } as any;
+
+        textProcessor(doc, 'test', context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: { a: 'b' } as any,
+                },
+            ],
+            isImplicit: true,
+        });
+    });
 });
