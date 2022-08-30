@@ -6,6 +6,7 @@ import {
     Browser,
     setHtmlWithMetadata,
     createRange,
+    ContentTraverser,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -19,6 +20,7 @@ import {
     KnownCreateElementDataIndex,
     SelectionRangeEx,
     SelectionRangeTypes,
+    NodeType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -91,6 +93,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     ? createRange(tempDiv, metadata.start, metadata.end)
                     : null;
 
+            this.handleBackgroundColorLossOf(tempDiv, newRange);
+
             this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
                 range: newRange,
@@ -113,6 +117,33 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     }, ChangeSource.Cut);
                 }
             });
+        }
+    }
+
+    private handleBackgroundColorLossOf(clonedRoot: HTMLElement, range: Range) {
+        const contentTraverser = ContentTraverser.createSelectionTraverser(clonedRoot, range);
+        let inlineElement = contentTraverser?.currentInlineElement;
+
+        while (inlineElement) {
+          let element = inlineElement.getContainerNode() as HTMLElement;
+          if (element.nodeType !== NodeType.Element) {
+            element = element.parentElement;
+          }
+
+          if (!element.style.backgroundColor) {
+            let parent = element.parentElement;
+            while (parent && parent !== clonedRoot) {
+              if (parent.style.backgroundColor) {
+                // set background-color
+                element.style.backgroundColor = parent.style.backgroundColor;
+                break;
+              }
+
+              parent = parent.parentElement;
+            }
+          }
+
+          inlineElement = contentTraverser.getNextInlineElement();
         }
     }
 
