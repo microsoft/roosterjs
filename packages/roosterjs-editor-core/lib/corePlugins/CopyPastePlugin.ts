@@ -8,6 +8,8 @@ import {
     createRange,
     VTable,
     removeCellsOutsideSelection,
+    isWholeTableSelected,
+    forEachSelectedCell,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -22,6 +24,7 @@ import {
     SelectionRangeEx,
     SelectionRangeTypes,
     TableSelection,
+    TableOperation,
 } from 'roosterjs-editor-types';
 
 /**
@@ -94,6 +97,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             if (selection.type === SelectionRangeTypes.TableSelection) {
                 const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
                 newRange = this.createTableRange(table, selection.coordinates);
+                if (isCut) {
+                    this.deleteTableContent(selection.table, selection.coordinates);
+                }
             } else {
                 newRange =
                     metadata?.type === SelectionRangeTypes.Normal
@@ -215,5 +221,28 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         removeCellsOutsideSelection(clonedVTable);
         clonedVTable.writeBack();
         return createRange(clonedVTable.table);
+    }
+
+    private deleteTableContent(table: HTMLTableElement, selection: TableSelection) {
+        table.style.removeProperty('width');
+        table.style.removeProperty('height');
+
+        const selectedVTable = new VTable(table);
+        selectedVTable.selection = selection;
+
+        forEachSelectedCell(selectedVTable, cell => {
+            if (cell?.td) {
+                cell.td.innerHTML = this.editor.getTrustedHTMLHandler()('<br>');
+            }
+        });
+
+        const wholeTableSelected = isWholeTableSelected(selectedVTable, selection);
+        if (wholeTableSelected) {
+            selectedVTable.edit(TableOperation.DeleteTable);
+            selectedVTable.writeBack();
+        } else if (table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0) {
+            selectedVTable.edit(TableOperation.DeleteColumn);
+            selectedVTable.writeBack();
+        }
     }
 }

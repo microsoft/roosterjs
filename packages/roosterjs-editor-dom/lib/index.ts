@@ -52,6 +52,8 @@ export { default as moveChildNodes } from './utils/moveChildNodes';
 export { default as VTable } from './table/VTable';
 export { default as isWholeTableSelected } from './table/isWholeTableSelected';
 export { default as removeCellsOutsideSelection } from './table/removeCellsOutsideSelection';
+export { default as forEachSelectedCell } from './table/forEachSelectedCell';
+
 export { default as VList } from './list/VList';
 export { default as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';

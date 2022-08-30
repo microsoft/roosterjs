@@ -477,21 +477,9 @@ export default class TableCellSelection implements EditorPlugin {
                 this.tableSelection = true;
 
                 this.vTable = this.vTable || new VTable(this.firstTable);
-
-                const firstCellCoordinates = getCellCoordinates(this.vTable, this.firstTarget);
-                const lastCellCoordinates = getCellCoordinates(this.vTable, this.lastTarget);
-                // If the selection started from the bottom or from right, the coordinates will inverted, so if the coordinates of the first target are bigger than last, the coordinates are switched.
-                const isRTLorBottomToTopSelection =
-                    firstCellCoordinates.x > lastCellCoordinates.x ||
-                    firstCellCoordinates.y > lastCellCoordinates.y;
-
                 this.tableRange = {
-                    firstCell: isRTLorBottomToTopSelection
-                        ? lastCellCoordinates
-                        : firstCellCoordinates,
-                    lastCell: isRTLorBottomToTopSelection
-                        ? firstCellCoordinates
-                        : lastCellCoordinates,
+                    firstCell: getCellCoordinates(this.vTable, this.firstTarget),
+                    lastCell: getCellCoordinates(this.vTable, this.lastTarget),
                 };
                 this.vTable.selection = this.tableRange;
                 this.selectTable();

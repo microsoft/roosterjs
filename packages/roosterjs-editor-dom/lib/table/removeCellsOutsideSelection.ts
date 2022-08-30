@@ -3,7 +3,6 @@ import VTable from './VTable';
 import { VCell } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * Remove the cells outside of the selection.
  * @param vTable VTable to remove selection
  */
@@ -13,6 +12,9 @@ export default function removeCellsOutsideSelection(vTable: VTable) {
             return;
         }
 
+        vTable.table.style.removeProperty('width');
+        vTable.table.style.removeProperty('height');
+
         const { firstCell, lastCell } = vTable.selection;
         const resultCells: VCell[][] = [];
 
@@ -20,6 +22,7 @@ export default function removeCellsOutsideSelection(vTable: VTable) {
         const firstY = firstCell.y;
         const lastX = lastCell.x;
         const lastY = lastCell.y;
+
         if (vTable.cells) {
             vTable.cells.forEach((row, y) => {
                 row = row.filter((_, x) => y >= firstY && y <= lastY && x >= firstX && x <= lastX);
