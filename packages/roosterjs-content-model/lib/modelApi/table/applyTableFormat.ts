@@ -179,7 +179,7 @@ function formatBackgroundColors(
 
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
-            if (!bgColorOverrides[rowIndex][colIndex]) {
+            if (!cell.format.bgColorOverride) {
                 const color =
                     hasBandedRows || hasBandedColumns
                         ? (hasBandedColumns && colIndex % 2 != 0) ||

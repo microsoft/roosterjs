@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { applyTableFormat } from 'roosterjs-content-model/lib/modelApi/table/applyTableFormat';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
@@ -60,8 +61,19 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
         );
     }, [table]);
 
+    const onApplyTableFormat = React.useCallback(() => {
+        applyTableFormat(table, undefined, true);
+    }, [table]);
+
     const getFormat = React.useCallback(() => {
-        return <FormatView format={table.format} renderers={TableFormatRenderers} />;
+        return (
+            <>
+                <div>
+                    <button onClick={onApplyTableFormat}>Apply table format</button>
+                </div>
+                <FormatView format={table.format} renderers={TableFormatRenderers} />
+            </>
+        );
     }, [table.format]);
 
     const getMetadata = React.useCallback(() => {
