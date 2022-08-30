@@ -296,4 +296,42 @@ describe('containerProcessor', () => {
             isImplicit: true,
         });
     });
+
+    it('Process with segment format', () => {
+        const div = document.createElement('div');
+        div.innerHTML = 'test';
+        context.segmentFormat = { a: 'b' } as any;
+
+        containerProcessor(doc, div, context);
+
+        expect(context.isInSelection).toBeFalse();
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [{ segmentType: 'Text', text: 'test', format: { a: 'b' } as any }],
+            isImplicit: true,
+        });
+    });
+
+    it('Process with segment format and selection marker', () => {
+        const div = document.createElement('div');
+        context.segmentFormat = { a: 'b' } as any;
+        context.regularSelection = {
+            startContainer: div,
+            startOffset: 0,
+            endContainer: div,
+            endOffset: 0,
+            isSelectionCollapsed: true,
+        };
+
+        containerProcessor(doc, div, context);
+
+        expect(context.isInSelection).toBeFalse();
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                { segmentType: 'SelectionMarker', format: { a: 'b' } as any, isSelected: true },
+            ],
+            isImplicit: true,
+        });
+    });
 });
