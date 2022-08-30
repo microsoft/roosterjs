@@ -1,12 +1,12 @@
 import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { boldFormatHandler } from './segment/boldFormatHandler';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
-import { fontFamilyFormatHandler } from './common/fontFamilyFormatHandler';
-import { fontSizeFormatHandler } from './common/fontSizeFormatHandler';
+import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
+import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
-import { textColorFormatHandler } from './common/textColorFormatHandler';
+import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 
 /**

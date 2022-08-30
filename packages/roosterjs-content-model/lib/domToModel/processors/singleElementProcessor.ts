@@ -36,7 +36,6 @@ const ProcessorMap: Record<string, ElementProcessor> = {
     FONT: knownElementProcessor,
     I: knownElementProcessor,
     S: knownElementProcessor,
-    SPAN: knownElementProcessor,
     STRIKE: knownElementProcessor,
     STRONG: knownElementProcessor,
     TABLE: tableProcessor,
