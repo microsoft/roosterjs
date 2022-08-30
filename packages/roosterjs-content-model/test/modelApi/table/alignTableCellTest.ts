@@ -1,5 +1,4 @@
 import { alignTableCell } from '../../../lib/modelApi/table/alignTableCell';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
@@ -40,7 +39,7 @@ describe('alignTableCell', () => {
         alignTableCell(table, TableOperation.AlignCellLeft);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],

@@ -1,6 +1,6 @@
 import { BorderFormat } from '../../../lib/publicTypes/format/formatParts/BorderFormat';
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 
 describe('borderFormatHandler.parse', () => {
     let div: HTMLElement;
@@ -18,7 +18,7 @@ describe('borderFormatHandler.parse', () => {
     });
 
     it('No border', () => {
-        borderFormatHandler.parse(format, div, context);
+        borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({});
     });
@@ -26,7 +26,7 @@ describe('borderFormatHandler.parse', () => {
     it('Has border color', () => {
         div.style.borderColor = 'red';
 
-        borderFormatHandler.parse(format, div, context);
+        borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             borderColor: 'red',
@@ -36,7 +36,7 @@ describe('borderFormatHandler.parse', () => {
     it('Has border width', () => {
         div.style.borderWidth = '1px';
 
-        borderFormatHandler.parse(format, div, context);
+        borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             borderWidth: '1px',
@@ -46,7 +46,7 @@ describe('borderFormatHandler.parse', () => {
     it('Has border style', () => {
         div.style.borderStyle = 'solid';
 
-        borderFormatHandler.parse(format, div, context);
+        borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             borderStyle: 'solid',
@@ -56,7 +56,7 @@ describe('borderFormatHandler.parse', () => {
     it('Has border width with different values', () => {
         div.style.borderWidth = '1px 2px 3px 4px';
 
-        borderFormatHandler.parse(format, div, context);
+        borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             borderWidth: '1px 2px 3px 4px',
@@ -66,7 +66,7 @@ describe('borderFormatHandler.parse', () => {
     it('Has border width with different values', () => {
         div.style.borderWidth = '1px 2px 3px 4px';
 
-        borderFormatHandler.parse(format, div, context);
+        borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             borderWidth: '1px 2px 3px 4px',
@@ -76,7 +76,7 @@ describe('borderFormatHandler.parse', () => {
     it('Has every thing', () => {
         div.style.border = 'solid 1px black';
 
-        borderFormatHandler.parse(format, div, context);
+        borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             borderWidth: '1px',
@@ -95,7 +95,7 @@ describe('borderFormatHandler.parse', () => {
                 boxSizing: 'border-box',
             },
         } as any) as HTMLElement;
-        borderFormatHandler.parse(format, fake, context);
+        borderFormatHandler.parse(format, fake, context, {});
         expect(format).toEqual({ useBorderBox: true });
     });
 });

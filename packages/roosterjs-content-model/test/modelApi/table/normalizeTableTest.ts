@@ -1,6 +1,3 @@
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
@@ -14,7 +11,7 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [],
             format: {
                 borderCollapse: true,
@@ -33,23 +30,24 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanAbove: false,
                         spanLeft: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 isImplicit: true,
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Br,
+                                        segmentType: 'Br',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -84,19 +82,19 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [],
                             },
                         ],
@@ -104,15 +102,15 @@ describe('normalizeTable', () => {
                 ],
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [],
                             },
                         ],
@@ -158,51 +156,54 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text1',
+                                        format: {},
                                     },
                                 ],
                             },
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text2',
+                                        format: {},
                                     },
                                 ],
                             },
                         ],
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text3',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -214,7 +215,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120, 120],
+            widths: [240, 120],
             heights: [22],
         });
     });
@@ -237,19 +238,19 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [],
                             },
                         ],
@@ -260,7 +261,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120],
+            widths: [240],
             heights: [22],
         });
     });
@@ -296,12 +297,12 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
@@ -309,8 +310,8 @@ describe('normalizeTable', () => {
                         blocks: [block1, block2],
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: true,
                         spanAbove: false,
                         isHeader: false,
@@ -320,8 +321,8 @@ describe('normalizeTable', () => {
                 ],
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
@@ -329,8 +330,8 @@ describe('normalizeTable', () => {
                         blocks: [block3],
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
@@ -379,60 +380,64 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text1',
+                                        format: {},
                                     },
                                 ],
                             },
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text3',
+                                        format: {},
                                     },
                                 ],
                             },
                         ],
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text2',
+                                        format: {},
                                     },
                                 ],
                             },
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text4',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -445,7 +450,7 @@ describe('normalizeTable', () => {
                 useBorderBox: true,
             },
             widths: [120, 120],
-            heights: [22, 22],
+            heights: [44],
         });
     });
 
@@ -480,50 +485,54 @@ describe('normalizeTable', () => {
         normalizeTable(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text1',
+                                        format: {},
                                     },
                                 ],
                             },
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text2',
+                                        format: {},
                                     },
                                 ],
                             },
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text3',
+                                        format: {},
                                     },
                                 ],
                             },
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Text,
+                                        segmentType: 'Text',
                                         text: 'text4',
+                                        format: {},
                                     },
                                 ],
                             },
@@ -535,8 +544,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120],
-            heights: [22, 22],
+            widths: [240],
+            heights: [44],
         });
     });
 });

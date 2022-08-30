@@ -523,14 +523,14 @@ describe('VTable.edit', () => {
         );
         runSimpleTableTestOnId2(
             TableOperation.MergeAbove,
-            '<table><tr><td id="id1">1</td><td rowspan="2">24</td></tr><tr><td>3</td></tr></table>'
+            '<table><tr><td id="id1">1</td><td rowspan="2">2<br>4</td></tr><tr><td>3</td></tr></table>'
         );
     });
 
     it('Simple table, MergeBelow', () => {
         runSimpleTableTestOnId1(
             TableOperation.MergeBelow,
-            '<table><tr><td id="id1" rowspan="2">13</td><td>2</td></tr><tr><td id="id2">4</td></tr></table>'
+            '<table><tr><td id="id1" rowspan="2">1<br>3</td><td>2</td></tr><tr><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId2(
             TableOperation.MergeBelow,
@@ -545,14 +545,14 @@ describe('VTable.edit', () => {
         );
         runSimpleTableTestOnId2(
             TableOperation.MergeLeft,
-            '<table><tr><td id="id1">1</td><td>2</td></tr><tr><td colspan="2">34</td></tr></table>'
+            '<table><tr><td id="id1">1</td><td>2</td></tr><tr><td colspan="2">3<br>4</td></tr></table>'
         );
     });
 
     it('Simple table, MergeRight', () => {
         runSimpleTableTestOnId1(
             TableOperation.MergeRight,
-            '<table><tr><td id="id1" colspan="2">12</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table><tr><td id="id1" colspan="2">1<br>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId2(
             TableOperation.MergeRight,
@@ -563,7 +563,7 @@ describe('VTable.edit', () => {
     it('Simple table, MergeCells', () => {
         runSimpleTableTestOnId1(
             TableOperation.MergeCells,
-            '<table><tr><td id="id1" colspan="2">12</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>',
+            '<table><tr><td id="id1" colspan="2">1<br>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>',
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
         );
     });

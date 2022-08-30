@@ -1,6 +1,5 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
@@ -19,7 +18,7 @@ export default function formatTable(
     const model = table && editor.createContentModel(table);
     const tableModel = model?.blocks[0];
 
-    if (tableModel?.blockType == ContentModelBlockType.Table) {
+    if (tableModel?.blockType == 'Table') {
         applyTableFormat(tableModel, format, keepCellShade);
 
         editor.addUndoSnapshot(
