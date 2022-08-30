@@ -1,5 +1,6 @@
 import * as generalBlockProcessor from '../../../lib/domToModel/processors/generalBlockProcessor';
 import * as generalSegmentProcessor from '../../../lib/domToModel/processors/generalSegmentProcessor';
+import * as singleElementProcessor from '../../../lib/domToModel/processors/singleElementProcessor';
 import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
@@ -19,6 +20,7 @@ describe('containerProcessor', () => {
         spyOn(generalBlockProcessor, 'generalBlockProcessor');
         spyOn(generalSegmentProcessor, 'generalSegmentProcessor');
         spyOn(textProcessor, 'textProcessor');
+        spyOn(singleElementProcessor, 'knownElementProcessor').and.callThrough();
     });
 
     it('Process a document fragment', () => {
@@ -85,8 +87,8 @@ describe('containerProcessor', () => {
             document: document,
         });
         expect(generalBlockProcessor.generalBlockProcessor).not.toHaveBeenCalled();
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
+        expect(singleElementProcessor.knownElementProcessor).toHaveBeenCalledTimes(1);
+        expect(singleElementProcessor.knownElementProcessor).toHaveBeenCalledWith(
             doc,
             span,
             context
@@ -117,8 +119,8 @@ describe('containerProcessor', () => {
             innerDiv,
             context
         );
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
+        expect(singleElementProcessor.knownElementProcessor).toHaveBeenCalledTimes(1);
+        expect(singleElementProcessor.knownElementProcessor).toHaveBeenCalledWith(
             doc,
             span,
             context
@@ -201,8 +203,7 @@ describe('containerProcessor', () => {
                     isSelected: true,
                     format: {},
                 },
-                { segmentType: 'Text', text: 'test2', format: {} },
-                { segmentType: 'Text', text: 'test3', format: {} },
+                { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -285,9 +286,10 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1test2', format: {} },
+                { segmentType: 'Text', text: 'test1', format: {} },
                 {
-                    segmentType: 'SelectionMarker',
+                    segmentType: 'Text',
+                    text: 'test2',
                     isSelected: true,
                     format: {},
                 },
