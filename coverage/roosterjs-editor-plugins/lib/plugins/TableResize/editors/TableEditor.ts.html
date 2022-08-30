@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.85% </span>
+                <span class="strong">78.42% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>107/134</span>
+                <span class='fraction'>109/139</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.1% </span>
+                <span class="strong">57.43% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>53/84</span>
+                <span class='fraction'>58/101</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.55% </span>
+                <span class="strong">78.1% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>105/132</span>
+                <span class='fraction'>107/137</span>
             </div>
         
             
@@ -400,7 +400,23 @@
 <a name='L341'></a><a href='#L341'>341</a>
 <a name='L342'></a><a href='#L342'>342</a>
 <a name='L343'></a><a href='#L343'>343</a>
-<a name='L344'></a><a href='#L344'>344</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -519,6 +535,7 @@
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -528,6 +545,9 @@
 <span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -536,6 +556,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -861,9 +893,10 @@ export default class TableEditor {
             let j = 0;
             for (; j &lt; tr.cells.length; j++) {
                 const td = tr.cells[j];
+                const tableRect = normalizeRect(this.table.getBoundingClientRect());
                 const tdRect = normalizeRect(td.getBoundingClientRect());
 &nbsp;
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (!tdRect) {
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (!tdRect || !tableRect) {
 <span class="cstat-no" title="statement not covered" >                    continue;</span>
                 }
 &nbsp;
@@ -871,7 +904,10 @@ export default class TableEditor {
                 const lessThanRight = this.isRTL ? <span class="branch-0 cbranch-no" title="branch not covered" >x &gt;= tdRect.right </span>: x &lt;= tdRect.right;
 &nbsp;
                 if (lessThanRight &amp;&amp; lessThanBottom) {
-                    if (i == 0 &amp;&amp; y &lt;= tdRect.top + INSERTER_HOVER_OFFSET) {
+                    const isOnLeftOrRight = this.isRTL
+                        ? <span class="branch-0 cbranch-no" title="branch not covered" >tdRect.right &lt;= tableRect.right &amp;&amp; tdRect.right &gt;= tableRect.right - 1</span>
+                        : tdRect.left &gt;= tableRect.left &amp;&amp; tdRect.left &lt;= tableRect.left + 1;
+                    if (i === 0 &amp;&amp; y &lt;= tdRect.top + INSERTER_HOVER_OFFSET) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? <span class="branch-0 cbranch-no" title="branch not covered" >x &lt; center </span>: x &gt; center;
                         this.setInserterTd(
@@ -882,12 +918,24 @@ export default class TableEditor {
                         j == 0 &amp;&amp;
                         (<span class="branch-1 cbranch-no" title="branch not covered" >this.isRTL</span>
                             ? x &gt;= tdRect.right - INSERTER_HOVER_OFFSET
-                            : x &lt;= tdRect.left + INSERTER_HOVER_OFFSET)
+                            : x &lt;= tdRect.left + INSERTER_HOVER_OFFSET) &amp;&amp;
+<span class="branch-2 cbranch-no" title="branch not covered" >                        isOnLeftOrRight</span>
                     ) {
+                        const tdAbove = <span class="cstat-no" title="statement not covered" >this.table.rows[i - 1]?.cells[0];</span>
+                        const tdAboveRect = <span class="cstat-no" title="statement not covered" >tdAbove</span>
+                            ? normalizeRect(tdAbove.getBoundingClientRect())
+                            : null;
+&nbsp;
+                        const isTdNotAboveMerged = <span class="cstat-no" title="statement not covered" >!tdAboveRect</span>
+                            ? null
+                            : this.isRTL
+                            ? tdAboveRect.right === tdRect.right
+                            : tdAboveRect.left === tdRect.left;
+&nbsp;
 <span class="cstat-no" title="statement not covered" >                        this.setInserterTd(</span>
-                            y &gt; (tdRect.top + tdRect.bottom) / 2
-                                ? td
-                                : this.table.rows[i - 1]?.cells[0],
+                            y &lt; (tdRect.top + tdRect.bottom) / 2 &amp;&amp; isTdNotAboveMerged
+                                ? tdAbove
+                                : td,
                             true /*isHorizontal*/
                         );
                     } else {
@@ -1093,7 +1141,7 @@ export default class TableEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 30 2022 16:50:44 GMT+0000 (Coordinated Universal Time)
+                at Tue Aug 30 2022 17:35:13 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
