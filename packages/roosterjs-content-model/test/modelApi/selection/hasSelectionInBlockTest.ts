@@ -1,13 +1,10 @@
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { hasSelectionInBlock } from '../../../lib/modelApi/selection/hasSelectionInBlock';
 
 describe('hasSelectionInBlock', () => {
     it('Empty paragraph block', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [],
         };
 
@@ -18,13 +15,15 @@ describe('hasSelectionInBlock', () => {
 
     it('Paragraph block with selected segment', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
                 {
-                    segmentType: ContentModelSegmentType.Br,
+                    segmentType: 'Br',
+                    format: {},
                 },
                 {
-                    segmentType: ContentModelSegmentType.Br,
+                    segmentType: 'Br',
+                    format: {},
                     isSelected: true,
                 },
             ],
@@ -37,7 +36,7 @@ describe('hasSelectionInBlock', () => {
 
     it('Empty table', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -51,13 +50,13 @@ describe('hasSelectionInBlock', () => {
 
     it('Table without selection', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},
                         spanAbove: false,
@@ -76,21 +75,21 @@ describe('hasSelectionInBlock', () => {
 
     it('Table with selected cell', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},
                         spanAbove: false,
                         spanLeft: false,
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},
                         spanAbove: false,
@@ -110,20 +109,21 @@ describe('hasSelectionInBlock', () => {
 
     it('Table with selected content', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.Br,
+                                        segmentType: 'Br',
                                         isSelected: true,
+                                        format: {},
                                     },
                                 ],
                             },
@@ -145,18 +145,19 @@ describe('hasSelectionInBlock', () => {
 
     it('Table cell with selected content', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blockType: 'BlockGroup',
+            blockGroupType: 'TableCell',
             format: {},
             spanAbove: false,
             spanLeft: false,
             blocks: [
                 {
-                    blockType: ContentModelBlockType.Paragraph,
+                    blockType: 'Paragraph',
                     segments: [
                         {
-                            segmentType: ContentModelSegmentType.Br,
+                            segmentType: 'Br',
                             isSelected: true,
+                            format: {},
                         },
                     ],
                 },
@@ -170,8 +171,8 @@ describe('hasSelectionInBlock', () => {
 
     it('Empty general block', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             element: null!,
             blocks: [],
         };
@@ -183,16 +184,17 @@ describe('hasSelectionInBlock', () => {
 
     it('General block with selected paragraph', () => {
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             element: null!,
             blocks: [
                 {
-                    blockType: ContentModelBlockType.Paragraph,
+                    blockType: 'Paragraph',
                     segments: [
                         {
-                            segmentType: ContentModelSegmentType.Br,
+                            segmentType: 'Br',
                             isSelected: true,
+                            format: {},
                         },
                     ],
                 },
