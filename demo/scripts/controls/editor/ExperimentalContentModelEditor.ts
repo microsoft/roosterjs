@@ -23,7 +23,7 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options?: EditorOptions) {
+    constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
         super(contentDiv, options);
         this.getDarkColor = options?.getDarkColor;
     }
@@ -35,7 +35,7 @@ export default class ExperimentalContentModelEditor extends Editor
         return {
             isDarkMode: this.isDarkMode(),
             zoomScale: this.getZoomScale(),
-            isRightToLeft: getComputedStyles(this.core.contentDiv, 'direction')[0] == 'rtl',
+            isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
             getDarkColor: this.getDarkColor,
         };
     }
@@ -47,7 +47,7 @@ export default class ExperimentalContentModelEditor extends Editor
      */
     createContentModel(startNode?: HTMLElement): ContentModelDocument {
         return domToContentModel(
-            startNode || this.core.contentDiv,
+            startNode || this.contentDiv,
             this.createContentModelContext(),
             !!startNode,
             this.getSelectionRangeEx()

@@ -73,7 +73,7 @@ import type {
  * RoosterJs core editor class
  */
 export default class Editor implements IEditor {
-    protected core: EditorCore;
+    private core: EditorCore;
 
     //#region Lifecycle
 
