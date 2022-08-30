@@ -1,4 +1,5 @@
 import applyTableFormat from './applyTableFormat';
+import getTagOfNode from '../utils/getTagOfNode';
 import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -134,6 +135,7 @@ export default class VTable {
                     row.forEach((cell, c) => {
                         if (cell.td) {
                             this.recalculateSpans(r, c);
+                            this.recalculateCellHeight(cell.td);
                             tr!.appendChild(cell.td);
                         }
                     });
@@ -145,6 +147,15 @@ export default class VTable {
             }
         } else if (this.table) {
             this.table.parentNode?.removeChild(this.table);
+        }
+    }
+
+    private recalculateCellHeight(td: HTMLTableCellElement) {
+        if (this.isEmptyCell(td) && td.rowSpan > 1) {
+            for (let i = 1; i < td.rowSpan; i++) {
+                const br = document.createElement('br');
+                td.appendChild(br);
+            }
         }
     }
 
@@ -478,13 +489,27 @@ export default class VTable {
             ? cell.td?.rowSpan === nextCell.td?.rowSpan && !cell.spanLeft
             : cell.td?.colSpan === nextCell.td?.colSpan && !cell.spanAbove;
         if (cell.td && nextCell.td && checkSpans) {
-            moveChildNodes(cell.td, nextCell.td, true /*keepExistingChildren*/);
+            this.mergeCellContents(cell.td, nextCell.td);
             nextCell.td = null;
             if (horizontally) {
                 nextCell.spanLeft = true;
             } else {
                 nextCell.spanAbove = true;
             }
+        }
+    }
+
+    private isEmptyCell(td: HTMLTableCellElement) {
+        return td.childElementCount === 1 && getTagOfNode(td.firstChild) === 'BR';
+    }
+
+    private mergeCellContents(cellTd: HTMLTableCellElement, nextCellTd: HTMLTableCellElement) {
+        if (this.isEmptyCell(nextCellTd)) {
+            moveChildNodes(cellTd, nextCellTd, false /*keepExistingChildren*/);
+        } else {
+            const br = document.createElement('br');
+            cellTd.appendChild(br);
+            moveChildNodes(cellTd, nextCellTd, true /*keepExistingChildren*/);
         }
     }
 
