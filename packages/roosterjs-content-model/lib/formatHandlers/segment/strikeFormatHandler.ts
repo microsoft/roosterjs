@@ -15,7 +15,7 @@ export const strikeFormatHandler: FormatHandler<StrikeFormat> = {
     },
     apply: (format, element) => {
         if (format.strikethrough) {
-            const strike = element.ownerDocument.createElement('strike');
+            const strike = element.ownerDocument.createElement('s');
             moveChildNodes(strike, element);
             element.appendChild(strike);
         }
