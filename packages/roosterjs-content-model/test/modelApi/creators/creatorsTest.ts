@@ -59,6 +59,25 @@ describe('Creators', () => {
         });
     });
 
+    it('createGeneralSegment with format', () => {
+        const element = document.createElement('div');
+        const format = { a: 1 } as any;
+        const result = createGeneralSegment(element, format);
+
+        expect(result).toEqual({
+            segmentType: 'General',
+            blocks: [],
+            element: element,
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            format: { a: 1 } as any,
+        });
+
+        (<any>result.format).a = 2;
+
+        expect(format).toEqual({ a: 1 });
+    });
+
     it('createParagraph - not dummy block', () => {
         const result = createParagraph(false);
 
@@ -87,6 +106,22 @@ describe('Creators', () => {
             format: {},
             text: text,
         });
+    });
+
+    it('createText', () => {
+        const format = { a: 1 } as any;
+        const text = 'test';
+        const result = createText(text, format);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: { a: 1 } as any,
+            text: text,
+        });
+
+        (<any>result.format).a = 2;
+
+        expect(format).toEqual({ a: 1 });
     });
 
     it('createTable', () => {
@@ -193,6 +228,21 @@ describe('Creators', () => {
         });
     });
 
+    it('createSelectionMarker with selection', () => {
+        const format = { a: 1 } as any;
+        const marker = createSelectionMarker(format);
+
+        expect(marker).toEqual({
+            segmentType: 'SelectionMarker',
+            isSelected: true,
+            format: { a: 1 } as any,
+        });
+
+        (<any>marker.format).a = 2;
+
+        expect(format).toEqual({ a: 1 });
+    });
+
     it('createBr', () => {
         const br = createBr();
 
@@ -200,5 +250,19 @@ describe('Creators', () => {
             segmentType: 'Br',
             format: {},
         });
+    });
+
+    it('createBr with format', () => {
+        const format = { a: 1 } as any;
+        const br = createBr(format);
+
+        expect(br).toEqual({
+            segmentType: 'Br',
+            format: { a: 1 } as any,
+        });
+
+        (<any>br.format).a = 2;
+
+        expect(format).toEqual({ a: 1 });
     });
 });

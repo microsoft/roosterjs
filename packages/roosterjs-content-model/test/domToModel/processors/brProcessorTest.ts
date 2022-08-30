@@ -34,4 +34,31 @@ describe('brProcessor', () => {
             document: document,
         });
     });
+
+    it('Br with format', () => {
+        const doc = createContentModelDocument(document);
+        const br = document.createElement('br');
+
+        context.segmentFormat = { a: 'b' } as any;
+
+        brProcessor(doc, br, context);
+
+        expect(doc).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: { a: 'b' } as any,
+                        },
+                    ],
+                },
+            ],
+            document: document,
+        });
+    });
 });
