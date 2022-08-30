@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContentModelBlockGroup, ContentModelBlockGroupType } from 'roosterjs-content-model';
+import { ContentModelBlockGroup } from 'roosterjs-content-model';
 import { ContentModelDocumentView } from './ContentModelDocumentView';
 import { ContentModelGeneralView } from './ContentModelGeneralView';
 import { ContentModelTableCellView } from './ContentModelTableCellView';
@@ -8,13 +8,13 @@ export function ContentModelBlockGroupView(props: { group: ContentModelBlockGrou
     const { group } = props;
 
     switch (group.blockGroupType) {
-        case ContentModelBlockGroupType.Document:
+        case 'Document':
             return <ContentModelDocumentView doc={group} />;
 
-        case ContentModelBlockGroupType.General:
+        case 'General':
             return <ContentModelGeneralView model={group} />;
 
-        case ContentModelBlockGroupType.TableCell:
+        case 'TableCell':
             return <ContentModelTableCellView cell={group} />;
     }
 }

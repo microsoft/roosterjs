@@ -1,5 +1,4 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { hasSelectionInBlock } from './hasSelectionInBlock';
 
 /**
@@ -8,7 +7,6 @@ import { hasSelectionInBlock } from './hasSelectionInBlock';
 export function hasSelectionInSegment(segment: ContentModelSegment): boolean {
     return (
         segment.isSelected ||
-        (segment.segmentType == ContentModelSegmentType.General &&
-            segment.blocks.some(hasSelectionInBlock))
+        (segment.segmentType == 'General' && segment.blocks.some(hasSelectionInBlock))
     );
 }
