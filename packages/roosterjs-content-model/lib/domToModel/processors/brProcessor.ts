@@ -6,7 +6,7 @@ import { ElementProcessor } from './ElementProcessor';
  * @internal
  */
 export const brProcessor: ElementProcessor = (group, element, context) => {
-    const br = createBr();
+    const br = createBr(context.segmentFormat);
 
     if (context.isInSelection) {
         br.isSelected = true;

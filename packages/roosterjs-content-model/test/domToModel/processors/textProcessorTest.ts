@@ -25,6 +25,7 @@ describe('textProcessor', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
+                            format: {},
                         },
                     ],
                 },
@@ -52,6 +53,7 @@ describe('textProcessor', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
+                            format: {},
                         },
                     ],
                 },
@@ -68,6 +70,7 @@ describe('textProcessor', () => {
                 {
                     segmentType: 'Text',
                     text: 'test0',
+                    format: {},
                 },
             ],
         });
@@ -84,6 +87,7 @@ describe('textProcessor', () => {
                         {
                             segmentType: 'Text',
                             text: 'test0test1',
+                            format: {},
                         },
                     ],
                 },
@@ -103,6 +107,7 @@ describe('textProcessor', () => {
                     blockGroupType: 'General',
                     element: null!,
                     blocks: [],
+                    format: {},
                 },
             ],
         });
@@ -122,10 +127,12 @@ describe('textProcessor', () => {
                             blockGroupType: 'General',
                             element: null!,
                             blocks: [],
+                            format: {},
                         },
                         {
                             segmentType: 'Text',
                             text: 'test',
+                            format: {},
                         },
                     ],
                 },
@@ -142,6 +149,7 @@ describe('textProcessor', () => {
                 {
                     segmentType: 'Text',
                     text: 'test1',
+                    format: {},
                 },
             ],
         });
@@ -156,11 +164,13 @@ describe('textProcessor', () => {
                 {
                     segmentType: 'Text',
                     text: 'test1',
+                    format: {},
                 },
                 {
                     segmentType: 'Text',
                     text: 'test2',
                     isSelected: true,
+                    format: {},
                 },
             ],
         });
@@ -175,6 +185,7 @@ describe('textProcessor', () => {
                     segmentType: 'Text',
                     text: 'test1',
                     isSelected: true,
+                    format: {},
                 },
             ],
         });
@@ -188,10 +199,12 @@ describe('textProcessor', () => {
                     segmentType: 'Text',
                     text: 'test1',
                     isSelected: true,
+                    format: {},
                 },
                 {
                     segmentType: 'Text',
                     text: 'test2',
+                    format: {},
                 },
             ],
         });
@@ -206,6 +219,7 @@ describe('textProcessor', () => {
                     segmentType: 'Text',
                     text: 'test1',
                     isSelected: true,
+                    format: {},
                 },
             ],
         });
@@ -221,8 +235,29 @@ describe('textProcessor', () => {
                     segmentType: 'Text',
                     text: 'test1test2',
                     isSelected: true,
+                    format: {},
                 },
             ],
+        });
+    });
+
+    it('Handle text with format', () => {
+        const doc = createContentModelDocument(document);
+
+        context.segmentFormat = { a: 'b' } as any;
+
+        textProcessor(doc, 'test', context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: { a: 'b' } as any,
+                },
+            ],
+            isImplicit: true,
         });
     });
 });

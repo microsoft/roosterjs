@@ -12,6 +12,6 @@ export function parseFormat<T extends ContentModelFormatBase>(
     context: ContentModelContext
 ) {
     handlers.forEach(handler => {
-        handler.parse(format, element, context);
+        handler.parse(format, element, context, {}); // TODO: pass in default styles
     });
 }
