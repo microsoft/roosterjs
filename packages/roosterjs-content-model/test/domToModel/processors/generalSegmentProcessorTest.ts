@@ -23,6 +23,7 @@ describe('generalSegmentProcessor', () => {
             blockGroupType: 'General',
             element: span,
             blocks: [],
+            format: {},
         };
 
         spyOn(createGeneralSegment, 'createGeneralSegment').and.returnValue(segment);
@@ -42,8 +43,38 @@ describe('generalSegmentProcessor', () => {
             document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
-        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span);
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
         expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span, context);
+    });
+
+    it('Process a SPAN element with format', () => {
+        const doc = createContentModelDocument(document);
+        const span = document.createElement('span');
+        context.segmentFormat = { a: 'b' } as any;
+
+        generalSegmentProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: { a: 'b' } as any,
+                            blocks: [],
+                            element: span,
+                        },
+                    ],
+                },
+            ],
+            document: document,
+        });
     });
 });

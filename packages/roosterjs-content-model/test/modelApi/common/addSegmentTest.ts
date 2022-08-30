@@ -24,6 +24,7 @@ describe('addSegment', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
+                            format: {},
                         },
                     ],
                 },
@@ -50,6 +51,7 @@ describe('addSegment', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
+                            format: {},
                         },
                     ],
                 },
@@ -66,6 +68,7 @@ describe('addSegment', () => {
                 {
                     segmentType: 'Text',
                     text: 'test1',
+                    format: {},
                 },
             ],
         };
@@ -85,10 +88,12 @@ describe('addSegment', () => {
                         {
                             segmentType: 'Text',
                             text: 'test1',
+                            format: {},
                         },
                         {
                             segmentType: 'Text',
                             text: 'test2',
+                            format: {},
                         },
                     ],
                 },
@@ -124,6 +129,7 @@ describe('addSegment', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
+                            format: {},
                         },
                     ],
                 },
