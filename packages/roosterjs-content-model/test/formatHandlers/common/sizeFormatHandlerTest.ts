@@ -19,7 +19,7 @@ describe('sizeFormatHandler.parse', () => {
         const fake = ({
             getBoundingClientRect: () => <any>null,
         } as any) as HTMLElement;
-        sizeFormatHandler.parse(format, fake, context);
+        sizeFormatHandler.parse(format, fake, context, {});
         expect(format).toEqual({});
     });
 
@@ -30,7 +30,7 @@ describe('sizeFormatHandler.parse', () => {
                 height: 0,
             }),
         } as any) as HTMLElement;
-        sizeFormatHandler.parse(format, fake, context);
+        sizeFormatHandler.parse(format, fake, context, {});
         expect(format).toEqual({});
     });
 
@@ -41,7 +41,7 @@ describe('sizeFormatHandler.parse', () => {
                 height: 20,
             }),
         } as any) as HTMLElement;
-        sizeFormatHandler.parse(format, fake, context);
+        sizeFormatHandler.parse(format, fake, context, {});
         expect(format).toEqual({ width: 10, height: 20 });
     });
 });

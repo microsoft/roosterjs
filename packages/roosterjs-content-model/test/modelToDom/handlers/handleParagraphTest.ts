@@ -55,6 +55,7 @@ describe('handleParagraph', () => {
         const segment: ContentModelSegment = {
             segmentType: 'Text',
             text: 'test',
+            format: {},
         };
         runTest(
             {
@@ -77,6 +78,7 @@ describe('handleParagraph', () => {
         const segment: ContentModelSegment = {
             segmentType: 'Text',
             text: 'test',
+            format: {},
         };
         runTest(
             {
@@ -100,6 +102,7 @@ describe('handleParagraph', () => {
         const segment1: ContentModelSegment = {
             segmentType: 'Text',
             text: 'test',
+            format: {},
         };
         const segment2: ContentModelSegment = {
             segmentType: 'General',
@@ -107,6 +110,7 @@ describe('handleParagraph', () => {
             blockGroupType: 'General',
             blocks: [],
             element: null!,
+            format: {},
         };
         runTest(
             {
