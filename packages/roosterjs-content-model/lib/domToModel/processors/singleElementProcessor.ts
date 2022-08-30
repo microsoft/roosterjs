@@ -11,7 +11,7 @@ import { isBlockElement } from 'roosterjs-editor-dom';
  * @param context
  */
 export const singleElementProcessor: ElementProcessor = (group, element, context) => {
-    let processor =
+    const processor =
         getProcessor(element.tagName) ||
         (isBlockElement(element) ? generalBlockProcessor : generalSegmentProcessor);
 
