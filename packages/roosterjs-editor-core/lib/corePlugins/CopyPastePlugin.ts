@@ -6,6 +6,8 @@ import {
     Browser,
     setHtmlWithMetadata,
     createRange,
+    VTable,
+    removeCellsOutsideSelection,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -19,6 +21,7 @@ import {
     KnownCreateElementDataIndex,
     SelectionRangeEx,
     SelectionRangeTypes,
+    TableSelection,
 } from 'roosterjs-editor-types';
 
 /**
@@ -86,10 +89,17 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 html,
                 this.editor.getTrustedHTMLHandler()
             );
-            const newRange =
-                metadata?.type === SelectionRangeTypes.Normal
-                    ? createRange(tempDiv, metadata.start, metadata.end)
-                    : null;
+            let newRange;
+
+            if (selection.type === SelectionRangeTypes.TableSelection) {
+                const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
+                newRange = this.createTableRange(table, selection.coordinates);
+            } else {
+                newRange =
+                    metadata?.type === SelectionRangeTypes.Normal
+                        ? createRange(tempDiv, metadata.start, metadata.end)
+                        : null;
+            }
 
             this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
@@ -197,5 +207,13 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             }
             this.editor.select(range);
         }
+    }
+
+    private createTableRange(table: HTMLTableElement, selection: TableSelection) {
+        const clonedVTable = new VTable(table as HTMLTableElement);
+        clonedVTable.selection = selection;
+        removeCellsOutsideSelection(clonedVTable);
+        clonedVTable.writeBack();
+        return createRange(clonedVTable.table);
     }
 }
