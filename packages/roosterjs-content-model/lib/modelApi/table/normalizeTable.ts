@@ -68,6 +68,11 @@ export function normalizeTable(table: ContentModelTable) {
 
         if (table.cells.every(row => row[colIndex]?.spanLeft)) {
             table.cells.forEach(row => row.splice(colIndex, 1));
+            table.widths.splice(
+                colIndex - 1,
+                2,
+                table.widths[colIndex - 1] + table.widths[colIndex]
+            );
         }
     }
 
@@ -83,6 +88,11 @@ export function normalizeTable(table: ContentModelTable) {
 
         if (row.every(cell => cell.spanAbove)) {
             table.cells.splice(rowIndex, 1);
+            table.heights.splice(
+                rowIndex - 1,
+                2,
+                table.heights[rowIndex - 1] + table.heights[rowIndex]
+            );
         }
     }
 }

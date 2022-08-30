@@ -147,22 +147,17 @@ function getBorder(style: string | null | undefined, alwaysUseTransparent: boole
 
 function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableMetadataFormat) {
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
-    const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven;
 
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
             if (!cell.format.bgColorOverride) {
-                const color = hasBandedColumns
-                    ? colIndex % 2 === 0
-                        ? format.bgColorEven
-                        : format.bgColorOdd
-                    : hasBandedRows
-                    ? rowIndex % 2 === 0
-                        ? format.bgColorEven
-                        : format.bgColorOdd
-                    : shouldColorWholeTable
-                    ? format.bgColorOdd
-                    : null;
+                const color =
+                    hasBandedRows || hasBandedColumns
+                        ? (hasBandedColumns && colIndex % 2 != 0) ||
+                          (hasBandedRows && rowIndex % 2 != 0)
+                            ? bgColorOdd
+                            : bgColorEven
+                        : bgColorEven;
 
                 setBackgroundColor(cell.format, color);
             }

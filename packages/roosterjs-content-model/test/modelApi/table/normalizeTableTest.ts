@@ -214,7 +214,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120, 120],
+            widths: [240, 120],
             heights: [22],
         });
     });
@@ -260,7 +260,7 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120],
+            widths: [240],
             heights: [22],
         });
     });
@@ -445,7 +445,7 @@ describe('normalizeTable', () => {
                 useBorderBox: true,
             },
             widths: [120, 120],
-            heights: [22, 22],
+            heights: [44],
         });
     });
 
@@ -535,8 +535,8 @@ describe('normalizeTable', () => {
                 borderCollapse: true,
                 useBorderBox: true,
             },
-            widths: [120, 120],
-            heights: [22, 22],
+            widths: [240],
+            heights: [44],
         });
     });
 });
