@@ -111,7 +111,9 @@ export default class Watermark implements EditorPlugin {
                 false /*isReadonly*/,
                 ContentPosition.Begin
             );
-            newEntity.wrapper.classList.add(this.customClass);
+            if (this.customClass) {
+                newEntity.wrapper.classList.add(this.customClass);
+            }
         }
     };
 
