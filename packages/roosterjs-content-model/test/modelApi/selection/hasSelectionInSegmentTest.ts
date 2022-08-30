@@ -6,6 +6,7 @@ describe('hasSelectionInSegment', () => {
         const segment: ContentModelSegment = {
             segmentType: 'Text',
             text: '',
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeFalse();
@@ -16,6 +17,7 @@ describe('hasSelectionInSegment', () => {
             segmentType: 'Text',
             text: '',
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -24,6 +26,7 @@ describe('hasSelectionInSegment', () => {
     it('Simple BR segment', () => {
         const segment: ContentModelSegment = {
             segmentType: 'Br',
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeFalse();
@@ -33,6 +36,7 @@ describe('hasSelectionInSegment', () => {
         const segment: ContentModelSegment = {
             segmentType: 'Br',
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -42,6 +46,7 @@ describe('hasSelectionInSegment', () => {
         const segment: ContentModelSegment = {
             segmentType: 'SelectionMarker',
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -54,6 +59,7 @@ describe('hasSelectionInSegment', () => {
             blockGroupType: 'General',
             blocks: [],
             element: null!,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeFalse();
@@ -67,6 +73,7 @@ describe('hasSelectionInSegment', () => {
             blocks: [],
             element: null!,
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -83,6 +90,7 @@ describe('hasSelectionInSegment', () => {
                     segments: [],
                 },
             ],
+            format: {},
             element: null!,
         };
         const result = hasSelectionInSegment(segment);
@@ -101,11 +109,13 @@ describe('hasSelectionInSegment', () => {
                         {
                             segmentType: 'Br',
                             isSelected: true,
+                            format: {},
                         },
                     ],
                 },
             ],
             element: null!,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();

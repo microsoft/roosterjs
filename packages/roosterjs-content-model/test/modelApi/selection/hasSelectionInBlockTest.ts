@@ -19,9 +19,11 @@ describe('hasSelectionInBlock', () => {
             segments: [
                 {
                     segmentType: 'Br',
+                    format: {},
                 },
                 {
                     segmentType: 'Br',
+                    format: {},
                     isSelected: true,
                 },
             ],
@@ -121,6 +123,7 @@ describe('hasSelectionInBlock', () => {
                                     {
                                         segmentType: 'Br',
                                         isSelected: true,
+                                        format: {},
                                     },
                                 ],
                             },
@@ -154,6 +157,7 @@ describe('hasSelectionInBlock', () => {
                         {
                             segmentType: 'Br',
                             isSelected: true,
+                            format: {},
                         },
                     ],
                 },
@@ -190,6 +194,7 @@ describe('hasSelectionInBlock', () => {
                         {
                             segmentType: 'Br',
                             isSelected: true,
+                            format: {},
                         },
                     ],
                 },

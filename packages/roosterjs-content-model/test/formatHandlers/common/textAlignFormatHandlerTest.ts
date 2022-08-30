@@ -30,7 +30,7 @@ describe('textAlignFormatHandler.parse', () => {
             div.setAttribute('align', attrValue);
         }
 
-        textAlignFormatHandler.parse(format, div, context);
+        textAlignFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             textAlign: expectedValue,
@@ -38,7 +38,7 @@ describe('textAlignFormatHandler.parse', () => {
     }
 
     it('No alignment', () => {
-        textAlignFormatHandler.parse(format, div, context);
+        textAlignFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 

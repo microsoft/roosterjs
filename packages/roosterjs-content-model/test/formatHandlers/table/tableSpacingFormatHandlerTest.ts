@@ -18,19 +18,19 @@ describe('tableSpacingFormatHandler.parse', () => {
     });
 
     it('No value', () => {
-        tableSpacingFormatHandler.parse(format, div, context);
+        tableSpacingFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 
     it('Collapsed border', () => {
         div.style.borderCollapse = 'collapse';
-        tableSpacingFormatHandler.parse(format, div, context);
+        tableSpacingFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({ borderCollapse: true });
     });
 
     it('Non-collapsed border', () => {
         div.style.borderCollapse = 'separate';
-        tableSpacingFormatHandler.parse(format, div, context);
+        tableSpacingFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 });
