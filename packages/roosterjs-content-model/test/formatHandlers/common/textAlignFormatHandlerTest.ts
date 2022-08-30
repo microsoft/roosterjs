@@ -1,4 +1,4 @@
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { TextAlignFormat } from '../../../lib/publicTypes/format/formatParts/TextAlignFormat';
 import { textAlignFormatHandler } from '../../../lib/formatHandlers/common/textAlignFormatHandler';
 

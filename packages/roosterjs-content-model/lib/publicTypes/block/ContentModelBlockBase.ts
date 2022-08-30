@@ -1,12 +1,9 @@
 import { ContentModelBlockType } from '../enum/BlockType';
-import type { CompatibleContentModelBlockType } from '../compatibleEnum/BlockType';
 
 /**
  * Base type of a block
  */
-export interface ContentModelBlockBase<
-    T extends ContentModelBlockType | CompatibleContentModelBlockType
-> {
+export interface ContentModelBlockBase<T extends ContentModelBlockType> {
     /**
      * Type of this block
      */

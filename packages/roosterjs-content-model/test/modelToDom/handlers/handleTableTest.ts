@@ -1,5 +1,4 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
@@ -23,7 +22,7 @@ describe('handleTable', () => {
     it('Empty table', () => {
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [],
                 format: {},
                 widths: [],
@@ -36,7 +35,7 @@ describe('handleTable', () => {
     it('Table with all empty rows', () => {
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [[], []],
                 format: {},
                 widths: [],
@@ -49,7 +48,7 @@ describe('handleTable', () => {
     it('Regular 1 * 1 table', () => {
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [[createTableCell(1, 1, false)]],
                 format: {},
                 widths: [],
@@ -63,7 +62,7 @@ describe('handleTable', () => {
         const tdModel = createTableCell(1, 1, false);
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [
                     [tdModel, tdModel],
                     [tdModel, tdModel],
@@ -80,7 +79,7 @@ describe('handleTable', () => {
         const tdModel = createTableCell(1, 1, false);
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [[tdModel], [], [tdModel]],
                 format: {},
                 widths: [],
@@ -94,7 +93,7 @@ describe('handleTable', () => {
         const tdModel = createTableCell(1, 1, false);
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [
                     [tdModel, createTableCell(2, 1, false)],
                     [tdModel, tdModel],
@@ -111,7 +110,7 @@ describe('handleTable', () => {
         const tdModel = createTableCell(1, 1, false);
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [
                     [tdModel, tdModel],
                     [createTableCell(1, 2, false), tdModel],
@@ -127,7 +126,7 @@ describe('handleTable', () => {
     it('Table with spanAbove and spanLeft cell', () => {
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [
                     [createTableCell(1, 1, false), createTableCell(2, 1, false)],
                     [createTableCell(1, 2, false), createTableCell(2, 2, false)],
@@ -150,7 +149,7 @@ describe('handleTable', () => {
         // +-----+--+
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [
                     [
                         createTableCell(1, 1, false),
@@ -183,7 +182,7 @@ describe('handleTable', () => {
     it('Table with header', () => {
         runTest(
             {
-                blockType: ContentModelBlockType.Table,
+                blockType: 'Table',
                 cells: [[createTableCell(1, 1, true)], [createTableCell(1, 1, false)]],
                 format: {},
                 widths: [],

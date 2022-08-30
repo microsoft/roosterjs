@@ -1,19 +1,18 @@
 /**
  * Type of Block Group in Content Model
  */
-export const enum ContentModelBlockGroupType {
+export type ContentModelBlockGroupType =
     /**
      * Represents the document entry of Content Model
      */
-    Document,
+    | 'Document'
 
     /**
      * Represents a table cell (TD, TH) element
      */
-    TableCell,
+    | 'TableCell'
 
     /**
      * Represents a general HTML element that doesn't have a special type
      */
-    General,
-}
+    | 'General';

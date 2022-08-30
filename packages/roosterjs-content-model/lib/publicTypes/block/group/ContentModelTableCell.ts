@@ -1,16 +1,12 @@
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelBlockGroupType } from '../../enum/BlockGroupType';
 import { ContentModelTableCellFormat } from '../../format/ContentModelTableCellFormat';
 import { ContentModelWithFormat } from '../../format/ContentModelWithFormat';
-import type { CompatibleContentModelBlockGroupType } from '../../compatibleEnum/BlockGroupType';
 
 /**
  * Content Model of Table Cell
  */
 export interface ContentModelTableCell
-    extends ContentModelBlockGroupBase<
-            ContentModelBlockGroupType.TableCell | CompatibleContentModelBlockGroupType.TableCell
-        >,
+    extends ContentModelBlockGroupBase<'TableCell'>,
         ContentModelWithFormat<ContentModelTableCellFormat> {
     /**
      * Whether this cell is spanned from left cell

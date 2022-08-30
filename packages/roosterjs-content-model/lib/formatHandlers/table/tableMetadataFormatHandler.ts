@@ -1,4 +1,5 @@
 import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
+import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 import {
     createBooleanDefinition,
@@ -30,8 +31,8 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
         tableBorderFormat: createNumberDefinition(
             false /** isOptional */,
             undefined /* value */,
-            0 /* first table border format */,
-            7 /* last table border format */
+            TableBorderFormat.DEFAULT /* first table border format, TODO: Use Min/Max to specify valid values */,
+            TableBorderFormat.CLEAR /* last table border format, , TODO: Use Min/Max to specify valid values */
         ),
     },
     false /* isOptional */,

@@ -1,24 +1,23 @@
 /**
  * Type of Segment in Content Model
  */
-export const enum ContentModelSegmentType {
+export type ContentModelSegmentType =
     /**
      * Represents a text node
      */
-    Text,
+    | 'Text'
 
     /**
      * Represents a BR element
      */
-    Br,
+    | 'Br'
 
     /**
      * Represents a selection marker. A selection marker is an empty segment that mark the start/end of selection
      */
-    SelectionMarker,
+    | 'SelectionMarker'
 
     /**
      * Represents a general segment that doesn't have a special type
      */
-    General,
-}
+    | 'General';

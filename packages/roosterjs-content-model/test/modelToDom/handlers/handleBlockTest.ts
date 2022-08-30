@@ -1,7 +1,5 @@
 import * as handleParagraph from '../../../lib/modelToDom/handlers/handleParagraph';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
@@ -25,7 +23,7 @@ describe('handleBlock', () => {
 
     it('Paragraph', () => {
         const paragraph: ContentModelBlock = {
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [],
         };
 
@@ -43,8 +41,8 @@ describe('handleBlock', () => {
     it('General block without child', () => {
         const element = document.createElement('span');
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [],
             element: element,
         };
@@ -57,12 +55,12 @@ describe('handleBlock', () => {
     it('General block with 1 child', () => {
         const element = document.createElement('span');
         const paragraph: ContentModelBlock = {
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [],
         };
         const block: ContentModelBlock = {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [paragraph],
             element: element,
         };
