@@ -23,7 +23,7 @@ const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
         showInputDialog(
             uiUtilities,
             'menuNameImageAltText',
-            'Set numbering value',
+            'Add alternate text',
             {
                 altText: {
                     labelKey: null,
