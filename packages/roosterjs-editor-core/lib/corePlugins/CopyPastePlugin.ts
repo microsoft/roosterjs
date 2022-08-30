@@ -1,3 +1,5 @@
+import { forEachSelectedCell } from './utils/forEachSelectedCell';
+import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import {
     addRangeToSelection,
     createElement,
@@ -7,9 +9,7 @@ import {
     setHtmlWithMetadata,
     createRange,
     VTable,
-    removeCellsOutsideSelection,
     isWholeTableSelected,
-    forEachSelectedCell,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -92,7 +92,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 html,
                 this.editor.getTrustedHTMLHandler()
             );
-            let newRange;
+            let newRange: Range;
 
             if (selection.type === SelectionRangeTypes.TableSelection) {
                 const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
@@ -107,14 +107,14 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                         : null;
             }
 
-            this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+            const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
                 range: newRange,
                 rawEvent: event as ClipboardEvent,
                 isCut,
             });
 
-            if (newRange) {
+            if (cutCopyEvent.range) {
                 addRangeToSelection(newRange);
             }
 
@@ -224,9 +224,6 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private deleteTableContent(table: HTMLTableElement, selection: TableSelection) {
-        table.style.removeProperty('width');
-        table.style.removeProperty('height');
-
         const selectedVTable = new VTable(table);
         selectedVTable.selection = selection;
 
@@ -237,12 +234,18 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         });
 
         const wholeTableSelected = isWholeTableSelected(selectedVTable, selection);
+        const isWholeColumnSelected =
+            table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0;
         if (wholeTableSelected) {
             selectedVTable.edit(TableOperation.DeleteTable);
             selectedVTable.writeBack();
-        } else if (table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0) {
+        } else if (isWholeColumnSelected) {
             selectedVTable.edit(TableOperation.DeleteColumn);
             selectedVTable.writeBack();
+        }
+        if (wholeTableSelected || isWholeColumnSelected) {
+            table.style.removeProperty('width');
+            table.style.removeProperty('height');
         }
     }
 }

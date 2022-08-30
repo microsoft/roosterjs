@@ -1,12 +1,13 @@
-import VTable from './VTable';
 import { VCell } from 'roosterjs-editor-types';
+import { VTable } from 'roosterjs-editor-dom';
 
 /**
+ * @internal
  * Executes an action to all the cells within the selection range.
  * @param callback action to apply on each selected cell
  * @returns the amount of cells modified
  */
-export default function forEachSelectedCell(vTable: VTable, callback: (cell: VCell) => void): void {
+export const forEachSelectedCell = (vTable: VTable, callback: (cell: VCell) => void): void => {
     if (vTable.selection) {
         const { lastCell, firstCell } = vTable.selection;
 
@@ -18,4 +19,4 @@ export default function forEachSelectedCell(vTable: VTable, callback: (cell: VCe
             }
         }
     }
-}
+};
