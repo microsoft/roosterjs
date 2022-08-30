@@ -272,4 +272,62 @@ describe('tableProcessor with format', () => {
             ],
         });
     });
+
+    it('calculate table size with zoom scale', () => {
+        const mockedTable = ({
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        const doc = createContentModelDocument(document);
+        context.contentModelContext.zoomScale = 2;
+
+        tableProcessor(doc, mockedTable, context);
+
+        expect(doc).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [50],
+                    heights: [100],
+                    format: {},
+                    cells: [
+                        [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'TableCell',
+                                format: {},
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                            },
+                        ],
+                    ],
+                },
+            ],
+        });
+    });
 });
