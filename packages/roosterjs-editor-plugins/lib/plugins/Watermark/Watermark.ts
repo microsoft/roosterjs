@@ -24,7 +24,11 @@ export default class Watermark implements EditorPlugin {
      * Create an instance of Watermark plugin
      * @param watermark The watermark string
      */
-    constructor(private watermark: string, private format?: DefaultFormat) {
+    constructor(
+        private watermark: string,
+        private format?: DefaultFormat,
+        private customClass?: string
+    ) {
         this.format = this.format || {
             fontSize: '14px',
             textColors: {
@@ -99,7 +103,7 @@ export default class Watermark implements EditorPlugin {
             watermarks.forEach(this.removeWatermark);
             this.editor.focus();
         } else if (!hasFocus && !isShowing && this.editor.isEmpty()) {
-            insertEntity(
+            const newEntity = insertEntity(
                 this.editor,
                 ENTITY_TYPE,
                 this.editor.getDocument().createTextNode(this.watermark),
@@ -107,6 +111,7 @@ export default class Watermark implements EditorPlugin {
                 false /*isReadonly*/,
                 ContentPosition.Begin
             );
+            newEntity.wrapper.classList.add(this.customClass);
         }
     };
 
