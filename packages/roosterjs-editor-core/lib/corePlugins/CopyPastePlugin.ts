@@ -1,3 +1,5 @@
+import { forEachSelectedCell } from './utils/forEachSelectedCell';
+import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import {
     addRangeToSelection,
     createElement,
@@ -6,6 +8,8 @@ import {
     Browser,
     setHtmlWithMetadata,
     createRange,
+    VTable,
+    isWholeTableSelected,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -19,6 +23,8 @@ import {
     KnownCreateElementDataIndex,
     SelectionRangeEx,
     SelectionRangeTypes,
+    TableSelection,
+    TableOperation,
 } from 'roosterjs-editor-types';
 
 /**
@@ -86,19 +92,29 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 html,
                 this.editor.getTrustedHTMLHandler()
             );
-            const newRange =
-                metadata?.type === SelectionRangeTypes.Normal
-                    ? createRange(tempDiv, metadata.start, metadata.end)
-                    : null;
+            let newRange: Range;
 
-            this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+            if (selection.type === SelectionRangeTypes.TableSelection) {
+                const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
+                newRange = this.createTableRange(table, selection.coordinates);
+                if (isCut) {
+                    this.deleteTableContent(selection.table, selection.coordinates);
+                }
+            } else {
+                newRange =
+                    metadata?.type === SelectionRangeTypes.Normal
+                        ? createRange(tempDiv, metadata.start, metadata.end)
+                        : null;
+            }
+
+            const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
                 range: newRange,
                 rawEvent: event as ClipboardEvent,
                 isCut,
             });
 
-            if (newRange) {
+            if (cutCopyEvent.range) {
                 addRangeToSelection(newRange);
             }
 
@@ -196,6 +212,40 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 range.collapse();
             }
             this.editor.select(range);
+        }
+    }
+
+    private createTableRange(table: HTMLTableElement, selection: TableSelection) {
+        const clonedVTable = new VTable(table as HTMLTableElement);
+        clonedVTable.selection = selection;
+        removeCellsOutsideSelection(clonedVTable);
+        clonedVTable.writeBack();
+        return createRange(clonedVTable.table);
+    }
+
+    private deleteTableContent(table: HTMLTableElement, selection: TableSelection) {
+        const selectedVTable = new VTable(table);
+        selectedVTable.selection = selection;
+
+        forEachSelectedCell(selectedVTable, cell => {
+            if (cell?.td) {
+                cell.td.innerHTML = this.editor.getTrustedHTMLHandler()('<br>');
+            }
+        });
+
+        const wholeTableSelected = isWholeTableSelected(selectedVTable, selection);
+        const isWholeColumnSelected =
+            table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0;
+        if (wholeTableSelected) {
+            selectedVTable.edit(TableOperation.DeleteTable);
+            selectedVTable.writeBack();
+        } else if (isWholeColumnSelected) {
+            selectedVTable.edit(TableOperation.DeleteColumn);
+            selectedVTable.writeBack();
+        }
+        if (wholeTableSelected || isWholeColumnSelected) {
+            table.style.removeProperty('width');
+            table.style.removeProperty('height');
         }
     }
 }

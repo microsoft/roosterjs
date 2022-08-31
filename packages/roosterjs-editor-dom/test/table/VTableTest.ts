@@ -763,9 +763,9 @@ describe('VTable.edit', () => {
             [
                 '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td colspan="2"><br></td></tr><tr><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
@@ -788,7 +788,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr><tr><td colspan="2"><br></td><td><br></td></tr><tr><td colspan="2"><br></td><td><br></td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
@@ -810,9 +810,9 @@ describe('VTable.edit', () => {
             TableOperation.InsertLeft,
             [
                 '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td rowspan="2"><br></td><td><br></td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
             ],
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
@@ -835,9 +835,9 @@ describe('VTable.edit', () => {
             [
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="4">2</td></tr><tr><td id="id3">3</td><td><br></td><td><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td><td><br></td><td><br></td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="4">2</td></tr><tr><td id="id3">3</td><td><br></td><td><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td><td><br></td><td><br></td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="4">2</td></tr><tr><td id="id3">3</td><td><br></td><td><br></td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td><td><br></td><td><br></td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
         );
