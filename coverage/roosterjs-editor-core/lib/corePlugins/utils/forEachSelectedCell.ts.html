@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-plugins/lib/plugins/TableCellSelection/utils/forEachSelectedCell.ts</title>
+    <title>Code coverage report for roosterjs-editor-core/lib/corePlugins/utils/forEachSelectedCell.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../../../prettify.css" />
-    <link rel="stylesheet" href="../../../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.png" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../../../sort-arrow-sprite.png);
+            background-image: url(../../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-plugins/lib/plugins/TableCellSelection/utils</a> forEachSelectedCell.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-core/lib/corePlugins/utils</a> forEachSelectedCell.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10% </span>
+                <span class="strong">16.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/10</span>
+                <span class='fraction'>2/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">14.29% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>1/7</span>
             </div>
         
             
@@ -77,7 +77,9 @@
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -88,11 +90,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -106,17 +110,19 @@ import { VTable } from 'roosterjs-editor-dom';
  * @param callback action to apply on each selected cell
  * @returns the amount of cells modified
  */
-export function <span class="fstat-no" title="function not covered" >forEachSelectedCell(</span>vTable: VTable, callback: (cell: VCell) =&gt; void): void {
-    const { lastCell<span class="cstat-no" title="statement not covered" >, f</span>irstCell<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >v</span>Table.selection;</span>
+export const forEachSelectedCell = <span class="fstat-no" title="function not covered" >(v</span>Table: VTable, callback: (cell: VCell) =&gt; void): void =&gt; {
+<span class="cstat-no" title="statement not covered" >    if (vTable.selection) {</span>
+        const { lastCell<span class="cstat-no" title="statement not covered" >, f</span>irstCell<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >v</span>Table.selection;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    for (let y = <span class="cstat-no" title="statement not covered" >firstCell.y;</span> y &lt;= lastCell.y; y++) {</span>
-<span class="cstat-no" title="statement not covered" >        for (let x = <span class="cstat-no" title="statement not covered" >firstCell.x;</span> x &lt;= lastCell.x; x++) {</span>
-<span class="cstat-no" title="statement not covered" >            if (vTable.cells[y][x]?.td) {</span>
-<span class="cstat-no" title="statement not covered" >                callback(vTable.cells[y][x]);</span>
+<span class="cstat-no" title="statement not covered" >        for (let y = <span class="cstat-no" title="statement not covered" >firstCell.y;</span> y &lt;= lastCell.y; y++) {</span>
+<span class="cstat-no" title="statement not covered" >            for (let x = <span class="cstat-no" title="statement not covered" >firstCell.x;</span> x &lt;= lastCell.x; x++) {</span>
+<span class="cstat-no" title="statement not covered" >                if (vTable.cells &amp;&amp; vTable.cells[y][x]?.td) {</span>
+<span class="cstat-no" title="statement not covered" >                    callback(vTable.cells[y][x]);</span>
+                }
             }
         }
     }
-}
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -124,17 +130,17 @@ export function <span class="fstat-no" title="function not covered" >forEachSele
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 30 2022 21:07:49 GMT+0000 (Coordinated Universal Time)
+                at Wed Aug 31 2022 14:39:40 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
-        <script src="../../../../../prettify.js"></script>
+        <script src="../../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../../../sorter.js"></script>
-        <script src="../../../../../block-navigation.js"></script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
     
