@@ -5,7 +5,7 @@ import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from './ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
-import { stackSegmentFormat } from '../utils/stackSegmentFormat';
+import { stackFormat } from '../utils/stackFormat';
 import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
@@ -29,7 +29,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    stackSegmentFormat(context, () => {
+    stackFormat(context, { segment: 'shallowClone' }, () => {
         parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
         parseFormat(
             tableElement,
@@ -81,7 +81,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                         table.cells[row + rowSpan - 1][targetCol] = cell;
 
                         if (hasTd) {
-                            stackSegmentFormat(context, () => {
+                            stackFormat(context, { segment: 'shallowClone' }, () => {
                                 parseFormat(
                                     td,
                                     TableCellFormatHandlers,

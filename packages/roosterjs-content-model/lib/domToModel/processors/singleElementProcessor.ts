@@ -6,7 +6,7 @@ import { generalSegmentProcessor } from './generalSegmentProcessor';
 import { isBlockElement } from 'roosterjs-editor-dom';
 import { parseFormat } from '../utils/parseFormat';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
-import { stackSegmentFormat } from '../utils/stackSegmentFormat';
+import { stackFormat } from '../utils/stackFormat';
 import { tableProcessor } from './tableProcessor';
 
 /**
@@ -17,7 +17,7 @@ export const knownElementProcessor: ElementProcessor = (group, element, context)
         // TODO: Use known block processor instead
         generalBlockProcessor(group, element, context);
     } else {
-        stackSegmentFormat(context, () => {
+        stackFormat(context, { segment: 'shallowClone' }, () => {
             parseFormat(
                 element,
                 SegmentFormatHandlers,
