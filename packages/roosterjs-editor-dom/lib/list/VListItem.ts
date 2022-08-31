@@ -329,12 +329,8 @@ export default class VListItem {
 
         // 4. Inherit styles of the child element to the li, so we are able to apply the styles to the ::marker
         if (this.listTypes.length > 1) {
-            if (
-                !(this.node.style.fontSize || this.node.style.color || this.node.style.fontFamily)
-            ) {
-                const stylesToInherit = ['font-size', 'font-family', 'color'];
-                setListItemStyle(this.node, stylesToInherit);
-            }
+            const stylesToInherit = ['font-size', 'font-family', 'color'];
+            setListItemStyle(this.node, stylesToInherit);
         }
 
         // 5. If this is not a list item now, need to unwrap the LI node and do proper handling
