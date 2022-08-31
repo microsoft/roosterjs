@@ -171,7 +171,7 @@ describe('Paste Plugin Test', () => {
             ).toBe('*');
         });
 
-        it('Any doc', () => {
+        it('Convert SIngle Image', () => {
             const mockHandler = <TrustedHTMLHandler>{};
             spyOn(editor, 'getTrustedHTMLHandler').and.returnValue(mockHandler);
             setUpSpies(

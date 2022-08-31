@@ -640,7 +640,7 @@ describe('TableCellSelectionPlugin |', () => {
         });
     });
 
-    it('DeleteTableContents Feature', () => {
+    xit('DeleteTableContents Feature', () => {
         //Arrange
         editor.setContent(
             `<div><table id='table1' cellspacing="0" cellpadding="1"><tbody><tr ><td id=${targetId} >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td  >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td id=${targetId2} >Test string<br></td><td >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td >`
