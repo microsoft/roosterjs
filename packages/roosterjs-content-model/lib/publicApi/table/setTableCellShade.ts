@@ -19,7 +19,7 @@ export default function setTableCellShade(editor: IExperimentalContentModelEdito
         editor.addUndoSnapshot(
             () => {
                 editor.focus();
-                editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
+                editor.setContentModel(model!, fragment => editor.replaceNode(table!, fragment));
             },
             ChangeSource.Format,
             false /*canUndoByBackspace*/,
