@@ -8,6 +8,7 @@ import {
     IEditor,
     PluginEventType,
     SelectionRangeTypes,
+    BeforeCutCopyEvent,
 } from 'roosterjs-editor-types';
 
 describe('CopyPastePlugin paste', () => {
@@ -106,7 +107,25 @@ describe('CopyPastePlugin copy', () => {
                     handler = null;
                 };
             });
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerPluginEvent = jasmine
+            .createSpy('triggerPluginEvent')
+            .and.callFake(
+                (
+                    eventType: PluginEventType.BeforeCutCopy,
+                    data: Pick<
+                        BeforeCutCopyEvent,
+                        'eventDataCache' | 'rawEvent' | 'clonedRoot' | 'range' | 'isCut'
+                    >,
+                    broadcast?: boolean
+                ) => {
+                    return {
+                        clonedRoot: tempNode,
+                        range: <Range>{ collapsed: false },
+                        rawEvent: event as ClipboardEvent,
+                        isCut: false,
+                    };
+                }
+            );
         spyOn(addRangeToSelection, 'default');
 
         editor = <IEditor>(<any>{
