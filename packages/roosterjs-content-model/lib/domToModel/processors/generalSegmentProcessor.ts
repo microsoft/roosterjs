@@ -18,7 +18,7 @@ export const generalSegmentProcessor: ElementProcessor = (group, element, contex
         context,
         {
             segment:
-                'clear' /*clearFormat, General segment will include all properties and styles when generate back to HTML, so no need to carry over existing segment format*/,
+                'empty' /*clearFormat, General segment will include all properties and styles when generate back to HTML, so no need to carry over existing segment format*/,
         },
         () => {
             addSegment(group, segment);

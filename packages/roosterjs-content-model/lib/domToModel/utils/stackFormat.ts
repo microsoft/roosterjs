@@ -4,13 +4,13 @@ import { DomToModelContext } from '../context/DomToModelContext';
 /**
  * @internal
  */
-export type StackFormatType = 'shallowClone' | 'clear';
+export type ShallowObjectStackType = 'shallowClone' | 'empty';
 
 /**
  * @internal
  */
 export interface StackFormatOptions {
-    segment?: StackFormatType;
+    segment?: ShallowObjectStackType;
 }
 
 /**
@@ -24,15 +24,18 @@ export function stackFormat(
     const { segmentFormat } = context;
     const { segment } = options;
 
-    context.segmentFormat = stackFormatInternal(segmentFormat, segment);
+    try {
+        context.segmentFormat = stackFormatInternal(segmentFormat, segment);
 
-    callback();
-    context.segmentFormat = segmentFormat;
+        callback();
+    } finally {
+        context.segmentFormat = segmentFormat;
+    }
 }
 
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
-    processType: StackFormatType | undefined
+    processType: ShallowObjectStackType | undefined
 ): T | {} {
-    return processType == 'clear' ? {} : processType == 'shallowClone' ? { ...format } : format;
+    return processType == 'empty' ? {} : processType == 'shallowClone' ? { ...format } : format;
 }

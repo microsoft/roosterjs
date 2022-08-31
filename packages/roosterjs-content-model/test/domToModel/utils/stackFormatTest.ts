@@ -15,7 +15,7 @@ describe('stackFormat', () => {
     it('clear segment format', () => {
         const context = createDomToModelContext();
         context.segmentFormat = { a: 1 } as any;
-        stackFormat(context, { segment: 'clear' }, () => {
+        stackFormat(context, { segment: 'empty' }, () => {
             expect(context.segmentFormat).toEqual({});
             (<any>context.segmentFormat).a = 2;
         });
