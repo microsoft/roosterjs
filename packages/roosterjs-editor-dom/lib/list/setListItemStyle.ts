@@ -12,7 +12,7 @@ import { InlineElement } from 'roosterjs-editor-types';
  * @param styles The styles that should be applied to the element.
  */
 export default function setListItemStyle(element: HTMLLIElement, styles: string[]) {
-    const elementsStyles = getInlineChildElementsStyle(element);
+    const elementsStyles = getInlineChildElementsStyle(element, styles);
     let stylesToApply: Record<string, string> = getStyles(element);
 
     styles.forEach(styleName => {
@@ -31,7 +31,7 @@ export default function setListItemStyle(element: HTMLLIElement, styles: string[
     setStyles(element, stylesToApply);
 }
 
-function getInlineChildElementsStyle(element: HTMLElement) {
+function getInlineChildElementsStyle(element: HTMLElement, styles: string[]) {
     const result: Record<string, string>[] = [];
     const contentTraverser = ContentTraverser.createBodyTraverser(element);
     let currentInlineElement: InlineElement | null = null;
@@ -39,14 +39,35 @@ function getInlineChildElementsStyle(element: HTMLElement) {
     while (contentTraverser.currentInlineElement != currentInlineElement) {
         currentInlineElement = contentTraverser.currentInlineElement;
         let currentNode = currentInlineElement?.getContainerNode() || null;
+        const currentStyle: Record<string | number, string> = {};
 
         currentNode = currentNode ? findClosestElementAncestor(currentNode) : null;
-        if (safeInstanceOf(currentNode, 'HTMLElement')) {
-            let childStyle = getStyles(currentNode);
-            if (childStyle) {
-                result.push(childStyle);
+
+        // we should consider of when it is the single childnode of element, the parentNode's style should add
+        // such as the "i", "b", "span" node in <li><span><b><i>aa</i></b></span></li>
+        while (
+            currentNode &&
+            currentNode !== element &&
+            safeInstanceOf(currentNode, 'HTMLElement')
+        ) {
+            styles.forEach(styleName => {
+                const styleValue = (currentNode as HTMLElement).style.getPropertyValue(styleName);
+                if (styleValue && !currentStyle[styleName]) {
+                    currentStyle[styleName] = styleValue;
+                }
+            });
+
+            if (currentNode?.parentNode?.childNodes.length === 1) {
+                currentNode = currentNode.parentNode;
+            } else {
+                currentNode = null;
             }
         }
+
+        if (currentStyle) {
+            result.push(currentStyle);
+        }
+
         contentTraverser.getNextInlineElement();
     }
 

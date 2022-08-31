@@ -56,16 +56,13 @@ export default class VTable {
     col: number | undefined;
 
     /**
-     * Selected range of cells with the coordinates of the first and last cell selected.
-     */
-    selection: TableSelection | null = null;
-
-    /**
      * Current format of the table
      */
     formatInfo: Required<TableFormat> | null = null;
 
     private trs: HTMLTableRowElement[] = [];
+
+    private tableSelection: TableSelection | null = null;
 
     /**
      * Create a new instance of VTable object using HTML TABLE or TD node
@@ -117,6 +114,22 @@ export default class VTable {
                 this.normalizeSize(typeof zoomScale == 'number' ? n => n / zoomScale : zoomScale);
             }
         }
+    }
+
+    /**
+     * Selected range of cells with the coordinates of the first and last cell selected.
+     */
+    public get selection(): TableSelection | null {
+        return this.tableSelection || null;
+    }
+
+    public set selection(value: TableSelection | null) {
+        if (value) {
+            const { firstCell } = value;
+            this.row = firstCell?.y;
+            this.col = firstCell?.x;
+        }
+        this.tableSelection = value;
     }
 
     /**
