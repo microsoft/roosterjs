@@ -12,8 +12,15 @@ import * as isWordDesktopDocument from '../../lib/plugins/Paste/sourceValidation
 import * as sanitizeHtmlColorsFromPastedContent from '../../lib/plugins/Paste/sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import * as shouldConvertToSingleImage from '../../lib/plugins/Paste/sourceValidations/shouldConvertToSingleImage';
 import * as wordOnlineFile from '../../lib/plugins/Paste/officeOnlineConverter/convertPastedContentFromWordOnline';
-import { BeforePasteEvent, EditorOptions, TrustedHTMLHandler } from 'roosterjs-editor-types';
-import { ClipboardData, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    BeforePasteEvent,
+    ClipboardData,
+    EditorOptions,
+    IEditor,
+    PluginEvent,
+    PluginEventType,
+    TrustedHTMLHandler,
+} from 'roosterjs-editor-types';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
 import { Editor } from 'roosterjs-editor-core';
 import { GOOGLE_SHEET_NODE_NAME } from '../../lib/plugins/Paste/sourceValidations/constants';
