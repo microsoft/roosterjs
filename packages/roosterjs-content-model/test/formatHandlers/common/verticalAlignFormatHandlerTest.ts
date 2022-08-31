@@ -1,4 +1,4 @@
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { VerticalAlignFormat } from '../../../lib/publicTypes/format/formatParts/VerticalAlignFormat';
 import { verticalAlignFormatHandler } from '../../../lib/formatHandlers/common/verticalAlignFormatHandler';
 
@@ -30,7 +30,7 @@ describe('verticalAlignFormatHandler.parse', () => {
             div.setAttribute('valign', attrValue);
         }
 
-        verticalAlignFormatHandler.parse(format, div, context);
+        verticalAlignFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
             verticalAlign: expectedValue,
@@ -38,7 +38,7 @@ describe('verticalAlignFormatHandler.parse', () => {
     }
 
     it('No alignment', () => {
-        verticalAlignFormatHandler.parse(format, div, context);
+        verticalAlignFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 

@@ -1,5 +1,5 @@
 import { getMetadata, setMetadata } from '../metadata/metadata';
-import { TableFormat } from 'roosterjs-editor-types';
+import { TableBorderFormat, TableFormat } from 'roosterjs-editor-types';
 import {
     createBooleanDefinition,
     createNumberDefinition,
@@ -30,17 +30,16 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
         tableBorderFormat: createNumberDefinition(
             false /** isOptional */,
             undefined /* value */,
-            0 /* first table border format */,
-            7 /* last table border format */
+            TableBorderFormat.DEFAULT /* first table border format, TODO: Use Min/Max to specify valid values */,
+            TableBorderFormat.CLEAR /* last table border format, , TODO: Use Min/Max to specify valid values */
         ),
-        keepCellShade: BooleanDefinition,
+        keepCellShade: createBooleanDefinition(true /** isOptional */),
     },
     false /* isOptional */,
     true /** allowNull */
 );
 
 /**
- * @internal
  * Get the format info of a table
  * If the table does not have a info saved, it will be retrieved from the css styles
  * @param table The table that has the info

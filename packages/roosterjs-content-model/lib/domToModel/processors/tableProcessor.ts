@@ -4,6 +4,8 @@ import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from './ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
+import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
+import { stackSegmentFormat } from '../utils/stackSegmentFormat';
 import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
@@ -27,45 +29,97 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
-    addBlock(group, table);
+    stackSegmentFormat(context, () => {
+        parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
+        parseFormat(
+            tableElement,
+            SegmentFormatHandlers,
+            context.segmentFormat,
+            context.contentModelContext
+        );
+        addBlock(group, table);
 
-    for (let row = 0; row < tableElement.rows.length; row++) {
-        const tr = tableElement.rows[row];
-        for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-            for (; table.cells[row][targetCol]; targetCol++) {}
+        const columnPositions: number[] = [0];
+        const rowPositions: number[] = [0];
 
-            const td = tr.cells[sourceCol];
-            const isCellSelected =
-                hasTableSelection &&
-                row >= firstCell.y &&
-                row <= lastCell.y &&
-                targetCol >= firstCell.x &&
-                targetCol <= lastCell.x;
+        for (let row = 0; row < tableElement.rows.length; row++) {
+            const tr = tableElement.rows[row];
+            for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
+                for (; table.cells[row][targetCol]; targetCol++) {}
 
-            for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
-                for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
-                    const hasTd = colSpan == 1 && rowSpan == 1;
-                    const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
+                const td = tr.cells[sourceCol];
+                const isCellSelected =
+                    hasTableSelection &&
+                    row >= firstCell.y &&
+                    row <= lastCell.y &&
+                    targetCol >= firstCell.x &&
+                    targetCol <= lastCell.x;
 
-                    if (isCellSelected) {
-                        cell.isSelected = true;
+                const colEnd = targetCol + td.colSpan;
+                const rowEnd = row + td.rowSpan;
+
+                if (columnPositions[colEnd] === undefined || rowPositions[rowEnd] === undefined) {
+                    const rect = td.getBoundingClientRect();
+
+                    if (columnPositions[colEnd] === undefined) {
+                        columnPositions[colEnd] = columnPositions[targetCol] + rect.width;
                     }
+                    if (rowPositions[rowEnd] === undefined) {
+                        rowPositions[rowEnd] = rowPositions[row] + rect.height;
+                    }
+                }
 
-                    table.cells[row + rowSpan - 1][targetCol] = cell;
+                for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
+                    for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
+                        const hasTd = colSpan == 1 && rowSpan == 1;
+                        const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
 
-                    if (hasTd) {
-                        parseFormat(
-                            td,
-                            TableCellFormatHandlers,
-                            cell.format,
-                            context.contentModelContext
-                        );
+                        if (isCellSelected) {
+                            cell.isSelected = true;
+                        }
 
-                        containerProcessor(cell, td, context);
+                        table.cells[row + rowSpan - 1][targetCol] = cell;
+
+                        if (hasTd) {
+                            stackSegmentFormat(context, () => {
+                                parseFormat(
+                                    td,
+                                    TableCellFormatHandlers,
+                                    cell.format,
+                                    context.contentModelContext
+                                );
+                                parseFormat(
+                                    td,
+                                    SegmentFormatHandlers,
+                                    context.segmentFormat,
+                                    context.contentModelContext
+                                );
+
+                                containerProcessor(cell, td, context);
+                            });
+                        }
                     }
                 }
             }
         }
-    }
+
+        table.widths = calcSizes(columnPositions);
+        table.heights = calcSizes(rowPositions);
+    });
 };
+
+function calcSizes(positions: number[]): number[] {
+    let result: number[] = [];
+    let lastPos = positions[positions.length - 1];
+
+    for (let i = positions.length - 2; i >= 0; i--) {
+        if (positions[i] === undefined) {
+            result[i] = 0;
+        } else {
+            result[i] = lastPos - positions[i];
+            lastPos = positions[i];
+        }
+    }
+
+    return result;
+}

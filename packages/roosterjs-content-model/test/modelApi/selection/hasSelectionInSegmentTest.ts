@@ -1,14 +1,12 @@
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { hasSelectionInSegment } from '../../../lib/modelApi/selection/hasSelectionInSegment';
 
 describe('hasSelectionInSegment', () => {
     it('Simple text segment', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.Text,
+            segmentType: 'Text',
             text: '',
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeFalse();
@@ -16,9 +14,10 @@ describe('hasSelectionInSegment', () => {
 
     it('Simple text segment with selection', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.Text,
+            segmentType: 'Text',
             text: '',
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -26,7 +25,8 @@ describe('hasSelectionInSegment', () => {
 
     it('Simple BR segment', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.Br,
+            segmentType: 'Br',
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeFalse();
@@ -34,8 +34,9 @@ describe('hasSelectionInSegment', () => {
 
     it('Simple BR segment with selection', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.Br,
+            segmentType: 'Br',
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -43,8 +44,9 @@ describe('hasSelectionInSegment', () => {
 
     it('SelectionMarker segment', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.SelectionMarker,
+            segmentType: 'SelectionMarker',
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -52,11 +54,12 @@ describe('hasSelectionInSegment', () => {
 
     it('Empty general segment', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.General,
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [],
             element: null!,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeFalse();
@@ -64,12 +67,13 @@ describe('hasSelectionInSegment', () => {
 
     it('Empty general segment with direct selection', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.General,
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [],
             element: null!,
             isSelected: true,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();
@@ -77,15 +81,16 @@ describe('hasSelectionInSegment', () => {
 
     it('General segment with child', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.General,
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [
                 {
-                    blockType: ContentModelBlockType.Paragraph,
+                    blockType: 'Paragraph',
                     segments: [],
                 },
             ],
+            format: {},
             element: null!,
         };
         const result = hasSelectionInSegment(segment);
@@ -94,21 +99,23 @@ describe('hasSelectionInSegment', () => {
 
     it('General segment with selected child', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.General,
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [
                 {
-                    blockType: ContentModelBlockType.Paragraph,
+                    blockType: 'Paragraph',
                     segments: [
                         {
-                            segmentType: ContentModelSegmentType.Br,
+                            segmentType: 'Br',
                             isSelected: true,
+                            format: {},
                         },
                     ],
                 },
             ],
             element: null!,
+            format: {},
         };
         const result = hasSelectionInSegment(segment);
         expect(result).toBeTrue();

@@ -44,6 +44,12 @@ const PendableStyleCheckers: Record<
     isBold: (tag, style) =>
         tag == 'B' ||
         tag == 'STRONG' ||
+        tag == 'H1' ||
+        tag == 'H2' ||
+        tag == 'H3' ||
+        tag == 'H4' ||
+        tag == 'H5' ||
+        tag == 'H6' ||
         parseInt(style.fontWeight) >= 700 ||
         ['bold', 'bolder'].indexOf(style.fontWeight) >= 0,
     isUnderline: (tag, style) => tag == 'U' || style.textDecoration.indexOf('underline') >= 0,

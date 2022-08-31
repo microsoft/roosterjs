@@ -1,5 +1,3 @@
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createTableStructure } from '../../../lib/modelApi/table/createTableStructure';
@@ -11,12 +9,12 @@ describe('createTableStructure', () => {
         createTableStructure(doc, 1, 1);
 
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},
                         spanAbove: false,
@@ -26,6 +24,8 @@ describe('createTableStructure', () => {
                 ],
             ],
             format: {},
+            widths: [],
+            heights: [],
         });
     });
 

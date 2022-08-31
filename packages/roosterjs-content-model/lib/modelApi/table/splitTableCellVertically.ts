@@ -2,6 +2,8 @@ import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createTableCell } from '../creators/createTableCell';
 import { getSelectedCells } from './getSelectedCells';
 
+const MIN_HEIGHT = 22;
+
 /**
  * @internal
  */
@@ -21,14 +23,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
             ) {
                 belowRow.forEach((belowCell, colIndex) => {
                     if (colIndex >= sel.firstCol && colIndex <= sel.lastCol) {
-                        const cell = row[colIndex];
-
                         belowCell.spanAbove = false;
-
-                        if (cell.format.height) {
-                            belowCell.format.height = cell.format.height / 2;
-                            cell.format.height = cell.format.height / 2;
-                        }
                     }
                 });
             } else {
@@ -42,12 +37,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
 
                     if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
                         newCell.spanAbove = true;
-                        if (newCell.format.height) {
-                            newCell.format.height = 0;
-                        }
                     } else {
-                        cell.format.height! /= 2;
-                        newCell.format.height! /= 2;
                         newCell.isSelected = cell.isSelected;
                     }
 
@@ -55,6 +45,9 @@ export function splitTableCellVertically(table: ContentModelTable) {
                 });
 
                 table.cells.splice(rowIndex + 1, 0, newRow);
+
+                const newHeight = Math.max((table.heights[rowIndex] /= 2), MIN_HEIGHT);
+                table.heights.splice(rowIndex, 1, newHeight, newHeight);
             }
         }
     }

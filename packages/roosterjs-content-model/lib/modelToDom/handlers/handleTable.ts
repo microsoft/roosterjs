@@ -60,9 +60,18 @@ export function handleTable(
 
                 let rowSpan = 1;
                 let colSpan = 1;
+                let width = table.widths[col];
+                let height = table.heights[row];
 
-                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {}
-                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {}
+                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {
+                    height += table.heights[row + rowSpan];
+                }
+                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {
+                    width += table.widths[col + colSpan];
+                }
+
+                td.style.width = width + 'px';
+                td.style.height = height + 'px';
 
                 if (rowSpan > 1) {
                     td.rowSpan = rowSpan;
