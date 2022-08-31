@@ -1,4 +1,5 @@
 import { addSegment } from '../../modelApi/common/addSegment';
+import { areSameFormats } from '../utils/areSameFormats';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../context/DomToModelContext';
@@ -20,11 +21,12 @@ export function textProcessor(
         if (
             lastSegment &&
             lastSegment.segmentType == 'Text' &&
-            !!lastSegment.isSelected == !!context.isInSelection
+            !!lastSegment.isSelected == !!context.isInSelection &&
+            areSameFormats(lastSegment.format, context.segmentFormat)
         ) {
             lastSegment.text += text;
         } else {
-            const textModel = createText(text);
+            const textModel = createText(text, context.segmentFormat);
 
             if (context.isInSelection) {
                 textModel.isSelected = true;

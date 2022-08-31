@@ -174,7 +174,7 @@ function getIndexOfNode(node: Node | null): number {
 function getEndOffset(node: Node): number {
     if (node.nodeType == NodeType.Text) {
         return node.nodeValue?.length || 0;
-    } else if (node.nodeType == NodeType.Element) {
+    } else if (node.nodeType == NodeType.Element || node.nodeType == NodeType.DocumentFragment) {
         return node.childNodes.length;
     } else {
         return 1;

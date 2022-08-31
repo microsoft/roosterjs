@@ -1,8 +1,11 @@
+import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
 import * as handleParagraph from '../../../lib/modelToDom/handlers/handleParagraph';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
+import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
+import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
@@ -73,6 +76,33 @@ describe('handleBlock', () => {
             element,
             paragraph,
             context
+        );
+    });
+
+    it('General block and segment', () => {
+        const element = document.createElement('span');
+        const block: ContentModelGeneralSegment = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            segmentType: 'General',
+            blocks: [],
+            element: element,
+            format: {},
+        };
+
+        parent = document.createElement('div');
+
+        spyOn(applyFormat, 'applyFormat');
+        handleBlock(document, parent, block, context);
+
+        expect(parent.innerHTML).toBe('<span></span>');
+        expect(parent.firstChild).not.toBe(element);
+        expect(context.regularSelection.current.segment).toBe(parent.firstChild);
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            SegmentFormatHandlers,
+            block.format,
+            context.contentModelContext
         );
     });
 });

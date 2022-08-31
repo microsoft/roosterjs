@@ -18,13 +18,13 @@ describe('idFormatHandler.parse', () => {
     });
 
     it('No id', () => {
-        idFormatHandler.parse(format, div, context);
+        idFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 
     it('Has id', () => {
         div.id = 'test';
-        idFormatHandler.parse(format, div, context);
+        idFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({ id: 'test' });
     });
 });

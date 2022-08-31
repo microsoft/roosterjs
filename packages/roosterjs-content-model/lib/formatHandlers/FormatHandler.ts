@@ -5,6 +5,11 @@ import { ContentModelFormatBase } from '../publicTypes/format/ContentModelFormat
  * @internal
  */
 export interface FormatHandler<TFormat extends ContentModelFormatBase> {
-    parse: (format: TFormat, element: HTMLElement, context: ContentModelContext) => void;
+    parse: (
+        format: TFormat,
+        element: HTMLElement,
+        context: ContentModelContext,
+        defaultStyle: Partial<CSSStyleDeclaration>
+    ) => void;
     apply: (format: TFormat, element: HTMLElement, context: ContentModelContext) => void;
 }
