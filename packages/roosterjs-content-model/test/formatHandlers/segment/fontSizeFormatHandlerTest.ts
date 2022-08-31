@@ -42,6 +42,14 @@ describe('fontSizeFormatHandler.parse', () => {
 
         expect(format.fontSize).toBe('100px');
     });
+
+    it('Font size with sub/sup', () => {
+        div.style.fontSize = 'smaller';
+        div.style.verticalAlign = 'sub';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBeUndefined();
+    });
 });
 
 describe('fontSizeFormatHandler.apply', () => {

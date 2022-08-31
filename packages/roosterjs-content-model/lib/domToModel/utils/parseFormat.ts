@@ -48,6 +48,14 @@ const DefaultStyleMap: Record<string, DefaultFormatParserType> = {
     STRONG: {
         fontWeight: 'bold',
     },
+    SUB: {
+        verticalAlign: 'sub',
+        fontSize: 'smaller',
+    },
+    SUP: {
+        verticalAlign: 'super',
+        fontSize: 'smaller',
+    },
     U: {
         textDecoration: 'underline',
     },

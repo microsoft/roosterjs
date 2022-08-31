@@ -4,6 +4,7 @@ import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
+import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 
@@ -17,4 +18,5 @@ export type ContentModelSegmentFormat = TextColorFormat &
     BoldFormat &
     ItalicFormat &
     UnderlineFormat &
-    StrikeFormat;
+    StrikeFormat &
+    SuperOrSubScriptFormat;

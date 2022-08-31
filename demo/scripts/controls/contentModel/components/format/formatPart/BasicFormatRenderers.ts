@@ -1,6 +1,13 @@
-import { BoldFormat, ItalicFormat, StrikeFormat, UnderlineFormat } from 'roosterjs-content-model';
 import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
+import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
+import {
+    BoldFormat,
+    ItalicFormat,
+    StrikeFormat,
+    SuperOrSubScriptFormat,
+    UnderlineFormat,
+} from 'roosterjs-content-model';
 
 export const BoldFormatRenderer: FormatRenderer<BoldFormat> = createCheckboxFormatRenderer<
     BoldFormat
@@ -32,4 +39,12 @@ export const StrikeFormatRenderer: FormatRenderer<StrikeFormat> = createCheckbox
     'Strike',
     format => format.strikethrough,
     (format, value) => (format.strikethrough = value)
+);
+
+export const SuperOrSubScriptFormatRenderer: FormatRenderer<SuperOrSubScriptFormat> = createTextFormatRenderer<
+    SuperOrSubScriptFormat
+>(
+    'SuperOrSubScript',
+    format => format.superOrSubScriptSequence,
+    (format, value) => (format.superOrSubScriptSequence = value)
 );

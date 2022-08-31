@@ -11,6 +11,7 @@ import {
     ItalicFormatRenderer,
     StrikeFormatRenderer,
     UnderlineFormatRenderer,
+    SuperOrSubScriptFormatRenderer,
 } from './formatPart/BasicFormatRenderers';
 
 const SegmentFormatRenders: FormatRenderer<ContentModelSegmentFormat>[] = [
@@ -22,6 +23,7 @@ const SegmentFormatRenders: FormatRenderer<ContentModelSegmentFormat>[] = [
     ItalicFormatRenderer,
     UnderlineFormatRenderer,
     StrikeFormatRenderer,
+    SuperOrSubScriptFormatRenderer,
 ];
 
 export function SegmentFormatView(props: { format: ContentModelSegmentFormat }) {

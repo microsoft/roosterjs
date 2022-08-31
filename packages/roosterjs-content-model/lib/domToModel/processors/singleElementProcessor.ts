@@ -38,6 +38,8 @@ const ProcessorMap: Record<string, ElementProcessor> = {
     S: knownElementProcessor,
     STRIKE: knownElementProcessor,
     STRONG: knownElementProcessor,
+    SUB: knownElementProcessor,
+    SUP: knownElementProcessor,
     TABLE: tableProcessor,
     U: knownElementProcessor,
 };

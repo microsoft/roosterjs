@@ -6,6 +6,7 @@ import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
+import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 
@@ -14,6 +15,7 @@ import { underlineFormatHandler } from './segment/underlineFormatHandler';
  * Order by frequency, from not common used to common used, for better optimization
  */
 export const SegmentFormatHandlers: FormatHandler<ContentModelSegmentFormat>[] = [
+    superOrSubScriptFormatHandler,
     strikeFormatHandler,
     fontFamilyFormatHandler,
     fontSizeFormatHandler,
