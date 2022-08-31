@@ -631,9 +631,9 @@ export default class Editor implements IEditor {
     ) {
         this.core.api.addUndoSnapshot(
             this.core,
-            callback ?? null,
-            changeSource ?? null,
-            canUndoByBackspace ?? false,
+            callback,
+            changeSource,
+            canUndoByBackspace,
             additionalData
         );
     }
