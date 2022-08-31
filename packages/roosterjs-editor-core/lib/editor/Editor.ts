@@ -458,9 +458,12 @@ export default class Editor implements IEditor {
             ? arg1
             : 'start' in arg1 && Array.isArray(arg1.end)
             ? createRange(this.core.contentDiv, arg1.start, arg1.end)
-            : safeInstanceOf(arg1, 'Node') && arg3 && arg4
-            ? createRange(arg1, <number | PositionType>arg2, arg3, arg4)
-            : null;
+            : createRange(
+                  <Node>arg1,
+                  <number | PositionType>arg2,
+                  <Node>arg3,
+                  <number | PositionType>arg4
+              );
         return !!range && this.contains(range) && this.core.api.selectRange(this.core, range);
     }
 
