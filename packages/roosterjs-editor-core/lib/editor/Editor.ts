@@ -710,9 +710,11 @@ export default class Editor implements IEditor {
     /**
      * Get a content traverser for current selection
      */
-    public getSelectionTraverser(range?: Range): IContentTraverser {
-        range = range ?? this.getSelectionRange() ?? new Range();
-        return range && ContentTraverser.createSelectionTraverser(this.core.contentDiv, range);
+    public getSelectionTraverser(range?: Range): IContentTraverser | null {
+        range = range ?? this.getSelectionRange() ?? undefined;
+        return range
+            ? ContentTraverser.createSelectionTraverser(this.core.contentDiv, range)
+            : null;
     }
 
     /**
@@ -721,11 +723,11 @@ export default class Editor implements IEditor {
      */
     public getBlockTraverser(
         startFrom: ContentPosition | CompatibleContentPosition = ContentPosition.SelectionStart
-    ): IContentTraverser {
-        let range = this.getSelectionRange() ?? new Range();
-        return (
-            range && ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom)
-        );
+    ): IContentTraverser | null {
+        let range = this.getSelectionRange();
+        return range
+            ? ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom)
+            : null;
     }
 
     /**
