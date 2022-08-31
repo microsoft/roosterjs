@@ -13,6 +13,7 @@ describe('createFormatContextTest', () => {
                 getDarkColor: undefined,
             },
             isInSelection: false,
+            segmentFormat: {},
         });
     });
 
@@ -34,6 +35,7 @@ describe('createFormatContextTest', () => {
                 getDarkColor: getDarkColor,
             },
             isInSelection: false,
+            segmentFormat: {},
         });
     });
 
@@ -74,6 +76,7 @@ describe('createFormatContextTest', () => {
                 endOffset: 2,
                 isSelectionCollapsed: false,
             },
+            segmentFormat: {},
         });
     });
 
@@ -126,6 +129,7 @@ describe('createFormatContextTest', () => {
                     y: 4,
                 },
             },
+            segmentFormat: {},
         });
     });
 
@@ -154,6 +158,7 @@ describe('createFormatContextTest', () => {
                 getDarkColor: getDarkColor,
             },
             isInSelection: false,
+            segmentFormat: {},
         });
     });
 
@@ -184,6 +189,7 @@ describe('createFormatContextTest', () => {
                 getDarkColor: getDarkColor,
             },
             isInSelection: false,
+            segmentFormat: {},
         });
     });
 });

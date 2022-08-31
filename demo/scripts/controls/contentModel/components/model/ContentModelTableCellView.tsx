@@ -5,7 +5,6 @@ import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderer
 import { ContentModelView } from '../ContentModelView';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
-import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
@@ -19,7 +18,6 @@ import {
 const styles = require('./ContentModelTableCellView.scss');
 
 const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = [
-    ...SizeFormatRenderers,
     ...BorderFormatRenderers,
     BackgroundColorFormatRenderer,
     TextAlignFormatRenderer,

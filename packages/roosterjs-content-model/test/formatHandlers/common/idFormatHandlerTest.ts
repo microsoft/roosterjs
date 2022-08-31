@@ -1,4 +1,4 @@
-import { ContentModelContext } from '../../../lib/publicTypes';
+import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { IdFormat } from '../../../lib/publicTypes/format/formatParts/IdFormat';
 import { idFormatHandler } from '../../../lib/formatHandlers/common/idFormatHandler';
 
@@ -18,13 +18,13 @@ describe('idFormatHandler.parse', () => {
     });
 
     it('No id', () => {
-        idFormatHandler.parse(format, div, context);
+        idFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 
     it('Has id', () => {
         div.id = 'test';
-        idFormatHandler.parse(format, div, context);
+        idFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({ id: 'test' });
     });
 });

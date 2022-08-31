@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { deleteTableColumn } from '../../../lib/modelApi/table/deleteTableColumn';
@@ -8,9 +7,11 @@ describe('deleteTableColumn', () => {
         const table = createTable(0);
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -22,9 +23,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1, cell2]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -38,9 +41,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -55,9 +60,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1, cell3]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -72,9 +79,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1, cell2]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -90,9 +99,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -108,9 +119,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -126,9 +139,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1, cell3, cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -148,9 +163,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1, cell3, cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -170,9 +187,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1, cell3, cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -192,9 +211,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1, cell2, cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -215,9 +236,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2], [cell4]],
+            widths: [],
+            heights: [],
         });
     });
 
@@ -234,9 +257,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2], [cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell2.spanAbove).toBeFalse();
@@ -256,9 +281,11 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2], [cell4]],
+            widths: [],
+            heights: [],
         });
 
         expect(cell2.spanAbove).toBeFalse();
@@ -284,13 +311,15 @@ describe('deleteTableColumn', () => {
 
         deleteTableColumn(table);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell2, cell3],
                 [cell5, cell6],
                 [cell8, cell9],
             ],
+            widths: [],
+            heights: [],
         });
 
         expect(cell2.spanLeft).toBeFalse();

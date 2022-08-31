@@ -3,10 +3,7 @@ import * as generalSegmentProcessor from '../../../lib/domToModel/processors/gen
 import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createText } from '../../../lib/modelApi/creators/createText';
@@ -30,8 +27,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, fragment, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -46,8 +43,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -63,8 +60,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -82,8 +79,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -109,8 +106,8 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
@@ -166,11 +163,16 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2', isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -191,12 +193,16 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.SelectionMarker, isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2', format: {} },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -217,11 +223,16 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2', isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -242,18 +253,22 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.SelectionMarker, isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2test3' },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
         });
     });
 
     // Skip this test for now, we will reenable it once we are ready to write e2e test case of creating model from dom
-    xit('Process a DIV with mixed selection', () => {
+    it('Process a DIV with mixed selection', () => {
         const div = document.createElement('div');
         div.innerHTML = '<span>test1</span>test2test3';
         context.regularSelection = {
@@ -268,11 +283,53 @@ describe('containerProcessor', () => {
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Paragraph,
+            blockType: 'Paragraph',
             segments: [
-                { segmentType: ContentModelSegmentType.Text, text: 'test1' },
-                { segmentType: ContentModelSegmentType.Text, text: 'test2', isSelected: true },
-                { segmentType: ContentModelSegmentType.Text, text: 'test3' },
+                { segmentType: 'Text', text: 'test1test2', format: {} },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                },
+                { segmentType: 'Text', text: 'test3', format: {} },
+            ],
+            isImplicit: true,
+        });
+    });
+
+    it('Process with segment format', () => {
+        const div = document.createElement('div');
+        div.innerHTML = 'test';
+        context.segmentFormat = { a: 'b' } as any;
+
+        containerProcessor(doc, div, context);
+
+        expect(context.isInSelection).toBeFalse();
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [{ segmentType: 'Text', text: 'test', format: { a: 'b' } as any }],
+            isImplicit: true,
+        });
+    });
+
+    it('Process with segment format and selection marker', () => {
+        const div = document.createElement('div');
+        context.segmentFormat = { a: 'b' } as any;
+        context.regularSelection = {
+            startContainer: div,
+            startOffset: 0,
+            endContainer: div,
+            endOffset: 0,
+            isSelectionCollapsed: true,
+        };
+
+        containerProcessor(doc, div, context);
+
+        expect(context.isInSelection).toBeFalse();
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                { segmentType: 'SelectionMarker', format: { a: 'b' } as any, isSelected: true },
             ],
             isImplicit: true,
         });

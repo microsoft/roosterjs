@@ -2,6 +2,8 @@ import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createTableCell } from '../creators/createTableCell';
 import { getSelectedCells } from './getSelectedCells';
 
+const MIN_WIDTH = 30;
+
 /**
  * @internal
  */
@@ -20,15 +22,7 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
             ) {
                 table.cells.forEach((row, rowIndex) => {
                     if (rowIndex >= sel.firstRow && rowIndex <= sel.lastRow) {
-                        const cell = row[colIndex];
-                        const rightCell = row[colIndex + 1];
-
-                        rightCell.spanLeft = false;
-
-                        if (cell.format.width) {
-                            rightCell.format.width = cell.format.width / 2;
-                            cell.format.width = cell.format.width / 2;
-                        }
+                        row[colIndex + 1].spanLeft = false;
                     }
                 });
             } else {
@@ -44,18 +38,16 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
 
                         if (rowIndex < sel.firstRow || rowIndex > sel.lastRow) {
                             newCell.spanLeft = true;
-
-                            if (newCell.format.width) {
-                                newCell.format.width = 0;
-                            }
                         } else {
-                            cell.format.width! /= 2;
-                            newCell.format.width! /= 2;
                             newCell.isSelected = cell.isSelected;
                         }
                         row.splice(colIndex + 1, 0, newCell);
                     }
                 });
+
+                const newWidth = Math.max(table.widths[colIndex] / 2, MIN_WIDTH);
+
+                table.widths.splice(colIndex, 1, newWidth, newWidth);
             }
         }
     }

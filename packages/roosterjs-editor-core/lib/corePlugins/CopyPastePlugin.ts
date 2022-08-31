@@ -1,10 +1,15 @@
+import { forEachSelectedCell } from './utils/forEachSelectedCell';
+import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import {
     addRangeToSelection,
     createElement,
     extractClipboardEvent,
-    setHtmlWithSelectionPath,
     moveChildNodes,
     Browser,
+    setHtmlWithMetadata,
+    createRange,
+    VTable,
+    isWholeTableSelected,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -18,6 +23,8 @@ import {
     KnownCreateElementDataIndex,
     SelectionRangeEx,
     SelectionRangeTypes,
+    TableSelection,
+    TableOperation,
 } from 'roosterjs-editor-types';
 
 /**
@@ -80,22 +87,36 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         if (selection && !selection.areAllCollapsed) {
             const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
             const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
-            const newRange = setHtmlWithSelectionPath(
+            const metadata = setHtmlWithMetadata(
                 tempDiv,
                 html,
                 this.editor.getTrustedHTMLHandler()
             );
+            let newRange: Range;
 
-            if (newRange) {
-                addRangeToSelection(newRange);
+            if (selection.type === SelectionRangeTypes.TableSelection) {
+                const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
+                newRange = this.createTableRange(table, selection.coordinates);
+                if (isCut) {
+                    this.deleteTableContent(selection.table, selection.coordinates);
+                }
+            } else {
+                newRange =
+                    metadata?.type === SelectionRangeTypes.Normal
+                        ? createRange(tempDiv, metadata.start, metadata.end)
+                        : null;
             }
 
-            this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+            const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                 clonedRoot: tempDiv,
                 range: newRange,
                 rawEvent: event as ClipboardEvent,
                 isCut,
             });
+
+            if (cutCopyEvent.range) {
+                addRangeToSelection(newRange);
+            }
 
             this.editor.runAsync(editor => {
                 this.cleanUpAndRestoreSelection(tempDiv, selection, !isCut /* isCopy */);
@@ -191,6 +212,40 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 range.collapse();
             }
             this.editor.select(range);
+        }
+    }
+
+    private createTableRange(table: HTMLTableElement, selection: TableSelection) {
+        const clonedVTable = new VTable(table as HTMLTableElement);
+        clonedVTable.selection = selection;
+        removeCellsOutsideSelection(clonedVTable);
+        clonedVTable.writeBack();
+        return createRange(clonedVTable.table);
+    }
+
+    private deleteTableContent(table: HTMLTableElement, selection: TableSelection) {
+        const selectedVTable = new VTable(table);
+        selectedVTable.selection = selection;
+
+        forEachSelectedCell(selectedVTable, cell => {
+            if (cell?.td) {
+                cell.td.innerHTML = this.editor.getTrustedHTMLHandler()('<br>');
+            }
+        });
+
+        const wholeTableSelected = isWholeTableSelected(selectedVTable, selection);
+        const isWholeColumnSelected =
+            table.rows.length - 1 === selection.lastCell.y && selection.firstCell.y === 0;
+        if (wholeTableSelected) {
+            selectedVTable.edit(TableOperation.DeleteTable);
+            selectedVTable.writeBack();
+        } else if (isWholeColumnSelected) {
+            selectedVTable.edit(TableOperation.DeleteColumn);
+            selectedVTable.writeBack();
+        }
+        if (wholeTableSelected || isWholeColumnSelected) {
+            table.style.removeProperty('width');
+            table.style.removeProperty('height');
         }
     }
 }

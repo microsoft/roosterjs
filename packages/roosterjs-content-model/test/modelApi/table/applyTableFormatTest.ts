@@ -1,7 +1,5 @@
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
 import { combineBorderValue } from '../../../lib/domUtils/borderValues';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/ContentModelTableCell';
 import { TableBorderFormat } from 'roosterjs-editor-types';
@@ -12,8 +10,8 @@ const T = 'transparent';
 describe('applyTableFormat', () => {
     function createCell(): ContentModelTableCell {
         return {
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.TableCell,
+            blockType: 'BlockGroup',
+            blockGroupType: 'TableCell',
             blocks: [],
             isHeader: false,
             spanAbove: false,
@@ -44,9 +42,11 @@ describe('applyTableFormat', () => {
 
     function createTable(row: number, column: number): ContentModelTable {
         return {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: createCells(row, column),
             format: {},
+            widths: [0],
+            heights: [0],
         };
     }
 

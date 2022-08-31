@@ -1,7 +1,8 @@
+import { applyFormat } from '../utils/applyFormat';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { handleBlock } from './handleBlock';
 import { ModelToDomContext } from '../context/ModelToDomContext';
+import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
 /**
  * @internal
@@ -24,22 +25,28 @@ export function handleSegment(
     let element: HTMLElement | null = null;
 
     switch (segment.segmentType) {
-        case ContentModelSegmentType.Text:
+        case 'Text':
             const txt = doc.createTextNode(segment.text);
 
             element = doc.createElement('span');
             element.appendChild(txt);
             regularSelection.current.segment = txt;
+
+            applyFormat(
+                element,
+                SegmentFormatHandlers,
+                segment.format,
+                context.contentModelContext
+            );
+
             break;
 
-        case ContentModelSegmentType.Br:
+        case 'Br':
             element = doc.createElement('br');
             regularSelection.current.segment = element;
             break;
 
-        case ContentModelSegmentType.General:
-            regularSelection.current.segment = segment.element;
-
+        case 'General':
             handleBlock(doc, parent, segment, context);
             break;
     }

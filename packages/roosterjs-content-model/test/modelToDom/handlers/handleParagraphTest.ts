@@ -1,9 +1,6 @@
 import * as handleSegment from '../../../lib/modelToDom/handlers/handleSegment';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagraph';
 import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
@@ -34,7 +31,7 @@ describe('handleParagraph', () => {
     it('Handle empty explicit paragraph', () => {
         runTest(
             {
-                blockType: ContentModelBlockType.Paragraph,
+                blockType: 'Paragraph',
                 segments: [],
             },
             '<div></div>',
@@ -45,7 +42,7 @@ describe('handleParagraph', () => {
     it('Handle empty implicit paragraph', () => {
         runTest(
             {
-                blockType: ContentModelBlockType.Paragraph,
+                blockType: 'Paragraph',
                 segments: [],
                 isImplicit: true,
             },
@@ -56,12 +53,13 @@ describe('handleParagraph', () => {
 
     it('Handle paragraph with single text segment', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.Text,
+            segmentType: 'Text',
             text: 'test',
+            format: {},
         };
         runTest(
             {
-                blockType: ContentModelBlockType.Paragraph,
+                blockType: 'Paragraph',
                 segments: [segment],
             },
             '<div></div>',
@@ -78,12 +76,13 @@ describe('handleParagraph', () => {
 
     it('Handle implicit paragraph single text segment', () => {
         const segment: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.Text,
+            segmentType: 'Text',
             text: 'test',
+            format: {},
         };
         runTest(
             {
-                blockType: ContentModelBlockType.Paragraph,
+                blockType: 'Paragraph',
                 segments: [segment],
                 isImplicit: true,
             },
@@ -101,19 +100,21 @@ describe('handleParagraph', () => {
 
     it('Handle multiple segments', () => {
         const segment1: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.Text,
+            segmentType: 'Text',
             text: 'test',
+            format: {},
         };
         const segment2: ContentModelSegment = {
-            segmentType: ContentModelSegmentType.General,
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             blocks: [],
             element: null!,
+            format: {},
         };
         runTest(
             {
-                blockType: ContentModelBlockType.Paragraph,
+                blockType: 'Paragraph',
                 segments: [segment1, segment2],
             },
             '<div></div>',

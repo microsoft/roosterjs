@@ -1,6 +1,5 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
@@ -8,17 +7,19 @@ import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableM
  * Format current focused table with the given format
  * @param editor The editor instance
  * @param format The table format to apply
+ * @param keepCellShade Whether keep existing shade color when apply format if there is a manually set shade color
  */
 export default function formatTable(
     editor: IExperimentalContentModelEditor,
-    format: TableMetadataFormat
+    format: TableMetadataFormat,
+    keepCellShade?: boolean
 ) {
     const table = editor.getElementAtCursor('TABLE');
-    const model = editor.createContentModel(table);
-    const tableModel = model.blocks[0];
+    const model = table && editor.createContentModel(table);
+    const tableModel = model?.blocks[0];
 
-    if (tableModel?.blockType == ContentModelBlockType.Table) {
-        applyTableFormat(tableModel, format);
+    if (tableModel?.blockType == 'Table') {
+        applyTableFormat(tableModel, format, keepCellShade);
 
         editor.addUndoSnapshot(
             () => {

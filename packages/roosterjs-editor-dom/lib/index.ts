@@ -51,11 +51,13 @@ export { default as moveChildNodes } from './utils/moveChildNodes';
 
 export { default as VTable } from './table/VTable';
 export { default as isWholeTableSelected } from './table/isWholeTableSelected';
+
 export { default as VList } from './list/VList';
 export { default as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
 export { default as VListChain } from './list/VListChain';
 export { default as setListItemStyle } from './list/setListItemStyle';
+export { getTableFormatInfo } from './table/tableFormatInfo';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';

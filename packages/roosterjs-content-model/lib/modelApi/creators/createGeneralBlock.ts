@@ -1,5 +1,3 @@
-import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelGeneralBlock } from '../../publicTypes/block/group/ContentModelGeneralBlock';
 
 /**
@@ -7,8 +5,8 @@ import { ContentModelGeneralBlock } from '../../publicTypes/block/group/ContentM
  */
 export function createGeneralBlock(element: HTMLElement): ContentModelGeneralBlock {
     return {
-        blockType: ContentModelBlockType.BlockGroup,
-        blockGroupType: ContentModelBlockGroupType.General,
+        blockType: 'BlockGroup',
+        blockGroupType: 'General',
         element: element,
         blocks: [],
     };

@@ -1,5 +1,3 @@
-import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
 import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
 
@@ -17,8 +15,8 @@ export function createTableCell(
     const spanAbove =
         typeof spanAboveOrRowSpan === 'number' ? spanAboveOrRowSpan > 1 : !!spanAboveOrRowSpan;
     return {
-        blockType: ContentModelBlockType.BlockGroup,
-        blockGroupType: ContentModelBlockGroupType.TableCell,
+        blockType: 'BlockGroup',
+        blockGroupType: 'TableCell',
         blocks: [],
         format: format ? { ...format } : {},
         spanLeft,

@@ -2,7 +2,6 @@ import { alignTable } from '../../modelApi/table/alignTable';
 import { alignTableCell } from '../../modelApi/table/alignTableCell';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource, TableOperation } from 'roosterjs-editor-types';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
@@ -19,17 +18,17 @@ import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVer
 /**
  * Format current focused table with the given format
  * @param editor The editor instance
- * @param format The table format to apply
+ * @param operation The table operation to apply
  */
 export default function editTable(
     editor: IExperimentalContentModelEditor,
     operation: TableOperation
 ) {
     const table = editor.getElementAtCursor('TABLE');
-    const model = editor.createContentModel(table);
-    const tableModel = model.blocks[0];
+    const model = table && editor.createContentModel(table);
+    const tableModel = model?.blocks[0];
 
-    if (tableModel?.blockType == ContentModelBlockType.Table) {
+    if (tableModel?.blockType == 'Table') {
         switch (operation) {
             case TableOperation.AlignCellBottom:
             case TableOperation.AlignCellCenter:

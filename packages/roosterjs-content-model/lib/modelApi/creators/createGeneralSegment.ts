@@ -1,16 +1,18 @@
-import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 
 /**
  * @internal
  */
-export function createGeneralSegment(element: HTMLElement): ContentModelGeneralSegment {
+export function createGeneralSegment(
+    element: HTMLElement,
+    format?: ContentModelSegmentFormat
+): ContentModelGeneralSegment {
     return {
-        blockType: ContentModelBlockType.BlockGroup,
-        blockGroupType: ContentModelBlockGroupType.General,
-        segmentType: ContentModelSegmentType.General,
+        blockType: 'BlockGroup',
+        blockGroupType: 'General',
+        segmentType: 'General',
+        format: format ? { ...format } : {},
         blocks: [],
         element: element,
     };

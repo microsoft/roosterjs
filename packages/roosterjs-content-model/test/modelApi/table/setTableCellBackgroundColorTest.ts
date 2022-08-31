@@ -1,34 +1,35 @@
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { setTableCellBackgroundColor } from '../../../lib/modelApi/table/setTableCellBackgroundColor';
 
 describe('setTableCellBackgroundColor', () => {
     it('Empty table', () => {
         const table: ContentModelTable = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
     it('Table without selection', () => {
         const table: ContentModelTable = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
@@ -37,17 +38,19 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
@@ -56,25 +59,27 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
     it('Table with table cell selection', () => {
         const table: ContentModelTable = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
@@ -82,8 +87,8 @@ describe('setTableCellBackgroundColor', () => {
                         isSelected: true,
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
@@ -93,25 +98,27 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
@@ -122,8 +129,8 @@ describe('setTableCellBackgroundColor', () => {
                         isSelected: true,
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
@@ -136,32 +143,35 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
     it('Table with table content selection', () => {
         const table: ContentModelTable = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.SelectionMarker,
+                                        segmentType: 'SelectionMarker',
                                         isSelected: true,
+                                        format: {},
                                     },
                                 ],
                             },
@@ -173,32 +183,35 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
                     },
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Paragraph,
+                                blockType: 'Paragraph',
                                 segments: [
                                     {
-                                        segmentType: ContentModelSegmentType.SelectionMarker,
+                                        segmentType: 'SelectionMarker',
                                         isSelected: true,
+                                        format: {},
                                     },
                                 ],
                             },
@@ -213,26 +226,28 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 
     it('Table with nested table', () => {
         const table: ContentModelTable = {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Table,
+                                blockType: 'Table',
                                 format: {},
                                 cells: [
                                     [
                                         {
-                                            blockType: ContentModelBlockType.BlockGroup,
-                                            blockGroupType: ContentModelBlockGroupType.TableCell,
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'TableCell',
                                             spanAbove: false,
                                             spanLeft: false,
                                             format: {},
@@ -240,6 +255,8 @@ describe('setTableCellBackgroundColor', () => {
                                         },
                                     ],
                                 ],
+                                widths: [0],
+                                heights: [0],
                             },
                         ],
                         spanAbove: false,
@@ -250,26 +267,28 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         };
 
         setTableCellBackgroundColor(table, 'red');
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         blocks: [
                             {
-                                blockType: ContentModelBlockType.Table,
+                                blockType: 'Table',
                                 format: {},
                                 cells: [
                                     [
                                         {
-                                            blockType: ContentModelBlockType.BlockGroup,
-                                            blockGroupType: ContentModelBlockGroupType.TableCell,
+                                            blockType: 'BlockGroup',
+                                            blockGroupType: 'TableCell',
                                             spanAbove: false,
                                             spanLeft: false,
                                             format: {},
@@ -277,6 +296,8 @@ describe('setTableCellBackgroundColor', () => {
                                         },
                                     ],
                                 ],
+                                widths: [0],
+                                heights: [0],
                             },
                         ],
                         spanAbove: false,
@@ -287,6 +308,8 @@ describe('setTableCellBackgroundColor', () => {
                 ],
             ],
             format: {},
+            widths: [0],
+            heights: [0],
         });
     });
 });
