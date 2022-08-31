@@ -12,7 +12,7 @@ const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.Origina
  */
 export const getStyleBasedFormatState: GetStyleBasedFormatState = (
     core: EditorCore,
-    node: Node
+    node?: Node
 ) => {
     if (!node) {
         return {};

@@ -7,14 +7,17 @@ import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
-import { PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
+import { NodePosition, PositionType, QueryScope, RegionType } from 'roosterjs-editor-types';
 
 /**
  * Delete selected content, and return the new position to select
  * @param core The EditorCore object.
  * @param range The range to delete
  */
-export default function deleteSelectedContent(root: HTMLElement, range: Range) {
+export default function deleteSelectedContent(
+    root: HTMLElement,
+    range: Range
+): NodePosition | null {
     let nodeBefore: Node | null = null;
 
     // 1. TABLE and TR node in selected should be deleted. It is possible we don't detect them from step 2

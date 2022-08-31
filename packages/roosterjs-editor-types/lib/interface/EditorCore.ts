@@ -103,7 +103,7 @@ export type AttachDomEvent = (
 export type CreatePasteFragment = (
     core: EditorCore,
     clipboardData: ClipboardData,
-    position: NodePosition,
+    position: NodePosition | null,
     pasteAsText: boolean,
     applyCurrentStyle: boolean
 ) => DocumentFragment | null;
@@ -157,7 +157,7 @@ export type GetSelectionRangeEx = (core: EditorCore) => SelectionRangeEx;
  * @param core The EditorCore objects
  * @param node The node to get style from
  */
-export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
+export type GetStyleBasedFormatState = (core: EditorCore, node?: Node) => StyleBasedFormatState;
 
 /**
  * Get the pendable format such as underline and bold
@@ -182,7 +182,7 @@ export type HasFocus = (core: EditorCore) => boolean;
  * @param core The EditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
+export type InsertNode = (core: EditorCore, node: Node, option?: InsertOption) => boolean;
 
 /**
  * Restore an undo snapshot into editor
@@ -259,7 +259,7 @@ export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcas
  */
 export type SelectTable = (
     core: EditorCore,
-    table: HTMLTableElement,
+    table: HTMLTableElement | null,
     coordinates?: TableSelection
 ) => TableSelectionRange | null;
 

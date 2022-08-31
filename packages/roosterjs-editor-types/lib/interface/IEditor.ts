@@ -83,7 +83,7 @@ export default interface IEditor {
      * @param node The node to create InlineElement
      * @returns The BlockElement result
      */
-    getBlockElementAtNode(node: Node): BlockElement;
+    getBlockElementAtNode(node: Node): BlockElement | null;
 
     /**
      * Check if the node falls in the editor content
@@ -199,7 +199,7 @@ export default interface IEditor {
     /**
      * Delete selected content
      */
-    deleteSelectedContent(): NodePosition;
+    deleteSelectedContent(): NodePosition | null;
 
     /**
      * Paste into editor using a clipboardData object
@@ -221,7 +221,7 @@ export default interface IEditor {
      * Default value is true
      * @returns current selection range, or null if editor never got focus before
      */
-    getSelectionRange(tryGetFromCache?: boolean): Range;
+    getSelectionRange(tryGetFromCache?: boolean): Range | null;
 
     /**
      * Get current selection range from Editor.
@@ -235,7 +235,7 @@ export default interface IEditor {
      * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
      * @returns current selection path, or null if editor never got focus before
      */
-    getSelectionPath(): SelectionPath;
+    getSelectionPath(): SelectionPath | null;
 
     /**
      * Check if focus is in editor now
@@ -317,7 +317,7 @@ export default interface IEditor {
     /**
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
-    getFocusedPosition(): NodePosition;
+    getFocusedPosition(): NodePosition | null;
 
     /**
      * Get an HTML element from current cursor position.
@@ -331,7 +331,11 @@ export default interface IEditor {
      * @param event Optional, if specified, editor will try to get cached result from the event object first.
      * If it is not cached before, query from DOM and cache the result into the event object
      */
-    getElementAtCursor(selector?: string, startFrom?: Node, event?: PluginEvent): HTMLElement;
+    getElementAtCursor(
+        selector?: string,
+        startFrom?: Node,
+        event?: PluginEvent
+    ): HTMLElement | null;
 
     /**
      * Check if this position is at beginning of the editor.
@@ -505,10 +509,10 @@ export default interface IEditor {
     setEditorDomAttribute(name: string, value: string): void;
 
     /**
-     * Get DOM attribute of editor content DIV
+     * Get DOM attribute of editor content DIV, null if there is no such attribute.
      * @param name Name of the attribute
      */
-    getEditorDomAttribute(name: string): string;
+    getEditorDomAttribute(name: string): string | null;
 
     /**
      * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
@@ -517,7 +521,7 @@ export default interface IEditor {
      * may be different than what user is seeing from the view. When pass false, scroll position will be ignored.
      * @returns An [x, y] array which contains the left and top distances, or null if the given element is not in editor.
      */
-    getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[];
+    getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] | null;
 
     /**
      * Add a Content Edit feature.
