@@ -437,12 +437,12 @@ export default class Editor implements IEditor {
     }
 
     public select(
-        arg1: Range | NodePosition | Node | SelectionPath | HTMLTableElement,
+        arg1: Range | NodePosition | Node | SelectionPath | HTMLTableElement | null,
         arg2?: NodePosition | number | PositionType | TableSelection,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
-        if ('rows' in arg1) {
+        if (arg1 && 'rows' in arg1) {
             const selection = this.core.api.selectTable(this.core, arg1, <TableSelection>arg2);
             this.core.domEvent.tableSelectionRange = selection;
 
