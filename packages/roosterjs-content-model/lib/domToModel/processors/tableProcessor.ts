@@ -41,6 +41,7 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
         const columnPositions: number[] = [0];
         const rowPositions: number[] = [0];
+        const zoomScale = context.contentModelContext.zoomScale;
 
         for (let row = 0; row < tableElement.rows.length; row++) {
             const tr = tableElement.rows[row];
@@ -57,15 +58,18 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
                 const colEnd = targetCol + td.colSpan;
                 const rowEnd = row + td.rowSpan;
+                const needCalcWidth = columnPositions[colEnd] === undefined;
+                const needCalcHeight = rowPositions[rowEnd] === undefined;
 
-                if (columnPositions[colEnd] === undefined || rowPositions[rowEnd] === undefined) {
+                if (needCalcWidth || needCalcHeight) {
                     const rect = td.getBoundingClientRect();
 
-                    if (columnPositions[colEnd] === undefined) {
-                        columnPositions[colEnd] = columnPositions[targetCol] + rect.width;
+                    if (needCalcWidth) {
+                        columnPositions[colEnd] =
+                            columnPositions[targetCol] + rect.width / zoomScale;
                     }
-                    if (rowPositions[rowEnd] === undefined) {
-                        rowPositions[rowEnd] = rowPositions[row] + rect.height;
+                    if (needCalcHeight) {
+                        rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
                     }
                 }
 
