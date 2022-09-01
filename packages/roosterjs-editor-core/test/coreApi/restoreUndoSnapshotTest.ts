@@ -35,7 +35,7 @@ describe('restoreUndoSnapshot', () => {
 
         restoreUndoSnapshot(core, -1);
 
-        expect(addUndoSnapshot).toHaveBeenCalledWith(core);
+        expect(addUndoSnapshot).toHaveBeenCalledWith(core, null, null, false);
         expect(move).toHaveBeenCalledWith(-1);
         expect(setContent).toHaveBeenCalledWith(core, html, true, metadata);
         expect(core.undo.isRestoring).toBeFalse();

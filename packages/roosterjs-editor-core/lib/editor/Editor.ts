@@ -161,7 +161,7 @@ export default class Editor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
+        return node ? this.core.api.insertNode(this.core, node, option ?? null) : false;
     }
 
     /**
@@ -193,19 +193,13 @@ export default class Editor implements IEditor {
     ): boolean {
         // Only replace the node when it falls within editor
         if (this.contains(existingNode) && toNode) {
-            const nodeReplaceCallback = () =>
-                existingNode.parentNode?.replaceChild(toNode, existingNode);
-            if (transformColorForDarkMode) {
-                this.core.api.transformColor(
-                    this.core,
-                    toNode,
-                    true /*includeSelf*/,
-                    nodeReplaceCallback,
-                    ColorTransformDirection.LightToDark
-                );
-            } else {
-                nodeReplaceCallback();
-            }
+            this.core.api.transformColor(
+                this.core,
+                transformColorForDarkMode ? toNode : null,
+                true /*includeSelf*/,
+                () => existingNode.parentNode?.replaceChild(toNode, existingNode),
+                ColorTransformDirection.LightToDark
+            );
 
             return true;
         }
@@ -246,7 +240,13 @@ export default class Editor implements IEditor {
                 );
             });
         } else {
-            return queryElements(this.core.contentDiv, selector, callback, scope, undefined);
+            return queryElements(
+                this.core.contentDiv,
+                selector,
+                callback,
+                scope,
+                undefined /* range */
+            );
         }
 
         return result;
@@ -504,7 +504,7 @@ export default class Editor implements IEditor {
         event = startFrom ? undefined : event; // Only use cache when startFrom is not specified, for different start position can have different result
 
         return (
-            cacheGetEventData(event, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
+            cacheGetEventData(event ?? null, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
                 if (!startFrom) {
                     let position = this.getFocusedPosition();
                     startFrom = position?.node;
@@ -631,9 +631,9 @@ export default class Editor implements IEditor {
     ) {
         this.core.api.addUndoSnapshot(
             this.core,
-            callback,
-            changeSource,
-            canUndoByBackspace,
+            callback ?? null,
+            changeSource ?? null,
+            canUndoByBackspace ?? false,
             additionalData
         );
     }
@@ -709,6 +709,7 @@ export default class Editor implements IEditor {
 
     /**
      * Get a content traverser for current selection
+     * @returns A content traverser, or null if editor never got focus before
      */
     public getSelectionTraverser(range?: Range): IContentTraverser | null {
         range = range ?? this.getSelectionRange() ?? undefined;
@@ -720,6 +721,7 @@ export default class Editor implements IEditor {
     /**
      * Get a content traverser for current block element start from specified position
      * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
+     * @returns A content traverser, or null if editor never got focus before
      */
     public getBlockTraverser(
         startFrom: ContentPosition | CompatibleContentPosition = ContentPosition.SelectionStart
@@ -734,10 +736,11 @@ export default class Editor implements IEditor {
      * Get a text traverser of current selection
      * @param event Optional, if specified, editor will try to get cached result from the event object first.
      * If it is not cached before, query from DOM and cache the result into the event object
+     * @returns A content traverser, or null if editor never got focus before
      */
-    public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher {
-        return cacheGetEventData(event, 'ContentSearcher', () => {
-            let range = this.getSelectionRange() ?? new Range();
+    public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher | null {
+        return cacheGetEventData(event ?? null, 'ContentSearcher', () => {
+            let range = this.getSelectionRange();
             return (
                 range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range))
             );
@@ -832,7 +835,7 @@ export default class Editor implements IEditor {
             const range = this.getSelectionRange();
             node = (range && Position.getStart(range).normalize().node) ?? undefined;
         }
-        return this.core.api.getStyleBasedFormatState(this.core, node);
+        return this.core.api.getStyleBasedFormatState(this.core, node ?? null);
     }
 
     /**

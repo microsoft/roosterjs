@@ -8,7 +8,7 @@ import { PluginEvent } from 'roosterjs-editor-types';
  * @param getter Getter function to get the object when it is not in cache yet
  */
 export default function cacheGetEventData<T>(
-    event: PluginEvent | undefined,
+    event: PluginEvent | null,
     key: string,
     getter: () => T
 ): T {

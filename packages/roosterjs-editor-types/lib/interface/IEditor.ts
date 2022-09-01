@@ -478,12 +478,14 @@ export default interface IEditor {
 
     /**
      * Get a content traverser for current selection
+     * @returns A content traverser, or null if editor never got focus before and no range is provided
      */
     getSelectionTraverser(range?: Range): IContentTraverser | null;
 
     /**
      * Get a content traverser for current block element start from specified position
      * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
+     * @returns A content traverser, or null if editor never got focus before
      */
     getBlockTraverser(
         startFrom?: ContentPosition | CompatibleContentPosition
@@ -493,8 +495,9 @@ export default interface IEditor {
      * Get a text traverser of current selection
      * @param event Optional, if specified, editor will try to get cached result from the event object first.
      * If it is not cached before, query from DOM and cache the result into the event object
+     * @returns A content traverser, or null if editor never got focus before
      */
-    getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher;
+    getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher | null;
 
     /**
      * Run a callback function asynchronously

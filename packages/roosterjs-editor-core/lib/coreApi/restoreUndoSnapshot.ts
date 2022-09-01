@@ -8,7 +8,12 @@ import { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
  */
 export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step: number) => {
     if (core.undo.hasNewContent && step < 0) {
-        core.api.addUndoSnapshot(core);
+        core.api.addUndoSnapshot(
+            core,
+            null /*callback*/,
+            null /*changeSource*/,
+            false /*canUndoByBackspace*/
+        );
     }
 
     const snapshot = core.undo.snapshotsService.move(step);

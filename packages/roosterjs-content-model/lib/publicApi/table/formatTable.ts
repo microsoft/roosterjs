@@ -24,7 +24,9 @@ export default function formatTable(
         editor.addUndoSnapshot(
             () => {
                 editor.focus();
-                editor.setContentModel(model!, fragment => editor.replaceNode(table!, fragment));
+                if (model && table) {
+                    editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
+                }
             },
             ChangeSource.Format,
             false /*canUndoByBackspace*/,

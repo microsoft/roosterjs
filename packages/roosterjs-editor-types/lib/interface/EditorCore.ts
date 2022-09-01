@@ -75,9 +75,9 @@ export default interface EditorCore extends PluginState {
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
-    callback?: (start: NodePosition | null, end: NodePosition | null) => any,
-    changeSource?: ChangeSource | CompatibleChangeSource | string,
-    canUndoByBackspace?: boolean,
+    callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
+    changeSource: ChangeSource | CompatibleChangeSource | string | null,
+    canUndoByBackspace: boolean,
     additionalData?: ContentChangedData
 ) => void;
 
@@ -157,7 +157,10 @@ export type GetSelectionRangeEx = (core: EditorCore) => SelectionRangeEx;
  * @param core The EditorCore objects
  * @param node The node to get style from
  */
-export type GetStyleBasedFormatState = (core: EditorCore, node?: Node) => StyleBasedFormatState;
+export type GetStyleBasedFormatState = (
+    core: EditorCore,
+    node: Node | null
+) => StyleBasedFormatState;
 
 /**
  * Get the pendable format such as underline and bold
@@ -182,7 +185,7 @@ export type HasFocus = (core: EditorCore) => boolean;
  * @param core The EditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export type InsertNode = (core: EditorCore, node: Node, option?: InsertOption) => boolean;
+export type InsertNode = (core: EditorCore, node: Node, option: InsertOption | null) => boolean;
 
 /**
  * Restore an undo snapshot into editor
@@ -234,7 +237,7 @@ export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
  */
 export type TransformColor = (
     core: EditorCore,
-    rootNode: Node,
+    rootNode: Node | null,
     includeSelf: boolean,
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
