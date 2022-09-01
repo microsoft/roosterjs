@@ -21,13 +21,15 @@ describe('DragAndDropHelper |', () => {
         node.style.height = '50px';
         node.style.backgroundColor = 'black';
         node.style.position = 'fixed';
+        node.style.top = '0px';
+        node.style.left = '0px';
 
         //Put node on top of body
         document.body.insertBefore(node, document.body.childNodes[0]);
     });
 
     //Creates the DragAndDropHelper for testing
-    function creteDnD(node: HTMLElement, mobile: boolean) {
+    function createDnD(node: HTMLElement, mobile: boolean) {
         dndHelper = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
             node,
             { node },
@@ -63,9 +65,12 @@ describe('DragAndDropHelper |', () => {
     it('mouse movement', () => {
         // Arrange
         const target = document.getElementById(id);
-        creteDnD(target, false);
+        createDnD(target, false);
         let targetEnd = target;
         targetEnd.style.top = 50 + 'px';
+
+        // Assert
+        expect(dndHelper.mouseType).toBe('mouse');
 
         // Act
         simulateMouseEvent('mousedown', target);
@@ -83,17 +88,18 @@ describe('DragAndDropHelper |', () => {
         simulateMouseEvent('mouseup', targetEnd);
 
         // Assert
-        let divMoved = target?.style.top != '0px';
-        expect(divMoved).toBe(true);
         expect(target?.style.backgroundColor).toBe('red');
     });
 
     it('touch movement', () => {
         // Arrange
         const target = document.getElementById(id);
-        creteDnD(target, true);
+        createDnD(target, true);
         let targetEnd = target;
         targetEnd.style.left = 50 + 'px';
+
+        // Assert
+        expect(dndHelper.mouseType).toBe('touch');
 
         // Act
         simulateTouchEvent('touchstart', target);
@@ -111,8 +117,6 @@ describe('DragAndDropHelper |', () => {
         simulateTouchEvent('touchend', targetEnd);
 
         // Assert
-        let divMoved = target?.style.left != '0px';
-        expect(divMoved).toBe(true);
         expect(target?.style.backgroundColor).toBe('red');
     });
 });
