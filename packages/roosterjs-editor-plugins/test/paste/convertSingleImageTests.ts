@@ -1,7 +1,7 @@
 import * as moveChildNodes from 'roosterjs-editor-dom/lib/utils/moveChildNodes';
 import convertPasteContentForSingleImage from '../../lib/plugins/Paste/imageConverter/convertPasteContentForSingleImage';
-import { getPasteEvent } from './pasteTestUtils';
 import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import { getPasteEvent } from './pasteTestUtils';
 
 describe('convertPasteContentForSingleImage |', () => {
     let ev: BeforePasteEvent;
@@ -14,7 +14,7 @@ describe('convertPasteContentForSingleImage |', () => {
         image = document.createElement('img');
         spyOn(moveChildNodes, 'default');
         spyOn(window, 'DOMParser').and.returnValue(<DOMParser>{
-            parseFromString(string, type) {
+            parseFromString(_string: string, _type: DOMParserSupportedType) {
                 doc = <Document>(<any>document.createDocumentFragment());
                 doc.append(image);
                 return doc;

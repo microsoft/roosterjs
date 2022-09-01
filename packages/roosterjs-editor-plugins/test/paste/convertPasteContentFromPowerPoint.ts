@@ -14,7 +14,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         image = document.createElement('img');
         spyOn(moveChildNodes, 'default');
         spyOn(window, 'DOMParser').and.returnValue(<DOMParser>{
-            parseFromString(string, type) {
+            parseFromString(_string: string, _type: DOMParserSupportedType) {
                 doc = <Document>(<any>document.createDocumentFragment());
                 doc.append(image);
                 return doc;
