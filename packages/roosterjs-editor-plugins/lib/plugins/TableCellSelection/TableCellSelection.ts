@@ -1,9 +1,6 @@
 import normalizeTableSelection from './utils/normalizeTableSelection';
-import { forEachSelectedCell } from './utils/forEachSelectedCell';
 import { getCellCoordinates } from './utils/getCellCoordinates';
-import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import {
-    BeforeCutCopyEvent,
     BuildInEditFeature,
     Coordinates,
     EditorPlugin,
@@ -115,9 +112,6 @@ export default class TableCellSelection implements EditorPlugin {
                         }
                     }
                     break;
-                case PluginEventType.BeforeCutCopy:
-                    this.handleBeforeCutCopy(event);
-                    break;
                 case PluginEventType.MouseDown:
                     if (!this.startedSelection) {
                         this.handleMouseDownEvent(event);
@@ -170,35 +164,6 @@ export default class TableCellSelection implements EditorPlugin {
             }
         } else if (this.tableSelection) {
             this.restoreSelection();
-        }
-    }
-
-    /**
-     * Handles the Before Copy Event.
-     * Clear the selection range from the cloned Root.
-     * @param event plugin event
-     */
-    private handleBeforeCutCopy(event: BeforeCutCopyEvent) {
-        const selection = this.editor.getSelectionRangeEx();
-        if (selection.type == SelectionRangeTypes.TableSelection) {
-            const clonedTable = event.clonedRoot.querySelector('table#' + selection.table.id);
-            if (clonedTable) {
-                this.tableRange = selection.coordinates;
-                const clonedVTable = new VTable(clonedTable as HTMLTableElement);
-                clonedVTable.selection = this.tableRange;
-                removeCellsOutsideSelection(clonedVTable);
-                clonedVTable.writeBack();
-
-                event.range.selectNode(clonedTable);
-
-                if (event.isCut) {
-                    forEachSelectedCell(this.vTable, cell => {
-                        if (cell?.td) {
-                            deleteNodeContents(cell.td, this.editor);
-                        }
-                    });
-                }
-            }
         }
     }
 

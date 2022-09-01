@@ -301,6 +301,31 @@ describe('setListItemStyle', () => {
         );
     });
 
+    it('List Item element, with <ol><li><div><b><span>aaa</span></b></div></li><ol>', () => {
+        // Arrange;
+        const listItemElement = document.createElement('li');
+        const divElement = document.createElement('div');
+
+        const spanElement = createElement({
+            elementTag: 'span',
+            styles: 'font-size: 72pt;font-family: Tahoma;color:blue',
+            textContent: 'test',
+        });
+
+        const b = document.createElement('b');
+        b.appendChild(spanElement);
+        divElement.appendChild(b);
+        listItemElement.appendChild(divElement);
+
+        // Act;
+        setListItemStyle(listItemElement, stylesToInherit);
+
+        // Assert;
+        expect(listItemElement.getAttribute('style')).toBe(
+            'font-size:72pt;font-family:Tahoma;color:blue'
+        );
+    });
+
     function runTest(childElement: TestChildElement[], result: string) {
         // Arrange
         let listItemElement = document.createElement('li');
@@ -315,6 +340,7 @@ describe('setListItemStyle', () => {
         // Assert
         expect(listItemElement.getAttribute('style')).toBe(result);
     }
+
     function createElement(input: TestChildElement): HTMLElement {
         const { elementTag, styles, textContent } = input;
         const element = document.createElement(elementTag);
