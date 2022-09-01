@@ -1,21 +1,15 @@
 import convertPasteContentForSingleImage from './imageConverter/convertPasteContentForSingleImage';
 import convertPastedContentForLI from './commonConverter/convertPastedContentForLI';
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
+import convertPastedContentFromOfficeOnline from './officeOnlineConverter/convertPastedContentFromOfficeOnline';
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import getPasteSource from './sourceValidations/getPasteSource';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
-import { documentContainWacElements } from './sourceValidations/documentContainWacElements';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { GOOGLE_SHEET_NODE_NAME } from './sourceValidations/constants';
-import { isExcelDesktopDocument } from './sourceValidations/isExcelDesktopDocument';
-import { isGoogleSheetDocument } from './sourceValidations/isGoogleSheetDocument';
-import { isPowerPointDesktopDocument } from './sourceValidations/isPowerPointDesktopDocument';
-import { isWordDesktopDocument } from './sourceValidations/isWordDesktopDocument';
-import { shouldConvertToSingleImage } from './sourceValidations/shouldConvertToSingleImage';
-import convertPastedContentFromWordOnline, {
-    isWordOnlineWithList,
-} from './officeOnlineConverter/convertPastedContentFromWordOnline';
+import { KnownSourceType } from './sourceValidations/KnownSourceType';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -60,37 +54,34 @@ export default class Paste implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
-            const { htmlAttributes, fragment, sanitizingOption, clipboardData } = event;
+            const { fragment, sanitizingOption } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
-            let wacListElements: Node[] = [];
 
-            if (isWordDesktopDocument(htmlAttributes)) {
-                // Handle HTML copied from Word
-                convertPastedContentFromWord(event);
-            } else if (isExcelDesktopDocument(htmlAttributes)) {
-                // Handle HTML copied from Excel
-                convertPastedContentFromExcel(event, trustedHTMLHandler);
-            } else if (isPowerPointDesktopDocument(htmlAttributes)) {
-                convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
-            } else if (documentContainWacElements(wacListElements, fragment)) {
-                // Once it is known that the document is from WAC
-                // We need to remove the display property and margin from all the list item
-                wacListElements.forEach((el: HTMLElement) => {
-                    el.style.display = null;
-                    el.style.margin = null;
-                });
-                // call conversion function if the pasted content is from word online and
-                // has list element in the pasted content.
-                if (isWordOnlineWithList(fragment)) {
-                    convertPastedContentFromWordOnline(fragment);
-                }
-            } else if (isGoogleSheetDocument(fragment)) {
-                sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
-            } else if (shouldConvertToSingleImage(this.editor, clipboardData)) {
-                convertPasteContentForSingleImage(event, trustedHTMLHandler);
-            } else {
-                convertPastedContentForLI(fragment);
-                handleLineMerge(fragment);
+            switch (getPasteSource(event, this.editor)) {
+                case KnownSourceType.WordDesktop:
+                    // Handle HTML copied from Word
+                    convertPastedContentFromWord(event);
+                    break;
+                case KnownSourceType.ExcelDesktop:
+                    // Handle HTML copied from Excel
+                    convertPastedContentFromExcel(event, trustedHTMLHandler);
+                    break;
+                case KnownSourceType.PowerPointDesktop:
+                    convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
+                    break;
+                case KnownSourceType.WacComponents:
+                    convertPastedContentFromOfficeOnline(fragment);
+                    break;
+                case KnownSourceType.GoogleSheets:
+                    sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+                    break;
+                case KnownSourceType.SingleImage:
+                    convertPasteContentForSingleImage(event, trustedHTMLHandler);
+                    break;
+                case KnownSourceType.Default:
+                    convertPastedContentForLI(fragment);
+                    handleLineMerge(fragment);
+                    break;
             }
 
             sanitizeHtmlColorsFromPastedContent(sanitizingOption);

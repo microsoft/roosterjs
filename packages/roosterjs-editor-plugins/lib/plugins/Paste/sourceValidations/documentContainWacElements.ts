@@ -1,7 +1,6 @@
-import { toArray } from 'roosterjs-editor-dom';
-
-const WAC_IDENTIFY_SELECTOR =
-    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
+import { getSourceFunction } from './getPasteSource';
+import { KnownSourceType } from './KnownSourceType';
+import { WAC_IDENTIFY_SELECTOR } from './constants';
 
 /**
  * @internal
@@ -10,7 +9,9 @@ const WAC_IDENTIFY_SELECTOR =
  * @param fragment Fragment to verify
  * @returns
  */
-export function documentContainWacElements(wacListElements: Node[], fragment: DocumentFragment) {
-    wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR));
-    return !!(wacListElements.length > 0);
-}
+const documentContainWacElements: getSourceFunction = (
+    htmlAttributes: Record<string, string>,
+    fragment: DocumentFragment
+) => (!!fragment.querySelector(WAC_IDENTIFY_SELECTOR) ? KnownSourceType.WacComponents : false);
+
+export default documentContainWacElements;

@@ -1,4 +1,6 @@
+import { getSourceFunction } from './getPasteSource';
 import { GOOGLE_SHEET_NODE_NAME } from './constants';
+import { KnownSourceType } from './KnownSourceType';
 
 /**
  * @internal
@@ -6,6 +8,9 @@ import { GOOGLE_SHEET_NODE_NAME } from './constants';
  * @param fragment
  * @returns
  */
-export function isGoogleSheetDocument(fragment: DocumentFragment) {
-    return !!fragment.querySelector(GOOGLE_SHEET_NODE_NAME);
-}
+const isGoogleSheetDocument: getSourceFunction = (
+    htmlAttributes: Record<string, string>,
+    fragment: DocumentFragment
+) => (!!fragment.querySelector(GOOGLE_SHEET_NODE_NAME) ? KnownSourceType.GoogleSheets : false);
+
+export default isGoogleSheetDocument;

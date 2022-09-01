@@ -1,4 +1,6 @@
 import { ClipboardData, ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
+import { getSourceFunction } from './getPasteSource';
+import { KnownSourceType } from './KnownSourceType';
 
 /**
  * @internal
@@ -8,10 +10,16 @@ import { ClipboardData, ExperimentalFeatures, IEditor } from 'roosterjs-editor-t
  * @param clipboardData Clipboard data to check
  * @returns
  */
-export function shouldConvertToSingleImage(editor: IEditor, clipboardData: ClipboardData) {
-    return (
-        editor.isFeatureEnabled(ExperimentalFeatures.ConvertSingleImageBody) &&
-        clipboardData.htmlFirstLevelChildTags?.length == 1 &&
-        clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
-    );
-}
+const shouldConvertToSingleImage: getSourceFunction = (
+    htmlAttributes: Record<string, string>,
+    fragment: DocumentFragment,
+    editor: IEditor,
+    clipboardData: ClipboardData
+) =>
+    editor.isFeatureEnabled(ExperimentalFeatures.ConvertSingleImageBody) &&
+    clipboardData.htmlFirstLevelChildTags?.length == 1 &&
+    clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
+        ? KnownSourceType.SingleImage
+        : false;
+
+export default shouldConvertToSingleImage;

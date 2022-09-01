@@ -3,34 +3,27 @@ import * as convertPastedContentForLI from '../../lib/plugins/Paste/commonConver
 import * as convertPastedContentFromExcel from '../../lib/plugins/Paste/excelConverter/convertPastedContentFromExcel';
 import * as convertPastedContentFromPowerPoint from '../../lib/plugins/Paste/pptConverter/convertPastedContentFromPowerPoint';
 import * as convertPastedContentFromWord from '../../lib/plugins/Paste/wordConverter/convertPastedContentFromWord';
-import * as documentContainWacElements from '../../lib/plugins/Paste/sourceValidations/documentContainWacElements';
+import * as getPasteSource from '../../lib/plugins/Paste/sourceValidations/getPasteSource';
 import * as handleLineMerge from '../../lib/plugins/Paste/lineMerge/handleLineMerge';
-import * as isExcelDesktopDocument from '../../lib/plugins/Paste/sourceValidations/isExcelDesktopDocument';
-import * as isGoogleSheetDocument from '../../lib/plugins/Paste/sourceValidations/isGoogleSheetDocument';
-import * as isPowerPointDesktopDocument from '../../lib/plugins/Paste/sourceValidations/isPowerPointDesktopDocument';
-import * as isWordDesktopDocument from '../../lib/plugins/Paste/sourceValidations/isWordDesktopDocument';
 import * as sanitizeHtmlColorsFromPastedContent from '../../lib/plugins/Paste/sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
-import * as shouldConvertToSingleImage from '../../lib/plugins/Paste/sourceValidations/shouldConvertToSingleImage';
 import * as wordOnlineFile from '../../lib/plugins/Paste/officeOnlineConverter/convertPastedContentFromWordOnline';
+import { Editor } from 'roosterjs-editor-core';
+import { getPasteEvent, getWacElement } from './pasteTestUtils';
+import { GOOGLE_SHEET_NODE_NAME } from '../../lib/plugins/Paste/sourceValidations/constants';
+import { KnownSourceType } from '../../lib/plugins/Paste/sourceValidations/KnownSourceType';
+import { Paste } from '../../lib/Paste';
 import {
     BeforePasteEvent,
-    ClipboardData,
     EditorOptions,
     IEditor,
-    PluginEvent,
-    PluginEventType,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
-import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
-import { Editor } from 'roosterjs-editor-core';
-import { GOOGLE_SHEET_NODE_NAME } from '../../lib/plugins/Paste/sourceValidations/constants';
-import { Paste } from '../../lib/Paste';
 
 describe('Paste Plugin Test', () => {
     let editor: IEditor;
     let id = 'tableSelectionContainerId';
     let paste: Paste;
-    let ev: PluginEvent;
+    let ev: BeforePasteEvent;
 
     beforeEach(() => {
         ev = getPasteEvent();
@@ -73,7 +66,7 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Word Content', () => {
-            setUpSpies(true /* WordSpy */);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.WordDesktop);
             spyOn(convertPastedContentFromWord, 'default').and.callFake(() => {});
 
             paste.onPluginEvent(ev);
@@ -85,7 +78,7 @@ describe('Paste Plugin Test', () => {
         it('Excel Content', () => {
             const mockHandler = <TrustedHTMLHandler>{};
 
-            setUpSpies(false /* Word */, true /* Excel */);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.ExcelDesktop);
             spyOn(convertPastedContentFromExcel, 'default').and.callFake(() => {});
             spyOn(editor, 'getTrustedHTMLHandler').and.returnValue(mockHandler);
 
@@ -101,10 +94,9 @@ describe('Paste Plugin Test', () => {
         it('PowerPoint Content', () => {
             const mockHandler = <TrustedHTMLHandler>{};
 
-            setUpSpies(false /* Word */, false /* Excel */, true /* Power Point */);
-
-            spyOn(convertPastedContentFromPowerPoint, 'default').and.callFake(() => {});
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.PowerPointDesktop);
             spyOn(editor, 'getTrustedHTMLHandler').and.returnValue(mockHandler);
+            spyOn(convertPastedContentFromPowerPoint, 'default');
 
             paste.onPluginEvent(ev);
 
@@ -116,41 +108,22 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Document with WAC elements no list', () => {
-            const elements: HTMLElement[] = [];
+            const tempEl = getWacElement();
+            tempEl.style.display = 'inherit';
+            tempEl.style.margin = '0px';
+            ev.fragment.append(tempEl);
 
-            spyOn(isWordDesktopDocument, 'isWordDesktopDocument').and.returnValue(false);
-            spyOn(isExcelDesktopDocument, 'isExcelDesktopDocument').and.returnValue(false);
-            spyOn(isPowerPointDesktopDocument, 'isPowerPointDesktopDocument').and.returnValue(
-                false
-            );
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.WacComponents);
             spyOn(wordOnlineFile, 'isWordOnlineWithList').and.returnValue(false);
-            spyOn(documentContainWacElements, 'documentContainWacElements').and.callFake(
-                fakeElements => {
-                    const tempEl = document.createElement('div');
-
-                    tempEl.style.display = 'inherit';
-                    tempEl.style.margin = '0px';
-
-                    elements.push(tempEl);
-                    fakeElements.push(tempEl);
-
-                    return true;
-                }
-            );
 
             paste.onPluginEvent(ev);
 
-            expect(elements[0].style.display).toBe('');
-            expect(elements[0].style.margin).toBe('');
+            expect(tempEl?.style.display).toBe('');
+            expect(tempEl?.style.margin).toBe('');
         });
 
         it('Document with WAC elements with list', () => {
-            setUpSpies(
-                false /* Word */,
-                false /* Excel */,
-                false /* Power Point */,
-                true /* wacElements */
-            );
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.WacComponents);
             spyOn(wordOnlineFile, 'isWordOnlineWithList').and.returnValue(true);
             spyOn(wordOnlineFile, 'default').and.callFake(() => {});
 
@@ -161,13 +134,7 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Document from google sheets', () => {
-            setUpSpies(
-                false /* Word */,
-                false /* Excel */,
-                false /* Power Point */,
-                false /* wacElements */,
-                true /* google sheet */
-            );
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.GoogleSheets);
 
             paste.onPluginEvent(ev);
 
@@ -181,14 +148,7 @@ describe('Paste Plugin Test', () => {
         it('Convert SIngle Image', () => {
             const mockHandler = <TrustedHTMLHandler>{};
             spyOn(editor, 'getTrustedHTMLHandler').and.returnValue(mockHandler);
-            setUpSpies(
-                false /* Word */,
-                false /* Excel */,
-                false /* Power Point */,
-                false /* wacElements */,
-                false /* google sheet */,
-                true /* convert image */
-            );
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.SingleImage);
             spyOn(convertPasteContentForSingleImage, 'default');
 
             paste.onPluginEvent(ev);
@@ -201,14 +161,7 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Any doc', () => {
-            setUpSpies(
-                false /* Word */,
-                false /* Excel */,
-                false /* Power Point */,
-                false /* wacElements */,
-                false /* google sheet */,
-                false /* convert image */
-            );
+            spyOn(getPasteSource, 'default').and.returnValue(KnownSourceType.Default);
             spyOn(convertPastedContentForLI, 'default');
             spyOn(handleLineMerge, 'default');
 
@@ -221,31 +174,3 @@ describe('Paste Plugin Test', () => {
         });
     });
 });
-
-const getPasteEvent = (): PluginEvent => {
-    return {
-        eventType: PluginEventType.BeforePaste,
-        clipboardData: <ClipboardData>{},
-        fragment: document.createDocumentFragment(),
-        sanitizingOption: createDefaultHtmlSanitizerOptions(),
-        htmlBefore: '',
-        htmlAfter: '',
-        htmlAttributes: {},
-    };
-};
-
-function setUpSpies(
-    word: boolean = false,
-    excel: boolean = false,
-    powerPoint: boolean = false,
-    wacElements: boolean = false,
-    googleSheet: boolean = false,
-    convertImage: boolean = false
-) {
-    spyOn(isWordDesktopDocument, 'isWordDesktopDocument').and.returnValue(word);
-    spyOn(isExcelDesktopDocument, 'isExcelDesktopDocument').and.returnValue(excel);
-    spyOn(isPowerPointDesktopDocument, 'isPowerPointDesktopDocument').and.returnValue(powerPoint);
-    spyOn(documentContainWacElements, 'documentContainWacElements').and.returnValue(wacElements);
-    spyOn(isGoogleSheetDocument, 'isGoogleSheetDocument').and.returnValue(googleSheet);
-    spyOn(shouldConvertToSingleImage, 'shouldConvertToSingleImage').and.returnValue(convertImage);
-}

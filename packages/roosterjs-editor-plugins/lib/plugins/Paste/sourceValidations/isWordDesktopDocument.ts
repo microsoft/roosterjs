@@ -1,3 +1,5 @@
+import { getSourceFunction } from './getPasteSource';
+import { KnownSourceType } from './KnownSourceType';
 import { PROG_ID_NAME } from './constants';
 
 const WORD_ATTRIBUTE_NAME = 'xmlns:w';
@@ -10,9 +12,10 @@ const WORD_PROG_ID = 'Word.Document';
  * @param htmlAttributes html attributes to check.
  * @returns
  */
-export function isWordDesktopDocument(htmlAttributes: Record<string, string>) {
-    return (
-        htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
-        htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
-    );
-}
+const isWordDesktopDocument: getSourceFunction = (htmlAttributes: Record<string, string>) =>
+    htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
+    htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
+        ? KnownSourceType.WordDesktop
+        : false;
+
+export default isWordDesktopDocument;
