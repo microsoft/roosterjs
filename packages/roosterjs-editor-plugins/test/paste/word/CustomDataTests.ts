@@ -24,4 +24,18 @@ describe('Word Custom Data | ', () => {
         expect(el.getAttribute(NODE_ID_ATTRIBUTE_NAME)).toEqual('1');
         expect(val).toEqual(TEST_VALUE);
     });
+
+    it('getObject === undefined', () => {
+        const el = document.createElement('div');
+        const val = getObject(customData, el, TEST_KEY);
+
+        expect(val).toBeUndefined();
+    });
+
+    it('getObject === null', () => {
+        const el = document.createTextNode('div');
+        const val = getObject(customData, el, TEST_KEY);
+
+        expect(val).toBeNull();
+    });
 });
