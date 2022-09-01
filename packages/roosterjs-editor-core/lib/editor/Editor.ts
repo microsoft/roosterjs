@@ -70,11 +70,13 @@ import type {
     CompatibleRegionType,
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 
+const disposedError = () => new Error('Editor Core is already disposed');
+
 /**
  * RoosterJs core editor class
  */
 export default class Editor implements IEditor {
-    private core: EditorCore;
+    private core: EditorCore | null = null;
 
     //#region Lifecycle
 
@@ -131,6 +133,9 @@ export default class Editor implements IEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
+        if (!this.core) {
+            throw disposedError();
+        }
         for (let i = this.core.plugins.length - 1; i >= 0; i--) {
             this.core.plugins[i].dispose();
         }
@@ -161,6 +166,9 @@ export default class Editor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return node ? this.core.api.insertNode(this.core, node, option ?? null) : false;
     }
 
@@ -191,6 +199,9 @@ export default class Editor implements IEditor {
         toNode: Node,
         transformColorForDarkMode?: boolean
     ): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         // Only replace the node when it falls within editor
         if (this.contains(existingNode) && toNode) {
             this.core.api.transformColor(
@@ -213,10 +224,16 @@ export default class Editor implements IEditor {
      * @returns The BlockElement result
      */
     public getBlockElementAtNode(node: Node): BlockElement | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         return getBlockElementAtNode(this.core.contentDiv, node);
     }
 
     public contains(arg: Node | Range): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return contains(this.core.contentDiv, <Node>arg);
     }
 
@@ -228,6 +245,9 @@ export default class Editor implements IEditor {
             | ((node: Node) => any) = QueryScope.Body,
         callback?: (node: Node) => any
     ) {
+        if (!this.core) {
+            throw disposedError();
+        }
         const result: HTMLElement[] = [];
         let scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
@@ -236,7 +256,7 @@ export default class Editor implements IEditor {
         if (selectionEx) {
             selectionEx.ranges.forEach(range => {
                 result.push(
-                    ...queryElements(this.core.contentDiv, selector, callback, scope, range)
+                    ...queryElements(this.core!.contentDiv, selector, callback, scope, range)
                 );
             });
         } else {
@@ -264,6 +284,9 @@ export default class Editor implements IEditor {
      * otherwise just return start and end
      */
     public collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[] {
+        if (!this.core) {
+            throw disposedError();
+        }
         return collapseNodes(this.core.contentDiv, start, end, canSplitParent);
     }
 
@@ -277,6 +300,9 @@ export default class Editor implements IEditor {
      * @returns True if there's no visible content, otherwise false
      */
     public isEmpty(trim?: boolean): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return isNodeEmpty(this.core.contentDiv, trim);
     }
 
@@ -288,6 +314,9 @@ export default class Editor implements IEditor {
     public getContent(
         mode: GetContentMode | CompatibleGetContentMode = GetContentMode.CleanHTML
     ): string {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.api.getContent(this.core, mode);
     }
 
@@ -297,6 +326,9 @@ export default class Editor implements IEditor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.core.api.setContent(this.core, content, triggerContentChangedEvent);
     }
 
@@ -310,6 +342,9 @@ export default class Editor implements IEditor {
      *  insertOnNewLine: false
      */
     public insertContent(content: string, option?: InsertOption) {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (content) {
             const doc = this.getDocument();
             const body = new DOMParser().parseFromString(
@@ -336,6 +371,9 @@ export default class Editor implements IEditor {
      * Delete selected content
      */
     public deleteSelectedContent(): NodePosition | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         const range = this.getSelectionRange();
         if (range && !range.collapsed) {
             return deleteSelectedContent(this.core.contentDiv, range);
@@ -355,6 +393,9 @@ export default class Editor implements IEditor {
         pasteAsText: boolean = false,
         applyCurrentFormat: boolean = false
     ) {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (!clipboardData) {
             return;
         }
@@ -397,6 +438,9 @@ export default class Editor implements IEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     public getSelectionRange(tryGetFromCache: boolean = true): Range | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.api.getSelectionRange(this.core, tryGetFromCache);
     }
 
@@ -408,6 +452,9 @@ export default class Editor implements IEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     public getSelectionRangeEx(): SelectionRangeEx {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.api.getSelectionRangeEx(this.core);
     }
 
@@ -417,6 +464,9 @@ export default class Editor implements IEditor {
      * @returns current selection path, or null if editor never got focus before
      */
     public getSelectionPath(): SelectionPath | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         const range = this.getSelectionRange();
         return range && getSelectionPath(this.core.contentDiv, range);
     }
@@ -426,6 +476,9 @@ export default class Editor implements IEditor {
      * @returns true if focus is in editor, otherwise false
      */
     public hasFocus(): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.api.hasFocus(this.core);
     }
 
@@ -433,6 +486,9 @@ export default class Editor implements IEditor {
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     public focus() {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.core.api.focus(this.core);
     }
 
@@ -442,6 +498,9 @@ export default class Editor implements IEditor {
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (arg1 && 'rows' in arg1) {
             const selection = this.core.api.selectTable(this.core, arg1, <TableSelection>arg2);
             this.core.domEvent.tableSelectionRange = selection;
@@ -505,6 +564,9 @@ export default class Editor implements IEditor {
 
         return (
             cacheGetEventData(event ?? null, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
+                if (!this.core) {
+                    throw disposedError();
+                }
                 if (!startFrom) {
                     let position = this.getFocusedPosition();
                     startFrom = position?.node;
@@ -524,6 +586,9 @@ export default class Editor implements IEditor {
      * @returns True if position is at beginning of the editor, otherwise false
      */
     public isPositionAtBeginning(position: NodePosition): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return isPositionAtBeginningOf(position, this.core.contentDiv);
     }
 
@@ -533,10 +598,13 @@ export default class Editor implements IEditor {
     public getSelectedRegions(
         type: RegionType | CompatibleRegionType = RegionType.Table
     ): Region[] {
+        if (!this.core) {
+            throw disposedError();
+        }
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
         selection.ranges.forEach(range => {
-            result.push(...(range ? getRegionsFromRange(this.core.contentDiv, range, type) : []));
+            result.push(...(range ? getRegionsFromRange(this.core!.contentDiv, range, type) : []));
         });
         return result.filter((value, index, self) => {
             return self.indexOf(value) === index;
@@ -551,6 +619,9 @@ export default class Editor implements IEditor {
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
     ): () => void {
+        if (!this.core) {
+            throw disposedError();
+        }
         const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
         return this.core.api.attachDomEvent(this.core, eventsToMap);
     }
@@ -569,6 +640,9 @@ export default class Editor implements IEditor {
         data: PluginEventData<T>,
         broadcast: boolean = false
     ): PluginEventFromType<T> {
+        if (!this.core) {
+            throw disposedError();
+        }
         let event = ({
             eventType,
             ...data,
@@ -601,6 +675,9 @@ export default class Editor implements IEditor {
      * Undo last edit operation
      */
     public undo() {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.focus();
         this.core.api.restoreUndoSnapshot(this.core, -1 /*step*/);
     }
@@ -609,6 +686,9 @@ export default class Editor implements IEditor {
      * Redo next edit operation
      */
     public redo() {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.focus();
         this.core.api.restoreUndoSnapshot(this.core, 1 /*step*/);
     }
@@ -629,6 +709,9 @@ export default class Editor implements IEditor {
         canUndoByBackspace?: boolean,
         additionalData?: ContentChangedData
     ) {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.core.api.addUndoSnapshot(
             this.core,
             callback ?? null,
@@ -642,6 +725,9 @@ export default class Editor implements IEditor {
      * Whether there is an available undo/redo snapshot
      */
     public getUndoState(): EditorUndoState {
+        if (!this.core) {
+            throw disposedError();
+        }
         const { hasNewContent, snapshotsService } = this.core.undo;
         return {
             canUndo: hasNewContent || snapshotsService.canMove(-1 /*previousSnapshot*/),
@@ -658,6 +744,9 @@ export default class Editor implements IEditor {
      * @returns The HTML document which contains this editor
      */
     public getDocument(): Document {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.contentDiv.ownerDocument;
     }
 
@@ -665,6 +754,9 @@ export default class Editor implements IEditor {
      * Get the scroll container of the editor
      */
     public getScrollContainer(): HTMLElement {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.domEvent.scrollContainer;
     }
 
@@ -677,6 +769,9 @@ export default class Editor implements IEditor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
+        if (!this.core) {
+            throw disposedError();
+        }
         return (this.core.lifecycle.customData[key] = this.core.lifecycle.customData[key] || {
             value: getter ? getter() : undefined,
             disposer,
@@ -688,6 +783,9 @@ export default class Editor implements IEditor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.domEvent.isInIME;
     }
 
@@ -696,6 +794,9 @@ export default class Editor implements IEditor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.lifecycle.defaultFormat;
     }
 
@@ -704,6 +805,9 @@ export default class Editor implements IEditor {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
     public getBodyTraverser(startNode?: Node): IContentTraverser {
+        if (!this.core) {
+            throw disposedError();
+        }
         return ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
     }
 
@@ -712,6 +816,9 @@ export default class Editor implements IEditor {
      * @returns A content traverser, or null if editor never got focus before
      */
     public getSelectionTraverser(range?: Range): IContentTraverser | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         range = range ?? this.getSelectionRange() ?? undefined;
         return range
             ? ContentTraverser.createSelectionTraverser(this.core.contentDiv, range)
@@ -726,6 +833,9 @@ export default class Editor implements IEditor {
     public getBlockTraverser(
         startFrom: ContentPosition | CompatibleContentPosition = ContentPosition.SelectionStart
     ): IContentTraverser | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         let range = this.getSelectionRange();
         return range
             ? ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom)
@@ -740,6 +850,9 @@ export default class Editor implements IEditor {
      */
     public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher | null {
         return cacheGetEventData(event ?? null, 'ContentSearcher', () => {
+            if (!this.core) {
+                throw disposedError();
+            }
             let range = this.getSelectionRange();
             return (
                 range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range))
@@ -753,6 +866,9 @@ export default class Editor implements IEditor {
      * @returns a function to cancel this async run
      */
     public runAsync(callback: (editor: IEditor) => void) {
+        if (!this.core) {
+            throw disposedError();
+        }
         let win = this.core.contentDiv.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
@@ -771,6 +887,9 @@ export default class Editor implements IEditor {
      * @param value Value of the attribute
      */
     public setEditorDomAttribute(name: string, value: string) {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (value === null) {
             this.core.contentDiv.removeAttribute(name);
         } else {
@@ -783,6 +902,9 @@ export default class Editor implements IEditor {
      * @param name Name of the attribute
      */
     public getEditorDomAttribute(name: string): string | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.contentDiv.getAttribute(name);
     }
 
@@ -794,6 +916,9 @@ export default class Editor implements IEditor {
      * @returns An [x, y] array which contains the left and top distances, or null if the given element is not in editor.
      */
     getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] | null {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (this.contains(element)) {
             const contentDiv = this.core.contentDiv;
             const editorRect = contentDiv.getBoundingClientRect();
@@ -820,10 +945,13 @@ export default class Editor implements IEditor {
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        if (!this.core) {
+            throw disposedError();
+        }
         feature?.keys.forEach(key => {
-            let array = this.core.edit.features[key] || [];
+            let array = this.core!.edit.features[key] || [];
             array.push(feature);
-            this.core.edit.features[key] = array;
+            this.core!.edit.features[key] = array;
         });
     }
 
@@ -831,6 +959,9 @@ export default class Editor implements IEditor {
      * Get style based format state from current selection, including font name/size and colors
      */
     public getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (!node) {
             const range = this.getSelectionRange();
             node = (range && Position.getStart(range).normalize().node) ?? undefined;
@@ -844,6 +975,9 @@ export default class Editor implements IEditor {
      * @returns The pending format state
      */
     public getPendableFormatState(forceGetStateFromDOM: boolean = false): PendableFormatState {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.api.getPendableFormatState(this.core, forceGetStateFromDOM);
     }
 
@@ -853,6 +987,9 @@ export default class Editor implements IEditor {
      * @param keyboardEvent Optional keyboard event object
      */
     public ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.core.api.ensureTypeInContainer(this.core, position, keyboardEvent);
     }
 
@@ -865,6 +1002,9 @@ export default class Editor implements IEditor {
      * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
      */
     public setDarkModeState(nextDarkMode?: boolean) {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (this.isDarkMode() == !!nextDarkMode) {
             return;
         }
@@ -890,6 +1030,9 @@ export default class Editor implements IEditor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     public isDarkMode(): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.lifecycle.isDarkMode;
     }
 
@@ -898,6 +1041,9 @@ export default class Editor implements IEditor {
      * @param node The node to transform
      */
     public transformToDarkColor(node: Node) {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.core.api.transformColor(
             this.core,
             node,
@@ -916,6 +1062,9 @@ export default class Editor implements IEditor {
      * use this function to do more shadow edit operation.
      */
     public startShadowEdit() {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.core.api.switchShadowEdit(this.core, true /*isOn*/);
     }
 
@@ -923,6 +1072,9 @@ export default class Editor implements IEditor {
      * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
      */
     public stopShadowEdit() {
+        if (!this.core) {
+            throw disposedError();
+        }
         this.core.api.switchShadowEdit(this.core, false /*isOn*/);
     }
 
@@ -930,6 +1082,9 @@ export default class Editor implements IEditor {
      * Check if editor is in Shadow Edit mode
      */
     public isInShadowEdit() {
+        if (!this.core) {
+            throw disposedError();
+        }
         return !!this.core.lifecycle.shadowEditFragment;
     }
 
@@ -940,6 +1095,9 @@ export default class Editor implements IEditor {
     public isFeatureEnabled(
         feature: ExperimentalFeatures | CompatibleExperimentalFeatures
     ): boolean {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.lifecycle.experimentalFeatures.indexOf(feature) >= 0;
     }
 
@@ -950,6 +1108,9 @@ export default class Editor implements IEditor {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.trustedHTMLHandler;
     }
 
@@ -957,6 +1118,9 @@ export default class Editor implements IEditor {
      * @deprecated Use getZoomScale() instead
      */
     getSizeTransformer(): SizeTransformer {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.sizeTransformer;
     }
 
@@ -967,6 +1131,9 @@ export default class Editor implements IEditor {
      * @returns current zoom scale number
      */
     getZoomScale(): number {
+        if (!this.core) {
+            throw disposedError();
+        }
         return this.core.zoomScale;
     }
 
@@ -977,6 +1144,9 @@ export default class Editor implements IEditor {
      * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
      */
     setZoomScale(scale: number): void {
+        if (!this.core) {
+            throw disposedError();
+        }
         if (scale > 0 && scale <= 10) {
             const oldValue = this.core.zoomScale;
             this.core.zoomScale = scale;
