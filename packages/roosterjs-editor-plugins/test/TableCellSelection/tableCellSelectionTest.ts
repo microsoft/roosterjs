@@ -656,12 +656,10 @@ describe('TableCellSelectionPlugin |', () => {
         let contentDiv = editor.getDocument().getElementById(id);
         contentDiv.dispatchEvent(simulateKeyDownEvent(Keys.BACKSPACE, false));
 
-        for (const row of table.rows) {
-            for (const cell of row.cells) {
-                expect(cell.childElementCount).toEqual(1);
-                expect(cell.firstElementChild?.tagName).toEqual('BR');
-            }
-        }
+        table.querySelectorAll('td').forEach(cell => {
+            expect(cell.childElementCount).toEqual(1);
+            expect(cell.firstElementChild?.tagName).toEqual('BR');
+        });
     });
 });
 
