@@ -35,7 +35,7 @@ describe('selectTable |', () => {
         selectTable(core, table, <TableSelection>{
             firstCell: { x: 0, y: 0 },
             lastCell: { x: 1, y: 1 },
-        }) as TableSelectionRange;
+        });
 
         expect(div.outerHTML).toBe(
             '<div id="contentDiv_0"><div><table><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
