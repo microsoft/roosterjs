@@ -1,6 +1,6 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
-import * as stackSegmentFormat from '../../../lib/domToModel/utils/stackSegmentFormat';
+import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -204,7 +204,7 @@ describe('tableProcessor with format', () => {
 
         context.segmentFormat = { a: 'b' } as any;
 
-        spyOn(stackSegmentFormat, 'stackSegmentFormat').and.callThrough();
+        spyOn(stackFormat, 'stackFormat').and.callThrough();
         spyOn(parseFormat, 'parseFormat').and.callFake((element, handlers, format, context) => {
             if (element == table) {
                 if (handlers == TableFormatHandlers) {
@@ -223,7 +223,7 @@ describe('tableProcessor with format', () => {
 
         tableProcessor(doc, table, context);
 
-        expect(stackSegmentFormat.stackSegmentFormat).toHaveBeenCalledTimes(2);
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
         expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
