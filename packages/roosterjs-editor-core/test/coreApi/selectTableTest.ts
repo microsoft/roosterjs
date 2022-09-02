@@ -1,6 +1,6 @@
 import createEditorCore from './createMockEditorCore';
-import { Browser } from 'roosterjs-editor-dom';
-import { EditorCore, TableSelection } from 'roosterjs-editor-types';
+import { Browser, getComputedStyle } from 'roosterjs-editor-dom';
+import { EditorCore, TableSelection, TableSelectionRange } from 'roosterjs-editor-types';
 import { selectTable } from '../../lib/coreApi/selectTable';
 
 describe('selectTable |', () => {
@@ -35,7 +35,7 @@ describe('selectTable |', () => {
         selectTable(core, table, <TableSelection>{
             firstCell: { x: 0, y: 0 },
             lastCell: { x: 1, y: 1 },
-        });
+        }) as TableSelectionRange;
 
         expect(div.outerHTML).toBe(
             '<div id="contentDiv_0"><div><table><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
@@ -282,9 +282,146 @@ describe('selectTable |', () => {
             expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
         });
     });
+
+    describe('Merged Cells scenarios |', () => {
+        it('First cell merged', () => {
+            div.innerHTML = buildTableHTML();
+
+            const table = div.querySelector('table');
+            table!.rows.item(0)!.cells.item(0)!.rowSpan = 2;
+
+            const input = <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 1, y: 0 },
+            };
+            const result = selectTable(core, table, input) as TableSelectionRange;
+
+            expect(result.table).toBe(table);
+            expect(result.coordinates).toEqual(input);
+        });
+        it('First Cell with col Span = 2 and ', () => {
+            div.innerHTML = buildTableHTML();
+            const table = div.querySelector('table');
+            table!.rows.item(0)!.cells.item(0)!.colSpan = 2;
+
+            const input = <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 0, y: 1 },
+            };
+            const result = selectTable(core, table, input) as TableSelectionRange;
+
+            const td = table?.querySelector('tr:nth-child(2) > td');
+            const td2 = table?.querySelector('tr:nth-child(2) > td:nth-child(2)');
+
+            expect(getComputedStyle(td!, 'background-color')).toEqual('rgba(198, 198, 198, 0.7)');
+            expect(getComputedStyle(td2!, 'background-color')).toEqual('rgba(0, 0, 0, 0)');
+            expect(result.table).toBe(table);
+            expect(result.coordinates).toEqual(input);
+        });
+
+        it('Multiple merged cells 1', () => {
+            /**
+             * Should select All Table
+                +------+------+
+                |      |      |
+                +      +------+
+                |      |      |
+                +      +------+
+                |      |      |
+                +------+------+
+             */
+            div.innerHTML =
+                '<table id="tableSelected0"><tbody><tr><td rowspan="3"></td><td></td></tr><tr><td></td></tr><tr><td></td></tr></tbody></table>';
+
+            const table = div.querySelector('table');
+
+            const input = <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 1, y: 2 },
+            };
+            const result = selectTable(core, table, input) as TableSelectionRange;
+
+            table?.querySelectorAll('tr')!.forEach(row =>
+                Array.from(row.cells).forEach(cell => {
+                    expect(getComputedStyle(cell, 'background-color')).toEqual(
+                        'rgba(198, 198, 198, 0.7)'
+                    );
+                })
+            );
+
+            expect(result.table).toBe(table);
+            expect(result.coordinates).toEqual(input);
+        });
+
+        it('Multiple merged cells 2', () => {
+            /**
+             * Select all
+                +------+------+------+
+                |             |      |
+                +------+------+------+
+                |                    |
+                +------+------+------+
+             */
+
+            div.innerHTML =
+                '<div><table id="tableSelected0"><tbody><tr><td colSpan="2"></td><td></td></tr><tr><td colspan="3"></td></tr></tbody></table>';
+            const table = div.querySelector('table');
+
+            const input = <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 0, y: 1 },
+            };
+            const result = selectTable(core, table, input) as TableSelectionRange;
+
+            table?.querySelectorAll('tr')!.forEach(row =>
+                Array.from(row.cells).forEach(cell => {
+                    expect(getComputedStyle(cell, 'background-color')).toEqual(
+                        'rgba(198, 198, 198, 0.7)'
+                    );
+                })
+            );
+
+            expect(result.table).toBe(table);
+            expect(result.coordinates).toEqual(input);
+        });
+
+        it('Multiple merged cells 1', () => {
+            /**
+             * Should select All Table
+                +------+------+
+                |      |      |
+                +      +------+
+                |      |      |
+                +      +      +
+                |      |      |
+                +------+------+
+             */
+            div.innerHTML =
+                '<table id="tableSelected0"><tbody><tr><td rowspan="3"></td><td></td></tr><tr><td rowspan="2"></td></tr><tr></tr></tbody></table>';
+
+            const table = div.querySelector('table');
+
+            const input = <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 1, y: 2 },
+            };
+            const result = selectTable(core, table, input) as TableSelectionRange;
+
+            table?.querySelectorAll('tr')!.forEach(row =>
+                Array.from(row.cells).forEach(cell => {
+                    expect(getComputedStyle(cell, 'background-color')).toEqual(
+                        'rgba(198, 198, 198, 0.7)'
+                    );
+                })
+            );
+
+            expect(result.table).toBe(table);
+            expect(result.coordinates).toEqual(input);
+        });
+    });
 });
 
-function buildTableHTML(tbody: boolean, thead: boolean = false, tfoot: boolean = false) {
+function buildTableHTML(tbody: boolean = true, thead: boolean = false, tfoot: boolean = false) {
     let table = '<div><table id="tableSelected0">';
 
     if (thead) {

@@ -14,6 +14,7 @@ import {
     SelectTable,
     PositionType,
     Coordinates,
+    TableSelectionRange,
 } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
@@ -33,9 +34,8 @@ export const selectTable: SelectTable = (
     core: EditorCore,
     table: HTMLTableElement,
     coordinates?: TableSelection
-) => {
+): TableSelectionRange | null => {
     unselect(core);
-
     if (areValidCoordinates(coordinates) && table) {
         ensureUniqueId(table, TABLE_ID);
         ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
@@ -71,10 +71,6 @@ function buildCss(
     coordinates: TableSelection,
     contentDivSelector: string
 ): { css: string; ranges: Range[] } {
-    const tr1 = coordinates.firstCell.y;
-    const td1 = coordinates.firstCell.x;
-    const tr2 = coordinates.lastCell.y;
-    const td2 = coordinates.lastCell.x;
     const ranges: Range[] = [];
 
     let firstSelected: HTMLTableCellElement | null = null;
@@ -84,6 +80,12 @@ function buildCss(
 
     const vTable = new VTable(table);
 
+    const lastCell = getLastCellCoordinates(vTable, coordinates);
+
+    const tr1 = coordinates.firstCell.y;
+    const td1 = coordinates.firstCell.x;
+    const tr2 = lastCell.y;
+    const td2 = lastCell.x;
     // Get whether table has thead, tbody or tfoot.
     const tableChildren = toArray(table.childNodes).filter(
         node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
@@ -269,4 +271,49 @@ function isValidCoordinate(input: number): boolean {
 function isMergedCell(table: HTMLTableElement, coordinates: TableSelection): boolean {
     const { firstCell } = coordinates;
     return !(table.rows.item(firstCell.y) && table.rows.item(firstCell.y)?.cells.item(firstCell.x));
+}
+
+function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection): Coordinates {
+    const { lastCell, firstCell } = tableSelection;
+    const result: Coordinates = lastCell;
+
+    //Check whether the last cell have colSpans and rowSpans, if the cell does, sum the amount of spans to the result
+    let cell = vTable.cells?.[lastCell.y][lastCell.x]?.td;
+    let resultX = result.x;
+    if (cell && firstCell.x != lastCell.x) {
+        if (cell.colSpan > 1) {
+            resultX += cell.colSpan - 1;
+        }
+        if (cell.rowSpan > 2) {
+            result.y += cell.rowSpan - 1;
+        }
+    }
+
+    /**
+        Need to also check whether the cells in the same column (within the selection) have merged elements
+        so we can add them.
+                     ________ _________________
+                    | (0, 0) |      (0,1)      |
+                    |________|________ ________|
+                    | (1, 0) | (1, 1) | (1, 2) |
+                    |________|________|________|
+                    | (2, 0) | (2, 1) | (2, 2) |
+                    |________|________|________|
+
+        For example in the above table, if the selection starts in (0, 1) and ends in (2, 0),
+        First Coord is going to be (0, 0) and last Coord is going to be (2, 1), but, we also need to
+        select (1, 2) and (2, 2), so we check if the top cell in the same column (within the selection) was merged.
+     */
+    if (cell?.colSpan && cell.colSpan > 1 && firstCell.x != lastCell.x) {
+        const cell2 = vTable.cells?.[firstCell.y][lastCell.x]?.td;
+        if (cell2) {
+            const merged = lastCell.x + cell2.colSpan;
+            if (cell2.colSpan > 1 && resultX < merged - 1) {
+                resultX = merged - 1;
+            }
+        }
+    }
+
+    result.x = resultX;
+    return result;
 }
