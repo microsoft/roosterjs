@@ -140,11 +140,8 @@ export default class NormalizeTablePlugin implements EditorPlugin {
     }
 }
 
-function isRTL(centeredElement: Element) {
-    return (
-        getComputedStyle(centeredElement, 'direction') == 'rtl' ||
-        centeredElement.getAttribute('dir') == 'rtl'
-    );
+function isRTL(el: Element) {
+    return getComputedStyle(el, 'direction') == 'rtl' || el.getAttribute('dir') == 'rtl';
 }
 
 function normalizeTables(tables: HTMLTableElement[]) {
