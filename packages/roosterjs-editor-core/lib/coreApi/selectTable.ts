@@ -277,17 +277,9 @@ function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection):
     const { lastCell, firstCell } = tableSelection;
     const result: Coordinates = lastCell;
 
-    //Check whether the last cell have colSpans and rowSpans, if the cell does, sum the amount of spans to the result
-    let cell = vTable.cells?.[lastCell.y][lastCell.x]?.td;
+    const cell = vTable.cells?.[lastCell.y][lastCell.x]?.td;
+    const cell2 = vTable.cells?.[firstCell.y][lastCell.x]?.td;
     let resultX = result.x;
-    if (cell && firstCell.x != lastCell.x) {
-        if (cell.colSpan > 1) {
-            resultX += cell.colSpan - 1;
-        }
-        if (cell.rowSpan > 2) {
-            result.y += cell.rowSpan - 1;
-        }
-    }
 
     /**
         Need to also check whether the cells in the same column (within the selection) have merged elements
@@ -304,13 +296,13 @@ function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection):
         First Coord is going to be (0, 0) and last Coord is going to be (2, 1), but, we also need to
         select (1, 2) and (2, 2), so we check if the top cell in the same column (within the selection) was merged.
      */
-    if (cell?.colSpan && cell.colSpan > 1 && firstCell.x != lastCell.x) {
-        const cell2 = vTable.cells?.[firstCell.y][lastCell.x]?.td;
-        if (cell2) {
-            const merged = lastCell.x + cell2.colSpan;
-            if (cell2.colSpan > 1 && resultX < merged - 1) {
-                resultX = merged - 1;
-            }
+    if (cell && cell2) {
+        const colSpanCell = lastCell.x >= firstCell.x ? cell : cell2;
+        if (colSpanCell.colSpan > 1) {
+            resultX += colSpanCell.colSpan - 1;
+        }
+        if (cell.rowSpan > 2) {
+            result.y += cell.rowSpan - 1;
         }
     }
 

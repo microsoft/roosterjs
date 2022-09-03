@@ -299,7 +299,12 @@ describe('selectTable |', () => {
             expect(result.table).toBe(table);
             expect(result.coordinates).toEqual(input);
         });
-        it('First Cell with col Span = 2 and ', () => {
+        //  _________________
+        // |     (0, 0)      |
+        // |_________________|
+        // | (1, 0) | (1, 1) |
+        // |________|________|
+        it('0,0 to 1, 0', () => {
             div.innerHTML = buildTableHTML();
             const table = div.querySelector('table');
             table!.rows.item(0)!.cells.item(0)!.colSpan = 2;
