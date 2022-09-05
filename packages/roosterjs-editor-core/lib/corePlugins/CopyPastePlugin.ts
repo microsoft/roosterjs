@@ -32,8 +32,8 @@ import {
  * Copy and paste plugin for handling onCopy and onPaste event
  */
 export default class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
-    private editor: IEditor;
-    private disposer: () => void;
+    private editor: IEditor | null = null;
+    private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
 
     /**
@@ -60,7 +60,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
-            paste: this.onPaste,
+            paste: e => this.onPaste(this.editor!, e),
             copy: e => this.onCutCopy(e, false /*isCut*/),
             cut: e => this.onCutCopy(e, true /*isCut*/),
         });
@@ -70,7 +70,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
      * Dispose this plugin
      */
     dispose() {
-        this.disposer();
+        if (this.disposer) {
+            this.disposer();
+        }
         this.disposer = null;
         this.editor = null;
     }
@@ -83,84 +85,98 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
-        const selection = this.editor.getSelectionRangeEx();
-        if (selection && !selection.areAllCollapsed) {
-            const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
-            const tempDiv = this.getTempDiv(true /*forceInLightMode*/);
-            const metadata = setHtmlWithMetadata(
-                tempDiv,
-                html,
-                this.editor.getTrustedHTMLHandler()
-            );
-            let newRange: Range;
+        if (this.editor) {
+            const selection = this.editor.getSelectionRangeEx();
+            if (selection && !selection.areAllCollapsed) {
+                const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
+                const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
+                const metadata = setHtmlWithMetadata(
+                    tempDiv,
+                    html,
+                    this.editor.getTrustedHTMLHandler()
+                );
+                let newRange: Range | null;
 
-            if (selection.type === SelectionRangeTypes.TableSelection) {
-                const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
-                newRange = this.createTableRange(table, selection.coordinates);
-                if (isCut) {
-                    this.deleteTableContent(selection.table, selection.coordinates);
+                if (
+                    selection.type === SelectionRangeTypes.TableSelection &&
+                    selection.coordinates
+                ) {
+                    const table = tempDiv.querySelector(
+                        `#${selection.table.id}`
+                    ) as HTMLTableElement;
+                    newRange = this.createTableRange(table, selection.coordinates);
+                    if (isCut) {
+                        this.deleteTableContent(
+                            this.editor,
+                            selection.table,
+                            selection.coordinates
+                        );
+                    }
+                } else {
+                    newRange =
+                        metadata?.type === SelectionRangeTypes.Normal
+                            ? createRange(tempDiv, metadata.start, metadata.end)
+                            : null;
                 }
-            } else {
-                newRange =
-                    metadata?.type === SelectionRangeTypes.Normal
-                        ? createRange(tempDiv, metadata.start, metadata.end)
-                        : null;
-            }
+                if (newRange) {
+                    const cutCopyEvent = this.editor.triggerPluginEvent(
+                        PluginEventType.BeforeCutCopy,
+                        {
+                            clonedRoot: tempDiv,
+                            range: newRange,
+                            rawEvent: event as ClipboardEvent,
+                            isCut,
+                        }
+                    );
 
-            const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
-                clonedRoot: tempDiv,
-                range: newRange,
-                rawEvent: event as ClipboardEvent,
-                isCut,
-            });
+                    if (cutCopyEvent.range) {
+                        addRangeToSelection(newRange);
+                    }
 
-            if (cutCopyEvent.range) {
-                addRangeToSelection(newRange);
-            }
+                    this.editor.runAsync(editor => {
+                        this.cleanUpAndRestoreSelection(tempDiv, selection, !isCut /* isCopy */);
 
-            this.editor.runAsync(editor => {
-                this.cleanUpAndRestoreSelection(tempDiv, selection, !isCut /* isCopy */);
-
-                if (isCut) {
-                    editor.addUndoSnapshot(() => {
-                        const position = this.editor.deleteSelectedContent();
-                        editor.focus();
-                        editor.select(position);
-                    }, ChangeSource.Cut);
+                        if (isCut) {
+                            editor.addUndoSnapshot(() => {
+                                const position = this.editor!.deleteSelectedContent();
+                                editor.focus();
+                                editor.select(position);
+                            }, ChangeSource.Cut);
+                        }
+                    });
                 }
-            });
+            }
         }
     }
 
-    private onPaste = (event: Event) => {
+    private onPaste = (editor: IEditor, event: Event) => {
         let range: Range;
-
         extractClipboardEvent(
             event as ClipboardEvent,
-            clipboardData => this.editor?.paste(clipboardData),
+            clipboardData => editor.paste(clipboardData),
             {
                 allowedCustomPasteType: this.state.allowedCustomPasteType,
                 getTempDiv: () => {
-                    range = this.editor?.getSelectionRange();
-                    return this.getTempDiv();
+                    range = editor.getSelectionRange();
+                    return this.getTempDiv(editor);
                 },
                 removeTempDiv: div => {
                     this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
                 },
             },
-            this.editor?.getSelectionRange()
+            editor.getSelectionRange()
         );
     };
 
-    private getTempDiv(forceInLightMode?: boolean) {
-        const div = this.editor.getCustomData(
+    private getTempDiv(editor: IEditor, forceInLightMode?: boolean) {
+        const div = editor.getCustomData(
             'CopyPasteTempDiv',
             () => {
                 const tempDiv = createElement(
                     KnownCreateElementDataIndex.CopyPasteTempDiv,
-                    this.editor.getDocument()
+                    editor.getDocument()
                 ) as HTMLDivElement;
-                this.editor.insertNode(tempDiv, {
+                editor.insertNode(tempDiv, {
                     position: ContentPosition.Outside,
                 });
 
@@ -189,7 +205,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             const selection = <SelectionRangeEx>range;
             switch (selection.type) {
                 case SelectionRangeTypes.TableSelection:
-                    this.editor.select(selection.table, selection.coordinates);
+                    if (this.editor && selection.table && selection.coordinates) {
+                        this.editor.select(selection.table, selection.coordinates);
+                    }
                     break;
                 case SelectionRangeTypes.Normal:
                     const range = selection.ranges?.[0];
@@ -207,7 +225,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private restoreRange(range: Range, isCopy: boolean) {
-        if (range) {
+        if (range && this.editor) {
             if (isCopy && Browser.isAndroid) {
                 range.collapse();
             }
@@ -223,13 +241,17 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         return createRange(clonedVTable.table);
     }
 
-    private deleteTableContent(table: HTMLTableElement, selection: TableSelection) {
+    private deleteTableContent(
+        editor: IEditor,
+        table: HTMLTableElement,
+        selection: TableSelection
+    ) {
         const selectedVTable = new VTable(table);
         selectedVTable.selection = selection;
 
         forEachSelectedCell(selectedVTable, cell => {
             if (cell?.td) {
-                cell.td.innerHTML = this.editor.getTrustedHTMLHandler()('<br>');
+                cell.td.innerHTML = editor.getTrustedHTMLHandler()('<br>');
             }
         });
 
