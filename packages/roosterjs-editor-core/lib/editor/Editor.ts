@@ -131,11 +131,12 @@ export default class Editor implements IEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        for (let i = this.getCore().plugins.length - 1; i >= 0; i--) {
-            this.getCore().plugins[i].dispose();
+        const core = this.getCore();
+        for (let i = core.plugins.length - 1; i >= 0; i--) {
+            core.plugins[i].dispose();
         }
 
-        this.core = null!;
+        this.core = null;
     }
 
     /**
@@ -161,7 +162,8 @@ export default class Editor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.getCore().api.insertNode(this.getCore(), node, option ?? null) : false;
+        const core = this.getCore();
+        return node ? core.api.insertNode(core, node, option ?? null) : false;
     }
 
     /**
@@ -191,10 +193,11 @@ export default class Editor implements IEditor {
         toNode: Node,
         transformColorForDarkMode?: boolean
     ): boolean {
+        const core = this.getCore();
         // Only replace the node when it falls within editor
         if (this.contains(existingNode) && toNode) {
-            this.getCore().api.transformColor(
-                this.getCore(),
+            core.api.transformColor(
+                core,
                 transformColorForDarkMode ? toNode : null,
                 true /*includeSelf*/,
                 () => existingNode.parentNode?.replaceChild(toNode, existingNode),
@@ -228,6 +231,7 @@ export default class Editor implements IEditor {
             | ((node: Node) => any) = QueryScope.Body,
         callback?: (node: Node) => any
     ) {
+        const core = this.getCore();
         const result: HTMLElement[] = [];
         let scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
@@ -235,18 +239,10 @@ export default class Editor implements IEditor {
         let selectionEx = scope == QueryScope.Body ? null : this.getSelectionRangeEx();
         if (selectionEx) {
             selectionEx.ranges.forEach(range => {
-                result.push(
-                    ...queryElements(this.getCore().contentDiv, selector, callback, scope, range)
-                );
+                result.push(...queryElements(core.contentDiv, selector, callback, scope, range));
             });
         } else {
-            return queryElements(
-                this.getCore().contentDiv,
-                selector,
-                callback,
-                scope,
-                undefined /* range */
-            );
+            return queryElements(core.contentDiv, selector, callback, scope, undefined /* range */);
         }
 
         return result;
@@ -288,7 +284,8 @@ export default class Editor implements IEditor {
     public getContent(
         mode: GetContentMode | CompatibleGetContentMode = GetContentMode.CleanHTML
     ): string {
-        return this.getCore().api.getContent(this.getCore(), mode);
+        const core = this.getCore();
+        return core.api.getContent(core, mode);
     }
 
     /**
@@ -297,7 +294,8 @@ export default class Editor implements IEditor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
-        this.getCore().api.setContent(this.getCore(), content, triggerContentChangedEvent);
+        const core = this.getCore();
+        core.api.setContent(core, content, triggerContentChangedEvent);
     }
 
     /**
@@ -355,6 +353,7 @@ export default class Editor implements IEditor {
         pasteAsText: boolean = false,
         applyCurrentFormat: boolean = false
     ) {
+        const core = this.getCore();
         if (!clipboardData) {
             return;
         }
@@ -370,8 +369,8 @@ export default class Editor implements IEditor {
 
         const range = this.getSelectionRange();
         const pos = range && Position.getStart(range);
-        const fragment = this.getCore().api.createPasteFragment(
-            this.getCore(),
+        const fragment = core.api.createPasteFragment(
+            core,
             clipboardData,
             pos,
             pasteAsText,
@@ -397,7 +396,8 @@ export default class Editor implements IEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     public getSelectionRange(tryGetFromCache: boolean = true): Range | null {
-        return this.getCore().api.getSelectionRange(this.getCore(), tryGetFromCache);
+        const core = this.getCore();
+        return core.api.getSelectionRange(core, tryGetFromCache);
     }
 
     /**
@@ -408,7 +408,8 @@ export default class Editor implements IEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     public getSelectionRangeEx(): SelectionRangeEx {
-        return this.getCore().api.getSelectionRangeEx(this.getCore());
+        const core = this.getCore();
+        return core.api.getSelectionRangeEx(core);
     }
 
     /**
@@ -426,14 +427,16 @@ export default class Editor implements IEditor {
      * @returns true if focus is in editor, otherwise false
      */
     public hasFocus(): boolean {
-        return this.getCore().api.hasFocus(this.getCore());
+        const core = this.getCore();
+        return core.api.hasFocus(core);
     }
 
     /**
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     public focus() {
-        this.getCore().api.focus(this.getCore());
+        const core = this.getCore();
+        core.api.focus(core);
     }
 
     public select(
@@ -536,10 +539,9 @@ export default class Editor implements IEditor {
     ): Region[] {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
+        const contentDiv = this.getCore().contentDiv;
         selection.ranges.forEach(range => {
-            result.push(
-                ...(range ? getRegionsFromRange(this.getCore().contentDiv, range, type) : [])
-            );
+            result.push(...(range ? getRegionsFromRange(contentDiv, range, type) : []));
         });
         return result.filter((value, index, self) => {
             return self.indexOf(value) === index;
@@ -555,7 +557,8 @@ export default class Editor implements IEditor {
         handler?: DOMEventHandler
     ): () => void {
         const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
-        return this.getCore().api.attachDomEvent(this.getCore(), eventsToMap);
+        const core = this.getCore();
+        return core.api.attachDomEvent(core, eventsToMap);
     }
 
     /**
@@ -572,11 +575,12 @@ export default class Editor implements IEditor {
         data: PluginEventData<T>,
         broadcast: boolean = false
     ): PluginEventFromType<T> {
+        const core = this.getCore();
         let event = ({
             eventType,
             ...data,
         } as any) as PluginEventFromType<T>;
-        this.getCore().api.triggerEvent(this.getCore(), event, broadcast);
+        core.api.triggerEvent(core, event, broadcast);
 
         return event;
     }
@@ -605,7 +609,8 @@ export default class Editor implements IEditor {
      */
     public undo() {
         this.focus();
-        this.getCore().api.restoreUndoSnapshot(this.getCore(), -1 /*step*/);
+        const core = this.getCore();
+        core.api.restoreUndoSnapshot(core, -1 /*step*/);
     }
 
     /**
@@ -613,7 +618,8 @@ export default class Editor implements IEditor {
      */
     public redo() {
         this.focus();
-        this.getCore().api.restoreUndoSnapshot(this.getCore(), 1 /*step*/);
+        const core = this.getCore();
+        core.api.restoreUndoSnapshot(core, 1 /*step*/);
     }
 
     /**
@@ -632,8 +638,9 @@ export default class Editor implements IEditor {
         canUndoByBackspace?: boolean,
         additionalData?: ContentChangedData
     ) {
-        this.getCore().api.addUndoSnapshot(
-            this.getCore(),
+        const core = this.getCore();
+        core.api.addUndoSnapshot(
+            core,
             callback ?? null,
             changeSource ?? null,
             canUndoByBackspace ?? false,
@@ -680,9 +687,8 @@ export default class Editor implements IEditor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
-        return (this.getCore().lifecycle.customData[key] = this.getCore().lifecycle.customData[
-            key
-        ] || {
+        const core = this.getCore();
+        return (core.lifecycle.customData[key] = core.lifecycle.customData[key] || {
             value: getter ? getter() : undefined,
             disposer,
         }).value as T;
@@ -826,10 +832,11 @@ export default class Editor implements IEditor {
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        const core = this.getCore();
         feature?.keys.forEach(key => {
-            let array = this.getCore().edit.features[key] || [];
+            let array = core.edit.features[key] || [];
             array.push(feature);
-            this.getCore().edit.features[key] = array;
+            core.edit.features[key] = array;
         });
     }
 
@@ -841,7 +848,8 @@ export default class Editor implements IEditor {
             const range = this.getSelectionRange();
             node = (range && Position.getStart(range).normalize().node) ?? undefined;
         }
-        return this.getCore().api.getStyleBasedFormatState(this.getCore(), node ?? null);
+        const core = this.getCore();
+        return core.api.getStyleBasedFormatState(core, node ?? null);
     }
 
     /**
@@ -850,7 +858,8 @@ export default class Editor implements IEditor {
      * @returns The pending format state
      */
     public getPendableFormatState(forceGetStateFromDOM: boolean = false): PendableFormatState {
-        return this.getCore().api.getPendableFormatState(this.getCore(), forceGetStateFromDOM);
+        const core = this.getCore();
+        return core.api.getPendableFormatState(core, forceGetStateFromDOM);
     }
 
     /**
@@ -859,7 +868,8 @@ export default class Editor implements IEditor {
      * @param keyboardEvent Optional keyboard event object
      */
     public ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
-        this.getCore().api.ensureTypeInContainer(this.getCore(), position, keyboardEvent);
+        const core = this.getCore();
+        core.api.ensureTypeInContainer(core, position, keyboardEvent);
     }
 
     //#endregion
@@ -874,10 +884,11 @@ export default class Editor implements IEditor {
         if (this.isDarkMode() == !!nextDarkMode) {
             return;
         }
+        const core = this.getCore();
 
-        this.getCore().api.transformColor(
-            this.getCore(),
-            this.getCore().contentDiv,
+        core.api.transformColor(
+            core,
+            core.contentDiv,
             false /*includeSelf*/,
             null /*callback*/,
             nextDarkMode
@@ -904,8 +915,9 @@ export default class Editor implements IEditor {
      * @param node The node to transform
      */
     public transformToDarkColor(node: Node) {
-        this.getCore().api.transformColor(
-            this.getCore(),
+        const core = this.getCore();
+        core.api.transformColor(
+            core,
             node,
             true /*includeSelf*/,
             null /*callback*/,
@@ -922,14 +934,16 @@ export default class Editor implements IEditor {
      * use this function to do more shadow edit operation.
      */
     public startShadowEdit() {
-        this.getCore().api.switchShadowEdit(this.getCore(), true /*isOn*/);
+        const core = this.getCore();
+        core.api.switchShadowEdit(core, true /*isOn*/);
     }
 
     /**
      * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
      */
     public stopShadowEdit() {
-        this.getCore().api.switchShadowEdit(this.getCore(), false /*isOn*/);
+        const core = this.getCore();
+        core.api.switchShadowEdit(core, false /*isOn*/);
     }
 
     /**
@@ -983,9 +997,10 @@ export default class Editor implements IEditor {
      * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
      */
     setZoomScale(scale: number): void {
+        const core = this.getCore();
         if (scale > 0 && scale <= 10) {
-            const oldValue = this.getCore().zoomScale;
-            this.getCore().zoomScale = scale;
+            const oldValue = core.zoomScale;
+            core.zoomScale = scale;
 
             if (oldValue != scale) {
                 this.triggerPluginEvent(
