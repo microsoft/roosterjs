@@ -50,5 +50,5 @@ export const enum BulletListType {
     /**
      * Maximum value of the enum
      */
-    Max = 9,
+    Max = 8,
 }
