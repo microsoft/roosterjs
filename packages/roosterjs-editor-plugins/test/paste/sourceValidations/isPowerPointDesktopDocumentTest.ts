@@ -1,7 +1,6 @@
 import isPowerPointDesktopDocument from '../../../lib/plugins/Paste/sourceValidations/isPowerPointDesktopDocument';
-import { KnownSourceType } from '../../../lib/plugins/Paste/sourceValidations/KnownSourceType';
-
-const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
+import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
+import { POWERPOINT_ATTRIBUTE_VALUE } from '../pasteTestUtils';
 
 describe('isPowerPointDesktopDocument |', () => {
     it('Is a PPT document 1', () => {
@@ -9,14 +8,14 @@ describe('isPowerPointDesktopDocument |', () => {
             ProgId: POWERPOINT_ATTRIBUTE_VALUE,
         };
 
-        const result = isPowerPointDesktopDocument(htmlAttributes);
+        const result = isPowerPointDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        expect(result).toEqual(KnownSourceType.PowerPointDesktop);
+        expect(result).toBeTrue();
     });
 
     it('Is not a PPT Document', () => {
-        const result = isPowerPointDesktopDocument({});
+        const result = isPowerPointDesktopDocument(<getSourceInputParams>{ htmlAttributes: {} });
 
-        expect(result).toEqual(false);
+        expect(result).toBeFalse();
     });
 });

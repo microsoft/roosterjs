@@ -10,21 +10,26 @@ import { KnownSourceType } from './KnownSourceType';
 /**
  * @internal
  */
-export type getSourceFunction = (
-    htmlAttributes: Record<string, string>,
-    fragment?: DocumentFragment,
-    editor?: IEditor,
-    clipboardData?: ClipboardData
-) => KnownSourceType | false;
+export type getSourceInputParams = {
+    htmlAttributes: Record<string, string>;
+    fragment: DocumentFragment;
+    editor: IEditor;
+    clipboardData: ClipboardData;
+};
 
-const getSourceFunctions: getSourceFunction[] = [
-    isWordDesktopDocument,
-    isExcelDesktopDocument,
-    isPowerPointDesktopDocument,
-    documentContainWacElements,
-    isGoogleSheetDocument,
-    shouldConvertToSingleImage,
-];
+/**
+ * @internal
+ */
+export type getSourceFunction = (props: getSourceInputParams) => boolean;
+
+const getSourceFunctions = new Map<KnownSourceType, getSourceFunction>([
+    [KnownSourceType.WordDesktop, isWordDesktopDocument],
+    [KnownSourceType.ExcelDesktop, isExcelDesktopDocument],
+    [KnownSourceType.PowerPointDesktop, isPowerPointDesktopDocument],
+    [KnownSourceType.WacComponents, documentContainWacElements],
+    [KnownSourceType.GoogleSheets, isGoogleSheetDocument],
+    [KnownSourceType.SingleImage, shouldConvertToSingleImage],
+]);
 
 /**
  * @internal
@@ -36,12 +41,19 @@ const getSourceFunctions: getSourceFunction[] = [
 export default function getPasteSource(event: BeforePasteEvent, editor: IEditor): KnownSourceType {
     const { htmlAttributes, clipboardData, fragment } = event;
 
-    for (const fn of getSourceFunctions) {
-        const result = fn(htmlAttributes, fragment, editor, clipboardData);
-        if (result) {
-            return result;
-        }
-    }
+    let result: KnownSourceType | null = null;
+    const param: getSourceInputParams = {
+        htmlAttributes,
+        fragment,
+        editor,
+        clipboardData,
+    };
 
-    return KnownSourceType.Default;
+    getSourceFunctions.forEach((func, key) => {
+        if (!result && func(param)) {
+            result = key;
+        }
+    });
+
+    return result ?? KnownSourceType.Default;
 }

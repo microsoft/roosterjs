@@ -1,7 +1,7 @@
 import isExcelDesktopDocument from '../../../lib/plugins/Paste/sourceValidations/isExcelDesktopDocument';
-import { KnownSourceType } from '../../../lib/plugins/Paste/sourceValidations/KnownSourceType';
+import { EXCEL_ATTRIBUTE_VALUE } from '../pasteTestUtils';
+import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
 
-const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 
 describe('isExcelDesktopDocument |', () => {
@@ -10,9 +10,9 @@ describe('isExcelDesktopDocument |', () => {
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
         };
 
-        const result = isExcelDesktopDocument(htmlAttributes);
+        const result = isExcelDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        expect(result).toEqual(KnownSourceType.ExcelDesktop);
+        expect(result).toBeTrue();
     });
 
     it('Is a Excel document 2', () => {
@@ -21,24 +21,23 @@ describe('isExcelDesktopDocument |', () => {
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
         };
 
-        const result = isExcelDesktopDocument(htmlAttributes);
+        const result = isExcelDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        expect(result).toEqual(KnownSourceType.ExcelDesktop);
+        expect(result).toBeTrue();
     });
 
     it('Is a Excel document 3', () => {
         const htmlAttributes: Record<string, string> = {
             'xmlns:x': EXCEL_ATTRIBUTE_VALUE,
         };
+        const result = isExcelDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        const result = isExcelDesktopDocument(htmlAttributes);
-
-        expect(result).toEqual(KnownSourceType.ExcelDesktop);
+        expect(result).toBeTrue();
     });
 
     it('Is not a Excel Document', () => {
-        const result = isExcelDesktopDocument({});
+        const result = isExcelDesktopDocument(<getSourceInputParams>{ htmlAttributes: {} });
 
-        expect(result).toEqual(false);
+        expect(result).toBeFalse();
     });
 });

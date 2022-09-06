@@ -1,7 +1,7 @@
 import isWordDesktopDocument from '../../../lib/plugins/Paste/sourceValidations/isWordDesktopDocument';
-import { KnownSourceType } from '../../../lib/plugins/Paste/sourceValidations/KnownSourceType';
+import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
+import { WORD_ATTRIBUTE_VALUE } from '../pasteTestUtils';
 
-const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
 const WORD_PROG_ID = 'Word.Document';
 
 describe('isWordDesktopDocument |', () => {
@@ -10,9 +10,9 @@ describe('isWordDesktopDocument |', () => {
             ProgId: WORD_PROG_ID,
         };
 
-        const result = isWordDesktopDocument(htmlAttributes);
+        const result = isWordDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        expect(result).toEqual(KnownSourceType.WordDesktop);
+        expect(result).toBeTrue();
     });
 
     it('Is a Word document 2', () => {
@@ -21,9 +21,9 @@ describe('isWordDesktopDocument |', () => {
             ProgId: WORD_PROG_ID,
         };
 
-        const result = isWordDesktopDocument(htmlAttributes);
+        const result = isWordDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        expect(result).toEqual(KnownSourceType.WordDesktop);
+        expect(result).toBeTrue();
     });
 
     it('Is a Word document 3', () => {
@@ -31,14 +31,14 @@ describe('isWordDesktopDocument |', () => {
             'xmlns:w': WORD_ATTRIBUTE_VALUE,
         };
 
-        const result = isWordDesktopDocument(htmlAttributes);
+        const result = isWordDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        expect(result).toEqual(KnownSourceType.WordDesktop);
+        expect(result).toBeTrue();
     });
 
     it('Is not a Word Document', () => {
-        const result = isWordDesktopDocument({});
+        const result = isWordDesktopDocument(<getSourceInputParams>{ htmlAttributes: {} });
 
-        expect(result).toEqual(false);
+        expect(result).toBeFalse();
     });
 });

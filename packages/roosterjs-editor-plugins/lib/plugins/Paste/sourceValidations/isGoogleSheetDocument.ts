@@ -1,16 +1,15 @@
-import { getSourceFunction } from './getPasteSource';
 import { GOOGLE_SHEET_NODE_NAME } from './constants';
-import { KnownSourceType } from './KnownSourceType';
+import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
 
 /**
  * @internal
  * Checks whether the fragment provided contain elements from Google sheets
- * @param fragment
+ * @param props Properties related to the PasteEvent
  * @returns
  */
-const isGoogleSheetDocument: getSourceFunction = (
-    htmlAttributes: Record<string, string>,
-    fragment: DocumentFragment
-) => (!!fragment.querySelector(GOOGLE_SHEET_NODE_NAME) ? KnownSourceType.GoogleSheets : false);
+const isGoogleSheetDocument: getSourceFunction = (props: getSourceInputParams) => {
+    const { fragment } = props;
+    return !!fragment.querySelector(GOOGLE_SHEET_NODE_NAME);
+};
 
 export default isGoogleSheetDocument;

@@ -1,6 +1,6 @@
 import shouldConvertToSingleImage from '../../../lib/plugins/Paste/sourceValidations/shouldConvertToSingleImage';
 import { ClipboardData, IEditor } from 'roosterjs-editor-types';
-import { KnownSourceType } from '../../../lib/plugins/Paste/sourceValidations/KnownSourceType';
+import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
 
 describe('shouldConvertToSingleImage |', () => {
     let editor: IEditor;
@@ -13,7 +13,7 @@ describe('shouldConvertToSingleImage |', () => {
 
     it('Is Single Image', () => {
         spyOn(editor, 'isFeatureEnabled').and.returnValue(true);
-        runTest(['IMG'], KnownSourceType.SingleImage);
+        runTest(['IMG'], true);
     });
 
     it('Is Single Image, feature is not enabled', () => {
@@ -31,13 +31,17 @@ describe('shouldConvertToSingleImage |', () => {
         runTest(['IMG', 'DIV'], false);
     });
 
-    function runTest(htmlFirstLevelChildTags: string[], resultExpected: KnownSourceType | false) {
+    function runTest(htmlFirstLevelChildTags: string[], resultExpected: boolean) {
         const fragment = document.createDocumentFragment();
         const clipboardData = <ClipboardData>{
             htmlFirstLevelChildTags,
         };
 
-        const result = shouldConvertToSingleImage({}, fragment, editor, clipboardData);
+        const result = shouldConvertToSingleImage(<getSourceInputParams>{
+            fragment,
+            editor,
+            clipboardData,
+        });
 
         expect(result).toEqual(resultExpected);
     }
