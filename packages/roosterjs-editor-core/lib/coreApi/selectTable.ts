@@ -277,10 +277,6 @@ function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection):
     const { lastCell, firstCell } = tableSelection;
     const result: Coordinates = lastCell;
 
-    const cell = vTable.cells?.[lastCell.y][lastCell.x]?.td;
-    const cell2 = vTable.cells?.[firstCell.y][lastCell.x]?.td;
-    let resultX = result.x;
-
     /**
         Need to also check whether the cells in the same column (within the selection) have merged elements
         so we can add them.
@@ -292,20 +288,19 @@ function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection):
                     | (2, 0) | (2, 1) | (2, 2) |
                     |________|________|________|
 
-        For example in the above table, if the selection starts in (0, 1) and ends in (2, 0),
-        First Coord is going to be (0, 0) and last Coord is going to be (2, 1), but, we also need to
-        select (1, 2) and (2, 2), so we check if the top cell in the same column (within the selection) was merged.
+        For example in the above table, if the selection starts in (1, 0) and ends in (0, 1),
+        First Coord is going to be (0, 0) and last Coord is going to be (1, 1), but, we also need to
+        select (1, 2), so we check if the top cell in the same column (within the selection) was merged.
      */
-    if (cell && cell2) {
-        const colSpanCell = lastCell.x >= firstCell.x ? cell : cell2;
-        if (colSpanCell.colSpan > 1) {
-            resultX += colSpanCell.colSpan - 1;
-        }
-        if (cell.rowSpan > 2) {
-            result.y += cell.rowSpan - 1;
-        }
+
+    const lastTD = vTable.cells?.[lastCell.y][lastCell.x]?.td;
+    const topLastTD =
+        lastCell.x > firstCell.x ? vTable.cells?.[firstCell.y][lastCell.x]?.td : undefined;
+
+    if (lastTD) {
+        result.x += Math.max(...[lastTD, topLastTD].map(c => (c && c.colSpan - 1) || 0));
+        result.y += lastTD.rowSpan - 1;
     }
 
-    result.x = resultX;
     return result;
 }
