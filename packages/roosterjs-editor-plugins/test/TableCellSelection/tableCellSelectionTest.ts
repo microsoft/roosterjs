@@ -1,15 +1,17 @@
 import { Browser } from 'roosterjs-editor-dom';
+import { DeleteTableContents } from '../../lib/plugins/TableCellSelection/features/DeleteTableContents';
 import { Editor } from 'roosterjs-editor-core';
 import { IEditor } from 'roosterjs-editor-types';
 import { TableCellSelection } from '../../lib/TableCellSelection';
 import {
+    Coordinates,
     EditorOptions,
     Keys,
-    SelectionRangeTypes,
-    TableSelectionRange,
     PluginEventType,
+    PluginKeyboardEvent,
+    SelectionRangeTypes,
     TableSelection,
-    Coordinates,
+    TableSelectionRange,
 } from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
@@ -653,8 +655,15 @@ describe('TableCellSelectionPlugin |', () => {
             lastCell: { x: 3, y: 3 },
         } as TableSelection);
 
-        let contentDiv = editor.getDocument().getElementById(id);
-        contentDiv.dispatchEvent(simulateKeyDownEvent(Keys.BACKSPACE, false));
+        const shouldHandle = DeleteTableContents.shouldHandleEvent(
+            <PluginKeyboardEvent>{},
+            editor,
+            false
+        );
+
+        DeleteTableContents.handleEvent(<PluginKeyboardEvent>{}, editor);
+
+        expect(shouldHandle).toBeTrue();
 
         table.querySelectorAll('td').forEach(cell => {
             expect(cell.childElementCount).toEqual(1);
