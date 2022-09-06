@@ -174,6 +174,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
             case PluginEventType.KeyDown:
                 this.eventHandledOnKeyDown = false;
+
                 if (this.isAndroidKeyboardEvent(event)) {
                     // On Android, the key for KeyboardEvent is "Unidentified" or undefined,
                     // so handling should be done using the input rather than key down event
@@ -182,6 +183,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     this.currentInputLength = this.calcInputLength(event);
                     this.isPendingInputEventHandling = true;
                 } else {
+                    console.log('else');
                     this.onKeyDownEvent(event);
                     this.isPendingInputEventHandling = false;
                 }
@@ -296,6 +298,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private onKeyUpDomEvent(event: PluginKeyboardEvent) {
+        console.log('isSuggesting', this.isSuggesting);
         if (this.isSuggesting) {
             // Word before cursor represents the text prior to the cursor, up to and including the trigger symbol.
             const wordBeforeCursor = this.getWord(event);
@@ -391,6 +394,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private onKeyDownEvent(event: PluginKeyboardEvent) {
         let keyboardEvent = event.rawEvent;
+        console.log('isSuggesting', this.isSuggesting);
         if (this.isSuggesting) {
             if (keyboardEvent.key == ESC_CHAR_CODE) {
                 this.setIsSuggesting(false);
