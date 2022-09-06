@@ -60,7 +60,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
-            paste: e => this.onPaste(this.editor!, e),
+            paste: e => this.onPaste(e),
             copy: e => this.onCutCopy(e, false /*isCut*/),
             cut: e => this.onCutCopy(e, true /*isCut*/),
         });
@@ -149,23 +149,25 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         }
     }
 
-    private onPaste = (editor: IEditor, event: Event) => {
+    private onPaste = (event: Event) => {
         let range: Range;
-        extractClipboardEvent(
-            event as ClipboardEvent,
-            clipboardData => editor.paste(clipboardData),
-            {
-                allowedCustomPasteType: this.state.allowedCustomPasteType,
-                getTempDiv: () => {
-                    range = editor.getSelectionRange();
-                    return this.getTempDiv(editor);
+        if (this.editor) {
+            extractClipboardEvent(
+                event as ClipboardEvent,
+                clipboardData => this.editor.paste(clipboardData),
+                {
+                    allowedCustomPasteType: this.state.allowedCustomPasteType,
+                    getTempDiv: () => {
+                        range = this.editor.getSelectionRange();
+                        return this.getTempDiv(this.editor);
+                    },
+                    removeTempDiv: div => {
+                        this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
+                    },
                 },
-                removeTempDiv: div => {
-                    this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
-                },
-            },
-            editor.getSelectionRange()
-        );
+                this.editor.getSelectionRange()
+            );
+        }
     };
 
     private getTempDiv(editor: IEditor, forceInLightMode?: boolean) {
