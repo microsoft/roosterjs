@@ -28,7 +28,7 @@ export const enum BulletListType {
     ShortArrow = 4,
 
     /**
-     * Bullet triggered by -> or -->
+     * Bullet triggered by ->
      */
     LongArrow = 5,
 
@@ -43,7 +43,12 @@ export const enum BulletListType {
     Hyphen = 7,
 
     /**
+     * Bullet triggered by -->
+     */
+    DoubleLongArrow = 8,
+
+    /**
      * Maximum value of the enum
      */
-    Max = 7,
+    Max = 8,
 }
