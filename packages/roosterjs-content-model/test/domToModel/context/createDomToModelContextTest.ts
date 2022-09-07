@@ -74,6 +74,7 @@ describe('createDomToModelContext', () => {
             coordinates: {
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
+                selectionPath: undefined,
             },
         });
 

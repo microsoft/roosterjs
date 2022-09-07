@@ -36,7 +36,12 @@ export const selectTable: SelectTable = (
     coordinates?: TableSelection
 ): TableSelectionRange | null => {
     unselect(core);
-    if (areValidCoordinates(coordinates) && table) {
+    if (
+        areValidCoordinates(coordinates) &&
+        table &&
+        coordinates.firstCell &&
+        coordinates.lastCell
+    ) {
         ensureUniqueId(table, TABLE_ID);
         ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
@@ -270,12 +275,14 @@ function isValidCoordinate(input: number): boolean {
 
 function isMergedCell(table: HTMLTableElement, coordinates: TableSelection): boolean {
     const { firstCell } = coordinates;
-    return !(table.rows.item(firstCell.y) && table.rows.item(firstCell.y)?.cells.item(firstCell.x));
+    return !(
+        table.rows.item(firstCell!.y) && table.rows.item(firstCell!.y)?.cells.item(firstCell!.x)
+    );
 }
 
 function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection): Coordinates {
-    const { lastCell, firstCell } = tableSelection;
-    const result: Coordinates = lastCell;
+    const { lastCell, selectionPath } = tableSelection;
+    const result: Coordinates = lastCell!;
 
     /**
         Need to also check whether the cells in the same column (within the selection) have merged elements
@@ -293,13 +300,23 @@ function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection):
         select (1, 2), so we check if the top cell in the same column (within the selection) was merged.
      */
 
-    const lastTD = vTable.cells?.[lastCell.y][lastCell.x]?.td;
-    const topLastTD =
-        lastCell.x > firstCell.x ? vTable.cells?.[firstCell.y][lastCell.x]?.td : undefined;
+    if (lastCell) {
+        const lastTD = vTable.cells?.[lastCell.y][lastCell.x]?.td;
 
-    if (lastTD) {
-        result.x += Math.max(...[lastTD, topLastTD].map(c => (c && c.colSpan - 1) || 0));
-        result.y += lastTD.rowSpan - 1;
+        let topLastTD: HTMLTableCellElement | null | undefined = undefined;
+        if (selectionPath && selectionPath.length > 0) {
+            const selectionStart = selectionPath[0];
+            const selectionEnd = selectionPath[selectionPath.length - 1];
+            topLastTD =
+                selectionEnd.x >= selectionStart.x
+                    ? vTable.cells?.[selectionEnd.y][lastCell.x]?.td
+                    : undefined;
+        }
+
+        if (lastTD) {
+            result.x += Math.max(...[lastTD, topLastTD].map(c => (c && c.colSpan - 1) || 0));
+            result.y += lastTD.rowSpan - 1;
+        }
     }
 
     return result;

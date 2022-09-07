@@ -43,6 +43,7 @@ export function handleTable(
                     table: tableNode,
                     firstCell: { x: col, y: row },
                     lastCell: { x: col, y: row },
+                    selectionPath: [],
                 };
 
                 if (context.tableSelection.table == tableNode) {

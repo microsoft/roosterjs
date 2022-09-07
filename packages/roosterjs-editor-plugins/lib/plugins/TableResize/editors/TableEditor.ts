@@ -329,6 +329,7 @@ export default class TableEditor {
                         y: rows,
                         x: lastCellIndex,
                     },
+                    selectionPath: [],
                 };
                 this.editor.select(table, selection);
             }

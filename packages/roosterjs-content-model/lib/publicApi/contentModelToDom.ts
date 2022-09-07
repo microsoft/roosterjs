@@ -51,6 +51,7 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
             coordinates: {
                 firstCell: tableSelection.firstCell,
                 lastCell: tableSelection.lastCell,
+                selectionPath: tableSelection.selectionPath,
             },
         };
     }

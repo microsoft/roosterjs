@@ -13,4 +13,9 @@ export default interface TableSelection {
      * Last Cell selection x and y position in the table
      */
     lastCell: Coordinates;
+
+    /**
+     * Path of selection done by the user.
+     */
+    selectionPath: Coordinates[];
 }

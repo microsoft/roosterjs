@@ -107,6 +107,7 @@ describe('setHtmlWithMetadata', () => {
                 x: 3,
                 y: 4,
             },
+            selectionPath: [],
         };
         const html = metadataToString(pureHtml, comment);
         const metadata = setHtmlWithMetadata(div, html);
@@ -129,6 +130,7 @@ describe('setHtmlWithMetadata', () => {
                 x: 3,
                 y: 4,
             },
+            selectionPath: [],
         };
         const html = metadataToString(pureHtml, comment);
         const metadata = setHtmlWithMetadata(div, html);
@@ -150,6 +152,7 @@ describe('setHtmlWithMetadata', () => {
                 x: 3,
                 y: 4,
             },
+            selectionPath: [],
         };
         const html = metadataToString(pureHtml, comment);
         const metadata = setHtmlWithMetadata(div, html);
@@ -166,6 +169,7 @@ describe('setHtmlWithMetadata', () => {
                 x: 3,
                 y: 4,
             },
+            selectionPath: [],
             isDarkMode: false,
         });
     });

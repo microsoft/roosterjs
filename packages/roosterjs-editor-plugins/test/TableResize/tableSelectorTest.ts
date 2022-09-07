@@ -192,6 +192,7 @@ describe('Table Selector Tests', () => {
                         y: 7,
                         x: 7,
                     },
+                    selectionPath: [],
                 });
                 expect(selection.ranges.length).toBe(8);
             }

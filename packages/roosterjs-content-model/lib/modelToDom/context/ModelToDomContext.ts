@@ -58,6 +58,11 @@ export interface TableSelection {
      * Coordinate of last selected cell
      */
     lastCell: Coordinates;
+
+    /**
+     * Path of selection done by the user.
+     */
+    selectionPath: Coordinates[];
 }
 
 /**

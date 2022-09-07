@@ -20,10 +20,12 @@ describe('normalize table selection |', () => {
             <TableSelection>{
                 firstCell: { x: 0, y: 0 },
                 lastCell: { x: 1, y: 1 },
+                selectionPath: undefined,
             },
             <TableSelection>{
                 firstCell: { x: 0, y: 0 },
                 lastCell: { x: 1, y: 1 },
+                selectionPath: undefined,
             }
         );
     });
@@ -67,10 +69,12 @@ describe('normalize table selection |', () => {
             <TableSelection>{
                 firstCell: { x: 1, y: 1 },
                 lastCell: { x: 0, y: 0 },
+                selectionPath: undefined,
             },
             <TableSelection>{
                 firstCell: { x: 0, y: 0 },
                 lastCell: { x: 1, y: 1 },
+                selectionPath: undefined,
             }
         );
     });
@@ -80,10 +84,12 @@ describe('normalize table selection |', () => {
             <TableSelection>{
                 firstCell: { x: 1, y: 0 },
                 lastCell: { x: 0, y: 0 },
+                selectionPath: undefined,
             },
             <TableSelection>{
                 firstCell: { x: 0, y: 0 },
                 lastCell: { x: 1, y: 0 },
+                selectionPath: undefined,
             }
         );
     });
@@ -93,16 +99,18 @@ describe('normalize table selection |', () => {
             <TableSelection>{
                 firstCell: { x: null, y: null },
                 lastCell: { x: 0, y: 0 },
+                selectionPath: undefined,
             },
             <TableSelection>{
                 firstCell: { x: 0, y: 0 },
                 lastCell: { x: 0, y: 0 },
+                selectionPath: undefined,
             }
         );
     });
 
     it('VTable is null', () => {
-        const vTable = <VTable>null;
+        const vTable = <VTable>(<any>null);
         expect(normalizeTableSelection(vTable)).toEqual(null);
     });
 });

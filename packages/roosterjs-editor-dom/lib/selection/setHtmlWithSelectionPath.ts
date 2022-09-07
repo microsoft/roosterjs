@@ -24,6 +24,8 @@ const CoordinatesDefinition = createObjectDefinition<Coordinates>({
     y: createNumberDefinition(),
 });
 
+const CoordinatesArrayDefinition = createArrayDefinition(CoordinatesDefinition);
+
 const IsDarkModeDefinition = createBooleanDefinition(true /*isOptional*/);
 
 const NormalContentMetadataDefinition = createObjectDefinition<NormalContentMetadata>({
@@ -39,6 +41,7 @@ const TableContentMetadataDefinition = createObjectDefinition<TableContentMetada
     tableId: createStringDefinition(),
     firstCell: CoordinatesDefinition,
     lastCell: CoordinatesDefinition,
+    selectionPath: CoordinatesArrayDefinition,
 });
 
 /**

@@ -325,10 +325,8 @@ describe('TableCellSelectionPlugin |', () => {
             //Assert
             const selection = editor.getSelectionRangeEx();
             expect(selection.type).toBe(SelectionRangeTypes.TableSelection);
-            expect((<TableSelectionRange>selection).coordinates).toEqual({
-                firstCell: { x: 1, y: 0 },
-                lastCell: { x: 2, y: 3 },
-            });
+            expect((<TableSelectionRange>selection).coordinates.firstCell).toEqual({ x: 1, y: 0 });
+            expect((<TableSelectionRange>selection).coordinates.lastCell).toEqual({ x: 2, y: 3 });
             expect(selection.areAllCollapsed).toBe(false);
         });
     });
@@ -352,7 +350,12 @@ describe('TableCellSelectionPlugin |', () => {
 
             const selection = editor.getSelectionRangeEx();
 
-            expect((<TableSelectionRange>selection).coordinates).toEqual(expectInput);
+            expect((<TableSelectionRange>selection).coordinates?.firstCell).toEqual(
+                expectInput?.firstCell
+            );
+            expect((<TableSelectionRange>selection).coordinates?.lastCell).toEqual(
+                expectInput?.lastCell
+            );
             expect(selection.type).toEqual(expectType ?? SelectionRangeTypes.TableSelection);
             expect(selection.areAllCollapsed).toBe(false);
         }
@@ -376,7 +379,12 @@ describe('TableCellSelectionPlugin |', () => {
 
             const selection = editor.getSelectionRangeEx();
 
-            expect((<TableSelectionRange>selection)?.coordinates ?? undefined).toEqual(expectInput);
+            expect((<TableSelectionRange>selection)?.coordinates?.firstCell ?? undefined).toEqual(
+                expectInput?.firstCell
+            );
+            expect((<TableSelectionRange>selection)?.coordinates?.lastCell ?? undefined).toEqual(
+                expectInput?.lastCell
+            );
             expect(selection.type).toEqual(expectType ?? SelectionRangeTypes.TableSelection);
             expect(selection.areAllCollapsed).toBe(areAllCollapsed);
         }
