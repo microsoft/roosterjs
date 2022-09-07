@@ -36,4 +36,4 @@ export { default as applyCellShading } from './table/applyCellShading';
 
 export { default as toggleListType } from './utils/toggleListType';
 export { default as blockFormat } from './utils/blockFormat';
-export { default as experimentCommitListChains } from './experiment/experimentCommitListChains';
+export { default as commitListChains, experimentCommitListChains } from './utils/commitListChains';
