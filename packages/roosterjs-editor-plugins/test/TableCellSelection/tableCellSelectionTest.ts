@@ -1,15 +1,17 @@
 import { Browser } from 'roosterjs-editor-dom';
+import { DeleteTableContents } from '../../lib/plugins/TableCellSelection/features/DeleteTableContents';
 import { Editor } from 'roosterjs-editor-core';
 import { IEditor } from 'roosterjs-editor-types';
 import { TableCellSelection } from '../../lib/TableCellSelection';
 import {
+    Coordinates,
     EditorOptions,
     Keys,
-    SelectionRangeTypes,
-    TableSelectionRange,
     PluginEventType,
+    PluginKeyboardEvent,
+    SelectionRangeTypes,
     TableSelection,
-    Coordinates,
+    TableSelectionRange,
 } from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
@@ -658,15 +660,23 @@ describe('TableCellSelectionPlugin |', () => {
 
         editor.select(table, {
             firstCell: { x: 0, y: 0 },
-            lastCell: { x: 3, y: 2 },
+            lastCell: { x: 3, y: 3 },
         } as TableSelection);
 
-        let contentDiv = editor.getDocument().getElementById(id);
-        contentDiv.dispatchEvent(simulateKeyDownEvent(Keys.BACKSPACE, false));
-
-        expect(editor.getContent()).toBe(
-            '<div><table id="table1" cellspacing="0" cellpadding="1"><tbody><tr><td id="tableSelectionTestId"><br></td><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td id="tableSelectionTestId2"><br></td><td><br></td></tr><tr><td>Test string<br></td><td>Test string<br></td><td>Test string<br></td><td></td></tr></tbody></table></div>'
+        const shouldHandle = DeleteTableContents.shouldHandleEvent(
+            <PluginKeyboardEvent>{},
+            editor,
+            false
         );
+
+        DeleteTableContents.handleEvent(<PluginKeyboardEvent>{}, editor);
+
+        expect(shouldHandle).toBeTrue();
+
+        table.querySelectorAll('td').forEach(cell => {
+            expect(cell.childElementCount).toEqual(1);
+            expect(cell.firstElementChild?.tagName).toEqual('BR');
+        });
     });
 });
 

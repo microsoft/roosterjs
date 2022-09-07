@@ -1,14 +1,13 @@
 import normalizeTableSelection from './utils/normalizeTableSelection';
+import { DeleteTableContents } from './features/DeleteTableContents';
 import { getCellCoordinates } from './utils/getCellCoordinates';
 import {
-    BuildInEditFeature,
     Coordinates,
     EditorPlugin,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
-    PluginKeyboardEvent,
     PluginKeyDownEvent,
     PluginKeyUpEvent,
     PluginMouseDownEvent,
@@ -70,7 +69,7 @@ export default class TableCellSelection implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.editor.addContentEditFeature(this.DeleteTableContents);
+        this.editor.addContentEditFeature(DeleteTableContents);
     }
 
     /**
@@ -495,32 +494,6 @@ export default class TableCellSelection implements EditorPlugin {
     }
     //#endregion
 
-    //#region Content Edit Features
-
-    /**
-     * When press Backspace, delete the contents inside of the selection, if it is Table Selection
-     */
-    DeleteTableContents: BuildInEditFeature<PluginKeyboardEvent> = {
-        keys: [Keys.DELETE, Keys.BACKSPACE],
-        shouldHandleEvent: (_, editor) => {
-            const selection = editor.getSelectionRangeEx();
-            return selection.type == SelectionRangeTypes.TableSelection;
-        },
-        handleEvent: (_, editor) => {
-            const selection = editor.getSelectionRangeEx();
-            if (selection.type == SelectionRangeTypes.TableSelection) {
-                editor.addUndoSnapshot(() => {
-                    editor.getSelectedRegions().forEach(region => {
-                        if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
-                            deleteNodeContents(region.rootNode, editor);
-                        }
-                    });
-                });
-            }
-        },
-    };
-    //#endregion
-
     //#region utils
     private clearState() {
         this.editor.select(null);
@@ -731,13 +704,6 @@ export default class TableCellSelection implements EditorPlugin {
         }
     }
     //#endregion
-}
-
-function deleteNodeContents(element: HTMLElement, editor: IEditor) {
-    const range = new Range();
-    range.selectNodeContents(element);
-    range.deleteContents();
-    element.appendChild(editor.getDocument().createElement('br'));
 }
 
 function updateSelection(
