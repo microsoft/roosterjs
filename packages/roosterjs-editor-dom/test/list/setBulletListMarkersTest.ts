@@ -26,6 +26,10 @@ describe('setBulletListMarkers', () => {
         runTest(BulletListType.LongArrow, '"→ "');
     });
 
+    it('double long arrow', () => {
+        runTest(BulletListType.DoubleLongArrow, '"→ "');
+    });
+
     it('short arrow', () => {
         runTest(BulletListType.ShortArrow, '"➢ "');
     });
