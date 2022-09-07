@@ -102,8 +102,7 @@ export default class Editor implements IEditor {
             }
         });
 
-        options.zoomScale = options.zoomScale ?? 1;
-        const zoomScale = options.zoomScale > 0 ? options.zoomScale : 1;
+        const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
         this.core = {
             contentDiv,
             api: {
