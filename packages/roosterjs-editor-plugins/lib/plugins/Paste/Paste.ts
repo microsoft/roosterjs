@@ -1,33 +1,15 @@
 import convertPasteContentForSingleImage from './imageConverter/convertPasteContentForSingleImage';
 import convertPastedContentForLI from './commonConverter/convertPastedContentForLI';
 import convertPastedContentFromExcel from './excelConverter/convertPastedContentFromExcel';
+import convertPastedContentFromOfficeOnline from './officeOnlineConverter/convertPastedContentFromOfficeOnline';
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
+import getPasteSource from './sourceValidations/getPasteSource';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
-import { toArray } from 'roosterjs-editor-dom';
-import {
-    EditorPlugin,
-    ExperimentalFeatures,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
-import convertPastedContentFromWordOnline, {
-    isWordOnlineWithList,
-} from './officeOnlineConverter/convertPastedContentFromWordOnline';
-
-const WORD_ATTRIBUTE_NAME = 'xmlns:w';
-const WORD_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:word';
-const WORD_PROG_ID = 'Word.Document';
-const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
-const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
-const PROG_ID_NAME = 'ProgId';
-const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
-const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
-const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
-const WAC_IDENTIFY_SELECTOR =
-    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { GOOGLE_SHEET_NODE_NAME } from './sourceValidations/constants';
+import { KnownSourceType } from './sourceValidations/KnownSourceType';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -72,47 +54,34 @@ export default class Paste implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.BeforePaste) {
-            const { htmlAttributes, fragment, sanitizingOption, clipboardData } = event;
+            const { fragment, sanitizingOption } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
-            let wacListElements: Node[];
 
-            if (isWordDocument(htmlAttributes)) {
-                // Handle HTML copied from Word
-                convertPastedContentFromWord(event);
-            } else if (
-                htmlAttributes[EXCEL_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE ||
-                htmlAttributes[PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
-            ) {
-                // Handle HTML copied from Excel
-                convertPastedContentFromExcel(event, trustedHTMLHandler);
-            } else if (htmlAttributes[PROG_ID_NAME] == POWERPOINT_ATTRIBUTE_VALUE) {
-                convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
-            } else if (
-                (wacListElements = toArray(fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR))) &&
-                wacListElements.length > 0
-            ) {
-                // Once it is known that the document is from WAC
-                // We need to remove the display property and margin from all the list item
-                wacListElements.forEach((el: HTMLElement) => {
-                    el.style.display = null;
-                    el.style.margin = null;
-                });
-                // call conversion function if the pasted content is from word online and
-                // has list element in the pasted content.
-                if (isWordOnlineWithList(fragment)) {
-                    convertPastedContentFromWordOnline(fragment);
-                }
-            } else if (fragment.querySelector(GOOGLE_SHEET_NODE_NAME)) {
-                sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
-            } else if (
-                this.editor.isFeatureEnabled(ExperimentalFeatures.ConvertSingleImageBody) &&
-                clipboardData.htmlFirstLevelChildTags?.length == 1 &&
-                clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
-            ) {
-                convertPasteContentForSingleImage(event, trustedHTMLHandler);
-            } else {
-                convertPastedContentForLI(fragment);
-                handleLineMerge(fragment);
+            switch (getPasteSource(event, this.editor)) {
+                case KnownSourceType.WordDesktop:
+                    // Handle HTML copied from Word
+                    convertPastedContentFromWord(event);
+                    break;
+                case KnownSourceType.ExcelDesktop:
+                    // Handle HTML copied from Excel
+                    convertPastedContentFromExcel(event, trustedHTMLHandler);
+                    break;
+                case KnownSourceType.PowerPointDesktop:
+                    convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
+                    break;
+                case KnownSourceType.WacComponents:
+                    convertPastedContentFromOfficeOnline(fragment);
+                    break;
+                case KnownSourceType.GoogleSheets:
+                    sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+                    break;
+                case KnownSourceType.SingleImage:
+                    convertPasteContentForSingleImage(event, trustedHTMLHandler);
+                    break;
+                case KnownSourceType.Default:
+                    convertPastedContentForLI(fragment);
+                    handleLineMerge(fragment);
+                    break;
             }
 
             sanitizeHtmlColorsFromPastedContent(sanitizingOption);
@@ -121,11 +90,4 @@ export default class Paste implements EditorPlugin {
             sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
         }
     }
-}
-
-function isWordDocument(htmlAttributes: Record<string, string>) {
-    return (
-        htmlAttributes[WORD_ATTRIBUTE_NAME] == WORD_ATTRIBUTE_VALUE ||
-        htmlAttributes[PROG_ID_NAME] == WORD_PROG_ID
-    );
 }
