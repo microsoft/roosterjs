@@ -412,7 +412,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.DeleteColumn,
             '<table><tr><td>2</td></tr><tr><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -431,7 +431,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.DeleteRow,
             '<table><tr><td>3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -455,7 +455,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertAbove,
             '<table><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -474,7 +474,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertBelow,
             '<table><tr><td id="id1">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -493,7 +493,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertLeft,
             '<table><tr><td><br></td><td><br></td><td id="id1">1</td><td>2</td></tr><tr><td><br></td><td><br></td><td>3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -512,7 +512,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.InsertRight,
             '<table><tr><td id="id1">1</td><td>2</td><td><br></td><td><br></td></tr><tr><td>3</td><td id="id2">4</td><td><br></td><td><br></td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -564,7 +564,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.MergeCells,
             '<table><tr><td id="id1" colspan="2">1<br>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -631,7 +631,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellCenter,
             '<table><tr><td id="id1" style="text-align: center;">1</td><td>2</td></tr><tr><td style="text-align: center;">3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -643,7 +643,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellRight,
             '<table><tr><td id="id1" style="text-align: right;">1</td><td>2</td></tr><tr><td style="text-align: right;">3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -655,7 +655,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellLeft,
             '<table><tr><td id="id1" style="text-align: left;">1</td><td>2</td></tr><tr><td style="text-align: left;">3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -667,7 +667,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellTop,
             '<table><tr><td id="id1" style="vertical-align: top;">1</td><td>2</td></tr><tr><td style="vertical-align: top;">3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -679,7 +679,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellMiddle,
             '<table><tr><td id="id1" style="vertical-align: middle;">1</td><td>2</td></tr><tr><td style="vertical-align: middle;">3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -691,7 +691,7 @@ describe('VTable.edit', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellBottom,
             '<table><tr><td id="id1" style="vertical-align: bottom;">1</td><td>2</td></tr><tr><td style="vertical-align: bottom;">3</td><td id="id2">4</td></tr></table>',
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -715,7 +715,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
                 '<table><tr><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -739,7 +739,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1">1</td><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -767,7 +767,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td><br></td><td colspan="2"><br></td></tr><tr><td><br></td><td colspan="2"><br></td></tr><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -791,7 +791,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="4">4</td></tr><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -815,7 +815,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td rowspan="2"><br></td><td rowspan="2"><br></td><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td><br></td><td><br></td><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -839,7 +839,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td><td><br></td><td><br></td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td><td rowspan="2"><br></td><td rowspan="2"><br></td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -893,7 +893,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 1, y: 0 }, selectionPath: [] }
         );
     });
 
@@ -954,7 +954,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2" style="text-align: center;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2" style="text-align: center;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
     itFirefoxOnly('Complex table, AlignCellRight', () => {
@@ -986,7 +986,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -1000,7 +1000,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 
@@ -1014,7 +1014,7 @@ describe('VTable.edit', () => {
                 '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
                 '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
-            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
+            { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 }, selectionPath: [] }
         );
     });
 });

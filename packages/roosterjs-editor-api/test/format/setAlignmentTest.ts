@@ -116,7 +116,7 @@ describe('setAlignment()', () => {
         spyOn(editor, 'getSelectionRangeEx').and.returnValue({
             type: 1,
             ranges: [range],
-            coordinates: { firstCell: { x: 0, y: 0 }, lastCell: { y: 0, x: 0 } },
+            coordinates: { firstCell: { x: 0, y: 0 }, lastCell: { y: 0, x: 0 }, selectionPath: [] },
             areAllCollapsed: false,
             table: document.getElementById('tableSelected0') as HTMLTableElement,
         });

@@ -551,7 +551,7 @@ describe('TableCellSelectionPlugin |', () => {
         it('Selection using Keyboard SHIFT', () => {
             runKeyDownTest(
                 { whichInput: Keys.SHIFT, shiftKey: true },
-                { firstCell: { x: 0, y: 0 }, lastCell: { x: 2, y: 2 } }
+                { firstCell: { x: 0, y: 0 }, lastCell: { x: 2, y: 2 }, selectionPath: [] }
             );
         });
 

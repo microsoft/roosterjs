@@ -697,7 +697,7 @@ export default class TableCellSelection implements EditorPlugin {
             selectionPath.push(firstCell);
         }
         let index: number;
-        if ((index = selectionPath.indexOf(lastCell)) > -1) {
+        if ((index = selectionPath.lastIndexOf(lastCell)) > -1) {
             selectionPath.splice(index, selectionPath.length - 1 - index);
         } else {
             selectionPath.push(lastCell);
