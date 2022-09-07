@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.07% </span>
+                <span class="strong">89.29% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>51/56</span>
+                <span class='fraction'>50/56</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.78% </span>
+                <span class="strong">80.85% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>39/46</span>
+                <span class='fraction'>38/47</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.74% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>49/54</span>
+                <span class='fraction'>48/54</span>
             </div>
         
             
@@ -229,7 +229,9 @@
 <a name='L170'></a><a href='#L170'>170</a>
 <a name='L171'></a><a href='#L171'>171</a>
 <a name='L172'></a><a href='#L172'>172</a>
-<a name='L173'></a><a href='#L173'>173</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -281,6 +283,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2864x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2864x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -378,20 +382,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -445,14 +449,16 @@ const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
  */
 export const transformColor: TransformColor = (
     core: EditorCore,
-    rootNode: Node,
+    rootNode: Node | null,
     includeSelf: boolean,
     callback: (() =&gt; void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) =&gt; {
     const elements =
-        forceTransform || core.lifecycle.isDarkMode ? getAll(rootNode, includeSelf) : [];
+        rootNode &amp;&amp; (forceTransform || core.lifecycle.isDarkMode)
+            ? getAll(rootNode, includeSelf)
+            : [];
 &nbsp;
     callback?.();
 &nbsp;
@@ -552,13 +558,13 @@ function getValueOrDefault(value: string | undefined, defaultValue: string | nul
 function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
     const result: HTMLElement[] = [];
 &nbsp;
-    if (safeInstanceOf(rootNode, 'HTMLElement')) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (safeInstanceOf(rootNode, 'HTMLElement')) {
         if (includeSelf) {
             result.push(rootNode);
         }
         const allChildren = rootNode.getElementsByTagName('*');
         arrayPush(result, toArray(allChildren));
-    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (safeInstanceOf(rootNode, 'DocumentFragment')) {
+    } else <span class="cstat-no" title="statement not covered" >if (safeInstanceOf(rootNode, 'DocumentFragment')) {</span>
         const allChildren = <span class="cstat-no" title="statement not covered" >rootNode.querySelectorAll('*');</span>
 <span class="cstat-no" title="statement not covered" >        arrayPush(result, toArray(allChildren));</span>
     }
@@ -580,7 +586,7 @@ function isHTMLElement(element: Element): element is HTMLElement {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Sep 07 2022 14:26:37 GMT+0000 (Coordinated Universal Time)
+                at Wed Sep 07 2022 15:41:37 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
