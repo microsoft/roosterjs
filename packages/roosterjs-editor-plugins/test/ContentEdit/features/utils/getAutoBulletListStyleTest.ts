@@ -12,7 +12,7 @@ describe('getAutoListStyle ', () => {
     });
 
     it('--> ', () => {
-        runTest('--> ', BulletListType.LongArrow);
+        runTest('--> ', BulletListType.DoubleLongArrow);
     });
 
     it('-> ', () => {

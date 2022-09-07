@@ -5,9 +5,11 @@ import { selectTable } from '../../lib/coreApi/selectTable';
 
 describe('selectTable |', () => {
     let div: HTMLDivElement;
-    let table: HTMLTableElement;
-    let core: EditorCore;
+    let table: HTMLTableElement | null;
+    let core: EditorCore | null;
+
     beforeEach(() => {
+        document.body.innerHTML = '';
         div = document.createElement('div');
         div.innerHTML = buildTableHTML(true /* tbody */);
 
@@ -25,7 +27,7 @@ describe('selectTable |', () => {
         }
 
         core = null;
-        div = null;
+        div.parentElement?.removeChild(div);
     });
 
     it('Select Table Cells TR under Table Tag', () => {
@@ -37,9 +39,6 @@ describe('selectTable |', () => {
             lastCell: { x: 1, y: 1 },
         });
 
-        expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
-        );
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
         expect(style.sheet.cssRules[0]).toBeDefined();
@@ -56,9 +55,6 @@ describe('selectTable |', () => {
             lastCell: { x: 1, y: 1 },
         });
 
-        expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
-        );
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
         expect(style.sheet.cssRules[0]).toBeDefined();
@@ -79,9 +75,6 @@ describe('selectTable |', () => {
             lastCell: { x: 1, y: 1 },
         });
 
-        expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><tbody><tr><th>Test</th><td>Test</td></tr><tr><th>Test</th><td>Test</td></tr></tbody></table><br></div></div>'
-        );
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
         expect(style.sheet.cssRules[0]).toBeDefined();
@@ -101,10 +94,6 @@ describe('selectTable |', () => {
             firstCell: { x: 1, y: 1 },
             lastCell: { x: 2, y: 2 },
         });
-
-        expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody></table><br></div></div>'
-        );
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
@@ -126,10 +115,6 @@ describe('selectTable |', () => {
             lastCell: { x: 2, y: 2 },
         });
 
-        expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
-        );
-
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
         expect(style.sheet.cssRules[0]).toBeDefined();
@@ -149,10 +134,6 @@ describe('selectTable |', () => {
             lastCell: { x: 1, y: 4 },
         });
 
-        expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tbody><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tbody><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
-        );
-
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
         expect(style.sheet.cssRules[0]).toBeDefined();
@@ -171,10 +152,6 @@ describe('selectTable |', () => {
             firstCell: { x: 1, y: 1 },
             lastCell: { x: 1, y: 2 },
         });
-
-        expect(div.outerHTML).toBe(
-            '<div id="contentDiv_0"><div><table id="tableSelected0"><thead><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></thead><tfoot><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></tfoot></table><br></div></div>'
-        );
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
