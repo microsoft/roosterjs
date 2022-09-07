@@ -285,8 +285,7 @@ function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection):
     const result: Coordinates = lastCell!;
 
     /**
-        Need to also check whether the cells in the same column (within the selection) have merged elements
-        so we can add them.
+     * selection for merged cell change depending on the merged cell.
                      ________ _________________
                     | (0, 0) |      (0,1)      |
                     |________|________ ________|
@@ -298,6 +297,8 @@ function getLastCellCoordinates(vTable: VTable, tableSelection: TableSelection):
         For example in the above table, if the selection starts in (1, 0) and ends in (0, 1),
         First Coord is going to be (0, 0) and last Coord is going to be (1, 1), but, we also need to
         select (1, 2), so we check if the top cell in the same column (within the selection) was merged.
+
+        And if selection stars from (0,1) and ends in (1, 0), we do not need to select (1,2)
      */
 
     if (lastCell) {
