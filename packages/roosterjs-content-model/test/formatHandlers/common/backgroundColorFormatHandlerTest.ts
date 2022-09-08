@@ -84,6 +84,14 @@ describe('backgroundColorFormatHandler.parse', () => {
 
         expect(format.backgroundColor).toBe('green');
     });
+
+    it('Color from element overwrite default style', () => {
+        div.style.backgroundColor = 'red';
+
+        backgroundColorFormatHandler.parse(format, div, context, { color: 'green' });
+
+        expect(format.backgroundColor).toBe('red');
+    });
 });
 
 describe('backgroundColorFormatHandler.apply', () => {

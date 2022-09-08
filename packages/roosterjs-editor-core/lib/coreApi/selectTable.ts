@@ -31,7 +31,7 @@ const STYLE_ID = 'tableStyle';
  */
 export const selectTable: SelectTable = (
     core: EditorCore,
-    table: HTMLTableElement,
+    table: HTMLTableElement | null,
     coordinates?: TableSelection
 ) => {
     unselect(core);

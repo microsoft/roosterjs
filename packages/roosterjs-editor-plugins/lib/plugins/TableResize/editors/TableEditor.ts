@@ -307,7 +307,11 @@ export default class TableEditor {
         this.onFinishEditing();
     };
 
-    private onSelect = (table: HTMLTableElement) => {
+    /**
+     * Public only for testing purposes
+     * @param table the table to select
+     */
+    public onSelect = (table: HTMLTableElement) => {
         this.editor.focus();
         if (table) {
             const vTable = new VTable(table);
