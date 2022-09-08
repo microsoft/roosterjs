@@ -91,7 +91,9 @@ export function addSnapshotV2(
 }
 
 function compareSnapshots(s1: Snapshot, s2: Snapshot) {
-    return s1.html == s2.html;
+  // filter out the changes not visible to the user, such as "data-listchain" attribute in list from cutPasteListChain plugin
+  // avoid the need to undo more than once
+  return s1.html.replace(/\sdata-listchain="[^"]+"/g, '') === s2.html.replace(/\sdata-listchain="[^"]+"/g, '');
 }
 
 function defaultCompare<T>(s1: T, s2: T) {
