@@ -2,7 +2,7 @@ import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
 import {
     blockFormat,
-    experimentCommitListChains,
+    commitListChains,
     setIndentation,
     toggleBullet,
     toggleNumbering,
@@ -116,7 +116,7 @@ const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
     },
     handleEvent: (event, editor) => {
         const chains = getListChains(editor);
-        editor.runAsync(editor => experimentCommitListChains(editor, chains));
+        editor.runAsync(editor => commitListChains(editor, chains));
     },
 };
 
@@ -309,7 +309,7 @@ const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
         editor.queryElements('li', QueryScope.OnSelection).length > 0,
     handleEvent: (event, editor) => {
         const chains = getListChains(editor);
-        editor.runAsync(editor => experimentCommitListChains(editor, chains));
+        editor.runAsync(editor => commitListChains(editor, chains));
     },
 };
 

@@ -6,7 +6,7 @@ import { Position, VListChain } from 'roosterjs-editor-dom';
  * @param editor The Editor object
  * @param chains List chains to commit
  */
-export default function experimentCommitListChains(editor: IEditor, chains: VListChain[]) {
+export default function commitListChains(editor: IEditor, chains: VListChain[]) {
     if (chains?.length > 0) {
         const range = editor.getSelectionRange();
         const start = range && Position.getStart(range);
@@ -15,3 +15,9 @@ export default function experimentCommitListChains(editor: IEditor, chains: VLis
         editor.select(start, end);
     }
 }
+
+/**
+ * @deprecated
+ * Same with commitListChains, keep this export just for backward compatibility
+ */
+export const experimentCommitListChains = commitListChains;
