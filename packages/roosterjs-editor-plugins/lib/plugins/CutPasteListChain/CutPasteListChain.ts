@@ -1,4 +1,4 @@
-import { experimentCommitListChains } from 'roosterjs-editor-api';
+import { commitListChains } from 'roosterjs-editor-api';
 import { VListChain } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -61,7 +61,7 @@ export default class CutPasteListChain implements EditorPlugin {
 
             case PluginEventType.ContentChanged:
                 if (this.chains?.length > 0 && this.expectedChangeSource == event.source) {
-                    experimentCommitListChains(this.editor, this.chains);
+                    commitListChains(this.editor, this.chains);
                     this.chains = null;
                     this.expectedChangeSource = null;
                 }

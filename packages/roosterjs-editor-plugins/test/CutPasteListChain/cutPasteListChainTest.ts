@@ -1,6 +1,7 @@
-import * as experimentCommitListChains from 'roosterjs-editor-api/lib/experiment/experimentCommitListChains';
-import { Position, VListChain } from 'roosterjs-editor-dom';
+import * as commitListChains from 'roosterjs-editor-api/lib/utils/commitListChains';
 import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
+import { CutPasteListChain } from '../../lib/CutPasteListChain';
+import { Position, VListChain } from 'roosterjs-editor-dom';
 import {
     ClipboardData,
     IEditor,
@@ -9,7 +10,6 @@ import {
     PluginEventType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-import { CutPasteListChain } from '../../lib/CutPasteListChain';
 
 describe('cutPasteListChain tests', () => {
     let editor: IEditor;
@@ -18,7 +18,7 @@ describe('cutPasteListChain tests', () => {
 
     beforeEach(() => {
         spyOn(VListChain, 'createListChains').and.callThrough();
-        spyOn(experimentCommitListChains, 'default').and.callFake(() => {});
+        spyOn(commitListChains, 'default').and.callFake(() => {});
 
         plugin = new CutPasteListChain();
 
@@ -165,7 +165,7 @@ describe('cutPasteListChain tests', () => {
         expect(contentDiv.innerHTML).toBe(expectedText);
     });
 
-    it('not call experimentCommitListChains with non-list element', () => {
+    it('not call commitListChains with non-list element', () => {
         const testString: string = 'this is a test';
         const contentDiv = createStringElement(testString);
         const pasteEvent = createPluginEventBeforePaste(testString);
@@ -180,10 +180,10 @@ describe('cutPasteListChain tests', () => {
         };
         plugin.onPluginEvent(contentChangedEvent);
 
-        expect(experimentCommitListChains.default).not.toHaveBeenCalled();
+        expect(commitListChains.default).not.toHaveBeenCalled();
     });
 
-    it('calls experimentCommitListChains with list element', () => {
+    it('calls commitListChains with list element', () => {
         const contentDiv = createListElement();
 
         setGetSelectedRegions(contentDiv);
@@ -198,6 +198,6 @@ describe('cutPasteListChain tests', () => {
         };
         plugin.onPluginEvent(contentChangedEvent);
 
-        expect(experimentCommitListChains.default).toHaveBeenCalled();
+        expect(commitListChains.default).toHaveBeenCalled();
     });
 });
