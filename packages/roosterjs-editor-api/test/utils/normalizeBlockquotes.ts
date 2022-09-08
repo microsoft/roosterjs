@@ -17,7 +17,6 @@ describe('Normalize Blockquote |', () => {
         expect(quotesHandled[0]).toEqual(blockquote);
     }
     it('Normalize centered blockquote', () => {
-        debugger;
         runTest(
             {
                 tag: 'blockquote',
