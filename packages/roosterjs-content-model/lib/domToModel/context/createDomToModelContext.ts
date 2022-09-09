@@ -16,6 +16,8 @@ export function createDomToModelContext(
             isRightToLeft: false,
             getDarkColor: undefined,
         },
+
+        segmentFormat: {},
         isInSelection: false,
     };
 

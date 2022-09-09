@@ -1,8 +1,6 @@
 import { addSegment } from '../../modelApi/common/addSegment';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
 import { createBr } from '../../modelApi/creators/createBr';
@@ -109,8 +107,7 @@ function getTableCellWidth(columns: number): number {
 
 function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentModelTableCell) {
     const onlyHasEmptyOrBr = sourceCell.blocks.every(
-        block =>
-            block.blockType == ContentModelBlockType.Paragraph && hasOnlyBrSegment(block.segments)
+        block => block.blockType == 'Paragraph' && hasOnlyBrSegment(block.segments)
     );
 
     if (!onlyHasEmptyOrBr) {
@@ -120,10 +117,7 @@ function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentMod
 }
 
 function hasOnlyBrSegment(segments: ContentModelSegment[]): boolean {
-    segments = segments.filter(s => s.segmentType != ContentModelSegmentType.SelectionMarker);
+    segments = segments.filter(s => s.segmentType != 'SelectionMarker');
 
-    return (
-        segments.length == 0 ||
-        (segments.length == 1 && segments[0].segmentType == ContentModelSegmentType.Br)
-    );
+    return segments.length == 0 || (segments.length == 1 && segments[0].segmentType == 'Br');
 }

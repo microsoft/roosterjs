@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
 
@@ -13,7 +12,7 @@ export function createTable(rowCount: number): ContentModelTable {
     }
 
     return {
-        blockType: ContentModelBlockType.Table,
+        blockType: 'Table',
         cells: rows,
         format: {},
         widths: [],

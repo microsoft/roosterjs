@@ -22,13 +22,13 @@ describe('tableCellMetadataFormatHandler.parse', () => {
             div.dataset.editingInfo = JSON.stringify(metadata);
         }
 
-        tableCellMetadataFormatHandler.parse(format, div, context);
+        tableCellMetadataFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual(expectedValue);
     }
 
     it('No value', () => {
-        tableCellMetadataFormatHandler.parse(format, div, context);
+        tableCellMetadataFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
     });
 

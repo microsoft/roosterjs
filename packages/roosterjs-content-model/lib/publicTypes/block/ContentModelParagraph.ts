@@ -1,15 +1,10 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelBlockType } from '../enum/BlockType';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
-import type { CompatibleContentModelBlockType } from '../compatibleEnum/BlockType';
 
 /**
  * Content Model of Paragraph
  */
-export interface ContentModelParagraph
-    extends ContentModelBlockBase<
-        ContentModelBlockType.Paragraph | CompatibleContentModelBlockType.Paragraph
-    > {
+export interface ContentModelParagraph extends ContentModelBlockBase<'Paragraph'> {
     /**
      * Segments within this paragraph
      */

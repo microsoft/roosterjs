@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const { rootPath, compatibleEnumPath, contentModelCompatibleEnumPath } = require('./common');
+const { compatibleEnumPath } = require('./common');
 
 const EnumRegex = /(^\s*\/\*(?:\*(?!\/)|[^*])*\*\/)?\W*export const enum ([A-Za-z0-9]+)\s{([^}]+)}/gm;
 const CompatibleTypePrefix = 'Compatible';
@@ -67,7 +67,6 @@ function processConstEnumInternal(targetPath) {
 
 function processConstEnum() {
     processConstEnumInternal(compatibleEnumPath);
-    processConstEnumInternal(contentModelCompatibleEnumPath);
 }
 
 module.exports = processConstEnum;

@@ -43,7 +43,7 @@ export const enum ExperimentalFeatures {
     ImageRotate = 'ImageRotate',
 
     /**
-     * Crop an inline image (requires ImageEdit plugin)
+     * @deprecated This feature is always enabled
      */
     ImageCrop = 'ImageCrop',
 
