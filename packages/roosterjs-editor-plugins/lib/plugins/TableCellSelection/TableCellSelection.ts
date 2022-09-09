@@ -1,17 +1,13 @@
 import normalizeTableSelection from './utils/normalizeTableSelection';
-import { forEachSelectedCell } from './utils/forEachSelectedCell';
+import { DeleteTableContents } from './features/DeleteTableContents';
 import { getCellCoordinates } from './utils/getCellCoordinates';
-import { removeCellsOutsideSelection } from './utils/removeCellsOutsideSelection';
 import {
-    BeforeCutCopyEvent,
-    BuildInEditFeature,
     Coordinates,
     EditorPlugin,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
-    PluginKeyboardEvent,
     PluginKeyDownEvent,
     PluginKeyUpEvent,
     PluginMouseDownEvent,
@@ -78,7 +74,7 @@ export default class TableCellSelection implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.editor.addContentEditFeature(this.DeleteTableContents);
+        this.editor.addContentEditFeature(DeleteTableContents);
     }
 
     /**
@@ -114,9 +110,6 @@ export default class TableCellSelection implements EditorPlugin {
                             this.editor.select(this.firstTable, this.tableRange);
                         }
                     }
-                    break;
-                case PluginEventType.BeforeCutCopy:
-                    this.handleBeforeCutCopy(event);
                     break;
                 case PluginEventType.MouseDown:
                     if (!this.startedSelection) {
@@ -170,35 +163,6 @@ export default class TableCellSelection implements EditorPlugin {
             }
         } else if (this.tableSelection) {
             this.restoreSelection();
-        }
-    }
-
-    /**
-     * Handles the Before Copy Event.
-     * Clear the selection range from the cloned Root.
-     * @param event plugin event
-     */
-    private handleBeforeCutCopy(event: BeforeCutCopyEvent) {
-        const selection = this.editor.getSelectionRangeEx();
-        if (selection.type == SelectionRangeTypes.TableSelection) {
-            const clonedTable = event.clonedRoot.querySelector('table#' + selection.table.id);
-            if (clonedTable) {
-                this.tableRange = selection.coordinates;
-                const clonedVTable = new VTable(clonedTable as HTMLTableElement);
-                clonedVTable.selection = this.tableRange;
-                removeCellsOutsideSelection(clonedVTable);
-                clonedVTable.writeBack();
-
-                event.range.selectNode(clonedTable);
-
-                if (event.isCut) {
-                    forEachSelectedCell(this.vTable, cell => {
-                        if (cell?.td) {
-                            deleteNodeContents(cell.td, this.editor);
-                        }
-                    });
-                }
-            }
         }
     }
 
@@ -543,32 +507,6 @@ export default class TableCellSelection implements EditorPlugin {
     }
     //#endregion
 
-    //#region Content Edit Features
-
-    /**
-     * When press Backspace, delete the contents inside of the selection, if it is Table Selection
-     */
-    DeleteTableContents: BuildInEditFeature<PluginKeyboardEvent> = {
-        keys: [Keys.DELETE, Keys.BACKSPACE],
-        shouldHandleEvent: (_, editor) => {
-            const selection = editor.getSelectionRangeEx();
-            return selection.type == SelectionRangeTypes.TableSelection;
-        },
-        handleEvent: (_, editor) => {
-            const selection = editor.getSelectionRangeEx();
-            if (selection.type == SelectionRangeTypes.TableSelection) {
-                editor.addUndoSnapshot(() => {
-                    editor.getSelectedRegions().forEach(region => {
-                        if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
-                            deleteNodeContents(region.rootNode, editor);
-                        }
-                    });
-                });
-            }
-        },
-    };
-    //#endregion
-
     //#region utils
     private clearState() {
         this.editor.select(null);
@@ -745,13 +683,6 @@ export default class TableCellSelection implements EditorPlugin {
         }
     }
     //#endregion
-}
-
-function deleteNodeContents(element: HTMLElement, editor: IEditor) {
-    const range = new Range();
-    range.selectNodeContents(element);
-    range.deleteContents();
-    element.appendChild(editor.getDocument().createElement('br'));
 }
 
 function updateSelection(

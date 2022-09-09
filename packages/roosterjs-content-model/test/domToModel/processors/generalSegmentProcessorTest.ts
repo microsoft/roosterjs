@@ -1,9 +1,6 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
-import { ContentModelSegmentType } from '../../../lib/publicTypes/enum/SegmentType';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
@@ -21,11 +18,12 @@ describe('generalSegmentProcessor', () => {
         const doc = createContentModelDocument(document);
         const span = document.createElement('span');
         const segment: ContentModelGeneralSegment = {
-            segmentType: ContentModelSegmentType.General,
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.General,
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
             element: span,
             blocks: [],
+            format: {},
         };
 
         spyOn(createGeneralSegment, 'createGeneralSegment').and.returnValue(segment);
@@ -33,11 +31,11 @@ describe('generalSegmentProcessor', () => {
         generalSegmentProcessor(doc, span, context);
 
         expect(doc).toEqual({
-            blockType: ContentModelBlockType.BlockGroup,
-            blockGroupType: ContentModelBlockGroupType.Document,
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: ContentModelBlockType.Paragraph,
+                    blockType: 'Paragraph',
                     isImplicit: true,
                     segments: [segment],
                 },
@@ -45,8 +43,38 @@ describe('generalSegmentProcessor', () => {
             document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
-        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span);
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
         expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
         expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span, context);
+    });
+
+    it('Process a SPAN element with format', () => {
+        const doc = createContentModelDocument(document);
+        const span = document.createElement('span');
+        context.segmentFormat = { a: 'b' } as any;
+
+        generalSegmentProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: { a: 'b' } as any,
+                            blocks: [],
+                            element: span,
+                        },
+                    ],
+                },
+            ],
+            document: document,
+        });
     });
 });

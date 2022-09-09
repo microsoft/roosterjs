@@ -2,7 +2,6 @@ import { alignTable } from '../../modelApi/table/alignTable';
 import { alignTableCell } from '../../modelApi/table/alignTableCell';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource, TableOperation } from 'roosterjs-editor-types';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
@@ -29,7 +28,7 @@ export default function editTable(
     const model = table && editor.createContentModel(table);
     const tableModel = model?.blocks[0];
 
-    if (tableModel?.blockType == ContentModelBlockType.Table) {
+    if (tableModel?.blockType == 'Table') {
         switch (operation) {
             case TableOperation.AlignCellBottom:
             case TableOperation.AlignCellCenter:
@@ -97,7 +96,9 @@ export default function editTable(
         editor.addUndoSnapshot(
             () => {
                 editor.focus();
-                editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
+                if (model && table) {
+                    editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
+                }
             },
             ChangeSource.Format,
             false /*canUndoByBackspace*/,

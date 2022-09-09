@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { insertTableRow } from '../../../lib/modelApi/table/insertTableRow';
@@ -9,7 +8,7 @@ describe('insertTableRow', () => {
         const table = createTable(0);
         insertTableRow(table, TableOperation.InsertAbove);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -18,7 +17,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertBelow);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -33,7 +32,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertAbove);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1]],
             widths: [],
@@ -42,7 +41,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertBelow);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell1]],
             widths: [],
@@ -63,7 +62,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertAbove);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2], [cell1]],
             widths: [100],
@@ -72,7 +71,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertBelow);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell2], [cell1], [cell2]],
             widths: [100],
@@ -99,7 +98,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertAbove);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell3], [cell3], [cell1], [cell2]],
             widths: [100],
@@ -108,7 +107,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertBelow);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [[cell3], [cell3], [cell1], [cell2], [cell4], [cell4]],
             widths: [100],
@@ -135,7 +134,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertAbove);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell3, cell4],
@@ -147,7 +146,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertBelow);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell3, cell4],
@@ -190,7 +189,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertAbove);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell1, cell2, cell3],
@@ -206,7 +205,7 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, TableOperation.InsertBelow);
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cell1, cell2, cell3],

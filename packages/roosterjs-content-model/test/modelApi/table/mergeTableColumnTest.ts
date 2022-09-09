@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { mergeTableColumn } from '../../../lib/modelApi/table/mergeTableColumn';
@@ -11,7 +10,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeLeft);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -21,7 +20,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeRight);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -44,7 +43,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeLeft);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -60,7 +59,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeRight);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -96,7 +95,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeLeft);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1], cells[2], cells[3]],
@@ -130,7 +129,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeRight);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1], cells[2], cells[3]],
@@ -184,7 +183,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeLeft);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1], cells[2], cells[3]],
@@ -223,7 +222,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeRight);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1], cells[2], cells[3]],
@@ -277,7 +276,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeLeft);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1], cells[2], cells[3]],
@@ -316,7 +315,7 @@ describe('mergeTableColumn', () => {
         mergeTableColumn(table, TableOperation.MergeRight);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1], cells[2], cells[3]],

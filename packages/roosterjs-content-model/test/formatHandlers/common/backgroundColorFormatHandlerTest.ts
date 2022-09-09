@@ -18,28 +18,28 @@ describe('backgroundColorFormatHandler.parse', () => {
     });
 
     it('No color', () => {
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBeUndefined();
     });
 
     it('Simple css color', () => {
         div.style.backgroundColor = 'red';
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBe('red');
     });
 
     it('Transparent', () => {
         div.style.backgroundColor = 'transparent';
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBe('transparent');
     });
 
     it('Simple attribute color', () => {
         div.setAttribute('bgcolor', 'red');
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBe('red');
     });
@@ -47,7 +47,7 @@ describe('backgroundColorFormatHandler.parse', () => {
     it('Simple both css and attribute color', () => {
         div.style.backgroundColor = 'red';
         div.setAttribute('bgcolor', 'green');
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBe('red');
     });
@@ -58,7 +58,7 @@ describe('backgroundColorFormatHandler.parse', () => {
         div.dataset.ogsb = 'blue';
         div.dataset.ogsc = 'green';
 
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBe('blue');
     });
@@ -69,7 +69,7 @@ describe('backgroundColorFormatHandler.parse', () => {
         div.dataset.ogab = 'blue';
         div.dataset.ogac = 'green';
 
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBe('blue');
     });
@@ -80,9 +80,17 @@ describe('backgroundColorFormatHandler.parse', () => {
         div.dataset.ogab = 'blue';
         div.dataset.ogsb = 'green';
 
-        backgroundColorFormatHandler.parse(format, div, context);
+        backgroundColorFormatHandler.parse(format, div, context, {});
 
         expect(format.backgroundColor).toBe('green');
+    });
+
+    it('Color from element overwrite default style', () => {
+        div.style.backgroundColor = 'red';
+
+        backgroundColorFormatHandler.parse(format, div, context, { color: 'green' });
+
+        expect(format.backgroundColor).toBe('red');
     });
 });
 

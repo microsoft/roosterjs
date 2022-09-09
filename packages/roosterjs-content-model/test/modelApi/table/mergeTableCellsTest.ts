@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { mergeTableCells } from '../../../lib/modelApi/table/mergeTableCells';
@@ -10,7 +9,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [],
             widths: [],
@@ -33,7 +32,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -64,7 +63,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -97,7 +96,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -130,7 +129,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -163,7 +162,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -196,7 +195,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -229,7 +228,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],
@@ -262,7 +261,7 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(table).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             format: {},
             cells: [
                 [cells[0], cells[1]],

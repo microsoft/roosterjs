@@ -116,9 +116,10 @@ export default class TableEditor {
             let j = 0;
             for (; j < tr.cells.length; j++) {
                 const td = tr.cells[j];
+                const tableRect = normalizeRect(this.table.getBoundingClientRect());
                 const tdRect = normalizeRect(td.getBoundingClientRect());
 
-                if (!tdRect) {
+                if (!tdRect || !tableRect) {
                     continue;
                 }
 
@@ -126,7 +127,10 @@ export default class TableEditor {
                 const lessThanRight = this.isRTL ? x >= tdRect.right : x <= tdRect.right;
 
                 if (lessThanRight && lessThanBottom) {
-                    if (i == 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                    const isOnLeftOrRight = this.isRTL
+                        ? tdRect.right <= tableRect.right && tdRect.right >= tableRect.right - 1
+                        : tdRect.left >= tableRect.left && tdRect.left <= tableRect.left + 1;
+                    if (i === 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
                         this.setInserterTd(
@@ -137,12 +141,24 @@ export default class TableEditor {
                         j == 0 &&
                         (this.isRTL
                             ? x >= tdRect.right - INSERTER_HOVER_OFFSET
-                            : x <= tdRect.left + INSERTER_HOVER_OFFSET)
+                            : x <= tdRect.left + INSERTER_HOVER_OFFSET) &&
+                        isOnLeftOrRight
                     ) {
+                        const tdAbove = this.table.rows[i - 1]?.cells[0];
+                        const tdAboveRect = tdAbove
+                            ? normalizeRect(tdAbove.getBoundingClientRect())
+                            : null;
+
+                        const isTdNotAboveMerged = !tdAboveRect
+                            ? null
+                            : this.isRTL
+                            ? tdAboveRect.right === tdRect.right
+                            : tdAboveRect.left === tdRect.left;
+
                         this.setInserterTd(
-                            y > (tdRect.top + tdRect.bottom) / 2
-                                ? td
-                                : this.table.rows[i - 1]?.cells[0],
+                            y < (tdRect.top + tdRect.bottom) / 2 && isTdNotAboveMerged
+                                ? tdAbove
+                                : td,
                             true /*isHorizontal*/
                         );
                     } else {
@@ -291,7 +307,11 @@ export default class TableEditor {
         this.onFinishEditing();
     };
 
-    private onSelect = (table: HTMLTableElement) => {
+    /**
+     * Public only for testing purposes
+     * @param table the table to select
+     */
+    public onSelect = (table: HTMLTableElement) => {
         this.editor.focus();
         if (table) {
             const vTable = new VTable(table);

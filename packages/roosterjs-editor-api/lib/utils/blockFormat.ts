@@ -1,4 +1,4 @@
-import experimentCommitListChains from '../experiment/experimentCommitListChains';
+import commitListChains from '../utils/commitListChains';
 import formatUndoSnapshot from './formatUndoSnapshot';
 import { IEditor, NodePosition, Region, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { VListChain } from 'roosterjs-editor-dom';
@@ -27,7 +27,7 @@ export default function blockFormat(
                 const regions = editor.getSelectedRegions();
                 const chains = VListChain.createListChains(regions, start?.node);
                 regions.forEach(region => callback(region, start, end, chains));
-                experimentCommitListChains(editor, chains);
+                commitListChains(editor, chains);
             }
             if (selection.type == SelectionRangeTypes.Normal) {
                 editor.select(start, end);

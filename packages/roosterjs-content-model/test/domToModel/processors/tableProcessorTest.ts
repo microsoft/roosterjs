@@ -1,11 +1,14 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
+import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
+import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../../lib/publicTypes/enum/BlockType';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
+import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
+import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
 describe('tableProcessor', () => {
@@ -29,12 +32,12 @@ describe('tableProcessor', () => {
 
     it('Process a regular 1*1 table', () => {
         runTest('<table><tr><td></td></tr></table>', {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [
                     {
-                        blockType: ContentModelBlockType.BlockGroup,
-                        blockGroupType: ContentModelBlockGroupType.TableCell,
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'TableCell',
                         spanAbove: false,
                         spanLeft: false,
                         isHeader: false,
@@ -56,7 +59,7 @@ describe('tableProcessor', () => {
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [tdModel, tdModel],
                 [tdModel, tdModel],
@@ -73,7 +76,7 @@ describe('tableProcessor', () => {
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [tdModel, tdModel],
                 [tdModel, createTableCell(2, 1, false)],
@@ -88,7 +91,7 @@ describe('tableProcessor', () => {
         const tableHTML = '<table><tr><td colspan="2" rowspan="2"></td></tr><tr></tr></table>';
 
         runTest(tableHTML, {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [createTableCell(1, 1, false), createTableCell(2, 1, false)],
                 [createTableCell(1, 2, false), createTableCell(2, 2, false)],
@@ -104,7 +107,7 @@ describe('tableProcessor', () => {
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [[tdModel]],
             format: {},
             widths: [0],
@@ -120,7 +123,7 @@ describe('tableProcessor', () => {
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [[tdModel, tdModel]],
             format: {},
             widths: [0, 0],
@@ -135,7 +138,7 @@ describe('tableProcessor', () => {
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, {
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [[tdModel, createTableCell(2, 1, false)]],
             format: {},
             widths: [0, 0],
@@ -167,7 +170,7 @@ describe('tableProcessor', () => {
         tableProcessor(doc, div.firstChild as HTMLTableElement, context);
 
         expect(doc.blocks[0]).toEqual({
-            blockType: ContentModelBlockType.Table,
+            blockType: 'Table',
             cells: [
                 [tdModel, { ...tdModel, isSelected: true }],
                 [tdModel, { ...tdModel, isSelected: true }],
@@ -225,6 +228,154 @@ describe('tableProcessor', () => {
                             {
                                 blockType: ContentModelBlockType.BlockGroup,
                                 blockGroupType: ContentModelBlockGroupType.TableCell,
+                                format: {},
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                            },
+                        ],
+                    ],
+                },
+            ],
+        });
+    });
+});
+
+describe('tableProcessor with format', () => {
+    let context: DomToModelContext;
+
+    beforeEach(() => {
+        context = createDomToModelContext();
+    });
+
+    it('Process table and check segment format', () => {
+        const doc = createContentModelDocument(document);
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        const br = document.createElement('br');
+
+        table.appendChild(tr);
+        tr.appendChild(td);
+        td.appendChild(br);
+
+        context.segmentFormat = { a: 'b' } as any;
+
+        spyOn(stackFormat, 'stackFormat').and.callThrough();
+        spyOn(parseFormat, 'parseFormat').and.callFake((element, handlers, format, context) => {
+            if (element == table) {
+                if (handlers == TableFormatHandlers) {
+                    (<any>format).format1 = 'table';
+                } else if (handlers == SegmentFormatHandlers) {
+                    (<any>format).format2 = 'tableSegment';
+                }
+            } else if (element == td) {
+                if (handlers == TableCellFormatHandlers) {
+                    (<any>format).format3 = 'td';
+                } else if (handlers == SegmentFormatHandlers) {
+                    (<any>format).format4 = 'tdSegment';
+                }
+            }
+        });
+
+        tableProcessor(doc, table, context);
+
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
+        expect(context.segmentFormat).toEqual({ a: 'b' } as any);
+        expect(doc).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        isImplicit: true,
+                                        segments: [
+                                            {
+                                                segmentType: 'Br',
+                                                format: {
+                                                    a: 'b',
+                                                    format2: 'tableSegment',
+                                                    format4: 'tdSegment',
+                                                } as any,
+                                            },
+                                        ],
+                                    },
+                                ],
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                format: {
+                                    format3: 'td',
+                                } as any,
+                            },
+                        ],
+                    ],
+                    widths: [0],
+                    heights: [0],
+                    format: {
+                        format1: 'table',
+                    } as any,
+                },
+            ],
+        });
+    });
+
+    it('calculate table size with zoom scale', () => {
+        const mockedTable = ({
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        const doc = createContentModelDocument(document);
+        context.contentModelContext.zoomScale = 2;
+
+        tableProcessor(doc, mockedTable, context);
+
+        expect(doc).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [50],
+                    heights: [100],
+                    format: {},
+                    cells: [
+                        [
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'TableCell',
                                 format: {},
                                 blocks: [],
                                 spanAbove: false,

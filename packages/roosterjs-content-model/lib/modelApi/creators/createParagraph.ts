@@ -1,4 +1,3 @@
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 
 /**
@@ -6,7 +5,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
  */
 export function createParagraph(isImplicit?: boolean): ContentModelParagraph {
     const result: ContentModelParagraph = {
-        blockType: ContentModelBlockType.Paragraph,
+        blockType: 'Paragraph',
         segments: [],
     };
 

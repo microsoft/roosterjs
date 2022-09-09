@@ -1,5 +1,4 @@
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
@@ -14,13 +13,15 @@ export default function setTableCellShade(editor: IExperimentalContentModelEdito
     const model = table && editor.createContentModel(table);
     const tableModel = model?.blocks[0];
 
-    if (tableModel?.blockType == ContentModelBlockType.Table) {
+    if (tableModel?.blockType == 'Table') {
         normalizeTable(tableModel);
         setTableCellBackgroundColor(tableModel, color);
         editor.addUndoSnapshot(
             () => {
                 editor.focus();
-                editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
+                if (model && table) {
+                    editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
+                }
             },
             ChangeSource.Format,
             false /*canUndoByBackspace*/,

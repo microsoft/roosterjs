@@ -49,7 +49,7 @@ export default function createTableInserter(
             div.style.top = `${tdRect.bottom - 8}px`;
             (div.firstChild as HTMLElement).style.width = `${tableRect.right - tableRect.left}px`;
         } else {
-            div.style.left = `${isRTL ? tdRect.left : tdRect.right - 8}px`;
+            div.style.left = `${isRTL ? tdRect.left - 8 : tdRect.right - 8}px`;
             div.style.top = `${
                 tdRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
             }px`;

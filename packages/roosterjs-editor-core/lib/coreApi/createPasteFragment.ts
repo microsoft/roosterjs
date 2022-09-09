@@ -38,7 +38,7 @@ const TAB_SPACES = 6;
 export const createPasteFragment: CreatePasteFragment = (
     core: EditorCore,
     clipboardData: ClipboardData,
-    position: NodePosition,
+    position: NodePosition | null,
     pasteAsText: boolean,
     applyCurrentStyle: boolean
 ) => {
@@ -130,7 +130,7 @@ export const createPasteFragment: CreatePasteFragment = (
                 .replace(/ {2}/g, ' ' + NBSP_HTML);
 
             if (line.includes('\t')) {
-                line = transformTabCharacters(line, index === 0 ? position.offset : 0);
+                line = transformTabCharacters(line, index === 0 ? position?.offset : 0);
             }
 
             const textNode = document.createTextNode(line);
@@ -160,7 +160,7 @@ export const createPasteFragment: CreatePasteFragment = (
     const sanitizer = new HtmlSanitizer(event.sanitizingOption);
 
     sanitizer.convertGlobalCssToInlineCss(fragment);
-    sanitizer.sanitize(fragment, position && getInheritableStyles(position.element));
+    sanitizer.sanitize(fragment, position ? getInheritableStyles(position.element) : undefined);
 
     return fragment;
 };
