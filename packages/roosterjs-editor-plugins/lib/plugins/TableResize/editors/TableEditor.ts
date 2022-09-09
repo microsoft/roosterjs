@@ -3,7 +3,6 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import type { HelperType } from './HelperType';
 import {
     getComputedStyle,
     normalizeRect,
@@ -77,8 +76,7 @@ export default class TableEditor {
         private onChanged: () => void,
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: HelperType,
-            table?: HTMLTableElement
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
         eventTarget?: EventTarget
     ) {

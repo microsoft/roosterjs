@@ -8,7 +8,6 @@ import {
     PluginEventType,
     Rect,
 } from 'roosterjs-editor-types';
-import type { HelperType } from './editors/HelperType';
 
 const TABLE_RESIZER_LENGTH = 12;
 
@@ -30,7 +29,7 @@ export default class TableResize implements EditorPlugin {
     constructor(
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: HelperType,
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
             table?: HTMLTableElement
         ) => void
     ) {}
@@ -113,11 +112,17 @@ export default class TableResize implements EditorPlugin {
         }
 
         if (!this.tableEditor && table) {
+            const onShowHelper = (
+                elementData: CreateElementData,
+                helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+            ) => {
+                this.onShowHelperElement(elementData, helperType, table);
+            };
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
                 this.invalidateTableRects,
-                this.onShowHelperElement,
+                onShowHelper,
                 e.currentTarget
             );
         }

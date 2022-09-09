@@ -2,7 +2,6 @@ import Disposable from '../../../pluginUtils/Disposable';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, TableOperation } from 'roosterjs-editor-types';
-import type { HelperType } from './HelperType';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
@@ -20,8 +19,7 @@ export default function createTableInserter(
     onInsert: (table: HTMLTableElement) => void,
     onShowHelperElement: (
         elementData: CreateElementData,
-        helperType: HelperType,
-        table?: HTMLTableElement
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
 ): TableEditFeature {
     const table = editor.getElementAtCursor('table', td);

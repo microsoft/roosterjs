@@ -2,7 +2,6 @@ import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import { CreateElementData } from 'roosterjs-editor-types';
-import type { HelperType } from './HelperType';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -19,8 +18,7 @@ export default function createTableResizer(
     onDragEnd: () => false,
     onShowHelperElement: (
         elementData: CreateElementData,
-        helperType: HelperType,
-        table?: HTMLTableElement
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
 ): TableEditFeature {
     const document = table.ownerDocument;
@@ -31,7 +29,7 @@ export default function createTableResizer(
         }-resize; user-select: none; border: 1px solid #808080`,
     };
 
-    onShowHelperElement?.(createElementData, 'TableResizer', table);
+    onShowHelperElement?.(createElementData, 'TableResizer');
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 
