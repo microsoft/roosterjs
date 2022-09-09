@@ -116,7 +116,7 @@ export default class TableResize implements EditorPlugin {
                 elementData: CreateElementData,
                 helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
             ) => {
-                this.onShowHelperElement(elementData, helperType, table);
+                this.onShowHelperElement?.(elementData, helperType, table);
             };
             this.tableEditor = new TableEditor(
                 this.editor,
