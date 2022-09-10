@@ -2,10 +2,10 @@ import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
-    ContentModelContext,
     ContentModelDocument,
     contentModelToDom,
     domToContentModel,
+    EditorContext,
     IExperimentalContentModelEditor,
 } from 'roosterjs-content-model';
 
@@ -31,7 +31,7 @@ export default class ExperimentalContentModelEditor extends Editor
     /**
      * Create a ContentModelContext object used by ContentModel API
      */
-    createContentModelContext(): ContentModelContext {
+    createEditorContext(): EditorContext {
         return {
             isDarkMode: this.isDarkMode(),
             zoomScale: this.getZoomScale(),
@@ -48,7 +48,7 @@ export default class ExperimentalContentModelEditor extends Editor
     createContentModel(startNode?: HTMLElement): ContentModelDocument {
         return domToContentModel(
             startNode || this.contentDiv,
-            this.createContentModelContext(),
+            this.createEditorContext(),
             !!startNode,
             this.getSelectionRangeEx()
         );
@@ -63,7 +63,7 @@ export default class ExperimentalContentModelEditor extends Editor
         model: ContentModelDocument,
         mergingCallback: (fragment: DocumentFragment) => void = this.defaultMergingCallback
     ) {
-        const [fragment, range] = contentModelToDom(model, this.createContentModelContext());
+        const [fragment, range] = contentModelToDom(model, this.createEditorContext());
 
         switch (range?.type) {
             case SelectionRangeTypes.Normal:
