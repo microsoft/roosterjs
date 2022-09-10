@@ -3,7 +3,7 @@ import * as createGeneralSegment from '../../../lib/modelApi/creators/createGene
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { generalSegmentProcessor } from '../../../lib/domToModel/processors/generalSegmentProcessor';
 
 describe('generalSegmentProcessor', () => {

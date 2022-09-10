@@ -1,7 +1,7 @@
 import { addSegment } from '../../modelApi/common/addSegment';
 import { containerProcessor } from './containerProcessor';
 import { createGeneralSegment } from '../../modelApi/creators/createGeneralSegment';
-import { ElementProcessor } from './ElementProcessor';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { stackFormat } from '../utils/stackFormat';
 
 /**

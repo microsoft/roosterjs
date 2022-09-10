@@ -5,7 +5,7 @@ import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBl
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
@@ -299,7 +299,7 @@ describe('tableProcessor with format', () => {
         } as any) as HTMLTableElement;
 
         const doc = createContentModelDocument(document);
-        context.contentModelContext.zoomScale = 2;
+        context.zoomScale = 2;
 
         tableProcessor(doc, mockedTable, context);
 

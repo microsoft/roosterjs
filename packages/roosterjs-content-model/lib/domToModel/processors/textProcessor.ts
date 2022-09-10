@@ -2,7 +2,7 @@ import { addSegment } from '../../modelApi/common/addSegment';
 import { areSameFormats } from '../utils/areSameFormats';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { createText } from '../../modelApi/creators/createText';
-import { DomToModelContext } from '../context/DomToModelContext';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 
 /**
  * @internal

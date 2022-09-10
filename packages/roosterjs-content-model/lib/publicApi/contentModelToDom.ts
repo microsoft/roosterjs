@@ -1,10 +1,11 @@
-import { BlockAndSegmentNode, ModelToDomContext } from '../modelToDom/context/ModelToDomContext';
-import { ContentModelContext } from '../publicTypes/ContentModelContext';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
+import { EditorContext } from '../publicTypes/context/EditorContext';
 import { handleBlock } from '../modelToDom/handlers/handleBlock';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
+import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
+import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
 import { optimize } from '../modelToDom/optimizers/optimize';
 import {
     NodePosition,
@@ -16,16 +17,16 @@ import {
 /**
  * Create DOM tree fragment from Content Model document
  * @param model The content model document to generate DOM tree from
- * @param contentModelContext Content for Content Model
+ * @param editorContext Content for Content Model editor
  * @returns A Document Fragment that contains the DOM tree generated from the given model,
  * and a SelectionRangeEx object that contains selection info from the model if any, or null
  */
 export default function contentModelToDom(
     model: ContentModelDocument,
-    contentModelContext: ContentModelContext
+    editorContext: EditorContext
 ): [DocumentFragment, SelectionRangeEx | null] {
     const fragment = model.document.createDocumentFragment();
-    const modelToDomContext = createModelToDomContext(contentModelContext);
+    const modelToDomContext = createModelToDomContext(editorContext);
 
     handleBlock(model.document, fragment, model, modelToDomContext);
     optimize(fragment, 2 /*optimizeLevel*/);
@@ -72,7 +73,7 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
     return null;
 }
 
-function calcPosition(pos: BlockAndSegmentNode): NodePosition | undefined {
+function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefined {
     let result: NodePosition | undefined;
 
     if (pos.block) {

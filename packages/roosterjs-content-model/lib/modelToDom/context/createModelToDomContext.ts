@@ -1,16 +1,19 @@
-import { ContentModelContext } from '../../publicTypes/ContentModelContext';
-import { ModelToDomContext } from './ModelToDomContext';
+import { EditorContext } from '../../publicTypes/context/EditorContext';
+import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
-export function createModelToDomContext(
-    contentModelContext?: ContentModelContext
-): ModelToDomContext {
+/**
+ * @internal
+ * @param editorContext
+ * @returns
+ */
+export function createModelToDomContext(editorContext?: EditorContext): ModelToDomContext {
     return {
-        contentModelContext: contentModelContext || {
+        ...(editorContext || {
             isDarkMode: false,
             isRightToLeft: false,
             zoomScale: 1,
             getDarkColor: undefined,
-        },
+        }),
         regularSelection: {
             current: {
                 block: null,

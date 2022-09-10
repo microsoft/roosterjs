@@ -1,6 +1,7 @@
 import { brProcessor } from './brProcessor';
 import { containerProcessor } from './containerProcessor';
-import { ElementProcessor } from './ElementProcessor';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { fontProcessor } from './fontProcessor';
 import { generalBlockProcessor } from './generalBlockProcessor';
 import { generalSegmentProcessor } from './generalSegmentProcessor';
 import { isBlockElement } from 'roosterjs-editor-dom';
@@ -18,12 +19,7 @@ export const knownElementProcessor: ElementProcessor = (group, element, context)
         generalBlockProcessor(group, element, context);
     } else {
         stackFormat(context, { segment: 'shallowClone' }, () => {
-            parseFormat(
-                element,
-                SegmentFormatHandlers,
-                context.segmentFormat,
-                context.contentModelContext
-            );
+            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
             containerProcessor(group, element, context);
         });
     }
@@ -33,7 +29,7 @@ const ProcessorMap: Record<string, ElementProcessor> = {
     B: knownElementProcessor,
     BR: brProcessor,
     EM: knownElementProcessor,
-    FONT: knownElementProcessor,
+    FONT: fontProcessor,
     I: knownElementProcessor,
     S: knownElementProcessor,
     STRIKE: knownElementProcessor,

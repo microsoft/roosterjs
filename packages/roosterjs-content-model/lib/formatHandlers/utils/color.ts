@@ -33,6 +33,9 @@ export function getColor(
     return color;
 }
 
+/**
+ * @internal
+ */
 export function setColor(
     element: HTMLElement,
     color: string | ModeIndependentColor,
