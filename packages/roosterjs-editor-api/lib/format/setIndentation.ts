@@ -1,4 +1,5 @@
 import blockFormat from '../utils/blockFormat';
+import normalizeBlockquote from '../utils/normalizeBlockquote';
 import {
     BlockElement,
     ExperimentalFeatures,
@@ -108,11 +109,13 @@ export default function setIndentation(
         },
         'setIndentation'
     );
-}
 
-function indent(region: RegionBase, blocks: BlockElement[]) {
-    const nodes = collapseNodesInRegion(region, blocks);
-    wrap(nodes, KnownCreateElementDataIndex.BlockquoteWrapper);
+    function indent(region: RegionBase, blocks: BlockElement[]) {
+        const nodes = collapseNodesInRegion(region, blocks);
+        wrap(nodes, KnownCreateElementDataIndex.BlockquoteWrapper);
+        const quotesHandled: Node[] = [];
+        nodes.forEach(node => normalizeBlockquote(node, quotesHandled));
+    }
 }
 
 function outdent(region: RegionBase, blocks: BlockElement[]) {
