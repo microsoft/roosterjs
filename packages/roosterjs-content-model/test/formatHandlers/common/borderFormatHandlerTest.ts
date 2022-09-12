@@ -1,20 +1,19 @@
 import { BorderFormat } from '../../../lib/publicTypes/format/formatParts/BorderFormat';
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('borderFormatHandler.parse', () => {
     let div: HTMLElement;
     let format: BorderFormat;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
     });
 
     it('No border', () => {
@@ -103,16 +102,12 @@ describe('borderFormatHandler.parse', () => {
 describe('borderFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: BorderFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     it('No border', () => {

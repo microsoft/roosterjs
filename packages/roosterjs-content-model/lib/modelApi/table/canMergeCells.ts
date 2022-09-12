@@ -1,5 +1,8 @@
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
 
+/**
+ * @internal
+ */
 export function canMergeCells(
     cells: ContentModelTableCell[][],
     firstRow: number,

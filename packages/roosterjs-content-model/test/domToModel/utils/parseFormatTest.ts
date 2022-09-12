@@ -1,13 +1,9 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { FormatHandler } from '../../../lib/formatHandlers/FormatHandler';
 import { parseFormat } from '../../../lib/domToModel/utils/parseFormat';
 
 describe('parseFormat', () => {
-    const defaultContext: ContentModelContext = {
-        isDarkMode: false,
-        zoomScale: 1,
-        isRightToLeft: false,
-    };
+    const defaultContext = createDomToModelContext();
 
     it('empty handlers', () => {
         const element = document.createElement('div');
@@ -41,11 +37,7 @@ describe('parseFormat', () => {
 });
 
 describe('Default styles', () => {
-    const defaultContext: ContentModelContext = {
-        isDarkMode: false,
-        zoomScale: 1,
-        isRightToLeft: false,
-    };
+    const defaultContext = createDomToModelContext();
 
     function runTest(tag: string, expectResult: Partial<CSSStyleDeclaration>) {
         const element = document.createElement(tag);
@@ -93,33 +85,5 @@ describe('Default styles', () => {
 
     it('Default style for U', () => {
         runTest('u', { textDecoration: 'underline' });
-    });
-
-    it('Default style for FONT', () => {
-        const element = document.createElement('font');
-        element.face = 'font';
-        element.size = '4';
-        element.color = 'red';
-
-        const handlers: FormatHandler<any>[] = [
-            {
-                parse: (format, e, c, defaultStyle) => {
-                    expect(defaultStyle).toEqual({
-                        fontFamily: 'font',
-                        fontSize: '18px',
-                        color: 'red',
-                    });
-                    expect(c).toBe(defaultContext);
-
-                    format.a = 1;
-                },
-                apply: null!,
-            },
-        ];
-        const format = {};
-
-        parseFormat(element, handlers, format, defaultContext);
-
-        expect(format).toEqual({ a: 1 });
     });
 });

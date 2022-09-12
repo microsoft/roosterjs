@@ -1,8 +1,8 @@
-import { addBlock } from '../../modelApi/common/addBlock';
+import { addBlock } from '../common/addBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { createTable } from '../../modelApi/creators/createTable';
-import { createTableCell } from '../../modelApi/creators/createTableCell';
+import { createTable } from '../creators/createTable';
+import { createTableCell } from '../creators/createTableCell';
 
 /**
  * @internal

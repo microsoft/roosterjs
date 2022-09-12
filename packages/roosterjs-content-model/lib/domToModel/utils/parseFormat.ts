@@ -1,5 +1,5 @@
-import { ContentModelContext } from '../../publicTypes/ContentModelContext';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { FormatHandler } from '../../formatHandlers/FormatHandler';
 
 type DefaultFormatParserType =
@@ -68,7 +68,7 @@ export function parseFormat<T extends ContentModelFormatBase>(
     element: HTMLElement,
     handlers: FormatHandler<T>[],
     format: T,
-    context: ContentModelContext
+    context: DomToModelContext
 ) {
     const styleItem = DefaultStyleMap[element.tagName];
     const defaultStyle = styleItem

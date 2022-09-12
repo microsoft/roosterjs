@@ -1,6 +1,6 @@
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createBr } from '../../modelApi/creators/createBr';
-import { ElementProcessor } from './ElementProcessor';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 
 /**
  * @internal

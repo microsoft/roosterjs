@@ -1,19 +1,18 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { StrikeFormat } from '../../../lib/publicTypes/format/formatParts/StrikeFormat';
 import { strikeFormatHandler } from '../../../lib/formatHandlers/segment/strikeFormatHandler';
 
 describe('strikeFormatHandler.parse', () => {
     let div: HTMLElement;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
     let format: StrikeFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
         format = {};
     });
 
@@ -75,16 +74,12 @@ describe('strikeFormatHandler.parse', () => {
 describe('strikeFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: StrikeFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     it('no strikethrough', () => {

@@ -1,5 +1,5 @@
+import hasSelectionInBlock from '../../publicApi/selection/hasSelectionInBlock';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { hasSelectionInBlock } from '../selection/hasSelectionInBlock';
 
 /**
  * @internal

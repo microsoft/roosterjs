@@ -1,5 +1,5 @@
+import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionInBlock';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { hasSelectionInBlock } from '../../../lib/modelApi/selection/hasSelectionInBlock';
 
 describe('hasSelectionInBlock', () => {
     it('Empty paragraph block', () => {
