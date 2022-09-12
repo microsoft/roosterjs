@@ -1,7 +1,6 @@
 import { brProcessor } from './brProcessor';
 import { containerProcessor } from './containerProcessor';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { fontProcessor } from './fontProcessor';
 import { generalBlockProcessor } from './generalBlockProcessor';
 import { generalSegmentProcessor } from './generalSegmentProcessor';
 import { isBlockElement } from 'roosterjs-editor-dom';
@@ -29,7 +28,7 @@ const ProcessorMap: Record<string, ElementProcessor> = {
     B: knownElementProcessor,
     BR: brProcessor,
     EM: knownElementProcessor,
-    FONT: fontProcessor,
+    FONT: knownElementProcessor,
     I: knownElementProcessor,
     S: knownElementProcessor,
     STRIKE: knownElementProcessor,
