@@ -1,17 +1,11 @@
 import hasSelectionInBlock from '../../publicApi/selection/hasSelectionInBlock';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { TableSelectionCoordinates } from '../selection/setSelectionToTable';
 
 /**
  * @internal
  */
-export function getSelectedCells(
-    table: ContentModelTable
-): {
-    firstRow: number;
-    firstCol: number;
-    lastRow: number;
-    lastCol: number;
-} | null {
+export function getSelectedCells(table: ContentModelTable): TableSelectionCoordinates | null {
     let firstRow = -1;
     let firstCol = -1;
     let lastRow = -1;
