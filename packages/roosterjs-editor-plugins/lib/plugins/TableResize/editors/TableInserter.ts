@@ -17,12 +17,20 @@ export default function createTableInserter(
     isRTL: boolean,
     isHorizontal: boolean,
     onInsert: (table: HTMLTableElement) => void,
-    onShowHelperElement: (
+    shouldShowHelper: (
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) => boolean,
+    onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
-): TableEditFeature {
+): TableEditFeature | null {
     const table = editor.getElementAtCursor('table', td);
+
+    if (!shouldShowHelper('TableInserter')) {
+        return null;
+    }
+
     const tdRect = normalizeRect(td.getBoundingClientRect());
     const tableRect = table ? normalizeRect(table.getBoundingClientRect()) : null;
 
@@ -62,6 +70,8 @@ export default function createTableInserter(
 
         return { div, featureHandler: handler, node: td };
     }
+
+    return null;
 }
 
 class TableInsertHandler implements Disposable {

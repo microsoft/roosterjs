@@ -1,16 +1,14 @@
+import createTableSelector from '../../lib/plugins/TableResize/editors/TableSelector';
 import TableEditor from '../../lib/plugins/TableResize/editors/TableEditor';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, IEditor, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { TableResize } from '../../lib/TableResize';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
-const TABLE_SELECTOR_ID = '_Table_Selector';
-
 describe('Table Selector Tests', () => {
     let editor: IEditor;
     let id = 'tableSelectionContainerId';
     let targetId = 'tableSelectionTestId';
-    let targetId2 = 'tableSelectionTestId2';
     let tableResize: TableResize;
     let node: HTMLDivElement;
 
@@ -46,45 +44,12 @@ describe('Table Selector Tests', () => {
     });
 
     it('Display component on mouse move inside table', () => {
-        editor.setContent(
-            `<table id='table1'><tr ><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table>`
-        );
-        const target = document.getElementById(targetId);
-        const target2 = document.getElementById(targetId2);
-        editor.focus();
-        editor.select(target);
-
-        simulateMouseEvent('mousemove', target2);
-
-        editor.runAsync(editor => {
-            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-            if (tableSelector) {
-                expect(tableSelector).toBeDefined();
-            }
-        });
+        runTest(0, true);
     });
 
     it('Do not display component, top of table is no visible in the container.', () => {
         //Arrange
-        editor.setContent(
-            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table><div style='height: 300px'>`
-        );
-        node.style.height = '100px';
-        node.style.overflowX = 'auto';
-        node.scrollTop = 15;
-        const target = document.getElementById(targetId);
-        const target2 = document.getElementById(targetId2);
-        editor.focus();
-        editor.select(target);
-
-        //Act
-        simulateMouseEvent('mousemove', target2);
-
-        //Assert
-        editor.runAsync(editor => {
-            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-            expect(tableSelector).toBeNull();
-        });
+        runTest(15, false);
     });
 
     it('Do not display component, Top of table is no visible in the scroll container.', () => {
@@ -92,25 +57,13 @@ describe('Table Selector Tests', () => {
         const scrollContainer = document.createElement('div');
         document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
         scrollContainer.append(node);
-
         spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
-        editor.setContent(
-            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table><div style='height: 300px'>`
-        );
-        scrollContainer.style.height = '100px';
-        scrollContainer.style.overflowX = 'auto';
-        scrollContainer.scrollTop = 15;
-        const target = document.getElementById(targetId);
-        const target2 = document.getElementById(targetId2);
-        editor.focus();
-        editor.select(target);
 
-        //Act
-        simulateMouseEvent('mousemove', target2);
+        runTest(15, false);
+    });
 
-        //Assert
-        const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-        expect(tableSelector).toBeNull();
+    it('Do not display component, shouldShowHelper returns false', () => {
+        runTest(15, false, false);
     });
 
     it('Display component, Top of table is visible in the scroll container scrolled down.', () => {
@@ -119,50 +72,16 @@ describe('Table Selector Tests', () => {
         scrollContainer.innerHTML = '<div style="height: 300px"></div>';
         document.body.insertBefore(scrollContainer, document.body.childNodes[0]);
         scrollContainer.append(node);
-
         spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
-        editor.setContent(
-            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table>`
-        );
-        scrollContainer.style.height = '100px';
-        scrollContainer.style.overflowX = 'auto';
-        scrollContainer.scrollTop = 50;
-        const target = document.getElementById(targetId);
-        const target2 = document.getElementById(targetId2);
-        editor.focus();
-        editor.select(target);
 
-        //Act
-        simulateMouseEvent('mousemove', target2);
-
-        //Assert
-        editor.runAsync(editor => {
-            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-            expect(tableSelector).toBeDefined();
-        });
+        runTest(0, true);
     });
 
     it('Scroll container equals null, display component', () => {
         //Arrange
         spyOn(editor, 'getScrollContainer').and.returnValue(null);
-        editor.setContent(
-            `<table id='table1'><tr><td>a</td><td>w</td></tr><tr><td id=${targetId}>a</td><td id=${targetId2}>w</td></tr></table><div style='height: 300px'>`
-        );
-        node.style.height = '100px';
-        node.style.overflowX = 'auto';
-        node.scrollTop = 15;
-        const target = document.getElementById(targetId);
-        const target2 = document.getElementById(targetId2);
-        editor.focus();
-        editor.select(target);
-        //Act
-        simulateMouseEvent('mousemove', target2);
 
-        //Assert
-        editor.runAsync(editor => {
-            const tableSelector = editor.getDocument().getElementById(TABLE_SELECTOR_ID);
-            expect(tableSelector).toBeDefined();
-        });
+        runTest(15, true, true);
     });
 
     it('On click event', () => {
@@ -171,7 +90,12 @@ describe('Table Selector Tests', () => {
         );
         const table = document.getElementById(targetId) as HTMLTableElement;
 
-        const tableEditor = new TableEditor(editor, table, () => {});
+        const tableEditor = new TableEditor(
+            editor,
+            table,
+            () => {},
+            () => true
+        );
 
         tableEditor.onSelect(table);
 
@@ -191,16 +115,35 @@ describe('Table Selector Tests', () => {
             expect(selection.ranges.length).toBe(8);
         }
     });
-});
 
-function simulateMouseEvent(type: string, target: HTMLElement, point?: { x: number; y: number }) {
-    const rect = target.getBoundingClientRect();
-    var event = new MouseEvent(type, {
-        view: window,
-        bubbles: true,
-        cancelable: true,
-        clientX: rect.left + (point != undefined ? point?.x : 0),
-        clientY: rect.top + (point != undefined ? point?.y : 0),
-    });
-    target.dispatchEvent(event);
-}
+    function runTest(scrollTop: number, isNotNull: boolean | null, shouldShowCb: boolean = true) {
+        //Arrange
+        editor.setContent(
+            '<table id="table1"><tr><td>a</td><td>w</td></tr><tr><td>a</td><td>w</td></tr></table><div style="height: 300px">'
+        );
+
+        node.style.height = '100px';
+        node.style.overflowX = 'auto';
+        node.scrollTop = scrollTop;
+        const target = document.getElementById('table1');
+        editor.focus();
+
+        //Act
+        const result = createTableSelector(
+            target as HTMLTableElement,
+            1,
+            editor,
+            () => {},
+            () => shouldShowCb,
+            () => {},
+            <EventTarget>node
+        );
+
+        //Assert
+        if (!isNotNull) {
+            expect(result).toBeNull();
+        } else {
+            expect(result).toBeDefined();
+        }
+    }
+});

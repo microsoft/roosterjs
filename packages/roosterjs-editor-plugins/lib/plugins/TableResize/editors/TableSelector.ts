@@ -1,7 +1,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
-import { createElement, normalizeRect } from 'roosterjs-editor-dom';
-import { CreateElementData, Rect } from 'roosterjs-editor-types';
+import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
+import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -12,16 +12,21 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
 export default function createTableSelector(
     table: HTMLTableElement,
     zoomScale: number,
+    editor: IEditor,
     onFinishDragging: (table: HTMLTableElement) => void,
+    shouldShowHelper: (
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) => boolean,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    shouldShow?: (rect: Rect) => boolean
-): TableEditorFeature {
+    eventTarget?: EventTarget
+): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
-    if (rect && shouldShow && !shouldShow(rect)) {
-        return { div: null, featureHandler: null, node: table };
+
+    if (!shouldShowHelper('TableSelector') || !isSelectorInsideEditor(editor, rect, eventTarget)) {
+        return null;
     }
 
     const document = table.ownerDocument;
@@ -83,4 +88,24 @@ function setSelectorDivPosition(context: DragAndDropContext, trigger: HTMLElemen
         trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
         trigger.style.left = `${rect.left - TABLE_SELECTOR_LENGTH - 2}px`;
     }
+}
+
+function isSelectorInsideEditor(editor: IEditor, rect: Rect | null, target?: EventTarget): boolean {
+    const scrollContainer = editor.getScrollContainer();
+    if (target && safeInstanceOf(target, 'HTMLElement') && scrollContainer && rect) {
+        const scrollContainerRect = normalizeRect(scrollContainer.getBoundingClientRect());
+        const containerRect = normalizeRect(target.getBoundingClientRect());
+
+        if (scrollContainerRect && containerRect) {
+            const scrollContainerVisibleTop = scrollContainer.scrollTop - scrollContainerRect.top;
+
+            return (
+                containerRect.top <= rect.top &&
+                scrollContainerVisibleTop <= rect.top &&
+                scrollContainerRect.top <= rect.top
+            );
+        }
+    }
+
+    return true;
 }

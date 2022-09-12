@@ -31,7 +31,13 @@ export default class TableResize implements EditorPlugin {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
             table?: HTMLTableElement
-        ) => void
+        ) => void,
+        private shouldShowHelper?: (
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
+            editor: IEditor,
+            table: HTMLTableElement,
+            eventTarget: EventTarget | undefined | null
+        ) => boolean
     ) {}
 
     /**
@@ -106,24 +112,25 @@ export default class TableResize implements EditorPlugin {
         this.tableEditor?.onMouseMove(x, y);
     };
 
-    private setTableEditor(table: HTMLTableElement, e?: MouseEvent) {
+    private setTableEditor(table: HTMLTableElement | null, e?: MouseEvent) {
         if (this.tableEditor && !this.tableEditor.isEditing() && table != this.tableEditor.table) {
             this.disposeTableEditor();
         }
 
         if (!this.tableEditor && table) {
-            const onShowHelper = (
-                elementData: CreateElementData,
-                helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-            ) => {
-                this.onShowHelperElement?.(elementData, helperType, table);
-            };
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
                 this.invalidateTableRects,
-                onShowHelper,
-                e.currentTarget
+                (
+                    helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+                ) => {
+                    return (
+                        !this.shouldShowHelper ||
+                        this.shouldShowHelper(helperType, this.editor, table, e?.target)
+                    );
+                },
+                this.onShowHelperElement
             );
         }
     }

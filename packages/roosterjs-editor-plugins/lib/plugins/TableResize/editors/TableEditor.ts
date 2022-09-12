@@ -3,20 +3,13 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import {
-    getComputedStyle,
-    normalizeRect,
-    Position,
-    safeInstanceOf,
-    VTable,
-} from 'roosterjs-editor-dom';
+import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
     NodePosition,
     TableSelection,
     CreateElementData,
-    Rect,
 } from 'roosterjs-editor-types';
 
 const INSERTER_HOVER_OFFSET = 5;
@@ -52,18 +45,18 @@ const INSERTER_HOVER_OFFSET = 5;
  */
 export default class TableEditor {
     // 1, 2 - Insert a column or a row
-    private horizontalInserter: TableEditFeature;
-    private verticalInserter: TableEditFeature;
+    private horizontalInserter: TableEditFeature | null = null;
+    private verticalInserter: TableEditFeature | null = null;
 
     // 3, 4 - Resize a column or a row from a cell
-    private horizontalResizer: TableEditFeature;
-    private verticalResizer: TableEditFeature;
+    private horizontalResizer: TableEditFeature | null = null;
+    private verticalResizer: TableEditFeature | null = null;
 
     // 5 - Resize whole table
-    private tableResizer: TableEditFeature;
+    private tableResizer: TableEditFeature | null;
 
     // 6 - Select whole table
-    private tableSelector: TableEditFeature;
+    private tableSelector: TableEditFeature | null;
 
     private isRTL: boolean;
     private start: NodePosition;
@@ -74,6 +67,9 @@ export default class TableEditor {
         private editor: IEditor,
         public readonly table: HTMLTableElement,
         private onChanged: () => void,
+        private shouldShowHelper: (
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+        ) => boolean,
         private onShowHelperElement?: (
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
@@ -81,20 +77,24 @@ export default class TableEditor {
         eventTarget?: EventTarget
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
+        const zoomScale = editor.getZoomScale();
         this.tableResizer = createTableResizer(
             table,
-            editor.getZoomScale(),
+            zoomScale,
             this.isRTL,
             this.onStartTableResize,
             this.onFinishEditing,
+            this.shouldShowHelper,
             this.onShowHelperElement
         );
         this.tableSelector = createTableSelector(
             table,
-            editor.getZoomScale(),
+            zoomScale,
+            editor,
             this.onSelect,
+            this.shouldShowHelper,
             this.onShowHelperElement,
-            this.getShouldShowTableSelectorHandler(this.editor.getScrollContainer(), eventTarget)
+            eventTarget
         );
         this.isCurrentlyEditing = false;
     }
@@ -191,6 +191,7 @@ export default class TableEditor {
                 true /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
+                this.shouldShowHelper,
                 this.onShowHelperElement
             );
             this.verticalResizer = createCellResizer(
@@ -200,6 +201,7 @@ export default class TableEditor {
                 false /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
+                this.shouldShowHelper,
                 this.onShowHelperElement
             );
         }
@@ -220,8 +222,9 @@ export default class TableEditor {
                 this.editor,
                 td,
                 this.isRTL,
-                isHorizontal,
+                !!isHorizontal,
                 this.onInserted,
+                this.shouldShowHelper,
                 this.onShowHelperElement
             );
             if (isHorizontal) {
@@ -338,26 +341,4 @@ export default class TableEditor {
             }
         }
     };
-
-    private getShouldShowTableSelectorHandler(
-        scrollContainer: HTMLElement,
-        eventTarget?: EventTarget
-    ): (rect: Rect) => boolean {
-        if (eventTarget && safeInstanceOf(eventTarget, 'HTMLElement') && scrollContainer) {
-            const scrollContainerRect = normalizeRect(scrollContainer.getBoundingClientRect());
-            const containerRect = normalizeRect(eventTarget.getBoundingClientRect());
-
-            if (scrollContainerRect && containerRect) {
-                const scrollContainerVisibleTop =
-                    scrollContainer.scrollTop - scrollContainerRect.top;
-
-                return (rect: Rect) =>
-                    containerRect.top <= rect.top &&
-                    scrollContainerVisibleTop <= rect.top &&
-                    scrollContainerRect.top <= rect.top;
-            }
-        }
-
-        return () => true;
-    }
 }

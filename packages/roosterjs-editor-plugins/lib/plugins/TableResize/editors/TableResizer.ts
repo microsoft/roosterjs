@@ -16,11 +16,18 @@ export default function createTableResizer(
     isRTL: boolean,
     onStart: () => void,
     onDragEnd: () => false,
-    onShowHelperElement: (
+    shouldShowHelper: (
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) => boolean,
+    onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
-): TableEditFeature {
+): TableEditFeature | null {
+    if (!shouldShowHelper('TableResizer')) {
+        return null;
+    }
+
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
