@@ -22,6 +22,7 @@ export interface DomToModelOption {
 /**
  * Options for creating ModelToDomContext
  */
+// tslint:disable no-empty-interface
 export interface ModelToDomOption {
     // TODO: Add options here
 }
