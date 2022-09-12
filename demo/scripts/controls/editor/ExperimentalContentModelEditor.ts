@@ -29,7 +29,7 @@ export default class ExperimentalContentModelEditor extends Editor
     }
 
     /**
-     * Create a ContentModelContext object used by ContentModel API
+     * Create a EditorContext object used by ContentModel API
      */
     createEditorContext(): EditorContext {
         return {
