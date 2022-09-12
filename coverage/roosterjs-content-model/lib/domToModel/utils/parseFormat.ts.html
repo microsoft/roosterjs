@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.25% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>13/16</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.5% </span>
+                <span class="strong">18.75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/16</span>
+                <span class='fraction'>3/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.25% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/16</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -151,16 +151,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,7 +172,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -212,19 +212,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">64x</span>
-<span class="cline-any cline-yes">64x</span>
+<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">63x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">64x</span>
-<span class="cline-any cline-yes">396x</span>
+<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">395x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelContext } from '../../publicTypes/ContentModelContext';
-import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { FormatHandler } from '../../formatHandlers/FormatHandler';
 &nbsp;
 type DefaultFormatParserType =
@@ -233,17 +233,17 @@ type DefaultFormatParserType =
 &nbsp;
 const FontSizes = ['10px', '13px', '16px', '18px', '24px', '32px', '48px'];
 &nbsp;
-function getFontSize(size: string | null) {
-    const intSize = parseInt(size || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>;
+function <span class="fstat-no" title="function not covered" >getFontSize(</span>size: string | null) {
+    const intSize = <span class="cstat-no" title="statement not covered" >parseInt(size || '');</span>
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (Number.isNaN(intSize)) {
+<span class="cstat-no" title="statement not covered" >    if (Number.isNaN(intSize)) {</span>
 <span class="cstat-no" title="statement not covered" >        return undefined;</span>
-    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (intSize &lt; 1) {
+    } else <span class="cstat-no" title="statement not covered" >if (intSize &lt; 1) {</span>
 <span class="cstat-no" title="statement not covered" >        return FontSizes[0];</span>
-    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (intSize &gt; FontSizes.length) {
+    } else <span class="cstat-no" title="statement not covered" >if (intSize &gt; FontSizes.length) {</span>
 <span class="cstat-no" title="statement not covered" >        return FontSizes[FontSizes.length - 1];</span>
     } else {
-        return FontSizes[intSize - 1];
+<span class="cstat-no" title="statement not covered" >        return FontSizes[intSize - 1];</span>
     }
 }
 &nbsp;
@@ -254,11 +254,11 @@ const DefaultStyleMap: Record&lt;string, DefaultFormatParserType&gt; = {
     EM: {
         fontStyle: 'italic',
     },
-    FONT: e =&gt; {
-        return {
-            fontFamily: e.getAttribute('face') || <span class="branch-1 cbranch-no" title="branch not covered" >undefined,</span>
+    FONT: <span class="fstat-no" title="function not covered" >e </span>=&gt; {
+<span class="cstat-no" title="statement not covered" >        return {</span>
+            fontFamily: e.getAttribute('face') || undefined,
             fontSize: getFontSize(e.getAttribute('size')),
-            color: e.getAttribute('color') || <span class="branch-1 cbranch-no" title="branch not covered" >undefined,</span>
+            color: e.getAttribute('color') || undefined,
         };
     },
     I: {
@@ -293,12 +293,12 @@ export function parseFormat&lt;T extends ContentModelFormatBase&gt;(
     element: HTMLElement,
     handlers: FormatHandler&lt;T&gt;[],
     format: T,
-    context: ContentModelContext
+    context: DomToModelContext
 ) {
     const styleItem = DefaultStyleMap[element.tagName];
     const defaultStyle = styleItem
         ? typeof styleItem === 'function'
-            ? styleItem(element)
+            ? <span class="branch-0 cbranch-no" title="branch not covered" >styleItem(element)</span>
             : styleItem
         : {};
 &nbsp;
@@ -313,7 +313,7 @@ export function parseFormat&lt;T extends ContentModelFormatBase&gt;(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Sep 12 2022 17:56:20 GMT+0000 (Coordinated Universal Time)
+                at Mon Sep 12 2022 20:30:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
