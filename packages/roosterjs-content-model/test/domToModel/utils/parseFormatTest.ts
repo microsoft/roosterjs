@@ -1,15 +1,13 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { FormatHandler } from '../../../lib/formatHandlers/FormatHandler';
+import { FormatKey } from '../../../lib/publicTypes/format/FormatHandlerTypeMap';
 import { parseFormat } from '../../../lib/domToModel/utils/parseFormat';
 
 describe('parseFormat', () => {
-    const defaultContext = createDomToModelContext();
-
     it('empty handlers', () => {
         const element = document.createElement('div');
-        const handlers: FormatHandler<any>[] = [];
+        const handlers: FormatKey[] = [];
         const format = {};
-
+        const defaultContext = createDomToModelContext();
         parseFormat(element, handlers, format, defaultContext);
 
         expect(format).toEqual({});
@@ -17,46 +15,44 @@ describe('parseFormat', () => {
 
     it('one handlers', () => {
         const element = document.createElement('div');
-        const handlers: FormatHandler<any>[] = [
-            {
-                parse: (format, e, c, defaultStyle) => {
+        const defaultContext = createDomToModelContext(undefined, undefined, {
+            formatParserOverride: {
+                id: (format, e, c, defaultStyle) => {
                     expect(e).toBe(element);
                     expect(c).toBe(defaultContext);
 
-                    format.a = 1;
+                    format.id = '1';
                 },
-                apply: null!,
             },
-        ];
+        });
+        const handlers: FormatKey[] = ['id'];
         const format = {};
 
         parseFormat(element, handlers, format, defaultContext);
 
-        expect(format).toEqual({ a: 1 });
+        expect(format).toEqual({ id: '1' });
     });
 });
 
 describe('Default styles', () => {
-    const defaultContext = createDomToModelContext();
-
     function runTest(tag: string, expectResult: Partial<CSSStyleDeclaration>) {
         const element = document.createElement(tag);
-        const handlers: FormatHandler<any>[] = [
-            {
-                parse: (format, e, c, defaultStyle) => {
+        const defaultContext = createDomToModelContext(undefined, undefined, {
+            formatParserOverride: {
+                id: (format, e, c, defaultStyle) => {
                     expect(defaultStyle).toEqual(expectResult);
                     expect(c).toBe(defaultContext);
 
-                    format.a = 1;
+                    format.id = '1';
                 },
-                apply: null!,
             },
-        ];
+        });
+        const handlers: FormatKey[] = ['id'];
         const format = {};
 
         parseFormat(element, handlers, format, defaultContext);
 
-        expect(format).toEqual({ a: 1 });
+        expect(format).toEqual({ id: '1' });
     }
 
     it('Default style for B', () => {
