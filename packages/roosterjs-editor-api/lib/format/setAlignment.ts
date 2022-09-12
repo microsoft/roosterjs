@@ -1,6 +1,7 @@
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import normalizeBlockquote from '../utils/normalizeBlockquote';
 import {
     createVListFromRegion,
     findClosestElementAncestor,
@@ -91,7 +92,15 @@ function alignText(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
         align = 'right';
     }
     execCommand(editor, command);
-    editor.queryElements('[align]', QueryScope.OnSelection, node => (node.style.textAlign = align));
+    const elements = editor.queryElements('[align]', QueryScope.OnSelection, node => {
+        node.style.textAlign = align;
+        normalizeBlockquote(node);
+    });
+
+    if (elements.length == 0) {
+        const node = editor.getElementAtCursor();
+        normalizeBlockquote(node);
+    }
 }
 
 function isList(element: HTMLElement) {
