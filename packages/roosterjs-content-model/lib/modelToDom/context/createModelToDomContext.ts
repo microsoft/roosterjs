@@ -1,12 +1,16 @@
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
  * @internal
  * @param editorContext
  * @returns
  */
-export function createModelToDomContext(editorContext?: EditorContext): ModelToDomContext {
+export function createModelToDomContext(
+    editorContext?: EditorContext,
+    options?: ModelToDomOption
+): ModelToDomContext {
     return {
         ...(editorContext || {
             isDarkMode: false,
