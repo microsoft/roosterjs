@@ -1,9 +1,9 @@
-import { addSegment } from '../../modelApi/common/addSegment';
+import { addSegment } from '../common/addSegment';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
-import { createBr } from '../../modelApi/creators/createBr';
+import { createBr } from '../creators/createBr';
 
 const MIN_HEIGHT = 22;
 

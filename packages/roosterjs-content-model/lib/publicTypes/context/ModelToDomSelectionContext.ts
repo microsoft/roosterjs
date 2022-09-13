@@ -1,11 +1,9 @@
-import { ContentModelContext } from '../../publicTypes/ContentModelContext';
 import { Coordinates } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * Represents internal data structure for a selection position, combined by block and segment node
  */
-export interface BlockAndSegmentNode {
+export interface ModelToDomBlockAndSegmentNode {
     /**
      * The block element of the selection. When segment is null, it represents the start position of this block element,
      * otherwise block element will be ignored and we can always retrieve position from segment node
@@ -19,31 +17,29 @@ export interface BlockAndSegmentNode {
 }
 
 /**
- * @internal
  * Represents internal data structure for regular selection
  */
-export interface RegularSelection {
+export interface ModelToDomRegularSelection {
     /**
      * Start position of selection
      */
-    start?: BlockAndSegmentNode;
+    start?: ModelToDomBlockAndSegmentNode;
 
     /**
      * End position of selection
      */
-    end?: BlockAndSegmentNode;
+    end?: ModelToDomBlockAndSegmentNode;
 
     /**
      * Current navigating position
      */
-    current: BlockAndSegmentNode;
+    current: ModelToDomBlockAndSegmentNode;
 }
 
 /**
- * @internal
  * Represents internal data structure for table selection
  */
-export interface TableSelection {
+export interface ModelToDomTableSelection {
     /**
      * Table where selection is located
      */
@@ -61,21 +57,16 @@ export interface TableSelection {
 }
 
 /**
- * @internal
+ * Represents selection info used by Content Model to DOM conversion
  */
-export interface ModelToDomContext {
-    /**
-     * Common context for ContentModel
-     */
-    readonly contentModelContext: ContentModelContext;
-
+export interface ModelToDomSelectionContext {
     /**
      * Regular selection info
      */
-    regularSelection: RegularSelection;
+    regularSelection: ModelToDomRegularSelection;
 
     /**
      * Table selection info
      */
-    tableSelection?: TableSelection;
+    tableSelection?: ModelToDomTableSelection;
 }

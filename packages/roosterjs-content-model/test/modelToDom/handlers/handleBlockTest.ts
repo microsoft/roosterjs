@@ -4,7 +4,7 @@ import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBl
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
-import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlock', () => {
@@ -102,7 +102,7 @@ describe('handleBlock', () => {
             parent.firstChild as HTMLElement,
             SegmentFormatHandlers,
             block.format,
-            context.contentModelContext
+            context
         );
     });
 });

@@ -3,7 +3,7 @@ import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTa
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
-import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('handleTable', () => {
     let context: ModelToDomContext;

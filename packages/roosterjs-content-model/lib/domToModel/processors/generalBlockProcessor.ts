@@ -1,7 +1,7 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { containerProcessor } from './containerProcessor';
 import { createGeneralBlock } from '../../modelApi/creators/createGeneralBlock';
-import { ElementProcessor } from './ElementProcessor';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 
 /**
  * @internal

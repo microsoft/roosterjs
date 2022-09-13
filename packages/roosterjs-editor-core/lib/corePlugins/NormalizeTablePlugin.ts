@@ -1,6 +1,5 @@
 import {
     changeElementTag,
-    getComputedStyle,
     getTagOfNode,
     moveChildNodes,
     safeInstanceOf,
@@ -66,7 +65,6 @@ export default class NormalizeTablePlugin implements EditorPlugin {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
                 this.normalizeTables(this.editor.queryElements('table'));
-                this.normalizeBlockquotes(this.editor.queryElements('blockquote'));
                 break;
 
             case PluginEventType.BeforePaste:
@@ -119,29 +117,6 @@ export default class NormalizeTablePlugin implements EditorPlugin {
             }
         }
     }
-
-    private normalizeBlockquotes(elements: HTMLQuoteElement[]) {
-        elements.forEach((quote: HTMLQuoteElement) => {
-            const centeredElement = quote.querySelector('[style^="text-align: center"]');
-
-            if (centeredElement) {
-                if (isRTL(centeredElement)) {
-                    delete quote.style.marginInlineEnd;
-                    quote.style.marginInlineStart = 'auto';
-                } else {
-                    delete quote.style.marginInlineStart;
-                    quote.style.marginInlineEnd = 'auto';
-                }
-            } else {
-                delete quote.style.marginInlineStart;
-                delete quote.style.marginInlineEnd;
-            }
-        });
-    }
-}
-
-function isRTL(el: Element) {
-    return getComputedStyle(el, 'direction') == 'rtl' || el.getAttribute('dir') == 'rtl';
 }
 
 function normalizeTables(tables: HTMLTableElement[]) {

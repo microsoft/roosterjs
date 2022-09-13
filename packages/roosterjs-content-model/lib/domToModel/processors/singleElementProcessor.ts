@@ -1,6 +1,6 @@
 import { brProcessor } from './brProcessor';
 import { containerProcessor } from './containerProcessor';
-import { ElementProcessor } from './ElementProcessor';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { generalBlockProcessor } from './generalBlockProcessor';
 import { generalSegmentProcessor } from './generalSegmentProcessor';
 import { isBlockElement } from 'roosterjs-editor-dom';
@@ -18,12 +18,7 @@ export const knownElementProcessor: ElementProcessor = (group, element, context)
         generalBlockProcessor(group, element, context);
     } else {
         stackFormat(context, { segment: 'shallowClone' }, () => {
-            parseFormat(
-                element,
-                SegmentFormatHandlers,
-                context.segmentFormat,
-                context.contentModelContext
-            );
+            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
             containerProcessor(group, element, context);
         });
     }

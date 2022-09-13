@@ -1,5 +1,5 @@
-import { ContentModelContext } from './ContentModelContext';
 import { ContentModelDocument } from './block/group/ContentModelDocument';
+import { EditorContext } from './context/EditorContext';
 import { IEditor } from 'roosterjs-editor-types';
 
 /**
@@ -9,9 +9,9 @@ import { IEditor } from 'roosterjs-editor-types';
  */
 export interface IExperimentalContentModelEditor extends IEditor {
     /**
-     * Create a ContentModelContext object used by ContentModel API
+     * Create a EditorContext object used by ContentModel API
      */
-    createContentModelContext(): ContentModelContext;
+    createEditorContext(): EditorContext;
 
     /**
      * Create Content Model from DOM tree in this editor

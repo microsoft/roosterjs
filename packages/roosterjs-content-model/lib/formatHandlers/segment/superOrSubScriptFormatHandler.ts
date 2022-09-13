@@ -36,6 +36,9 @@ export const superOrSubScriptFormatHandler: FormatHandler<SuperOrSubScriptFormat
     },
 };
 
+/**
+ * @internal
+ */
 export function isSuperOrSubScript(
     fontSize: string | undefined,
     verticalAlign: string | undefined

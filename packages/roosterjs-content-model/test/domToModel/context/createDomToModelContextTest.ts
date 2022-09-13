@@ -1,9 +1,9 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createDomToModelContext', () => {
-    const defaultContentModelContext: ContentModelContext = {
+    const editorContext: EditorContext = {
         isDarkMode: false,
         zoomScale: 1,
         isRightToLeft: false,
@@ -14,24 +14,24 @@ describe('createDomToModelContext', () => {
         const context = createDomToModelContext();
 
         expect(context).toEqual({
-            contentModelContext: defaultContentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
         });
     });
 
     it('with content model context', () => {
-        const contentModelContext: ContentModelContext = {
+        const editorContext: EditorContext = {
             isDarkMode: true,
             zoomScale: 2,
             isRightToLeft: true,
             getDarkColor: () => '',
         };
 
-        const context = createDomToModelContext(contentModelContext);
+        const context = createDomToModelContext(editorContext);
 
         expect(context).toEqual({
-            contentModelContext: contentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
         });
@@ -52,7 +52,7 @@ describe('createDomToModelContext', () => {
         });
 
         expect(context).toEqual({
-            contentModelContext: defaultContentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
             regularSelection: {
@@ -78,7 +78,7 @@ describe('createDomToModelContext', () => {
         });
 
         expect(context).toEqual({
-            contentModelContext: defaultContentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
             tableSelection: {

@@ -1,19 +1,18 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { SuperOrSubScriptFormat } from '../../../lib/publicTypes/format/formatParts/SuperOrSubScriptFormat';
 import { superOrSubScriptFormatHandler } from '../../../lib/formatHandlers/segment/superOrSubScriptFormatHandler';
 
 describe('superOrSubScriptFormatHandler.parse', () => {
     let div: HTMLElement;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
     let format: SuperOrSubScriptFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
         format = {};
     });
 
@@ -99,16 +98,12 @@ describe('superOrSubScriptFormatHandler.parse', () => {
 describe('superOrSubScriptFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: SuperOrSubScriptFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     it('no sub/sup', () => {

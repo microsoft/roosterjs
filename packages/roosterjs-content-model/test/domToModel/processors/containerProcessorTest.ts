@@ -7,7 +7,7 @@ import { ContentModelDocument } from '../../../lib/publicTypes/block/group/Conte
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 
 describe('containerProcessor', () => {
     let doc: ContentModelDocument;

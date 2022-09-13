@@ -1,10 +1,11 @@
+import hasSelectionInSegment from './hasSelectionInSegment';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { hasSelectionInSegment } from './hasSelectionInSegment';
 
 /**
- * @internal
+ * Check if there is selection within the given block
+ * @param block The block to check
  */
-export function hasSelectionInBlock(block: ContentModelBlock): boolean {
+export default function hasSelectionInBlock(block: ContentModelBlock): boolean {
     switch (block.blockType) {
         case 'Paragraph':
             return block.segments.some(hasSelectionInSegment);

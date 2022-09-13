@@ -1,6 +1,6 @@
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { handleSegment } from './handleSegment';
-import { ModelToDomContext } from '../context/ModelToDomContext';
+import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
  * @internal
