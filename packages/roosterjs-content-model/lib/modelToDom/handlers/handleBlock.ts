@@ -6,7 +6,7 @@ import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentMod
 import { handleParagraph } from './handleParagraph';
 import { handleTable } from './handleTable';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { ModelToDomContext } from '../context/ModelToDomContext';
+import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
@@ -34,12 +34,7 @@ export function handleBlock(
 
                     if (isGeneralSegment(block) && isNodeOfType(newParent, NodeType.Element)) {
                         context.regularSelection.current.segment = newParent;
-                        applyFormat(
-                            newParent,
-                            SegmentFormatHandlers,
-                            block.format,
-                            context.contentModelContext
-                        );
+                        applyFormat(newParent, SegmentFormatHandlers, block.format, context);
                     }
 
                     break;

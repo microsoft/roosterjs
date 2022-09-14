@@ -2,7 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { containerProcessor } from './containerProcessor';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
-import { ElementProcessor } from './ElementProcessor';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
@@ -30,18 +30,13 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
     stackFormat(context, { segment: 'shallowClone' }, () => {
-        parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
-        parseFormat(
-            tableElement,
-            SegmentFormatHandlers,
-            context.segmentFormat,
-            context.contentModelContext
-        );
+        parseFormat(tableElement, TableFormatHandlers, table.format, context);
+        parseFormat(tableElement, SegmentFormatHandlers, context.segmentFormat, context);
         addBlock(group, table);
 
         const columnPositions: number[] = [0];
         const rowPositions: number[] = [0];
-        const zoomScale = context.contentModelContext.zoomScale;
+        const zoomScale = context.zoomScale;
 
         for (let row = 0; row < tableElement.rows.length; row++) {
             const tr = tableElement.rows[row];
@@ -86,17 +81,12 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
                         if (hasTd) {
                             stackFormat(context, { segment: 'shallowClone' }, () => {
-                                parseFormat(
-                                    td,
-                                    TableCellFormatHandlers,
-                                    cell.format,
-                                    context.contentModelContext
-                                );
+                                parseFormat(td, TableCellFormatHandlers, cell.format, context);
                                 parseFormat(
                                     td,
                                     SegmentFormatHandlers,
                                     context.segmentFormat,
-                                    context.contentModelContext
+                                    context
                                 );
 
                                 containerProcessor(cell, td, context);

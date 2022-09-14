@@ -1,21 +1,21 @@
-import { ContentModelContext } from '../../publicTypes/ContentModelContext';
-import { DomToModelContext } from './DomToModelContext';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
+import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
 export function createDomToModelContext(
-    contentModelContext?: ContentModelContext,
+    editorContext?: EditorContext,
     range?: SelectionRangeEx
 ): DomToModelContext {
     const context: DomToModelContext = {
-        contentModelContext: contentModelContext || {
+        ...(editorContext || {
             isDarkMode: false,
             zoomScale: 1,
             isRightToLeft: false,
             getDarkColor: undefined,
-        },
+        }),
 
         segmentFormat: {},
         isInSelection: false,

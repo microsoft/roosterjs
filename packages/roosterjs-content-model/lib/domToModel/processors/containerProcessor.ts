@@ -1,7 +1,7 @@
 import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
-import { DomToModelContext } from '../context/DomToModelContext';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
 import { singleElementProcessor } from './singleElementProcessor';

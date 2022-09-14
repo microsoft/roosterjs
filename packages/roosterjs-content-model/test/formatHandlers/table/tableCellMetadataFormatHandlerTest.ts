@@ -1,20 +1,19 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { TableCellMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableCellMetadataFormat';
 import { tableCellMetadataFormatHandler } from '../../../lib/formatHandlers/table/tableCellMetadataFormatHandler';
 
 describe('tableCellMetadataFormatHandler.parse', () => {
     let div: HTMLElement;
     let format: TableCellMetadataFormat;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
     });
 
     function runTest(metadata: any, expectedValue: TableCellMetadataFormat) {
@@ -47,16 +46,12 @@ describe('tableCellMetadataFormatHandler.parse', () => {
 describe('tableCellMetadataFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: TableCellMetadataFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     function runTest(tableCellFormat: TableCellMetadataFormat | null, expectedValue: any) {

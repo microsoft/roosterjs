@@ -6,12 +6,10 @@ describe('createFormatContextTest', () => {
         const context = createDomToModelContext();
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: false,
-                zoomScale: 1,
-                isRightToLeft: false,
-                getDarkColor: undefined,
-            },
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+            getDarkColor: undefined,
             isInSelection: false,
             segmentFormat: {},
         });
@@ -28,12 +26,10 @@ describe('createFormatContextTest', () => {
         });
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
         });
@@ -62,12 +58,10 @@ describe('createFormatContextTest', () => {
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             regularSelection: {
                 startContainer: text,
@@ -111,12 +105,10 @@ describe('createFormatContextTest', () => {
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             tableSelection: {
                 table: table,
@@ -151,12 +143,10 @@ describe('createFormatContextTest', () => {
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
         });
@@ -182,12 +172,10 @@ describe('createFormatContextTest', () => {
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
         });

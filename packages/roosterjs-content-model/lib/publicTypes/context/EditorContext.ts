@@ -1,7 +1,7 @@
 /**
- * A context interface used by ContentModel PAI
+ * An editor context interface used by ContentModel PAI
  */
-export interface ContentModelContext {
+export interface EditorContext {
     /**
      * Whether current content is in dark mode
      */
