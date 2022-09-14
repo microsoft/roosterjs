@@ -1,5 +1,7 @@
 import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionInBlock';
+import hasSelectionInBlockGroup from '../../../lib/publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
+import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/ContentModelTableCell';
 
 describe('hasSelectionInBlock', () => {
     it('Empty paragraph block', () => {
@@ -55,7 +57,6 @@ describe('hasSelectionInBlock', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},
@@ -80,7 +81,6 @@ describe('hasSelectionInBlock', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},
@@ -88,7 +88,6 @@ describe('hasSelectionInBlock', () => {
                         spanLeft: false,
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},
@@ -114,7 +113,6 @@ describe('hasSelectionInBlock', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [
                             {
@@ -144,8 +142,7 @@ describe('hasSelectionInBlock', () => {
     });
 
     it('Table cell with selected content', () => {
-        const block: ContentModelBlock = {
-            blockType: 'BlockGroup',
+        const block: ContentModelTableCell = {
             blockGroupType: 'TableCell',
             format: {},
             spanAbove: false,
@@ -164,7 +161,7 @@ describe('hasSelectionInBlock', () => {
             ],
         };
 
-        const result = hasSelectionInBlock(block);
+        const result = hasSelectionInBlockGroup(block);
 
         expect(result).toBeTrue();
     });

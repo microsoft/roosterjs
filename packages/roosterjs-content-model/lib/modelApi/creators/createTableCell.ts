@@ -15,7 +15,6 @@ export function createTableCell(
     const spanAbove =
         typeof spanAboveOrRowSpan === 'number' ? spanAboveOrRowSpan > 1 : !!spanAboveOrRowSpan;
     return {
-        blockType: 'BlockGroup',
         blockGroupType: 'TableCell',
         blocks: [],
         format: format ? { ...format } : {},

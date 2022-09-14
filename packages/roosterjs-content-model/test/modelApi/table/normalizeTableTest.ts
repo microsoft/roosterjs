@@ -34,7 +34,6 @@ describe('normalizeTable', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanAbove: false,
                         spanLeft: false,
@@ -86,7 +85,6 @@ describe('normalizeTable', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -102,7 +100,6 @@ describe('normalizeTable', () => {
                 ],
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -160,7 +157,6 @@ describe('normalizeTable', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -190,7 +186,6 @@ describe('normalizeTable', () => {
                         ],
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -242,7 +237,6 @@ describe('normalizeTable', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -301,7 +295,6 @@ describe('normalizeTable', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -310,7 +303,6 @@ describe('normalizeTable', () => {
                         blocks: [block1, block2],
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: true,
                         spanAbove: false,
@@ -321,7 +313,6 @@ describe('normalizeTable', () => {
                 ],
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -330,7 +321,6 @@ describe('normalizeTable', () => {
                         blocks: [block3],
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -384,7 +374,6 @@ describe('normalizeTable', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -414,7 +403,6 @@ describe('normalizeTable', () => {
                         ],
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
@@ -489,7 +477,6 @@ describe('normalizeTable', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanLeft: false,
                         spanAbove: false,
