@@ -62,6 +62,7 @@ export {
     DomToModelImageSelection,
     DomToModelSelectionContext,
 } from './publicTypes/context/DomToModelSelectionContext';
+export { DomToModelSettings, DefaultStyleMap } from './publicTypes/context/DomToModelSettings';
 export { DomToModelContext } from './publicTypes/context/DomToModelContext';
 export { ModelToDomContext } from './publicTypes/context/ModelToDomContext';
 export {
@@ -72,4 +73,8 @@ export {
 } from './publicTypes/context/ModelToDomSelectionContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
 
-export { IExperimentalContentModelEditor } from './publicTypes/IExperimentalContentModelEditor';
+export {
+    IExperimentalContentModelEditor,
+    DomToModelOption,
+    ModelToDomOption,
+} from './publicTypes/IExperimentalContentModelEditor';
