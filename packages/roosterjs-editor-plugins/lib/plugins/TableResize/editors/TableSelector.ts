@@ -14,18 +14,15 @@ export default function createTableSelector(
     zoomScale: number,
     editor: IEditor,
     onFinishDragging: (table: HTMLTableElement) => void,
-    shouldShowHelper: (
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => boolean,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    eventTarget?: EventTarget
+    contentDiv?: EventTarget
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
-    if (!shouldShowHelper('TableSelector') || !isSelectorInsideEditor(editor, rect, eventTarget)) {
+    if (!isSelectorInsideEditor(editor, rect, contentDiv)) {
         return null;
     }
 
@@ -90,21 +87,16 @@ function setSelectorDivPosition(context: DragAndDropContext, trigger: HTMLElemen
     }
 }
 
-function isSelectorInsideEditor(editor: IEditor, rect: Rect | null, target?: EventTarget): boolean {
-    const scrollContainer = editor.getScrollContainer();
-    if (target && safeInstanceOf(target, 'HTMLElement') && scrollContainer && rect) {
-        const scrollContainerRect = normalizeRect(scrollContainer.getBoundingClientRect());
-        const containerRect = normalizeRect(target.getBoundingClientRect());
+function isSelectorInsideEditor(
+    editor: IEditor,
+    rect: Rect | null,
+    contentDiv?: EventTarget
+): boolean {
+    const visibleViewport = editor.getVisibleViewport();
+    if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
+        const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
 
-        if (scrollContainerRect && containerRect) {
-            const scrollContainerVisibleTop = scrollContainer.scrollTop - scrollContainerRect.top;
-
-            return (
-                containerRect.top <= rect.top &&
-                scrollContainerVisibleTop <= rect.top &&
-                scrollContainerRect.top <= rect.top
-            );
-        }
+        return containerRect.top <= rect.top && visibleViewport.top <= rect.top;
     }
 
     return true;

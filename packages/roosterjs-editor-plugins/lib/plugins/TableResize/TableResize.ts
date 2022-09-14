@@ -31,13 +31,7 @@ export default class TableResize implements EditorPlugin {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
             table?: HTMLTableElement
-        ) => void,
-        private shouldShowHelper?: (
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector',
-            editor: IEditor,
-            table: HTMLTableElement,
-            eventTarget: EventTarget | undefined | null
-        ) => boolean
+        ) => void
     ) {}
 
     /**
@@ -122,15 +116,8 @@ export default class TableResize implements EditorPlugin {
                 this.editor,
                 table,
                 this.invalidateTableRects,
-                (
-                    helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-                ) => {
-                    return (
-                        !this.shouldShowHelper ||
-                        this.shouldShowHelper(helperType, this.editor, table, e?.target)
-                    );
-                },
-                this.onShowHelperElement
+                this.onShowHelperElement,
+                e.currentTarget
             );
         }
     }

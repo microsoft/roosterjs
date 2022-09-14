@@ -2,6 +2,7 @@ import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
+import Rect from './Rect';
 import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ColorTransformDirection } from '../enum/ColorTransformDirection';
@@ -62,6 +63,11 @@ export default interface EditorCore extends PluginState {
      * @deprecated Use zoomScale instead
      */
     sizeTransformer: SizeTransformer;
+
+    /**
+     * Retrieves the Visible Viewport of the editor.
+     */
+    getVisibleViewport: () => Rect;
 }
 
 /**

@@ -67,14 +67,11 @@ export default class TableEditor {
         private editor: IEditor,
         public readonly table: HTMLTableElement,
         private onChanged: () => void,
-        private shouldShowHelper: (
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) => boolean,
         private onShowHelperElement?: (
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        eventTarget?: EventTarget
+        contentDiv?: EventTarget
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         const zoomScale = editor.getZoomScale();
@@ -84,7 +81,6 @@ export default class TableEditor {
             this.isRTL,
             this.onStartTableResize,
             this.onFinishEditing,
-            this.shouldShowHelper,
             this.onShowHelperElement
         );
         this.tableSelector = createTableSelector(
@@ -92,9 +88,8 @@ export default class TableEditor {
             zoomScale,
             editor,
             this.onSelect,
-            this.shouldShowHelper,
             this.onShowHelperElement,
-            eventTarget
+            contentDiv
         );
         this.isCurrentlyEditing = false;
     }
@@ -191,7 +186,6 @@ export default class TableEditor {
                 true /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.shouldShowHelper,
                 this.onShowHelperElement
             );
             this.verticalResizer = createCellResizer(
@@ -201,7 +195,6 @@ export default class TableEditor {
                 false /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.shouldShowHelper,
                 this.onShowHelperElement
             );
         }
@@ -224,7 +217,6 @@ export default class TableEditor {
                 this.isRTL,
                 !!isHorizontal,
                 this.onInserted,
-                this.shouldShowHelper,
                 this.onShowHelperElement
             );
             if (isHorizontal) {

@@ -28,6 +28,7 @@ import {
     PluginEventType,
     PositionType,
     QueryScope,
+    Rect,
     Region,
     RegionType,
     SelectionPath,
@@ -59,6 +60,7 @@ import {
     arrayPush,
     toArray,
     getObjectKeys,
+    normalizeRect,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -115,6 +117,9 @@ export default class Editor implements IEditor {
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
             zoomScale: zoomScale,
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
+            getVisibleViewport:
+                options.getVisibleViewport ||
+                (() => normalizeRect(this.getScrollContainer().getBoundingClientRect())),
         };
 
         // 3. Initialize plugins
@@ -1012,6 +1017,10 @@ export default class Editor implements IEditor {
                 );
             }
         }
+    }
+
+    getVisibleViewport(): Rect {
+        return this.getCore().getVisibleViewport();
     }
 
     /**

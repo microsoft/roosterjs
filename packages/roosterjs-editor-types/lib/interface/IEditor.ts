@@ -5,6 +5,7 @@ import DefaultFormat from './DefaultFormat';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
+import Rect from './Rect';
 import Region from './Region';
 import SelectionPath from './SelectionPath';
 import TableSelection from './TableSelection';
@@ -629,6 +630,10 @@ export default interface IEditor {
      */
     getSizeTransformer(): SizeTransformer;
 
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect;
     //#endregion
 }
 

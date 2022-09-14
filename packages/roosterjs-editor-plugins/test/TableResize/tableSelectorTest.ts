@@ -62,10 +62,6 @@ describe('Table Selector Tests', () => {
         runTest(15, false);
     });
 
-    it('Do not display component, shouldShowHelper returns false', () => {
-        runTest(15, false, false);
-    });
-
     it('Display component, Top of table is visible in the scroll container scrolled down.', () => {
         //Arrange
         const scrollContainer = document.createElement('div');
@@ -75,13 +71,6 @@ describe('Table Selector Tests', () => {
         spyOn(editor, 'getScrollContainer').and.returnValue(scrollContainer);
 
         runTest(0, true);
-    });
-
-    it('Scroll container equals null, display component', () => {
-        //Arrange
-        spyOn(editor, 'getScrollContainer').and.returnValue(null);
-
-        runTest(15, true, true);
     });
 
     it('On click event', () => {
@@ -116,7 +105,7 @@ describe('Table Selector Tests', () => {
         }
     });
 
-    function runTest(scrollTop: number, isNotNull: boolean | null, shouldShowCb: boolean = true) {
+    function runTest(scrollTop: number, isNotNull: boolean | null) {
         //Arrange
         editor.setContent(
             '<table id="table1"><tr><td>a</td><td>w</td></tr><tr><td>a</td><td>w</td></tr></table><div style="height: 300px">'
@@ -134,7 +123,6 @@ describe('Table Selector Tests', () => {
             1,
             editor,
             () => {},
-            () => shouldShowCb,
             () => {},
             <EventTarget>node
         );
