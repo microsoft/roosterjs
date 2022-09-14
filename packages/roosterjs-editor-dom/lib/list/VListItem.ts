@@ -261,13 +261,13 @@ export default class VListItem {
         if (style) {
             if (
                 isFirstLevel &&
-                this.listTypes[1] === ListType.Unordered &&
+                this.getListType() === ListType.Unordered &&
                 style.unorderedStyleType
             ) {
                 setBulletListMarkers(this.node, style.unorderedStyleType);
             } else if (
                 isFirstLevel &&
-                this.listTypes[1] === ListType.Ordered &&
+                this.getListType() === ListType.Ordered &&
                 style.orderedStyleType
             ) {
                 setNumberingListMarkers(this.node, style.orderedStyleType, index);
