@@ -119,7 +119,7 @@ export default class Editor implements IEditor {
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
             getVisibleViewport:
                 options.getVisibleViewport ||
-                (() => normalizeRect(this.getScrollContainer().getBoundingClientRect())),
+                (() => normalizeRect(this.getScrollContainer().getBoundingClientRect())!),
         };
 
         // 3. Initialize plugins
