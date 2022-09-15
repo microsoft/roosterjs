@@ -5,9 +5,9 @@ import { EditorCore, SelectImage, SelectionRangeTypes } from 'roosterjs-editor-t
  * @internal
  * Select a image and save data of the selected range
  * @param core The EditorCore object
- * @param table image to select
- * @param imageId
- * @returns true if successful
+ * @param image Image to select
+ * @param wrapper Selected image wrapper
+ * @returns Selected image information
  */
 export const selectImage: SelectImage = (
     core: EditorCore,
