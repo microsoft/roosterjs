@@ -17,11 +17,11 @@ export default function createCellResizer(
     isHorizontal: boolean,
     onStart: () => void,
     onEnd: () => false,
-    onShowHelperElement: (
+    onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void
-): TableEditFeature {
+): TableEditFeature | null {
     const document = td.ownerDocument;
     const createElementData = {
         tag: 'div',

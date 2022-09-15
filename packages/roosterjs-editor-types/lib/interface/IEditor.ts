@@ -5,6 +5,7 @@ import DefaultFormat from './DefaultFormat';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
+import Rect from './Rect';
 import Region from './Region';
 import SelectionPath from './SelectionPath';
 import TableSelection from './TableSelection';
@@ -520,6 +521,8 @@ export default interface IEditor {
     getEditorDomAttribute(name: string): string | null;
 
     /**
+     * @deprecated Use getVisibleViewport() instead
+     *
      * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
      * @param element The element to calculate from. If the given element is not in editor, return value will be null
      * @param addScroll When pass true, The return value will also add scrollLeft and scrollTop if any. So the value
@@ -629,6 +632,10 @@ export default interface IEditor {
      */
     getSizeTransformer(): SizeTransformer;
 
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null;
     //#endregion
 }
 
