@@ -22,7 +22,7 @@ export default function createTableSelector(
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
-    if (!isSelectorInsideEditor(editor, rect, contentDiv)) {
+    if (!isTableTopVisible(editor, rect, contentDiv)) {
         return null;
     }
 
@@ -87,11 +87,7 @@ function setSelectorDivPosition(context: DragAndDropContext, trigger: HTMLElemen
     }
 }
 
-function isSelectorInsideEditor(
-    editor: IEditor,
-    rect: Rect | null,
-    contentDiv?: EventTarget
-): boolean {
+function isTableTopVisible(editor: IEditor, rect: Rect | null, contentDiv?: EventTarget): boolean {
     const visibleViewport = editor.getVisibleViewport();
     if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
         const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
