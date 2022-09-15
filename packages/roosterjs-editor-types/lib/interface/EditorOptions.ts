@@ -132,5 +132,5 @@ export default interface EditorOptions {
     /**
      * Retrieves the visible viewport of the Editor. The default viewport is the Rect of the scrollContainer.
      */
-    getVisibleViewport?: () => Rect;
+    getVisibleViewport?: () => Rect | null;
 }

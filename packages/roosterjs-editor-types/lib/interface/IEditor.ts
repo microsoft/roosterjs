@@ -635,7 +635,7 @@ export default interface IEditor {
     /**
      * Retrieves the rect of the visible viewport of the editor.
      */
-    getVisibleViewport(): Rect;
+    getVisibleViewport(): Rect | null;
     //#endregion
 }
 
