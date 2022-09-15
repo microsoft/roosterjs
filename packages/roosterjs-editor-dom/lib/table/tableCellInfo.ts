@@ -19,7 +19,6 @@ const TableCellFormatMetadata = createObjectDefinition<Required<TableCellMetadat
 /**
  * @internal
  * Get the format info of a table cell
- * If the table does not have a info saved, it will be retrieved from the css styles
  * @param cell The table cell to use
  */
 export function getTableCellMetadata(cell: HTMLTableCellElement) {
@@ -27,7 +26,7 @@ export function getTableCellMetadata(cell: HTMLTableCellElement) {
 }
 
 /**
- * Save the format info of a table cell
+ * Add metadata to a cell
  * @param cell The table cell to add the metadata
  * @param format The format of the table
  */
