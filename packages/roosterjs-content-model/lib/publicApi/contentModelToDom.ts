@@ -6,6 +6,7 @@ import { handleBlock } from '../modelToDom/handlers/handleBlock';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
+import { ModelToDomOption } from '../publicTypes/IExperimentalContentModelEditor';
 import { optimize } from '../modelToDom/optimizers/optimize';
 import {
     NodePosition,
@@ -18,15 +19,17 @@ import {
  * Create DOM tree fragment from Content Model document
  * @param model The content model document to generate DOM tree from
  * @param editorContext Content for Content Model editor
+ * @param option Additional options to customize the behavior of Content Model to DOM conversion
  * @returns A Document Fragment that contains the DOM tree generated from the given model,
  * and a SelectionRangeEx object that contains selection info from the model if any, or null
  */
 export default function contentModelToDom(
     model: ContentModelDocument,
-    editorContext: EditorContext
+    editorContext: EditorContext,
+    option?: ModelToDomOption
 ): [DocumentFragment, SelectionRangeEx | null] {
     const fragment = model.document.createDocumentFragment();
-    const modelToDomContext = createModelToDomContext(editorContext);
+    const modelToDomContext = createModelToDomContext(editorContext, option);
 
     handleBlock(model.document, fragment, model, modelToDomContext);
     optimize(fragment, 2 /*optimizeLevel*/);

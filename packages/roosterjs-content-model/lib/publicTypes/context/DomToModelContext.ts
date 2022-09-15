@@ -1,5 +1,6 @@
 import { DomToModelFormatContext } from './DomToModelFormatContext';
 import { DomToModelSelectionContext } from './DomToModelSelectionContext';
+import { DomToModelSettings } from './DomToModelSettings';
 import { EditorContext } from './EditorContext';
 
 /**
@@ -8,4 +9,5 @@ import { EditorContext } from './EditorContext';
 export interface DomToModelContext
     extends EditorContext,
         DomToModelSelectionContext,
-        DomToModelFormatContext {}
+        DomToModelFormatContext,
+        DomToModelSettings {}
