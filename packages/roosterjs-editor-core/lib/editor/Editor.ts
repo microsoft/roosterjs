@@ -28,6 +28,7 @@ import {
     PluginEventType,
     PositionType,
     QueryScope,
+    Rect,
     Region,
     RegionType,
     SelectionPath,
@@ -59,6 +60,7 @@ import {
     arrayPush,
     toArray,
     getObjectKeys,
+    getIntersectedRect,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -115,6 +117,17 @@ export default class Editor implements IEditor {
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
             zoomScale: zoomScale,
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
+            getVisibleViewport:
+                options.getVisibleViewport ||
+                (() => {
+                    const scrollContainer = this.getScrollContainer();
+
+                    return getIntersectedRect(
+                        scrollContainer == contentDiv
+                            ? [scrollContainer]
+                            : [scrollContainer, contentDiv]
+                    );
+                }),
         };
 
         // 3. Initialize plugins
@@ -798,6 +811,8 @@ export default class Editor implements IEditor {
     }
 
     /**
+     * @deprecated Use getVisibleViewport() instead.
+     *
      * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
      * @param element The element to calculate from. If the given element is not in editor, return value will be null
      * @param addScroll When pass true, The return value will also add scrollLeft and scrollTop if any. So the value
@@ -1012,6 +1027,13 @@ export default class Editor implements IEditor {
                 );
             }
         }
+    }
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null {
+        return this.getCore().getVisibleViewport();
     }
 
     /**
