@@ -318,7 +318,10 @@ export default class VListItem {
             //apply the styles of the current parent list to the new list
             if (this.getDeepChildIndex(originalRoot) == stackLength) {
                 const listStyleType = this.node.parentElement?.style.listStyleType;
-                if (listStyleType) {
+                if (
+                    listStyleType &&
+                    getTagOfNode(this.node.parentElement) === getTagOfNode(newList)
+                ) {
                     newList.style.listStyleType = listStyleType;
                 }
             }

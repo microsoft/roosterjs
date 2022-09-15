@@ -1,7 +1,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
-import { createElement, normalizeRect } from 'roosterjs-editor-dom';
-import { CreateElementData, Rect } from 'roosterjs-editor-types';
+import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
+import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -12,16 +12,18 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
 export default function createTableSelector(
     table: HTMLTableElement,
     zoomScale: number,
+    editor: IEditor,
     onFinishDragging: (table: HTMLTableElement) => void,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    shouldShow?: (rect: Rect) => boolean
-): TableEditorFeature {
+    contentDiv?: EventTarget
+): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
-    if (rect && shouldShow && !shouldShow(rect)) {
-        return { div: null, featureHandler: null, node: table };
+
+    if (!isTableTopVisible(editor, rect, contentDiv)) {
+        return null;
     }
 
     const document = table.ownerDocument;
@@ -83,4 +85,15 @@ function setSelectorDivPosition(context: DragAndDropContext, trigger: HTMLElemen
         trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
         trigger.style.left = `${rect.left - TABLE_SELECTOR_LENGTH - 2}px`;
     }
+}
+
+function isTableTopVisible(editor: IEditor, rect: Rect | null, contentDiv?: EventTarget): boolean {
+    const visibleViewport = editor.getVisibleViewport();
+    if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
+        const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
+
+        return containerRect.top <= rect.top && visibleViewport.top <= rect.top;
+    }
+
+    return true;
 }
