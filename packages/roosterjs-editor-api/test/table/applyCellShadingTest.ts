@@ -68,6 +68,6 @@ describe('applyCellShading', () => {
         expect(cell?.style.backgroundColor.replace(' ', '')).toEqual(
             'rgb(0, 255, 255)'.replace(' ', '')
         );
-        expect(cell?.dataset['editingInfo']).toBeDefined();
+        expect(cell?.getAttribute('data-editing-info')).toBeDefined();
     });
 });
