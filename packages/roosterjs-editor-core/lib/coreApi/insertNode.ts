@@ -157,21 +157,26 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                         pos = adjustInsertPosition(contentDiv, node, pos, range);
                     }
 
-                    let nodeForCursor =
-                        node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
-                    range = createRange(pos);
-                    range.insertNode(node);
-                    if (option.updateCursor && nodeForCursor) {
-                        rangeToRestore = createRange(
-                            new Position(nodeForCursor, PositionType.After).normalize()
-                        );
-                    }
+                    if (pos) {
+                        let nodeForCursor =
+                            node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
 
-                    if (rangeToRestore) {
-                        core.api.selectRange(core, rangeToRestore);
-                    }
+                        range = createRange(pos);
 
-                    break;
+                        range.insertNode(node);
+
+                        if (option.updateCursor && nodeForCursor) {
+                            rangeToRestore = createRange(
+                                new Position(nodeForCursor, PositionType.After).normalize()
+                            );
+                        }
+
+                        if (rangeToRestore) {
+                            core.api.selectRange(core, rangeToRestore);
+                        }
+
+                        break;
+                    }
             }
         },
         ColorTransformDirection.LightToDark
