@@ -119,7 +119,25 @@ export default class Editor implements IEditor {
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
             getVisibleViewport:
                 options.getVisibleViewport ||
-                (() => normalizeRect(this.getScrollContainer().getBoundingClientRect())!),
+                (() => {
+                    const scrollContainer = this.getScrollContainer();
+                    const scrollContainerRect = normalizeRect(
+                        scrollContainer.getBoundingClientRect()
+                    )!;
+
+                    if (scrollContainer != contentDiv) {
+                        const contentDivRect = contentDiv.getBoundingClientRect()!;
+
+                        return {
+                            top: Math.max(scrollContainerRect.top, contentDivRect.top),
+                            bottom: Math.min(scrollContainerRect.bottom, contentDivRect.bottom),
+                            left: Math.max(scrollContainerRect.left, contentDivRect.left),
+                            right: Math.min(scrollContainerRect.right, scrollContainerRect.right),
+                        };
+                    }
+
+                    return scrollContainerRect;
+                }),
         };
 
         // 3. Initialize plugins
@@ -803,6 +821,8 @@ export default class Editor implements IEditor {
     }
 
     /**
+     * @deprecated Use getVisibleViewport() instead.
+     *
      * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
      * @param element The element to calculate from. If the given element is not in editor, return value will be null
      * @param addScroll When pass true, The return value will also add scrollLeft and scrollTop if any. So the value

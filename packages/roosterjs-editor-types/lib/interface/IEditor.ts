@@ -521,6 +521,8 @@ export default interface IEditor {
     getEditorDomAttribute(name: string): string | null;
 
     /**
+     * @deprecated Use getVisibleViewport() instead
+     *
      * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
      * @param element The element to calculate from. If the given element is not in editor, return value will be null
      * @param addScroll When pass true, The return value will also add scrollLeft and scrollTop if any. So the value
