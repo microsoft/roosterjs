@@ -6,9 +6,8 @@ import { NodePosition, NodeType, TableOperation } from 'roosterjs-editor-types';
 
 /**
  * @internal
- * Insert a DOM node into editor content
- * @param core The EditorCore object. No op if null.
- * @param option An insert option object to specify how to insert the node
+ * STILL NOT WRITTEN
+ *
  */
 export default function pasteTable(
     root: HTMLElement,
