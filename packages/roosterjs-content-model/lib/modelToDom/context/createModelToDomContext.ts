@@ -1,4 +1,5 @@
 import { EditorContext } from '../../publicTypes/context/EditorContext';
+import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
 
@@ -24,5 +25,6 @@ export function createModelToDomContext(
                 segment: null,
             },
         },
+        formatAppliers: getFormatAppliers(options?.formatApplierOverride),
     };
 }
