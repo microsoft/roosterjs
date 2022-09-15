@@ -42,6 +42,23 @@ export interface TableSelectionRange
 }
 
 /**
+ * Represents a selected image.
+ */
+export interface ImageSelectionRange
+    extends SelectionRangeExBase<
+        SelectionRangeTypes.ImageSelection | CompatibleSelectionRangeTypes.ImageSelection
+    > {
+    /**
+     * Selected Image
+     */
+    image: HTMLImageElement;
+    /**
+     * Id of the selected Image
+     */
+    imageId: string | undefined;
+}
+
+/**
  * Represents normal selection
  */
 export interface NormalSelectionRange
@@ -52,4 +69,4 @@ export interface NormalSelectionRange
 /**
  * Types of ranges used in editor api getSelectionRangeEx
  */
-export type SelectionRangeEx = NormalSelectionRange | TableSelectionRange;
+export type SelectionRangeEx = NormalSelectionRange | TableSelectionRange | ImageSelectionRange;

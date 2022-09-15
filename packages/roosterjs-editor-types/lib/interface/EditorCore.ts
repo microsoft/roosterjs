@@ -8,6 +8,7 @@ import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
+import { ImageSelectionRange } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
@@ -19,7 +20,6 @@ import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
 import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
-
 /**
  * Represents the core data structure of an editor
  */
@@ -267,6 +267,20 @@ export type SelectTable = (
 ) => TableSelectionRange | null;
 
 /**
+ * Select a table and save data of the selected range
+ * @param core The EditorCore object
+ * @param table table to select
+ * @param coordinates first and last cell of the selection, if this parameter is null, instead of
+ * selecting, will unselect the table.
+ * @returns true if successful
+ */
+export type SelectImage = (
+    core: EditorCore,
+    image: HTMLImageElement | null,
+    wrapper?: HTMLSpanElement
+) => ImageSelectionRange | null;
+
+/**
  * The interface for the map of core API.
  * Editor can call call API from this map under EditorCore object
  */
@@ -431,4 +445,13 @@ export interface CoreApiMap {
      * @returns true if successful
      */
     selectTable: SelectTable;
+
+    /**
+     * Select a image and save data of the selected range
+     * @param core The EditorCore object
+     * @param image image to select
+     * @param imageId the id of the image element
+     * @returns true if successful
+     */
+    selectImage: SelectImage;
 }

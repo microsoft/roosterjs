@@ -103,6 +103,11 @@ const DARK_MODE_BGCOLOR = '#333';
 const MAX_SMALL_SIZE_IMAGE = 10000;
 
 /**
+ * Id to the wrapper and image selected
+ */
+const IMAGE_SELECTED = 'imageSelected';
+
+/**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
  */
 export default class ImageEdit implements EditorPlugin {
@@ -131,6 +136,8 @@ export default class ImageEdit implements EditorPlugin {
      * Identify if the image was resized by the user.
      */
     private wasResized: boolean;
+
+    private idNumber = 0;
 
     /**
      * Create a new instance of ImageEdit
@@ -363,6 +370,15 @@ export default class ImageEdit implements EditorPlugin {
             false /*isBlock*/,
             true /*isReadonly*/
         );
+
+        if (!this.image.id) {
+            this.idNumber = this.idNumber + 1;
+            const imageId = IMAGE_SELECTED + this.idNumber;
+            this.image.id = imageId;
+            wrapper.id = imageId;
+        } else {
+            wrapper.id = this.image.id;
+        }
 
         wrapper.style.position = 'relative';
         wrapper.style.maxWidth = '100%';

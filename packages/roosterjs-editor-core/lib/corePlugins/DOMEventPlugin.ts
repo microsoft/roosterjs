@@ -43,6 +43,7 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             contextMenuProviders:
                 options.plugins?.filter<ContextMenuProvider<any>>(isContextMenuProvider) || [],
             tableSelectionRange: null,
+            imageSelectionRange: null,
         };
     }
 
@@ -150,6 +151,11 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
             this.editor.select(table, coordinates);
         } else {
             this.editor.select(this.state.selectionRange);
+        }
+
+        const { image } = this.state.imageSelectionRange || {};
+        if (image) {
+            this.editor.select(image);
         }
 
         this.state.selectionRange = null;

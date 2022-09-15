@@ -439,20 +439,35 @@ export default class Editor implements IEditor {
     }
 
     public select(
-        arg1: Range | NodePosition | Node | SelectionPath | HTMLTableElement | null,
+        arg1:
+            | Range
+            | NodePosition
+            | Node
+            | SelectionPath
+            | HTMLTableElement
+            | HTMLImageElement
+            | null,
         arg2?: NodePosition | number | PositionType | TableSelection,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
+
         if (arg1 && 'rows' in arg1) {
             const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
             core.domEvent.tableSelectionRange = selection;
-
             return !!selection;
         } else {
             core.api.selectTable(core, null);
             core.domEvent.tableSelectionRange = null;
+        }
+
+        const imageSelection = this.getImageSelection(core, arg1);
+        if (imageSelection) {
+            core.domEvent.imageSelectionRange = imageSelection;
+            return !!imageSelection;
+        } else {
+            core.domEvent.imageSelectionRange = null;
         }
 
         let range = !arg1
@@ -468,6 +483,27 @@ export default class Editor implements IEditor {
                   <number | PositionType>arg4
               );
         return !!range && this.contains(range) && core.api.selectRange(core, range);
+    }
+
+    private getImageSelection(
+        core: EditorCore,
+        arg: Range | NodePosition | Node | SelectionPath | HTMLTableElement | null
+    ) {
+        if (safeInstanceOf(arg, 'HTMLImageElement')) {
+            const selection = core.api.selectImage(core, arg);
+            return selection;
+        }
+        if (arg && safeInstanceOf(arg, 'HTMLSpanElement')) {
+            const argElement = <HTMLSpanElement>arg;
+            const argClass = argElement.className;
+            if (argClass.indexOf('IMAGE_EDIT_WRAPPER') >= 0) {
+                const selection = core.api.selectImage(core, null /** image **/, argElement);
+                return selection;
+            }
+        } else {
+            core.api.selectImage(core, null);
+            return null;
+        }
     }
 
     /**

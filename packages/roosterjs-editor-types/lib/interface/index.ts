@@ -87,6 +87,7 @@ export {
     TransformColor,
     TriggerEvent,
     SelectTable,
+    SelectImage,
 } from './EditorCore';
 export { default as EditorOptions } from './EditorOptions';
 export {
@@ -113,5 +114,6 @@ export {
     SelectionRangeExBase,
     NormalSelectionRange,
     TableSelectionRange,
+    ImageSelectionRange,
     SelectionRangeEx,
 } from './SelectionRangeEx';

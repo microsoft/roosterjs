@@ -52,6 +52,7 @@ describe('getSelectionRangeEx', () => {
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
             tableSelectionRange: null,
+            imageSelectionRange: null,
         };
         const input = document.createElement('input');
         document.body.appendChild(input);
