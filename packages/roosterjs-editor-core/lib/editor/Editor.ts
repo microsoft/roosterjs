@@ -60,7 +60,7 @@ import {
     arrayPush,
     toArray,
     getObjectKeys,
-    normalizeRect,
+    getIntersectedRect,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -121,22 +121,12 @@ export default class Editor implements IEditor {
                 options.getVisibleViewport ||
                 (() => {
                     const scrollContainer = this.getScrollContainer();
-                    const scrollContainerRect = normalizeRect(
-                        scrollContainer.getBoundingClientRect()
-                    )!;
 
-                    if (scrollContainer != contentDiv) {
-                        const contentDivRect = contentDiv.getBoundingClientRect()!;
-
-                        return {
-                            top: Math.max(scrollContainerRect.top, contentDivRect.top),
-                            bottom: Math.min(scrollContainerRect.bottom, contentDivRect.bottom),
-                            left: Math.max(scrollContainerRect.left, contentDivRect.left),
-                            right: Math.min(scrollContainerRect.right, scrollContainerRect.right),
-                        };
-                    }
-
-                    return scrollContainerRect;
+                    return getIntersectedRect(
+                        scrollContainer == contentDiv
+                            ? [scrollContainer]
+                            : [scrollContainer, contentDiv]
+                    );
                 }),
         };
 
@@ -1039,7 +1029,10 @@ export default class Editor implements IEditor {
         }
     }
 
-    getVisibleViewport(): Rect {
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null {
         return this.getCore().getVisibleViewport();
     }
 

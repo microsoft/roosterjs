@@ -67,7 +67,7 @@ export default interface EditorCore extends PluginState {
     /**
      * Retrieves the Visible Viewport of the editor.
      */
-    getVisibleViewport: () => Rect;
+    getVisibleViewport: () => Rect | null;
 }
 
 /**
