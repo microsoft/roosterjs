@@ -1,12 +1,14 @@
+import { ContentPosition, EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
+    EditorContext,
     ContentModelDocument,
     contentModelToDom,
     domToContentModel,
-    EditorContext,
+    DomToModelOption,
     IExperimentalContentModelEditor,
+    ModelToDomOption,
 } from 'roosterjs-content-model';
 
 /**
@@ -44,13 +46,15 @@ export default class ExperimentalContentModelEditor extends Editor
      * Create Content Model from DOM tree in this editor
      * @param startNode Optional start node. If provided, Content Model will be created from this node (including itself),
      * otherwise it will create Content Model for the whole content in editor.
+     * @param option The option to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(startNode?: HTMLElement): ContentModelDocument {
+    createContentModel(startNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument {
         return domToContentModel(
             startNode || this.contentDiv,
             this.createEditorContext(),
             !!startNode,
-            this.getSelectionRangeEx()
+            this.getSelectionRangeEx(),
+            option
         );
     }
 
@@ -58,12 +62,14 @@ export default class ExperimentalContentModelEditor extends Editor
      * Set content with content model
      * @param model The content model to set
      * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
+     * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(
         model: ContentModelDocument,
-        mergingCallback: (fragment: DocumentFragment) => void = this.defaultMergingCallback
+        mergingCallback: (fragment: DocumentFragment) => void = this.defaultMergingCallback,
+        option?: ModelToDomOption
     ) {
-        const [fragment, range] = contentModelToDom(model, this.createEditorContext());
+        const [fragment, range] = contentModelToDom(model, this.createEditorContext(), option);
 
         switch (range?.type) {
             case SelectionRangeTypes.Normal:
@@ -86,7 +92,10 @@ export default class ExperimentalContentModelEditor extends Editor
     }
 
     private defaultMergingCallback = (fragment: DocumentFragment) => {
-        this.setContent('');
-        this.insertNode(fragment);
+        while (this.contentDiv.firstChild) {
+            this.contentDiv.removeChild(this.contentDiv.firstChild);
+        }
+
+        this.insertNode(fragment, { position: ContentPosition.Begin });
     };
 }

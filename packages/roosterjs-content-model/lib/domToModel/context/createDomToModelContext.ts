@@ -1,5 +1,9 @@
+import { defaultProcessorMap } from './defaultProcessors';
+import { defaultStyleMap } from './defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
+import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
+import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
@@ -7,7 +11,8 @@ import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
  */
 export function createDomToModelContext(
     editorContext?: EditorContext,
-    range?: SelectionRangeEx
+    range?: SelectionRangeEx,
+    options?: DomToModelOption
 ): DomToModelContext {
     const context: DomToModelContext = {
         ...(editorContext || {
@@ -19,6 +24,18 @@ export function createDomToModelContext(
 
         segmentFormat: {},
         isInSelection: false,
+
+        elementProcessors: {
+            ...defaultProcessorMap,
+            ...(options?.processorOverride || {}),
+        },
+
+        defaultStyles: {
+            ...defaultStyleMap,
+            ...(options?.defaultStyleOverride || {}),
+        },
+
+        formatParsers: getFormatParsers(options?.formatParserOverride),
     };
 
     switch (range?.type) {

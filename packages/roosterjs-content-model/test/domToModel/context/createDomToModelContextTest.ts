@@ -1,5 +1,8 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
+import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
+import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createDomToModelContext', () => {
@@ -9,7 +12,11 @@ describe('createDomToModelContext', () => {
         isRightToLeft: false,
         getDarkColor: undefined,
     };
-
+    const contextOptions = {
+        elementProcessors: defaultProcessorMap,
+        defaultStyles: defaultStyleMap,
+        formatParsers: getFormatParsers(),
+    };
     it('no param', () => {
         const context = createDomToModelContext();
 
@@ -17,6 +24,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             isInSelection: false,
+            ...contextOptions,
         });
     });
 
@@ -34,6 +42,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             isInSelection: false,
+            ...contextOptions,
         });
     });
 
@@ -62,6 +71,7 @@ describe('createDomToModelContext', () => {
                 endOffset: 1,
                 isSelectionCollapsed: false,
             },
+            ...contextOptions,
         });
     });
 
@@ -86,6 +96,7 @@ describe('createDomToModelContext', () => {
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
             },
+            ...contextOptions,
         });
     });
 });

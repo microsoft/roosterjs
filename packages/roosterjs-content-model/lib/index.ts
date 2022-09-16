@@ -29,6 +29,7 @@ export { ContentModelBr } from './publicTypes/segment/ContentModelBr';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 
+export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './publicTypes/format/ContentModelTableCellFormat';
 export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegmentFormat';
@@ -62,6 +63,12 @@ export {
     DomToModelImageSelection,
     DomToModelSelectionContext,
 } from './publicTypes/context/DomToModelSelectionContext';
+export {
+    DomToModelSettings,
+    DefaultStyleMap,
+    FormatParser,
+    FormatParsers,
+} from './publicTypes/context/DomToModelSettings';
 export { DomToModelContext } from './publicTypes/context/DomToModelContext';
 export { ModelToDomContext } from './publicTypes/context/ModelToDomContext';
 export {
@@ -70,6 +77,15 @@ export {
     ModelToDomTableSelection,
     ModelToDomSelectionContext,
 } from './publicTypes/context/ModelToDomSelectionContext';
+export {
+    ModelToDomSettings,
+    FormatApplier,
+    FormatAppliers,
+} from './publicTypes/context/ModelToDomSettings';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
 
-export { IExperimentalContentModelEditor } from './publicTypes/IExperimentalContentModelEditor';
+export {
+    IExperimentalContentModelEditor,
+    DomToModelOption,
+    ModelToDomOption,
+} from './publicTypes/IExperimentalContentModelEditor';
