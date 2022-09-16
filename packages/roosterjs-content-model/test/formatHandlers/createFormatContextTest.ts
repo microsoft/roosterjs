@@ -1,7 +1,14 @@
 import { createDomToModelContext } from '../../lib/domToModel/context/createDomToModelContext';
+import { defaultProcessorMap } from '../../lib/domToModel/context/defaultProcessors';
+import { defaultStyleMap } from '../../lib/domToModel/context/defaultStyles';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createFormatContextTest', () => {
+    const contextOptions = {
+        elementProcessors: defaultProcessorMap,
+        defaultStyles: defaultStyleMap,
+    };
+
     it('empty parameter', () => {
         const context = createDomToModelContext();
 
@@ -12,6 +19,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: undefined,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -32,6 +40,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -71,6 +80,7 @@ describe('createFormatContextTest', () => {
                 isSelectionCollapsed: false,
             },
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -122,6 +132,7 @@ describe('createFormatContextTest', () => {
                 },
             },
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -149,6 +160,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -178,6 +190,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 });
