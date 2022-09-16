@@ -1,7 +1,8 @@
 import { ContentModelDocument } from './block/group/ContentModelDocument';
-import { DefaultStyleMap } from './context/DomToModelSettings';
+import { DefaultStyleMap, FormatParsers } from './context/DomToModelSettings';
 import { EditorContext } from './context/EditorContext';
 import { ElementProcessor } from './context/ElementProcessor';
+import { FormatAppliers } from './context/ModelToDomSettings';
 import { IEditor } from 'roosterjs-editor-types';
 
 /**
@@ -17,14 +18,18 @@ export interface DomToModelOption {
      * Overrides default element styles
      */
     defaultStyleOverride?: DefaultStyleMap;
+
+    /**
+     * Overrides default format handlers
+     */
+    formatParserOverride?: Partial<FormatParsers>;
 }
 
 /**
  * Options for creating ModelToDomContext
  */
-// tslint:disable no-empty-interface
 export interface ModelToDomOption {
-    // TODO: Add options here
+    formatApplierOverride?: Partial<FormatAppliers>;
 }
 
 /**
