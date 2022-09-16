@@ -1,3 +1,4 @@
+import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionInBlock';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { deleteTableRow } from '../../../lib/modelApi/table/deleteTableRow';
@@ -68,6 +69,9 @@ describe('deleteTableRow', () => {
             widths: [],
             heights: [],
         });
+
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with selection at end', () => {
@@ -89,6 +93,9 @@ describe('deleteTableRow', () => {
             widths: [],
             heights: [],
         });
+
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with multiple selection', () => {
@@ -111,6 +118,8 @@ describe('deleteTableRow', () => {
             widths: [],
             heights: [],
         });
+
+        expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with full selection', () => {
@@ -160,6 +169,10 @@ describe('deleteTableRow', () => {
         expect(cell1.spanAbove).toBeFalse();
         expect(cell3.spanAbove).toBeFalse();
         expect(cell4.spanAbove).toBeFalse();
+
+        expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with selection spanned cell - 2', () => {
@@ -187,6 +200,10 @@ describe('deleteTableRow', () => {
         expect(cell1.spanAbove).toBeFalse();
         expect(cell3.spanAbove).toBeFalse();
         expect(cell4.spanAbove).toBeFalse();
+
+        expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with selection spanned cell - 3', () => {
@@ -214,6 +231,10 @@ describe('deleteTableRow', () => {
         expect(cell1.spanAbove).toBeFalse();
         expect(cell3.spanAbove).toBeTrue();
         expect(cell4.spanAbove).toBeFalse();
+
+        expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with selection spanned cell - 4', () => {
@@ -241,6 +262,10 @@ describe('deleteTableRow', () => {
         expect(cell1.spanAbove).toBeFalse();
         expect(cell2.spanAbove).toBeTrue();
         expect(cell4.spanAbove).toBeFalse();
+
+        expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell2.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeTrue();
     });
 
     it('table with selection and multi columns', () => {
@@ -262,6 +287,9 @@ describe('deleteTableRow', () => {
             widths: [],
             heights: [],
         });
+
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with selection and multi columns and colspan', () => {
@@ -286,6 +314,9 @@ describe('deleteTableRow', () => {
 
         expect(cell3.spanLeft).toBeFalse();
         expect(cell4.spanLeft).toBeTrue();
+
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with selection and multi columns and colspan', () => {
@@ -310,6 +341,9 @@ describe('deleteTableRow', () => {
 
         expect(cell3.spanLeft).toBeFalse();
         expect(cell4.spanLeft).toBeFalse();
+
+        expect(cell3.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 
     it('table with selection and multi columns and multi span', () => {
@@ -353,5 +387,12 @@ describe('deleteTableRow', () => {
         expect(cell8.spanAbove).toBeFalse();
         expect(cell9.spanLeft).toBeFalse();
         expect(cell9.spanAbove).toBeFalse();
+
+        expect(cell6.blocks.some(hasSelectionInBlock)).toBeTrue();
+        expect(cell4.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell5.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell7.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell8.blocks.some(hasSelectionInBlock)).toBeFalse();
+        expect(cell9.blocks.some(hasSelectionInBlock)).toBeFalse();
     });
 });

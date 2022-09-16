@@ -21,7 +21,6 @@ export function deleteTableColumn(table: ContentModelTable) {
         }
 
         table.widths.splice(sel.firstCol, sel.lastCol - sel.firstCol + 1);
-
         collapseTableSelection(table.cells, sel);
     }
 }
