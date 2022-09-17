@@ -30,7 +30,6 @@ describe('generalProcessor', () => {
         generalProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [block],
             document: document,
