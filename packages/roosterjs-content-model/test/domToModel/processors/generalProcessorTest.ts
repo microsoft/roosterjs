@@ -58,7 +58,6 @@ describe('generalProcessor', () => {
         generalProcessor(doc, span, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -83,7 +82,6 @@ describe('generalProcessor', () => {
         generalProcessor(doc, span, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {

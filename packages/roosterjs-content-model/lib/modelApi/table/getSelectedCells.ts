@@ -1,4 +1,4 @@
-import hasSelectionInBlock from '../../publicApi/selection/hasSelectionInBlock';
+import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { TableSelectionCoordinates } from '../selection/setSelectionToTable';
 
@@ -14,7 +14,7 @@ export function getSelectedCells(table: ContentModelTable): TableSelectionCoordi
 
     table.cells.forEach((row, rowIndex) =>
         row.forEach((cell, colIndex) => {
-            if (hasSelectionInBlock(cell)) {
+            if (hasSelectionInBlockGroup(cell)) {
                 hasSelection = true;
 
                 if (firstRow < 0) {
