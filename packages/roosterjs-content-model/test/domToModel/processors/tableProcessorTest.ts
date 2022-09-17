@@ -36,7 +36,6 @@ describe('tableProcessor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanAbove: false,
                         spanLeft: false,
@@ -227,7 +226,6 @@ describe('tableProcessor with format', () => {
         expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             document: document,
             blocks: [
@@ -236,7 +234,6 @@ describe('tableProcessor with format', () => {
                     cells: [
                         [
                             {
-                                blockType: 'BlockGroup',
                                 blockGroupType: 'TableCell',
                                 blocks: [
                                     {
@@ -304,7 +301,6 @@ describe('tableProcessor with format', () => {
         tableProcessor(doc, mockedTable, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             document: document,
             blocks: [
@@ -316,7 +312,6 @@ describe('tableProcessor with format', () => {
                     cells: [
                         [
                             {
-                                blockType: 'BlockGroup',
                                 blockGroupType: 'TableCell',
                                 format: {},
                                 blocks: [],

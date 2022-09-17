@@ -15,7 +15,6 @@ describe('textProcessor', () => {
         textProcessor(doc, 'test', context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -44,7 +43,6 @@ describe('textProcessor', () => {
         textProcessor(doc, 'test', context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -78,7 +76,6 @@ describe('textProcessor', () => {
         textProcessor(doc, 'test1', context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -115,7 +112,6 @@ describe('textProcessor', () => {
         textProcessor(doc, 'test', context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {

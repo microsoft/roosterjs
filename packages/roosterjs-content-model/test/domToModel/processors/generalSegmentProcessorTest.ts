@@ -31,7 +31,6 @@ describe('generalSegmentProcessor', () => {
         generalSegmentProcessor(doc, span, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -56,7 +55,6 @@ describe('generalSegmentProcessor', () => {
         generalSegmentProcessor(doc, span, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
