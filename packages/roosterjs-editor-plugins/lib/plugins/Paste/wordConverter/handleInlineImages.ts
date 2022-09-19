@@ -4,104 +4,58 @@ export default function handleInlineImages(fragment: DocumentFragment, rtf?: str
     const imageElements = toArray(fragment.querySelectorAll('img'));
 
     if (rtf && imageElements.length > 0) {
-        const imageDataUrls = getImagesFromRtf(rtf);
+        const imageContents = getImagesFromRtf(rtf);
 
-        if (imageElements.length == imageDataUrls.length) {
+        if (imageElements.length == imageContents.length) {
             imageElements.forEach((imageElement, i) => {
-                imageElement.src = imageDataUrls[i];
+                const dataUrl = createDataUrlFromImageContent(imageContents[i]);
+                imageElement.src = 'data:image/png;base64,' + dataUrl;
             });
         }
     }
 }
 
 function getImagesFromRtf(content: string) {
-    const stack: RtfEntry = [];
-    let result: RtfEntry;
+    const knownImageTags: string[] = [];
+    const result: string[] = [];
 
-    for (let i = 0; i < content.length; i++) {
-        const c = content[i];
+    let startIndex = 0;
 
-        switch (c) {
-            case '{':
-                const newObj: RtfEntry = [];
+    while (startIndex >= 0 && startIndex < content.length) {
+        const imageTagStartIndex = content.indexOf('{\\*\\blipuid', startIndex);
+        const imageTagEndIndex =
+            imageTagStartIndex >= 0 ? content.indexOf('}', imageTagStartIndex) : -1;
+        const imageTag =
+            imageTagEndIndex >= 0
+                ? content.substring(imageTagStartIndex + 1, imageTagEndIndex)
+                : '';
 
-                if (stack.length > 0) {
-                    (stack[stack.length - 1] as RtfEntry).push(newObj);
-                }
+        if (imageTag) {
+            const imageStartIndex = imageTagEndIndex + 1;
+            const imageEndIndex = content.indexOf('}', imageStartIndex);
+            const imageData = content.substring(imageStartIndex, imageEndIndex);
 
-                stack.push(newObj);
-                break;
-
-            case '}':
-                result = stack.pop() as RtfEntry;
-
-                break;
-
-            case '\r':
-            case '\n':
-                break;
-
-            default:
-                const obj = stack[stack.length - 1] as RtfEntry;
-
-                if (typeof obj[obj.length - 1] !== 'string') {
-                    obj.push('');
-                }
-
-                obj[obj.length - 1] += c;
-
-                break;
-        }
-    }
-
-    const images: Record<string, string> = {};
-
-    findImageInternal(result, images);
-
-    return Object.values(images);
-}
-
-type RtfEntry = (string | RtfEntry)[];
-
-function findImageInternal(doc: RtfEntry | string, results: Record<string, string>) {
-    if (typeof doc !== 'object') {
-        return;
-    }
-
-    for (let i = 0; i < doc.length; i++) {
-        const item = doc[i];
-
-        if (typeof item != 'object') {
-            continue;
-        }
-
-        const firstChild = item[0];
-        const fileContent = doc[i + 1];
-
-        if (
-            item.length == 1 &&
-            typeof firstChild === 'string' &&
-            firstChild.indexOf('\\*\\blipuid') == 0 &&
-            typeof fileContent == 'string'
-        ) {
-            i++;
-
-            if (!results[firstChild]) {
-                results[firstChild] = createFileFromImageSource(fileContent);
+            if (knownImageTags.indexOf(imageTag) < 0) {
+                result.push(imageData.replace(/[\r\n]/g, ''));
+                knownImageTags.push(imageTag);
             }
+
+            startIndex = imageEndIndex + 1;
         } else {
-            findImageInternal(doc[i], results);
+            break;
         }
     }
+
+    return result;
 }
 
-function createFileFromImageSource(dataUri: string) {
-    const arrayBuilder = new ArrayBuffer(dataUri.length / 2);
+function createDataUrlFromImageContent(content: string) {
+    const arrayBuilder = new ArrayBuffer(content.length / 2);
     const unit8Array = new Uint8Array(arrayBuilder);
 
-    for (let i = 0; i < dataUri.length; i += 2) {
-        unit8Array[i / 2] = parseInt(dataUri[i] + dataUri[i + 1], 16);
+    for (let i = 0; i < content.length; i += 2) {
+        unit8Array[i / 2] = parseInt(content[i] + content[i + 1], 16);
     }
 
-    return 'data:image/png;base64, ' + btoa(String.fromCharCode.apply(null, unit8Array));
+    return btoa(String.fromCharCode.apply(null, unit8Array));
 }
