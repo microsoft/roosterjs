@@ -63,5 +63,5 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
 
     commentsRemoval(sanitizingOption.elementCallbacks, sanitizingOption.cssStyleCallbacks);
 
-    handleInlineImages(event.fragment, clipboardData.rtf);
+    handleInlineImages(fragment, clipboardData.rtf);
 }
