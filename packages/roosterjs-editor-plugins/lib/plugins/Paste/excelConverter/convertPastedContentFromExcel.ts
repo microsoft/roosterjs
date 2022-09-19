@@ -1,3 +1,4 @@
+import handleInlineImages from '../wordConverter/handleInlineImages';
 import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
 
@@ -30,6 +31,8 @@ export default function convertPastedContentFromExcel(
         }
         return true;
     });
+
+    handleInlineImages(fragment, clipboardData.rtf);
 }
 
 /**
