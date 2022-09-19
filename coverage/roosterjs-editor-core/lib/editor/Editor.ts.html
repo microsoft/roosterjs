@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.67% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>227/304</span>
+                <span class='fraction'>228/304</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.25% </span>
+                <span class="strong">61.85% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>155/249</span>
+                <span class='fraction'>154/249</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.07% </span>
+                <span class="strong">75.31% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>60/81</span>
+                <span class='fraction'>61/81</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.88% </span>
+                <span class="strong">74.23% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>215/291</span>
+                <span class='fraction'>216/291</span>
             </div>
         
             
@@ -1517,9 +1517,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">323x</span>
-<span class="cline-any cline-yes">164x</span>
-<span class="cline-any cline-yes">164x</span>
+<span class="cline-any cline-yes">318x</span>
+<span class="cline-any cline-yes">159x</span>
+<span class="cline-any cline-yes">159x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1567,21 +1567,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">751x</span>
-<span class="cline-any cline-yes">751x</span>
+<span class="cline-any cline-yes">706x</span>
+<span class="cline-any cline-yes">706x</span>
 <span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">72x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">679x</span>
-<span class="cline-any cline-yes">679x</span>
+<span class="cline-any cline-yes">634x</span>
+<span class="cline-any cline-yes">634x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">679x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">634x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1590,7 +1587,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">679x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">634x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1837,7 +1837,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2151,10 +2151,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">55566x</span>
+<span class="cline-any cline-yes">55554x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">55566x</span>
+<span class="cline-any cline-yes">55554x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2568,7 +2568,7 @@ export default class Editor implements IEditor {
      * Default value is true
      * @returns current selection range, or null if editor never got focus before
      */
-    public getSelectionRange(tryGetFromCache: boolean = true): Range | null {
+    public getSelectionRange(<span class="missing-if-branch" title="else path not taken" >E</span>tryGetFromCache: boolean = true): Range | null {
         const core = this.getCore();
         return core.api.getSelectionRange(core, tryGetFromCache);
     }
@@ -2887,8 +2887,8 @@ export default class Editor implements IEditor {
      * Get a content traverser for the whole editor
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
-<span class="fstat-no" title="function not covered" >    public g</span>etBodyTraverser(startNode?: Node): IContentTraverser {
-<span class="cstat-no" title="statement not covered" >        return ContentTraverser.createBodyTraverser(this.getCore().contentDiv, startNode);</span>
+    public getBodyTraverser(startNode?: Node): IContentTraverser {
+        return ContentTraverser.createBodyTraverser(this.getCore().contentDiv, startNode);
     }
 &nbsp;
     /**
@@ -3217,7 +3217,7 @@ export default class Editor implements IEditor {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Sep 17 2022 02:23:46 GMT+0000 (Coordinated Universal Time)
+                at Mon Sep 19 2022 17:26:26 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
