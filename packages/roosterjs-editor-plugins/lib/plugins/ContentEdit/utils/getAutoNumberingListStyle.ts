@@ -21,6 +21,8 @@ const characters: Record<string, number> = {
     ')': Character.Parenthesis,
 };
 
+const numberingTriggers = ['1', 'a', 'A', 'I', 'i'];
+
 const identifyNumberingType = (text: string) => {
     if (!isNaN(parseInt(text))) {
         return NumberingTypes.Decimal;
@@ -101,7 +103,7 @@ const identifyNumberingListType = (
 /**
  * @internal
  * @param textBeforeCursor The trigger character
- * @param startNumber (Optional) Start number of the list
+ * @param isTheFirstItem (Optional) Is the start number of a list.
  * @returns The style of a numbering list triggered by a string
  */
 export default function getAutoNumberingListStyle(
@@ -110,8 +112,9 @@ export default function getAutoNumberingListStyle(
 ): NumberingListType {
     const trigger = textBeforeCursor.trim();
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
+    //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
-    const numberingTriggers = ['1', 'a', 'A', 'I', 'i'];
+
     if (isTheFirstItem && numberingTriggers.indexOf(listIndex) < 0) {
         return null;
     }
