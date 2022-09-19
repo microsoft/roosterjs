@@ -52,10 +52,6 @@ export interface ImageSelectionRange
      * Selected Image
      */
     image: HTMLImageElement;
-    /**
-     * Id of the selected Image
-     */
-    imageId: string | undefined;
 }
 
 /**

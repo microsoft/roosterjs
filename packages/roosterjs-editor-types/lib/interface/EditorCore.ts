@@ -282,8 +282,7 @@ export type SelectTable = (
  */
 export type SelectImage = (
     core: EditorCore,
-    image: HTMLImageElement | null,
-    wrapper?: HTMLSpanElement
+    image: HTMLImageElement | null
 ) => ImageSelectionRange | null;
 
 /**

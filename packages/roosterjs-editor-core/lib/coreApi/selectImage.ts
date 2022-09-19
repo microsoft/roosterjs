@@ -9,25 +9,14 @@ import { EditorCore, SelectImage, SelectionRangeTypes } from 'roosterjs-editor-t
  * @param wrapper Selected image wrapper
  * @returns Selected image information
  */
-export const selectImage: SelectImage = (
-    core: EditorCore,
-    image: HTMLImageElement | null,
-    wrapper?: HTMLSpanElement
-) => {
-    const selectedImage = image
-        ? image
-        : wrapper
-        ? (document.querySelector(`img[id$="${wrapper.id}"]`) as HTMLImageElement)
-        : null;
-    if (selectedImage) {
-        const range = wrapper ? createRange(wrapper) : createRange(selectedImage);
-        core.api.selectRange(core, range);
+export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageElement | null) => {
+    if (image) {
+        const range = createRange(image);
 
         return {
             type: SelectionRangeTypes.ImageSelection,
             ranges: [range],
-            imageId: selectedImage.id,
-            image: selectedImage,
+            image: image,
             areAllCollapsed: range.collapsed,
         };
     }

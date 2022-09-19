@@ -183,6 +183,7 @@ export default class ImageEdit implements EditorPlugin {
         this.disposer();
         this.disposer = null;
         this.editor = null;
+        this.idNumber = 0;
     }
 
     /**
@@ -375,9 +376,6 @@ export default class ImageEdit implements EditorPlugin {
             this.idNumber = this.idNumber + 1;
             const imageId = IMAGE_SELECTED + this.idNumber;
             this.image.id = imageId;
-            wrapper.id = imageId;
-        } else {
-            wrapper.id = this.image.id;
         }
 
         wrapper.style.position = 'relative';

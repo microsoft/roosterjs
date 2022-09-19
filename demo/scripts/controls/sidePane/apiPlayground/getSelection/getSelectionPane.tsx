@@ -42,11 +42,11 @@ export default class GetSelectionPane extends React.Component<ApiPaneProps, Sele
 
     onPluginEvent(e: PluginEvent) {
         if (e.eventType == PluginEventType.MouseUp && !this.state.manualSelect) {
-            this.getSelection();
+            this.updateSelection();
         }
     }
 
-    private getSelection = () => {
+    private updateSelection = () => {
         this.setState({
             selection: this.editor.getSelectionRangeEx(),
         });
@@ -127,7 +127,7 @@ export default class GetSelectionPane extends React.Component<ApiPaneProps, Sele
                     )}
                     {this.state.selection.type === SelectionRangeTypes.ImageSelection && (
                         <>
-                            <div>Image Id: {this.state.selection.imageId}</div>
+                            <div>Image Id: {this.state.selection.image.id}</div>
                         </>
                     )}
                 </div>

@@ -146,16 +146,14 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
 
     private onFocus = () => {
         const { table, coordinates } = this.state.tableSelectionRange || {};
+        const { image } = this.state.imageSelectionRange || {};
 
         if (table && coordinates) {
             this.editor.select(table, coordinates);
+        } else if (image) {
+            this.editor.select(image);
         } else {
             this.editor.select(this.state.selectionRange);
-        }
-
-        const { image } = this.state.imageSelectionRange || {};
-        if (image) {
-            this.editor.select(image);
         }
 
         this.state.selectionRange = null;
