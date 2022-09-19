@@ -14,7 +14,6 @@ describe('Creators', () => {
         const result = createContentModelDocument(document);
 
         expect(result).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
@@ -26,7 +25,6 @@ describe('Creators', () => {
         const result = createContentModelDocument(anotherDoc);
 
         expect(result).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: anotherDoc,
@@ -139,7 +137,6 @@ describe('Creators', () => {
     it('createTableCell from Table Cell - no span', () => {
         const tdModel = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, false /*isHeader*/);
         expect(tdModel).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'TableCell',
             blocks: [],
             spanLeft: false,
@@ -152,7 +149,6 @@ describe('Creators', () => {
     it('createTableCell from Table Cell - span left', () => {
         const tdModel = createTableCell(2 /*colSpan*/, 1 /*rowSpan*/, false /*isHeader*/);
         expect(tdModel).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'TableCell',
             blocks: [],
             spanLeft: true,
@@ -165,7 +161,6 @@ describe('Creators', () => {
     it('createTableCell from Table Cell - span above', () => {
         const tdModel = createTableCell(1 /*colSpan*/, 3 /*rowSpan*/, false /*isHeader*/);
         expect(tdModel).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'TableCell',
             blocks: [],
             spanLeft: false,
@@ -178,7 +173,6 @@ describe('Creators', () => {
     it('createTableCell from Table Header', () => {
         const tdModel = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, true /*isHeader*/);
         expect(tdModel).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'TableCell',
             blocks: [],
             spanLeft: false,
@@ -195,7 +189,6 @@ describe('Creators', () => {
         const tdModel = createTableCell(1 /*colSpan*/, 1 /*rowSpan*/, true /*isHeader*/, format);
 
         expect(tdModel).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'TableCell',
             blocks: [],
             spanLeft: false,
@@ -208,7 +201,6 @@ describe('Creators', () => {
         format.textAlign = 'end';
 
         expect(tdModel).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'TableCell',
             blocks: [],
             spanLeft: false,

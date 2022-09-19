@@ -6,6 +6,7 @@ export { default as setTableCellShade } from './publicApi/table/setTableCellShad
 export { default as editTable } from './publicApi/table/editTable';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
 export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
+export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 
 export { extractBorderValues, combineBorderValue, BorderIndex } from './domUtils/borderValues';
 

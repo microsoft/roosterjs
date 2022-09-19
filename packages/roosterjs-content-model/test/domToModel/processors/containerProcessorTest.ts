@@ -27,7 +27,6 @@ describe('containerProcessor', () => {
         containerProcessor(doc, fragment, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
@@ -43,7 +42,6 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
@@ -60,7 +58,6 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
@@ -79,7 +76,6 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
@@ -106,7 +102,6 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
