@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/18</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.06% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/17</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -106,26 +106,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,27 +141,27 @@ import { stackFormat } from '../utils/stackFormat';
 /**
  * @internal
  */
-export const knownElementProcessor: ElementProcessor = <span class="fstat-no" title="function not covered" >(g</span>roup, element, context) =&gt; {
-<span class="cstat-no" title="statement not covered" >    if (isBlockElement(element)) {</span>
-<span class="cstat-no" title="statement not covered" >        stackFormat(</span>
+export const knownElementProcessor: ElementProcessor = (group, element, context) =&gt; {
+    if (isBlockElement(element)) {
+        stackFormat(
             context,
             {
                 segment: 'shallowClone',
             },
-<span class="fstat-no" title="function not covered" >            () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);</span>
+            () =&gt; {
+                parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                addBlock(group, createParagraph(false /*isImplicit*/));</span>
+                addBlock(group, createParagraph(false /*isImplicit*/));
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                containerProcessor(group, element, context);</span>
+                containerProcessor(group, element, context);
             }
         );
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        addBlock(group, createParagraph(false /*isImplicit*/));</span>
+        addBlock(group, createParagraph(false /*isImplicit*/));
     } else {
-<span class="cstat-no" title="statement not covered" >        stackFormat(context, { segment: 'shallowClone' }, <span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);</span>
-<span class="cstat-no" title="statement not covered" >            containerProcessor(group, element, context);</span>
+        stackFormat(context, { segment: 'shallowClone' }, () =&gt; {
+            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
+            containerProcessor(group, element, context);
         });
     }
 };
@@ -172,7 +172,7 @@ export const knownElementProcessor: ElementProcessor = <span class="fstat-no" ti
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Sep 19 2022 17:26:26 GMT+0000 (Coordinated Universal Time)
+                at Mon Sep 19 2022 21:34:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
