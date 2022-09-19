@@ -1,4 +1,5 @@
 import commentsRemoval from './commentsRemoval';
+import handleInlineImages from './handleInlineImages';
 import { BeforePasteEvent } from 'roosterjs-editor-types';
 import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
 import { createWordConverter } from './wordConverter';
@@ -13,7 +14,7 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
  * Converts all the Word generated list items in the specified node into standard HTML UL and OL tags
  */
 export default function convertPastedContentFromWord(event: BeforePasteEvent) {
-    const { sanitizingOption, fragment } = event;
+    const { sanitizingOption, fragment, clipboardData } = event;
 
     // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
     chainSanitizerCallback(sanitizingOption.elementCallbacks, 'O:P', element => {
@@ -61,4 +62,6 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
     });
 
     commentsRemoval(sanitizingOption.elementCallbacks, sanitizingOption.cssStyleCallbacks);
+
+    handleInlineImages(event.fragment, clipboardData.rtf);
 }

@@ -25,6 +25,8 @@ const ContentHandlers: {
 } = {
     [ContentType.HTML]: (data, value) =>
         (data.rawHtml = Browser.isEdge ? workaroundForEdge(value) : value),
+    [ContentType.RTF]: (data, value) =>
+        (data.rtf = Browser.isEdge ? workaroundForEdge(value) : value),
     [ContentType.PlainText]: (data, value) => (data.text = value),
     [OTHER_TEXT_TYPE]: (data, value, type?) => !!type && (data.customValues[type] = value),
     [ContentTypePrefix.Text + EDGE_LINK_PREVIEW]: tryParseLinkPreview,
