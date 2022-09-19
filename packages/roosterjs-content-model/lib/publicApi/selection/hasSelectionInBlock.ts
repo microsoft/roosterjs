@@ -1,3 +1,4 @@
+import hasSelectionInBlockGroup from './hasSelectionInBlockGroup';
 import hasSelectionInSegment from './hasSelectionInSegment';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 
@@ -11,18 +12,10 @@ export default function hasSelectionInBlock(block: ContentModelBlock): boolean {
             return block.segments.some(hasSelectionInSegment);
 
         case 'Table':
-            return block.cells.some(row => row.some(hasSelectionInBlock));
+            return block.cells.some(row => row.some(hasSelectionInBlockGroup));
 
         case 'BlockGroup':
-            if (block.blockGroupType == 'TableCell' && block.isSelected) {
-                return true;
-            }
-
-            if (block.blocks.some(hasSelectionInBlock)) {
-                return true;
-            }
-
-            return false;
+            return hasSelectionInBlockGroup(block);
 
         default:
             return false;

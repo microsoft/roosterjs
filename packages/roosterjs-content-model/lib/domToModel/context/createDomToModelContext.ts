@@ -3,6 +3,7 @@ import { defaultStyleMap } from './defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
+import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
@@ -33,6 +34,8 @@ export function createDomToModelContext(
             ...defaultStyleMap,
             ...(options?.defaultStyleOverride || {}),
         },
+
+        formatParsers: getFormatParsers(options?.formatParserOverride),
     };
 
     switch (range?.type) {
