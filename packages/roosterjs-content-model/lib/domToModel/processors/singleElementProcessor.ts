@@ -1,7 +1,5 @@
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { generalBlockProcessor } from './generalBlockProcessor';
-import { generalSegmentProcessor } from './generalSegmentProcessor';
-import { isBlockElement } from 'roosterjs-editor-dom';
+import { generalProcessor } from './generalProcessor';
 
 /**
  * @internal
@@ -10,9 +8,6 @@ import { isBlockElement } from 'roosterjs-editor-dom';
  * @param context
  */
 export const singleElementProcessor: ElementProcessor = (group, element, context) => {
-    const processor =
-        context.elementProcessors[element.tagName] ||
-        (isBlockElement(element) ? generalBlockProcessor : generalSegmentProcessor);
-
+    const processor = context.elementProcessors[element.tagName] || generalProcessor;
     processor(group, element, context);
 };
