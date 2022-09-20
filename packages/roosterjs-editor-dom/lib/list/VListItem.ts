@@ -283,6 +283,11 @@ export default class VListItem {
      * @param originalRoot Original list root element. It will be reused when write back if possible
      */
     writeBack(listStack: Node[], originalRoot?: HTMLOListElement | HTMLUListElement) {
+        // Remove any un-needed lists from the stack.
+        if (listStack.length > this.listTypes.length) {
+            listStack.splice(this.listTypes.length);
+        }
+
         // 1. If the listStack is the same length as the listTypes for this item, check
         // if the last item needs to change, and remove it if needed. We can always re-use
         // the other lists even if the type doesn't match - since the display is the same
