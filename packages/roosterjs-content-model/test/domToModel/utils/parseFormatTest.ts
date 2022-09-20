@@ -15,7 +15,7 @@ describe('parseFormat', () => {
 
     it('one handlers', () => {
         const element = document.createElement('div');
-        const defaultContext = createDomToModelContext(undefined, undefined, {
+        const defaultContext = createDomToModelContext(undefined, {
             formatParserOverride: {
                 id: (format, e, c, defaultStyle) => {
                     expect(e).toBe(element);
@@ -37,7 +37,7 @@ describe('parseFormat', () => {
 describe('Default styles', () => {
     function runTest(tag: string, expectResult: Partial<CSSStyleDeclaration>) {
         const element = document.createElement(tag);
-        const defaultContext = createDomToModelContext(undefined, undefined, {
+        const defaultContext = createDomToModelContext(undefined, {
             formatParserOverride: {
                 id: (format, e, c, defaultStyle) => {
                     expect(defaultStyle).toEqual(expectResult);
