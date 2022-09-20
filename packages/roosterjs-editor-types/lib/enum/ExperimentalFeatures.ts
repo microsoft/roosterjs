@@ -101,4 +101,12 @@ export const enum ExperimentalFeatures {
      * e.g. We will move list items with "display: block" into previous list item and change tag to be DIV
      */
     NormalizeList = 'NormalizeList',
+
+    /**
+     * With this feature enabled, when writing back a list item we will re-use all
+     * ancestor list elements, even if they don't match the types currently in the
+     * listTypes array for that item. The only list that we will ensure is correct
+     * is the one closest to the item.
+     */
+    ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
 }

@@ -1,4 +1,4 @@
-import { IEditor } from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
 import { Position, VListChain } from 'roosterjs-editor-dom';
 
 /**
@@ -11,7 +11,9 @@ export default function commitListChains(editor: IEditor, chains: VListChain[]) 
         const range = editor.getSelectionRange();
         const start = range && Position.getStart(range);
         const end = range && Position.getEnd(range);
-        chains.forEach(chain => chain.commit());
+        chains.forEach(chain =>
+            chain.commit(editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements))
+        );
         editor.select(start, end);
     }
 }

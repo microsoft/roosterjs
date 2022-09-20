@@ -282,25 +282,46 @@ export default class VListItem {
      * @param listStack current stack of list elements
      * @param originalRoot Original list root element. It will be reused when write back if possible
      */
-    writeBack(listStack: Node[], originalRoot?: HTMLOListElement | HTMLUListElement) {
-        // Remove any un-needed lists from the stack.
-        if (listStack.length > this.listTypes.length) {
-            listStack.splice(this.listTypes.length);
-        }
+    writeBack(
+        listStack: Node[],
+        originalRoot: HTMLOListElement | HTMLUListElement,
+        shouldReuseAllAncestorListElements: boolean
+    ) {
+        let nextLevel = 1;
 
-        // 1. If the listStack is the same length as the listTypes for this item, check
-        // if the last item needs to change, and remove it if needed. We can always re-use
-        // the other lists even if the type doesn't match - since the display is the same
-        // as long as the list immediately surrounding the item is correct.
-        const listStackEndIndex = listStack.length - 1;
-        if (
-            listStackEndIndex === this.listTypes.length - 1 && // they are the same length
-            getListTypeFromNode(listStack[listStackEndIndex]) !== this.listTypes[listStackEndIndex]
-        ) {
-            listStack.splice(listStackEndIndex);
-        }
+        if (shouldReuseAllAncestorListElements) {
+            // Remove any un-needed lists from the stack.
+            if (listStack.length > this.listTypes.length) {
+                listStack.splice(this.listTypes.length);
+            }
 
-        let nextLevel = listStack.length;
+            // 1. If the listStack is the same length as the listTypes for this item, check
+            // if the last item needs to change, and remove it if needed. We can always re-use
+            // the other lists even if the type doesn't match - since the display is the same
+            // as long as the list immediately surrounding the item is correct.
+            const listStackEndIndex = listStack.length - 1;
+            if (
+                listStackEndIndex === this.listTypes.length - 1 && // they are the same length
+                getListTypeFromNode(listStack[listStackEndIndex]) !==
+                    this.listTypes[listStackEndIndex]
+            ) {
+                listStack.splice(listStackEndIndex);
+            }
+
+            nextLevel = listStack.length;
+        } else {
+            // 1. Determine list elements that we can reuse
+            // e.g.:
+            //    passed in listStack: Fragment > OL > UL > OL
+            //    local listTypes:     null     > OL > UL > UL > OL
+            //    then Fragment > OL > UL can be reused
+            for (; nextLevel < listStack.length; nextLevel++) {
+                if (getListTypeFromNode(listStack[nextLevel]) !== this.listTypes[nextLevel]) {
+                    listStack.splice(nextLevel);
+                    break;
+                }
+            }
+        }
 
         // 2. Add new list elements
         // e.g.:
