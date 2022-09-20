@@ -504,7 +504,7 @@ export default class Editor implements IEditor {
         arg2?: NodePosition | number | PositionType | TableSelection
     ) {
         if (safeInstanceOf(arg, 'HTMLImageElement') && !arg2) {
-            const selection = core.api.selectImage(core, arg);
+            const selection = core.api.selectImage(arg);
             return selection;
         }
 
@@ -513,11 +513,11 @@ export default class Editor implements IEditor {
             const argClass = argElement.className;
             if (argClass.indexOf('IMAGE_EDIT_WRAPPER') >= 0) {
                 const image = argElement.getElementsByTagName('img')[0];
-                const selection = core.api.selectImage(core, image);
+                const selection = core.api.selectImage(image);
                 return selection;
             }
         } else {
-            core.api.selectImage(core, null);
+            core.api.selectImage(null);
         }
     }
 

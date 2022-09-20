@@ -280,10 +280,7 @@ export type SelectTable = (
  * selecting, will unselect the table.
  * @returns true if successful
  */
-export type SelectImage = (
-    core: EditorCore,
-    image: HTMLImageElement | null
-) => ImageSelectionRange | null;
+export type SelectImage = (image: HTMLImageElement | null) => ImageSelectionRange | null;
 
 /**
  * The interface for the map of core API.
