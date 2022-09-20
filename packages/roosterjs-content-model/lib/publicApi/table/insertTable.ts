@@ -36,7 +36,9 @@ export default function insertTable(
 
     editor.addUndoSnapshot(
         () => {
-            editor.setContentModel(doc, fragment => editor.insertNode(fragment));
+            editor.setContentModel(doc, {
+                mergingCallback: fragment => editor.insertNode(fragment),
+            });
         },
         ChangeSource.Format,
         false /*canUndoByBackspace*/,
