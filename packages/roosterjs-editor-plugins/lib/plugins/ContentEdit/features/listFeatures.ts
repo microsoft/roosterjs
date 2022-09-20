@@ -159,7 +159,10 @@ function isAListPattern(textBeforeCursor: string) {
 const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (!cacheGetListElement(event, editor)) {
+        if (
+            !cacheGetListElement(event, editor) &&
+            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
+        ) {
             let searcher = editor.getContentSearcherOfCursor(event);
             let textBeforeCursor = searcher.getSubStringBefore(4);
 
@@ -261,29 +264,16 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
         event.rawEvent.preventDefault();
         editor.addUndoSnapshot(
             () => {
-                let regions: RegionBase[];
-                let searcher = editor.getContentSearcherOfCursor();
-                let textBeforeCursor = searcher.getSubStringBefore(5);
-                let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
+                const searcher = editor.getContentSearcherOfCursor();
+                const textBeforeCursor = searcher.getSubStringBefore(5);
+                const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
-                if (!textRange) {
-                    // no op if the range can't be found
-                } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
-                    const num = parseInt(textBeforeCursor);
-                    const listStyle = getAutoNumberingListStyle(textBeforeCursor, num);
-                    prepareAutoBullet(editor, textRange);
-                    toggleNumbering(
-                        editor,
-                        num,
-                        listStyle,
-                        'autoToggleList' /** apiNameOverride */
-                    );
-                } else {
+                if (textRange) {
                     const listStyle = getAutoNumberingListStyle(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
                         editor,
-                        undefined /* startNumber*/,
+                        undefined /** startNumber */,
                         listStyle,
                         'autoToggleList' /** apiNameOverride */
                     );
@@ -374,14 +364,20 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
 function shouldTriggerList(
     event: PluginKeyboardEvent,
     editor: IEditor,
-    getListStyle: (text: string) => number
+    getListStyle: (text: string, isTheFirstItem?: boolean) => number
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
     const itHasSpace = /\s/g.test(textBeforeCursor);
-
+    const element = editor.getElementAtCursor();
+    const previousNode = editor.getBodyTraverser(element).getPreviousBlockElement();
+    const isLi = previousNode
+        ? getTagOfNode(previousNode?.collapseToSingleElement()) === 'LI'
+        : false;
     return (
-        !itHasSpace && !searcher.getNearestNonTextInlineElement() && getListStyle(textBeforeCursor)
+        !itHasSpace &&
+        !searcher.getNearestNonTextInlineElement() &&
+        getListStyle(textBeforeCursor, !isLi)
     );
 }
 
