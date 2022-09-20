@@ -48,7 +48,12 @@ export const enum BulletListType {
     DoubleLongArrow = 8,
 
     /**
+     * Bullet type circle
+     */
+    Circle = 9,
+
+    /**
      * Maximum value of the enum
      */
-    Max = 8,
+    Max = 9,
 }
