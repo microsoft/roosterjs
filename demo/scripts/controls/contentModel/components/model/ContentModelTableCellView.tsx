@@ -12,7 +12,7 @@ import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignF
 import {
     ContentModelTableCell,
     ContentModelTableCellFormat,
-    hasSelectionInBlock,
+    hasSelectionInBlockGroup,
 } from 'roosterjs-content-model';
 
 const styles = require('./ContentModelTableCellView.scss');
@@ -99,7 +99,7 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
             title={isHeader ? 'TableCellHeader' : 'TableCell'}
             subTitle={subTitle}
             className={styles.modelTableCell}
-            hasSelection={hasSelectionInBlock(cell)}
+            hasSelection={hasSelectionInBlockGroup(cell)}
             isSelected={cell.isSelected}
             jsonSource={cell}
             getContent={getContent}
