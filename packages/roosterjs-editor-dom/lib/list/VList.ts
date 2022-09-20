@@ -202,7 +202,7 @@ export default class VList {
                 start = newListStart;
             }
 
-            item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements ?? false);
+            item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements);
             const topList = listStack[1];
 
             if (safeInstanceOf(topList, 'HTMLOListElement')) {

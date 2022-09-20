@@ -281,11 +281,13 @@ export default class VListItem {
      * Write the change result back into DOM
      * @param listStack current stack of list elements
      * @param originalRoot Original list root element. It will be reused when write back if possible
+     * @param shouldReuseAllAncestorListElements Optional - defaults to false. If true, only make
+     *              sure the direct parent of this list matches the list types when writing back.
      */
     writeBack(
         listStack: Node[],
         originalRoot: HTMLOListElement | HTMLUListElement,
-        shouldReuseAllAncestorListElements: boolean
+        shouldReuseAllAncestorListElements: boolean = false
     ) {
         let nextLevel = 1;
 
