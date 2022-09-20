@@ -11,6 +11,11 @@ export default function validate<T>(input: any, def: Definition<T>): input is T 
     let result = false;
     if ((def.isOptional && typeof input === 'undefined') || (def.allowNull && input === null)) {
         result = true;
+    } else if (
+        (!def.isOptional && typeof input === 'undefined') ||
+        (!def.allowNull && input === null)
+    ) {
+        return false;
     } else {
         switch (def.type) {
             case DefinitionType.String:
