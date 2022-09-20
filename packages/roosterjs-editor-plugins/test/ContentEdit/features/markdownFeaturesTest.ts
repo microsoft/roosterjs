@@ -86,42 +86,36 @@ describe('MarkdownFeatures | ', () => {
     }
 
     describe('Should Handle Event | ', () => {
-        describe('MarkdownBold | ', () => {
-            it('Should handle in normal scenario 1', () => {
-                runShouldHandleEvent('*abcd', true /* shouldHandleExpect */, markdownBold);
-            });
+        it('Should handle in normal scenario 1', () => {
+            runShouldHandleEvent('*abcd', true /* shouldHandleExpect */, markdownBold);
+        });
 
-            it('Should handle in normal scenario 2', () => {
-                runShouldHandleEvent('*abcd~', true /* shouldHandleExpect */, markdownBold);
-            });
+        it('Should handle in normal scenario 2', () => {
+            runShouldHandleEvent('*abcd~', true /* shouldHandleExpect */, markdownBold);
+        });
 
-            it('Should handle in normal scenario 3', () => {
-                runShouldHandleEvent(
-                    '*abcd defi 1234',
-                    true /* shouldHandleExpect */,
-                    markdownBold
-                );
-            });
+        it('Should handle in normal scenario 3', () => {
+            runShouldHandleEvent('*abcd defi 1234', true /* shouldHandleExpect */, markdownBold);
+        });
 
-            it('Should handle in normal scenario 4', () => {
-                runShouldHandleEvent('abcd *1234', true /* shouldHandleExpect */, markdownBold);
-            });
+        it('Should handle in normal scenario 4', () => {
+            runShouldHandleEvent('abcd *1234', true /* shouldHandleExpect */, markdownBold);
+        });
 
-            it('Should not handle because of preceding whitespace', () => {
-                runShouldHandleEvent('*abcd ', false /* shouldHandleExpect */, markdownBold);
-            });
+        it('Should not handle because of preceding whitespace', () => {
+            runShouldHandleEvent('*abcd ', false /* shouldHandleExpect */, markdownBold);
+        });
 
-            it('Should not handle because of preceding trigger character', () => {
-                runShouldHandleEvent('*abcd*', false /* shouldHandleExpect */, markdownBold);
-            });
+        it('Should not handle because of preceding trigger character', () => {
+            runShouldHandleEvent('*abcd*', false /* shouldHandleExpect */, markdownBold);
+        });
 
-            it('Should not handle because of multiple whitespace', () => {
-                runShouldHandleEvent('*abcd   ', false /* shouldHandleExpect */, markdownBold);
-            });
+        it('Should not handle because of multiple whitespace', () => {
+            runShouldHandleEvent('*abcd   ', false /* shouldHandleExpect */, markdownBold);
+        });
 
-            it('Should not handle because of wrong starting trigger character', () => {
-                runShouldHandleEvent('-abcd', false /* shouldHandleExpect */, markdownBold);
-            });
+        it('Should not handle because of wrong starting trigger character', () => {
+            runShouldHandleEvent('-abcd', false /* shouldHandleExpect */, markdownBold);
         });
     });
 
