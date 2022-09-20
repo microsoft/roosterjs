@@ -13,7 +13,6 @@ describe('createTableStructure', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         format: {},

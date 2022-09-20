@@ -2,7 +2,7 @@ import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDoc
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { handleBlock } from '../modelToDom/handlers/handleBlock';
+import { handleBlockGroup } from '../modelToDom/handlers/handleBlockGroup';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
@@ -31,7 +31,7 @@ export default function contentModelToDom(
     const fragment = model.document.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
-    handleBlock(model.document, fragment, model, modelToDomContext);
+    handleBlockGroup(model.document, fragment, model, modelToDomContext);
     optimize(fragment, 2 /*optimizeLevel*/);
 
     const range = extractSelectionRange(modelToDomContext);

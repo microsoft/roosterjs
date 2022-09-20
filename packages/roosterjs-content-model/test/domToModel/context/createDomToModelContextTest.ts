@@ -2,6 +2,7 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
 import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
+import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createDomToModelContext', () => {
@@ -14,6 +15,7 @@ describe('createDomToModelContext', () => {
     const contextOptions = {
         elementProcessors: defaultProcessorMap,
         defaultStyles: defaultStyleMap,
+        formatParsers: getFormatParsers(),
     };
     it('no param', () => {
         const context = createDomToModelContext();

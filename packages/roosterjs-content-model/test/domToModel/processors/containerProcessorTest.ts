@@ -1,12 +1,8 @@
-import * as generalBlockProcessor from '../../../lib/domToModel/processors/generalBlockProcessor';
-import * as generalSegmentProcessor from '../../../lib/domToModel/processors/generalSegmentProcessor';
 import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 
 describe('containerProcessor', () => {
@@ -16,8 +12,6 @@ describe('containerProcessor', () => {
     beforeEach(() => {
         doc = createContentModelDocument(document);
         context = createDomToModelContext();
-        spyOn(generalBlockProcessor, 'generalBlockProcessor');
-        spyOn(generalSegmentProcessor, 'generalSegmentProcessor');
         spyOn(textProcessor, 'textProcessor');
     });
 
@@ -27,13 +21,10 @@ describe('containerProcessor', () => {
         containerProcessor(doc, fragment, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(generalBlockProcessor.generalBlockProcessor).not.toHaveBeenCalled();
-        expect(generalSegmentProcessor.generalSegmentProcessor).not.toHaveBeenCalled();
         expect(textProcessor.textProcessor).not.toHaveBeenCalled();
     });
 
@@ -43,13 +34,10 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(generalBlockProcessor.generalBlockProcessor).not.toHaveBeenCalled();
-        expect(generalSegmentProcessor.generalSegmentProcessor).not.toHaveBeenCalled();
         expect(textProcessor.textProcessor).not.toHaveBeenCalled();
     });
 
@@ -60,13 +48,10 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(generalBlockProcessor.generalBlockProcessor).not.toHaveBeenCalled();
-        expect(generalSegmentProcessor.generalSegmentProcessor).not.toHaveBeenCalled();
         expect(textProcessor.textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor.textProcessor).toHaveBeenCalledWith(doc, 'test', context);
     });
@@ -79,18 +64,10 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(generalBlockProcessor.generalBlockProcessor).not.toHaveBeenCalled();
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
-            doc,
-            span,
-            context
-        );
         expect(textProcessor.textProcessor).not.toHaveBeenCalled();
     });
 
@@ -106,23 +83,19 @@ describe('containerProcessor', () => {
         containerProcessor(doc, div, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
-            blocks: [],
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                },
+            ],
             document: document,
         });
-        expect(generalBlockProcessor.generalBlockProcessor).toHaveBeenCalledTimes(1);
-        expect(generalBlockProcessor.generalBlockProcessor).toHaveBeenCalledWith(
-            doc,
-            innerDiv,
-            context
-        );
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledTimes(1);
-        expect(generalSegmentProcessor.generalSegmentProcessor).toHaveBeenCalledWith(
-            doc,
-            span,
-            context
-        );
         expect(textProcessor.textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor.textProcessor).toHaveBeenCalledWith(doc, 'test', context);
     });
@@ -135,17 +108,6 @@ describe('containerProcessor', () => {
     beforeEach(() => {
         doc = createContentModelDocument(document);
         context = createDomToModelContext();
-        spyOn(generalSegmentProcessor, 'generalSegmentProcessor').and.callFake(
-            (group, element, context) => {
-                const segment = createText(element.textContent!) as any;
-
-                if (context.isInSelection) {
-                    segment.isSelected = true;
-                }
-
-                addSegment(group, segment);
-            }
-        );
     });
 
     it('Process a DIV with element selection', () => {
@@ -201,8 +163,7 @@ describe('containerProcessor', () => {
                     isSelected: true,
                     format: {},
                 },
-                { segmentType: 'Text', text: 'test2', format: {} },
-                { segmentType: 'Text', text: 'test3', format: {} },
+                { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
         });
@@ -285,12 +246,8 @@ describe('containerProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'Text', text: 'test1test2', format: {} },
-                {
-                    segmentType: 'SelectionMarker',
-                    isSelected: true,
-                    format: {},
-                },
+                { segmentType: 'Text', text: 'test1', format: {} },
+                { segmentType: 'Text', text: 'test2', format: {}, isSelected: true },
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,

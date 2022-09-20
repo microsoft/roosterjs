@@ -2,7 +2,7 @@ import * as React from 'react';
 import { applyTableFormat } from 'roosterjs-content-model/lib/modelApi/table/applyTableFormat';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
-import { ContentModelBlockView } from './ContentModelBlockView';
+import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
 import { ContentModelView } from '../ContentModelView';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
@@ -48,7 +48,7 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
                 {table.cells.map((row, i) => (
                     <div className={styles.tableRow} key={i}>
                         {row.map((cell, j) => (
-                            <ContentModelBlockView block={cell} key={j} />
+                            <ContentModelBlockGroupView group={cell} key={j} />
                         ))}
                     </div>
                 ))}

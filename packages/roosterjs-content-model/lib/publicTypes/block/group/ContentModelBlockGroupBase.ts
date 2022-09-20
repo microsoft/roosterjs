@@ -1,12 +1,10 @@
 import { ContentModelBlock } from '../ContentModelBlock';
-import { ContentModelBlockBase } from '../ContentModelBlockBase';
 import { ContentModelBlockGroupType } from '../../enum/BlockGroupType';
 
 /**
  * Base type of Content Model Block Group
  */
-export interface ContentModelBlockGroupBase<T extends ContentModelBlockGroupType>
-    extends ContentModelBlockBase<'BlockGroup'> {
+export interface ContentModelBlockGroupBase<T extends ContentModelBlockGroupType> {
     /**
      * Type of this block group
      */

@@ -17,7 +17,6 @@ describe('brProcessor', () => {
         brProcessor(doc, br, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -44,7 +43,6 @@ describe('brProcessor', () => {
         brProcessor(doc, br, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {

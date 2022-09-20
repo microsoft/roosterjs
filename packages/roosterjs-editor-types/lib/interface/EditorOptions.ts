@@ -1,6 +1,7 @@
 import CorePlugins from './CorePlugins';
 import DefaultFormat from './DefaultFormat';
 import EditorPlugin from './EditorPlugin';
+import Rect from './Rect';
 import Snapshot from './Snapshot';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
@@ -127,4 +128,9 @@ export default interface EditorOptions {
      * @deprecated Use zoomScale instead
      */
     sizeTransformer?: SizeTransformer;
+
+    /**
+     * Retrieves the visible viewport of the Editor. The default viewport is the Rect of the scrollContainer.
+     */
+    getVisibleViewport?: () => Rect | null;
 }

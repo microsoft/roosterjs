@@ -19,7 +19,6 @@ describe('fontProcessor', () => {
         fontProcessor(doc, font, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [],
             document: document,
