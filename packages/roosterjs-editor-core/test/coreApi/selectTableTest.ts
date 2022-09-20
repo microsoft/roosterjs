@@ -4,34 +4,32 @@ import { EditorCore, TableSelection } from 'roosterjs-editor-types';
 import { selectTable } from '../../lib/coreApi/selectTable';
 
 describe('selectTable |', () => {
-    let div: HTMLDivElement;
+    let div: HTMLDivElement | null;
     let table: HTMLTableElement | null;
     let core: EditorCore | null;
 
     beforeEach(() => {
-        document.body.innerHTML = '';
         div = document.createElement('div');
-        div.innerHTML = buildTableHTML(true /* tbody */);
+        div!.innerHTML = buildTableHTML(true /* tbody */);
 
-        table = div.querySelector('table');
-        document.body.appendChild(div);
+        table = div!.querySelector('table');
+        document.body.appendChild(div!);
 
-        core = createEditorCore(div, {});
+        core = createEditorCore(div!, {});
     });
 
     afterEach(() => {
-        document.body.removeChild(div);
-        let style = document.getElementById('tableStylecontentDiv_0');
-        if (style) {
-            document.head.removeChild(style);
-        }
+        let styles = document.querySelectorAll('#tableStylecontentDiv_0');
+        styles.forEach(s => s.parentElement?.removeChild(s));
 
         core = null;
-        div.parentElement?.removeChild(div);
+        div = null;
+        table = null;
+        document.body.innerHTML = '';
     });
 
     it('Select Table Cells TR under Table Tag', () => {
-        div.innerHTML =
+        div!.innerHTML =
             '<div><table><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></table><br></div>';
 
         selectTable(core, table, <TableSelection>{
@@ -66,9 +64,9 @@ describe('selectTable |', () => {
     });
 
     it('Select TH and TR in the same row', () => {
-        div.innerHTML =
+        div!.innerHTML =
             '<div><table><tr><th>Test</th><td>Test</td></tr><tr><th>Test</th><td>Test</td></tr></table><br></div>';
-        table = div.querySelector('table');
+        table = div!.querySelector('table');
 
         selectTable(core, table, <TableSelection>{
             firstCell: { x: 0, y: 0 },
@@ -86,9 +84,9 @@ describe('selectTable |', () => {
     });
 
     it('Select Table Cells THEAD, TBODY', () => {
-        div.innerHTML = buildTableHTML(true /* tbody */, true /* thead */);
+        div!.innerHTML = buildTableHTML(true /* tbody */, true /* thead */);
 
-        table = div.querySelector('table');
+        table = div!.querySelector('table');
 
         selectTable(core, table, <TableSelection>{
             firstCell: { x: 1, y: 1 },
@@ -106,9 +104,9 @@ describe('selectTable |', () => {
     });
 
     it('Select Table Cells TBODY, TFOOT', () => {
-        div.innerHTML = buildTableHTML(true /* tbody */, false /* thead */, true /* tfoot */);
+        div!.innerHTML = buildTableHTML(true /* tbody */, false /* thead */, true /* tfoot */);
 
-        table = div.querySelector('table');
+        table = div!.querySelector('table');
 
         selectTable(core, table, <TableSelection>{
             firstCell: { x: 1, y: 1 },
@@ -126,8 +124,8 @@ describe('selectTable |', () => {
     });
 
     it('Select Table Cells THEAD, TBODY, TFOOT', () => {
-        div.innerHTML = buildTableHTML(true /* tbody */, true /* thead */, true /* tfoot */);
-        table = div.querySelector('table');
+        div!.innerHTML = buildTableHTML(true /* tbody */, true /* thead */, true /* tfoot */);
+        table = div!.querySelector('table');
 
         selectTable(core, table, <TableSelection>{
             firstCell: { x: 1, y: 1 },
@@ -145,8 +143,8 @@ describe('selectTable |', () => {
     });
 
     it('Select Table Cells THEAD, TFOOT', () => {
-        div.innerHTML = buildTableHTML(false /* tbody */, true /* thead */, true /* tfoot */);
-        table = div.querySelector('table');
+        div!.innerHTML = buildTableHTML(false /* tbody */, true /* thead */, true /* tfoot */);
+        table = div!.querySelector('table');
 
         selectTable(core, table, <TableSelection>{
             firstCell: { x: 1, y: 1 },
@@ -165,9 +163,9 @@ describe('selectTable |', () => {
 
     it('remove duplicated ID', () => {
         const tableHTML = buildTableHTML(true);
-        div.innerHTML = tableHTML + '' + tableHTML;
+        div!.innerHTML = tableHTML + '' + tableHTML;
 
-        const tables = div.querySelectorAll('table');
+        const tables = div!.querySelectorAll('table');
         table = tables[0];
         tables.forEach(table => (table.id = 'DuplicatedId'));
 
@@ -181,7 +179,7 @@ describe('selectTable |', () => {
 
     describe('Null scenarios |', () => {
         it('Null table selection', () => {
-            const core = createEditorCore(div, {});
+            const core = createEditorCore(div!, {});
             selectTable(core, table, null);
 
             expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
