@@ -1,15 +1,17 @@
 import { toArray } from 'roosterjs-editor-dom';
 
 export default function handleInlineImages(fragment: DocumentFragment, rtf?: string) {
-    const imageElements = toArray(fragment.querySelectorAll('img'));
+    const imageElements = toArray(fragment.querySelectorAll('img')).filter(img => !img.alt);
 
     if (rtf && imageElements.length > 0) {
         const imageContents = getImagesFromRtf(rtf);
 
         if (imageElements.length == imageContents.length) {
             imageElements.forEach((imageElement, i) => {
-                const dataUrl = createDataUrlFromImageContent(imageContents[i]);
-                imageElement.src = 'data:image/png;base64,' + dataUrl;
+                if (imageContents[i]) {
+                    const dataUrl = createDataUrlFromImageContent(imageContents[i]);
+                    imageElement.src = 'data:image/png;base64,' + dataUrl;
+                }
             });
         }
     }
@@ -49,13 +51,26 @@ function getImagesFromRtf(content: string) {
     return result;
 }
 
-function createDataUrlFromImageContent(content: string) {
-    const arrayBuilder = new ArrayBuffer(content.length / 2);
-    const unit8Array = new Uint8Array(arrayBuilder);
+const trunkSize = 240000;
 
-    for (let i = 0; i < content.length; i += 2) {
-        unit8Array[i / 2] = parseInt(content[i] + content[i + 1], 16);
+function createDataUrlFromImageContent(content: string) {
+    const trunkCount = Math.floor((content.length - 1) / trunkSize) + 1;
+    const result: string[] = [];
+
+    for (let trunk = 0; trunk < trunkCount; trunk++) {
+        const base = trunk * trunkSize;
+        const contentLength = Math.min(trunkSize, content.length - base);
+        const arrayBuilder = new ArrayBuffer(contentLength / 2);
+        const unit8Array = new Uint8Array(arrayBuilder);
+
+        for (let j = 0; j < contentLength; j += 2) {
+            unit8Array[j / 2] = parseInt(content[j + base] + content[j + base + 1], 16);
+        }
+
+        const str = String.fromCharCode.apply(null, unit8Array);
+
+        result.push(btoa(str));
     }
 
-    return btoa(String.fromCharCode.apply(null, unit8Array));
+    return result.join('');
 }
