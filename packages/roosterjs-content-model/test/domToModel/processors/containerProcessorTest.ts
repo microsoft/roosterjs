@@ -228,7 +228,6 @@ describe('containerProcessor', () => {
         });
     });
 
-    // Skip this test for now, we will reenable it once we are ready to write e2e test case of creating model from dom
     it('Process a DIV with mixed selection', () => {
         const div = document.createElement('div');
         div.innerHTML = '<span>test1</span>test2test3';
