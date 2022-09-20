@@ -12,7 +12,7 @@ describe('MarkdownFeatures | ', () => {
     let editor: IEditor;
     const TEST_ID = 'MarkDownFeatureTest';
     const TEST_ELEMENT_ID = 'MarkDownFeatureTestElementId';
-    // here we only test bolding as the logic for other styling is the same
+    // Here we only test bolding as the logic for other styling is exactly the same
     const markdownBold = MarkdownFeatures.markdownBold;
 
     beforeEach(done => {
