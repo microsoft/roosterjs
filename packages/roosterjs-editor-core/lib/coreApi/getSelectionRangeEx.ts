@@ -48,7 +48,7 @@ export const getSelectionRangeEx: GetSelectionRangeEx = (core: EditorCore) => {
                 image: findClosestElementAncestor(
                     ranges[0].startContainer,
                     core.contentDiv,
-                    'image'
+                    'img'
                 ) as HTMLImageElement,
                 imageId: undefined,
             };
