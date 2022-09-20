@@ -275,12 +275,13 @@ export type SelectTable = (
 /**
  * Select a table and save data of the selected range
  * @param core The EditorCore object
- * @param table table to select
- * @param coordinates first and last cell of the selection, if this parameter is null, instead of
- * selecting, will unselect the table.
+ * @param image image to select
  * @returns true if successful
  */
-export type SelectImage = (image: HTMLImageElement | null) => ImageSelectionRange | null;
+export type SelectImage = (
+    core: EditorCore,
+    image: HTMLImageElement | null
+) => ImageSelectionRange | null;
 
 /**
  * The interface for the map of core API.
