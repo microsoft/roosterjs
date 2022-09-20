@@ -326,3 +326,56 @@ describe('tableProcessor with format', () => {
         });
     });
 });
+
+describe('tableProcessor', () => {
+    beforeEach(() => {});
+
+    it('list context is stacked during table processing', () => {
+        const listLevels = { value: 'test1' } as any;
+        const listParent = { value: 'test2' } as any;
+        const threadItemCounts = { value: 'test3' } as any;
+
+        const context = createDomToModelContext();
+        context.listFormat.levels = listLevels;
+        context.listFormat.listParent = listParent;
+        context.listFormat.threadItemCounts = threadItemCounts;
+
+        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+            expect(context.listFormat.levels).toBeUndefined();
+            expect(context.listFormat.listParent).toBeUndefined();
+            expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
+        });
+
+        const group = createContentModelDocument(document);
+        const mockedTable = ({
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        tableProcessor(group, mockedTable, context);
+
+        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
+        expect(context.listFormat.levels).toBe(listLevels);
+        expect(context.listFormat.listParent).toBe(listParent);
+        expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
+    });
+});
