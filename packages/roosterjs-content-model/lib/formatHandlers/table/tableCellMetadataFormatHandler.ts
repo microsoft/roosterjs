@@ -1,6 +1,6 @@
 import { createBooleanDefinition, createObjectDefinition } from 'roosterjs-editor-dom';
 import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
-import { TableCellMetadataFormat } from '../../publicTypes/format/formatParts/TableCellMetadataFormat';
+import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 
 const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableCellMetadataFormat>>(
     {
