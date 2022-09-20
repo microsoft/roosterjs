@@ -10,8 +10,9 @@ function DropDownFormatItem<TFormat, TOption extends string>(props: {
     options: TOption[];
     getter: (format: TFormat) => TOption | undefined;
     setter?: (format: TFormat, newValue: TOption | undefined) => void;
+    onUpdate?: () => void;
 }) {
-    const { name, getter, setter, format, options } = props;
+    const { name, getter, setter, format, options, onUpdate } = props;
     const dropDown = React.useRef<HTMLSelectElement>(null);
     const [value, setValue] = useProperty(getter(format));
 
@@ -20,6 +21,7 @@ function DropDownFormatItem<TFormat, TOption extends string>(props: {
             dropDown.current.value == '' ? undefined : (dropDown.current.value as TOption);
         setValue(newValue);
         setter?.(format, newValue);
+        onUpdate?.();
     }, [format, setter]);
 
     return (
@@ -45,13 +47,14 @@ export function createDropDownFormatRenderer<T, O extends string>(
     getter: (format: T) => O,
     setter?: (format: T, newValue: O) => void
 ): FormatRenderer<T> {
-    return (format: T) => (
+    return (format: T, onUpdate?: () => void) => (
         <DropDownFormatItem
             name={name}
             getter={getter}
             setter={setter}
             format={format}
             options={options}
+            onUpdate={onUpdate}
             key={name}
         />
     );
@@ -63,7 +66,7 @@ export function createDropDownFormatRendererGroup<T, O extends string, V extends
     getter: (format: T) => O[],
     setter?: (format: T, name: V, newValue: O) => void
 ): FormatRenderer<T> {
-    return (format: T) => {
+    return (format: T, onUpdate?: () => void) => {
         const initValues = getter(format);
         return (
             <>
@@ -74,6 +77,7 @@ export function createDropDownFormatRendererGroup<T, O extends string, V extends
                         setter={(format, newValue) => setter?.(format, name, newValue)}
                         format={format}
                         options={options}
+                        onUpdate={onUpdate}
                         key={name}
                     />
                 ))}

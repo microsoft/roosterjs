@@ -11,8 +11,9 @@ function ColorFormatItem<T>(props: {
     format: T;
     getter: (format: T) => string;
     setter?: (format: T, newValue: string) => void;
+    onUpdate?: () => void;
 }) {
-    const { name, getter, setter, format } = props;
+    const { name, getter, setter, format, onUpdate } = props;
     const colorPickerBox = React.useRef<HTMLInputElement & HTMLTextAreaElement>(null);
     const colorValueBox = React.useRef<HTMLInputElement>(null);
     const transparentCheckBox = React.useRef<HTMLInputElement>(null);
@@ -39,6 +40,7 @@ function ColorFormatItem<T>(props: {
 
             setValue(newValue);
             setter?.(format, newValue);
+            onUpdate?.();
         },
         [setter, format]
     );
@@ -90,8 +92,15 @@ export function createColorFormatRenderer<T>(
     getter: (format: T) => string,
     setter?: (format: T, newValue: string) => void
 ): FormatRenderer<T> {
-    return (format: T) => (
-        <ColorFormatItem name={name} getter={getter} setter={setter} format={format} key={name} />
+    return (format: T, onUpdate?: () => void) => (
+        <ColorFormatItem
+            name={name}
+            getter={getter}
+            setter={setter}
+            format={format}
+            key={name}
+            onUpdate={onUpdate}
+        />
     );
 }
 
@@ -100,7 +109,7 @@ export function createColorFormatRendererGroup<T, V extends string>(
     getter: (format: T) => string[],
     setter?: (format: T, name: V, newValue: string) => void
 ): FormatRenderer<T> {
-    return (format: T) => {
+    return (format: T, onUpdate?: () => void) => {
         const initValues = getter(format);
 
         return (
@@ -111,6 +120,7 @@ export function createColorFormatRendererGroup<T, V extends string>(
                         getter={() => initValues[index]}
                         setter={(format, newValue) => setter?.(format, name, newValue)}
                         format={format}
+                        onUpdate={onUpdate}
                         key={name}
                     />
                 ))}
