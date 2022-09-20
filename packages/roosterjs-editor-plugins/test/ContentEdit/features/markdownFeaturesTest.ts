@@ -12,6 +12,8 @@ describe('MarkdownFeatures | ', () => {
     let editor: IEditor;
     const TEST_ID = 'MarkDownFeatureTest';
     const TEST_ELEMENT_ID = 'MarkDownFeatureTestElementId';
+    // here we only test bolding as the logic for other styling is the same
+    const markdownBold = MarkdownFeatures.markdownBold;
 
     beforeEach(done => {
         editor = TestHelper.initEditor(TEST_ID);
@@ -85,17 +87,15 @@ describe('MarkdownFeatures | ', () => {
 
     describe('Should Handle Event | ', () => {
         describe('MarkdownBold | ', () => {
-            const markdownBold = MarkdownFeatures.markdownBold;
-
-            fit('Should handle in normal scenario 1', () => {
+            it('Should handle in normal scenario 1', () => {
                 runShouldHandleEvent('*abcd', true /* shouldHandleExpect */, markdownBold);
             });
 
-            fit('Should handle in normal scenario 2', () => {
+            it('Should handle in normal scenario 2', () => {
                 runShouldHandleEvent('*abcd~', true /* shouldHandleExpect */, markdownBold);
             });
 
-            fit('Should handle in normal scenario 3', () => {
+            it('Should handle in normal scenario 3', () => {
                 runShouldHandleEvent(
                     '*abcd defi 1234',
                     true /* shouldHandleExpect */,
@@ -103,24 +103,39 @@ describe('MarkdownFeatures | ', () => {
                 );
             });
 
-            fit('Should not handle because of preceding whitespace', () => {
+            it('Should handle in normal scenario 4', () => {
+                runShouldHandleEvent('abcd *1234', true /* shouldHandleExpect */, markdownBold);
+            });
+
+            it('Should not handle because of preceding whitespace', () => {
                 runShouldHandleEvent('*abcd ', false /* shouldHandleExpect */, markdownBold);
             });
 
-            fit('Should not handle because of preceding trigger character', () => {
+            it('Should not handle because of preceding trigger character', () => {
                 runShouldHandleEvent('*abcd*', false /* shouldHandleExpect */, markdownBold);
             });
 
-            fit('Should not handle because of multiple whitespace', () => {
+            it('Should not handle because of multiple whitespace', () => {
                 runShouldHandleEvent('*abcd   ', false /* shouldHandleExpect */, markdownBold);
+            });
+
+            it('Should not handle because of wrong starting trigger character', () => {
+                runShouldHandleEvent('-abcd', false /* shouldHandleExpect */, markdownBold);
             });
         });
     });
 
     describe('Handle Event | ', () => {
-        const markdownBold = MarkdownFeatures.markdownBold;
-        fit('HandleEvent 2', () => {
+        it('markdownBold normal scenario 1', () => {
             runHandleEvent(markdownBold, '*abcd', '<b>abcd</b>');
+        });
+
+        it('markdownBold normal scenario 2', () => {
+            runHandleEvent(markdownBold, '*abcd 123', '<b>abcd 123</b>');
+        });
+
+        it('markdownBold normal scenario 3', () => {
+            runHandleEvent(markdownBold, 'abcd *123', 'abcd <b>123</b>');
         });
     });
 });
