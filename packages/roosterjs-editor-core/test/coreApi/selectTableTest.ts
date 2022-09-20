@@ -3,7 +3,7 @@ import { Browser } from 'roosterjs-editor-dom';
 import { EditorCore, TableSelection } from 'roosterjs-editor-types';
 import { selectTable } from '../../lib/coreApi/selectTable';
 
-describe('selectTable |', () => {
+xdescribe('selectTable |', () => {
     let div: HTMLDivElement | null;
     let table: HTMLTableElement | null;
     let core: EditorCore | null;
