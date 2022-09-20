@@ -9,8 +9,9 @@ function CheckboxFormatItem<TFormat>(props: {
     format: TFormat;
     getter: (format: TFormat) => boolean;
     setter?: (format: TFormat, newValue: boolean) => void;
+    onUpdate?: () => void;
 }) {
-    const { name, getter, setter, format } = props;
+    const { name, getter, setter, format, onUpdate } = props;
     const checkbox = React.useRef<HTMLInputElement>(null);
     const [value, setValue] = useProperty<boolean>(getter(format));
 
@@ -18,6 +19,7 @@ function CheckboxFormatItem<TFormat>(props: {
         const newValue = checkbox.current.checked;
         setValue(newValue);
         setter?.(format, newValue);
+        onUpdate?.();
     }, [format, setter, setValue]);
 
     return (
@@ -35,12 +37,13 @@ export function createCheckboxFormatRenderer<T>(
     getter: (format: T) => boolean,
     setter?: (format: T, newValue: boolean) => void
 ): FormatRenderer<T> {
-    return (format: T) => (
+    return (format: T, onUpdate?: () => void) => (
         <CheckboxFormatItem
             name={name}
             getter={getter}
             setter={setter}
             format={format}
+            onUpdate={onUpdate}
             key={name}
         />
     );
