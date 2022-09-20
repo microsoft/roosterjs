@@ -286,7 +286,7 @@ export default class VListItem {
      */
     writeBack(
         listStack: Node[],
-        originalRoot: HTMLOListElement | HTMLUListElement,
+        originalRoot?: HTMLOListElement | HTMLUListElement,
         shouldReuseAllAncestorListElements: boolean = false
     ) {
         let nextLevel = 1;
