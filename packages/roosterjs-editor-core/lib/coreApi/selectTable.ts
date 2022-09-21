@@ -1,3 +1,4 @@
+import { ensureUniqueId } from './ensureUniqueId';
 import {
     createRange,
     getStyles,
@@ -181,29 +182,6 @@ function unselect(core: EditorCore) {
     if (styleElement?.sheet?.cssRules) {
         while (styleElement.sheet.cssRules.length > 0) {
             styleElement.sheet.deleteRule(0);
-        }
-    }
-}
-
-function ensureUniqueId(el: HTMLElement, idPrefix: string) {
-    const doc = el.ownerDocument;
-
-    if (!el.id) {
-        let cont = 0;
-        const getElement = () => doc.getElementById(idPrefix + cont);
-        //Ensure that there are no elements with the same ID
-        let element = getElement();
-        while (element) {
-            cont++;
-            element = getElement();
-        }
-
-        el.id = idPrefix + cont;
-    } else {
-        const elements = doc.querySelectorAll(`#${el.id}`);
-        if (elements.length > 1) {
-            el.removeAttribute('id');
-            ensureUniqueId(el, idPrefix);
         }
     }
 }
