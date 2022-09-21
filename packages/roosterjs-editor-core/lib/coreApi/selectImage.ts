@@ -4,7 +4,6 @@ import { SelectImage, SelectionRangeTypes } from 'roosterjs-editor-types';
 /**
  * @internal
  * Select a image and save data of the selected range
- * @param core The EditorCore object
  * @param image Image to select
  * @returns Selected image information
  */
