@@ -43,7 +43,7 @@ function cacheGetRangeForMarkdownOperation(
 
         let startPosition: NodePosition;
         let endPosition: NodePosition;
-        searcher.forEachTextInlineElement(textInlineElement => {
+        searcher?.forEachTextInlineElement(textInlineElement => {
             if (endPosition && startPosition) {
                 return true;
             }
@@ -102,7 +102,8 @@ function handleMarkdownEvent(
                 );
 
                 // set the removal range to include the typed last character.
-                range.setEnd(range.endContainer, range.endOffset + 1);
+                const lastIndex: number = (range.endContainer as Text).length;
+                range.setEnd(range.endContainer, lastIndex);
 
                 // extract content and put it into a new element.
                 const elementToWrap = editor.getDocument().createElement(elementTag);
@@ -130,7 +131,7 @@ const MarkdownBold: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMarkd
     Keys.EIGHT_ASTERISK,
     '*',
     'b',
-    true
+    true /* useShiftKey */
 );
 
 /**
@@ -140,7 +141,7 @@ const MarkdownItalic: BuildInEditFeature<PluginKeyboardEvent> = generateBasicMar
     Keys.DASH_UNDERSCORE,
     '_',
     'i',
-    true
+    true /* useShiftKey */
 );
 
 /**
@@ -150,7 +151,7 @@ const MarkdownStrikethrough: BuildInEditFeature<PluginKeyboardEvent> = generateB
     Keys.GRAVE_TILDE,
     '~',
     's',
-    true
+    true /* useShiftKey */
 );
 
 /**
@@ -160,7 +161,7 @@ const MarkdownInlineCode: BuildInEditFeature<PluginKeyboardEvent> = generateBasi
     Keys.GRAVE_TILDE,
     '`',
     'code',
-    false
+    false /* useShiftKey */
 );
 
 /**

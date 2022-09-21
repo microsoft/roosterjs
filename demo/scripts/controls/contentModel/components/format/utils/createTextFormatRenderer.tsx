@@ -9,9 +9,10 @@ function TextFormatItem<T>(props: {
     format: T;
     getter: (format: T) => string;
     setter?: (format: T, newValue: string) => void;
+    onUpdate?: () => void;
     type: 'text' | 'number' | 'multiline';
 }) {
-    const { name, getter, setter, format, type } = props;
+    const { name, getter, setter, format, type, onUpdate } = props;
     const textBox = React.useRef<HTMLInputElement & HTMLTextAreaElement>(null);
     const [value, setValue] = useProperty(getter(format));
 
@@ -19,6 +20,7 @@ function TextFormatItem<T>(props: {
         (newValue: string) => {
             setValue(newValue);
             setter?.(format, newValue);
+            onUpdate();
         },
         [setter, format]
     );
@@ -78,13 +80,14 @@ export function createTextFormatRenderer<T>(
     setter?: (format: T, newValue: string) => void,
     type: 'text' | 'number' | 'multiline' = 'text'
 ): FormatRenderer<T> {
-    return (format: T) => (
+    return (format: T, onUpdate?: () => void) => (
         <TextFormatItem
             name={name}
             getter={getter}
             setter={setter}
             format={format}
             type={type}
+            onUpdate={onUpdate}
             key={name}
         />
     );
@@ -96,7 +99,7 @@ export function createTextFormatRendererGroup<T, V extends string>(
     setter?: (format: T, name: V, newValue: string) => void,
     type: 'text' | 'number' | 'multiline' = 'text'
 ): FormatRenderer<T> {
-    return (format: T) => {
+    return (format: T, onUpdate?: () => void) => {
         const initValues = getter(format);
 
         return (
@@ -108,6 +111,7 @@ export function createTextFormatRendererGroup<T, V extends string>(
                         setter={(format, newValue) => setter?.(format, name, newValue)}
                         format={format}
                         type={type}
+                        onUpdate={onUpdate}
                         key={name}
                     />
                 ))}
