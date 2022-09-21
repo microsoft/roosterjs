@@ -1,6 +1,7 @@
 import {
     applyFormat,
     applyTextStyle,
+    Browser,
     createDefaultHtmlSanitizerOptions,
     getInheritableStyles,
     getTagOfNode,
@@ -162,6 +163,11 @@ export const createPasteFragment: CreatePasteFragment = (
     sanitizer.convertGlobalCssToInlineCss(fragment);
     sanitizer.sanitize(fragment, position ? getInheritableStyles(position.element) : undefined);
 
+    // Step 6. Remove unexpected caret color for Safari
+    if (Browser.isSafari) {
+        removeCaretColor(fragment);
+    }
+
     return fragment;
 };
 
@@ -214,4 +220,20 @@ function createBeforePasteEvent(core: EditorCore, clipboardData: ClipboardData):
 
 function processStyles(node: ParentNode, callback: (style: HTMLStyleElement) => void) {
     toArray(node.querySelectorAll('style')).forEach(callback);
+}
+
+/**
+ * Remove unwanted caret-color value for some browsers, such as Safari.
+ * We create a light mode only temp div to do the copy paste, and Safari always sets 'caret-color' to 'color' for copied text,
+ * However, when transform colors to dark, we don't take caret-color into account, hence a pure black caret will be used in dark mode, which is invisible.
+ * @param fragment the DocumentFragment to clean up
+ */
+function removeCaretColor(fragment: DocumentFragment) {
+    const children = fragment.children;
+    for (let index = 0; index < children.length; ++index) {
+        const element = children[index] as HTMLElement;
+        if (element) {
+            element.style.caretColor = '';
+        }
+    }
 }
