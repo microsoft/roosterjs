@@ -42,7 +42,7 @@ export default function EmojiStatusBar(props: EmojiStatusBarProps) {
     }
 
     const icon = emoji ? emoji.codePoint : '';
-    const description = emoji ? strings[emoji.description] : '';
+    const description = emoji?.description ? strings[emoji.description] : '';
 
     return (
         <div className={classNames.statusBar}>

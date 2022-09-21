@@ -9,8 +9,8 @@ import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/i
  */
 class ContextMenuProviderImpl<TString extends string, TContext>
     implements ContextMenuProvider<IContextualMenuItem>, ReactEditorPlugin {
-    private editor: IEditor;
-    private targetNode: Node;
+    private editor: IEditor | null = null;
+    private targetNode: Node | null = null;
     private uiUtilities: UIUtilities | null = null;
 
     /**
@@ -53,10 +53,13 @@ class ContextMenuProviderImpl<TString extends string, TContext>
     getContextMenuItems(node: Node) {
         this.targetNode = node;
 
-        return this.shouldAddMenuItems(this.editor, node)
+        return this.editor && this.shouldAddMenuItems?.(this.editor, node)
             ? this.items
                   .filter(
-                      item => !item.shouldShow || item.shouldShow(this.editor, node, this.context)
+                      item =>
+                          !item.shouldShow ||
+                          (this.editor &&
+                              item.shouldShow(this.editor, node, <TContext>this.context))
                   )
                   .map(item => this.convertMenuItems(item))
             : [];
@@ -75,15 +78,15 @@ class ContextMenuProviderImpl<TString extends string, TContext>
             onClick: () => this.onClick(item, item.key),
             subMenuProps: item.subItems
                 ? {
-                      onItemClick: (_, menuItem) => this.onClick(item, menuItem.data),
-                      items: Object.keys(item.subItems).map((key: keyof typeof item.subItems) => ({
+                      onItemClick: (_, menuItem) => menuItem && this.onClick(item, menuItem.data),
+                      items: (Object.keys(item.subItems) as TString[]).map(key => ({
                           key: key,
                           data: key,
-                          text: getLocalizedString(this.strings, key, item.subItems[key]),
+                          text: getLocalizedString(this.strings, key, item.subItems?.[key]),
                           className: item.itemClassName,
                           onRender: item.itemRender
-                              ? subItem => item.itemRender(subItem, () => this.onClick(item, key))
-                              : null,
+                              ? subItem => item.itemRender?.(subItem, () => this.onClick(item, key))
+                              : undefined,
                       })),
                       ...(item.commandBarSubMenuProperties || {}),
                   }
@@ -92,14 +95,16 @@ class ContextMenuProviderImpl<TString extends string, TContext>
     }
 
     private onClick(item: ContextMenuItem<TString, TContext>, key: TString) {
-        item.onClick(
-            key,
-            this.editor,
-            this.targetNode,
-            this.strings,
-            this.uiUtilities,
-            this.context
-        );
+        if (this.editor && this.targetNode && this.uiUtilities) {
+            item.onClick(
+                key,
+                this.editor,
+                this.targetNode,
+                this.strings,
+                this.uiUtilities,
+                <TContext>this.context
+            );
+        }
     }
 }
 
@@ -112,10 +117,16 @@ class ContextMenuProviderImpl<TString extends string, TContext>
  */
 export default function createContextMenuProvider<TString extends string, TContext>(
     menuName: string,
-    items: ContextMenuItem<TString>[],
+    items: ContextMenuItem<TString, TContext>[],
     strings?: LocalizedStrings<TString>,
     shouldAddMenuItems?: (editor: IEditor, node: Node) => boolean,
     context?: TContext
 ): EditorPlugin {
-    return new ContextMenuProviderImpl(menuName, items, strings, shouldAddMenuItems, context);
+    return new ContextMenuProviderImpl<TString, TContext>(
+        menuName,
+        items,
+        strings,
+        shouldAddMenuItems,
+        context
+    );
 }

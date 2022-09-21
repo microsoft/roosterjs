@@ -17,7 +17,7 @@ export interface InputDialogProps<Strings extends string, ItemNames extends stri
     dialogTitleKey: Strings;
     unlocalizedTitle: string;
     items: Record<ItemNames, DialogItem<Strings>>;
-    strings: LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>;
+    strings?: Partial<LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>>;
     onChange?: (
         changedItemName: ItemNames,
         newValue: string,
@@ -42,7 +42,7 @@ export default function InputDialog<Strings extends string, ItemNames extends st
         [strings, dialogTitleKey, unlocalizedTitle]
     );
     const [currentValues, setCurrentValues] = React.useState<Record<ItemNames, string>>(
-        Object.keys(items).reduce((result: Record<ItemNames, string>, key: keyof typeof items) => {
+        (Object.keys(items) as ItemNames[]).reduce((result: Record<ItemNames, string>, key) => {
             result[key] = items[key].initValue;
             return result;
         }, {} as Record<ItemNames, string>)
@@ -52,21 +52,25 @@ export default function InputDialog<Strings extends string, ItemNames extends st
         onOk?.(currentValues);
     }, [onOk, currentValues]);
     const onItemChanged = React.useCallback(
-        (itemName: ItemNames, newValue: string) => {
-            const newValues = onChange?.(itemName, newValue, { ...currentValues }) || {
-                ...currentValues,
-                [itemName]: newValue,
-            };
+        (itemName: string, newValue: string) => {
+            if (itemName in items) {
+                const newValues = onChange?.(itemName as ItemNames, newValue, {
+                    ...currentValues,
+                }) || {
+                    ...currentValues,
+                    [itemName]: newValue,
+                };
 
-            setCurrentValues(newValues);
+                setCurrentValues(newValues);
+            }
         },
-        [setCurrentValues, currentValues]
+        [setCurrentValues, currentValues, items]
     );
 
     return (
         <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
             <div>
-                {Object.keys(items).map((key: keyof typeof items) => (
+                {(Object.keys(items) as (keyof typeof items)[]).map(key => (
                     <InputDialogItem
                         key={key}
                         itemName={key}

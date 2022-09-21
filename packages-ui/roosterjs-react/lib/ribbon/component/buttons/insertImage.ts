@@ -27,8 +27,10 @@ export const insertImage: RibbonButton<InsertImageButtonStringKey> = {
         document.body.appendChild(fileInput);
 
         fileInput.addEventListener('change', () => {
-            for (let i = 0; i < fileInput.files.length; i++) {
-                insertImageApi(editor, fileInput.files[i]);
+            if (fileInput.files) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    insertImageApi(editor, fileInput.files[i]);
+                }
             }
         });
 

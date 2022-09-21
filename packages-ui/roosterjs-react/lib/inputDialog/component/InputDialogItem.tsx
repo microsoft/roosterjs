@@ -10,7 +10,7 @@ import { TextField } from '@fluentui/react/lib/TextField';
  */
 export interface InputDialogItemProps<Strings extends string, ItemNames extends string> {
     itemName: ItemNames;
-    strings: LocalizedStrings<Strings>;
+    strings: Partial<LocalizedStrings<Strings>> | undefined;
     items: Record<ItemNames, DialogItem<Strings>>;
     currentValues: Record<ItemNames, string>;
     onEnterKey: () => void;

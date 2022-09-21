@@ -72,8 +72,8 @@ function InsertTablePane(props: {
     const [row, setRow] = React.useState(1);
 
     const updateSize = React.useCallback(
-        (t: EventTarget) => {
-            if (safeInstanceOf(t, 'HTMLElement')) {
+        (t?: HTMLElement | EventTarget) => {
+            if (safeInstanceOf(t, 'HTMLElement') && t.dataset.col && t.dataset.row) {
                 const col = parseInt(t.dataset.col);
                 const row = parseInt(t.dataset.row);
 
@@ -108,7 +108,7 @@ function InsertTablePane(props: {
         for (let i = 1; i <= MaxCols; i++) {
             let col: string[] = [];
             for (let j = 1; j <= MaxRows; j++) {
-                col[j] = formatText(item.text, i, j);
+                col[j] = formatText(item.text ?? '', i, j);
             }
             result[i] = col;
         }
@@ -143,7 +143,7 @@ function InsertTablePane(props: {
         return items;
     }, [col, row]);
 
-    const text = formatText(item.text, row, col);
+    const text = formatText(item.text ?? '', row, col);
 
     return (
         <div className={classNames.tablePaneInner}>
