@@ -475,11 +475,16 @@ export default class Editor implements IEditor {
             core.domEvent.tableSelectionRange = null;
         }
 
-        const imageSelection = this.getImageSelection(core, arg1);
-        if (imageSelection) {
-            core.domEvent.imageSelectionRange = imageSelection;
-            return !!imageSelection;
+        if (
+            this.isFeatureEnabled(ExperimentalFeatures.ImageSelection) &&
+            safeInstanceOf(arg1, 'HTMLImageElement') &&
+            !arg2
+        ) {
+            const selection = core.api.selectImage(arg1);
+            core.domEvent.imageSelectionRange = selection;
+            return !!selection;
         } else {
+            core.api.selectImage(null);
             core.domEvent.imageSelectionRange = null;
         }
 
@@ -496,29 +501,6 @@ export default class Editor implements IEditor {
                   <number | PositionType>arg4
               );
         return !!range && this.contains(range) && core.api.selectRange(core, range);
-    }
-
-    private getImageSelection(
-        core: EditorCore,
-        arg: Range | NodePosition | Node | SelectionPath | HTMLTableElement | null,
-        arg2?: NodePosition | number | PositionType | TableSelection
-    ) {
-        if (safeInstanceOf(arg, 'HTMLImageElement') && !arg2) {
-            const selection = core.api.selectImage(core, arg);
-            return selection;
-        }
-
-        if (arg && safeInstanceOf(arg, 'HTMLSpanElement') && !arg2) {
-            const argElement = <HTMLSpanElement>arg;
-            const argClass = argElement.className;
-            if (argClass.indexOf('IMAGE_EDIT_WRAPPER') >= 0) {
-                const image = argElement.getElementsByTagName('img')[0];
-                const selection = core.api.selectImage(core, image);
-                return selection;
-            }
-        } else {
-            core.api.selectImage(core, null);
-        }
     }
 
     /**

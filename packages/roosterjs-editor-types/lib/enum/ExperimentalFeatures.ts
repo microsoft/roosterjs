@@ -101,4 +101,9 @@ export const enum ExperimentalFeatures {
      * e.g. We will move list items with "display: block" into previous list item and change tag to be DIV
      */
     NormalizeList = 'NormalizeList',
+
+    /**
+     * When a html image is selected, the selected image data will be stored by editor core.
+     */
+    ImageSelection = 'ImageSelection',
 }

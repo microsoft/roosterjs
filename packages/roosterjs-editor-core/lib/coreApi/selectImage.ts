@@ -1,5 +1,5 @@
 import { createRange } from 'roosterjs-editor-dom';
-import { EditorCore, SelectImage, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectImage, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -8,10 +8,9 @@ import { EditorCore, SelectImage, SelectionRangeTypes } from 'roosterjs-editor-t
  * @param image Image to select
  * @returns Selected image information
  */
-export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageElement | null) => {
+export const selectImage: SelectImage = (image: HTMLImageElement | null) => {
     if (image) {
         const range = createRange(image);
-        core.api.selectRange(core, range);
 
         return {
             type: SelectionRangeTypes.ImageSelection,

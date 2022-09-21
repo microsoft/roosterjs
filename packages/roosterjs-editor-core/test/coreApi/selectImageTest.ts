@@ -1,11 +1,9 @@
-import createEditorCore from './createMockEditorCore';
-import { EditorCore, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { selectImage } from '../../lib/coreApi/selectImage';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('selectImage |', () => {
     let div: HTMLDivElement;
     let image: HTMLImageElement | null;
-    let core: EditorCore | null;
 
     beforeEach(() => {
         document.body.innerHTML = '';
@@ -14,7 +12,6 @@ describe('selectImage |', () => {
 
         image = div.querySelector('img');
         document.body.appendChild(div);
-        core = createEditorCore(div, {});
     });
 
     afterEach(() => {
@@ -24,11 +21,10 @@ describe('selectImage |', () => {
             document.head.removeChild(style);
         }
         div.parentElement?.removeChild(div);
-        core = null;
     });
 
     it('selectImage', () => {
-        const selectedInfo = selectImage(core, image);
+        const selectedInfo = selectImage(image);
         const range = new Range();
         range.selectNode(image!);
 
