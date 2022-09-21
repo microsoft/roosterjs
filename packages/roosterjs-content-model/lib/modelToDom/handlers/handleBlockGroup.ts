@@ -25,7 +25,10 @@ export function handleBlockGroup(
             handleBlockGroupChildren(doc, newParent, group, context);
 
             if (isGeneralSegment(group) && isNodeOfType(newParent, NodeType.Element)) {
-                context.regularSelection.current.segment = newParent;
+                if (!group.element.firstChild) {
+                    context.regularSelection.current.segment = newParent;
+                }
+
                 applyFormat(newParent, SegmentFormatHandlers, group.format, context);
             }
 

@@ -1,10 +1,9 @@
 import createEditorCore from './createMockEditorCore';
-import { Browser } from 'roosterjs-editor-dom';
 import { EditorCore, TableSelection } from 'roosterjs-editor-types';
 import { selectTable } from '../../lib/coreApi/selectTable';
 
 describe('selectTable |', () => {
-    let div: HTMLDivElement;
+    let div: HTMLDivElement | null;
     let table: HTMLTableElement | null;
     let core: EditorCore | null;
 
@@ -12,15 +11,12 @@ describe('selectTable |', () => {
     let styleSheet: HTMLStyleElement;
 
     beforeEach(() => {
-        while (document.body.firstChild) {
-            document.body.firstChild.parentElement?.removeChild(document.body.firstChild);
-        }
         document.body.innerHTML = '';
         div = document.createElement('div');
-        div.innerHTML = buildTableHTML(true /* tbody */);
+        div!.innerHTML = buildTableHTML(true /* tbody */);
 
-        table = div.querySelector('table');
-        document.body.appendChild(div);
+        table = div!.querySelector('table');
+        document.body.appendChild(div!);
 
         core = createEditorCore(div, {});
 
@@ -36,14 +32,13 @@ describe('selectTable |', () => {
     });
 
     afterEach(() => {
-        document.body.removeChild(div);
-        let style = document.getElementById('tableStylecontentDiv_0');
-        if (style) {
-            document.head.removeChild(style);
-        }
+        let styles = document.querySelectorAll('#tableStylecontentDiv_0');
+        styles.forEach(s => s.parentElement?.removeChild(s));
 
         core = null;
-        div.parentElement?.removeChild(div);
+        div = null;
+        table = null;
+        document.body.innerHTML = '';
     });
 
     function runTest(
@@ -52,12 +47,12 @@ describe('selectTable |', () => {
         timesCalled: number,
         cssRule?: string
     ) {
-        while (div.firstChild) {
-            div.removeChild(div.firstChild);
+        while (div!.firstChild) {
+            div!.removeChild(div!.firstChild);
         }
-        div.innerHTML = content;
+        div!.innerHTML = content;
 
-        table = div.querySelector('table');
+        table = div!.querySelector('table');
 
         selectTable(core, table, selection);
 
@@ -155,9 +150,9 @@ describe('selectTable |', () => {
 
     it('remove duplicated ID', () => {
         const tableHTML = buildTableHTML(true);
-        div.innerHTML = tableHTML + '' + tableHTML;
+        div!.innerHTML = tableHTML + '' + tableHTML;
 
-        const tables = div.querySelectorAll('table');
+        const tables = div!.querySelectorAll('table');
         table = tables[0];
         tables.forEach(table => (table.id = 'DuplicatedId'));
 
