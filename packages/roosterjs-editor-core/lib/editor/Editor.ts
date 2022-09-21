@@ -469,6 +469,7 @@ export default class Editor implements IEditor {
         if (arg1 && 'rows' in arg1) {
             const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
             core.domEvent.tableSelectionRange = selection;
+
             return !!selection;
         } else {
             core.api.selectTable(core, null);
