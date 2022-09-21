@@ -8,7 +8,13 @@ describe('selectTable |', () => {
     let table: HTMLTableElement | null;
     let core: EditorCore | null;
 
+    let cssSheet: CSSStyleSheet;
+    let styleSheet: HTMLStyleElement;
+
     beforeEach(() => {
+        while (document.body.firstChild) {
+            document.body.firstChild.parentElement?.removeChild(document.body.firstChild);
+        }
         document.body.innerHTML = '';
         div = document.createElement('div');
         div.innerHTML = buildTableHTML(true /* tbody */);
@@ -17,6 +23,16 @@ describe('selectTable |', () => {
         document.body.appendChild(div);
 
         core = createEditorCore(div, {});
+
+        cssSheet = new CSSStyleSheet();
+        styleSheet = <HTMLStyleElement>{
+            id: '',
+            sheet: cssSheet,
+        };
+
+        spyOn(cssSheet, 'insertRule');
+        spyOn(document.head, 'appendChild');
+        spyOn(document, 'createElement').and.returnValue(styleSheet);
     });
 
     afterEach(() => {
@@ -30,136 +46,110 @@ describe('selectTable |', () => {
         div.parentElement?.removeChild(div);
     });
 
+    function runTest(
+        content: string,
+        selection: TableSelection | null,
+        timesCalled: number,
+        cssRule?: string
+    ) {
+        while (div.firstChild) {
+            div.removeChild(div.firstChild);
+        }
+        div.innerHTML = content;
+
+        table = div.querySelector('table');
+
+        selectTable(core, table, selection);
+
+        expect(document.head.appendChild).toHaveBeenCalledTimes(timesCalled);
+        expect(document.createElement).toHaveBeenCalledTimes(timesCalled);
+        expect(cssSheet.insertRule).toHaveBeenCalledTimes(timesCalled);
+        if (cssRule) {
+            expect(cssSheet.insertRule).toHaveBeenCalledWith(cssRule);
+        }
+    }
+
     it('Select Table Cells TR under Table Tag', () => {
-        div.innerHTML =
-            '<div><table><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></table><br></div>';
-
-        selectTable(core, table, <TableSelection>{
-            firstCell: { x: 0, y: 0 },
-            lastCell: { x: 1, y: 1 },
-        });
-
-        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
-        expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
-            Browser.isFirefox
-                ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        runTest(
+            '<div><table><tr><td><span>Test</span></td><td><span>Test</span></td></tr><tr><td><span>Test</span></td><td><span>Test</span></td></tr></table><br></div>',
+            <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 1, y: 1 },
+            },
+            1,
+            '#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2){background-color: rgba(198,198,198,0.7) !important;}'
         );
     });
 
     it('Select Table Cells TBODY', () => {
-        selectTable(core, table, <TableSelection>{
-            firstCell: { x: 0, y: 0 },
-            lastCell: { x: 1, y: 1 },
-        });
-
-        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
-        expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
-            Browser.isFirefox
-                ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        runTest(
+            buildTableHTML(true /* tbody */),
+            <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 1, y: 1 },
+            },
+            1,
+            '#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2){background-color: rgba(198,198,198,0.7) !important;}'
         );
     });
 
     it('Select TH and TR in the same row', () => {
-        div.innerHTML =
-            '<div><table><tr><th>Test</th><td>Test</td></tr><tr><th>Test</th><td>Test</td></tr></table><br></div>';
-        table = div.querySelector('table');
-
-        selectTable(core, table, <TableSelection>{
-            firstCell: { x: 0, y: 0 },
-            lastCell: { x: 1, y: 1 },
-        });
-
-        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
-        expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
-            Browser.isFirefox
-                ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TH:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TH:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > th:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > th:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        runTest(
+            '<div><table><tr><th>Test</th><td>Test</td></tr><tr><th>Test</th><td>Test</td></tr></table><br></div>',
+            <TableSelection>{
+                firstCell: { x: 0, y: 0 },
+                lastCell: { x: 1, y: 1 },
+            },
+            1,
+            '#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TH:nth-child(1),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TH:nth-child(1),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2){background-color: rgba(198,198,198,0.7) !important;}'
         );
     });
 
     it('Select Table Cells THEAD, TBODY', () => {
-        div.innerHTML = buildTableHTML(true /* tbody */, true /* thead */);
-
-        table = div.querySelector('table');
-
-        selectTable(core, table, <TableSelection>{
-            firstCell: { x: 1, y: 1 },
-            lastCell: { x: 2, y: 2 },
-        });
-
-        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
-        expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
-            Browser.isFirefox
-                ? '#contentDiv_0 #tableSelected0 > THEAD > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : '#contentDiv_0 #tableSelected0 > thead > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        runTest(
+            buildTableHTML(true /* tbody */, true /* thead */),
+            <TableSelection>{
+                firstCell: { x: 1, y: 1 },
+                lastCell: { x: 2, y: 2 },
+            },
+            1,
+            '#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2){background-color: rgba(198,198,198,0.7) !important;}'
         );
     });
 
     it('Select Table Cells TBODY, TFOOT', () => {
-        div.innerHTML = buildTableHTML(true /* tbody */, false /* thead */, true /* tfoot */);
-
-        table = div.querySelector('table');
-
-        selectTable(core, table, <TableSelection>{
-            firstCell: { x: 1, y: 1 },
-            lastCell: { x: 2, y: 2 },
-        });
-
-        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
-        expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
-            Browser.isFirefox
-                ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        runTest(
+            buildTableHTML(true /* tbody */, false /* thead */, true /* tfoot */),
+            <TableSelection>{
+                firstCell: { x: 1, y: 1 },
+                lastCell: { x: 1, y: 2 },
+            },
+            1,
+            '#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2){background-color: rgba(198,198,198,0.7) !important;}'
         );
     });
 
     it('Select Table Cells THEAD, TBODY, TFOOT', () => {
-        div.innerHTML = buildTableHTML(true /* tbody */, true /* thead */, true /* tfoot */);
-        table = div.querySelector('table');
-
-        selectTable(core, table, <TableSelection>{
-            firstCell: { x: 1, y: 1 },
-            lastCell: { x: 1, y: 4 },
-        });
-
-        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
-        expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
-            Browser.isFirefox
-                ? '#contentDiv_0 #tableSelected0 > THEAD > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : '#contentDiv_0 #tableSelected0 > thead > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        runTest(
+            buildTableHTML(true /* tbody */, true /* thead */, true /* tfoot */),
+            <TableSelection>{
+                firstCell: { x: 1, y: 1 },
+                lastCell: { x: 1, y: 4 },
+            },
+            1,
+            '#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2){background-color: rgba(198,198,198,0.7) !important;}'
         );
     });
 
     it('Select Table Cells THEAD, TFOOT', () => {
-        div.innerHTML = buildTableHTML(false /* tbody */, true /* thead */, true /* tfoot */);
-        table = div.querySelector('table');
-
-        selectTable(core, table, <TableSelection>{
-            firstCell: { x: 1, y: 1 },
-            lastCell: { x: 1, y: 2 },
-        });
-
-        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
-        expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
-            Browser.isFirefox
-                ? '#contentDiv_0 #tableSelected0 > THEAD > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : '#contentDiv_0 #tableSelected0 > thead > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        runTest(
+            buildTableHTML(false /* tbody */, true /* thead */, true /* tfoot */),
+            <TableSelection>{
+                firstCell: { x: 1, y: 1 },
+                lastCell: { x: 1, y: 2 },
+            },
+            1,
+            '#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2){background-color: rgba(198,198,198,0.7) !important;}'
         );
     });
 
@@ -181,82 +171,95 @@ describe('selectTable |', () => {
 
     describe('Null scenarios |', () => {
         it('Null table selection', () => {
-            const core = createEditorCore(div, {});
-            selectTable(core, table, null);
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(buildTableHTML(true /* tbody */), null, 0);
         });
 
         it('Null first cell coordinates', () => {
-            selectTable(core, table, <TableSelection>{
-                firstCell: null,
-                lastCell: { x: 1, y: 1 },
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    firstCell: null,
+                    lastCell: { x: 1, y: 1 },
+                },
+                0
+            );
         });
 
         it('Null last cell coordinates', () => {
-            selectTable(core, table, <TableSelection>{
-                firstCell: { x: 1, y: 1 },
-                lastCell: null,
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    firstCell: { x: 1, y: 1 },
+                    lastCell: null,
+                },
+                0
+            );
         });
 
         it('Null first cell y coordinate', () => {
-            selectTable(core, table, <TableSelection>{
-                firstCell: { x: 0, y: null },
-                lastCell: { x: 1, y: 1 },
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    firstCell: { x: 0, y: null },
+                    lastCell: { x: 1, y: 1 },
+                },
+                0
+            );
         });
 
         it('Null first cell x coordinate', () => {
-            selectTable(core, table, <TableSelection>{
-                firstCell: { x: null, y: 0 },
-                lastCell: { x: 1, y: 1 },
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    firstCell: { x: null, y: 0 },
+                    lastCell: { x: 1, y: 1 },
+                },
+                0
+            );
         });
 
         it('Null last cell y coordinate', () => {
-            selectTable(core, table, <TableSelection>{
-                firstCell: { x: 0, y: 0 },
-                lastCell: { x: 1, y: null },
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { x: 1, y: null },
+                },
+                0
+            );
         });
 
         it('Null last cell x coordinate', () => {
-            selectTable(core, table, <TableSelection>{
-                firstCell: { x: 0, y: 0 },
-                lastCell: { x: null, y: 1 },
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { x: null, y: 1 },
+                },
+                0
+            );
         });
 
         it('Null last cell x & y coordinate', () => {
-            selectTable(core, table, <TableSelection>{
-                firstCell: { x: 0, y: 0 },
-                lastCell: { x: null, y: null },
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { x: null, y: null },
+                },
+                0
+            );
         });
 
         it('Null first cell x & y coordinate', () => {
-            selectTable(core, table, <TableSelection>{
-                lastCell: { x: 0, y: 0 },
-                firstCell: { x: null, y: null },
-            });
-
-            expect(document.getElementById('tableStylecontentDiv_0')).toBeNull();
+            runTest(
+                buildTableHTML(true /* tbody */),
+                <TableSelection>{
+                    lastCell: { x: 0, y: 0 },
+                    firstCell: { x: null, y: null },
+                },
+                0
+            );
         });
     });
 });
