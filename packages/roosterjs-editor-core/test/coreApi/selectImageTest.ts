@@ -11,7 +11,6 @@ describe('selectImage |', () => {
         document.body.innerHTML = '';
         div = document.createElement('div');
         div.innerHTML = '<img/>';
-
         image = div.querySelector('img');
         document.body.appendChild(div);
         core = createEditorCore(div!, {});
@@ -19,7 +18,7 @@ describe('selectImage |', () => {
 
     afterEach(() => {
         document.body.removeChild(div);
-        let style = document.getElementById('imageSelected1');
+        let style = document.getElementById('imageStylecontentDiv_0');
         if (style) {
             document.head.removeChild(style);
         }
@@ -38,5 +37,21 @@ describe('selectImage |', () => {
             image: image,
             areAllCollapsed: range.collapsed,
         });
+    });
+
+    it('image should have an unique id', () => {
+        selectImage(core, image);
+        expect(image!.id).toBe('imageSelected0');
+    });
+
+    it('contentDiv should have an unique id', () => {
+        selectImage(core, image);
+        expect(core.contentDiv.id).toBe('contentDiv_0');
+    });
+
+    it('styleTag should be created', () => {
+        selectImage(core, image);
+        const style = document.getElementById('imageStylecontentDiv_0');
+        expect(style?.tagName).toBe('STYLE');
     });
 });
