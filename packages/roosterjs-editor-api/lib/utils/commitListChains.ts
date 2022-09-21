@@ -11,9 +11,10 @@ export default function commitListChains(editor: IEditor, chains: VListChain[]) 
         const range = editor.getSelectionRange();
         const start = range && Position.getStart(range);
         const end = range && Position.getEnd(range);
-        chains.forEach(chain =>
-            chain.commit(editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements))
+        const shouldReuseAllAncestorListElements = editor.isFeatureEnabled(
+            ExperimentalFeatures.ReuseAllAncestorListElements
         );
+        chains.forEach(chain => chain.commit(shouldReuseAllAncestorListElements));
         editor.select(start, end);
     }
 }
