@@ -452,12 +452,20 @@ export default class Editor implements IEditor {
     }
 
     public select(
-        arg1: Range | NodePosition | Node | SelectionPath | HTMLTableElement | null,
+        arg1:
+            | Range
+            | NodePosition
+            | Node
+            | SelectionPath
+            | HTMLTableElement
+            | HTMLImageElement
+            | null,
         arg2?: NodePosition | number | PositionType | TableSelection,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
+
         if (arg1 && 'rows' in arg1) {
             const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
             core.domEvent.tableSelectionRange = selection;
@@ -466,6 +474,19 @@ export default class Editor implements IEditor {
         } else {
             core.api.selectTable(core, null);
             core.domEvent.tableSelectionRange = null;
+        }
+
+        if (
+            this.isFeatureEnabled(ExperimentalFeatures.ImageSelection) &&
+            safeInstanceOf(arg1, 'HTMLImageElement') &&
+            !arg2
+        ) {
+            const selection = core.api.selectImage(arg1);
+            core.domEvent.imageSelectionRange = selection;
+            return !!selection;
+        } else {
+            core.api.selectImage(null);
+            core.domEvent.imageSelectionRange = null;
         }
 
         let range = !arg1

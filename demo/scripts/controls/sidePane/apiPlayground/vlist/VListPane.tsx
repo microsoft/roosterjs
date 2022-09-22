@@ -2,7 +2,7 @@ import * as React from 'react';
 import ApiPaneProps from '../ApiPaneProps';
 import VListItem from 'roosterjs-editor-dom/lib/list/VListItem';
 import { createVListFromRegion, VList } from 'roosterjs-editor-dom';
-import { IEditor, ListType, PositionType } from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor, ListType, PositionType } from 'roosterjs-editor-types';
 
 interface VListPaneState {
     vlist: VList;
@@ -100,7 +100,9 @@ export default class VListPane extends React.Component<ApiPaneProps, VListPaneSt
     private onWriteback = () => {
         const editor = this.props.getEditor();
         editor.addUndoSnapshot(() => {
-            this.state.vlist?.writeBack();
+            this.state.vlist?.writeBack(
+                editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+            );
             editor.focus();
             editor.select(this.state.vlist.items[0]?.getNode(), PositionType.Begin);
         });

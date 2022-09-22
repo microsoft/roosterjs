@@ -1,6 +1,7 @@
 import createEditorCore from './createMockEditorCore';
 import { focus } from '../../lib/coreApi/focus';
 import { getSelectionRangeEx } from '../../lib/coreApi/getSelectionRangeEx';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { selectNode } from '../TestHelper';
 
 describe('getSelectionRangeEx', () => {
@@ -52,6 +53,7 @@ describe('getSelectionRangeEx', () => {
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
             tableSelectionRange: null,
+            imageSelectionRange: null,
         };
         const input = document.createElement('input');
         document.body.appendChild(input);
@@ -83,6 +85,33 @@ describe('getSelectionRangeEx', () => {
             expect(range.endOffset).toBe(2);
             cont++;
         });
+    });
+
+    it('image selection', () => {
+        div.innerHTML = '<img></img>';
+        const image = div.querySelector('img');
+        const core = createEditorCore(div, {});
+        const range = new Range();
+        range.selectNode(image!);
+        core.domEvent = {
+            selectionRange: range,
+            isInIME: false,
+            scrollContainer: null,
+            stopPrintableKeyboardEventPropagation: false,
+            contextMenuProviders: [],
+            tableSelectionRange: null,
+            imageSelectionRange: {
+                type: SelectionRangeTypes.ImageSelection,
+                ranges: [range],
+                image: image,
+                areAllCollapsed: range.collapsed,
+            },
+        };
+        focus(core);
+
+        const selectionEx = getSelectionRangeEx(core);
+        expect(selectionEx.type).toBe(SelectionRangeTypes.ImageSelection);
+        expect(selectionEx.ranges).toEqual([range]);
     });
 
     function runTest(input: string, id: string, expectedRangesLength: number[][]) {

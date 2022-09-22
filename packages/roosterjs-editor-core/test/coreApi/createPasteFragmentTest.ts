@@ -317,7 +317,9 @@ describe('createPasteFragment', () => {
     });
 
     it('html input with html attributes and meta', () => {
-        const sanitizingOption: any = {};
+        const sanitizingOption: any = {
+            cssStyleCallbacks: {},
+        };
         spyOn(createDefaultHtmlSanitizerOptions, 'default').and.returnValue(sanitizingOption);
 
         const triggerEvent = jasmine.createSpy();
@@ -361,7 +363,7 @@ describe('createPasteFragment', () => {
     });
 
     it('html input, make sure STYLE tags are properly handled', () => {
-        const sanitizingOption: any = { additionalGlobalStyleNodes: [] };
+        const sanitizingOption: any = { additionalGlobalStyleNodes: [], cssStyleCallbacks: {} };
         spyOn(createDefaultHtmlSanitizerOptions, 'default').and.returnValue(sanitizingOption);
 
         const triggerEvent = jasmine.createSpy();
