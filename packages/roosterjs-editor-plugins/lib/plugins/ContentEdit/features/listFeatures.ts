@@ -75,7 +75,9 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
             blockFormat(editor, (region, start, end) => {
                 const vList = createVListFromRegion(region, false /*includeSiblingList*/, li);
                 vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
-                vList.writeBack();
+                vList.writeBack(
+                    editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                );
                 event.rawEvent.preventDefault();
             });
         } else {
