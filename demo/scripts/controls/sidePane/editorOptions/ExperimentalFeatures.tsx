@@ -25,6 +25,8 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.NormalizeList]:
         'Normalize list to make sure it can be displayed correctly in other client',
     [ExperimentalFeatures.ImageSelection]: 'The selected image data will be stored by editor core',
+    [ExperimentalFeatures.ReuseAllAncestorListElements]:
+        "Reuse ancestor list elements even if they don't match the types from the list item.",
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
