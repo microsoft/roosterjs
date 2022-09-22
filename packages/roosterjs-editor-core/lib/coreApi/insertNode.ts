@@ -7,6 +7,7 @@ import {
     InsertOption,
     NodeType,
     PositionType,
+    NodePosition,
 } from 'roosterjs-editor-types';
 import {
     createRange,
@@ -145,7 +146,7 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
                         range.deleteContents();
                     }
 
-                    let pos = Position.getStart(range);
+                    let pos: NodePosition | null = Position.getStart(range);
                     let blockElement: BlockElement | null;
 
                     if (

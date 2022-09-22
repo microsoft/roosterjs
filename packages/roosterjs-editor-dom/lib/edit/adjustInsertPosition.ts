@@ -32,7 +32,7 @@ const adjustSteps: ((
     nodeToInsert: Node,
     position: NodePosition,
     range: Range
-) => NodePosition)[] = [
+) => NodePosition | null)[] = [
     adjustInsertPositionForHyperLink,
     adjustInsertPositionForStructuredNode,
     adjustInsertPositionForParagraph,
@@ -113,7 +113,7 @@ function adjustInsertPositionForStructuredNode(
     nodeToInsert: Node,
     position: NodePosition,
     range: Range
-): NodePosition {
+): NodePosition | null {
     let rootNodeToInsert: Node | null = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
@@ -159,37 +159,11 @@ function adjustInsertPositionForStructuredNode(
                     : PositionType.After
             );
         }
-    } else if (tag == 'TABLE' && trNode) {
+    }
+
+    if (tag == 'TABLE' && trNode) {
         pasteTable(root, nodeToInsert, position, range);
-        console.log('#');
-        debugger;
-        position = null;
-        // When inserting a table into a table, if these tables have the same column count, and
-        // current position is at beginning of a row, then merge these two tables
-        /*
-        let newTable = new VTable(<HTMLTableElement>rootNodeToInsert);
-        let currentTable = new VTable(<HTMLTableCellElement>tdNode);
-
-        let editor = this.editor as IExperimentalContentModelEditor;
-        //editTable(,TableOperation.InsertRight);
-
-        if (
-            currentTable.col == 0 &&
-            tdNode == currentTable.getCell(currentTable.row || 0, 0).td &&
-            newTable.cells?.[0] &&
-            newTable.cells[0].length == currentTable.cells?.[0].length &&
-            isPositionAtBeginningOf(position, tdNode)
-        ) {
-            if (
-                getTagOfNode(rootNodeToInsert!.firstChild) == 'TBODY' &&
-                !rootNodeToInsert!.firstChild?.nextSibling
-            ) {
-                unwrap(rootNodeToInsert!.firstChild!);
-            }
-            unwrap(rootNodeToInsert!);
-            position = new Position(trNode, PositionType.After);
-        }
-        */
+        return null;
     }
 
     return position;
@@ -352,11 +326,13 @@ function adjustInsertPositionForTable(
 export default function adjustInsertPositionBySteps(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: NodePosition,
+    position: NodePosition | null,
     range: Range
-): NodePosition {
+): NodePosition | null {
     adjustSteps.forEach(handler => {
-        position = handler(root, nodeToInsert, position, range);
+        if (position) {
+            position = handler(root, nodeToInsert, position, range);
+        }
     });
     return position;
 }
