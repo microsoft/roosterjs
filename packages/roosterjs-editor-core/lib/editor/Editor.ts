@@ -740,7 +740,7 @@ export default class Editor implements IEditor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
-        return this.getCore().lifecycle.defaultFormat;
+        return this.getCore().lifecycle.defaultFormat!;
     }
 
     /**

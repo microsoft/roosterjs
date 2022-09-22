@@ -70,7 +70,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
         position = new Position(formatNode.firstChild!, PositionType.Begin);
     }
 
-    if (formatNode) {
+    if (formatNode && core.lifecycle.defaultFormat) {
         applyFormat(formatNode, core.lifecycle.defaultFormat, core.lifecycle.isDarkMode);
     }
 

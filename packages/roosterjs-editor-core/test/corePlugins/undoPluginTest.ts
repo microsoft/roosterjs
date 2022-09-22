@@ -24,6 +24,7 @@ describe('UndoPlugin', () => {
         editor = <IEditor>(<any>{
             isInIME,
             addUndoSnapshot,
+            getFocusedPosition: jasmine.createSpy().and.returnValue({}),
         });
         plugin.initialize(editor);
     });

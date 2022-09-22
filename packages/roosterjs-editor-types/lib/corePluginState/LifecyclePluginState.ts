@@ -16,7 +16,7 @@ export default interface LifecyclePluginState {
     /**
      * Default format of this editor
      */
-    defaultFormat: DefaultFormat;
+    defaultFormat: DefaultFormat | null;
 
     /**
      * Whether editor is in dark mode
