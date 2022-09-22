@@ -107,6 +107,7 @@ export const enum ExperimentalFeatures {
      */
     ImageSelection = 'ImageSelection',
 
+    /**
      * With this feature enabled, when writing back a list item we will re-use all
      * ancestor list elements, even if they don't match the types currently in the
      * listTypes array for that item. The only list that we will ensure is correct
