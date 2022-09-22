@@ -51,23 +51,23 @@ class PasteOptionPlugin implements ReactEditorPlugin {
     }
 
     private handlePasteOptionPaneEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyDown) {
-            const selectedKey = this.pasteOptionRef.current?.getSelectedKey();
+        if (event.eventType == PluginEventType.KeyDown && this.pasteOptionRef.current) {
+            const selectedKey = this.pasteOptionRef.current.getSelectedKey();
 
             if (!selectedKey) {
                 switch (event.rawEvent.which) {
                     case Keys.CTRL_LEFT:
-                        this.pasteOptionRef.current?.setSelectedKey(ButtonKeys[0]);
+                        this.pasteOptionRef.current.setSelectedKey(ButtonKeys[0]);
                         cancelEvent(event.rawEvent);
                         break;
 
                     case Keys.ESCAPE:
-                        this.pasteOptionRef.current?.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         cancelEvent(event.rawEvent);
                         break;
 
                     default:
-                        this.pasteOptionRef.current?.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         break;
                 }
             } else {
@@ -75,7 +75,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
                 if (keyboardEvent.which != Keys.CTRL_LEFT && keyboardEvent.ctrlKey) {
                     // Dismiss the paste option when pressing hotkey CTRL+<any key>
-                    this.pasteOptionRef.current?.dismiss();
+                    this.pasteOptionRef.current.dismiss();
                     return;
                 }
 
@@ -91,7 +91,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
                 switch (keyboardEvent.which) {
                     case Keys.ESCAPE:
-                        this.pasteOptionRef.current?.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         break;
                     case Keys.LEFT:
                     case Keys.RIGHT:
@@ -100,7 +100,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                             (keyboardEvent.which == Keys.RIGHT) == this.uiUtilities?.isRightToLeft()
                                 ? -1
                                 : 1;
-                        this.pasteOptionRef.current?.setSelectedKey(
+                        this.pasteOptionRef.current.setSelectedKey(
                             ButtonKeys[
                                 (ButtonKeys.indexOf(selectedKey) + diff + buttonCount) % buttonCount
                             ]
@@ -113,7 +113,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                         // Noop
                         break;
                     default:
-                        this.pasteOptionRef.current?.dismiss();
+                        this.pasteOptionRef.current.dismiss();
                         return;
                 }
 
