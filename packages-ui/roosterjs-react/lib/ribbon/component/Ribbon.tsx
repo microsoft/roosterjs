@@ -118,7 +118,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                             checked: selectedItem == key || false,
                             className: dropDownMenu.itemClassName,
                             onRender: dropDownMenu.itemRender
-                                ? item => dropDownMenu.itemRender?.(item, onClick)
+                                ? item => dropDownMenu.itemRender!(item, onClick)
                                 : undefined,
                         })),
                         ...(dropDownMenu.commandBarSubMenuProperties || {}),
