@@ -16,7 +16,6 @@ export default function pasteTable(
     position: NodePosition,
     range: Range
 ) {
-    console.log(nodeToInsert.childNodes);
     if (
         (nodeToInsert.childNodes.length == 1 &&
             getTagOfNode(nodeToInsert.childNodes[0]) == 'TABLE') ||
