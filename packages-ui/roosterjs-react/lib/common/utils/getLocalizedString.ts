@@ -8,7 +8,7 @@ import { LocalizedStrings } from '../type/LocalizedStrings';
  * @returns A localized string from the string map, or defaultString
  */
 export default function getLocalizedString<T extends string, R extends string | null | undefined>(
-    strings: Partial<LocalizedStrings<T>> | undefined,
+    strings: LocalizedStrings<T> | undefined,
     key: T,
     defaultString: R
 ) {

@@ -20,7 +20,7 @@ export default interface RibbonPlugin extends ReactEditorPlugin {
     onButtonClick: <T extends string>(
         button: RibbonButton<T>,
         key: T,
-        strings?: Partial<LocalizedStrings<T>>
+        strings?: LocalizedStrings<T>
     ) => void;
 
     /**
@@ -32,7 +32,7 @@ export default interface RibbonPlugin extends ReactEditorPlugin {
     startLivePreview: <T extends string>(
         button: RibbonButton<T>,
         key: T,
-        strings?: Partial<LocalizedStrings<T>>
+        strings?: LocalizedStrings<T>
     ) => void;
 
     /**

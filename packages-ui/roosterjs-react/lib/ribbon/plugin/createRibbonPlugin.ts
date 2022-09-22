@@ -90,7 +90,7 @@ class RibbonPluginImpl implements RibbonPlugin {
     onButtonClick<T extends string>(
         button: RibbonButton<T>,
         key: T,
-        strings?: Partial<LocalizedStrings<T>>
+        strings?: LocalizedStrings<T>
     ) {
         if (this.editor && this.uiUtilities) {
             this.editor.stopShadowEdit();
@@ -112,7 +112,7 @@ class RibbonPluginImpl implements RibbonPlugin {
     startLivePreview<T extends string>(
         button: RibbonButton<T>,
         key: T,
-        strings?: Partial<LocalizedStrings<T>>
+        strings?: LocalizedStrings<T>
     ) {
         if (this.editor && this.uiUtilities) {
             const isInShadowEdit = this.editor.isInShadowEdit();
