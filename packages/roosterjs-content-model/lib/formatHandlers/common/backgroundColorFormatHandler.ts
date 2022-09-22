@@ -6,8 +6,10 @@ import { getColor, setColor } from '../utils/color';
  * @internal
  */
 export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> = {
-    parse: (format, element, context) => {
-        const backgroundColor = getColor(element, true /*isBackground*/, context.isDarkMode);
+    parse: (format, element, context, defaultStyle) => {
+        const backgroundColor =
+            getColor(element, true /*isBackground*/, context.isDarkMode) ||
+            defaultStyle.backgroundColor;
 
         if (backgroundColor) {
             format.backgroundColor = backgroundColor;

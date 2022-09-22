@@ -3,14 +3,19 @@ import { ContentModelTableCell } from '../../publicTypes/block/group/ContentMode
 /**
  * @internal
  */
+export interface TableSelectionCoordinates {
+    firstRow: number;
+    firstCol: number;
+    lastRow: number;
+    lastCol: number;
+}
+
+/**
+ * @internal
+ */
 export function setSelectionToTable(
     cells: ContentModelTableCell[][],
-    selection: {
-        firstRow: number;
-        firstCol: number;
-        lastRow: number;
-        lastCol: number;
-    }
+    selection: TableSelectionCoordinates
 ) {
     const { firstCol, firstRow, lastCol, lastRow } = selection;
 

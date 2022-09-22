@@ -1,39 +1,48 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
+import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
+import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
+import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createDomToModelContext', () => {
-    const defaultContentModelContext: ContentModelContext = {
+    const editorContext: EditorContext = {
         isDarkMode: false,
         zoomScale: 1,
         isRightToLeft: false,
         getDarkColor: undefined,
     };
-
+    const contextOptions = {
+        elementProcessors: defaultProcessorMap,
+        defaultStyles: defaultStyleMap,
+        formatParsers: getFormatParsers(),
+    };
     it('no param', () => {
         const context = createDomToModelContext();
 
         expect(context).toEqual({
-            contentModelContext: defaultContentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
+            ...contextOptions,
         });
     });
 
     it('with content model context', () => {
-        const contentModelContext: ContentModelContext = {
+        const editorContext: EditorContext = {
             isDarkMode: true,
             zoomScale: 2,
             isRightToLeft: true,
             getDarkColor: () => '',
         };
 
-        const context = createDomToModelContext(contentModelContext);
+        const context = createDomToModelContext(editorContext);
 
         expect(context).toEqual({
-            contentModelContext: contentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
+            ...contextOptions,
         });
     });
 
@@ -52,7 +61,7 @@ describe('createDomToModelContext', () => {
         });
 
         expect(context).toEqual({
-            contentModelContext: defaultContentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
             regularSelection: {
@@ -62,6 +71,7 @@ describe('createDomToModelContext', () => {
                 endOffset: 1,
                 isSelectionCollapsed: false,
             },
+            ...contextOptions,
         });
     });
 
@@ -78,7 +88,7 @@ describe('createDomToModelContext', () => {
         });
 
         expect(context).toEqual({
-            contentModelContext: defaultContentModelContext,
+            ...editorContext,
             segmentFormat: {},
             isInSelection: false,
             tableSelection: {
@@ -86,6 +96,7 @@ describe('createDomToModelContext', () => {
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
             },
+            ...contextOptions,
         });
     });
 });

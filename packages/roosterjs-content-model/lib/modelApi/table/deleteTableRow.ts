@@ -1,6 +1,6 @@
+import { collapseTableSelection } from '../selection/collapseTableSelection';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { getSelectedCells } from './getSelectedCells';
-import { setSelectionToTable } from '../selection/setSelectionToTable';
 
 /**
  * @internal
@@ -20,6 +20,6 @@ export function deleteTableRow(table: ContentModelTable) {
         table.cells.splice(sel.firstRow, sel.lastRow - sel.firstRow + 1);
         table.heights.splice(sel.firstRow, sel.lastRow - sel.firstRow + 1);
 
-        setSelectionToTable(table.cells, sel);
+        collapseTableSelection(table.cells, sel);
     }
 }

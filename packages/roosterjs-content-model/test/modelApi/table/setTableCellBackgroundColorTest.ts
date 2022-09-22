@@ -28,7 +28,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -49,7 +48,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -70,7 +68,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -78,7 +75,6 @@ describe('setTableCellBackgroundColor', () => {
                         format: {},
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -87,7 +83,6 @@ describe('setTableCellBackgroundColor', () => {
                         isSelected: true,
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -109,7 +104,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -117,7 +111,6 @@ describe('setTableCellBackgroundColor', () => {
                         format: {},
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -129,7 +122,6 @@ describe('setTableCellBackgroundColor', () => {
                         isSelected: true,
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -154,7 +146,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -162,7 +153,6 @@ describe('setTableCellBackgroundColor', () => {
                         format: {},
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [
                             {
@@ -194,7 +184,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [],
                         spanAbove: false,
@@ -202,7 +191,6 @@ describe('setTableCellBackgroundColor', () => {
                         format: {},
                     },
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [
                             {
@@ -237,7 +225,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [
                             {
@@ -246,7 +233,6 @@ describe('setTableCellBackgroundColor', () => {
                                 cells: [
                                     [
                                         {
-                                            blockType: 'BlockGroup',
                                             blockGroupType: 'TableCell',
                                             spanAbove: false,
                                             spanLeft: false,
@@ -278,7 +264,6 @@ describe('setTableCellBackgroundColor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         blocks: [
                             {
@@ -287,7 +272,6 @@ describe('setTableCellBackgroundColor', () => {
                                 cells: [
                                     [
                                         {
-                                            blockType: 'BlockGroup',
                                             blockGroupType: 'TableCell',
                                             spanAbove: false,
                                             spanLeft: false,

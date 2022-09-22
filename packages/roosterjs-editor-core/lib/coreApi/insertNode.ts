@@ -48,7 +48,11 @@ function getInitialRange(
  * @param core The EditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export const insertNode: InsertNode = (core: EditorCore, node: Node, option: InsertOption) => {
+export const insertNode: InsertNode = (
+    core: EditorCore,
+    node: Node,
+    option: InsertOption | null
+) => {
     option = option || {
         position: ContentPosition.SelectionStart,
         insertOnNewLine: false,
@@ -71,6 +75,9 @@ export const insertNode: InsertNode = (core: EditorCore, node: Node, option: Ins
         node,
         true /*includeSelf*/,
         () => {
+            if (!option) {
+                return;
+            }
             switch (option.position) {
                 case ContentPosition.Begin:
                 case ContentPosition.End: {

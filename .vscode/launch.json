@@ -34,6 +34,44 @@
             "console": "integratedTerminal"
         },
         {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug All Unit Tests",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--no-single-run"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug All Unit Tests (Chrome)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--chrome", "--no-single-run"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug current unit test file",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": ["start", "--components", "${fileBasenameNoExtension}", "--no-single-run"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug current unit test file (Chrome)",
+            "program": "${workspaceFolder}/node_modules/karma/bin/karma",
+            "args": [
+                "start",
+                "--chrome",
+                "--components",
+                "${fileBasenameNoExtension}",
+                "--no-single-run"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "type": "chrome",
             "request": "launch",
             "name": "Debug app in Chrome",

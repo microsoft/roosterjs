@@ -28,12 +28,14 @@ import {
     PluginEventType,
     PositionType,
     QueryScope,
+    Rect,
     Region,
     RegionType,
     SelectionPath,
     SelectionRangeEx,
     SizeTransformer,
     StyleBasedFormatState,
+    TableSelection,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
 import {
@@ -58,6 +60,7 @@ import {
     arrayPush,
     toArray,
     getObjectKeys,
+    getIntersectedRect,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -73,7 +76,7 @@ import type {
  * RoosterJs core editor class
  */
 export default class Editor implements IEditor {
-    private core: EditorCore;
+    private core: EditorCore | null = null;
 
     //#region Lifecycle
 
@@ -93,13 +96,15 @@ export default class Editor implements IEditor {
         const plugins: EditorPlugin[] = [];
         getObjectKeys(corePlugins).forEach(name => {
             if (name == '_placeholder') {
-                arrayPush(plugins, options.plugins);
+                if (options.plugins) {
+                    arrayPush(plugins, options.plugins);
+                }
             } else {
                 plugins.push(corePlugins[name]);
             }
         });
 
-        const zoomScale = options.zoomScale > 0 ? options.zoomScale : 1;
+        const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
         this.core = {
             contentDiv,
             api: {
@@ -112,6 +117,17 @@ export default class Editor implements IEditor {
             trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
             zoomScale: zoomScale,
             sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
+            getVisibleViewport:
+                options.getVisibleViewport ||
+                (() => {
+                    const scrollContainer = this.getScrollContainer();
+
+                    return getIntersectedRect(
+                        scrollContainer == contentDiv
+                            ? [scrollContainer]
+                            : [scrollContainer, contentDiv]
+                    );
+                }),
         };
 
         // 3. Initialize plugins
@@ -127,8 +143,9 @@ export default class Editor implements IEditor {
      * Dispose this editor, dispose all plugins and custom data
      */
     public dispose(): void {
-        for (let i = this.core.plugins.length - 1; i >= 0; i--) {
-            this.core.plugins[i].dispose();
+        const core = this.getCore();
+        for (let i = core.plugins.length - 1; i >= 0; i--) {
+            core.plugins[i].dispose();
         }
 
         this.core = null;
@@ -157,7 +174,8 @@ export default class Editor implements IEditor {
      * @returns true if node is inserted. Otherwise false
      */
     public insertNode(node: Node, option?: InsertOption): boolean {
-        return node ? this.core.api.insertNode(this.core, node, option) : false;
+        const core = this.getCore();
+        return node ? core.api.insertNode(core, node, option ?? null) : false;
     }
 
     /**
@@ -167,7 +185,7 @@ export default class Editor implements IEditor {
      */
     public deleteNode(node: Node): boolean {
         // Only remove the node when it falls within editor
-        if (node && this.contains(node)) {
+        if (node && this.contains(node) && node.parentNode) {
             node.parentNode.removeChild(node);
             return true;
         }
@@ -187,13 +205,14 @@ export default class Editor implements IEditor {
         toNode: Node,
         transformColorForDarkMode?: boolean
     ): boolean {
+        const core = this.getCore();
         // Only replace the node when it falls within editor
         if (this.contains(existingNode) && toNode) {
-            this.core.api.transformColor(
-                this.core,
+            core.api.transformColor(
+                core,
                 transformColorForDarkMode ? toNode : null,
                 true /*includeSelf*/,
-                () => existingNode.parentNode.replaceChild(toNode, existingNode),
+                () => existingNode.parentNode?.replaceChild(toNode, existingNode),
                 ColorTransformDirection.LightToDark
             );
 
@@ -208,12 +227,12 @@ export default class Editor implements IEditor {
      * @param node The node to create InlineElement
      * @returns The BlockElement result
      */
-    public getBlockElementAtNode(node: Node): BlockElement {
-        return getBlockElementAtNode(this.core.contentDiv, node);
+    public getBlockElementAtNode(node: Node): BlockElement | null {
+        return getBlockElementAtNode(this.getCore().contentDiv, node);
     }
 
     public contains(arg: Node | Range): boolean {
-        return contains(this.core.contentDiv, <Node>arg);
+        return contains(this.getCore().contentDiv, <Node>arg);
     }
 
     public queryElements(
@@ -224,6 +243,7 @@ export default class Editor implements IEditor {
             | ((node: Node) => any) = QueryScope.Body,
         callback?: (node: Node) => any
     ) {
+        const core = this.getCore();
         const result: HTMLElement[] = [];
         let scope = scopeOrCallback instanceof Function ? QueryScope.Body : scopeOrCallback;
         callback = scopeOrCallback instanceof Function ? scopeOrCallback : callback;
@@ -231,12 +251,10 @@ export default class Editor implements IEditor {
         let selectionEx = scope == QueryScope.Body ? null : this.getSelectionRangeEx();
         if (selectionEx) {
             selectionEx.ranges.forEach(range => {
-                result.push(
-                    ...queryElements(this.core.contentDiv, selector, callback, scope, range)
-                );
+                result.push(...queryElements(core.contentDiv, selector, callback, scope, range));
             });
         } else {
-            return queryElements(this.core.contentDiv, selector, callback, scope, null);
+            return queryElements(core.contentDiv, selector, callback, scope, undefined /* range */);
         }
 
         return result;
@@ -254,7 +272,7 @@ export default class Editor implements IEditor {
      * otherwise just return start and end
      */
     public collapseNodes(start: Node, end: Node, canSplitParent: boolean): Node[] {
-        return collapseNodes(this.core.contentDiv, start, end, canSplitParent);
+        return collapseNodes(this.getCore().contentDiv, start, end, canSplitParent);
     }
 
     //#endregion
@@ -267,7 +285,7 @@ export default class Editor implements IEditor {
      * @returns True if there's no visible content, otherwise false
      */
     public isEmpty(trim?: boolean): boolean {
-        return isNodeEmpty(this.core.contentDiv, trim);
+        return isNodeEmpty(this.getCore().contentDiv, trim);
     }
 
     /**
@@ -278,7 +296,8 @@ export default class Editor implements IEditor {
     public getContent(
         mode: GetContentMode | CompatibleGetContentMode = GetContentMode.CleanHTML
     ): string {
-        return this.core.api.getContent(this.core, mode);
+        const core = this.getCore();
+        return core.api.getContent(core, mode);
     }
 
     /**
@@ -287,7 +306,8 @@ export default class Editor implements IEditor {
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
      */
     public setContent(content: string, triggerContentChangedEvent: boolean = true) {
-        this.core.api.setContent(this.core, content, triggerContentChangedEvent);
+        const core = this.getCore();
+        core.api.setContent(core, content, triggerContentChangedEvent);
     }
 
     /**
@@ -303,7 +323,7 @@ export default class Editor implements IEditor {
         if (content) {
             const doc = this.getDocument();
             const body = new DOMParser().parseFromString(
-                this.core.trustedHTMLHandler(content),
+                this.getCore().trustedHTMLHandler(content),
                 'text/html'
             )?.body;
             let allNodes = body?.childNodes ? toArray(body.childNodes) : [];
@@ -325,9 +345,12 @@ export default class Editor implements IEditor {
     /**
      * Delete selected content
      */
-    public deleteSelectedContent(): NodePosition {
+    public deleteSelectedContent(): NodePosition | null {
         const range = this.getSelectionRange();
-        return range && !range.collapsed && deleteSelectedContent(this.core.contentDiv, range);
+        if (range && !range.collapsed) {
+            return deleteSelectedContent(this.getCore().contentDiv, range);
+        }
+        return null;
     }
 
     /**
@@ -339,9 +362,10 @@ export default class Editor implements IEditor {
      */
     public paste(
         clipboardData: ClipboardData,
-        pasteAsText?: boolean,
-        applyCurrentFormat?: boolean
+        pasteAsText: boolean = false,
+        applyCurrentFormat: boolean = false
     ) {
+        const core = this.getCore();
         if (!clipboardData) {
             return;
         }
@@ -357,18 +381,19 @@ export default class Editor implements IEditor {
 
         const range = this.getSelectionRange();
         const pos = range && Position.getStart(range);
-        const fragment = this.core.api.createPasteFragment(
-            this.core,
+        const fragment = core.api.createPasteFragment(
+            core,
             clipboardData,
             pos,
             pasteAsText,
             applyCurrentFormat
         );
-
-        this.addUndoSnapshot(() => {
-            this.insertNode(fragment);
-            return clipboardData;
-        }, ChangeSource.Paste);
+        if (fragment) {
+            this.addUndoSnapshot(() => {
+                this.insertNode(fragment);
+                return clipboardData;
+            }, ChangeSource.Paste);
+        }
     }
 
     //#endregion
@@ -382,8 +407,9 @@ export default class Editor implements IEditor {
      * Default value is true
      * @returns current selection range, or null if editor never got focus before
      */
-    public getSelectionRange(tryGetFromCache: boolean = true): Range {
-        return this.core.api.getSelectionRange(this.core, tryGetFromCache);
+    public getSelectionRange(tryGetFromCache: boolean = true): Range | null {
+        const core = this.getCore();
+        return core.api.getSelectionRange(core, tryGetFromCache);
     }
 
     /**
@@ -394,7 +420,8 @@ export default class Editor implements IEditor {
      * @returns current selection range, or null if editor never got focus before
      */
     public getSelectionRangeEx(): SelectionRangeEx {
-        return this.core.api.getSelectionRangeEx(this.core);
+        const core = this.getCore();
+        return core.api.getSelectionRangeEx(core);
     }
 
     /**
@@ -402,9 +429,9 @@ export default class Editor implements IEditor {
      * It does a live pull on the selection, if nothing retrieved, return whatever we have in cache.
      * @returns current selection path, or null if editor never got focus before
      */
-    public getSelectionPath(): SelectionPath {
+    public getSelectionPath(): SelectionPath | null {
         const range = this.getSelectionRange();
-        return range && getSelectionPath(this.core.contentDiv, range);
+        return range && getSelectionPath(this.getCore().contentDiv, range);
     }
 
     /**
@@ -412,47 +439,77 @@ export default class Editor implements IEditor {
      * @returns true if focus is in editor, otherwise false
      */
     public hasFocus(): boolean {
-        return this.core.api.hasFocus(this.core);
+        const core = this.getCore();
+        return core.api.hasFocus(core);
     }
 
     /**
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
     public focus() {
-        this.core.api.focus(this.core);
+        const core = this.getCore();
+        core.api.focus(core);
     }
 
-    public select(arg1: any, arg2?: any, arg3?: any, arg4?: any): boolean {
-        if (!!(<HTMLTableElement>arg1)?.rows) {
-            const selection = this.core.api.selectTable(this.core, arg1, arg2);
-            this.core.domEvent.tableSelectionRange = selection;
+    public select(
+        arg1:
+            | Range
+            | NodePosition
+            | Node
+            | SelectionPath
+            | HTMLTableElement
+            | HTMLImageElement
+            | null,
+        arg2?: NodePosition | number | PositionType | TableSelection,
+        arg3?: Node,
+        arg4?: number | PositionType
+    ): boolean {
+        const core = this.getCore();
+
+        if (arg1 && 'rows' in arg1) {
+            const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
+            core.domEvent.tableSelectionRange = selection;
 
             return !!selection;
         } else {
-            this.core.api.selectTable(this.core, null);
-            this.core.domEvent.tableSelectionRange = null;
+            core.api.selectTable(core, null);
+            core.domEvent.tableSelectionRange = null;
+        }
+
+        if (
+            this.isFeatureEnabled(ExperimentalFeatures.ImageSelection) &&
+            safeInstanceOf(arg1, 'HTMLImageElement') &&
+            !arg2
+        ) {
+            const selection = core.api.selectImage(arg1);
+            core.domEvent.imageSelectionRange = selection;
+            return !!selection;
+        } else {
+            core.api.selectImage(null);
+            core.domEvent.imageSelectionRange = null;
         }
 
         let range = !arg1
             ? null
             : safeInstanceOf(arg1, 'Range')
             ? arg1
-            : Array.isArray(arg1.start) && Array.isArray(arg1.end)
-            ? createRange(
-                  this.core.contentDiv,
-                  (<SelectionPath>arg1).start,
-                  (<SelectionPath>arg1).end
-              )
-            : createRange(arg1, arg2, arg3, arg4);
-        return this.contains(range) && this.core.api.selectRange(this.core, range);
+            : 'start' in arg1 && Array.isArray(arg1.end)
+            ? createRange(core.contentDiv, arg1.start, arg1.end)
+            : createRange(
+                  <Node>arg1,
+                  <number | PositionType>arg2,
+                  <Node>arg3,
+                  <number | PositionType>arg4
+              );
+        return !!range && this.contains(range) && core.api.selectRange(core, range);
     }
 
     /**
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
-    public getFocusedPosition(): NodePosition {
+    public getFocusedPosition(): NodePosition | null {
         let sel = this.getDocument().defaultView?.getSelection();
-        if (this.contains(sel && sel.focusNode)) {
+        if (sel?.focusNode && this.contains(sel.focusNode)) {
             return new Position(sel.focusNode, sel.focusOffset);
         }
 
@@ -480,18 +537,21 @@ export default class Editor implements IEditor {
         selector?: string,
         startFrom?: Node,
         event?: PluginEvent
-    ): HTMLElement {
-        event = startFrom ? null : event; // Only use cache when startFrom is not specified, for different start position can have different result
+    ): HTMLElement | null {
+        event = startFrom ? undefined : event; // Only use cache when startFrom is not specified, for different start position can have different result
 
-        return cacheGetEventData(event, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
-            if (!startFrom) {
-                let position = this.getFocusedPosition();
-                startFrom = position && position.node;
-            }
-            return (
-                startFrom && findClosestElementAncestor(startFrom, this.core.contentDiv, selector)
-            );
-        });
+        return (
+            cacheGetEventData(event ?? null, 'GET_ELEMENT_AT_CURSOR_' + selector, () => {
+                if (!startFrom) {
+                    let position = this.getFocusedPosition();
+                    startFrom = position?.node;
+                }
+                return (
+                    startFrom &&
+                    findClosestElementAncestor(startFrom, this.getCore().contentDiv, selector)
+                );
+            }) ?? null
+        );
     }
 
     /**
@@ -501,7 +561,7 @@ export default class Editor implements IEditor {
      * @returns True if position is at beginning of the editor, otherwise false
      */
     public isPositionAtBeginning(position: NodePosition): boolean {
-        return isPositionAtBeginningOf(position, this.core.contentDiv);
+        return isPositionAtBeginningOf(position, this.getCore().contentDiv);
     }
 
     /**
@@ -512,8 +572,9 @@ export default class Editor implements IEditor {
     ): Region[] {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
+        const contentDiv = this.getCore().contentDiv;
         selection.ranges.forEach(range => {
-            result.push(...(range ? getRegionsFromRange(this.core.contentDiv, range, type) : []));
+            result.push(...(range ? getRegionsFromRange(contentDiv, range, type) : []));
         });
         return result.filter((value, index, self) => {
             return self.indexOf(value) === index;
@@ -528,8 +589,9 @@ export default class Editor implements IEditor {
         nameOrMap: string | Record<string, DOMEventHandler>,
         handler?: DOMEventHandler
     ): () => void {
-        const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler } : nameOrMap;
-        return this.core.api.attachDomEvent(this.core, eventsToMap);
+        const eventsToMap = typeof nameOrMap == 'string' ? { [nameOrMap]: handler! } : nameOrMap;
+        const core = this.getCore();
+        return core.api.attachDomEvent(core, eventsToMap);
     }
 
     /**
@@ -544,13 +606,14 @@ export default class Editor implements IEditor {
     public triggerPluginEvent<T extends PluginEventType | CompatiblePluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
-        broadcast?: boolean
+        broadcast: boolean = false
     ): PluginEventFromType<T> {
+        const core = this.getCore();
         let event = ({
             eventType,
             ...data,
         } as any) as PluginEventFromType<T>;
-        this.core.api.triggerEvent(this.core, event, broadcast);
+        core.api.triggerEvent(core, event, broadcast);
 
         return event;
     }
@@ -579,7 +642,8 @@ export default class Editor implements IEditor {
      */
     public undo() {
         this.focus();
-        this.core.api.restoreUndoSnapshot(this.core, -1 /*step*/);
+        const core = this.getCore();
+        core.api.restoreUndoSnapshot(core, -1 /*step*/);
     }
 
     /**
@@ -587,7 +651,8 @@ export default class Editor implements IEditor {
      */
     public redo() {
         this.focus();
-        this.core.api.restoreUndoSnapshot(this.core, 1 /*step*/);
+        const core = this.getCore();
+        core.api.restoreUndoSnapshot(core, 1 /*step*/);
     }
 
     /**
@@ -601,16 +666,17 @@ export default class Editor implements IEditor {
      * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
      */
     public addUndoSnapshot(
-        callback?: (start: NodePosition, end: NodePosition) => any,
+        callback?: (start: NodePosition | null, end: NodePosition | null) => any,
         changeSource?: ChangeSource | CompatibleChangeSource | string,
         canUndoByBackspace?: boolean,
         additionalData?: ContentChangedData
     ) {
-        this.core.api.addUndoSnapshot(
-            this.core,
-            callback,
-            changeSource,
-            canUndoByBackspace,
+        const core = this.getCore();
+        core.api.addUndoSnapshot(
+            core,
+            callback ?? null,
+            changeSource ?? null,
+            canUndoByBackspace ?? false,
             additionalData
         );
     }
@@ -619,7 +685,7 @@ export default class Editor implements IEditor {
      * Whether there is an available undo/redo snapshot
      */
     public getUndoState(): EditorUndoState {
-        const { hasNewContent, snapshotsService } = this.core.undo;
+        const { hasNewContent, snapshotsService } = this.getCore().undo;
         return {
             canUndo: hasNewContent || snapshotsService.canMove(-1 /*previousSnapshot*/),
             canRedo: snapshotsService.canMove(1 /*nextSnapshot*/),
@@ -635,14 +701,14 @@ export default class Editor implements IEditor {
      * @returns The HTML document which contains this editor
      */
     public getDocument(): Document {
-        return this.core.contentDiv.ownerDocument;
+        return this.getCore().contentDiv.ownerDocument;
     }
 
     /**
      * Get the scroll container of the editor
      */
     public getScrollContainer(): HTMLElement {
-        return this.core.domEvent.scrollContainer;
+        return this.getCore().domEvent.scrollContainer;
     }
 
     /**
@@ -654,7 +720,8 @@ export default class Editor implements IEditor {
      * dispose editor.
      */
     public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
-        return (this.core.lifecycle.customData[key] = this.core.lifecycle.customData[key] || {
+        const core = this.getCore();
+        return (core.lifecycle.customData[key] = core.lifecycle.customData[key] || {
             value: getter ? getter() : undefined,
             disposer,
         }).value as T;
@@ -665,7 +732,7 @@ export default class Editor implements IEditor {
      * @returns True if editor is in IME input sequence, otherwise false
      */
     public isInIME(): boolean {
-        return this.core.domEvent.isInIME;
+        return this.getCore().domEvent.isInIME;
     }
 
     /**
@@ -673,7 +740,7 @@ export default class Editor implements IEditor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
-        return this.core.lifecycle.defaultFormat;
+        return this.getCore().lifecycle.defaultFormat;
     }
 
     /**
@@ -681,40 +748,46 @@ export default class Editor implements IEditor {
      * @param startNode The node to start from. If not passed, it will start from the beginning of the body
      */
     public getBodyTraverser(startNode?: Node): IContentTraverser {
-        return ContentTraverser.createBodyTraverser(this.core.contentDiv, startNode);
+        return ContentTraverser.createBodyTraverser(this.getCore().contentDiv, startNode);
     }
 
     /**
      * Get a content traverser for current selection
+     * @returns A content traverser, or null if editor never got focus before
      */
-    public getSelectionTraverser(range?: Range): IContentTraverser {
-        range = range ?? this.getSelectionRange();
-        return range && ContentTraverser.createSelectionTraverser(this.core.contentDiv, range);
+    public getSelectionTraverser(range?: Range): IContentTraverser | null {
+        range = range ?? this.getSelectionRange() ?? undefined;
+        return range
+            ? ContentTraverser.createSelectionTraverser(this.getCore().contentDiv, range)
+            : null;
     }
 
     /**
      * Get a content traverser for current block element start from specified position
      * @param startFrom Start position of the traverser. Default value is ContentPosition.SelectionStart
+     * @returns A content traverser, or null if editor never got focus before
      */
     public getBlockTraverser(
         startFrom: ContentPosition | CompatibleContentPosition = ContentPosition.SelectionStart
-    ): IContentTraverser {
+    ): IContentTraverser | null {
         let range = this.getSelectionRange();
-        return (
-            range && ContentTraverser.createBlockTraverser(this.core.contentDiv, range, startFrom)
-        );
+        return range
+            ? ContentTraverser.createBlockTraverser(this.getCore().contentDiv, range, startFrom)
+            : null;
     }
 
     /**
      * Get a text traverser of current selection
      * @param event Optional, if specified, editor will try to get cached result from the event object first.
      * If it is not cached before, query from DOM and cache the result into the event object
+     * @returns A content traverser, or null if editor never got focus before
      */
-    public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher {
-        return cacheGetEventData(event, 'ContentSearcher', () => {
+    public getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher | null {
+        return cacheGetEventData(event ?? null, 'ContentSearcher', () => {
             let range = this.getSelectionRange();
             return (
-                range && new PositionContentSearcher(this.core.contentDiv, Position.getStart(range))
+                range &&
+                new PositionContentSearcher(this.getCore().contentDiv, Position.getStart(range))
             );
         });
     }
@@ -725,7 +798,7 @@ export default class Editor implements IEditor {
      * @returns a function to cancel this async run
      */
     public runAsync(callback: (editor: IEditor) => void) {
-        let win = this.core.contentDiv.ownerDocument.defaultView || window;
+        let win = this.getCore().contentDiv.ownerDocument.defaultView || window;
         const handle = win.requestAnimationFrame(() => {
             if (!this.isDisposed() && callback) {
                 callback(this);
@@ -744,30 +817,32 @@ export default class Editor implements IEditor {
      */
     public setEditorDomAttribute(name: string, value: string) {
         if (value === null) {
-            this.core.contentDiv.removeAttribute(name);
+            this.getCore().contentDiv.removeAttribute(name);
         } else {
-            this.core.contentDiv.setAttribute(name, value);
+            this.getCore().contentDiv.setAttribute(name, value);
         }
     }
 
     /**
-     * get DOM attribute of editor content DIV
+     * Get DOM attribute of editor content DIV, null if there is no such attribute.
      * @param name Name of the attribute
      */
-    public getEditorDomAttribute(name: string): string {
-        return this.core.contentDiv.getAttribute(name);
+    public getEditorDomAttribute(name: string): string | null {
+        return this.getCore().contentDiv.getAttribute(name);
     }
 
     /**
+     * @deprecated Use getVisibleViewport() instead.
+     *
      * Get current relative distance from top-left corner of the given element to top-left corner of editor content DIV.
      * @param element The element to calculate from. If the given element is not in editor, return value will be null
      * @param addScroll When pass true, The return value will also add scrollLeft and scrollTop if any. So the value
      * may be different than what user is seeing from the view. When pass false, scroll position will be ignored.
      * @returns An [x, y] array which contains the left and top distances, or null if the given element is not in editor.
      */
-    getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] {
+    getRelativeDistanceToEditor(element: HTMLElement, addScroll?: boolean): number[] | null {
         if (this.contains(element)) {
-            const contentDiv = this.core.contentDiv;
+            const contentDiv = this.getCore().contentDiv;
             const editorRect = contentDiv.getBoundingClientRect();
             const elementRect = element.getBoundingClientRect();
 
@@ -792,10 +867,11 @@ export default class Editor implements IEditor {
      * @param feature The feature to add
      */
     public addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        const core = this.getCore();
         feature?.keys.forEach(key => {
-            let array = this.core.edit.features[key] || [];
+            let array = core.edit.features[key] || [];
             array.push(feature);
-            this.core.edit.features[key] = array;
+            core.edit.features[key] = array;
         });
     }
 
@@ -805,9 +881,10 @@ export default class Editor implements IEditor {
     public getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
         if (!node) {
             const range = this.getSelectionRange();
-            node = range && Position.getStart(range).normalize().node;
+            node = (range && Position.getStart(range).normalize().node) ?? undefined;
         }
-        return this.core.api.getStyleBasedFormatState(this.core, node);
+        const core = this.getCore();
+        return core.api.getStyleBasedFormatState(core, node ?? null);
     }
 
     /**
@@ -815,8 +892,9 @@ export default class Editor implements IEditor {
      * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
      * @returns The pending format state
      */
-    public getPendableFormatState(forceGetStateFromDOM?: boolean): PendableFormatState {
-        return this.core.api.getPendableFormatState(this.core, forceGetStateFromDOM);
+    public getPendableFormatState(forceGetStateFromDOM: boolean = false): PendableFormatState {
+        const core = this.getCore();
+        return core.api.getPendableFormatState(core, forceGetStateFromDOM);
     }
 
     /**
@@ -825,7 +903,8 @@ export default class Editor implements IEditor {
      * @param keyboardEvent Optional keyboard event object
      */
     public ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
-        this.core.api.ensureTypeInContainer(this.core, position, keyboardEvent);
+        const core = this.getCore();
+        core.api.ensureTypeInContainer(core, position, keyboardEvent);
     }
 
     //#endregion
@@ -840,10 +919,11 @@ export default class Editor implements IEditor {
         if (this.isDarkMode() == !!nextDarkMode) {
             return;
         }
+        const core = this.getCore();
 
-        this.core.api.transformColor(
-            this.core,
-            this.core.contentDiv,
+        core.api.transformColor(
+            core,
+            core.contentDiv,
             false /*includeSelf*/,
             null /*callback*/,
             nextDarkMode
@@ -862,7 +942,7 @@ export default class Editor implements IEditor {
      * @returns True if the editor is in dark mode, otherwise false
      */
     public isDarkMode(): boolean {
-        return this.core.lifecycle.isDarkMode;
+        return this.getCore().lifecycle.isDarkMode;
     }
 
     /**
@@ -870,8 +950,9 @@ export default class Editor implements IEditor {
      * @param node The node to transform
      */
     public transformToDarkColor(node: Node) {
-        this.core.api.transformColor(
-            this.core,
+        const core = this.getCore();
+        core.api.transformColor(
+            core,
             node,
             true /*includeSelf*/,
             null /*callback*/,
@@ -888,21 +969,23 @@ export default class Editor implements IEditor {
      * use this function to do more shadow edit operation.
      */
     public startShadowEdit() {
-        this.core.api.switchShadowEdit(this.core, true /*isOn*/);
+        const core = this.getCore();
+        core.api.switchShadowEdit(core, true /*isOn*/);
     }
 
     /**
      * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
      */
     public stopShadowEdit() {
-        this.core.api.switchShadowEdit(this.core, false /*isOn*/);
+        const core = this.getCore();
+        core.api.switchShadowEdit(core, false /*isOn*/);
     }
 
     /**
      * Check if editor is in Shadow Edit mode
      */
     public isInShadowEdit() {
-        return !!this.core.lifecycle.shadowEditFragment;
+        return !!this.getCore().lifecycle.shadowEditFragment;
     }
 
     /**
@@ -912,7 +995,7 @@ export default class Editor implements IEditor {
     public isFeatureEnabled(
         feature: ExperimentalFeatures | CompatibleExperimentalFeatures
     ): boolean {
-        return this.core.lifecycle.experimentalFeatures.indexOf(feature) >= 0;
+        return this.getCore().lifecycle.experimentalFeatures.indexOf(feature) >= 0;
     }
 
     /**
@@ -922,14 +1005,14 @@ export default class Editor implements IEditor {
      * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/trusted-types
      */
     getTrustedHTMLHandler(): TrustedHTMLHandler {
-        return this.core.trustedHTMLHandler;
+        return this.getCore().trustedHTMLHandler;
     }
 
     /**
      * @deprecated Use getZoomScale() instead
      */
     getSizeTransformer(): SizeTransformer {
-        return this.core.sizeTransformer;
+        return this.getCore().sizeTransformer;
     }
 
     /**
@@ -939,7 +1022,7 @@ export default class Editor implements IEditor {
      * @returns current zoom scale number
      */
     getZoomScale(): number {
-        return this.core.zoomScale;
+        return this.getCore().zoomScale;
     }
 
     /**
@@ -949,9 +1032,10 @@ export default class Editor implements IEditor {
      * @param scale The new scale number to set. It should be positive number and no greater than 10, otherwise it will be ignored.
      */
     setZoomScale(scale: number): void {
+        const core = this.getCore();
         if (scale > 0 && scale <= 10) {
-            const oldValue = this.core.zoomScale;
-            this.core.zoomScale = scale;
+            const oldValue = core.zoomScale;
+            core.zoomScale = scale;
 
             if (oldValue != scale) {
                 this.triggerPluginEvent(
@@ -964,6 +1048,24 @@ export default class Editor implements IEditor {
                 );
             }
         }
+    }
+
+    /**
+     * Retrieves the rect of the visible viewport of the editor.
+     */
+    getVisibleViewport(): Rect | null {
+        return this.getCore().getVisibleViewport();
+    }
+
+    /**
+     * @returns the current EditorCore object
+     * @throws a standard Error if there's no core object
+     */
+    private getCore(): EditorCore {
+        if (!this.core) {
+            throw new Error('Editor is already disposed');
+        }
+        return this.core;
     }
 
     //#endregion

@@ -1,19 +1,18 @@
 import { BackgroundColorFormat } from '../../../lib/publicTypes/format/formatParts/BackgroundColorFormat';
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('backgroundColorFormatHandler.parse', () => {
     let div: HTMLElement;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
     let format: BackgroundColorFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
         format = {};
     });
 
@@ -84,20 +83,24 @@ describe('backgroundColorFormatHandler.parse', () => {
 
         expect(format.backgroundColor).toBe('green');
     });
+
+    it('Color from element overwrite default style', () => {
+        div.style.backgroundColor = 'red';
+
+        backgroundColorFormatHandler.parse(format, div, context, { color: 'green' });
+
+        expect(format.backgroundColor).toBe('red');
+    });
 });
 
 describe('backgroundColorFormatHandler.apply', () => {
     let div: HTMLElement;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
     let format: BackgroundColorFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
 
         format = {};
     });

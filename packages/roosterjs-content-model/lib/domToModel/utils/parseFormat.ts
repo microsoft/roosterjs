@@ -1,17 +1,20 @@
-import { ContentModelContext } from '../../publicTypes/ContentModelContext';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
-import { FormatHandler } from '../../formatHandlers/FormatHandler';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
+import { FormatKey } from '../../publicTypes/format/FormatHandlerTypeMap';
 
 /**
  * @internal
  */
 export function parseFormat<T extends ContentModelFormatBase>(
     element: HTMLElement,
-    handlers: FormatHandler<T>[],
+    handlerKeys: FormatKey[],
     format: T,
-    context: ContentModelContext
+    context: DomToModelContext
 ) {
-    handlers.forEach(handler => {
-        handler.parse(format, element, context, {}); // TODO: pass in default styles
+    const styleItem = context.defaultStyles[element.tagName];
+    const defaultStyle = styleItem || {};
+
+    handlerKeys.forEach(key => {
+        context.formatParsers[key](format, element, context, defaultStyle);
     });
 }

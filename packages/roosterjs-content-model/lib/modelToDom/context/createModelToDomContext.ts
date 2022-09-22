@@ -1,21 +1,30 @@
-import { ContentModelContext } from '../../publicTypes/ContentModelContext';
-import { ModelToDomContext } from './ModelToDomContext';
+import { EditorContext } from '../../publicTypes/context/EditorContext';
+import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
+import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
 
+/**
+ * @internal
+ * @param editorContext
+ * @returns
+ */
 export function createModelToDomContext(
-    contentModelContext?: ContentModelContext
+    editorContext?: EditorContext,
+    options?: ModelToDomOption
 ): ModelToDomContext {
     return {
-        contentModelContext: contentModelContext || {
+        ...(editorContext || {
             isDarkMode: false,
             isRightToLeft: false,
             zoomScale: 1,
             getDarkColor: undefined,
-        },
+        }),
         regularSelection: {
             current: {
                 block: null,
                 segment: null,
             },
         },
+        formatAppliers: getFormatAppliers(options?.formatApplierOverride),
     };
 }

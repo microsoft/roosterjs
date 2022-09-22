@@ -1,7 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { handleBlock } from './handleBlock';
-import { ModelToDomContext } from '../context/ModelToDomContext';
+import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
 /**
@@ -32,12 +32,7 @@ export function handleSegment(
             element.appendChild(txt);
             regularSelection.current.segment = txt;
 
-            applyFormat(
-                element,
-                SegmentFormatHandlers,
-                segment.format,
-                context.contentModelContext
-            );
+            applyFormat(element, SegmentFormatHandlers, segment.format, context);
 
             break;
 

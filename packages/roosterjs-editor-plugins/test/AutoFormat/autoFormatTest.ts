@@ -16,7 +16,12 @@ describe('AutoHyphen |', () => {
     });
 
     const keyDown = (keysTyped: string): PluginEvent => {
-        return { eventType: PluginEventType.KeyDown, rawEvent: <KeyboardEvent>{ key: keysTyped } };
+        return {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: <KeyboardEvent>{
+                key: keysTyped,
+            },
+        };
     };
 
     function runTestShouldHandleAutoHyphen(
