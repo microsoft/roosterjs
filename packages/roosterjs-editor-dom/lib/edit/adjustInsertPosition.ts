@@ -280,37 +280,42 @@ function adjustInsertPositionForTable(
     position: NodePosition,
     range: Range
 ): NodePosition {
-    const { element } = position;
+    if (
+        (nodeToInsert.childNodes.length == 1 &&
+            getTagOfNode(nodeToInsert.childNodes[0]) == 'TABLE') ||
+        getTagOfNode(nodeToInsert) == 'TABLE'
+    ) {
+        const { element } = position;
 
-    const posBefore = new Position(element, PositionType.Before);
-    const rangeToTraverse = createRange(posBefore, position);
-    const contentTraverser = ContentTraverser.createSelectionTraverser(root, rangeToTraverse);
+        const posBefore = new Position(element, PositionType.Before);
+        const rangeToTraverse = createRange(posBefore, position);
+        const contentTraverser = ContentTraverser.createSelectionTraverser(root, rangeToTraverse);
 
-    let blockElement = contentTraverser && contentTraverser.currentBlockElement;
+        let blockElement = contentTraverser && contentTraverser.currentBlockElement;
 
-    if (blockElement) {
-        let nextBlockElement: BlockElement | null = blockElement;
+        if (blockElement) {
+            let nextBlockElement: BlockElement | null = blockElement;
 
-        while (!nextBlockElement) {
-            nextBlockElement = contentTraverser.getNextBlockElement();
-            if (nextBlockElement) {
-                blockElement = nextBlockElement;
+            while (!nextBlockElement) {
+                nextBlockElement = contentTraverser.getNextBlockElement();
+                if (nextBlockElement) {
+                    blockElement = nextBlockElement;
+                }
+            }
+
+            const prevElement = blockElement?.getEndNode();
+
+            if (prevElement && findClosestElementAncestor(prevElement, root, 'TABLE')) {
+                let tempRange = createRange(position);
+                tempRange.collapse(false /* toStart */);
+                const br = root.ownerDocument.createElement('br');
+                tempRange.insertNode(br);
+
+                tempRange = createRange(br);
+                position = Position.getEnd(tempRange);
             }
         }
-
-        const prevElement = blockElement?.getEndNode();
-
-        if (prevElement && findClosestElementAncestor(prevElement, root, 'TABLE')) {
-            let tempRange = createRange(position);
-            tempRange.collapse(false /* toStart */);
-            const br = root.ownerDocument.createElement('br');
-            tempRange.insertNode(br);
-
-            tempRange = createRange(br);
-            position = Position.getEnd(tempRange);
-        }
     }
-
     return position;
 }
 

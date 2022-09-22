@@ -58,11 +58,11 @@ export default function pasteTable(
                 let cell = currentCell.getCell(i, j);
                 let newcell = newTable.getTd(i - currentRow, j - currentCol);
                 if (!cell.spanAbove && !cell.spanLeft) {
-                    if (newcell.hasChildNodes()) {
+                    if (newcell!.hasChildNodes()) {
                         // Prevent double <br>
-                        cell.td?.removeChild(cell.td.lastChild);
-                        newcell.childNodes.forEach(child => {
-                            cell.td.append(child);
+                        cell.td?.removeChild(cell.td.lastChild!);
+                        newcell!.childNodes.forEach(child => {
+                            cell.td!.append(child);
                         });
                     }
                 }
