@@ -1,7 +1,7 @@
-import findClosestElementAncestor from 'roosterjs-editor-dom/lib/utils/findClosestElementAncestor';
-import getTagOfNode from 'roosterjs-editor-dom/lib/utils/getTagOfNode';
-import toArray from 'roosterjs-editor-dom/lib/jsUtils/toArray';
-import VTable from 'roosterjs-editor-dom/lib/table/VTable';
+import findClosestElementAncestor from '../utils/findClosestElementAncestor';
+import getTagOfNode from '../utils/getTagOfNode';
+import toArray from '../jsUtils/toArray';
+import VTable from '../table/VTable';
 import { NodePosition, NodeType, TableOperation } from 'roosterjs-editor-types';
 
 /**
