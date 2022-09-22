@@ -104,7 +104,7 @@ export default class VListChain {
      * After change the lists, commit the change to all lists in this chain to update the list number,
      * and clear the temporary dataset values added to list node
      */
-    commit() {
+    commit(shouldReuseAllAncestorListElements?: boolean) {
         const lists = this.getLists();
         let lastNumber = 0;
 
@@ -119,7 +119,7 @@ export default class VListChain {
             delete list.dataset[CHAIN_DATASET_NAME];
             delete list.dataset[AFTER_CURSOR_DATASET_NAME];
 
-            vlist.writeBack();
+            vlist.writeBack(shouldReuseAllAncestorListElements);
         }
     }
 

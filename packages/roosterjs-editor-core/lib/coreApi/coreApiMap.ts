@@ -12,6 +12,7 @@ import { getStyleBasedFormatState } from './getStyleBasedFormatState';
 import { hasFocus } from './hasFocus';
 import { insertNode } from './insertNode';
 import { restoreUndoSnapshot } from './restoreUndoSnapshot';
+import { selectImage } from './selectImage';
 import { selectRange } from './selectRange';
 import { selectTable } from './selectTable';
 import { setContent } from './setContent';
@@ -42,4 +43,5 @@ export const coreApiMap: CoreApiMap = {
     transformColor,
     triggerEvent,
     selectTable,
+    selectImage,
 };
