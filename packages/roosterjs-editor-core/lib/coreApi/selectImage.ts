@@ -1,6 +1,7 @@
+import addSelectionStyle from './utils/addSelectionStyle';
+import addUniqueId from './utils/addUniqueId';
 import { createRange } from 'roosterjs-editor-dom';
 import { EditorCore, SelectImage, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { ensureUniqueId } from './ensureUniqueId';
 
 const IMAGE_ID = 'imageSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
@@ -16,8 +17,8 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
     if (image) {
         const range = createRange(image);
 
-        ensureUniqueId(image, IMAGE_ID);
-        ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
+        addUniqueId(image, IMAGE_ID);
+        addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
         select(core, image);
         return {
@@ -32,17 +33,8 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
 };
 
 const select = (core: EditorCore, image: HTMLImageElement) => {
-    const styleTagId = STYLE_ID + core.contentDiv.id;
-    const doc = core.contentDiv.ownerDocument;
-    let styleTag = doc.getElementById(styleTagId) as HTMLStyleElement;
-    if (!styleTag) {
-        styleTag = doc.createElement('style');
-        styleTag.id = styleTagId;
-        doc.head.appendChild(styleTag);
-    }
-
     const borderCSS = buildBorderCSS(core, image.id);
-    styleTag.sheet?.insertRule(borderCSS);
+    addSelectionStyle(core, borderCSS, STYLE_ID);
 };
 
 const buildBorderCSS = (core: EditorCore, imageId: string): string => {
@@ -54,7 +46,7 @@ const buildBorderCSS = (core: EditorCore, imageId: string): string => {
         imageId +
         ' { margin: -2px; border: 2px solid' +
         borderColor +
-        '}'
+        ' !important; }'
     );
 };
 
