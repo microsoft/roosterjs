@@ -73,9 +73,9 @@ function InsertTablePane(props: {
 
     const updateSize = React.useCallback(
         (t?: HTMLElement | EventTarget) => {
-            if (safeInstanceOf(t, 'HTMLElement') && t.dataset.col && t.dataset.row) {
-                const col = parseInt(t.dataset.col);
-                const row = parseInt(t.dataset.row);
+            if (safeInstanceOf(t, 'HTMLElement')) {
+                const col = parseInt(t.dataset.col ?? '-1');
+                const row = parseInt(t.dataset.row ?? '-1');
 
                 if (col > 0 && col <= MaxCols && row > 0 && row <= MaxRows) {
                     setCol(col);
