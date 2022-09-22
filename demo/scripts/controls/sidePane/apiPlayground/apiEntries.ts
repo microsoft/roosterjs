@@ -3,6 +3,7 @@ import ApiPaneProps, { ApiPlaygroundComponent } from './ApiPaneProps';
 import BlockElementsPane from './blockElements/BlockElementsPane';
 import GetDarkColorPane from './darkColor/GetDarkColorPane';
 import GetSelectedRegionsPane from './region/GetSelectedRegionsPane';
+import GetSelectionPane from './getSelection/getSelectionPane';
 import InsertContentPane from './insertContent/InsertContentPane';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
 import MatchLinkPane from './matchLink/MatchLinkPane';
@@ -58,6 +59,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     getDarkColor: {
         name: 'getDarkColor',
         component: GetDarkColorPane,
+    },
+    getSelection: {
+        name: 'getSelection',
+        component: GetSelectionPane,
     },
     more: {
         name: 'Coming soon...',

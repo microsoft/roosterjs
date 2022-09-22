@@ -1,7 +1,8 @@
 import BasePluginEvent from './BasePluginEvent';
+import TableSelection from '../interface/TableSelection';
 import { PluginEventType } from '../enum/PluginEventType';
-import { SelectionRangeTypes } from '../enum';
-import { TableSelection } from '../interface';
+import { SelectionRangeTypes } from '../enum/SelectionRangeTypes';
+import type { CompatibleSelectionRangeTypes } from '../compatibleEnum/SelectionRangeTypes';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
@@ -11,7 +12,7 @@ export interface SelectionChangedEventData {
     /**
      * Type of the selection
      */
-    selectionType: SelectionRangeTypes;
+    selectionType: SelectionRangeTypes | CompatibleSelectionRangeTypes;
 
     /**
      * The HTMLElement selected
@@ -27,6 +28,11 @@ export interface SelectionChangedEventData {
      * If is a table selection, the coordinates of the selection
      */
     coordinates?: TableSelection;
+
+    /**
+     * If the selection changed was caused by a keyboard event, the key that changed selection
+     */
+    keyboardKey?: number | string;
 }
 
 /**

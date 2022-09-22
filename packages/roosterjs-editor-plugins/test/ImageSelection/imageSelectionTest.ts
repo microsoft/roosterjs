@@ -1,8 +1,18 @@
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { IEditor } from 'roosterjs-editor-types';
 import { ImageSelection } from '../../lib/ImageSelection';
+import {
+    EditorOptions,
+    SelectionRangeTypes,
+    PluginEvent,
+    PluginEventType,
+    Keys,
+} from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
+
+const SHIFT_KEYCODE = 16;
+const CTRL_KEYCODE = 17;
+const ALT_KEYCODE = 18;
 
 describe('ImageSelectionPlugin |', () => {
     let editor: IEditor;
@@ -10,6 +20,7 @@ describe('ImageSelectionPlugin |', () => {
     let imageId = 'imageSelectionId';
     let imageSelection: ImageSelection;
     let editorIsFeatureEnabled: any;
+    let editorTriggerPluginEvent: any;
 
     beforeEach(() => {
         let node = document.createElement('div');
@@ -34,6 +45,13 @@ describe('ImageSelectionPlugin |', () => {
             return null;
         };
         editorIsFeatureEnabled = spyOn(editor, 'isFeatureEnabled');
+    });
+
+    afterEach(() => {
+        editor.dispose();
+        editor = null;
+        const div = document.getElementById(id);
+        div.parentNode.removeChild(div);
     });
 
     it('should be triggered in mouse down', () => {
@@ -68,12 +86,95 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
-    afterEach(() => {
-        editor.dispose();
-        editor = null;
-        const div = document.getElementById(id);
-        div.parentNode.removeChild(div);
+    it('should handle a ESCAPE KEY in a image', () => {
+        editorTriggerPluginEvent = spyOn(editor, 'triggerPluginEvent');
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Keys.ESCAPE));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
+        expect(editorTriggerPluginEvent).toHaveBeenCalled();
+        expect(editorTriggerPluginEvent).toHaveBeenCalledWith(PluginEventType.SelectionChanged, {
+            selectionType: SelectionRangeTypes.Normal,
+            selectedElement: undefined,
+            keyboardKey: Keys.ESCAPE,
+        });
     });
+
+    it('should handle any SHIFT_KEY in a image', () => {
+        editorTriggerPluginEvent = spyOn(editor, 'triggerPluginEvent');
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(SHIFT_KEYCODE));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(false);
+        expect(editorTriggerPluginEvent).toHaveBeenCalledWith(PluginEventType.SelectionChanged, {
+            selectionType: SelectionRangeTypes.Normal,
+            selectedElement: undefined,
+            keyboardKey: SHIFT_KEYCODE,
+        });
+    });
+
+    it('should handle any CTRL_KEYCODE in a image', () => {
+        editorTriggerPluginEvent = spyOn(editor, 'triggerPluginEvent');
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(CTRL_KEYCODE));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(false);
+        expect(editorTriggerPluginEvent).toHaveBeenCalledWith(PluginEventType.SelectionChanged, {
+            selectionType: SelectionRangeTypes.Normal,
+            selectedElement: undefined,
+            keyboardKey: CTRL_KEYCODE,
+        });
+    });
+
+    it('should handle any ALT_KEYCODE in a image', () => {
+        editorTriggerPluginEvent = spyOn(editor, 'triggerPluginEvent');
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(ALT_KEYCODE));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(false);
+        expect(editorTriggerPluginEvent).toHaveBeenCalledWith(PluginEventType.SelectionChanged, {
+            selectionType: SelectionRangeTypes.Normal,
+            selectedElement: undefined,
+            keyboardKey: ALT_KEYCODE,
+        });
+    });
+
+    const keyDown = (keysTyped: number): PluginEvent => {
+        return {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: <KeyboardEvent>{
+                which: keysTyped,
+            },
+        };
+    };
 
     function simulateMouseEvent(target: HTMLElement) {
         const rect = target.getBoundingClientRect();
