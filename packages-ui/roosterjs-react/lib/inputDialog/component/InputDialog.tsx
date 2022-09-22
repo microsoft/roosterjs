@@ -71,7 +71,7 @@ export default function InputDialog<Strings extends string, ItemNames extends st
     return (
         <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
             <div>
-                {(Object.keys(items) as (keyof typeof items)[]).map(key => (
+                {getObjectKeys(items).map(key => (
                     <InputDialogItem
                         key={key}
                         itemName={key}
