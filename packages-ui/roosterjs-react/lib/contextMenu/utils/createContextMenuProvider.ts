@@ -3,6 +3,7 @@ import getLocalizedString from '../../common/utils/getLocalizedString';
 import { ContextMenuProvider, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * A plugin of editor to provide context menu items
@@ -79,7 +80,7 @@ class ContextMenuProviderImpl<TString extends string, TContext>
             subMenuProps: item.subItems
                 ? {
                       onItemClick: (_, menuItem) => menuItem && this.onClick(item, menuItem.data),
-                      items: (Object.keys(item.subItems) as TString[]).map(key => ({
+                      items: getObjectKeys(item.subItems).map(key => ({
                           key: key,
                           data: key,
                           text: getLocalizedString(this.strings, key, item.subItems?.[key]),

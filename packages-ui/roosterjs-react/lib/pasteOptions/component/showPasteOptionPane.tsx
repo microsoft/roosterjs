@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
 import { getLocalizedString, LocalizedStrings, UIUtilities } from '../../common/index';
-import { getPositionRect } from 'roosterjs-editor-dom';
+import { getObjectKeys, getPositionRect } from 'roosterjs-editor-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
@@ -161,7 +161,7 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
                 </div>
                 {selectedKey && (
                     <div className={classNames.buttonsContainer}>
-                        {(Object.keys(Buttons) as PasteOptionButtonKeys[]).map(key => (
+                        {getObjectKeys(Buttons).map(key => (
                             <PasteOptionButton
                                 key={key}
                                 strings={strings}

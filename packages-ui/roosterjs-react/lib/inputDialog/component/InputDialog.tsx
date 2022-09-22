@@ -9,6 +9,7 @@ import {
 } from '../../common/index';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -42,7 +43,7 @@ export default function InputDialog<Strings extends string, ItemNames extends st
         [strings, dialogTitleKey, unlocalizedTitle]
     );
     const [currentValues, setCurrentValues] = React.useState<Record<ItemNames, string>>(
-        (Object.keys(items) as ItemNames[]).reduce((result: Record<ItemNames, string>, key) => {
+        getObjectKeys(items).reduce((result: Record<ItemNames, string>, key) => {
             result[key] = items[key].initValue;
             return result;
         }, {} as Record<ItemNames, string>)
