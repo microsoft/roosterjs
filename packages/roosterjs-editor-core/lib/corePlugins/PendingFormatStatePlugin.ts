@@ -2,6 +2,7 @@ import { isCharacterValue, Position, setColor } from 'roosterjs-editor-dom';
 import {
     IEditor,
     Keys,
+    NodePosition,
     PendingFormatStatePluginState,
     PluginEvent,
     PluginEventType,
@@ -17,7 +18,7 @@ const ZERO_WIDTH_SPACE = '\u200B';
  */
 export default class PendingFormatStatePlugin
     implements PluginWithState<PendingFormatStatePluginState> {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
     private state: PendingFormatStatePluginState;
 
     /**
@@ -86,7 +87,9 @@ export default class PendingFormatStatePlugin
             case PluginEventType.KeyDown:
             case PluginEventType.MouseDown:
             case PluginEventType.ContentChanged:
+                let currentPosition: NodePosition | null = null;
                 if (
+                    this.editor &&
                     event.eventType == PluginEventType.KeyDown &&
                     isCharacterValue(event.rawEvent) &&
                     this.state.pendableFormatSpan
@@ -104,7 +107,8 @@ export default class PendingFormatStatePlugin
                         event.rawEvent.which >= Keys.PAGEUP &&
                         event.rawEvent.which <= Keys.DOWN) ||
                     (this.state.pendableFormatPosition &&
-                        !this.state.pendableFormatPosition.equalTo(this.getCurrentPosition()))
+                        (currentPosition = this.getCurrentPosition()) &&
+                        !this.state.pendableFormatPosition.equalTo(currentPosition))
                 ) {
                     // If content or position is changed (by keyboard, mouse, or code),
                     // check if current position is still the same with the cached one (if exist),
@@ -123,8 +127,8 @@ export default class PendingFormatStatePlugin
     }
 
     private getCurrentPosition() {
-        let range = this.editor.getSelectionRange();
-        return range && Position.getStart(range).normalize();
+        let range = this.editor?.getSelectionRange();
+        return (range && Position.getStart(range).normalize()) ?? null;
     }
 
     private createPendingFormatSpan(
@@ -132,7 +136,7 @@ export default class PendingFormatStatePlugin
     ) {
         let span = this.state.pendableFormatSpan;
 
-        if (!span) {
+        if (!span && this.editor) {
             const currentStyle = this.editor.getStyleBasedFormatState();
             const doc = this.editor.getDocument();
             const isDarkMode = this.editor.isDarkMode();
@@ -141,24 +145,31 @@ export default class PendingFormatStatePlugin
             span.contentEditable = 'true';
             span.appendChild(doc.createTextNode(ZERO_WIDTH_SPACE));
 
-            span.style.fontFamily = currentStyle.fontName;
-            span.style.fontSize = currentStyle.fontSize;
+            span.style.setProperty('font-family', currentStyle.fontName ?? null);
+            span.style.setProperty('font-size', currentStyle.fontSize ?? null);
 
-            setColor(
-                span,
-                currentStyle.textColors || currentStyle.textColor,
-                false /*isBackground*/,
-                isDarkMode
-            );
-            setColor(
-                span,
-                currentStyle.backgroundColors || currentStyle.backgroundColor,
-                true /*isBackground*/,
-                isDarkMode
-            );
+            if (currentStyle.textColors || currentStyle.textColor) {
+                setColor(
+                    span,
+                    (currentStyle.textColors || currentStyle.textColor)!,
+                    false /*isBackground*/,
+                    isDarkMode
+                );
+            }
+
+            if (currentStyle.backgroundColors || currentStyle.backgroundColor) {
+                setColor(
+                    span,
+                    (currentStyle.backgroundColors || currentStyle.backgroundColor)!,
+                    true /*isBackground*/,
+                    isDarkMode
+                );
+            }
         }
 
-        callback(span);
+        if (span) {
+            callback(span);
+        }
 
         return span;
     }

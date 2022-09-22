@@ -26,7 +26,7 @@ import {
  * new table is inserted, to make sure the selection path we created is correct.
  */
 export default class NormalizeTablePlugin implements EditorPlugin {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
 
     /**
      * Get a friendly name of this plugin
@@ -64,7 +64,9 @@ export default class NormalizeTablePlugin implements EditorPlugin {
         switch (event.eventType) {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
-                this.normalizeTables(this.editor.queryElements('table'));
+                if (this.editor) {
+                    this.normalizeTables(this.editor.queryElements('table'));
+                }
                 break;
 
             case PluginEventType.BeforePaste:
@@ -82,7 +84,7 @@ export default class NormalizeTablePlugin implements EditorPlugin {
                 break;
 
             case PluginEventType.ExtractContentWithDom:
-                if (this.editor.isFeatureEnabled(ExperimentalFeatures.NormalizeList)) {
+                if (this.editor?.isFeatureEnabled(ExperimentalFeatures.NormalizeList)) {
                     normalizeListsForExport(event.clonedRoot);
                 }
                 break;
@@ -90,18 +92,15 @@ export default class NormalizeTablePlugin implements EditorPlugin {
     }
 
     private normalizeTableFromEvent(event: KeyboardEvent | MouseEvent) {
-        const table = this.editor.getElementAtCursor(
-            'table',
-            event.target as Node
-        ) as HTMLTableElement;
+        const table = this.editor?.getElementAtCursor('table', event.target as Node);
 
         if (table) {
-            this.normalizeTables([table]);
+            this.normalizeTables([<HTMLTableElement>table]);
         }
     }
 
     private normalizeTables(tables: HTMLTableElement[]) {
-        if (tables.length > 0) {
+        if (this.editor && tables.length > 0) {
             const rangeEx = this.editor.getSelectionRangeEx();
             const { startContainer, endContainer, startOffset, endOffset } =
                 (rangeEx?.type == SelectionRangeTypes.Normal && rangeEx.ranges[0]) || {};
@@ -109,9 +108,17 @@ export default class NormalizeTablePlugin implements EditorPlugin {
             const isChanged = normalizeTables(tables);
 
             if (isChanged) {
-                if (startContainer && endContainer) {
+                if (
+                    startContainer &&
+                    endContainer &&
+                    typeof startOffset === 'number' &&
+                    typeof endOffset === 'number'
+                ) {
                     this.editor.select(startContainer, startOffset, endContainer, endOffset);
-                } else if (rangeEx?.type == SelectionRangeTypes.TableSelection) {
+                } else if (
+                    rangeEx?.type == SelectionRangeTypes.TableSelection &&
+                    rangeEx.coordinates
+                ) {
                     this.editor.select(rangeEx.table, rangeEx.coordinates);
                 }
             }
@@ -173,7 +180,7 @@ function normalizeListsForExport(root: ParentNode) {
         const prevElement = li.previousSibling;
 
         if (li.style.display == 'block' && safeInstanceOf(prevElement, 'HTMLLIElement')) {
-            delete li.style.display;
+            li.style.removeProperty('display');
 
             prevElement.appendChild(changeElementTag(li, 'div'));
         }

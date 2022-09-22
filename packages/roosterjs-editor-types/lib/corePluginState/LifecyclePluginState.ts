@@ -31,7 +31,7 @@ export default interface LifecyclePluginState {
     /**
      * External content transform function to help do color transform for existing content
      */
-    onExternalContentTransform: (htmlIn: HTMLElement) => void;
+    onExternalContentTransform: ((htmlIn: HTMLElement) => void) | null;
 
     /**
      * Enabled experimental features

@@ -50,12 +50,12 @@ const DARK_MODE_DEFAULT_FORMAT = {
  * Lifecycle plugin handles editor initialization and disposing
  */
 export default class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
     private state: LifecyclePluginState;
     private initialContent: string;
     private contentDivFormat: string[];
-    private initializer: () => void;
-    private disposer: () => void;
+    private initializer: (() => void) | null = null;
+    private disposer: (() => void) | null = null;
     private adjustColor: () => void;
 
     /**
@@ -91,10 +91,10 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
 
         this.state = {
             customData: {},
-            defaultFormat: options.defaultFormat || null,
+            defaultFormat: options.defaultFormat ?? {},
             isDarkMode: !!options.inDarkMode,
-            getDarkColor: options.getDarkColor || ((color: string) => color),
-            onExternalContentTransform: options.onExternalContentTransform,
+            getDarkColor: options.getDarkColor ?? ((color: string | null) => color ?? '#fff'),
+            onExternalContentTransform: options.onExternalContentTransform ?? null,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
             shadowEditSelectionPath: null,
@@ -139,7 +139,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
      * Dispose this plugin
      */
     dispose() {
-        this.editor.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
+        this.editor?.triggerPluginEvent(PluginEventType.BeforeDispose, {}, true /*broadcast*/);
 
         getObjectKeys(this.state.customData).forEach(key => {
             const data = this.state.customData[key];
@@ -187,7 +187,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         getObjectKeys(COMMANDS).forEach(command => {
             // Catch any possible exception since this should not block the initialization of editor
             try {
-                this.editor.getDocument().execCommand(command, false, COMMANDS[command]);
+                this.editor?.getDocument().execCommand(command, false, COMMANDS[command]);
             } catch {}
         });
     }
