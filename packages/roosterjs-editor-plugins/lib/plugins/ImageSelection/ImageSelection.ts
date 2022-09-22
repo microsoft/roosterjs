@@ -12,7 +12,7 @@ import {
  */
 export default class ImageSelection implements EditorPlugin {
     private editor: IEditor | null = null;
-    private image: HTMLImageElement | null = null;
+    private imageId: string | null = null;
 
     constructor() {}
 
@@ -37,7 +37,7 @@ export default class ImageSelection implements EditorPlugin {
     dispose() {
         this.editor.select(null);
         this.editor = null;
-        this.image = null;
+        this.imageId = null;
     }
 
     onPluginEvent(event: PluginEvent) {
@@ -50,21 +50,22 @@ export default class ImageSelection implements EditorPlugin {
                     }
                     break;
                 case PluginEventType.LeavingShadowEdit:
-                    if (this.image) {
-                        const image = this.editor.queryElements('#' + this.image.id);
-                        if (image.length == 1) {
-                            this.image = image[0] as HTMLImageElement;
-                            this.editor.select(this.image);
+                    if (this.imageId) {
+                        const images = this.editor.queryElements(
+                            '#' + this.imageId
+                        ) as HTMLImageElement[];
+                        if (images.length == 1) {
+                            const image = images[0];
+                            this.editor.select(image);
                         }
+                        this.imageId = null;
                     }
                     break;
                 case PluginEventType.MouseDown:
                     const target = event.rawEvent.target;
                     if (safeInstanceOf(target, 'HTMLImageElement')) {
-                        this.image = target;
-                        this.editor.select(this.image);
-                    } else {
-                        this.image = null;
+                        this.editor.select(target);
+                        this.imageId = target.id;
                     }
                     break;
             }
