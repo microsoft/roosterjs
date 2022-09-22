@@ -60,7 +60,8 @@ class ContextMenuProviderImpl<TString extends string, TContext>
                       item =>
                           !item.shouldShow ||
                           (this.editor &&
-                              item.shouldShow(this.editor, node, <TContext>this.context))
+                              this.context &&
+                              item.shouldShow(this.editor, node, this.context))
                   )
                   .map(item => this.convertMenuItems(item))
             : [];
@@ -96,14 +97,14 @@ class ContextMenuProviderImpl<TString extends string, TContext>
     }
 
     private onClick(item: ContextMenuItem<TString, TContext>, key: TString) {
-        if (this.editor && this.targetNode && this.uiUtilities) {
+        if (this.editor && this.targetNode && this.uiUtilities && this.context) {
             item.onClick(
                 key,
                 this.editor,
                 this.targetNode,
                 this.strings,
                 this.uiUtilities,
-                <TContext>this.context
+                this.context
             );
         }
     }
