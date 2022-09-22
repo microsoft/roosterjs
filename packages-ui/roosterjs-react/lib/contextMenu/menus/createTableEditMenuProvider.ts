@@ -59,7 +59,7 @@ const ColorValues = {
 function onClick(key: TableEditMenuItemStringKey, editor: IEditor) {
     editor.focus();
     const operation = TableEditOperationMap[key];
-    if (operation) {
+    if (typeof operation === 'number') {
         editTable(editor, operation);
     }
 }

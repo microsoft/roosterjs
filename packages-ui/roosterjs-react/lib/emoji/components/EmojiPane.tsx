@@ -538,7 +538,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
     };
 
     const onSearchChange = (_: any, newValue?: string): void => {
-        if (newValue) {
+        if (typeof newValue === 'string') {
             const normalizedSearchValue = normalizeSearchText(newValue, false);
             const newMode =
                 normalizedSearchValue.length === 0 ? EmojiPaneMode.Full : EmojiPaneMode.Partial;

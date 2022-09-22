@@ -35,6 +35,7 @@ const EMOJI_BEFORE_COLON_REGEX = /([\u0023-\u0039][\u20e3]|[\ud800-\udbff][\udc0
 class EmojiPlugin implements ReactEditorPlugin {
     private editor: IEditor | null = null;
     private eventHandledOnKeyDown: boolean = false;
+    private canUndoEmoji: boolean = false;
     private isSuggesting: boolean = false;
     private paneRef = React.createRef<EmojiPane>();
     private timer: number | null = null;
@@ -75,11 +76,12 @@ class EmojiPlugin implements ReactEditorPlugin {
             this.eventHandledOnKeyDown = false;
             if (this.isSuggesting) {
                 this.onKeyDownSuggestingDomEvent(event);
-            } else if (event.rawEvent.which === KeyCodes.backspace) {
+            } else if (event.rawEvent.which === KeyCodes.backspace && this.canUndoEmoji) {
                 //TODO: 1051
                 // If KeyDown is backspace and canUndoEmoji, call editor undo
-                this.editor?.undo();
+                this.editor!.undo();
                 this.handleEventOnKeyDown(event);
+                this.canUndoEmoji = false;
             }
         } else if (event.eventType === PluginEventType.KeyUp && !isModifierKey(event.rawEvent)) {
             if (this.isSuggesting) {
@@ -90,6 +92,7 @@ class EmojiPlugin implements ReactEditorPlugin {
         } else if (event.eventType === PluginEventType.MouseUp) {
             //TODO: 1052
             // If MouseUp, the emoji cannot be undone
+            this.canUndoEmoji = false;
             this.setIsSuggesting(false);
         }
     }
