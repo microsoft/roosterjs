@@ -1,6 +1,6 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import { createVListFromRegion } from 'roosterjs-editor-dom';
-import { IEditor } from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Resets Ordered List Numbering back to the value of the parameter startNumber
@@ -26,7 +26,9 @@ export default function setOrderedListNumbering(
                 );
                 if (vList) {
                     vList.split(separator, startNumber);
-                    vList.writeBack();
+                    vList.writeBack(
+                        editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                    );
                 }
             }
         },

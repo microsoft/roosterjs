@@ -80,7 +80,11 @@ export default function setIndentation(
                                   isTabKeyTextFeaturesEnabled /* preventItemRemoval */
                               )
                             : vList.setIndentation(start, end, indentation);
-                        vList.writeBack();
+                        vList.writeBack(
+                            editor.isFeatureEnabled(
+                                ExperimentalFeatures.ReuseAllAncestorListElements
+                            )
+                        );
                         blockGroups.push([]);
                     }
                 } else {
