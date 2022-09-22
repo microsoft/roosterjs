@@ -1,12 +1,13 @@
 import * as TestHelper from '../TestHelper';
 import { AutoFormat } from '../../lib/AutoFormat';
-import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 describe('AutoHyphen |', () => {
     let editor: IEditor;
     const TEST_ID = 'autoHyphenTest';
-    let plugin = new AutoFormat();
+    let plugin: EditorPlugin;
     beforeEach(() => {
+        plugin = new AutoFormat();
         editor = TestHelper.initEditor(TEST_ID, [plugin]);
     });
 
