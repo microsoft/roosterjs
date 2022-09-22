@@ -13,7 +13,6 @@ describe('addBlock', () => {
         addBlock(doc, block);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [block],
             document: document,

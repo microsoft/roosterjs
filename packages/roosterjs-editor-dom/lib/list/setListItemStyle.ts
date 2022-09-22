@@ -45,8 +45,12 @@ function getInlineChildElementsStyle(element: HTMLElement, styles: string[]) {
 
         // we should consider of when it is the single childnode of element, the parentNode's style should add
         // such as the "i", "b", "span" node in <li><span><b><i>aa</i></b></span></li>
-        while (currentNode && currentNode !== element && safeInstanceOf(currentNode, 'HTMLElement')) {
-            styles.forEach((styleName) => {
+        while (
+            currentNode &&
+            currentNode !== element &&
+            safeInstanceOf(currentNode, 'HTMLElement')
+        ) {
+            styles.forEach(styleName => {
                 const styleValue = (currentNode as HTMLElement).style.getPropertyValue(styleName);
                 if (styleValue && !currentStyle[styleName]) {
                     currentStyle[styleName] = styleValue;

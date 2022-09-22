@@ -10,4 +10,8 @@ export const enum SelectionRangeTypes {
      * Selection made inside of a single table.
      */
     TableSelection,
+    /**
+     * Selection made in a image.
+     */
+    ImageSelection,
 }

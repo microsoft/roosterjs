@@ -42,14 +42,16 @@ const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
  */
 export const transformColor: TransformColor = (
     core: EditorCore,
-    rootNode: Node,
+    rootNode: Node | null,
     includeSelf: boolean,
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) => {
     const elements =
-        forceTransform || core.lifecycle.isDarkMode ? getAll(rootNode, includeSelf) : [];
+        rootNode && (forceTransform || core.lifecycle.isDarkMode)
+            ? getAll(rootNode, includeSelf)
+            : [];
 
     callback?.();
 

@@ -63,6 +63,7 @@ describe('Editor', () => {
             stopPrintableKeyboardEventPropagation: true,
             contextMenuProviders: [],
             tableSelectionRange: null,
+            imageSelectionRange: null,
         });
         if (!Browser.isChrome) {
             expect(core.edit).toEqual({
@@ -171,6 +172,7 @@ describe('Editor', () => {
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
             tableSelectionRange: null,
+            imageSelectionRange: null,
         });
         if (!Browser.isChrome) {
             expect(core.edit).toEqual({

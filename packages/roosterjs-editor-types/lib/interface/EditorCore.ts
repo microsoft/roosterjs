@@ -2,12 +2,14 @@ import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
+import Rect from './Rect';
 import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
+import { ImageSelectionRange } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
@@ -19,7 +21,6 @@ import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
 import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
-
 /**
  * Represents the core data structure of an editor
  */
@@ -62,6 +63,11 @@ export default interface EditorCore extends PluginState {
      * @deprecated Use zoomScale instead
      */
     sizeTransformer: SizeTransformer;
+
+    /**
+     * Retrieves the Visible Viewport of the editor.
+     */
+    getVisibleViewport: () => Rect | null;
 }
 
 /**
@@ -103,7 +109,7 @@ export type AttachDomEvent = (
 export type CreatePasteFragment = (
     core: EditorCore,
     clipboardData: ClipboardData,
-    position: NodePosition,
+    position: NodePosition | null,
     pasteAsText: boolean,
     applyCurrentStyle: boolean
 ) => DocumentFragment | null;
@@ -157,7 +163,10 @@ export type GetSelectionRangeEx = (core: EditorCore) => SelectionRangeEx;
  * @param core The EditorCore objects
  * @param node The node to get style from
  */
-export type GetStyleBasedFormatState = (core: EditorCore, node: Node) => StyleBasedFormatState;
+export type GetStyleBasedFormatState = (
+    core: EditorCore,
+    node: Node | null
+) => StyleBasedFormatState;
 
 /**
  * Get the pendable format such as underline and bold
@@ -182,7 +191,7 @@ export type HasFocus = (core: EditorCore) => boolean;
  * @param core The EditorCore object. No op if null.
  * @param option An insert option object to specify how to insert the node
  */
-export type InsertNode = (core: EditorCore, node: Node, option: InsertOption) => boolean;
+export type InsertNode = (core: EditorCore, node: Node, option: InsertOption | null) => boolean;
 
 /**
  * Restore an undo snapshot into editor
@@ -234,7 +243,7 @@ export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
  */
 export type TransformColor = (
     core: EditorCore,
-    rootNode: Node,
+    rootNode: Node | null,
     includeSelf: boolean,
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
@@ -259,9 +268,16 @@ export type TriggerEvent = (core: EditorCore, pluginEvent: PluginEvent, broadcas
  */
 export type SelectTable = (
     core: EditorCore,
-    table: HTMLTableElement,
+    table: HTMLTableElement | null,
     coordinates?: TableSelection
 ) => TableSelectionRange | null;
+
+/**
+ * Select a table and save data of the selected range
+ * @param image image to select
+ * @returns true if successful
+ */
+export type SelectImage = (image: HTMLImageElement | null) => ImageSelectionRange | null;
 
 /**
  * The interface for the map of core API.
@@ -428,4 +444,13 @@ export interface CoreApiMap {
      * @returns true if successful
      */
     selectTable: SelectTable;
+
+    /**
+     * Select a image and save data of the selected range
+     * @param core The EditorCore object
+     * @param image image to select
+     * @param imageId the id of the image element
+     * @returns true if successful
+     */
+    selectImage: SelectImage;
 }

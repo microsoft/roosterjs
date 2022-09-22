@@ -2,10 +2,10 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { containerProcessor } from './containerProcessor';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
-import { ElementProcessor } from './ElementProcessor';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
-import { stackSegmentFormat } from '../utils/stackSegmentFormat';
+import { stackFormat } from '../utils/stackFormat';
 import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
@@ -29,18 +29,14 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    stackSegmentFormat(context, () => {
-        parseFormat(tableElement, TableFormatHandlers, table.format, context.contentModelContext);
-        parseFormat(
-            tableElement,
-            SegmentFormatHandlers,
-            context.segmentFormat,
-            context.contentModelContext
-        );
+    stackFormat(context, { segment: 'shallowClone' }, () => {
+        parseFormat(tableElement, TableFormatHandlers, table.format, context);
+        parseFormat(tableElement, SegmentFormatHandlers, context.segmentFormat, context);
         addBlock(group, table);
 
         const columnPositions: number[] = [0];
         const rowPositions: number[] = [0];
+        const zoomScale = context.zoomScale;
 
         for (let row = 0; row < tableElement.rows.length; row++) {
             const tr = tableElement.rows[row];
@@ -57,15 +53,18 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
                 const colEnd = targetCol + td.colSpan;
                 const rowEnd = row + td.rowSpan;
+                const needCalcWidth = columnPositions[colEnd] === undefined;
+                const needCalcHeight = rowPositions[rowEnd] === undefined;
 
-                if (columnPositions[colEnd] === undefined || rowPositions[rowEnd] === undefined) {
+                if (needCalcWidth || needCalcHeight) {
                     const rect = td.getBoundingClientRect();
 
-                    if (columnPositions[colEnd] === undefined) {
-                        columnPositions[colEnd] = columnPositions[targetCol] + rect.width;
+                    if (needCalcWidth) {
+                        columnPositions[colEnd] =
+                            columnPositions[targetCol] + rect.width / zoomScale;
                     }
-                    if (rowPositions[rowEnd] === undefined) {
-                        rowPositions[rowEnd] = rowPositions[row] + rect.height;
+                    if (needCalcHeight) {
+                        rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
                     }
                 }
 
@@ -81,18 +80,13 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                         table.cells[row + rowSpan - 1][targetCol] = cell;
 
                         if (hasTd) {
-                            stackSegmentFormat(context, () => {
-                                parseFormat(
-                                    td,
-                                    TableCellFormatHandlers,
-                                    cell.format,
-                                    context.contentModelContext
-                                );
+                            stackFormat(context, { segment: 'shallowClone' }, () => {
+                                parseFormat(td, TableCellFormatHandlers, cell.format, context);
                                 parseFormat(
                                     td,
                                     SegmentFormatHandlers,
                                     context.segmentFormat,
-                                    context.contentModelContext
+                                    context
                                 );
 
                                 containerProcessor(cell, td, context);

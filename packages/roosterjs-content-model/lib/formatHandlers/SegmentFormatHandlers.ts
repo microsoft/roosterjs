@@ -1,8 +1,17 @@
-import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
-import { FormatHandler } from './FormatHandler';
+import { FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 
 /**
  * @internal
  * Order by frequency, from not common used to common used, for better optimization
  */
-export const SegmentFormatHandlers: FormatHandler<ContentModelSegmentFormat>[] = [];
+export const SegmentFormatHandlers: FormatKey[] = [
+    'superOrSubScript',
+    'strike',
+    'fontFamily',
+    'fontSize',
+    'underline',
+    'italic',
+    'bold',
+    'textColor',
+    'backgroundColor',
+];

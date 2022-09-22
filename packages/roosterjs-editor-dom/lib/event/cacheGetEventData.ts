@@ -7,7 +7,11 @@ import { PluginEvent } from 'roosterjs-editor-types';
  * @param key Cache key string, need to be unique
  * @param getter Getter function to get the object when it is not in cache yet
  */
-export default function cacheGetEventData<T>(event: PluginEvent, key: string, getter: () => T): T {
+export default function cacheGetEventData<T>(
+    event: PluginEvent | null,
+    key: string,
+    getter: () => T
+): T {
     let result =
         event && event.eventDataCache && event.eventDataCache.hasOwnProperty(key)
             ? <T>event.eventDataCache[key]

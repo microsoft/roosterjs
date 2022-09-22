@@ -1,11 +1,11 @@
 import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
-import * as stackSegmentFormat from '../../../lib/domToModel/utils/stackSegmentFormat';
+import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
@@ -36,7 +36,6 @@ describe('tableProcessor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanAbove: false,
                         spanLeft: false,
@@ -204,7 +203,7 @@ describe('tableProcessor with format', () => {
 
         context.segmentFormat = { a: 'b' } as any;
 
-        spyOn(stackSegmentFormat, 'stackSegmentFormat').and.callThrough();
+        spyOn(stackFormat, 'stackFormat').and.callThrough();
         spyOn(parseFormat, 'parseFormat').and.callFake((element, handlers, format, context) => {
             if (element == table) {
                 if (handlers == TableFormatHandlers) {
@@ -223,11 +222,10 @@ describe('tableProcessor with format', () => {
 
         tableProcessor(doc, table, context);
 
-        expect(stackSegmentFormat.stackSegmentFormat).toHaveBeenCalledTimes(2);
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
         expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             document: document,
             blocks: [
@@ -236,7 +234,6 @@ describe('tableProcessor with format', () => {
                     cells: [
                         [
                             {
-                                blockType: 'BlockGroup',
                                 blockGroupType: 'TableCell',
                                 blocks: [
                                     {
@@ -268,6 +265,62 @@ describe('tableProcessor with format', () => {
                     format: {
                         format1: 'table',
                     } as any,
+                },
+            ],
+        });
+    });
+
+    it('calculate table size with zoom scale', () => {
+        const mockedTable = ({
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        const doc = createContentModelDocument(document);
+        context.zoomScale = 2;
+
+        tableProcessor(doc, mockedTable, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [50],
+                    heights: [100],
+                    format: {},
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                format: {},
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                            },
+                        ],
+                    ],
                 },
             ],
         });

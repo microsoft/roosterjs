@@ -5,7 +5,7 @@ const bulletListType: Record<string, number> = {
     '-': BulletListType.Dash,
     '--': BulletListType.Square,
     '->': BulletListType.LongArrow,
-    '-->': BulletListType.LongArrow,
+    '-->': BulletListType.DoubleLongArrow,
     '=>': BulletListType.UnfilledArrow,
     '>': BulletListType.ShortArrow,
     '—': BulletListType.Hyphen,

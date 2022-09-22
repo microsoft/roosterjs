@@ -22,6 +22,7 @@ const bulletListStyle: Record<string, string> = {
     [BulletListType.Square]: 'square',
     [BulletListType.Dash]: '- ',
     [BulletListType.LongArrow]: '→ ',
+    [BulletListType.DoubleLongArrow]: '→ ',
     [BulletListType.ShortArrow]: '➢ ',
     [BulletListType.UnfilledArrow]: '➪ ',
     [BulletListType.Hyphen]: '— ',

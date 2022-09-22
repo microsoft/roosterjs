@@ -93,6 +93,10 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         this.removeDocumentEvents();
     }
 
+    public get mouseType(): string {
+        return this.dndMouse == MOUSE_EVENT_INFO_MOBILE ? 'touch' : 'mouse';
+    }
+
     private addDocumentEvents() {
         const doc = this.trigger.ownerDocument;
         doc.addEventListener(this.dndMouse.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);

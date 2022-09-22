@@ -1,20 +1,19 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { IdFormat } from '../../../lib/publicTypes/format/formatParts/IdFormat';
 import { idFormatHandler } from '../../../lib/formatHandlers/common/idFormatHandler';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('idFormatHandler.parse', () => {
     let div: HTMLElement;
     let format: IdFormat;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
     });
 
     it('No id', () => {
@@ -32,16 +31,12 @@ describe('idFormatHandler.parse', () => {
 describe('idFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: IdFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     it('No id', () => {
