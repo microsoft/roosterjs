@@ -18,7 +18,7 @@ export interface InputDialogProps<Strings extends string, ItemNames extends stri
     dialogTitleKey: Strings;
     unlocalizedTitle: string;
     items: Record<ItemNames, DialogItem<Strings>>;
-    strings?: Partial<LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>>;
+    strings?: LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>;
     onChange?: (
         changedItemName: ItemNames,
         newValue: string,

@@ -17,7 +17,7 @@ export default function showInputDialog<Strings extends string, ItemNames extend
     dialogTitleKey: Strings,
     unlocalizedTitle: string,
     items: Record<ItemNames, DialogItem<Strings>>,
-    strings?: Partial<LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>>,
+    strings?: LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>,
     onChange?: (
         changedItemName: ItemNames,
         newValue: string,
