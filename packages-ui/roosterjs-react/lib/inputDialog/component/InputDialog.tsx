@@ -53,9 +53,9 @@ export default function InputDialog<Strings extends string, ItemNames extends st
         onOk?.(currentValues);
     }, [onOk, currentValues]);
     const onItemChanged = React.useCallback(
-        (itemName: string, newValue: string) => {
+        (itemName: ItemNames, newValue: string) => {
             if (itemName in items) {
-                const newValues = onChange?.(itemName as ItemNames, newValue, {
+                const newValues = onChange?.(itemName, newValue, {
                     ...currentValues,
                 }) || {
                     ...currentValues,

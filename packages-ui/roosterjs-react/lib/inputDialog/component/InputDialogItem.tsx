@@ -14,7 +14,7 @@ export interface InputDialogItemProps<Strings extends string, ItemNames extends 
     items: Record<ItemNames, DialogItem<Strings>>;
     currentValues: Record<ItemNames, string>;
     onEnterKey: () => void;
-    onChanged: (itemName: string, newValue: string) => void;
+    onChanged: (itemName: ItemNames, newValue: string) => void;
 }
 
 const classNames = mergeStyleSets({
