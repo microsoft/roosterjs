@@ -6,8 +6,9 @@ import { NodePosition, NodeType, TableOperation } from 'roosterjs-editor-types';
 
 /**
  * @internal
- * STILL NOT WRITTEN
- *
+ * @param root The table to paste into
+ * @param nodeToInsert A Node containing the table to be inserted
+ * @param position The position to paste the table
  */
 export default function pasteTable(
     root: HTMLElement,
@@ -15,10 +16,13 @@ export default function pasteTable(
     position: NodePosition,
     range: Range
 ) {
+    console.log(nodeToInsert.childNodes);
     if (
-        (nodeToInsert.childNodes.length >= 1 &&
+        (nodeToInsert.childNodes.length == 1 &&
             getTagOfNode(nodeToInsert.childNodes[0]) == 'TABLE') ||
-        getTagOfNode(nodeToInsert) == 'TABLE'
+        (nodeToInsert.childNodes.length == 2 &&
+            getTagOfNode(nodeToInsert.childNodes[0]) == 'TABLE' &&
+            getTagOfNode(nodeToInsert.childNodes[1]) == 'BR')
     ) {
         let rootNodeToInsert: Node | null = nodeToInsert;
 
@@ -30,28 +34,34 @@ export default function pasteTable(
         }
 
         let tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
-        //let trNode = tdNode && findClosestElementAncestor(tdNode, root, 'TR');
 
+        // This is the table on the clipboard
         let newTable = new VTable(<HTMLTableElement>rootNodeToInsert);
-        let currentcell = new VTable(<HTMLTableCellElement>tdNode);
+        // This table is already on the editor
+        let currentCell = new VTable(<HTMLTableCellElement>tdNode);
 
-        let rows = currentcell.row + newTable.cells?.length;
-        let columns = currentcell.col + newTable.cells?.[0].length;
+        let currentRow = currentCell.row!;
+        let currentCol = currentCell.col!;
 
-        while (currentcell.cells.length < rows) {
-            currentcell.edit(TableOperation.InsertBelow);
+        let rows = currentRow + newTable.cells?.length!;
+        let columns = currentCol + newTable.cells?.[0].length!;
+
+        while (currentCell.cells!.length! < rows) {
+            currentCell.edit(TableOperation.InsertBelow);
         }
 
-        while (currentcell.cells[0].length < columns) {
-            currentcell.edit(TableOperation.InsertRight);
+        while (currentCell.cells![0].length < columns) {
+            currentCell.edit(TableOperation.InsertRight);
         }
 
-        for (let i = currentcell.row; i < rows; i++) {
-            for (let j = currentcell.col; j < columns; j++) {
-                let cell = currentcell.getCell(i, j);
-                let newcell = newTable.getTd(i - currentcell.row, j - currentcell.col);
+        for (let i = currentRow; i < rows; i++) {
+            for (let j = currentCol; j < columns; j++) {
+                let cell = currentCell.getCell(i, j);
+                let newcell = newTable.getTd(i - currentRow, j - currentCol);
                 if (!cell.spanAbove && !cell.spanLeft) {
                     if (newcell.hasChildNodes()) {
+                        // Prevent double <br>
+                        cell.td?.removeChild(cell.td.lastChild);
                         newcell.childNodes.forEach(child => {
                             cell.td.append(child);
                         });
@@ -60,12 +70,6 @@ export default function pasteTable(
             }
         }
 
-        currentcell.writeBack();
-
-        return null as Node;
+        currentCell.writeBack();
     }
 }
-
-void function addEmpty(tr: HTMLTableRowElement, prevtr: HTMLTableRowElement) {
-    tr.appendChild(prevtr.firstChild.cloneNode());
-};
