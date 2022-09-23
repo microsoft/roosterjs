@@ -128,6 +128,7 @@ export default class Editor implements IEditor {
                             : [scrollContainer, contentDiv]
                     );
                 }),
+            imageSelectionBorderColor: options.imageSelectionBorderColor,
         };
 
         // 3. Initialize plugins
@@ -481,11 +482,11 @@ export default class Editor implements IEditor {
             safeInstanceOf(arg1, 'HTMLImageElement') &&
             !arg2
         ) {
-            const selection = core.api.selectImage(arg1);
+            const selection = core.api.selectImage(core, arg1);
             core.domEvent.imageSelectionRange = selection;
             return !!selection;
         } else {
-            core.api.selectImage(null);
+            core.api.selectImage(core, null);
             core.domEvent.imageSelectionRange = null;
         }
 

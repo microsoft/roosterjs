@@ -133,4 +133,9 @@ export default interface EditorOptions {
      * Retrieves the visible viewport of the Editor. The default viewport is the Rect of the scrollContainer.
      */
     getVisibleViewport?: () => Rect | null;
+
+    /**
+     * Color of the border of a selectedImage. Default color: '#DB626C'
+     */
+    imageSelectionBorderColor?: string;
 }

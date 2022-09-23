@@ -21,5 +21,5 @@ export default interface RibbonProps<T extends string> extends Partial<ICommandB
      * A dictionary of localized strings for all buttons.
      * Key of the dictionary is the key of each button, value will be the string or a function to return the string
      */
-    strings?: Partial<LocalizedStrings<T>>;
+    strings?: LocalizedStrings<T>;
 }

@@ -9,11 +9,11 @@ import { LocalizedStrings, UIUtilities } from '../../common/index';
  * A plugin to connect format ribbon component and the editor
  */
 class RibbonPluginImpl implements RibbonPlugin {
-    private editor: IEditor;
-    private onFormatChanged: (formatState: FormatState) => void;
+    private editor: IEditor | null = null;
+    private onFormatChanged: ((formatState: FormatState) => void) | null = null;
     private timer = 0;
-    private formatState: FormatState;
-    private uiUtilities: UIUtilities;
+    private formatState: FormatState | null = null;
+    private uiUtilities: UIUtilities | null = null;
 
     /**
      * Construct a new instance of RibbonPlugin object
@@ -87,8 +87,12 @@ class RibbonPluginImpl implements RibbonPlugin {
      * @param key Key of child menu item that is clicked if any
      * @param strings The localized string map for this button
      */
-    onButtonClick<T extends string>(button: RibbonButton<T>, key: T, strings: LocalizedStrings<T>) {
-        if (this.editor) {
+    onButtonClick<T extends string>(
+        button: RibbonButton<T>,
+        key: T,
+        strings?: LocalizedStrings<T>
+    ) {
+        if (this.editor && this.uiUtilities) {
             this.editor.stopShadowEdit();
 
             button.onClick(this.editor, key, strings, this.uiUtilities);
@@ -108,9 +112,9 @@ class RibbonPluginImpl implements RibbonPlugin {
     startLivePreview<T extends string>(
         button: RibbonButton<T>,
         key: T,
-        strings: LocalizedStrings<T>
+        strings?: LocalizedStrings<T>
     ) {
-        if (this.editor) {
+        if (this.editor && this.uiUtilities) {
             const isInShadowEdit = this.editor.isInShadowEdit();
 
             // If editor is already in shadow edit, no need to check again.
@@ -132,7 +136,11 @@ class RibbonPluginImpl implements RibbonPlugin {
     }
 
     private delayUpdate() {
-        const window = this.editor.getDocument().defaultView;
+        const window = this.editor?.getDocument().defaultView;
+
+        if (!window) {
+            return;
+        }
 
         if (this.timer) {
             window.clearTimeout(this.timer);
@@ -151,7 +159,7 @@ class RibbonPluginImpl implements RibbonPlugin {
             if (
                 !this.formatState ||
                 getObjectKeys(newFormatState).some(
-                    key => newFormatState[key] != this.formatState[key]
+                    key => newFormatState[key] != this.formatState?.[key]
                 )
             ) {
                 this.formatState = newFormatState;
