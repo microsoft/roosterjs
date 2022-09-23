@@ -1,9 +1,9 @@
 /**
  * Format of table cell that stored as metadata
  */
-export type TableCellMetadataFormat = {
+export default interface TableCellMetadataFormat {
     /**
      * Override default background color
      */
     bgColorOverride?: boolean;
-};
+}

@@ -63,9 +63,7 @@ export default class NormalizeTablePlugin implements EditorPlugin {
         switch (event.eventType) {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
-                if (this.editor) {
-                    this.normalizeTables(this.editor.queryElements('table'));
-                }
+                this.normalizeTables(this.editor.queryElements('table'));
                 break;
 
             case PluginEventType.BeforePaste:

@@ -40,6 +40,14 @@ export default function insertTable(
             setSelection(model, marker);
         }
 
-        return true;
-    });
+    editor.addUndoSnapshot(
+        () => {
+            editor.setContentModel(doc, {
+                mergingCallback: fragment => editor.insertNode(fragment),
+            });
+        },
+        ChangeSource.Format,
+        false /*canUndoByBackspace*/,
+        { formatApiName: 'insertTable' }
+    );
 }

@@ -1,9 +1,8 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { handleSegment } from './handleSegment';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal

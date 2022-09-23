@@ -99,5 +99,22 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
         } else {
             return false;
         }
-    });
+
+        normalizeTable(tableModel);
+        applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+
+        editor.addUndoSnapshot(
+            () => {
+                editor.focus();
+                if (model && table) {
+                    editor.setContentModel(model, {
+                        mergingCallback: fragment => editor.replaceNode(table, fragment),
+                    });
+                }
+            },
+            ChangeSource.Format,
+            false /*canUndoByBackspace*/,
+            { formatApiName: 'editTable' }
+        );
+    }
 }

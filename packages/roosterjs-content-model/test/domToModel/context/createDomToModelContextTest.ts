@@ -1,8 +1,8 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
-import { defaultStyleMap } from '../../../lib/formatHandlers/utils/defaultStyles';
-import { DomToModelListFormat } from '../../../lib/publicTypes/context/DomToModelFormatContext';
+import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
+import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     defaultFormatParsers,
@@ -14,16 +14,10 @@ describe('createDomToModelContext', () => {
         isDarkMode: false,
         getDarkColor: undefined,
     };
-    const listFormat: DomToModelListFormat = {
-        threadItemCounts: [],
-        levels: [],
-    };
     const contextOptions = {
         elementProcessors: defaultProcessorMap,
         defaultStyles: defaultStyleMap,
         formatParsers: getFormatParsers(),
-        defaultElementProcessors: defaultProcessorMap,
-        defaultFormatParsers: defaultFormatParsers,
     };
     it('no param', () => {
         const context = createDomToModelContext();
@@ -34,11 +28,6 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             zoomScaleFormat: {},
             isInSelection: false,
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
             ...contextOptions,
         });
     });
@@ -57,11 +46,6 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             zoomScaleFormat: {},
             isInSelection: false,
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
             ...contextOptions,
         });
     });
@@ -97,12 +81,6 @@ describe('createDomToModelContext', () => {
                 endOffset: 1,
                 isSelectionCollapsed: false,
             },
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
-            selectionRootNode: mockNode,
             ...contextOptions,
         });
     });
@@ -114,7 +92,7 @@ describe('createDomToModelContext', () => {
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [],
                 areAllCollapsed: false,
-                table: mockTable,
+                table: 'TABLE' as any,
                 coordinates: {
                     firstCell: { x: 1, y: 2 },
                     lastCell: { x: 3, y: 4 },
@@ -133,12 +111,6 @@ describe('createDomToModelContext', () => {
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
             },
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
-            selectionRootNode: mockTable,
             ...contextOptions,
         });
     });

@@ -18,7 +18,6 @@ import {
 export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boolean): void => {
     const { lifecycle, contentDiv } = core;
     let {
-        shadowEditEntities,
         shadowEditFragment,
         shadowEditSelectionPath,
         shadowEditTableSelectionPath,
@@ -49,13 +48,11 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 SelectionRangeTypes.TableSelection,
                 selection
             );
+            shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
             shadowEditImageSelectionPath = getShadowEditSelectionPath(
                 SelectionRangeTypes.ImageSelection,
                 selection
             );
-
-            shadowEditEntities = {};
-            shadowEditFragment = moveContentWithEntityPlaceholders(contentDiv, shadowEditEntities);
 
             core.api.triggerEvent(
                 core,
@@ -71,7 +68,6 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             lifecycle.shadowEditSelectionPath = shadowEditSelectionPath;
             lifecycle.shadowEditTableSelectionPath = shadowEditTableSelectionPath;
             lifecycle.shadowEditImageSelectionPath = shadowEditImageSelectionPath;
-            lifecycle.shadowEditEntities = shadowEditEntities;
         }
 
         if (lifecycle.shadowEditFragment) {
@@ -120,7 +116,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 const { image } = core.domEvent.imageSelectionRange;
                 const imageElement = core.contentDiv.querySelector('#' + image.id);
                 if (imageElement) {
-                    core.api.selectImage(core, image);
+                    core.domEvent.imageSelectionRange = core.api.selectImage(core, image);
                 }
             }
 

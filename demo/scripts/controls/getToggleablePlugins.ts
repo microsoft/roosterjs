@@ -6,6 +6,7 @@ import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChai
 import { EditorPlugin } from 'roosterjs-editor-types';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageEdit } from 'roosterjs-editor-plugins/lib/ImageEdit';
+import { ImageSelection } from 'roosterjs-editor-plugins';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
@@ -55,6 +56,7 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
                 ? createTableEditMenuProvider()
                 : null,
         contextMenu: pluginList.contextMenu ? createContextMenuPlugin() : null,
+        imageSelection: pluginList.imageSelection ? new ImageSelection() : null,
     };
 
     return Object.values(plugins);

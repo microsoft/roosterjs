@@ -1,9 +1,11 @@
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
-import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+
+/**
+ * @internal
+ */
+export type ShallowObjectStackType = 'shallowClone' | 'empty';
 
 /**
  * @internal

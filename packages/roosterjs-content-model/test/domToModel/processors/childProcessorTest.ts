@@ -1,10 +1,9 @@
-import { childProcessor } from '../../../lib/domToModel/processors/childProcessor';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
+import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
+import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
-import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 
 describe('childProcessor', () => {
     let doc: ContentModelDocument;
@@ -12,13 +11,9 @@ describe('childProcessor', () => {
     let textProcessor: jasmine.Spy<ElementProcessor<Text>>;
 
     beforeEach(() => {
-        textProcessor = jasmine.createSpy('textProcessor');
-        doc = createContentModelDocument();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                '#text': textProcessor,
-            },
-        });
+        doc = createContentModelDocument(document);
+        context = createDomToModelContext();
+        spyOn(textProcessor, 'textProcessor');
     });
 
     it('Process a document fragment', () => {
@@ -30,7 +25,7 @@ describe('childProcessor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
-        expect(textProcessor).not.toHaveBeenCalled();
+        expect(textProcessor.textProcessor).not.toHaveBeenCalled();
     });
 
     it('Process an empty DIV', () => {
@@ -42,7 +37,7 @@ describe('childProcessor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
-        expect(textProcessor).not.toHaveBeenCalled();
+        expect(textProcessor.textProcessor).not.toHaveBeenCalled();
     });
 
     it('Process a DIV with text node', () => {
@@ -56,8 +51,8 @@ describe('childProcessor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
-        expect(textProcessor).toHaveBeenCalledTimes(1);
-        expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
+        expect(textProcessor.textProcessor).toHaveBeenCalledTimes(1);
+        expect(textProcessor.textProcessor).toHaveBeenCalledWith(doc, 'test', context);
     });
 
     it('Process a DIV with SPAN node', () => {
@@ -71,7 +66,7 @@ describe('childProcessor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
-        expect(textProcessor).not.toHaveBeenCalled();
+        expect(textProcessor.textProcessor).not.toHaveBeenCalled();
     });
 
     it('Process a DIV with SPAN, DIV and text node', () => {
@@ -90,19 +85,17 @@ describe('childProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    format: {},
                     segments: [],
                 },
                 {
                     blockType: 'Paragraph',
-                    format: {},
                     segments: [],
-                    isImplicit: true,
                 },
             ],
+            document: document,
         });
-        expect(textProcessor).toHaveBeenCalledTimes(1);
-        expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
+        expect(textProcessor.textProcessor).toHaveBeenCalledTimes(1);
+        expect(textProcessor.textProcessor).toHaveBeenCalledWith(doc, 'test', context);
     });
 });
 

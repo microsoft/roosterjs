@@ -1,6 +1,4 @@
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { createBr } from '../creators/createBr';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { isBlockEmpty, isSegmentEmpty } from './isEmpty';
 
 /**
@@ -15,9 +13,11 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
                 normalizeContentModel(block);
                 break;
             case 'Paragraph':
-                removeEmptySegments(block);
-
-                normalizeParagraph(block);
+                for (let j = block.segments.length - 1; j >= 0; j--) {
+                    if (isSegmentEmpty(block.segments[j])) {
+                        block.segments.splice(j, 1);
+                    }
+                }
                 break;
             case 'Table':
                 for (let r = 0; r < block.cells.length; r++) {
@@ -30,32 +30,6 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
 
         if (isBlockEmpty(block)) {
             group.blocks.splice(i, 1);
-        }
-    }
-}
-
-function removeEmptySegments(block: ContentModelParagraph) {
-    for (let j = block.segments.length - 1; j >= 0; j--) {
-        if (isSegmentEmpty(block.segments[j])) {
-            block.segments.splice(j, 1);
-        }
-    }
-}
-
-function normalizeParagraph(block: ContentModelParagraph) {
-    if (!block.isImplicit) {
-        const segments = block.segments;
-
-        if (segments.length == 1 && segments[0].segmentType == 'SelectionMarker') {
-            segments.push(createBr(segments[0].format));
-        } else if (
-            segments.length > 1 &&
-            segments[segments.length - 1].segmentType == 'Br' &&
-            segments.some(
-                segment => segment.segmentType != 'SelectionMarker' && segment.segmentType != 'Br'
-            )
-        ) {
-            segments.pop();
         }
     }
 }

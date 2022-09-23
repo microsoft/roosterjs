@@ -32,8 +32,8 @@ export default function getIntersectedRect(
 ): Rect | null {
     const rects = elements
         .map(element => normalizeRect(element.getBoundingClientRect()))
-        .concat(additionalRects)
-        .filter(element => !!element) as Rect[];
+        .filter(element => !!element)
+        .concat(additionalRects) as Rect[];
 
     const result: Rect = {
         top: Math.max(...rects.map(r => r.top)),

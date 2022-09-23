@@ -2,8 +2,6 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { getBoundingClientRect } from '../utils/getBoundingClientRect';
-import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -34,19 +32,14 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
             const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-            parseFormat(tableElement, context.formatParsers.table, table.format, context);
-            parseFormat(
-                tableElement,
-                context.formatParsers.segmentOnBlock,
-                context.segmentFormat,
-                context
-            );
-            parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
-            addBlock(group, table);
+    stackFormat(context, { segment: 'shallowClone' }, () => {
+        parseFormat(tableElement, TableFormatHandlers, table.format, context);
+        parseFormat(tableElement, SegmentFormatHandlers, context.segmentFormat, context);
+        addBlock(group, table);
 
-    const columnPositions: number[] = [0];
-    const rowPositions: number[] = [0];
-    const zoomScale = context.contentModelContext.zoomScale;
+        const columnPositions: number[] = [0];
+        const rowPositions: number[] = [0];
+        const zoomScale = context.zoomScale;
 
             for (let row = 0; row < tableElement.rows.length; row++) {
                 const tr = tableElement.rows[row];
@@ -71,8 +64,32 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 if (needCalcWidth) {
                     columnPositions[colEnd] = columnPositions[targetCol] + rect.width / zoomScale;
                 }
-                if (needCalcHeight) {
-                    rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
+
+                for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
+                    for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
+                        const hasTd = colSpan == 1 && rowSpan == 1;
+                        const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
+
+                        if (isCellSelected) {
+                            cell.isSelected = true;
+                        }
+
+                        table.cells[row + rowSpan - 1][targetCol] = cell;
+
+                        if (hasTd) {
+                            stackFormat(context, { segment: 'shallowClone' }, () => {
+                                parseFormat(td, TableCellFormatHandlers, cell.format, context);
+                                parseFormat(
+                                    td,
+                                    SegmentFormatHandlers,
+                                    context.segmentFormat,
+                                    context
+                                );
+
+                                containerProcessor(cell, td, context);
+                            });
+                        }
+                    }
                 }
             }
 

@@ -3,7 +3,6 @@ import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFo
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('borderFormatHandler.parse', () => {

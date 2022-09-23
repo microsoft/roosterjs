@@ -43,7 +43,7 @@ export {
 } from './ContentMetadata';
 export { default as Snapshot } from './Snapshot';
 export { default as TableFormat } from './TableFormat';
-export { TableCellMetadataFormat } from './TableCellMetadataFormat';
+export { default as TableCellMetadataFormat } from './TableCellMetadataFormat';
 export { default as TableSelection } from './TableSelection';
 export { default as Coordinates } from './Coordinates';
 export { default as HtmlSanitizerOptions } from './HtmlSanitizerOptions';

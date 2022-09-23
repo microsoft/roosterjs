@@ -4,6 +4,7 @@ import { ContextMenuProvider, EditorPlugin, IEditor } from 'roosterjs-editor-typ
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * A plugin of editor to provide context menu items
@@ -57,7 +58,11 @@ class ContextMenuProviderImpl<TString extends string, TContext>
         return this.editor && this.shouldAddMenuItems?.(this.editor, node)
             ? this.items
                   .filter(
-                      item => !item.shouldShow || item.shouldShow(this.editor!, node, this.context)
+                      item =>
+                          !item.shouldShow ||
+                          (this.editor &&
+                              this.context &&
+                              item.shouldShow(this.editor, node, this.context))
                   )
                   .map(item => this.convertMenuItems(item))
             : [];
@@ -93,7 +98,7 @@ class ContextMenuProviderImpl<TString extends string, TContext>
     }
 
     private onClick(item: ContextMenuItem<TString, TContext>, key: TString) {
-        if (this.editor && this.targetNode && this.uiUtilities) {
+        if (this.editor && this.targetNode && this.uiUtilities && this.context) {
             item.onClick(
                 key,
                 this.editor,

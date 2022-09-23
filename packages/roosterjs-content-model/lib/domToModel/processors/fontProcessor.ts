@@ -1,6 +1,7 @@
+import { containerProcessor } from './containerProcessor';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
+import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
 
 const FontSizes = ['10px', '13px', '16px', '18px', '24px', '32px', '48px'];
@@ -22,11 +23,11 @@ function getFontSize(size: string | null) {
 /**
  * @internal
  */
-export const fontProcessor: ElementProcessor<HTMLFontElement> = (group, element, context) => {
+export const fontProcessor: ElementProcessor = (group, element, context) => {
     stackFormat(
         context,
         {
-            segment: isBlockElement(element, context) ? 'shallowCloneForBlock' : 'shallowClone',
+            segment: 'shallowClone',
         },
         () => {
             const fontFamily = element.getAttribute('face');
@@ -46,9 +47,9 @@ export const fontProcessor: ElementProcessor<HTMLFontElement> = (group, element,
                 format.textColor = textColor;
             }
 
-            parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
+            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
 
-            context.elementProcessors.child(group, element, context);
+            containerProcessor(group, element, context);
         }
     );
 };

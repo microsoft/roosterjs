@@ -335,16 +335,11 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
                 if (textRange) {
-                    const number = isFirstItemOfAList(textBeforeCursor)
-                        ? 1
-                        : parseInt(textBeforeCursor);
-
-                    const isLi = getPreviousListItem(editor, textRange);
                     const listStyle = getAutoNumberingListStyle(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
                         editor,
-                        isLi && number !== 1 ? undefined : number /** startNumber */,
+                        undefined /** startNumber */,
                         listStyle,
                         'autoToggleList' /** apiNameOverride */
                     );
@@ -469,37 +464,20 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
 function shouldTriggerList(
     event: PluginKeyboardEvent,
     editor: IEditor,
-    getListStyle: (
-        text: string,
-        previousListChain?: VListChain[],
-        previousListStyle?: NumberingListType | BulletListType
-    ) => number,
-    listType: ListType
+    getListStyle: (text: string, isTheFirstItem?: boolean) => number
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
-    const traverser = editor.getBlockTraverser();
-    const text =
-        traverser && traverser.currentBlockElement
-            ? traverser.currentBlockElement.getTextContent().slice(0, textBeforeCursor.length)
-            : null;
-    const isATheBeginning = text && text === textBeforeCursor;
-    const listChains = getListChains(editor);
-    const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-    const previousListType = getPreviousListType(editor, textRange, listType);
-    const isFirstItem = isFirstItemOfAList(textBeforeCursor);
-    const listStyle = getListStyle(textBeforeCursor, listChains, previousListType);
-    const shouldTriggerNewListStyle =
-        isFirstItem ||
-        !previousListType ||
-        previousListType === listStyle ||
-        listType === ListType.Unordered;
-
+    const itHasSpace = /\s/g.test(textBeforeCursor);
+    const element = editor.getElementAtCursor();
+    const previousNode = editor.getBodyTraverser(element).getPreviousBlockElement();
+    const isLi = previousNode
+        ? getTagOfNode(previousNode?.collapseToSingleElement()) === 'LI'
+        : false;
     return (
-        isATheBeginning &&
+        !itHasSpace &&
         !searcher.getNearestNonTextInlineElement() &&
-        listStyle &&
-        shouldTriggerNewListStyle
+        getListStyle(textBeforeCursor, !isLi)
     );
 }
 

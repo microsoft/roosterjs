@@ -1,5 +1,3 @@
-import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
-import { MarkdownFeatures } from '../../../lib/plugins/ContentEdit/features/markdownFeatures';
 import {
     BuildInEditFeature,
     IEditor,
@@ -7,6 +5,8 @@ import {
     PluginKeyboardEvent,
     PositionType,
 } from 'roosterjs-editor-types';
+import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
+import { MarkdownFeatures } from '../../../lib/plugins/ContentEdit/features/markdownFeatures';
 
 describe('MarkdownFeatures | ', () => {
     let editor: IEditor;
@@ -67,12 +67,9 @@ describe('MarkdownFeatures | ', () => {
         testContent: string,
         expectedContent: string
     ) {
-        editor.setContent(`<div id="${TEST_ELEMENT_ID}">${testContent} other text</div>`);
+        editor.setContent(`<div id="${TEST_ELEMENT_ID}">${testContent}</div>`);
         const element = document.getElementById(TEST_ELEMENT_ID);
-        const range = document.createRange();
-        range.setStart(element?.firstChild!, testContent.length);
-        range.setEnd(element?.firstChild!, testContent.length);
-        editor.select(range);
+        editor.select(element, PositionType.End);
         const keyboardPluginEvent: PluginKeyboardEvent = {
             eventType: PluginEventType.KeyDown,
             rawEvent: new KeyboardEvent('keydown', {
@@ -124,15 +121,15 @@ describe('MarkdownFeatures | ', () => {
 
     describe('Handle Event | ', () => {
         it('markdownBold normal scenario 1', () => {
-            runHandleEvent(markdownBold, '*abcd', '<b>abcd</b>​other text');
+            runHandleEvent(markdownBold, '*abcd', '<b>abcd</b>');
         });
 
         it('markdownBold normal scenario 2', () => {
-            runHandleEvent(markdownBold, '*abcd 123', '<b>abcd 123</b>​other text');
+            runHandleEvent(markdownBold, '*abcd 123', '<b>abcd 123</b>');
         });
 
         it('markdownBold normal scenario 3', () => {
-            runHandleEvent(markdownBold, 'abcd *123', 'abcd <b>123</b>​other text');
+            runHandleEvent(markdownBold, 'abcd *123', 'abcd <b>123</b>');
         });
     });
 });

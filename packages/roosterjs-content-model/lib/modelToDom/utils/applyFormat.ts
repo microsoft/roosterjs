@@ -1,5 +1,5 @@
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
-import { FormatApplier } from '../../publicTypes/context/ModelToDomSettings';
+import { FormatKey } from '../../publicTypes/format/FormatHandlerTypeMap';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
@@ -7,11 +7,11 @@ import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
  */
 export function applyFormat<T extends ContentModelFormatBase>(
     element: HTMLElement,
-    appliers: (FormatApplier<T> | null)[],
+    handlerKeys: FormatKey[],
     format: T,
     context: ModelToDomContext
 ) {
-    appliers.forEach(applier => {
-        applier?.(format, element, context);
+    handlerKeys.forEach(key => {
+        context.formatAppliers[key](format, element, context);
     });
 }

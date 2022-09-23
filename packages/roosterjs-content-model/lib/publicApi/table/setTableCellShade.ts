@@ -14,20 +14,23 @@ export default function setTableCellShade(editor: IContentModelEditor, color: st
     formatWithContentModel(editor, 'setTableCellShade', model => {
         const table = getFirstSelectedTable(model);
 
-        if (table) {
-            normalizeTable(table);
-
-            table.cells.forEach(row =>
-                row.forEach(cell => {
-                    if (hasSelectionInBlockGroup(cell)) {
-                        setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
-                    }
-                })
-            );
-
-            return true;
-        } else {
-            return false;
-        }
-    });
+    if (tableModel?.blockType == 'Table') {
+        normalizeTable(tableModel);
+        setTableCellBackgroundColor(tableModel, color);
+        editor.addUndoSnapshot(
+            () => {
+                editor.focus();
+                if (model && table) {
+                    editor.setContentModel(model, {
+                        mergingCallback: fragment => editor.replaceNode(table, fragment),
+                    });
+                }
+            },
+            ChangeSource.Format,
+            false /*canUndoByBackspace*/,
+            {
+                formatApiName: 'setTableCellShade',
+            }
+        );
+    }
 }

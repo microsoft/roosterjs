@@ -468,12 +468,23 @@ export default class Editor implements IEditor {
     }
 
     public select(
-        arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
+        arg1:
+            | Range
+            | NodePosition
+            | Node
+            | SelectionPath
+            | HTMLTableElement
+            | HTMLImageElement
+            | null,
         arg2?: NodePosition | number | PositionType | TableSelection,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
+
+        if (arg1 && 'rows' in arg1) {
+            const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
+            core.domEvent.tableSelectionRange = selection;
 
         let rangeEx: SelectionRangeEx | null = null;
 
@@ -519,54 +530,32 @@ export default class Editor implements IEditor {
                 : null;
         }
 
-        if (rangeEx) {
-            switch (rangeEx.type) {
-                case SelectionRangeTypes.TableSelection:
-                    if (this.contains(rangeEx.table)) {
-                        core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-                        core.domEvent.tableSelectionRange = core.api.selectTable(
-                            core,
-                            rangeEx.table,
-                            rangeEx.coordinates
-                        );
-                        rangeEx = core.domEvent.tableSelectionRange;
-                    }
-                    break;
-                case SelectionRangeTypes.ImageSelection:
-                    if (this.contains(rangeEx.image)) {
-                        core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                        core.domEvent.imageSelectionRange = core.api.selectImage(
-                            core,
-                            rangeEx.image
-                        );
-                        rangeEx = core.domEvent.imageSelectionRange;
-                    }
-                    break;
-                case SelectionRangeTypes.Normal:
-                    core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                    core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-
-                    if (this.contains(rangeEx.ranges[0])) {
-                        core.api.selectRange(core, rangeEx.ranges[0]);
-                    } else {
-                        rangeEx = null;
-                    }
-                    break;
-            }
-
-            this.triggerPluginEvent(
-                PluginEventType.SelectionChanged,
-                {
-                    selectionRangeEx: rangeEx,
-                },
-                true /** broadcast **/
-            );
+        if (
+            this.isFeatureEnabled(ExperimentalFeatures.ImageSelection) &&
+            safeInstanceOf(arg1, 'HTMLImageElement') &&
+            !arg2
+        ) {
+            const selection = core.api.selectImage(core, arg1);
+            core.domEvent.imageSelectionRange = selection;
+            return !!selection;
         } else {
-            core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-            core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+            core.api.selectImage(core, null);
+            core.domEvent.imageSelectionRange = null;
         }
 
-        return !!rangeEx;
+        let range = !arg1
+            ? null
+            : safeInstanceOf(arg1, 'Range')
+            ? arg1
+            : 'start' in arg1 && Array.isArray(arg1.end)
+            ? createRange(core.contentDiv, arg1.start, arg1.end)
+            : createRange(
+                  <Node>arg1,
+                  <number | PositionType>arg2,
+                  <Node>arg3,
+                  <number | PositionType>arg4
+              );
+        return !!range && this.contains(range) && core.api.selectRange(core, range);
     }
 
     /**

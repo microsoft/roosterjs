@@ -1,8 +1,11 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { handleBlockGroup } from './handleBlockGroup';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
+import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
 /**
  * @internal
@@ -12,7 +15,7 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
     parent: Node,
     table: ContentModelTable,
     context: ModelToDomContext
-) => {
+) {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return
         return;
@@ -20,8 +23,7 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
 
     const tableNode = doc.createElement('table');
     parent.appendChild(tableNode);
-    applyFormat(tableNode, context.formatAppliers.table, table.format, context);
-    applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+    applyFormat(tableNode, TableFormatHandlers, table.format, context);
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
@@ -56,8 +58,7 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
             if (!cell.spanAbove && !cell.spanLeft) {
                 const td = doc.createElement(cell.isHeader ? 'th' : 'td');
                 tr.appendChild(td);
-                applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
-                applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
+                applyFormat(td, TableCellFormatHandlers, cell.format, context);
 
                 let rowSpan = 1;
                 let colSpan = 1;
@@ -82,7 +83,7 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
                     td.colSpan = colSpan;
                 }
 
-                context.modelHandlers.blockGroup(doc, td, cell, context);
+                handleBlockGroup(doc, td, cell, context);
             }
         }
     }

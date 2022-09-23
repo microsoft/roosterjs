@@ -1,12 +1,7 @@
-import { defaultContentModelHandlers } from './defaultContentModelHandlers';
-import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
+import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { ModelToDomOption } from '../../publicTypes/IContentModelEditor';
-import {
-    defaultFormatAppliers,
-    getFormatAppliers,
-} from '../../formatHandlers/defaultFormatHandlers';
+import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
  * @internal
@@ -28,26 +23,6 @@ export function createModelToDomContext(
                 segment: null,
             },
         },
-        listFormat: {
-            threadItemCounts: [],
-            nodeStack: [],
-        },
-        implicitFormat: {},
-        formatAppliers: getFormatAppliers(
-            options?.formatApplierOverride,
-            options?.additionalFormatAppliers
-        ),
-        modelHandlers: {
-            ...defaultContentModelHandlers,
-            ...(options?.modelHandlerOverride || {}),
-        },
-        defaultImplicitFormatMap: {
-            ...defaultImplicitFormatMap,
-            ...(options?.defaultImplicitFormatOverride || {}),
-        },
-        entities: {},
-
-        defaultModelHandlers: defaultContentModelHandlers,
-        defaultFormatAppliers: defaultFormatAppliers,
+        formatAppliers: getFormatAppliers(options?.formatApplierOverride),
     };
 }

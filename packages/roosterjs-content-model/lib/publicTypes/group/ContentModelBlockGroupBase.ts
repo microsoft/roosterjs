@@ -1,5 +1,5 @@
-import { ContentModelBlock } from '../block/ContentModelBlock';
-import { ContentModelBlockGroupType } from '../enum/BlockGroupType';
+import { ContentModelBlock } from '../ContentModelBlock';
+import { ContentModelBlockGroupType } from '../../enum/BlockGroupType';
 
 /**
  * Base type of Content Model Block Group

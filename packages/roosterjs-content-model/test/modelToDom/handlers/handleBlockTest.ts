@@ -8,6 +8,7 @@ import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentMod
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
+import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
@@ -106,39 +107,11 @@ describe('handleBlock', () => {
         expect(parent.innerHTML).toBe('<span></span>');
         expect(parent.firstChild).not.toBe(element);
         expect(context.regularSelection.current.segment).toBe(parent.firstChild);
-        expect(applyFormat.applyFormat).toHaveBeenCalled();
-    });
-
-    it('Entity block', () => {
-        const element = document.createElement('div');
-        const block: ContentModelEntity = {
-            blockType: 'Entity',
-            segmentType: 'Entity',
-            format: {},
-            wrapper: element,
-            type: 'entity',
-            id: 'entity_1',
-            isReadonly: true,
-        };
-
-        parent = document.createElement('div');
-
-        handleBlock(document, parent, block, context);
-
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context);
-    });
-
-    it('HR block', () => {
-        const block: ContentModelDivider = {
-            blockType: 'Divider',
-            tagName: 'hr',
-            format: {},
-        };
-
-        parent = document.createElement('div');
-
-        handleBlock(document, parent, block, context);
-
-        expect(handleDivider).toHaveBeenCalledWith(document, parent, block, context);
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            SegmentFormatHandlers,
+            block.format,
+            context
+        );
     });
 });

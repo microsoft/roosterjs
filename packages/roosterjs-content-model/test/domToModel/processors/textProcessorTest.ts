@@ -2,8 +2,6 @@ import { addBlock } from '../../../lib/modelApi/common/addBlock';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 

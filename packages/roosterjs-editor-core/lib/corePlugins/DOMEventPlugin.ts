@@ -157,11 +157,11 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         const { image } = this.state.imageSelectionRange || {};
 
         if (table && coordinates) {
-            this.editor?.select(table, coordinates);
+            this.editor.select(table, coordinates);
         } else if (image) {
-            this.editor?.select(image);
-        } else if (this.state.selectionRange) {
-            this.editor?.select(this.state.selectionRange);
+            this.editor.select(image);
+        } else {
+            this.editor.select(this.state.selectionRange);
         }
 
         this.state.selectionRange = null;

@@ -1,5 +1,5 @@
 import hasSelectionInBlock from './hasSelectionInBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 
 /**
  * Check if there is selection within the given block

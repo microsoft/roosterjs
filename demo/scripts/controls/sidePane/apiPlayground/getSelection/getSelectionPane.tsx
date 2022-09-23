@@ -41,14 +41,14 @@ export default class GetSelectionPane extends React.Component<ApiPaneProps, Sele
     }
 
     onPluginEvent(e: PluginEvent) {
-        if (e.eventType == PluginEventType.SelectionChanged && !this.state.manualSelect) {
+        if (e.eventType == PluginEventType.MouseUp && !this.state.manualSelect) {
             this.updateSelection();
         }
     }
 
     private updateSelection = () => {
         this.setState({
-            selection: this.editor ? this.editor.getSelectionRangeEx() : null,
+            selection: this.editor.getSelectionRangeEx(),
         });
     };
 

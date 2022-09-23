@@ -10,7 +10,7 @@ import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
-import { ImageSelectionRange, SelectionRangeEx } from './SelectionRangeEx';
+import { ImageSelectionRange } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
@@ -73,12 +73,6 @@ export default interface EditorCore extends PluginState {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
-
-    /**
-     * Dark model handler for the editor, used for variable-based solution.
-     * If keep it null, editor will still use original dataset-based dark mode solution.
-     */
-    darkColorHandler?: DarkColorHandler;
 }
 
 /**

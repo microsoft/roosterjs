@@ -6,7 +6,9 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
+import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
+import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
+import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
 describe('tableProcessor', () => {
@@ -317,8 +319,8 @@ describe('tableProcessor with format', () => {
             getAttribute: () => '',
         } as any) as HTMLTableElement;
 
-        const doc = createContentModelDocument();
-        context.zoomScaleFormat.zoomScale = 2;
+        const doc = createContentModelDocument(document);
+        context.zoomScale = 2;
 
         tableProcessor(doc, mockedTable, context);
 

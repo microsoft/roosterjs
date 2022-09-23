@@ -1,7 +1,7 @@
 import { Coordinates } from 'roosterjs-editor-types';
 
 /**
- * Represents a regular selection for DOM to Content Model conversion
+ * Represents regular a selection for DOM to Content Model conversion
  */
 export interface DomToModelRegularSelection {
     /**
@@ -31,7 +31,7 @@ export interface DomToModelRegularSelection {
 }
 
 /**
- * Represents a table for DOM to Content Model conversion
+ * Represents regular a table for DOM to Content Model conversion
  */
 export interface DomToModelTableSelection {
     /**
@@ -51,7 +51,7 @@ export interface DomToModelTableSelection {
 }
 
 /**
- * Represents an image for DOM to Content Model conversion
+ * Represents regular an image for DOM to Content Model conversion
  */
 export interface DomToModelImageSelection {
     /**
@@ -83,13 +83,4 @@ export interface DomToModelSelectionContext {
      * Image selection provided by editor
      */
     imageSelection?: DomToModelImageSelection;
-
-    /**
-     * Root not that contains the selection.
-     * For regular selection, it is the common ancestor container of selection range.
-     * For table selection, it is the table node.
-     * For image selection, it is the image node.
-     * Otherwise, it is undefined.
-     */
-    selectionRootNode?: Node;
 }

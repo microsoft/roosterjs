@@ -21,9 +21,20 @@ export default function formatTable(
         if (tableModel) {
             applyTableFormat(tableModel, format, keepCellShade);
 
-            return true;
-        } else {
-            return false;
-        }
-    });
+        editor.addUndoSnapshot(
+            () => {
+                editor.focus();
+                if (model && table) {
+                    editor.setContentModel(model, {
+                        mergingCallback: fragment => editor.replaceNode(table, fragment),
+                    });
+                }
+            },
+            ChangeSource.Format,
+            false /*canUndoByBackspace*/,
+            {
+                formatApiName: 'formatTable',
+            }
+        );
+    }
 }

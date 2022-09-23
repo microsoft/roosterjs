@@ -181,6 +181,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
             case PluginEventType.KeyDown:
                 this.eventHandledOnKeyDown = false;
+
                 if (this.isAndroidKeyboardEvent(event)) {
                     // On Android, the key for KeyboardEvent is "Unidentified" or undefined,
                     // so handling should be done using the input rather than key down event
