@@ -55,9 +55,11 @@ describe('createDomToModelContext', () => {
             collapsed: false,
         } as any) as Range;
         const context = createDomToModelContext(undefined, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [mockedRange],
-            areAllCollapsed: false,
+            selectionRange: {
+                type: SelectionRangeTypes.Normal,
+                ranges: [mockedRange],
+                areAllCollapsed: false,
+            },
         });
 
         expect(context).toEqual({
@@ -77,13 +79,15 @@ describe('createDomToModelContext', () => {
 
     it('with table selection', () => {
         const context = createDomToModelContext(undefined, {
-            type: SelectionRangeTypes.TableSelection,
-            ranges: [],
-            areAllCollapsed: false,
-            table: 'TABLE' as any,
-            coordinates: {
-                firstCell: { x: 1, y: 2 },
-                lastCell: { x: 3, y: 4 },
+            selectionRange: {
+                type: SelectionRangeTypes.TableSelection,
+                ranges: [],
+                areAllCollapsed: false,
+                table: 'TABLE' as any,
+                coordinates: {
+                    firstCell: { x: 1, y: 2 },
+                    lastCell: { x: 3, y: 4 },
+                },
             },
         });
 
