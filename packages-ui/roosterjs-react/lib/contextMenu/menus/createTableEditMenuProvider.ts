@@ -53,12 +53,15 @@ const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOpe
 const ColorValues = {
     ...BackgroundColors,
     // Add this value to satisfy compiler
-    menuNameTableCellShade: <ModeIndependentColor>null,
+    menuNameTableCellShade: <ModeIndependentColor>(<unknown>null),
 };
 
 function onClick(key: TableEditMenuItemStringKey, editor: IEditor) {
     editor.focus();
-    editTable(editor, TableEditOperationMap[key]);
+    const operation = TableEditOperationMap[key];
+    if (typeof operation === 'number') {
+        editTable(editor, operation);
+    }
 }
 
 const TableEditInsertMenuItem: ContextMenuItem<TableEditInsertMenuItemStringKey> = {
@@ -164,7 +167,7 @@ export default function createTableEditMenuProvider(
 ): EditorPlugin {
     return createContextMenuProvider(
         'tableEdit',
-        [
+        <ContextMenuItem<TableEditMenuItemStringKey>[]>[
             TableEditInsertMenuItem,
             TableEditDeleteMenuItem,
             TableEditMergeMenuItem,

@@ -29,7 +29,7 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
         key: TString,
         editor: IEditor,
         targetNode: Node,
-        strings: LocalizedStrings<TString>,
+        strings: LocalizedStrings<TString> | undefined,
         uiUtilities: UIUtilities,
         context: TContext
     ) => void;

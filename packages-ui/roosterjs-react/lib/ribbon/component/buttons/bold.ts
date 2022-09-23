@@ -10,7 +10,7 @@ export const bold: RibbonButton<BoldButtonStringKey> = {
     key: 'buttonNameBold',
     unlocalizedText: 'Bold',
     iconName: 'Bold',
-    isChecked: formatState => formatState.isBold,
+    isChecked: formatState => !!formatState.isBold,
     onClick: editor => {
         toggleBold(editor);
         return true;

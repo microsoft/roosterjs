@@ -7,10 +7,10 @@ import { LocalizedStrings } from '../type/LocalizedStrings';
  * @param defaultString Default unlocalized string, will be used if strings is not specified or the give key doesn't exist in strings
  * @returns A localized string from the string map, or defaultString
  */
-export default function getLocalizedString<T extends string>(
-    strings: Partial<LocalizedStrings<T>>,
+export default function getLocalizedString<T extends string, R extends string | null | undefined>(
+    strings: LocalizedStrings<T> | undefined,
     key: T,
-    defaultString: string
+    defaultString: R
 ) {
     const str = strings?.[key];
 
