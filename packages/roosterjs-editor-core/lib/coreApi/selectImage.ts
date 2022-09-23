@@ -3,9 +3,11 @@ import addUniqueId from './utils/addUniqueId';
 import { createRange, Position, removeImportantStyleRule } from 'roosterjs-editor-dom';
 import {
     EditorCore,
+    ImageSelectionRange,
     PluginEventType,
     PositionType,
     SelectImage,
+    SelectionRangeEx,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
@@ -30,18 +32,20 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
 
         select(core, image);
 
-        core.domEvent.imageSelectionRange = {
+        const selection: ImageSelectionRange = {
             type: SelectionRangeTypes.ImageSelection,
             ranges: [range],
             image: image,
             areAllCollapsed: range.collapsed,
         };
 
+        core.domEvent.imageSelectionRange = selection;
+
         core.api.triggerEvent(
             core,
             {
                 eventType: PluginEventType.SelectionChanged,
-                selectionType: SelectionRangeTypes.ImageSelection,
+                selectionRangeEx: selection as SelectionRangeEx,
             },
             true /** broadcast */
         );

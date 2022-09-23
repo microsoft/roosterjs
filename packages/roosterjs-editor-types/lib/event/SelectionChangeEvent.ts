@@ -1,7 +1,6 @@
 import BasePluginEvent from './BasePluginEvent';
 import { PluginEventType } from '../enum/PluginEventType';
-import { SelectionRangeTypes } from '../enum/SelectionRangeTypes';
-import type { CompatibleSelectionRangeTypes } from '../compatibleEnum/SelectionRangeTypes';
+import { SelectionRangeEx } from '../interface/SelectionRangeEx';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
@@ -9,9 +8,9 @@ import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventTyp
  */
 export interface SelectionChangedEventData {
     /**
-     * Type of the selection
+     * Information of the selection
      */
-    selectionType: SelectionRangeTypes | CompatibleSelectionRangeTypes;
+    selectionRangeEx: SelectionRangeEx;
 }
 
 /**
