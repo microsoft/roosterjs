@@ -3,9 +3,15 @@
         "strict": true
     },
     "extends": "../../../tsconfig.json",
-    "include": ["./AutoFormat/*.ts", "./ContextMenu/*.ts", "./CustomReplace/*.ts"],
+    "include": [
+        "./AutoFormat/*.ts",
+        "./ContextMenu/*.ts",
+        "./CustomReplace/*.ts",
+        "./CutPasteListChain/*.ts"
+    ],
     "references": [
         { "path": "../../../roosterjs-editor-types/tsconfig.child.json" },
-        { "path": "../../../roosterjs-editor-dom/tsconfig.child.json" }
+        { "path": "../../../roosterjs-editor-dom/tsconfig.child.json" },
+        { "path": "../../../roosterjs-editor-api/tsconfig.child.json" }
     ]
 }
