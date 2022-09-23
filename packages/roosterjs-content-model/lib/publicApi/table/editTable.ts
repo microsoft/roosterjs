@@ -97,7 +97,9 @@ export default function editTable(
             () => {
                 editor.focus();
                 if (model && table) {
-                    editor.setContentModel(model, fragment => editor.replaceNode(table, fragment));
+                    editor.setContentModel(model, {
+                        mergingCallback: fragment => editor.replaceNode(table, fragment),
+                    });
                 }
             },
             ChangeSource.Format,

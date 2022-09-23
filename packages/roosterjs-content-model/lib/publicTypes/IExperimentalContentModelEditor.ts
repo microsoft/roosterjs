@@ -3,12 +3,22 @@ import { DefaultStyleMap, FormatParsers } from './context/DomToModelSettings';
 import { EditorContext } from './context/EditorContext';
 import { ElementProcessor } from './context/ElementProcessor';
 import { FormatAppliers } from './context/ModelToDomSettings';
-import { IEditor } from 'roosterjs-editor-types';
+import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Options for creating DomToModelContext
  */
 export interface DomToModelOption {
+    /**
+     * True to create content model from the root element itself, false to create from all child nodes of root. @default false
+     */
+    includeRoot?: boolean;
+
+    /**
+     * Selection range to be included in Content Model
+     */
+    selectionRange?: SelectionRangeEx;
+
     /**
      * Overrides default element processors
      */
@@ -29,6 +39,15 @@ export interface DomToModelOption {
  * Options for creating ModelToDomContext
  */
 export interface ModelToDomOption {
+    /**
+     * A callback to indicate how should the new content be integrated into existing content
+
+     */
+    mergingCallback?: (fragment: DocumentFragment) => void;
+
+    /**
+     * Overrides default format appliers
+     */
     formatApplierOverride?: Partial<FormatAppliers>;
 }
 
@@ -45,21 +64,16 @@ export interface IExperimentalContentModelEditor extends IEditor {
 
     /**
      * Create Content Model from DOM tree in this editor
-     * @param startNode Optional start node. If provided, Content Model will be created from this node (including itself),
+     * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
      * otherwise it will create Content Model for the whole content in editor.
      * @param option The options to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(startNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument;
+    createContentModel(rootNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument;
 
     /**
      * Set content with content model
      * @param model The content model to set
-     * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
-    setContentModel(
-        model: ContentModelDocument,
-        mergingCallback?: (fragment: DocumentFragment) => void,
-        option?: ModelToDomOption
-    ): void;
+    setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
 }
