@@ -41,7 +41,7 @@ export default interface RibbonButtonDropDown {
      * @param formatState The current formatState of editor
      * @returns the key of selected item, it needs to be the same with the key in dropDownItems
      */
-    getSelectedItemKey?: (formatState: FormatState) => string;
+    getSelectedItemKey?: (formatState: FormatState) => string | null;
 
     /**
      * Use this property to pass in Fluent UI ContextMenu property directly. It will overwrite the values of other conflict properties

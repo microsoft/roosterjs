@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
-import { EmojiFabricIconCharacterMap, EmojiList } from '../utils/emojiList';
+import { EmojiFabricIconCharacterMap, EmojiFamilyKeys, EmojiList } from '../utils/emojiList';
 import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { getObjectKeys } from 'roosterjs-editor-dom';
@@ -15,7 +15,7 @@ import { TooltipHost } from '@fluentui/react/lib/Tooltip';
 export interface EmojiNavBarProps {
     onClick?: (selected: string) => void;
     currentSelected?: string;
-    getTabId?: (selected: string) => string;
+    getTabId?: (selected: EmojiFamilyKeys) => string;
     strings: Record<string, string>;
     classNames: IProcessedStyleSet<IStyleSet<EmojiPaneStyle>>;
 }
@@ -51,7 +51,7 @@ export default function EmojiNavBar(props: EmojiNavBarProps) {
                                 })}
                                 key={key}
                                 onClick={onFamilyClick.bind(onclick, key)}
-                                id={getTabId(key)}
+                                id={getTabId?.(key)}
                                 role="tab"
                                 aria-selected={selected}
                                 aria-label={friendlyName}

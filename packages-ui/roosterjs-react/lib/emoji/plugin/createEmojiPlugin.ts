@@ -1,5 +1,4 @@
 import showEmojiCallout, { EmojiICallout } from '../components/showEmojiCallout';
-import { Editor } from 'roosterjs-editor-core';
 import { Emoji } from '../type/Emoji';
 import { EmojiPane } from '../components/EmojiPane';
 import { EmojiStringKeys } from '../type/EmojiStringKeys';
@@ -9,6 +8,7 @@ import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/i
 import { MoreEmoji } from '../utils/emojiList';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
+    IEditor,
     PluginDomEvent,
     PluginEvent,
     PluginEventType,
@@ -34,12 +34,12 @@ const KEYCODE_COLON_FIREFOX = 59;
 const EMOJI_BEFORE_COLON_REGEX = /([\u0023-\u0039][\u20e3]|[\ud800-\udbff][\udc00-\udfff]|[\u00a9-\u00ae]|[\u2122-\u3299])*([:;][^:]*)/;
 
 class EmojiPlugin implements ReactEditorPlugin {
-    private editor: Editor;
-    private eventHandledOnKeyDown: boolean;
-    private canUndoEmoji: boolean;
-    private isSuggesting: boolean;
+    private editor: IEditor | null = null;
+    private eventHandledOnKeyDown: boolean = false;
+    private canUndoEmoji: boolean = false;
+    private isSuggesting: boolean = false;
     private paneRef = React.createRef<EmojiPane>();
-    private timer: number;
+    private timer: number | null = null;
     private uiUtilities: UIUtilities | null = null;
     private strings: Record<string, string>;
     private emojiCalloutRef = React.createRef<EmojiICallout>();
@@ -68,7 +68,7 @@ class EmojiPlugin implements ReactEditorPlugin {
         this.baseId = 0;
     }
 
-    public initialize(editor: Editor): void {
+    public initialize(editor: IEditor): void {
         this.editor = editor;
     }
 
@@ -80,7 +80,7 @@ class EmojiPlugin implements ReactEditorPlugin {
             } else if (event.rawEvent.which === KeyCodes.backspace && this.canUndoEmoji) {
                 //TODO: 1051
                 // If KeyDown is backspace and canUndoEmoji, call editor undo
-                this.editor.undo();
+                this.editor!.undo();
                 this.handleEventOnKeyDown(event);
                 this.canUndoEmoji = false;
             }
@@ -110,9 +110,13 @@ class EmojiPlugin implements ReactEditorPlugin {
         const wordBeforeCursor = this.getWordBeforeCursor(event);
         switch (event.rawEvent.which) {
             case KeyCodes.enter:
-                const selectedEmoji = this.paneRef.current.getSelectedEmoji();
+                const selectedEmoji = this.paneRef.current?.getSelectedEmoji();
                 // check if selection is on the "..." and show full picker if so, otherwise try to apply emoji
-                if (this.tryShowFullPicker(event, selectedEmoji, wordBeforeCursor)) {
+                if (
+                    !selectedEmoji ||
+                    !wordBeforeCursor ||
+                    this.tryShowFullPicker(event, selectedEmoji, wordBeforeCursor)
+                ) {
                     break;
                 } else {
                     this.insertEmoji(selectedEmoji, wordBeforeCursor);
@@ -122,7 +126,7 @@ class EmojiPlugin implements ReactEditorPlugin {
                 break;
             case KeyCodes.left:
             case KeyCodes.right:
-                this.paneRef.current.navigate(event.rawEvent.which === KeyCodes.left ? -1 : 1);
+                this.paneRef.current?.navigate(event.rawEvent.which === KeyCodes.left ? -1 : 1);
                 this.handleEventOnKeyDown(event);
                 break;
             case KeyCodes.escape:
@@ -157,10 +161,11 @@ class EmojiPlugin implements ReactEditorPlugin {
         // If this is a character key or backspace
         // Clear the timer as we will either queue a new timer or stop suggesting
         if (
-            (event.rawEvent.key.length === 1 && event.rawEvent.which !== KeyCodes.space) ||
-            event.rawEvent.which === KeyCodes.backspace
+            this.timer &&
+            ((event.rawEvent.key.length === 1 && event.rawEvent.which !== KeyCodes.space) ||
+                event.rawEvent.which === KeyCodes.backspace)
         ) {
-            this.editor.getDocument().defaultView.clearTimeout(this.timer);
+            this.editor?.getDocument().defaultView?.clearTimeout(this.timer);
             this.timer = null;
             this.emojiCalloutRef.current?.dismiss();
         }
@@ -192,27 +197,30 @@ class EmojiPlugin implements ReactEditorPlugin {
     }
 
     private getCallout() {
-        this.baseId++;
-        const rangeNode = this.editor.getElementAtCursor();
-        const rect = rangeNode.getBoundingClientRect();
-        showEmojiCallout(
-            this.uiUtilities,
-            rect,
-            this.strings,
-            this.onSelectFromPane,
-            this.paneRef,
-            this.emojiCalloutRef,
-            this.onHideCallout,
-            this.baseId,
-            this.searchBoxStrings
-        );
+        const rangeNode = this.editor?.getElementAtCursor();
+        const rect = rangeNode?.getBoundingClientRect();
+        if (this.uiUtilities && rect) {
+            this.baseId++;
+
+            showEmojiCallout(
+                this.uiUtilities,
+                rect,
+                this.strings,
+                this.onSelectFromPane,
+                this.paneRef,
+                this.emojiCalloutRef,
+                this.onHideCallout,
+                this.baseId,
+                this.searchBoxStrings
+            );
+        }
     }
 
     private onHideCallout = () => this.setIsSuggesting(false);
 
     private onSelectFromPane = (emoji: Emoji, wordBeforeCursor: string): void => {
         if (emoji === MoreEmoji) {
-            this.paneRef.current.showFullPicker(wordBeforeCursor);
+            this.paneRef.current?.showFullPicker(wordBeforeCursor);
             return;
         }
 
@@ -233,7 +241,7 @@ class EmojiPlugin implements ReactEditorPlugin {
     }
 
     private insertEmoji(emoji: Emoji, wordBeforeCursor: string) {
-        if (!wordBeforeCursor) {
+        if (!wordBeforeCursor || !this.editor || !emoji.codePoint) {
             return;
         }
         const node = this.editor.getDocument().createElement('span');
@@ -241,20 +249,22 @@ class EmojiPlugin implements ReactEditorPlugin {
 
         this.editor.addUndoSnapshot(
             () => {
-                replaceWithNode(this.editor, wordBeforeCursor, node, true /*exactMatch*/);
-                this.editor.select(node, PositionType.After);
+                if (this.editor) {
+                    replaceWithNode(this.editor, wordBeforeCursor, node, true /*exactMatch*/);
+                    this.editor.select(node, PositionType.After);
+                }
             },
-            null /*changeSource*/,
+            undefined /*changeSource*/,
             true /*canUndoByBackspace*/
         );
 
         this.emojiCalloutRef.current?.dismiss();
     }
 
-    private getWordBeforeCursor(event: PluginEvent): string {
-        const cursorData = this.editor.getContentSearcherOfCursor(event);
+    private getWordBeforeCursor(event: PluginEvent): string | null {
+        const cursorData = this.editor?.getContentSearcherOfCursor(event);
         const wordBeforeCursor = cursorData ? cursorData.getWordBefore() : null;
-        const matches = EMOJI_BEFORE_COLON_REGEX.exec(wordBeforeCursor);
+        const matches = wordBeforeCursor ? EMOJI_BEFORE_COLON_REGEX.exec(wordBeforeCursor) : null;
         return matches && matches.length > 2 && matches[0] === wordBeforeCursor ? matches[2] : null;
     }
 

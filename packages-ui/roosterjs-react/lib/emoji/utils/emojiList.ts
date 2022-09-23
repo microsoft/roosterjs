@@ -760,7 +760,7 @@ export function forEachEmoji(callback: (emoji: Emoji) => boolean): void {
 }
 
 // get emoji code point from an emoji key
-function getEmojiCodePoint(key: string): string {
+function getEmojiCodePoint(key: string): string | null {
     let unicode = parseInt(key, 16);
     if (isNaN(unicode)) {
         return null;
@@ -778,7 +778,7 @@ function getEmojiCodePoint(key: string): string {
         surrogatePairs = [unicode];
     }
 
-    return String.fromCharCode(...surrogatePairs);
+    return String.fromCharCode(...surrogatePairs!);
 }
 
 function createEmoji(key: string, shortcut?: string): Emoji {
@@ -787,10 +787,10 @@ function createEmoji(key: string, shortcut?: string): Emoji {
         description: `emjD${key}`,
         keywords: `emjK${key}`,
         shortcut,
-        codePoint: getEmojiCodePoint(key),
+        codePoint: getEmojiCodePoint(key) ?? undefined,
     };
 }
 
 function createEmojiWithNoKeyword(key: string): Emoji {
-    return { key, description: `emjD${key}`, codePoint: getEmojiCodePoint(key) };
+    return { key, description: `emjD${key}`, codePoint: getEmojiCodePoint(key) ?? undefined };
 }

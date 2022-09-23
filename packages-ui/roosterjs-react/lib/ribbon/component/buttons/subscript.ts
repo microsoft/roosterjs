@@ -10,7 +10,7 @@ export const subscript: RibbonButton<SubscriptButtonStringKey> = {
     key: 'buttonNameSubscript',
     unlocalizedText: 'Subscript',
     iconName: 'Subscript',
-    isChecked: formatState => formatState.isSubscript,
+    isChecked: formatState => !!formatState.isSubscript,
     onClick: editor => {
         toggleSubscript(editor);
         return true;
