@@ -8,7 +8,8 @@
         "./lib/plugins/AutoFormat/*.ts",
         "./lib/plugins/ContextMenu/*.ts",
         "./lib/plugins/CustomReplace/*.ts",
-        "./lib/plugins/CutPasteListChain/*.ts"
+        "./lib/plugins/CutPasteListChain/*.ts",
+        "./lib/plugins/HyperLink/*.ts"
     ],
     "references": [
         { "path": "./lib/plugins/tsconfig.child.json" },
