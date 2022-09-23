@@ -13,7 +13,7 @@ import {
     resizeByPercentage,
 } from 'roosterjs-editor-plugins';
 
-const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
+const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageAltText',
     unlocalizedText: 'Add alternate text',
     onClick: (_, editor, node, strings, uiUtilities) => {
@@ -43,7 +43,7 @@ const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     },
 };
 
-const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
+const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageResize',
     unlocalizedText: 'Size',
     subItems: {
@@ -121,7 +121,7 @@ export default function createImageEditMenuProvider(
     imageEditPlugin: ImageEdit,
     strings?: LocalizedStrings<ImageEditMenuItemStringKey>
 ): EditorPlugin {
-    return createContextMenuProvider(
+    return createContextMenuProvider<ImageEditMenuItemStringKey, ImageEdit>(
         'imageEdit',
         [ImageAltTextMenuItem, ImageResizeMenuItem, ImageCropMenuItem, ImageRemoveMenuItem],
         strings,

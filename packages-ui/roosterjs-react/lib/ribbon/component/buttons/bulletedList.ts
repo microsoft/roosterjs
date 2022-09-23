@@ -10,7 +10,7 @@ export const bulletedList: RibbonButton<BulletedListButtonStringKey> = {
     key: 'buttonNameBulletedList',
     unlocalizedText: 'Bulleted list',
     iconName: 'BulletedList',
-    isChecked: formatState => formatState.isBullet,
+    isChecked: formatState => !!formatState.isBullet,
     onClick: editor => {
         toggleBullet(editor);
         return true;
