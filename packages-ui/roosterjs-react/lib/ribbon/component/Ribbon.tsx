@@ -9,6 +9,7 @@ import { getObjectKeys } from 'roosterjs-editor-dom';
 import { IContextualMenuItem, IContextualMenuItemProps } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { moreCommands } from './buttons/moreCommands';
+import type { IRenderFunction } from '@fluentui/react/lib/Utilities';
 
 const ribbonClassName = mergeStyles({
     '& .ms-CommandBar': {
@@ -27,19 +28,21 @@ const rtlIcon = mergeStyles({
  */
 export default function Ribbon<T extends string>(props: RibbonProps<T>) {
     const { plugin, buttons, strings, dir } = props;
-    const [formatState, setFormatState] = React.useState<FormatState>(null);
+    const [formatState, setFormatState] = React.useState<FormatState | null>(null);
     const isRtl = dir == 'rtl';
 
     const onClick = React.useCallback(
-        (_, item: IContextualMenuItem) => {
-            plugin?.onButtonClick(item.data as RibbonButton<T>, item.key, strings);
+        (_, item?: IContextualMenuItem) => {
+            if (item) {
+                plugin?.onButtonClick<string>(item.data, item.key, strings);
+            }
         },
         [plugin, strings]
     );
 
     const onHover = React.useCallback(
         (button: RibbonButton<T>, key: string) => {
-            plugin.startLivePreview(button, key, strings);
+            plugin.startLivePreview<T>(button, key as T, strings);
         },
         [plugin, strings]
     );
@@ -53,6 +56,9 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
             props?: IContextualMenuItemProps,
             defaultRender?: (props?: IContextualMenuItemProps) => JSX.Element | null
         ): JSX.Element | null => {
+            if (!defaultRender) {
+                return null;
+            }
             return <span className={rtlIcon}>{defaultRender(props)}</span>;
         },
         []
@@ -81,6 +87,16 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                     ...(button.commandBarProperties || {}),
                 };
 
+                const contextMenuItemRenderer: IRenderFunction<IContextualMenuItem> = (
+                    props,
+                    defaultRenderer
+                ) =>
+                    props && defaultRenderer ? (
+                        <div onMouseOver={e => onHover(button, props.key)}>
+                            {defaultRenderer(props)}
+                        </div>
+                    ) : null;
+
                 if (dropDownMenu) {
                     result.subMenuProps = {
                         shouldFocusOnMount: true,
@@ -88,21 +104,21 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                         onDismiss: onDismiss,
                         onItemClick: onClick,
                         onRenderContextualMenuItem: dropDownMenu.allowLivePreview
-                            ? (props, defaultRenderer) => (
-                                  <div onMouseOver={e => onHover(button, props.key)}>
-                                      {defaultRenderer(props)}
-                                  </div>
-                              )
+                            ? contextMenuItemRenderer
                             : undefined,
                         items: getObjectKeys(dropDownMenu.items).map(key => ({
                             key: key,
-                            text: getLocalizedString(strings, key, dropDownMenu.items[key]),
+                            text: getLocalizedString<string, string>(
+                                strings,
+                                key,
+                                dropDownMenu.items[key]
+                            ),
                             data: button,
                             canCheck: !!dropDownMenu.getSelectedItemKey,
                             checked: selectedItem == key || false,
                             className: dropDownMenu.itemClassName,
                             onRender: dropDownMenu.itemRender
-                                ? item => dropDownMenu.itemRender(item, onClick)
+                                ? item => dropDownMenu.itemRender!(item, onClick)
                                 : undefined,
                         })),
                         ...(dropDownMenu.commandBarSubMenuProperties || {}),
@@ -124,7 +140,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
         };
     }, [plugin]);
 
-    const moreCommandsBtn = moreCommands as RibbonButton<T>;
+    const moreCommandsBtn = moreCommands as RibbonButton<string>;
 
     return (
         <CommandBar
@@ -132,7 +148,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
             {...props}
             className={ribbonClassName + ' ' + (props?.className || '')}
             overflowButtonProps={{
-                ariaLabel: getLocalizedString(
+                ariaLabel: getLocalizedString<string, string>(
                     strings,
                     moreCommandsBtn.key,
                     moreCommandsBtn.unlocalizedText
