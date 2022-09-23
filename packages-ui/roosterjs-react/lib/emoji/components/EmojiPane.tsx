@@ -106,7 +106,7 @@ const AriaAttributes = {
  */
 export interface EmojiPane {
     navigate: (change: number, direction?: EmojiPaneNavigateDirection) => number;
-    getEmojiElementIdByIndex: (index: number) => string;
+    getEmojiElementIdByIndex: (index: number) => string | null;
     getSelectedEmoji: () => Emoji;
     showFullPicker: (fullSearchText: string) => void;
     setSearch: (value: string) => void;
@@ -173,7 +173,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
     );
 
     const getEmojiElementIdByIndex = React.useCallback(
-        (index: number): string => {
+        (index: number): string | null => {
             const emoji = currentEmojiList[index];
             if (emoji) {
                 return getEmojiIconId(emoji);
@@ -225,12 +225,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         [mode, currentFamily, currentEmojiList]
     );
 
-    const getEmojiIconId = React.useCallback(
-        (emoji: Emoji): string => {
-            return emoji ? `${listId}-${emoji.key}` : undefined;
-        },
-        [listId]
-    );
+    const getEmojiIconId = React.useCallback((emoji: Emoji) => `${listId}-${emoji.key}`, [listId]);
 
     React.useImperativeHandle(
         ref,
@@ -264,7 +259,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         const { strings } = props;
         const selectedEmoji = getSelectedEmoji();
         const target = selectedEmoji ? `#${getEmojiIconId(selectedEmoji)}` : undefined;
-        const content = selectedEmoji ? strings[selectedEmoji.description] : undefined;
+        const content = selectedEmoji?.description ? strings[selectedEmoji.description] : undefined;
         const emojiList = renderCurrentEmojiIcons(index, currentEmojiList);
         // note: we're using a callout since TooltipHost does not support manual trigger, and we need to show the tooltip since quick picker is shown
         // as an autocomplete menu (false focus based on transferring navigation keyboard event)
@@ -312,7 +307,7 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
                 {!searchDisabled && (
                     <TextField
                         role="combobox"
-                        componentRef={searchRefCallback}
+                        componentRef={ref => searchRefCallback(ref)}
                         value={searchInBox}
                         onChange={onSearchChange}
                         inputClassName={classNames.emojiTextInput}
@@ -516,11 +511,13 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         return `family_${itemKey}_${props.baseId}`;
     };
 
-    const searchRefCallback = (ref: ITextField): void => {
-        searchBox = ref;
-        if (searchBox) {
-            searchBox.focus();
-            searchBox.setSelectionStart(searchBox.value.length);
+    const searchRefCallback = (ref: ITextField | null): void => {
+        if (ref) {
+            searchBox = ref;
+            if (searchBox?.value) {
+                searchBox.focus();
+                searchBox.setSelectionStart(searchBox.value.length);
+            }
         }
     };
 
@@ -540,14 +537,16 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         }
     };
 
-    const onSearchChange = (e: any, newValue: string): void => {
-        const normalizedSearchValue = normalizeSearchText(newValue, false);
-        const newMode =
-            normalizedSearchValue.length === 0 ? EmojiPaneMode.Full : EmojiPaneMode.Partial;
-        setIndex(newMode === EmojiPaneMode.Full ? -1 : 0);
-        setCurrentEmojiList(getSearchResult(normalizedSearchValue, mode));
-        setSearchInBox(newValue);
-        setMode(newMode);
+    const onSearchChange = (_: any, newValue?: string): void => {
+        if (typeof newValue === 'string') {
+            const normalizedSearchValue = normalizeSearchText(newValue, false);
+            const newMode =
+                normalizedSearchValue.length === 0 ? EmojiPaneMode.Full : EmojiPaneMode.Partial;
+            setIndex(newMode === EmojiPaneMode.Full ? -1 : 0);
+            setCurrentEmojiList(getSearchResult(normalizedSearchValue, mode));
+            setSearchInBox(newValue);
+            setMode(newMode);
+        }
     };
 
     const onSelect = (

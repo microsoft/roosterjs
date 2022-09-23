@@ -2,6 +2,7 @@ import { createRange, getSelectionPath, moveChildNodes } from 'roosterjs-editor-
 import {
     EditorCore,
     PluginEventType,
+    SelectionRangeEx,
     SelectionRangeTypes,
     SwitchShadowEdit,
 } from 'roosterjs-editor-types';
@@ -11,8 +12,26 @@ import {
  */
 export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boolean): void => {
     const { lifecycle, contentDiv } = core;
-    let { shadowEditFragment, shadowEditSelectionPath, shadowEditTableSelectionPath } = lifecycle;
+    let {
+        shadowEditFragment,
+        shadowEditSelectionPath,
+        shadowEditTableSelectionPath,
+        shadowEditImageSelectionPath,
+    } = lifecycle;
     const wasInShadowEdit = !!shadowEditFragment;
+
+    const getShadowEditSelectionPath = (
+        selectionType: SelectionRangeTypes,
+        shadowEditSelection?: SelectionRangeEx
+    ) => {
+        return (
+            (shadowEditSelection?.type == selectionType &&
+                shadowEditSelection.ranges
+                    .map(range => getSelectionPath(contentDiv, range))
+                    .map(w => w!!)) ||
+            null
+        );
+    };
 
     if (isOn) {
         if (!wasInShadowEdit) {
@@ -20,13 +39,15 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
 
             shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
-            shadowEditTableSelectionPath =
-                (selection?.type == SelectionRangeTypes.TableSelection &&
-                    selection.ranges
-                        .map(range => getSelectionPath(contentDiv, range))
-                        .map(w => w!!)) ||
-                null;
+            shadowEditTableSelectionPath = getShadowEditSelectionPath(
+                SelectionRangeTypes.TableSelection,
+                selection
+            );
             shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
+            shadowEditImageSelectionPath = getShadowEditSelectionPath(
+                SelectionRangeTypes.ImageSelection,
+                selection
+            );
 
             moveChildNodes(shadowEditFragment, contentDiv);
             shadowEditFragment.normalize();
@@ -43,6 +64,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             lifecycle.shadowEditFragment = shadowEditFragment;
             lifecycle.shadowEditSelectionPath = shadowEditSelectionPath;
             lifecycle.shadowEditTableSelectionPath = shadowEditTableSelectionPath;
+            lifecycle.shadowEditImageSelectionPath = shadowEditImageSelectionPath;
         }
 
         moveChildNodes(contentDiv);
@@ -77,6 +99,14 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                         shadowEditSelectionPath.end
                     )
                 );
+            }
+
+            if (core.domEvent.imageSelectionRange) {
+                const { image } = core.domEvent.imageSelectionRange;
+                const imageElement = core.contentDiv.querySelector('#' + image.id);
+                if (imageElement) {
+                    core.domEvent.imageSelectionRange = core.api.selectImage(image);
+                }
             }
 
             if (core.domEvent.tableSelectionRange) {
