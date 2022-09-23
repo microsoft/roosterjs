@@ -14,7 +14,6 @@ describe('addSegment', () => {
         addSegment(doc, segment);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -42,7 +41,6 @@ describe('addSegment', () => {
         addSegment(doc, segment);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -79,7 +77,6 @@ describe('addSegment', () => {
         addSegment(doc, segment);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -118,7 +115,6 @@ describe('addSegment', () => {
         addSegment(doc, segment);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 block,

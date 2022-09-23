@@ -1,10 +1,10 @@
 import changeElementTag from '../utils/changeElementTag';
 import setColor from '../utils/setColor';
+import { getTableCellMetadata } from './tableCellInfo';
 import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';
-const CELL_SHADE = 'cellShade';
 
 /**
  * @internal
@@ -35,8 +35,8 @@ function hasCellShade(cell: VCell) {
     if (!cell.td) {
         return false;
     }
-    const colorShade = cell.td.dataset[CELL_SHADE];
-    return colorShade ? true : false;
+
+    return !!getTableCellMetadata(cell.td)?.bgColorOverride;
 }
 
 /**

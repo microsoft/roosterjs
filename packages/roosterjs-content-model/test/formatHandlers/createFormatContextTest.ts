@@ -1,19 +1,27 @@
 import { createDomToModelContext } from '../../lib/domToModel/context/createDomToModelContext';
+import { defaultProcessorMap } from '../../lib/domToModel/context/defaultProcessors';
+import { defaultStyleMap } from '../../lib/domToModel/context/defaultStyles';
+import { getFormatParsers } from '../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createFormatContextTest', () => {
+    const contextOptions = {
+        elementProcessors: defaultProcessorMap,
+        defaultStyles: defaultStyleMap,
+        formatParsers: getFormatParsers(),
+    };
+
     it('empty parameter', () => {
         const context = createDomToModelContext();
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: false,
-                zoomScale: 1,
-                isRightToLeft: false,
-                getDarkColor: undefined,
-            },
+            isDarkMode: false,
+            zoomScale: 1,
+            isRightToLeft: false,
+            getDarkColor: undefined,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -28,14 +36,13 @@ describe('createFormatContextTest', () => {
         });
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -55,19 +62,19 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                ranges: [range],
-                areAllCollapsed: false,
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [range],
+                    areAllCollapsed: false,
+                },
             }
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             regularSelection: {
                 startContainer: text,
@@ -77,6 +84,7 @@ describe('createFormatContextTest', () => {
                 isSelectionCollapsed: false,
             },
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -93,30 +101,30 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: table,
-                coordinates: {
-                    firstCell: {
-                        x: 1,
-                        y: 2,
-                    },
-                    lastCell: {
-                        x: 3,
-                        y: 4,
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: table,
+                    coordinates: {
+                        firstCell: {
+                            x: 1,
+                            y: 2,
+                        },
+                        lastCell: {
+                            x: 3,
+                            y: 4,
+                        },
                     },
                 },
             }
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             tableSelection: {
                 table: table,
@@ -130,6 +138,7 @@ describe('createFormatContextTest', () => {
                 },
             },
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -144,21 +153,22 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                ranges: [],
-                areAllCollapsed: true,
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [],
+                    areAllCollapsed: true,
+                },
             }
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 
@@ -173,23 +183,24 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: null!,
-                coordinates: null!,
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: null!,
+                    coordinates: null!,
+                },
             }
         );
 
         expect(context).toEqual({
-            contentModelContext: {
-                isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
-                getDarkColor: getDarkColor,
-            },
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            ...contextOptions,
         });
     });
 });

@@ -6,8 +6,8 @@ import { UpdateMode } from '../type/UpdateMode';
  * A plugin to help get HTML content from editor
  */
 class UpdateContentPluginImpl implements UpdateContentPlugin {
-    private editor: IEditor;
-    private disposer: () => void;
+    private editor: IEditor | null = null;
+    private disposer: (() => void) | null = null;
 
     /**
      * Create a new instance of UpdateContentPlugin class

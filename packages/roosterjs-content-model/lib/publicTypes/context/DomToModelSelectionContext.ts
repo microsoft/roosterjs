@@ -1,11 +1,9 @@
-import { ContentModelContext } from '../../publicTypes/ContentModelContext';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { Coordinates } from 'roosterjs-editor-types';
 
 /**
- * @internal
+ * Represents regular a selection for DOM to Content Model conversion
  */
-export interface RegularSelection {
+export interface DomToModelRegularSelection {
     /**
      * Is the selection collapsed
      */
@@ -33,9 +31,9 @@ export interface RegularSelection {
 }
 
 /**
- * @internal
+ * Represents regular a table for DOM to Content Model conversion
  */
-export interface TableSelection {
+export interface DomToModelTableSelection {
     /**
      * Table where selection is located
      */
@@ -53,9 +51,9 @@ export interface TableSelection {
 }
 
 /**
- * @internal
+ * Represents regular an image for DOM to Content Model conversion
  */
-export interface ImageSelection {
+export interface DomToModelImageSelection {
     /**
      * Selected image
      */
@@ -63,37 +61,26 @@ export interface ImageSelection {
 }
 
 /**
- * @internal
- * Context of DOM to Model conversion, used for parse HTML element according to current context
+ * Represents the selection information of content used by DOM to Content Model conversion
  */
-export interface DomToModelContext {
+export interface DomToModelSelectionContext {
     /**
      * Is current context under a selection
      */
     isInSelection: boolean;
 
     /**
-     * Common context for ContentModel
-     */
-    contentModelContext: ContentModelContext;
-
-    /**
      * Regular selection (selection with a highlight background provided by browser)
      */
-    regularSelection?: RegularSelection;
+    regularSelection?: DomToModelRegularSelection;
 
     /**
      * Table selection provided by editor
      */
-    tableSelection?: TableSelection;
+    tableSelection?: DomToModelTableSelection;
 
     /**
      * Image selection provided by editor
      */
-    imageSelection?: ImageSelection;
-
-    /**
-     * Format of current segment
-     */
-    segmentFormat: ContentModelSegmentFormat;
+    imageSelection?: DomToModelImageSelection;
 }

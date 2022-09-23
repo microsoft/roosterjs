@@ -25,7 +25,9 @@ export const header: RibbonButton<HeaderButtonStringKey> = {
     dropDownMenu: {
         items: headers,
         getSelectedItemKey: formatState => {
-            return formatState.headerLevel > 0 ? 'header' + formatState.headerLevel : 'noHeader';
+            return (formatState.headerLevel ?? 0) > 0
+                ? 'header' + formatState.headerLevel
+                : 'noHeader';
         },
     },
     onClick: (editor, key) => {

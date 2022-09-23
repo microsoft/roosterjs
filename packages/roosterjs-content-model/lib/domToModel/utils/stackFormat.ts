@@ -1,5 +1,5 @@
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
-import { DomToModelContext } from '../context/DomToModelContext';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 
 /**
  * @internal

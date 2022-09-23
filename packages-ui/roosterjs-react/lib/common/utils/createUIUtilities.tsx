@@ -22,7 +22,7 @@ export default function createUIUtilities(
             doc.body.appendChild(div);
 
             ReactDOM.render(
-                <WindowProvider window={doc.defaultView}>
+                <WindowProvider window={doc.defaultView!}>
                     <ThemeProvider theme={theme}>{element}</ThemeProvider>
                 </WindowProvider>,
                 div

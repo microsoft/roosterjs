@@ -48,6 +48,7 @@ export { default as setColor } from './utils/setColor';
 export { default as matchesSelector } from './utils/matchesSelector';
 export { default as createElement, KnownCreateElementData } from './utils/createElement';
 export { default as moveChildNodes } from './utils/moveChildNodes';
+export { default as getIntersectedRect } from './utils/getIntersectedRect';
 
 export { default as VTable } from './table/VTable';
 export { default as isWholeTableSelected } from './table/isWholeTableSelected';
@@ -58,6 +59,7 @@ export { default as createVListFromRegion } from './list/createVListFromRegion';
 export { default as VListChain } from './list/VListChain';
 export { default as setListItemStyle } from './list/setListItemStyle';
 export { getTableFormatInfo } from './table/tableFormatInfo';
+export { saveTableCellMetadata } from './table/tableCellInfo';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';

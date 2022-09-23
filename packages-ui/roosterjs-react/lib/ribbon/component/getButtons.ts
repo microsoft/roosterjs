@@ -33,7 +33,7 @@ import { textColor } from './buttons/textColor';
 import { underline } from './buttons/underline';
 import { undo } from './buttons/undo';
 
-const KnownRibbonButtons: { [key in KnownRibbonButtonKey]: RibbonButton<AllButtonStringKeys> } = {
+const KnownRibbonButtons = <Record<KnownRibbonButtonKey, RibbonButton<AllButtonStringKeys>>>{
     [KnownRibbonButtonKey.Bold]: bold,
     [KnownRibbonButtonKey.Italic]: italic,
     [KnownRibbonButtonKey.Underline]: underline,
@@ -109,9 +109,9 @@ export const AllButtonKeys = [
  * @param keyOrButtons An array of buttons or known button key. Default value is all known buttons provided by roosterjs-react
  * @returns An array of all buttons
  */
-export default function getButtons<StringKey extends string = null>(
+export default function getButtons<StringKey extends string = string>(
     keyOrButtons: (KnownRibbonButtonKey | RibbonButton<StringKey>)[] = AllButtonKeys
-): RibbonButton<AllButtonStringKeys | StringKey>[] {
+): (RibbonButton<AllButtonStringKeys> | RibbonButton<StringKey>)[] {
     return keyOrButtons.map(keyOrButton =>
         typeof keyOrButton == 'number' ? KnownRibbonButtons[keyOrButton] : keyOrButton
     );
