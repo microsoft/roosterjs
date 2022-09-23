@@ -4,6 +4,7 @@ import { ContextMenuProvider, EditorPlugin, IEditor } from 'roosterjs-editor-typ
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * A plugin of editor to provide context menu items
