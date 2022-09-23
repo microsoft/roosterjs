@@ -35,6 +35,7 @@ export default function createCorePlugins(
         edit: map.edit || new EditPlugin(),
         pendingFormatState: map.pendingFormatState || new PendingFormatStatePlugin(),
         _placeholder: null,
+        typeAfterLink: null!, //deprecated after firefox update
         undo: map.undo || new UndoPlugin(options),
         domEvent: map.domEvent || new DOMEventPlugin(options, contentDiv),
         mouseUp: map.mouseUp || new MouseUpPlugin(),
