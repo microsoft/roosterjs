@@ -4,9 +4,9 @@ export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
 export { default as setTableCellShade } from './publicApi/table/setTableCellShade';
 export { default as editTable } from './publicApi/table/editTable';
-
-export { hasSelectionInBlock } from './modelApi/selection/hasSelectionInBlock';
-export { hasSelectionInSegment } from './modelApi/selection/hasSelectionInSegment';
+export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
+export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
+export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 
 export { extractBorderValues, combineBorderValue, BorderIndex } from './domUtils/borderValues';
 
@@ -30,9 +30,11 @@ export { ContentModelBr } from './publicTypes/segment/ContentModelBr';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 
+export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './publicTypes/format/ContentModelTableCellFormat';
 export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegmentFormat';
+export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 
 export { TextAlignFormat } from './publicTypes/format/formatParts/TextAlignFormat';
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
@@ -54,5 +56,37 @@ export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetad
 export { ContentModelFormatBase } from './publicTypes/format/ContentModelFormatBase';
 export { MarginFormat } from './publicTypes/format/formatParts/MarginFormat';
 
-export { IExperimentalContentModelEditor } from './publicTypes/IExperimentalContentModelEditor';
-export { ContentModelContext } from './publicTypes/ContentModelContext';
+export { EditorContext } from './publicTypes/context/EditorContext';
+export { DomToModelFormatContext } from './publicTypes/context/DomToModelFormatContext';
+export {
+    DomToModelRegularSelection,
+    DomToModelTableSelection,
+    DomToModelImageSelection,
+    DomToModelSelectionContext,
+} from './publicTypes/context/DomToModelSelectionContext';
+export {
+    DomToModelSettings,
+    DefaultStyleMap,
+    FormatParser,
+    FormatParsers,
+} from './publicTypes/context/DomToModelSettings';
+export { DomToModelContext } from './publicTypes/context/DomToModelContext';
+export { ModelToDomContext } from './publicTypes/context/ModelToDomContext';
+export {
+    ModelToDomBlockAndSegmentNode,
+    ModelToDomRegularSelection,
+    ModelToDomTableSelection,
+    ModelToDomSelectionContext,
+} from './publicTypes/context/ModelToDomSelectionContext';
+export {
+    ModelToDomSettings,
+    FormatApplier,
+    FormatAppliers,
+} from './publicTypes/context/ModelToDomSettings';
+export { ElementProcessor } from './publicTypes/context/ElementProcessor';
+
+export {
+    IExperimentalContentModelEditor,
+    DomToModelOption,
+    ModelToDomOption,
+} from './publicTypes/IExperimentalContentModelEditor';

@@ -1,12 +1,14 @@
+import { ContentPosition, EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
-    ContentModelContext,
+    EditorContext,
     ContentModelDocument,
     contentModelToDom,
     domToContentModel,
+    DomToModelOption,
     IExperimentalContentModelEditor,
+    ModelToDomOption,
 } from 'roosterjs-content-model';
 
 /**
@@ -29,9 +31,9 @@ export default class ExperimentalContentModelEditor extends Editor
     }
 
     /**
-     * Create a ContentModelContext object used by ContentModel API
+     * Create a EditorContext object used by ContentModel API
      */
-    createContentModelContext(): ContentModelContext {
+    createEditorContext(): EditorContext {
         return {
             isDarkMode: this.isDarkMode(),
             zoomScale: this.getZoomScale(),
@@ -44,26 +46,25 @@ export default class ExperimentalContentModelEditor extends Editor
      * Create Content Model from DOM tree in this editor
      * @param startNode Optional start node. If provided, Content Model will be created from this node (including itself),
      * otherwise it will create Content Model for the whole content in editor.
+     * @param option The option to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(startNode?: HTMLElement): ContentModelDocument {
-        return domToContentModel(
-            startNode || this.contentDiv,
-            this.createContentModelContext(),
-            !!startNode,
-            this.getSelectionRangeEx()
-        );
+    createContentModel(startNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument {
+        return domToContentModel(startNode || this.contentDiv, this.createEditorContext(), {
+            includeRoot: !!startNode,
+            selectionRange: this.getSelectionRangeEx(),
+            ...(option || {}),
+        });
     }
 
     /**
      * Set content with content model
      * @param model The content model to set
      * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
+     * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
-    setContentModel(
-        model: ContentModelDocument,
-        mergingCallback: (fragment: DocumentFragment) => void = this.defaultMergingCallback
-    ) {
-        const [fragment, range] = contentModelToDom(model, this.createContentModelContext());
+    setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
+        const [fragment, range] = contentModelToDom(model, this.createEditorContext(), option);
+        const mergingCallback = option?.mergingCallback || this.defaultMergingCallback;
 
         switch (range?.type) {
             case SelectionRangeTypes.Normal:
@@ -86,7 +87,10 @@ export default class ExperimentalContentModelEditor extends Editor
     }
 
     private defaultMergingCallback = (fragment: DocumentFragment) => {
-        this.setContent('');
-        this.insertNode(fragment);
+        while (this.contentDiv.firstChild) {
+            this.contentDiv.removeChild(this.contentDiv.firstChild);
+        }
+
+        this.insertNode(fragment, { position: ContentPosition.Begin });
     };
 }

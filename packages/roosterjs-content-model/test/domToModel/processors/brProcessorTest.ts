@@ -1,7 +1,7 @@
 import { brProcessor } from '../../../lib/domToModel/processors/brProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 
 describe('brProcessor', () => {
     let context: DomToModelContext;
@@ -17,7 +17,6 @@ describe('brProcessor', () => {
         brProcessor(doc, br, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -44,7 +43,6 @@ describe('brProcessor', () => {
         brProcessor(doc, br, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             blocks: [
                 {

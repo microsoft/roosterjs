@@ -63,7 +63,9 @@ export default function toggleListType(
                 if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
                     vList.setListStyleType(orderedStyle, unorderedStyle);
                 }
-                vList.writeBack();
+                vList.writeBack(
+                    editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                );
             }
         },
         undefined /* beforeRunCallback */,

@@ -9,6 +9,7 @@ import {
 } from '../../common/index';
 import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
 import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -17,7 +18,7 @@ export interface InputDialogProps<Strings extends string, ItemNames extends stri
     dialogTitleKey: Strings;
     unlocalizedTitle: string;
     items: Record<ItemNames, DialogItem<Strings>>;
-    strings: LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>;
+    strings?: LocalizedStrings<Strings | OkButtonStringKey | CancelButtonStringKey>;
     onChange?: (
         changedItemName: ItemNames,
         newValue: string,
@@ -42,7 +43,7 @@ export default function InputDialog<Strings extends string, ItemNames extends st
         [strings, dialogTitleKey, unlocalizedTitle]
     );
     const [currentValues, setCurrentValues] = React.useState<Record<ItemNames, string>>(
-        Object.keys(items).reduce((result: Record<ItemNames, string>, key: keyof typeof items) => {
+        getObjectKeys(items).reduce((result: Record<ItemNames, string>, key) => {
             result[key] = items[key].initValue;
             return result;
         }, {} as Record<ItemNames, string>)
@@ -53,20 +54,24 @@ export default function InputDialog<Strings extends string, ItemNames extends st
     }, [onOk, currentValues]);
     const onItemChanged = React.useCallback(
         (itemName: ItemNames, newValue: string) => {
-            const newValues = onChange?.(itemName, newValue, { ...currentValues }) || {
-                ...currentValues,
-                [itemName]: newValue,
-            };
+            if (itemName in items) {
+                const newValues = onChange?.(itemName, newValue, {
+                    ...currentValues,
+                }) || {
+                    ...currentValues,
+                    [itemName]: newValue,
+                };
 
-            setCurrentValues(newValues);
+                setCurrentValues(newValues);
+            }
         },
-        [setCurrentValues, currentValues]
+        [setCurrentValues, currentValues, items]
     );
 
     return (
         <Dialog dialogContentProps={dialogContentProps} hidden={false} onDismiss={onCancel}>
             <div>
-                {Object.keys(items).map((key: keyof typeof items) => (
+                {getObjectKeys(items).map(key => (
                     <InputDialogItem
                         key={key}
                         itemName={key}

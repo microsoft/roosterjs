@@ -10,7 +10,7 @@ export const quote: RibbonButton<QuoteButtonStringKey> = {
     key: 'buttonNameQuote',
     unlocalizedText: 'Quote',
     iconName: 'RightDoubleQuote',
-    isChecked: formatState => formatState.isBlockQuote,
+    isChecked: formatState => !!formatState.isBlockQuote,
     onClick: editor => {
         toggleBlockQuote(editor);
         return true;

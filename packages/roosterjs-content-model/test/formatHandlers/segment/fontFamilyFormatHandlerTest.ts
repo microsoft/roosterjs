@@ -1,19 +1,18 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { FontFamilyFormat } from '../../../lib/publicTypes/format/formatParts/FontFamilyFormat';
 import { fontFamilyFormatHandler } from '../../../lib/formatHandlers/segment/fontFamilyFormatHandler';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('fontFamilyFormatHandler.parse', () => {
     let div: HTMLElement;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
     let format: FontFamilyFormat;
 
     beforeEach(() => {
         div = document.createElement('div');
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
         format = {};
     });
 
@@ -47,16 +46,12 @@ describe('fontFamilyFormatHandler.parse', () => {
 describe('fontFamilyFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: FontFamilyFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     it('no font', () => {

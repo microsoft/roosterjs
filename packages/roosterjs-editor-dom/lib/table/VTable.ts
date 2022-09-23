@@ -5,6 +5,7 @@ import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../jsUtils/toArray';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
+import { removeMetadata } from '../metadata/metadata';
 import {
     SizeTransformer,
     TableBorderFormat,
@@ -15,7 +16,6 @@ import {
 } from 'roosterjs-editor-types';
 import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
-const CELL_SHADE = 'cellShade';
 const DEFAULT_FORMAT: Required<TableFormat> = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
@@ -197,8 +197,8 @@ export default class VTable {
     private deleteCellShadeDataset(cells: VCell[][] | null) {
         cells?.forEach(row => {
             row.forEach(cell => {
-                if (cell.td && cell.td.dataset[CELL_SHADE]) {
-                    delete cell.td.dataset[CELL_SHADE];
+                if (cell.td) {
+                    removeMetadata(cell.td);
                 }
             });
         });

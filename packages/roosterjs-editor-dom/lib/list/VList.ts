@@ -177,8 +177,10 @@ export default class VList {
     /**
      * Write the result back into DOM tree
      * After that, this VList becomes unavailable because we set this.rootList to null
+     *
+     * @param shouldReuseAllAncestorListElements Optional - defaults to false.
      */
-    writeBack() {
+    writeBack(shouldReuseAllAncestorListElements?: boolean) {
         if (!this.rootList) {
             throw new Error('rootList must not be null');
         }
@@ -200,7 +202,7 @@ export default class VList {
                 start = newListStart;
             }
 
-            item.writeBack(listStack, this.rootList);
+            item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements);
             const topList = listStack[1];
 
             if (safeInstanceOf(topList, 'HTMLOListElement')) {

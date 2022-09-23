@@ -10,7 +10,6 @@ const T = 'transparent';
 describe('applyTableFormat', () => {
     function createCell(): ContentModelTableCell {
         return {
-            blockType: 'BlockGroup',
             blockGroupType: 'TableCell',
             blocks: [],
             isHeader: false,

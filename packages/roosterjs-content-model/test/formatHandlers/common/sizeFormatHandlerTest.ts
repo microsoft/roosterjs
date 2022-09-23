@@ -1,18 +1,17 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { SizeFormat } from '../../../lib/publicTypes/format/formatParts/SizeFormat';
 import { sizeFormatHandler } from '../../../lib/formatHandlers/common/sizeFormatHandler';
 
 describe('sizeFormatHandler.parse', () => {
     let format: SizeFormat;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
     });
 
     it('Not able to get size', () => {
@@ -49,16 +48,12 @@ describe('sizeFormatHandler.parse', () => {
 describe('sizeFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: SizeFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     it('No size', () => {

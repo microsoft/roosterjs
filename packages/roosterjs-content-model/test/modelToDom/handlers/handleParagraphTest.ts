@@ -3,7 +3,7 @@ import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentMod
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagraph';
-import { ModelToDomContext } from '../../../lib/modelToDom/context/ModelToDomContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('handleParagraph', () => {
     let parent: HTMLElement;

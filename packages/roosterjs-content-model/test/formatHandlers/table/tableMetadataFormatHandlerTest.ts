@@ -1,4 +1,7 @@
-import { ContentModelContext } from '../../../lib/publicTypes/ContentModelContext';
+import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableMetadataFormat';
 import { tableMetadataFormatHandler } from '../../../lib/formatHandlers/table/tableMetadataFormatHandler';
@@ -6,16 +9,12 @@ import { tableMetadataFormatHandler } from '../../../lib/formatHandlers/table/ta
 describe('tableMetadataFormatHandler.parse', () => {
     let div: HTMLElement;
     let format: TableMetadataFormat;
-    let context: ContentModelContext;
+    let context: DomToModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createDomToModelContext();
     });
 
     function runTest(metadata: any, expectedValue: TableMetadataFormat) {
@@ -87,16 +86,12 @@ describe('tableMetadataFormatHandler.parse', () => {
 describe('tableMetadataFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: TableMetadataFormat;
-    let context: ContentModelContext;
+    let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-        };
+        context = createModelToDomContext();
     });
 
     function runTest(tableFormat: TableMetadataFormat | null, expectedValue: any) {

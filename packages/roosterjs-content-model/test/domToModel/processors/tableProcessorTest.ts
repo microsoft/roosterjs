@@ -5,7 +5,7 @@ import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBl
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { DomToModelContext } from '../../../lib/domToModel/context/DomToModelContext';
+import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
 import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
@@ -36,7 +36,6 @@ describe('tableProcessor', () => {
             cells: [
                 [
                     {
-                        blockType: 'BlockGroup',
                         blockGroupType: 'TableCell',
                         spanAbove: false,
                         spanLeft: false,
@@ -227,7 +226,6 @@ describe('tableProcessor with format', () => {
         expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             document: document,
             blocks: [
@@ -236,7 +234,6 @@ describe('tableProcessor with format', () => {
                     cells: [
                         [
                             {
-                                blockType: 'BlockGroup',
                                 blockGroupType: 'TableCell',
                                 blocks: [
                                     {
@@ -299,12 +296,11 @@ describe('tableProcessor with format', () => {
         } as any) as HTMLTableElement;
 
         const doc = createContentModelDocument(document);
-        context.contentModelContext.zoomScale = 2;
+        context.zoomScale = 2;
 
         tableProcessor(doc, mockedTable, context);
 
         expect(doc).toEqual({
-            blockType: 'BlockGroup',
             blockGroupType: 'Document',
             document: document,
             blocks: [
@@ -316,7 +312,6 @@ describe('tableProcessor with format', () => {
                     cells: [
                         [
                             {
-                                blockType: 'BlockGroup',
                                 blockGroupType: 'TableCell',
                                 format: {},
                                 blocks: [],

@@ -1,5 +1,5 @@
+import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { hasSelectionInBlock } from '../selection/hasSelectionInBlock';
 
 /**
  * @internal
@@ -7,7 +7,7 @@ import { hasSelectionInBlock } from '../selection/hasSelectionInBlock';
 export function setTableCellBackgroundColor(table: ContentModelTable, color: string) {
     table.cells.forEach(row =>
         row.forEach(cell => {
-            if (hasSelectionInBlock(cell)) {
+            if (hasSelectionInBlockGroup(cell)) {
                 cell.format.backgroundColor = color;
                 cell.format.bgColorOverride = true;
             }
