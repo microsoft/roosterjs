@@ -482,9 +482,8 @@ export default class Editor implements IEditor {
             safeInstanceOf(arg1, 'HTMLImageElement') &&
             !arg2
         ) {
-            const selection = core.api.selectImage(core, arg1);
-            core.domEvent.imageSelectionRange = selection;
-            return !!selection;
+            core.api.selectImage(core, arg1);
+            return true;
         } else {
             core.api.selectImage(core, null);
             core.domEvent.imageSelectionRange = null;

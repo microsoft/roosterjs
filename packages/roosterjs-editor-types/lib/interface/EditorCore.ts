@@ -9,7 +9,6 @@ import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
-import { ImageSelectionRange } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
@@ -283,10 +282,7 @@ export type SelectTable = (
  * @param image image to select
  * @returns true if successful
  */
-export type SelectImage = (
-    core: EditorCore,
-    image: HTMLImageElement | null
-) => ImageSelectionRange | null;
+export type SelectImage = (core: EditorCore, image: HTMLImageElement | null) => void;
 
 /**
  * The interface for the map of core API.
