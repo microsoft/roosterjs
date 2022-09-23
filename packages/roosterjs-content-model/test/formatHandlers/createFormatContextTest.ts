@@ -62,9 +62,11 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                ranges: [range],
-                areAllCollapsed: false,
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [range],
+                    areAllCollapsed: false,
+                },
             }
         );
 
@@ -99,18 +101,20 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: table,
-                coordinates: {
-                    firstCell: {
-                        x: 1,
-                        y: 2,
-                    },
-                    lastCell: {
-                        x: 3,
-                        y: 4,
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: table,
+                    coordinates: {
+                        firstCell: {
+                            x: 1,
+                            y: 2,
+                        },
+                        lastCell: {
+                            x: 3,
+                            y: 4,
+                        },
                     },
                 },
             }
@@ -149,9 +153,11 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                ranges: [],
-                areAllCollapsed: true,
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [],
+                    areAllCollapsed: true,
+                },
             }
         );
 
@@ -177,11 +183,13 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: null!,
-                coordinates: null!,
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: null!,
+                    coordinates: null!,
+                },
             }
         );
 

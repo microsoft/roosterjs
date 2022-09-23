@@ -10,7 +10,7 @@ export const italic: RibbonButton<ItalicButtonStringKey> = {
     key: 'buttonNameItalic',
     unlocalizedText: 'Italic',
     iconName: 'Italic',
-    isChecked: formatState => formatState.isItalic,
+    isChecked: formatState => !!formatState.isItalic,
     onClick: editor => {
         toggleItalic(editor);
         return true;

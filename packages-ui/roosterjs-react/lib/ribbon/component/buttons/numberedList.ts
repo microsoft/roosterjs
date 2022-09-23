@@ -10,7 +10,7 @@ export const numberedList: RibbonButton<NumberedListButtonStringKey> = {
     key: 'buttonNameNumberedList',
     unlocalizedText: 'Numbered list',
     iconName: 'NumberedList',
-    isChecked: formatState => formatState.isNumbering,
+    isChecked: formatState => !!formatState.isNumbering,
     onClick: editor => {
         toggleNumbering(editor);
         return true;
