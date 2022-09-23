@@ -9,7 +9,8 @@
         "./lib/plugins/ContextMenu/*.ts",
         "./lib/plugins/CustomReplace/*.ts",
         "./lib/plugins/CutPasteListChain/*.ts",
-        "./lib/plugins/HyperLink/*.ts"
+        "./lib/plugins/HyperLink/*.ts",
+        "./lib/plugins/Watermark/*.ts"
     ],
     "references": [
         { "path": "./lib/plugins/tsconfig.child.json" },

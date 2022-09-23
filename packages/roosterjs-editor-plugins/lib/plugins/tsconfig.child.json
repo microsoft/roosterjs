@@ -8,7 +8,8 @@
         "./ContextMenu/*.ts",
         "./CustomReplace/*.ts",
         "./CutPasteListChain/*.ts",
-        "./HyperLink/*.ts"
+        "./HyperLink/*.ts",
+        "./Watermark/*.ts"
     ],
     "references": [
         { "path": "../../../roosterjs-editor-types/tsconfig.child.json" },
