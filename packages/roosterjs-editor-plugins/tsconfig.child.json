@@ -4,7 +4,9 @@
     },
     "extends": "../tsconfig.json",
     "include": ["./lib/**/*.ts"],
+    "exclude": ["./lib/plugins/AutoFormat/*.ts", "./lib/plugins/ContextMenu/*.ts"],
     "references": [
+        { "path": "./lib/plugins/tsconfig.child.json" },
         { "path": "../roosterjs-editor-types/tsconfig.child.json" },
         { "path": "../roosterjs-editor-dom/tsconfig.child.json" },
         { "path": "../roosterjs-editor-api/tsconfig.child.json" }

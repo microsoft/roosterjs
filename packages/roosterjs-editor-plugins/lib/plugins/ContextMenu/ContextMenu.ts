@@ -37,9 +37,9 @@ export interface ContextMenuOptions<T> {
  * An editor plugin that support showing a context menu using render() function from options parameter
  */
 export default class ContextMenu<T> implements EditorPlugin {
-    private container: HTMLElement;
-    private editor: IEditor;
-    private isMenuShowing: boolean;
+    private container: HTMLElement | null = null;
+    private editor: IEditor | null = null;
+    private isMenuShowing: boolean = false;
 
     /**
      * Create a new instance of ContextMenu class
@@ -68,7 +68,7 @@ export default class ContextMenu<T> implements EditorPlugin {
     dispose() {
         this.onDismiss();
 
-        if (this.container) {
+        if (this.container?.parentNode) {
             this.container.parentNode.removeChild(this.container);
             this.container = null;
         }
@@ -89,22 +89,24 @@ export default class ContextMenu<T> implements EditorPlugin {
                 rawEvent.preventDefault();
             }
 
-            this.initContainer(rawEvent.pageX, rawEvent.pageY);
-            this.options.render(this.container, items as T[], this.onDismiss);
-            this.isMenuShowing = true;
+            if (this.initContainer(rawEvent.pageX, rawEvent.pageY)) {
+                this.options.render(this.container!, items as T[], this.onDismiss);
+                this.isMenuShowing = true;
+            }
         }
     }
 
     private initContainer(x: number, y: number) {
-        if (!this.container) {
+        if (!this.container && this.editor) {
             this.container = createElement(
                 KnownCreateElementDataIndex.ContextMenuWrapper,
                 this.editor.getDocument()
             ) as HTMLElement;
             this.editor.getDocument().body.appendChild(this.container);
         }
-        this.container.style.left = x + 'px';
-        this.container.style.top = y + 'px';
+        this.container?.style.setProperty('left', x + 'px');
+        this.container?.style.setProperty('top', y + 'px');
+        return !!this.container;
     }
 
     private onDismiss = () => {
