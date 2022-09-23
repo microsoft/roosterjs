@@ -61,12 +61,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                 range &&
                 findClosestElementAncestor(range.startContainer, undefined /* root */, '[style]');
 
-            if (
-                !range ||
-                (!this.isRangeEmpty(range) &&
-                    styledAncestor &&
-                    this.editor.contains(styledAncestor))
-            ) {
+            if (!range || (!this.isRangeEmpty(range) && this.editor.contains(styledAncestor))) {
                 return;
             }
 

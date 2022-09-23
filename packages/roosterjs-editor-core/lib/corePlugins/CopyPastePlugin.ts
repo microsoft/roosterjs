@@ -139,10 +139,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                         if (isCut) {
                             editor.addUndoSnapshot(() => {
                                 const position = editor.deleteSelectedContent();
-                                if (position) {
-                                    editor.focus();
-                                    editor.select(position);
-                                }
+                                editor.focus();
+                                editor.select(position);
                             }, ChangeSource.Cut);
                         }
                     });
@@ -157,7 +155,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             const editor = this.editor;
             extractClipboardEvent(
                 event as ClipboardEvent,
-                clipboardData => this.editor?.paste(clipboardData),
+                clipboardData => editor.paste(clipboardData),
                 {
                     allowedCustomPasteType: this.state.allowedCustomPasteType,
                     getTempDiv: () => {
