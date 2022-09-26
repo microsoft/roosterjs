@@ -51,7 +51,6 @@ export { ItalicFormat } from './publicTypes/format/formatParts/ItalicFormat';
 export { UnderlineFormat } from './publicTypes/format/formatParts/UnderlineFormat';
 export { StrikeFormat } from './publicTypes/format/formatParts/StrikeFormat';
 export { SuperOrSubScriptFormat } from './publicTypes/format/formatParts/SuperOrSubScriptFormat';
-export { TableCellMetadataFormat } from './publicTypes/format/formatParts/TableCellMetadataFormat';
 export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetadataFormat';
 export { ContentModelFormatBase } from './publicTypes/format/ContentModelFormatBase';
 export { MarginFormat } from './publicTypes/format/formatParts/MarginFormat';
