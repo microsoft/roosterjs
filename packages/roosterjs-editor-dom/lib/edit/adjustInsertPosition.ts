@@ -9,7 +9,7 @@ import isNodeEmpty from '../utils/isNodeEmpty';
 import isPositionAtBeginningOf from '../selection/isPositionAtBeginningOf';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import LinkInlineElement from '../inlineElements/LinkInlineElement';
-import pasteTable from './pasteTable';
+import pasteTable from '../table/pasteTable';
 import Position from '../selection/Position';
 import PositionContentSearcher from '../contentTraverser/PositionContentSearcher';
 import queryElements from '../utils/queryElements';
@@ -162,7 +162,7 @@ function adjustInsertPositionForStructuredNode(
     }
 
     if (tag == 'TABLE' && trNode) {
-        pasteTable(root, nodeToInsert, position, range);
+        pasteTable(root, <HTMLTableElement>rootNodeToInsert, position, range);
         return null;
     }
 
