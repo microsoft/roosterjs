@@ -488,7 +488,6 @@ export default class Editor implements IEditor {
             return !!selection;
         } else {
             core.api.selectImage(core, null);
-            core.domEvent.imageSelectionRange = null;
         }
 
         let range = !arg1

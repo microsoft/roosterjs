@@ -42,6 +42,7 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
         return selection;
     }
 
+    core.domEvent.imageSelectionRange = null;
     return null;
 };
 
