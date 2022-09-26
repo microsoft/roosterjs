@@ -9,12 +9,16 @@ import {
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
+const Escape = 'Escape';
 const SHIFT = 'Shift';
 const CTRL = 'Control';
 const Alt = 'Alt';
-const Escape = 'Escape';
 const Enter = 'Enter';
-const Backspace = ' ';
+const Space = ' ';
+const Home = 'Home';
+const PageDown = 'PageDown';
+const PageUp = 'PageUp';
+const End = 'End';
 
 /**
  * Detect image selection and help highlight the image
@@ -67,22 +71,27 @@ export default class ImageSelection implements EditorPlugin {
                 case PluginEventType.KeyDown:
                     const key = event.rawEvent.key;
                     const keyDownSelection = this.editor.getSelectionRangeEx();
-
                     if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
-                        if (key === Escape) {
+                        if (
+                            key === Escape ||
+                            key === PageDown ||
+                            key === PageUp ||
+                            key === Home ||
+                            key === End
+                        ) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange().collapse();
                         } else if (
                             key === SHIFT ||
                             key === CTRL ||
                             key === Alt ||
+                            key === Enter ||
+                            key == Space ||
                             event.rawEvent.metaKey
                         ) {
                             this.editor.select(keyDownSelection.ranges[0]);
-                        } else if (key === Backspace || key === Enter) {
-                            event.rawEvent.preventDefault();
-                            event.rawEvent.stopPropagation();
                         } else {
+                            keyDownSelection.ranges[0].deleteContents();
                             const cursorPosition = this.editor.getSelectionRange();
                             this.editor.select(cursorPosition);
                         }

@@ -117,6 +117,7 @@ export const enum PluginEventType {
     ZoomChanged = 21,
 
     /**
+     * EXPERIMENTAL FEATURE
      * Editor changed the selection.
      */
     SelectionChanged = 22,

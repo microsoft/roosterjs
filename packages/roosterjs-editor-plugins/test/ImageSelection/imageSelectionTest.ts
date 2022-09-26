@@ -9,12 +9,16 @@ import {
 } from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
+const Escape = 'Escape';
 const SHIFT = 'Shift';
 const CTRL = 'Control';
 const Alt = 'Alt';
-const Escape = 'Escape';
 const Enter = 'Enter';
-const Backspace = ' ';
+const Space = ' ';
+const Home = 'Home';
+const PageDown = 'PageDown';
+const PageUp = 'PageUp';
+const End = 'End';
 
 describe('ImageSelectionPlugin |', () => {
     let editor: IEditor;
@@ -101,6 +105,62 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(true);
     });
 
+    it('should handle a HOME KEY in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Home));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
+    });
+
+    it('should handle a PAGE DOWN in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(PageDown));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
+    });
+
+    it('should handle a End in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(End));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
+    });
+
+    it('should handle a PageUp in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(PageUp));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
+    });
+
     it('should handle any SHIFT_KEY in a image', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
@@ -143,21 +203,7 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
-    it('should handle any Backspace in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(Backspace));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-        expect(selection.areAllCollapsed).toBe(false);
-    });
-
-    it('should handle any Enter in a image', () => {
+    it('should handle any ENTER in a image', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
@@ -167,7 +213,21 @@ describe('ImageSelectionPlugin |', () => {
         range.selectNode(target!);
         imageSelection.onPluginEvent(keyDown(Enter));
         const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(false);
+    });
+
+    it('should handle any SPACE in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Space));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
         expect(selection.areAllCollapsed).toBe(false);
     });
 

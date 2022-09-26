@@ -33,6 +33,7 @@ import {
     RegionType,
     SelectionPath,
     SelectionRangeEx,
+    SelectionRangeTypes,
     SizeTransformer,
     StyleBasedFormatState,
     TableSelection,
@@ -470,7 +471,7 @@ export default class Editor implements IEditor {
         if (arg1 && 'rows' in arg1) {
             const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
             core.domEvent.tableSelectionRange = selection;
-
+            this.triggerSelectionChanged(selection as SelectionRangeEx);
             return !!selection;
         } else {
             core.api.selectTable(core, null);
@@ -482,8 +483,9 @@ export default class Editor implements IEditor {
             safeInstanceOf(arg1, 'HTMLImageElement') &&
             !arg2
         ) {
-            core.api.selectImage(core, arg1);
-            return true;
+            const selection = core.api.selectImage(core, arg1);
+            this.triggerSelectionChanged(selection as SelectionRangeEx);
+            return !!selection;
         } else {
             core.api.selectImage(core, null);
             core.domEvent.imageSelectionRange = null;
@@ -501,7 +503,26 @@ export default class Editor implements IEditor {
                   <Node>arg3,
                   <number | PositionType>arg4
               );
+
+        if (range) {
+            this.triggerSelectionChanged({
+                type: SelectionRangeTypes.Normal,
+                ranges: [range],
+                areAllCollapsed: range.collapsed,
+            });
+        }
+
         return !!range && this.contains(range) && core.api.selectRange(core, range);
+    }
+
+    private triggerSelectionChanged(selection: SelectionRangeEx) {
+        this.triggerPluginEvent(
+            PluginEventType.SelectionChanged,
+            {
+                selectionRangeEx: selection,
+            },
+            true /** broadcast **/
+        );
     }
 
     /**

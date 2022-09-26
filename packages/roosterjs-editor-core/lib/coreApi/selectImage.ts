@@ -4,10 +4,8 @@ import { createRange, Position, removeImportantStyleRule } from 'roosterjs-edito
 import {
     EditorCore,
     ImageSelectionRange,
-    PluginEventType,
     PositionType,
     SelectImage,
-    SelectionRangeEx,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
@@ -41,14 +39,7 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
 
         core.domEvent.imageSelectionRange = selection;
 
-        core.api.triggerEvent(
-            core,
-            {
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: selection as SelectionRangeEx,
-            },
-            true /** broadcast */
-        );
+        return selection;
     }
 
     return null;
