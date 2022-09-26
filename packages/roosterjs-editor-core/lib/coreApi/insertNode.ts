@@ -153,7 +153,7 @@ export const insertNode: InsertNode = (
                         range.deleteContents();
                     }
 
-                    let pos: NodePosition | null = Position.getStart(range);
+                    let pos: NodePosition = Position.getStart(range);
                     let blockElement: BlockElement | null;
 
                     if (
@@ -165,26 +165,24 @@ export const insertNode: InsertNode = (
                         pos = adjustInsertPosition(contentDiv, node, pos, range);
                     }
 
-                    if (pos) {
-                        let nodeForCursor =
-                            node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
+                    let nodeForCursor =
+                        node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
 
-                        range = createRange(pos);
+                    range = createRange(pos);
 
-                        range.insertNode(node);
+                    range.insertNode(node);
 
-                        if (option.updateCursor && nodeForCursor) {
-                            rangeToRestore = createRange(
-                                new Position(nodeForCursor, PositionType.After).normalize()
-                            );
-                        }
-
-                        if (rangeToRestore) {
-                            core.api.selectRange(core, rangeToRestore);
-                        }
-
-                        break;
+                    if (option.updateCursor && nodeForCursor) {
+                        rangeToRestore = createRange(
+                            new Position(nodeForCursor, PositionType.After).normalize()
+                        );
                     }
+
+                    if (rangeToRestore) {
+                        core.api.selectRange(core, rangeToRestore);
+                    }
+
+                    break;
             }
         },
         ColorTransformDirection.LightToDark

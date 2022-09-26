@@ -1,6 +1,6 @@
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
+import moveChildNodes from '../utils/moveChildNodes';
 import VTable from './VTable';
-import { moveChildNodes } from 'roosterjs-editor-dom';
 import { NodePosition, TableOperation } from 'roosterjs-editor-types';
 
 /**

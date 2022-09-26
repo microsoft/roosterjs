@@ -9,6 +9,7 @@ import isNodeEmpty from '../utils/isNodeEmpty';
 import isPositionAtBeginningOf from '../selection/isPositionAtBeginningOf';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import LinkInlineElement from '../inlineElements/LinkInlineElement';
+import moveChildNodes from '../utils/moveChildNodes';
 import pasteTable from '../table/pasteTable';
 import Position from '../selection/Position';
 import PositionContentSearcher from '../contentTraverser/PositionContentSearcher';
@@ -32,7 +33,7 @@ const adjustSteps: ((
     nodeToInsert: Node,
     position: NodePosition,
     range: Range
-) => NodePosition | null)[] = [
+) => NodePosition)[] = [
     adjustInsertPositionForHyperLink,
     adjustInsertPositionForStructuredNode,
     adjustInsertPositionForParagraph,
@@ -113,7 +114,7 @@ function adjustInsertPositionForStructuredNode(
     nodeToInsert: Node,
     position: NodePosition,
     range: Range
-): NodePosition | null {
+): NodePosition {
     let rootNodeToInsert: Node | null = nodeToInsert;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
@@ -163,7 +164,8 @@ function adjustInsertPositionForStructuredNode(
 
     if (tag == 'TABLE' && trNode) {
         pasteTable(root, <HTMLTableElement>rootNodeToInsert, position, range);
-        return null;
+        moveChildNodes(nodeToInsert);
+        return position;
     }
 
     return position;
@@ -331,9 +333,9 @@ function adjustInsertPositionForTable(
 export default function adjustInsertPositionBySteps(
     root: HTMLElement,
     nodeToInsert: Node,
-    position: NodePosition | null,
+    position: NodePosition,
     range: Range
-): NodePosition | null {
+): NodePosition {
     adjustSteps.forEach(handler => {
         if (position) {
             position = handler(root, nodeToInsert, position, range);

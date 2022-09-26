@@ -60,6 +60,7 @@ export { default as VListChain } from './list/VListChain';
 export { default as setListItemStyle } from './list/setListItemStyle';
 export { getTableFormatInfo } from './table/tableFormatInfo';
 export { saveTableCellMetadata } from './table/tableCellInfo';
+export { default as pasteTable } from './table/pasteTable';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';
