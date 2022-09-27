@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>50/50</span>
+                <span class='fraction'>51/51</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.49% </span>
+                <span class="strong">73.58% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>33/41</span>
+                <span class='fraction'>39/53</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>50/50</span>
+                <span class='fraction'>51/51</span>
             </div>
         
             
@@ -187,7 +187,17 @@
 <a name='L128'></a><a href='#L128'>128</a>
 <a name='L129'></a><a href='#L129'>129</a>
 <a name='L130'></a><a href='#L130'>130</a>
-<a name='L131'></a><a href='#L131'>131</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -305,7 +315,15 @@
 <span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -318,6 +336,7 @@
 <span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NumberingListType } from 'roosterjs-editor-types';
+import { VListChain } from 'roosterjs-editor-dom';
 &nbsp;
 const enum NumberingTypes {
     Decimal = 1,
@@ -422,20 +441,28 @@ const identifyNumberingListType = (
 /**
  * @internal
  * @param textBeforeCursor The trigger character
- * @param isTheFirstItem (Optional) Is the start number of a list.
+ * @param previousListChain (Optional) This parameters is used to keep the list chain, if the is not a new list
  * @returns The style of a numbering list triggered by a string
  */
 export default function getAutoNumberingListStyle(
     textBeforeCursor: string,
-    isTheFirstItem?: boolean
+    previousListChain?: VListChain[]
 ): NumberingListType {
     const trigger = textBeforeCursor.trim();
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
     //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
 &nbsp;
-    if (isTheFirstItem &amp;&amp; numberingTriggers.indexOf(listIndex) &lt; 0) {
-        return null;
+    if (previousListChain) {
+        if (
+            (previousListChain.length &lt; 1 &amp;&amp; numberingTriggers.indexOf(listIndex) &lt; 0) ||
+            (previousListChain<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength &gt; 0 &amp;&amp;
+<span class="branch-3 cbranch-no" title="branch not covered" >                !previousListChain[previousListChain.length - 1]?.canAppendAtCursor(</span>
+                    parseInt(listIndex)
+                ))
+        ) {
+            return null;
+        }
     }
 &nbsp;
     // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
@@ -454,7 +481,7 @@ export default function getAutoNumberingListStyle(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Sep 27 2022 16:38:31 GMT+0000 (Coordinated Universal Time)
+                at Tue Sep 27 2022 17:58:49 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
