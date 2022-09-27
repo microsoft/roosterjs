@@ -341,7 +341,7 @@ describe('tableProcessor', () => {
         context.listFormat.threadItemCounts = threadItemCounts;
 
         spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
-            expect(context.listFormat.levels).toBeUndefined();
+            expect(context.listFormat.levels).toEqual([]);
             expect(context.listFormat.listParent).toBeUndefined();
             expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
         });
