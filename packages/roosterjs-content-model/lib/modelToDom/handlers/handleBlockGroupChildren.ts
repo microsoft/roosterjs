@@ -21,10 +21,9 @@ export function handleBlockGroupChildren(
             // so that list items with same type/threadId can be merged into the same list element
             // In other cases, clear the stack so that two separate lists won't share the same list element
             if (
-                listFormat.nodeStack.length > 0 &&
-                (index == 0 ||
-                    childBlock.blockType != 'BlockGroup' ||
-                    childBlock.blockGroupType != 'ListItem')
+                index == 0 ||
+                childBlock.blockType != 'BlockGroup' ||
+                childBlock.blockGroupType != 'ListItem'
             ) {
                 listFormat.nodeStack = [];
             }
