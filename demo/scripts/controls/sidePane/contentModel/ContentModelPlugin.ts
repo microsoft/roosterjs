@@ -41,6 +41,10 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
         this.contentModelRibbon.onPluginEvent(e);
     }
 
+    getInnerRibbonPlugin() {
+        return this.contentModelRibbon;
+    }
+
     protected getComponentProps(baseProps: SidePaneElementProps): ContentModelPaneProps {
         return {
             ...baseProps,
