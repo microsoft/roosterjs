@@ -1,6 +1,7 @@
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('handleList', () => {
@@ -106,7 +107,7 @@ describe('handleList', () => {
         });
     });
 
-    it('Context has OL, single OL list item, do not reuse existing OL element', () => {
+    itChromeOnly('Context has OL, single OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem(undefined, [
             {
@@ -140,7 +141,7 @@ describe('handleList', () => {
         });
     });
 
-    it('Context has OL, 2 level OL list item, reuse existing OL element', () => {
+    itChromeOnly('Context has OL, 2 level OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem(undefined, [
             {
@@ -181,7 +182,7 @@ describe('handleList', () => {
         });
     });
 
-    it('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
+    itChromeOnly('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem(undefined, [
             {
