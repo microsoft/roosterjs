@@ -24,6 +24,11 @@ export function createDomToModelContext(
         segmentFormat: {},
         isInSelection: false,
 
+        listFormat: {
+            levels: [],
+            threadItemCounts: [],
+        },
+
         elementProcessors: {
             ...defaultProcessorMap,
             ...(options?.processorOverride || {}),
