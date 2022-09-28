@@ -263,7 +263,7 @@ describe('Creators', () => {
     });
 
     it('createListItem', () => {
-        const listItem = createListItem();
+        const listItem = createListItem([]);
 
         expect(listItem).toEqual({
             blockType: 'BlockGroup',
@@ -281,7 +281,7 @@ describe('Creators', () => {
     it('createListItem with format and levels', () => {
         const format: ContentModelSegmentFormat = { fontSize: 'a' };
         const levels: ContentModelListItemLevelFormat[] = [{ listType: 'OL' }];
-        const listItem = createListItem(format, levels);
+        const listItem = createListItem(levels, format);
 
         expect(listItem).toEqual({
             blockType: 'BlockGroup',
