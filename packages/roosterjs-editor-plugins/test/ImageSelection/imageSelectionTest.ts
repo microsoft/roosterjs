@@ -10,10 +10,6 @@ import {
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
 const Escape = 'Escape';
-const SHIFT = 'Shift';
-const CTRL = 'Control';
-const Alt = 'Alt';
-const Enter = 'Enter';
 const Space = ' ';
 const Home = 'Home';
 const PageDown = 'PageDown';
@@ -161,63 +157,7 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(true);
     });
 
-    it('should handle any SHIFT_KEY in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(SHIFT));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(false);
-    });
-
-    it('should handle any CTRL_KEYCODE in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(CTRL));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(false);
-    });
-
-    it('should handle any ALT_KEYCODE in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(Alt));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(false);
-    });
-
-    it('should handle any ENTER in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(Enter));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(false);
-    });
-
-    it('should handle any SPACE in a image', () => {
+    it('should handle any key in a image', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);

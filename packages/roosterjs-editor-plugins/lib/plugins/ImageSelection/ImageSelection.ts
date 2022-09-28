@@ -10,11 +10,6 @@ import {
 } from 'roosterjs-editor-types';
 
 const Escape = 'Escape';
-const SHIFT = 'Shift';
-const CTRL = 'Control';
-const Alt = 'Alt';
-const Enter = 'Enter';
-const Space = ' ';
 const Home = 'Home';
 const PageDown = 'PageDown';
 const PageUp = 'PageUp';
@@ -81,19 +76,8 @@ export default class ImageSelection implements EditorPlugin {
                         ) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange().collapse();
-                        } else if (
-                            key === SHIFT ||
-                            key === CTRL ||
-                            key === Alt ||
-                            key === Enter ||
-                            key == Space ||
-                            event.rawEvent.metaKey
-                        ) {
-                            this.editor.select(keyDownSelection.ranges[0]);
                         } else {
-                            keyDownSelection.ranges[0].deleteContents();
-                            const cursorPosition = this.editor.getSelectionRange();
-                            this.editor.select(cursorPosition);
+                            this.editor.select(keyDownSelection.ranges[0]);
                         }
                     }
                     break;

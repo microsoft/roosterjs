@@ -10,7 +10,7 @@ export interface SelectionChangedEventData {
     /**
      * Information of the selection
      */
-    selectionRangeEx: SelectionRangeEx;
+    selectionRangeEx: SelectionRangeEx | null;
 }
 
 /**
