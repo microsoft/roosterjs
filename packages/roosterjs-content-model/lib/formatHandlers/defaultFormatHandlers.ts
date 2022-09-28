@@ -10,6 +10,11 @@ import { FormatParsers } from '../publicTypes/context/DomToModelSettings';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
+import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
+import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
+import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
+import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
@@ -33,6 +38,11 @@ const defaultFormatHandlerMap: FormatHandlers = {
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
     italic: italicFormatHandler,
+    listItemMetadata: listItemMetadataFormatHandler,
+    listItemThread: listItemThreadFormatHandler,
+    listLevelMetadata: listLevelMetadataFormatHandler,
+    listLevelThread: listLevelThreadFormatHandler,
+    listType: listTypeFormatHandler,
     margin: marginFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,

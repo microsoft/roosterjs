@@ -8,6 +8,16 @@ export type ContentModelBlockGroupType =
     | 'Document'
 
     /**
+     * Represents a Quote element
+     */
+    | 'Quote'
+
+    /**
+     * Represents a list item (LI) element
+     */
+    | 'ListItem'
+
+    /**
      * Represents a table cell (TD, TH) element
      */
     | 'TableCell'
