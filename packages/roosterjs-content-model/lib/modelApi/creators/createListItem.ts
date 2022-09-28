@@ -7,8 +7,8 @@ import { createSelectionMarker } from './createSelectionMarker';
  * @internal
  */
 export function createListItem(
-    format?: ContentModelSegmentFormat,
-    levels?: ContentModelListItemLevelFormat[]
+    levels: ContentModelListItemLevelFormat[],
+    format?: ContentModelSegmentFormat
 ): ContentModelListItem {
     return {
         blockType: 'BlockGroup',

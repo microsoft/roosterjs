@@ -28,7 +28,7 @@ export const listItemProcessor: ElementProcessor = (group, element, context) => 
             () => {
                 parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
 
-                const listItem = createListItem(context.segmentFormat, listFormat.levels);
+                const listItem = createListItem(listFormat.levels, context.segmentFormat);
                 listFormat.listParent!.blocks.push(listItem);
 
                 parseFormat(
