@@ -142,7 +142,7 @@ describe('handleBlockGroup', () => {
     });
 
     it('ListItem', () => {
-        const group = createListItem();
+        const group = createListItem([]);
         spyOn(handleListItem, 'handleListItem');
 
         handleBlockGroup(document, parent, group, context);

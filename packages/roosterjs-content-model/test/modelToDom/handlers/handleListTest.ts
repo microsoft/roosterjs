@@ -14,7 +14,7 @@ describe('handleList', () => {
     });
 
     it('Empty context, empty list item', () => {
-        const listItem = createListItem();
+        const listItem = createListItem([]);
 
         handleList(document, parent, listItem, context);
 
@@ -30,7 +30,7 @@ describe('handleList', () => {
     });
 
     it('Empty context, single UL list item', () => {
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'UL',
             },
@@ -54,7 +54,7 @@ describe('handleList', () => {
     });
 
     it('Empty context, single OL list item', () => {
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -79,7 +79,7 @@ describe('handleList', () => {
 
     it('Context has OL, single OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -109,7 +109,7 @@ describe('handleList', () => {
 
     itChromeOnly('Context has OL, single OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
                 orderedStyleType: 2,
@@ -143,7 +143,7 @@ describe('handleList', () => {
 
     itChromeOnly('Context has OL, 2 level OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -184,7 +184,7 @@ describe('handleList', () => {
 
     itChromeOnly('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
                 unorderedStyleType: 3,
@@ -229,7 +229,7 @@ describe('handleList', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -265,7 +265,7 @@ describe('handleList', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -301,7 +301,7 @@ describe('handleList', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'UL',
             },
@@ -357,7 +357,7 @@ describe('handleList without format handlers', () => {
     });
 
     it('Empty context, empty list item', () => {
-        const listItem = createListItem();
+        const listItem = createListItem([]);
 
         handleList(document, parent, listItem, context);
 
@@ -373,7 +373,7 @@ describe('handleList without format handlers', () => {
     });
 
     it('Empty context, single UL list item', () => {
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'UL',
             },
@@ -397,7 +397,7 @@ describe('handleList without format handlers', () => {
     });
 
     it('Empty context, single OL list item', () => {
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -422,7 +422,7 @@ describe('handleList without format handlers', () => {
 
     it('Context has OL, single OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -452,7 +452,7 @@ describe('handleList without format handlers', () => {
 
     it('Context has OL, single OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
                 orderedStyleType: 2,
@@ -484,7 +484,7 @@ describe('handleList without format handlers', () => {
 
     it('Context has OL, 2 level OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -523,7 +523,7 @@ describe('handleList without format handlers', () => {
 
     it('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
                 unorderedStyleType: 3,
@@ -566,7 +566,7 @@ describe('handleList without format handlers', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -602,7 +602,7 @@ describe('handleList without format handlers', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'OL',
             },
@@ -638,7 +638,7 @@ describe('handleList without format handlers', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem(undefined, [
+        const listItem = createListItem([
             {
                 listType: 'UL',
             },

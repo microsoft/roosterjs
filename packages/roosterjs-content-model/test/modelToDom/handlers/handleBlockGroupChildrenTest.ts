@@ -87,7 +87,7 @@ describe('handleBlockGroupChildren', () => {
         const group = createContentModelDocument(document);
         const paragraph1 = createParagraph();
         const paragraph2 = createParagraph();
-        const list = createListItem();
+        const list = createListItem([]);
         const nodeStack = [{ a: 'b' } as any];
 
         group.blocks.push(paragraph1);

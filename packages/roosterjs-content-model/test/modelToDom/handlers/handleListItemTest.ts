@@ -22,7 +22,7 @@ describe('handleListItem', () => {
 
     it('not an OL or UL', () => {
         const parent = document.createElement('div');
-        const listItem = createListItem(undefined, [{ listType: 'OL' }]);
+        const listItem = createListItem([{ listType: 'OL' }]);
         const paragraph = createParagraph(true /*isImplicit*/);
 
         listItem.blocks.push(paragraph);
@@ -50,7 +50,7 @@ describe('handleListItem', () => {
     it('OL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ol');
-        const listItem = createListItem(undefined, [{ listType: 'OL' }]);
+        const listItem = createListItem([{ listType: 'OL' }]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
@@ -106,7 +106,7 @@ describe('handleListItem', () => {
     it('UL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ul');
-        const listItem = createListItem(undefined, [{ listType: 'UL' }]);
+        const listItem = createListItem([{ listType: 'UL' }]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
@@ -178,7 +178,7 @@ describe('handleListItem without format handler', () => {
 
     it('not an OL or UL', () => {
         const parent = document.createElement('div');
-        const listItem = createListItem(undefined, [{ listType: 'OL' }]);
+        const listItem = createListItem([{ listType: 'OL' }]);
         const paragraph = createParagraph(true /*isImplicit*/);
 
         listItem.blocks.push(paragraph);
@@ -206,7 +206,7 @@ describe('handleListItem without format handler', () => {
     it('OL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ol');
-        const listItem = createListItem(undefined, [{ listType: 'OL' }]);
+        const listItem = createListItem([{ listType: 'OL' }]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
@@ -262,7 +262,7 @@ describe('handleListItem without format handler', () => {
     it('UL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ul');
-        const listItem = createListItem(undefined, [{ listType: 'UL' }]);
+        const listItem = createListItem([{ listType: 'UL' }]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
