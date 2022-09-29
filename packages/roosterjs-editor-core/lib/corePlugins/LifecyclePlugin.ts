@@ -93,7 +93,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             customData: {},
             defaultFormat: options.defaultFormat ?? null,
             isDarkMode: !!options.inDarkMode,
-            getDarkColor: options.getDarkColor ?? ((color: string | null) => color ?? '#000'),
+            getDarkColor: options.getDarkColor ?? ((color: string) => color),
             onExternalContentTransform: options.onExternalContentTransform ?? null,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,

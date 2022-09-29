@@ -92,10 +92,7 @@ function transformToLightMode(elements: HTMLElement[]) {
     });
 }
 
-function transformToDarkMode(
-    elements: HTMLElement[],
-    getDarkColor: (color: string | null) => string
-) {
+function transformToDarkMode(elements: HTMLElement[], getDarkColor: (color: string) => string) {
     ColorAttributeName.forEach(names => {
         elements
             .map(element => {
@@ -118,7 +115,10 @@ function transformToDarkMode(
                           element,
                           styleColor,
                           attrColor,
-                          newColor: getDarkColor(styleColor || attrColor),
+                          newColor:
+                              styleColor || attrColor
+                                  ? getDarkColor((styleColor || attrColor)!)
+                                  : null,
                       }
                     : null;
             })
@@ -136,7 +136,7 @@ function transformToDarkMode(
                 );
                 element.dataset[names[ColorAttributeEnum.CssDataSet]] = styleColor || '';
 
-                if (attrColor) {
+                if (attrColor && newColor) {
                     element.setAttribute(names[ColorAttributeEnum.HtmlColor], newColor);
                     element.dataset[names[ColorAttributeEnum.HtmlDataSet]] = attrColor;
                 }

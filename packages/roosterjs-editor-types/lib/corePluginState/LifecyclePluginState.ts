@@ -26,7 +26,7 @@ export default interface LifecyclePluginState {
     /**
      * Calculate dark mode color from light mode color
      */
-    getDarkColor: (lightColor: string | null) => string;
+    getDarkColor: (lightColor: string) => string;
 
     /**
      * External content transform function to help do color transform for existing content
