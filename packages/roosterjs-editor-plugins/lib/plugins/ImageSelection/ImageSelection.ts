@@ -15,6 +15,7 @@ const mouseRightButton = 2;
 const mouseLeftButton = 0;
 
 /**
+ * Requires @see ExperimentalFeatures.ImageSelection to be enabled.
  * Detect image selection and help highlight the image
  */
 export default class ImageSelection implements EditorPlugin {
