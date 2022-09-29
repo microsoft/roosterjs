@@ -27,9 +27,10 @@ describe('selectImage |', () => {
     });
 
     it('selectImage', () => {
-        const selectedInfo = selectImage(core, image);
+        selectImage(core, image);
         const range = new Range();
         range.selectNode(image!);
+        const selectedInfo = core.domEvent.imageSelectionRange;
 
         expect(selectedInfo).toEqual({
             type: SelectionRangeTypes.ImageSelection,
