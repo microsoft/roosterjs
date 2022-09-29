@@ -15,6 +15,7 @@ const MSO_SPECIAL_CHARACTER_COMMENT = 'comment';
 const MSO_COMMENT_CONTINUATION = 'mso-comment-continuation';
 const MSO_ELEMENT = 'mso-element';
 const MSO_ELEMENT_COMMENT_LIST = 'comment-list';
+const MSO_COMMENT_DONE = 'mso-comment-done';
 
 /**
  * @internal
@@ -91,5 +92,6 @@ export default function commentsRemoval(
         MSO_COMMENT_DATE,
         MSO_COMMENT_PARENT,
         MSO_COMMENT_CONTINUATION,
+        MSO_COMMENT_DONE,
     ].forEach(style => chainSanitizerCallback(styleCallbacks, style, () => false));
 }

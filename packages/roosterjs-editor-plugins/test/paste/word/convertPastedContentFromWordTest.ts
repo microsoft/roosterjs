@@ -63,6 +63,11 @@ describe('convertPastedContentFromWord', () => {
         runTest(source, '<span></span>');
     });
 
+    it('Remove Comment | mso-comment-done, remove style', () => {
+        let source = '<span style="mso-comment-done:yes"></span>';
+        runTest(source, '<span></span>');
+    });
+
     it('Remove Comment | mso-special-character:comment', () => {
         let source = '<span><span style="mso-special-character:comment">&nbsp;</span></span>';
         runTest(source, '<span></span>');
