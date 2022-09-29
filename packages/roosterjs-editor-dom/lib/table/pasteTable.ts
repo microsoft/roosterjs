@@ -1,22 +1,23 @@
-import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import moveChildNodes from '../utils/moveChildNodes';
 import VTable from './VTable';
 import { NodePosition, TableOperation } from 'roosterjs-editor-types';
 
 /**
+ *
  * Pastes a table inside another, modifying the original to create a merged one
- * @param root The table to paste into
+ * @param currentTd The cell where the cursor is in the table to paste into
  * @param rootNodeToInsert A Node containing the table to be inserted
  * @param position The position to paste the table
+ * @param range The selected range of the table
+ *
+ * Position and range are here for when table selection allows to move pivot point
  */
 export default function pasteTable(
-    root: HTMLElement,
+    currentTd: HTMLElement,
     rootNodeToInsert: HTMLTableElement,
-    position: NodePosition,
-    range: Range
+    position?: NodePosition,
+    range?: Range
 ) {
-    let currentTd = findClosestElementAncestor(position.node, root, 'TD,TH');
-
     // This is the table on the clipboard
     let newTable = new VTable(rootNodeToInsert);
     // This table is already on the editor
@@ -49,9 +50,10 @@ export default function pasteTable(
             let newCell = newTable.getTd(i - cursorRow, j - cursorCol);
             if (cell.td) {
                 moveChildNodes(cell.td, newCell!);
+            } else {
+                cell.td = document.createElement('td');
             }
         }
     }
-
     currentTable.writeBack();
 }

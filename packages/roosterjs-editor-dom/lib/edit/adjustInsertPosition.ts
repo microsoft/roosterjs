@@ -26,6 +26,7 @@ import {
     PositionType,
     QueryScope,
 } from 'roosterjs-editor-types';
+
 const NOT_EDITABLE_SELECTOR = '[contenteditable=false]';
 
 const adjustSteps: ((
@@ -116,8 +117,10 @@ function adjustInsertPositionForStructuredNode(
     range: Range
 ): NodePosition {
     let rootNodeToInsert: Node | null = nodeToInsert;
+    let isFragment: boolean = false;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
+        isFragment = true;
         let rootNodes = toArray(rootNodeToInsert.childNodes).filter(
             (n: ChildNode) => getTagOfNode(n) != 'BR'
         );
@@ -130,7 +133,6 @@ function adjustInsertPositionForStructuredNode(
     let listItem = findClosestElementAncestor(position.node, root, 'LI');
     let listNode = listItem && findClosestElementAncestor(listItem, root, 'OL,UL');
     let tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
-    let trNode = tdNode && findClosestElementAncestor(tdNode, root, 'TR');
 
     if (tag == 'LI') {
         tag = listNode ? getTagOfNode(listNode) : 'UL';
@@ -162,8 +164,8 @@ function adjustInsertPositionForStructuredNode(
         }
     }
 
-    if (tag == 'TABLE' && trNode) {
-        pasteTable(root, <HTMLTableElement>rootNodeToInsert, position, range);
+    if (isFragment && tag == 'TABLE' && tdNode) {
+        pasteTable(tdNode, <HTMLTableElement>rootNodeToInsert, position, range);
         moveChildNodes(nodeToInsert);
         return position;
     }
@@ -337,9 +339,7 @@ export default function adjustInsertPositionBySteps(
     range: Range
 ): NodePosition {
     adjustSteps.forEach(handler => {
-        if (position) {
-            position = handler(root, nodeToInsert, position, range);
-        }
+        position = handler(root, nodeToInsert, position, range);
     });
     return position;
 }

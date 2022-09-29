@@ -169,7 +169,6 @@ export const insertNode: InsertNode = (
                         node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
 
                     range = createRange(pos);
-
                     range.insertNode(node);
 
                     if (option.updateCursor && nodeForCursor) {
