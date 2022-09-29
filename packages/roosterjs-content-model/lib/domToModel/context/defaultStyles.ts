@@ -13,6 +13,9 @@ export const defaultStyleMap: DefaultStyleMap = {
     I: {
         fontStyle: 'italic',
     },
+    LI: {
+        display: 'list-item',
+    },
     S: {
         textDecoration: 'line-through',
     },
