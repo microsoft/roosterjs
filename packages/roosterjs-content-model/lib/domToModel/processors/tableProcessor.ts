@@ -89,7 +89,17 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
                                     context
                                 );
 
-                                containerProcessor(cell, td, context);
+                                const { listParent, levels } = context.listFormat;
+
+                                context.listFormat.listParent = undefined;
+                                context.listFormat.levels = [];
+
+                                try {
+                                    containerProcessor(cell, td, context);
+                                } finally {
+                                    context.listFormat.listParent = listParent;
+                                    context.listFormat.levels = levels;
+                                }
                             });
                         }
                     }
