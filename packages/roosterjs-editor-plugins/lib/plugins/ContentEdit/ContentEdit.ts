@@ -74,9 +74,11 @@ export default class ContentEdit implements EditorPlugin {
         features.forEach(feature => editor.addContentEditFeature(feature));
     }
 
-    private disposeFeatures(editor: IEditor) {
-        const features = this.getFeatures();
-        features.forEach(feature => editor.removeContentEditFeature(feature));
+    private disposeFeatures() {
+        if (this.editor) {
+            const features = this.getFeatures();
+            features.forEach(feature => this.editor.removeContentEditFeature(feature));
+        }
     }
 
     /**
@@ -84,7 +86,7 @@ export default class ContentEdit implements EditorPlugin {
      */
     dispose(): void {
         if (this.editor) {
-            this.disposeFeatures(this.editor);
+            this.disposeFeatures();
         }
         this.editor = undefined;
     }
