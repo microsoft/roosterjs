@@ -471,7 +471,7 @@ export default class Editor implements IEditor {
         if (arg1 && 'rows' in arg1) {
             const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
             core.domEvent.tableSelectionRange = selection;
-            this.triggerSelectionChanged(selection as SelectionRangeEx);
+            this.triggerSelectionChanged(selection);
             return !!selection;
         } else {
             core.api.selectTable(core, null);
@@ -484,7 +484,7 @@ export default class Editor implements IEditor {
             !arg2
         ) {
             const selection = core.api.selectImage(core, arg1);
-            this.triggerSelectionChanged(selection as SelectionRangeEx);
+            this.triggerSelectionChanged(selection);
             return !!selection;
         } else {
             core.api.selectImage(core, null);
@@ -514,7 +514,7 @@ export default class Editor implements IEditor {
         return !!range && this.contains(range) && core.api.selectRange(core, range);
     }
 
-    private triggerSelectionChanged(selection: SelectionRangeEx) {
+    private triggerSelectionChanged(selection: SelectionRangeEx | null) {
         this.triggerPluginEvent(
             PluginEventType.SelectionChanged,
             {
