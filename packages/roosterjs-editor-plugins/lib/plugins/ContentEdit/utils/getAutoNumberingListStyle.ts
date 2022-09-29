@@ -116,7 +116,7 @@ export default function getAutoNumberingListStyle(
     //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
 
-    if (previousListChain) {
+    if (previousListChain && parseInt(listIndex) > 1) {
         if (
             (previousListChain.length < 1 && numberingTriggers.indexOf(listIndex) < 0) ||
             (previousListChain?.length > 0 &&
