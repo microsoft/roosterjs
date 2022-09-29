@@ -115,4 +115,10 @@ export const enum PluginEventType {
      * Zoom scale value is changed, triggered by Editor.setZoomScale() when set a different scale number
      */
     ZoomChanged = 21,
+
+    /**
+     * EXPERIMENTAL FEATURE
+     * Editor changed the selection.
+     */
+    SelectionChanged = 22,
 }
