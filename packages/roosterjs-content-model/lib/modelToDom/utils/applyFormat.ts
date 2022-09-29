@@ -12,6 +12,6 @@ export function applyFormat<T extends ContentModelFormatBase>(
     context: ModelToDomContext
 ) {
     handlerKeys.forEach(key => {
-        context.formatAppliers[key](format, element, context);
+        context.formatAppliers[key]?.(format, element, context);
     });
 }
