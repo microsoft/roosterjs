@@ -41,7 +41,7 @@ describe('PasteTable', () => {
         document.body.appendChild(div);
         node = document.getElementById(ID) as HTMLElement;
         pasteTable(
-            node.firstChild?.childNodes[pivotRow].childNodes[pivotCol] as HTMLElement,
+            node.firstChild?.childNodes[pivotRow].childNodes[pivotCol] as HTMLTableCellElement,
             copyBase.firstChild! as HTMLTableElement,
             ({
                 node: node.firstChild?.childNodes[pivotRow].childNodes[pivotCol],
