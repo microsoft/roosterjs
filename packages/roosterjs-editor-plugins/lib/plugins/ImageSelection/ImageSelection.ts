@@ -1,7 +1,8 @@
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { createRange, safeInstanceOf } from 'roosterjs-editor-dom';
 
 import {
     EditorPlugin,
+    ExperimentalFeatures,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -10,10 +11,8 @@ import {
 } from 'roosterjs-editor-types';
 
 const Escape = 'Escape';
-const Home = 'Home';
-const PageDown = 'PageDown';
-const PageUp = 'PageUp';
-const End = 'End';
+const mouseRightButton = 2;
+const mouseLeftButton = 0;
 
 /**
  * Detect image selection and help highlight the image
@@ -47,7 +46,7 @@ export default class ImageSelection implements EditorPlugin {
     }
 
     onPluginEvent(event: PluginEvent) {
-        if (this.editor) {
+        if (this.editor && this.editor.isFeatureEnabled(ExperimentalFeatures.ImageSelection)) {
             switch (event.eventType) {
                 case PluginEventType.EnteredShadowEdit:
                 case PluginEventType.LeavingShadowEdit:
@@ -60,22 +59,22 @@ export default class ImageSelection implements EditorPlugin {
                 case PluginEventType.MouseDown:
                     const target = event.rawEvent.target;
                     if (safeInstanceOf(target, 'HTMLImageElement')) {
-                        this.editor.select(target);
+                        if (event.rawEvent.button === mouseRightButton) {
+                            const imageRange = createRange(target);
+                            this.editor.select(imageRange);
+                        } else if (event.rawEvent.button === mouseLeftButton) {
+                            this.editor.select(target);
+                        }
                     }
                     break;
                 case PluginEventType.KeyDown:
                     const key = event.rawEvent.key;
                     const keyDownSelection = this.editor.getSelectionRangeEx();
                     if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
-                        if (
-                            key === Escape ||
-                            key === PageDown ||
-                            key === PageUp ||
-                            key === Home ||
-                            key === End
-                        ) {
+                        if (key === Escape) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange().collapse();
+                            event.rawEvent.stopPropagation();
                         } else {
                             this.editor.select(keyDownSelection.ranges[0]);
                         }

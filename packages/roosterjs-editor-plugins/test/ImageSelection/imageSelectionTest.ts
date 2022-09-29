@@ -11,10 +11,6 @@ export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
 const Escape = 'Escape';
 const Space = ' ';
-const Home = 'Home';
-const PageDown = 'PageDown';
-const PageUp = 'PageUp';
-const End = 'End';
 
 describe('ImageSelectionPlugin |', () => {
     let editor: IEditor;
@@ -55,15 +51,27 @@ describe('ImageSelectionPlugin |', () => {
         div.parentNode.removeChild(div);
     });
 
-    it('should be triggered in mouse down', () => {
+    it('should be triggered in mouse down left click', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
-        simulateMouseEvent(target!);
+        simulateMouseEvent(target!, 0);
         editor.focus();
 
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
+        expect(selection.areAllCollapsed).toBe(false);
+    });
+
+    it('should be triggered in mouse down right click', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        simulateMouseEvent(target!, 2);
+        editor.focus();
+
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
         expect(selection.areAllCollapsed).toBe(false);
     });
 
@@ -101,62 +109,6 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(true);
     });
 
-    it('should handle a HOME KEY in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(Home));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(true);
-    });
-
-    it('should handle a PAGE DOWN in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(PageDown));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(true);
-    });
-
-    it('should handle a End in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(End));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(true);
-    });
-
-    it('should handle a PageUp in a image', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-        const range = document.createRange();
-        range.selectNode(target!);
-        imageSelection.onPluginEvent(keyDown(PageUp));
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(true);
-    });
-
     it('should handle any key in a image', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
@@ -182,7 +134,7 @@ describe('ImageSelectionPlugin |', () => {
         };
     };
 
-    function simulateMouseEvent(target: HTMLElement) {
+    function simulateMouseEvent(target: HTMLElement, keyNumber: number) {
         const rect = target.getBoundingClientRect();
         var event = new MouseEvent('mousedown', {
             view: window,
@@ -191,6 +143,7 @@ describe('ImageSelectionPlugin |', () => {
             clientX: rect.left,
             clientY: rect.top,
             shiftKey: false,
+            button: keyNumber,
         });
         target.dispatchEvent(event);
     }
