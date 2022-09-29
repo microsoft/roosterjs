@@ -58,7 +58,6 @@ describe('PasteTable', () => {
 
     it('Paste table | 3X3 to 5X5', () => {
         runTest(TABLE123, TABLEABC, 2, 2);
-        debugger;
         expect(node.childNodes.length).toEqual(5);
         expect(node.childNodes[0].childNodes.length).toEqual(5);
     });
