@@ -4,7 +4,7 @@ import { ContextualMenu, IContextualMenuItem } from '@fluentui/react/lib/Context
 import { ReactEditorPlugin, UIUtilities } from '../../common/index';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
 
-function normalizeItems(items: IContextualMenuItem[]) {
+function normalizeItems(items: (IContextualMenuItem | null)[]) {
     let dividerKey = 0;
     return items.map(
         item =>

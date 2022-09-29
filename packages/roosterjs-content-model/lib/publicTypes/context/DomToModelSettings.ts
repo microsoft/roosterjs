@@ -26,7 +26,7 @@ export type FormatParser<TFormat extends ContentModelFormatBase> = (
  * All format parsers
  */
 export type FormatParsers = {
-    [Key in FormatKey]: FormatParser<FormatHandlerTypeMap[Key]>;
+    [Key in FormatKey]: FormatParser<FormatHandlerTypeMap[Key]> | null;
 };
 
 /**

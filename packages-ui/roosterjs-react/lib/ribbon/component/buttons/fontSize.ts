@@ -15,7 +15,7 @@ export const fontSize: RibbonButton<FontSizeButtonStringKey> = {
             map[size + 'pt'] = size.toString();
             return map;
         }, <Record<string, string>>{}),
-        getSelectedItemKey: formatState => formatState.fontSize,
+        getSelectedItemKey: formatState => formatState.fontSize ?? null,
         allowLivePreview: true,
     },
     onClick: (editor, size) => {

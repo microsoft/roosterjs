@@ -49,13 +49,11 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
     createContentModel(startNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument {
-        return domToContentModel(
-            startNode || this.contentDiv,
-            this.createEditorContext(),
-            !!startNode,
-            this.getSelectionRangeEx(),
-            option
-        );
+        return domToContentModel(startNode || this.contentDiv, this.createEditorContext(), {
+            includeRoot: !!startNode,
+            selectionRange: this.getSelectionRangeEx(),
+            ...(option || {}),
+        });
     }
 
     /**
@@ -64,12 +62,9 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
-    setContentModel(
-        model: ContentModelDocument,
-        mergingCallback: (fragment: DocumentFragment) => void = this.defaultMergingCallback,
-        option?: ModelToDomOption
-    ) {
+    setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
         const [fragment, range] = contentModelToDom(model, this.createEditorContext(), option);
+        const mergingCallback = option?.mergingCallback || this.defaultMergingCallback;
 
         switch (range?.type) {
             case SelectionRangeTypes.Normal:

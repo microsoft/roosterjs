@@ -10,7 +10,7 @@ export const superscript: RibbonButton<SuperscriptButtonStringKey> = {
     key: 'buttonNameSuperscript',
     unlocalizedText: 'Superscript',
     iconName: 'Superscript',
-    isChecked: formatState => formatState.isSuperscript,
+    isChecked: formatState => !!formatState.isSuperscript,
     onClick: editor => {
         toggleSuperscript(editor);
         return true;

@@ -18,7 +18,7 @@ export type FormatApplier<TFormat extends ContentModelFormatBase> = (
  * All format appliers
  */
 export type FormatAppliers = {
-    [Key in FormatKey]: FormatApplier<FormatHandlerTypeMap[Key]>;
+    [Key in FormatKey]: FormatApplier<FormatHandlerTypeMap[Key]> | null;
 };
 
 /**

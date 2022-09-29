@@ -10,6 +10,11 @@ import { FormatParsers } from '../publicTypes/context/DomToModelSettings';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
+import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
+import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
+import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
+import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
@@ -33,6 +38,11 @@ const defaultFormatHandlerMap: FormatHandlers = {
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
     italic: italicFormatHandler,
+    listItemMetadata: listItemMetadataFormatHandler,
+    listItemThread: listItemThreadFormatHandler,
+    listLevelMetadata: listLevelMetadataFormatHandler,
+    listLevelThread: listLevelThreadFormatHandler,
+    listType: listTypeFormatHandler,
     margin: marginFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
@@ -50,7 +60,8 @@ const defaultFormatHandlerMap: FormatHandlers = {
  */
 export function getFormatParsers(option?: Partial<FormatParsers>): FormatParsers {
     return getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
-        parsers[key] = option?.[key] || defaultFormatHandlerMap[key].parse;
+        const parser = option?.[key];
+        parsers[key] = typeof parser === 'undefined' ? defaultFormatHandlerMap[key].parse : parser;
 
         return parsers;
     }, <FormatParsers>{});
@@ -60,9 +71,11 @@ export function getFormatParsers(option?: Partial<FormatParsers>): FormatParsers
  * @internal
  */
 export function getFormatAppliers(option?: Partial<FormatAppliers>): FormatAppliers {
-    return getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
-        parsers[key] = option?.[key] || defaultFormatHandlerMap[key].apply;
+    return getObjectKeys(defaultFormatHandlerMap).reduce((appliers, key) => {
+        const applier = option?.[key];
+        appliers[key] =
+            typeof applier === 'undefined' ? defaultFormatHandlerMap[key].apply : applier;
 
-        return parsers;
+        return appliers;
     }, <FormatAppliers>{});
 }
