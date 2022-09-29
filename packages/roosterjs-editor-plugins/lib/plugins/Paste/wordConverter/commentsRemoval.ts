@@ -39,10 +39,7 @@ export default function commentsRemoval(
     //      </span>
     chainSanitizerCallback(elementCallbacks, 'SPAN', element => {
         const styles = getStyles(element);
-        if (
-            styles[MSO_SPECIAL_CHARACTER] == MSO_SPECIAL_CHARACTER_COMMENT ||
-            !!styles[MSO_COMMENT_CONTINUATION]
-        ) {
+        if (styles[MSO_SPECIAL_CHARACTER] == MSO_SPECIAL_CHARACTER_COMMENT) {
             element.parentElement?.removeChild(element);
         }
         return true;
@@ -89,7 +86,10 @@ export default function commentsRemoval(
      * Remove styles related to Office Comments that can cause unwanted behaviors
      * depending on the user client
      */
-    chainSanitizerCallback(styleCallbacks, MSO_COMMENT_REFERENCE, () => false);
-    chainSanitizerCallback(styleCallbacks, MSO_COMMENT_DATE, () => false);
-    chainSanitizerCallback(styleCallbacks, MSO_COMMENT_PARENT, () => false);
+    [
+        MSO_COMMENT_REFERENCE,
+        MSO_COMMENT_DATE,
+        MSO_COMMENT_PARENT,
+        MSO_COMMENT_CONTINUATION,
+    ].forEach(style => chainSanitizerCallback(styleCallbacks, style, () => false));
 }
