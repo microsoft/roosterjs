@@ -13,7 +13,7 @@ import { NodePosition, TableOperation } from 'roosterjs-editor-types';
  * Position and range are here for when table selection allows to move pivot point
  */
 export default function pasteTable(
-    currentTd: HTMLElement,
+    currentTd: HTMLTableCellElement,
     rootNodeToInsert: HTMLTableElement,
     position?: NodePosition,
     range?: Range
@@ -21,7 +21,7 @@ export default function pasteTable(
     // This is the table on the clipboard
     let newTable = new VTable(rootNodeToInsert);
     // This table is already on the editor
-    let currentTable = new VTable(<HTMLTableCellElement>currentTd);
+    let currentTable = new VTable(currentTd);
 
     // Which cell in the currentTable is the cursor placed
     let cursorRow = currentTable.row!;

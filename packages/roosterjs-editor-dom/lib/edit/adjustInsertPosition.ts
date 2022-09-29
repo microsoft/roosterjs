@@ -165,9 +165,14 @@ function adjustInsertPositionForStructuredNode(
     }
 
     if (isFragment && tag == 'TABLE' && tdNode) {
-        pasteTable(tdNode, <HTMLTableElement>rootNodeToInsert, position, range);
+        pasteTable(
+            <HTMLTableCellElement>tdNode,
+            <HTMLTableElement>rootNodeToInsert,
+            position,
+            range
+        );
+        position = new Position(rootNodeToInsert!, 0);
         moveChildNodes(nodeToInsert);
-        return position;
     }
 
     return position;
