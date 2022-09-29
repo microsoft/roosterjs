@@ -1,8 +1,16 @@
 import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { IEditor } from 'roosterjs-editor-types';
 import { ImageSelection } from '../../lib/ImageSelection';
+import {
+    EditorOptions,
+    SelectionRangeTypes,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 export * from 'roosterjs-editor-dom/test/DomTestHelper';
+
+const Escape = 'Escape';
+const Space = ' ';
 
 describe('ImageSelectionPlugin |', () => {
     let editor: IEditor;
@@ -36,15 +44,34 @@ describe('ImageSelectionPlugin |', () => {
         editorIsFeatureEnabled = spyOn(editor, 'isFeatureEnabled');
     });
 
-    it('should be triggered in mouse down', () => {
+    afterEach(() => {
+        editor.dispose();
+        editor = null;
+        const div = document.getElementById(id);
+        div.parentNode.removeChild(div);
+    });
+
+    it('should be triggered in mouse down left click', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
-        simulateMouseEvent(target!);
+        simulateMouseEvent(target!, 0);
         editor.focus();
 
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
+        expect(selection.areAllCollapsed).toBe(false);
+    });
+
+    it('should be triggered in mouse down right click', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        simulateMouseEvent(target!, 2);
+        editor.focus();
+
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
         expect(selection.areAllCollapsed).toBe(false);
     });
 
@@ -68,14 +95,46 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
-    afterEach(() => {
-        editor.dispose();
-        editor = null;
-        const div = document.getElementById(id);
-        div.parentNode.removeChild(div);
+    it('should handle a ESCAPE KEY in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Escape));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(true);
     });
 
-    function simulateMouseEvent(target: HTMLElement) {
+    it('should handle any key in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Space));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.Normal);
+        expect(selection.areAllCollapsed).toBe(false);
+    });
+
+    const keyDown = (key: string): PluginEvent => {
+        return {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: <KeyboardEvent>{
+                key: key,
+                preventDefault: () => {},
+                stopPropagation: () => {},
+            },
+        };
+    };
+
+    function simulateMouseEvent(target: HTMLElement, keyNumber: number) {
         const rect = target.getBoundingClientRect();
         var event = new MouseEvent('mousedown', {
             view: window,
@@ -84,6 +143,7 @@ describe('ImageSelectionPlugin |', () => {
             clientX: rect.left,
             clientY: rect.top,
             shiftKey: false,
+            button: keyNumber,
         });
         target.dispatchEvent(event);
     }

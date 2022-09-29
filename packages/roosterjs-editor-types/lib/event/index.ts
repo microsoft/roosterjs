@@ -89,3 +89,8 @@ export {
     ZoomChangedEventData,
     CompatibleZoomChangedEvent,
 } from './ZoomChangedEvent';
+export {
+    default as SelectionChangedEvent,
+    SelectionChangedEventData,
+    CompatibleSelectionChangedEvent,
+} from './SelectionChangeEvent';
