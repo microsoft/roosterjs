@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">96.15% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>51/51</span>
+                <span class='fraction'>50/52</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.58% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>39/53</span>
+                <span class='fraction'>33/55</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">96.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>51/51</span>
+                <span class='fraction'>50/52</span>
             </div>
         
             
@@ -195,8 +195,7 @@
 <a name='L136'></a><a href='#L136'>136</a>
 <a name='L137'></a><a href='#L137'>137</a>
 <a name='L138'></a><a href='#L138'>138</a>
-<a name='L139'></a><a href='#L139'>139</a>
-<a name='L140'></a><a href='#L140'>140</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L139'></a><a href='#L139'>139</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -313,27 +312,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NumberingListType } from 'roosterjs-editor-types';
 import { VListChain } from 'roosterjs-editor-dom';
@@ -452,16 +450,15 @@ export default function getAutoNumberingListStyle(
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
     //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
+    const index = parseInt(listIndex);
 &nbsp;
-    if (previousListChain) {
-        if (
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (previousListChain &amp;&amp; index &gt; 1) {
+<span class="cstat-no" title="statement not covered" >        if (</span>
             (previousListChain.length &lt; 1 &amp;&amp; numberingTriggers.indexOf(listIndex) &lt; 0) ||
-            (previousListChain<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength &gt; 0 &amp;&amp;
-<span class="branch-3 cbranch-no" title="branch not covered" >                !previousListChain[previousListChain.length - 1]?.canAppendAtCursor(</span>
-                    parseInt(listIndex)
-                ))
+            (previousListChain?.length &gt; 0 &amp;&amp;
+                !previousListChain[previousListChain.length - 1]?.canAppendAtCursor(index))
         ) {
-            return null;
+<span class="cstat-no" title="statement not covered" >            return null;</span>
         }
     }
 &nbsp;
@@ -471,7 +468,7 @@ export default function getAutoNumberingListStyle(
     const numberingType =
         trigger.length === 2 || isDoubleParenthesis
             ? identifyNumberingListType(trigger, isDoubleParenthesis)
-            : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+            : null;
     return numberingType;
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -481,7 +478,7 @@ export default function getAutoNumberingListStyle(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 29 2022 22:27:34 GMT+0000 (Coordinated Universal Time)
+                at Thu Sep 29 2022 22:39:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
