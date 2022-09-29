@@ -115,14 +115,13 @@ export default function getAutoNumberingListStyle(
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
     //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
+    const index = parseInt(listIndex);
 
-    if (previousListChain && parseInt(listIndex) > 1) {
+    if (previousListChain && index > 1) {
         if (
             (previousListChain.length < 1 && numberingTriggers.indexOf(listIndex) < 0) ||
             (previousListChain?.length > 0 &&
-                !previousListChain[previousListChain.length - 1]?.canAppendAtCursor(
-                    parseInt(listIndex)
-                ))
+                !previousListChain[previousListChain.length - 1]?.canAppendAtCursor(index))
         ) {
             return null;
         }
