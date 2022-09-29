@@ -21,6 +21,8 @@ import {
  * 8. Manage list style
  */
 export default class ContentEdit implements EditorPlugin {
+    private editor: IEditor | undefined = undefined;
+
     /**
      * Create instance of ContentEdit plugin
      * @param settingsOverride An optional feature set to override default feature settings
@@ -43,6 +45,11 @@ export default class ContentEdit implements EditorPlugin {
      * @param editor The editor instance
      */
     initialize(editor: IEditor): void {
+        this.editor = editor;
+        this.addFeatures(editor);
+    }
+
+    private getFeatures(): GenericContentEditFeature<any>[] {
         const features: GenericContentEditFeature<PluginEvent>[] = [];
         const allFeatures = getAllFeatures();
 
@@ -59,13 +66,26 @@ export default class ContentEdit implements EditorPlugin {
             }
         });
 
-        features
-            .concat(this.additionalFeatures || [])
-            .forEach(feature => editor.addContentEditFeature(feature));
+        return features.concat(this.additionalFeatures || []);
+    }
+
+    private addFeatures(editor: IEditor) {
+        const features = this.getFeatures();
+        features.forEach(feature => editor.addContentEditFeature(feature));
+    }
+
+    private disposeFeatures(editor: IEditor) {
+        const features = this.getFeatures();
+        features.forEach(feature => editor.removeContentEditFeature(feature));
     }
 
     /**
      * Dispose this plugin
      */
-    dispose(): void {}
+    dispose(): void {
+        if (this.editor) {
+            this.disposeFeatures(this.editor);
+        }
+        this.editor = undefined;
+    }
 }
