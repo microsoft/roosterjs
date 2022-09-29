@@ -878,7 +878,7 @@ export default class Editor implements IEditor {
 
     /**
      * Remove a Content Edit feature.
-     * @param feature The feature to add
+     * @param feature The feature to remove
      */
     public removeContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         const core = this.getCore();
