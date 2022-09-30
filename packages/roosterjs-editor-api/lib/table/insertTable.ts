@@ -19,9 +19,7 @@ export default function insertTable(
     format?: TableFormat
 ) {
     let document = editor.getDocument();
-    let fragment = document.createDocumentFragment();
     let table = document.createElement('table') as HTMLTableElement;
-    fragment.appendChild(table);
     table.cellSpacing = '0';
     table.cellPadding = '1';
     for (let i = 0; i < rows; i++) {
@@ -46,7 +44,7 @@ export default function insertTable(
             let vtable = new VTable(table);
             vtable.applyFormat(format);
             vtable.writeBack();
-            editor.insertNode(fragment);
+            editor.insertNode(table);
             editor.runAsync(editor =>
                 editor.select(new Position(table, PositionType.Begin).normalize())
             );
