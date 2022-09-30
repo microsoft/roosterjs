@@ -45,6 +45,7 @@ const EventTypeMap: { [key in PluginEventType]: string } = {
     [PluginEventType.EditImage]: 'EditImage',
     [PluginEventType.BeforeSetContent]: 'BeforeSetContent',
     [PluginEventType.ZoomChanged]: 'ZoomChanged',
+    [PluginEventType.SelectionChanged]: 'SelectionChanged',
 };
 
 const EntityOperationMap: { [key in EntityOperation]: string } = {

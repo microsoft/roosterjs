@@ -2,7 +2,7 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
-import { TableCellMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableCellMetadataFormat';
+import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { tableCellMetadataFormatHandler } from '../../../lib/formatHandlers/table/tableCellMetadataFormatHandler';
 
 describe('tableCellMetadataFormatHandler.parse', () => {

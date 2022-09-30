@@ -2,10 +2,9 @@ import addSelectionStyle from './utils/addSelectionStyle';
 import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
-    getStyles,
     getTagOfNode,
     Position,
-    setStyles,
+    removeImportantStyleRule,
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -202,19 +201,7 @@ function generateCssFromCell(
 
 function removeImportant(cell: HTMLTableCellElement) {
     if (cell) {
-        const styles = getStyles(cell);
-        let modifiedStyles = 0;
-        ['background-color', 'background'].forEach(style => {
-            if (styles[style]?.indexOf('!important') > -1) {
-                const index = styles[style].indexOf('!');
-                styles[style] = styles[style].substring(0, index);
-                modifiedStyles++;
-            }
-        });
-
-        if (modifiedStyles > 0) {
-            setStyles(cell, styles);
-        }
+        removeImportantStyleRule(cell, ['background-color', 'background']);
     }
 }
 

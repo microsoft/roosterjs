@@ -6,6 +6,7 @@ import ContentChangedEvent, { CompatibleContentChangedEvent } from './ContentCha
 import EditImageEvent, { CompatibleEditImageEvent } from './EditImageEvent';
 import EditorReadyEvent, { CompatibleEditorReadyEvent } from './EditorReadyEvent';
 import EntityOperationEvent, { CompatibleEntityOperationEvent } from './EntityOperationEvent';
+import SelectionChangedEvent, { CompatibleSelectionChangedEvent } from './SelectionChangeEvent';
 import ZoomChangedEvent, { CompatibleZoomChangedEvent } from './ZoomChangedEvent';
 import { CompatiblePluginDomEvent, PluginDomEvent } from './PluginDomEvent';
 import {
@@ -39,6 +40,7 @@ export type PluginEvent =
     | EditImageEvent
     | BeforeSetContentEvent
     | ZoomChangedEvent
+    | SelectionChangedEvent
     | CompatibleBeforeCutCopyEvent
     | CompatibleBeforeDisposeEvent
     | CompatibleBeforePasteEvent
@@ -52,4 +54,5 @@ export type PluginEvent =
     | CompatiblePluginDomEvent
     | CompatibleEnterShadowEditEvent
     | CompatibleLeaveShadowEditEvent
-    | CompatibleZoomChangedEvent;
+    | CompatibleZoomChangedEvent
+    | CompatibleSelectionChangedEvent;
