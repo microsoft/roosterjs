@@ -56,6 +56,31 @@ export interface FormatHandlerTypeMap {
     italic: ItalicFormat;
 
     /**
+     * Format for ListMetadataFormat (used by list item)
+     */
+    listItemMetadata: ListMetadataFormat;
+
+    /**
+     * Format for ListThreadFormat (used by list item)
+     */
+    listItemThread: ListThreadFormat;
+
+    /**
+     * Format for ListMetadataFormat (used by list level)
+     */
+    listLevelMetadata: ListMetadataFormat;
+
+    /**
+     * Format for ListThreadFormat (used by list level)
+     */
+    listLevelThread: ListThreadFormat;
+
+    /**
+     * Format for ListTypeFormat
+     */
+    listType: ListTypeFormat;
+
+    /**
      * Format for MarginFormat
      */
     margin: MarginFormat;
