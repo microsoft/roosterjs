@@ -59,15 +59,15 @@ export default class ContentEdit implements EditorPlugin {
                 this.features.push(feature);
             }
         });
-        this.features
-            .concat(this.additionalFeatures || [])
-            .forEach(feature => this.editor.addContentEditFeature(feature));
+        this.features = this.features.concat(this.additionalFeatures || []);
+        this.features.forEach(feature => this.editor.addContentEditFeature(feature));
     }
 
     private disposeFeatures() {
         if (this.editor) {
             this.features.forEach(feature => this.editor.removeContentEditFeature(feature));
         }
+        this.features = [];
     }
 
     /**
@@ -75,6 +75,7 @@ export default class ContentEdit implements EditorPlugin {
      */
     dispose(): void {
         this.disposeFeatures();
+
         this.editor = undefined;
     }
 }
