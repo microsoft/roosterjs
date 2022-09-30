@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">96.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/20</span>
+                <span class='fraction'>30/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/10</span>
+                <span class='fraction'>9/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/7</span>
+                <span class='fraction'>8/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.74% </span>
+                <span class="strong">96.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/19</span>
+                <span class='fraction'>26/27</span>
             </div>
         
             
@@ -128,7 +128,16 @@
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -151,6 +160,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,7 +186,6 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">96x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,16 +198,24 @@
 <span class="cline-any cline-yes">75x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">75x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getAllFeatures from './getAllFeatures';
 import { getObjectKeys } from 'roosterjs-editor-dom';
@@ -222,6 +240,8 @@ import {
  * 8. Manage list style
  */
 export default class ContentEdit implements EditorPlugin {
+    private editor: IEditor | undefined = undefined;
+    private features: GenericContentEditFeature&lt;PluginEvent&gt;[] = [];
     /**
      * Create instance of ContentEdit plugin
      * @param settingsOverride An optional feature set to override default feature settings
@@ -244,9 +264,8 @@ export default class ContentEdit implements EditorPlugin {
      * @param editor The editor instance
      */
     initialize(editor: IEditor): void {
-        const features: GenericContentEditFeature&lt;PluginEvent&gt;[] = [];
+        this.editor = editor;
         const allFeatures = getAllFeatures();
-&nbsp;
         getObjectKeys(allFeatures).forEach(key =&gt; {
             const feature = allFeatures[key];
             const hasSettingForKey =
@@ -256,19 +275,27 @@ export default class ContentEdit implements EditorPlugin {
                 (hasSettingForKey &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >this.settingsOverride[key])</span> ||
                 (!hasSettingForKey &amp;&amp; !feature.defaultDisabled)
             ) {
-                features.push(feature);
+                this.features.push(feature);
             }
         });
+        this.features = this.features.concat(this.additionalFeatures || []);
+        this.features.forEach(feature =&gt; this.editor.addContentEditFeature(feature));
+    }
 &nbsp;
-        features
-            .concat(this.additionalFeatures || [])
-            .forEach(feature =&gt; editor.addContentEditFeature(feature));
+    private disposeFeatures() {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.editor) {
+            this.features.forEach(feature =&gt; this.editor.removeContentEditFeature(feature));
+        }
+        this.features = [];
     }
 &nbsp;
     /**
      * Dispose this plugin
      */
-    dispose(): void {}
+    dispose(): void {
+        this.disposeFeatures();
+        this.editor = undefined;
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -277,7 +304,7 @@ export default class ContentEdit implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 29 2022 23:20:18 GMT+0000 (Coordinated Universal Time)
+                at Fri Sep 30 2022 22:15:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
