@@ -883,7 +883,8 @@ export default class Editor implements IEditor {
     public removeContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
         const core = this.getCore();
         feature?.keys.forEach(key => {
-            core.edit.features[key] = [];
+            const index = core.edit.features[key].indexOf(feature);
+            core.edit.features[key].splice(index, 1);
         });
     }
 

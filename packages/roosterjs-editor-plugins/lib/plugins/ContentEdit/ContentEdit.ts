@@ -22,7 +22,7 @@ import {
  */
 export default class ContentEdit implements EditorPlugin {
     private editor: IEditor | undefined = undefined;
-
+    private features: GenericContentEditFeature<PluginEvent>[] = [];
     /**
      * Create instance of ContentEdit plugin
      * @param settingsOverride An optional feature set to override default feature settings
@@ -46,13 +46,7 @@ export default class ContentEdit implements EditorPlugin {
      */
     initialize(editor: IEditor): void {
         this.editor = editor;
-        this.addFeatures(editor);
-    }
-
-    private getFeatures(): GenericContentEditFeature<any>[] {
-        const features: GenericContentEditFeature<PluginEvent>[] = [];
         const allFeatures = getAllFeatures();
-
         getObjectKeys(allFeatures).forEach(key => {
             const feature = allFeatures[key];
             const hasSettingForKey =
@@ -62,22 +56,17 @@ export default class ContentEdit implements EditorPlugin {
                 (hasSettingForKey && this.settingsOverride[key]) ||
                 (!hasSettingForKey && !feature.defaultDisabled)
             ) {
-                features.push(feature);
+                this.features.push(feature);
             }
         });
-
-        return features.concat(this.additionalFeatures || []);
-    }
-
-    private addFeatures(editor: IEditor) {
-        const features = this.getFeatures();
-        features.forEach(feature => editor.addContentEditFeature(feature));
+        this.features
+            .concat(this.additionalFeatures || [])
+            .forEach(feature => this.editor.addContentEditFeature(feature));
     }
 
     private disposeFeatures() {
         if (this.editor) {
-            const features = this.getFeatures();
-            features.forEach(feature => this.editor.removeContentEditFeature(feature));
+            this.features.forEach(feature => this.editor.removeContentEditFeature(feature));
         }
     }
 
