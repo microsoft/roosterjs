@@ -903,8 +903,8 @@ export default class Editor implements IEditor {
         const core = this.getCore();
         feature?.keys.forEach(key => {
             const featureSet = core.edit.features[key];
-            if (featureSet && featureSet.indexOf(feature) >= 0) {
-                const index = core.edit.features[key].indexOf(feature);
+            const index = featureSet?.indexOf(feature) ?? -1;
+            if (index >= 0) {
                 core.edit.features[key].splice(index, 1);
                 if (core.edit.features[key].length < 1) {
                     delete core.edit.features[key];
