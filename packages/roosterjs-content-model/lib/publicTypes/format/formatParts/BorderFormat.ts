@@ -3,22 +3,22 @@
  */
 export type BorderFormat = {
     /**
-     * Border width in order: "top right bottom left"
+     * Top border in format 'width style color'
      */
-    borderWidth?: string;
+    borderTop?: string;
 
     /**
-     * Border style in order: "top right bottom left"
+     * Right border in format 'width style color'
      */
-    borderStyle?: string;
+    borderRight?: string;
 
     /**
-     * Border color in order: "top right bottom left"
+     * Bottom border in format 'width style color'
      */
-    borderColor?: string;
+    borderBottom?: string;
 
     /**
-     * Whether use border-box for this element
+     * Left border in format 'width style color'
      */
-    useBorderBox?: boolean;
+    borderLeft?: string;
 };

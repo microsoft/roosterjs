@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BlockGroupContentView } from './BlockGroupContentView';
+import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelView } from '../ContentModelView';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
+import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
@@ -19,7 +21,9 @@ const styles = require('./ContentModelTableCellView.scss');
 
 const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = [
     ...BorderFormatRenderers,
+    BorderBoxFormatRenderer,
     BackgroundColorFormatRenderer,
+    PaddingFormatRenderer,
     TextAlignFormatRenderer,
     VerticalAlignFormatRenderer,
     TableCellMetadataFormatRender,

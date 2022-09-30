@@ -1,4 +1,5 @@
 import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
+import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
@@ -10,6 +11,7 @@ import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
  */
 export type ContentModelTableFormat = IdFormat &
     BorderFormat &
+    BorderBoxFormat &
     SpacingFormat &
     BackgroundColorFormat &
     MarginFormat &

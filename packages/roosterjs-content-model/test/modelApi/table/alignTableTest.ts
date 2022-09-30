@@ -9,7 +9,8 @@ describe('alignTable', () => {
         alignTable(table, TableOperation.AlignLeft);
 
         expect(table.format).toEqual({
-            margin: '0 auto 0 0',
+            marginRight: 'auto',
+            marginLeft: '',
         });
     });
 
@@ -19,7 +20,8 @@ describe('alignTable', () => {
         alignTable(table, TableOperation.AlignCenter);
 
         expect(table.format).toEqual({
-            margin: '0 auto 0 auto',
+            marginLeft: 'auto',
+            marginRight: 'auto',
         });
     });
 
@@ -29,18 +31,25 @@ describe('alignTable', () => {
         alignTable(table, TableOperation.AlignRight);
 
         expect(table.format).toEqual({
-            margin: '0 0 0 auto',
+            marginLeft: 'auto',
+            marginRight: '',
         });
     });
 
     it('Align table to left to a table already has margin', () => {
         const table = createTable(1);
-        table.format.margin = '10px';
+        table.format.marginTop = '10px';
+        table.format.marginRight = '10px';
+        table.format.marginBottom = '10px';
+        table.format.marginLeft = '10px';
 
         alignTable(table, TableOperation.AlignRight);
 
         expect(table.format).toEqual({
-            margin: '10px 0 10px auto',
+            marginTop: '10px',
+            marginRight: '',
+            marginBottom: '10px',
+            marginLeft: 'auto',
         });
     });
 });
