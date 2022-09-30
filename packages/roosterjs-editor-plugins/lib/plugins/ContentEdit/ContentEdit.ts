@@ -75,7 +75,6 @@ export default class ContentEdit implements EditorPlugin {
      */
     dispose(): void {
         this.disposeFeatures();
-
         this.editor = undefined;
     }
 }
