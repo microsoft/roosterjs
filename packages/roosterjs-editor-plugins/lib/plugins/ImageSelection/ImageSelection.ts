@@ -1,18 +1,25 @@
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { createRange, safeInstanceOf } from 'roosterjs-editor-dom';
+
 import {
     EditorPlugin,
+    ExperimentalFeatures,
     IEditor,
     PluginEvent,
     PluginEventType,
+    PositionType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
+const Escape = 'Escape';
+const mouseRightButton = 2;
+const mouseLeftButton = 0;
+
 /**
+ * Requires @see ExperimentalFeatures.ImageSelection to be enabled.
  * Detect image selection and help highlight the image
  */
 export default class ImageSelection implements EditorPlugin {
     private editor: IEditor | null = null;
-    private imageId: string | null = null;
 
     constructor() {}
 
@@ -37,35 +44,41 @@ export default class ImageSelection implements EditorPlugin {
     dispose() {
         this.editor.select(null);
         this.editor = null;
-        this.imageId = null;
     }
 
     onPluginEvent(event: PluginEvent) {
-        if (this.editor) {
+        if (this.editor && this.editor.isFeatureEnabled(ExperimentalFeatures.ImageSelection)) {
             switch (event.eventType) {
                 case PluginEventType.EnteredShadowEdit:
+                case PluginEventType.LeavingShadowEdit:
                     const selection = this.editor.getSelectionRangeEx();
                     if (selection.type == SelectionRangeTypes.ImageSelection) {
                         this.editor.select(selection.image);
                     }
                     break;
-                case PluginEventType.LeavingShadowEdit:
-                    if (this.imageId) {
-                        const images = this.editor.queryElements(
-                            '#' + this.imageId
-                        ) as HTMLImageElement[];
-                        if (images.length == 1) {
-                            const image = images[0];
-                            this.editor.select(image);
-                        }
-                        this.imageId = null;
-                    }
-                    break;
+
                 case PluginEventType.MouseDown:
                     const target = event.rawEvent.target;
                     if (safeInstanceOf(target, 'HTMLImageElement')) {
-                        this.editor.select(target);
-                        this.imageId = target.id;
+                        if (event.rawEvent.button === mouseRightButton) {
+                            const imageRange = createRange(target);
+                            this.editor.select(imageRange);
+                        } else if (event.rawEvent.button === mouseLeftButton) {
+                            this.editor.select(target);
+                        }
+                    }
+                    break;
+                case PluginEventType.KeyDown:
+                    const key = event.rawEvent.key;
+                    const keyDownSelection = this.editor.getSelectionRangeEx();
+                    if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
+                        if (key === Escape) {
+                            this.editor.select(keyDownSelection.image, PositionType.Before);
+                            this.editor.getSelectionRange().collapse();
+                            event.rawEvent.stopPropagation();
+                        } else {
+                            this.editor.select(keyDownSelection.ranges[0]);
+                        }
                     }
                     break;
             }
