@@ -9,13 +9,14 @@ import isNodeEmpty from '../utils/isNodeEmpty';
 import isPositionAtBeginningOf from '../selection/isPositionAtBeginningOf';
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import LinkInlineElement from '../inlineElements/LinkInlineElement';
+import moveChildNodes from '../utils/moveChildNodes';
+import pasteTable from '../table/pasteTable';
 import Position from '../selection/Position';
 import PositionContentSearcher from '../contentTraverser/PositionContentSearcher';
 import queryElements from '../utils/queryElements';
 import splitTextNode from '../utils/splitTextNode';
 import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
-import VTable from '../table/VTable';
 import wrap from '../utils/wrap';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
 import {
@@ -116,8 +117,10 @@ function adjustInsertPositionForStructuredNode(
     range: Range
 ): NodePosition {
     let rootNodeToInsert: Node | null = nodeToInsert;
+    let isFragment: boolean = false;
 
     if (rootNodeToInsert.nodeType == NodeType.DocumentFragment) {
+        isFragment = true;
         let rootNodes = toArray(rootNodeToInsert.childNodes).filter(
             (n: ChildNode) => getTagOfNode(n) != 'BR'
         );
@@ -130,7 +133,6 @@ function adjustInsertPositionForStructuredNode(
     let listItem = findClosestElementAncestor(position.node, root, 'LI');
     let listNode = listItem && findClosestElementAncestor(listItem, root, 'OL,UL');
     let tdNode = findClosestElementAncestor(position.node, root, 'TD,TH');
-    let trNode = tdNode && findClosestElementAncestor(tdNode, root, 'TR');
 
     if (tag == 'LI') {
         tag = listNode ? getTagOfNode(listNode) : 'UL';
@@ -160,28 +162,17 @@ function adjustInsertPositionForStructuredNode(
                     : PositionType.After
             );
         }
-    } else if (tag == 'TABLE' && trNode) {
-        // When inserting a table into a table, if these tables have the same column count, and
-        // current position is at beginning of a row, then merge these two tables
-        let newTable = new VTable(<HTMLTableElement>rootNodeToInsert);
-        let currentTable = new VTable(<HTMLTableCellElement>tdNode);
+    }
 
-        if (
-            currentTable.col == 0 &&
-            tdNode == currentTable.getCell(currentTable.row || 0, 0).td &&
-            newTable.cells?.[0] &&
-            newTable.cells[0].length == currentTable.cells?.[0].length &&
-            isPositionAtBeginningOf(position, tdNode)
-        ) {
-            if (
-                getTagOfNode(rootNodeToInsert!.firstChild) == 'TBODY' &&
-                !rootNodeToInsert!.firstChild?.nextSibling
-            ) {
-                unwrap(rootNodeToInsert!.firstChild!);
-            }
-            unwrap(rootNodeToInsert!);
-            position = new Position(trNode, PositionType.After);
-        }
+    if (isFragment && tag == 'TABLE' && tdNode) {
+        pasteTable(
+            <HTMLTableCellElement>tdNode,
+            <HTMLTableElement>rootNodeToInsert,
+            position,
+            range
+        );
+        position = new Position(rootNodeToInsert!, 0);
+        moveChildNodes(nodeToInsert);
     }
 
     return position;
@@ -334,7 +325,6 @@ function adjustInsertPositionForTable(
             }
         }
     }
-
     return position;
 }
 

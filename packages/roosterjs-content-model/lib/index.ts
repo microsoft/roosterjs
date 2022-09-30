@@ -18,6 +18,8 @@ export { ContentModelBlockBase } from './publicTypes/block/ContentModelBlockBase
 export { ContentModelTable } from './publicTypes/block/ContentModelTable';
 export { ContentModelBlockGroupBase } from './publicTypes/block/group/ContentModelBlockGroupBase';
 export { ContentModelDocument } from './publicTypes/block/group/ContentModelDocument';
+export { ContentModelQuote } from './publicTypes/block/group/ContentModelQuote';
+export { ContentModelListItem } from './publicTypes/block/group/ContentModelListItem';
 export { ContentModelTableCell } from './publicTypes/block/group/ContentModelTableCell';
 export { ContentModelGeneralBlock } from './publicTypes/block/group/ContentModelGeneralBlock';
 export { ContentModelBlockGroup } from './publicTypes/block/group/ContentModelBlockGroup';
@@ -34,6 +36,7 @@ export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHand
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './publicTypes/format/ContentModelTableCellFormat';
 export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegmentFormat';
+export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentModelListItemLevelFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 
 export { TextAlignFormat } from './publicTypes/format/formatParts/TextAlignFormat';
@@ -51,13 +54,18 @@ export { ItalicFormat } from './publicTypes/format/formatParts/ItalicFormat';
 export { UnderlineFormat } from './publicTypes/format/formatParts/UnderlineFormat';
 export { StrikeFormat } from './publicTypes/format/formatParts/StrikeFormat';
 export { SuperOrSubScriptFormat } from './publicTypes/format/formatParts/SuperOrSubScriptFormat';
-export { TableCellMetadataFormat } from './publicTypes/format/formatParts/TableCellMetadataFormat';
 export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetadataFormat';
 export { ContentModelFormatBase } from './publicTypes/format/ContentModelFormatBase';
 export { MarginFormat } from './publicTypes/format/formatParts/MarginFormat';
+export { ListTypeFormat } from './publicTypes/format/formatParts/ListTypeFormat';
+export { ListThreadFormat } from './publicTypes/format/formatParts/ListThreadFormat';
+export { ListMetadataFormat } from './publicTypes/format/formatParts/ListMetadataFormat';
 
 export { EditorContext } from './publicTypes/context/EditorContext';
-export { DomToModelFormatContext } from './publicTypes/context/DomToModelFormatContext';
+export {
+    DomToModelListFormat,
+    DomToModelFormatContext,
+} from './publicTypes/context/DomToModelFormatContext';
 export {
     DomToModelRegularSelection,
     DomToModelTableSelection,
@@ -72,6 +80,11 @@ export {
 } from './publicTypes/context/DomToModelSettings';
 export { DomToModelContext } from './publicTypes/context/DomToModelContext';
 export { ModelToDomContext } from './publicTypes/context/ModelToDomContext';
+export {
+    ModelToDomListStackItem,
+    ModelToDomListContext,
+    ModelToDomFormatContext,
+} from './publicTypes/context/ModelToDomFormatContext';
 export {
     ModelToDomBlockAndSegmentNode,
     ModelToDomRegularSelection,

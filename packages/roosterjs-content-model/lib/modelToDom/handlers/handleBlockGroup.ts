@@ -2,7 +2,9 @@ import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelGeneralBlock } from '../../publicTypes/block/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
-import { handleBlock } from './handleBlock';
+import { handleBlockGroupChildren } from './handleBlockGroupChildren';
+import { handleListItem } from './handleListItem';
+import { handleQuote } from './handleQuote';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
@@ -34,24 +36,18 @@ export function handleBlockGroup(
 
             break;
 
+        case 'Quote':
+            handleQuote(doc, parent, group, context);
+            break;
+
+        case 'ListItem':
+            handleListItem(doc, parent, group, context);
+            break;
+
         default:
             handleBlockGroupChildren(doc, parent, group, context);
             break;
     }
-}
-
-/**
- * @internal
- */
-export function handleBlockGroupChildren(
-    doc: Document,
-    parent: Node,
-    group: ContentModelBlockGroup,
-    context: ModelToDomContext
-) {
-    group.blocks.forEach(childBlock => {
-        handleBlock(doc, parent, childBlock, context);
-    });
 }
 
 function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {
