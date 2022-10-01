@@ -896,6 +896,24 @@ export default class Editor implements IEditor {
     }
 
     /**
+     * Remove a Content Edit feature.
+     * @param feature The feature to remove
+     */
+    public removeContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        const core = this.getCore();
+        feature?.keys.forEach(key => {
+            const featureSet = core.edit.features[key];
+            const index = featureSet?.indexOf(feature) ?? -1;
+            if (index >= 0) {
+                core.edit.features[key].splice(index, 1);
+                if (core.edit.features[key].length < 1) {
+                    delete core.edit.features[key];
+                }
+            }
+        });
+    }
+
+    /**
      * Get style based format state from current selection, including font name/size and colors
      */
     public getStyleBasedFormatState(node?: Node): StyleBasedFormatState {
