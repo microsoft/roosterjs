@@ -538,6 +538,12 @@ export default interface IEditor {
     addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>): void;
 
     /**
+     * Remove a Content Edit feature.
+     * @param feature The feature to remove
+     */
+    removeContentEditFeature(feature: GenericContentEditFeature<PluginEvent>): void;
+
+    /**
      * Get style based format state from current selection, including font name/size and colors
      */
     getStyleBasedFormatState(node?: Node): StyleBasedFormatState;

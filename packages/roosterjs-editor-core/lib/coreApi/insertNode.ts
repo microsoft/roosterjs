@@ -7,6 +7,7 @@ import {
     InsertOption,
     NodeType,
     PositionType,
+    NodePosition,
 } from 'roosterjs-editor-types';
 import {
     createRange,
@@ -152,7 +153,7 @@ export const insertNode: InsertNode = (
                         range.deleteContents();
                     }
 
-                    let pos = Position.getStart(range);
+                    let pos: NodePosition = Position.getStart(range);
                     let blockElement: BlockElement | null;
 
                     if (
@@ -166,8 +167,10 @@ export const insertNode: InsertNode = (
 
                     let nodeForCursor =
                         node.nodeType == NodeType.DocumentFragment ? node.lastChild : node;
+
                     range = createRange(pos);
                     range.insertNode(node);
+
                     if (option.updateCursor && nodeForCursor) {
                         rangeToRestore = createRange(
                             new Position(nodeForCursor, PositionType.After).normalize()
