@@ -52,6 +52,14 @@ const OLTypeToStyleMap: Record<string, string> = {
     I: 'upper-roman',
 };
 
+const OLTypeToStyleMap: Record<string, string> = {
+    '1': 'decimal',
+    a: 'lower-alpha',
+    A: 'upper-alpha',
+    i: 'lower-roman',
+    I: 'upper-roman',
+};
+
 /**
  * @internal
  */

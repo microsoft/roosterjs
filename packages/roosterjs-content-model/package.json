@@ -8,5 +8,5 @@
         "roosterjs-editor-core": ""
     },
     "main": "./lib/index.ts",
-    "version": "0.0.3"
+    "version": "0.0.4"
 }

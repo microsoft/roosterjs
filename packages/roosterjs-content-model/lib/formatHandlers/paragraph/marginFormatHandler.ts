@@ -9,6 +9,13 @@ const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
     'marginLeft',
 ];
 
+const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
+    'marginTop',
+    'marginRight',
+    'marginBottom',
+    'marginLeft',
+];
+
 /**
  * @internal
  */
