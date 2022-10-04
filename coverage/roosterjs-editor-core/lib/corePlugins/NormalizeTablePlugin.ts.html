@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.37% </span>
+                <span class="strong">97.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>74/76</span>
+                <span class='fraction'>76/78</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.23% </span>
+                <span class="strong">91.18% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>49/52</span>
+                <span class='fraction'>62/68</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.22% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>70/72</span>
+                <span class='fraction'>72/74</span>
             </div>
         
             
@@ -238,7 +238,14 @@
 <a name='L179'></a><a href='#L179'>179</a>
 <a name='L180'></a><a href='#L180'>180</a>
 <a name='L181'></a><a href='#L181'>181</a>
-<a name='L182'></a><a href='#L182'>182</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -266,7 +273,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3194x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -307,6 +314,8 @@
 <span class="cline-any cline-yes">3619x</span>
 <span class="cline-any cline-yes">3619x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3619x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -331,9 +340,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">45x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">45x</span>
 <span class="cline-any cline-yes">35x</span>
@@ -350,8 +356,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">170x</span>
 <span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -447,7 +461,7 @@ import {
  * new table is inserted, to make sure the selection path we created is correct.
  */
 export default class NormalizeTablePlugin implements EditorPlugin {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
 &nbsp;
     /**
      * Get a friendly name of this plugin
@@ -485,7 +499,9 @@ export default class NormalizeTablePlugin implements EditorPlugin {
         switch (event.eventType) {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
-                this.normalizeTables(this.editor.queryElements('table'));
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (this.editor) {
+                    this.normalizeTables(this.editor.queryElements('table'));
+                }
                 break;
 &nbsp;
             case PluginEventType.BeforePaste:
@@ -503,7 +519,7 @@ export default class NormalizeTablePlugin implements EditorPlugin {
                 break;
 &nbsp;
             case PluginEventType.ExtractContentWithDom:
-                if (this.editor.isFeatureEnabled(ExperimentalFeatures.NormalizeList)) {
+                if (this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>sFeatureEnabled(ExperimentalFeatures.NormalizeList)) {
                     normalizeListsForExport(event.clonedRoot);
                 }
                 break;
@@ -511,18 +527,15 @@ export default class NormalizeTablePlugin implements EditorPlugin {
     }
 &nbsp;
     private normalizeTableFromEvent(event: KeyboardEvent | MouseEvent) {
-        const table = this.editor.getElementAtCursor(
-            'table',
-            event.target as Node
-        ) as HTMLTableElement;
+        const table = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etElementAtCursor('table', event.target as Node);
 &nbsp;
         if (table) {
-            this.normalizeTables([table]);
+            this.normalizeTables([&lt;HTMLTableElement&gt;table]);
         }
     }
 &nbsp;
     private normalizeTables(tables: HTMLTableElement[]) {
-        if (tables.length &gt; 0) {
+        if (this.editor &amp;&amp; tables.length &gt; 0) {
             const rangeEx = this.editor.getSelectionRangeEx();
             const { startContainer, endContainer, startOffset, endOffset } =
                 (rangeEx?.type == SelectionRangeTypes.Normal &amp;&amp; rangeEx.ranges[0]) || {};
@@ -530,9 +543,17 @@ export default class NormalizeTablePlugin implements EditorPlugin {
             const isChanged = normalizeTables(tables);
 &nbsp;
             if (isChanged) {
-                if (startContainer &amp;&amp; endContainer) {
+                if (
+                    startContainer &amp;&amp;
+                    endContainer &amp;&amp;
+                    typeof startOffset === 'number' &amp;&amp;
+                    typeof endOffset === 'number'
+                ) {
                     this.editor.select(startContainer, startOffset, endContainer, endOffset);
-                } else if (rangeEx?.type == SelectionRangeTypes.TableSelection) {
+                } else if (
+                    rangeEx?.type == SelectionRangeTypes.TableSelection &amp;&amp;
+                    rangeEx.coordinates
+                ) {
                     this.editor.select(rangeEx.table, rangeEx.coordinates);
                 }
             }
@@ -594,7 +615,7 @@ function normalizeListsForExport(root: ParentNode) {
         const prevElement = li.previousSibling;
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (li.style.display == 'block' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >safeInstanceOf(prevElement, 'HTMLLIElement'))</span> {
-<span class="cstat-no" title="statement not covered" >            delete li.style.display;</span>
+<span class="cstat-no" title="statement not covered" >            li.style.removeProperty('display');</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            prevElement.appendChild(changeElementTag(li, 'div'));</span>
         }
@@ -607,7 +628,7 @@ function normalizeListsForExport(root: ParentNode) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 04 2022 19:36:25 GMT+0000 (Coordinated Universal Time)
+                at Tue Oct 04 2022 21:05:01 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

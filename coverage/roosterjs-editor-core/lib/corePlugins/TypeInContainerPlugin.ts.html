@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.07% </span>
+                <span class="strong">73.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/27</span>
+                <span class='fraction'>22/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.89% </span>
+                <span class="strong">42.86% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/19</span>
+                <span class='fraction'>15/35</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.08% </span>
+                <span class="strong">72.41% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/26</span>
+                <span class='fraction'>21/29</span>
             </div>
         
             
@@ -143,11 +143,7 @@
 <a name='L84'></a><a href='#L84'>84</a>
 <a name='L85'></a><a href='#L85'>85</a>
 <a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a>
-<a name='L88'></a><a href='#L88'>88</a>
-<a name='L89'></a><a href='#L89'>89</a>
-<a name='L90'></a><a href='#L90'>90</a>
-<a name='L91'></a><a href='#L91'>91</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L87'></a><a href='#L87'>87</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,7 +151,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3178x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,13 +202,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -222,9 +216,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -245,7 +237,7 @@ import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-e
  * Typing Component helps to ensure typing is always happening under a DOM container
  */
 export default class TypeInContainerPlugin implements EditorPlugin {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
 &nbsp;
     /**
      * Get a friendly name of  this plugin
@@ -286,7 +278,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyPress) {
+        if (event.eventType == PluginEventType.KeyPress &amp;&amp; this.editor) {
             // If normalization was not possible before the keypress,
             // check again after the keyboard event has been processed by browser native behavior.
             //
@@ -296,13 +288,11 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             // Only schedule when the range is not collapsed to catch this edge case.
             let range = this.editor.getSelectionRange();
 &nbsp;
-            if (
-                !range ||
-                (!this.isRangeEmpty(range) &amp;&amp;
-                    this.editor.contains(
-                        findClosestElementAncestor(range.startContainer, null /* root */, '[style]')
-                    ))
-            ) {
+            const styledAncestor =
+                range &amp;&amp;
+                findClosestElementAncestor(range.startContainer, undefined /* root */, '[style]');
+&nbsp;
+            if (!range || (!this.isRangeEmpty(range) &amp;&amp; this.editor.contains(styledAncestor))) {
                 return;
             }
 &nbsp;
@@ -310,16 +300,14 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                 this.editor.ensureTypeInContainer(Position.getStart(range), event.rawEvent);
             } else {
                 const callback = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >                    if (this.editor) {</span>
-<span class="cstat-no" title="statement not covered" >                        this.editor.ensureTypeInContainer(</span>
-                            this.editor.getFocusedPosition(),
-                            event.rawEvent
-                        );
+                    const focusedPosition = <span class="cstat-no" title="statement not covered" >this.editor?.getFocusedPosition();</span>
+<span class="cstat-no" title="statement not covered" >                    if (focusedPosition) {</span>
+<span class="cstat-no" title="statement not covered" >                        this.editor?.ensureTypeInContainer(focusedPosition, event.rawEvent);</span>
                     }
                 };
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (Browser.isMobileOrTablet) {</span>
-<span class="cstat-no" title="statement not covered" >                    this.editor.getDocument().defaultView.setTimeout(callback, 100);</span>
+<span class="cstat-no" title="statement not covered" >                    this.editor.getDocument().defaultView?.setTimeout(callback, 100);</span>
                 } else {
 <span class="cstat-no" title="statement not covered" >                    this.editor.runAsync(callback);</span>
                 }
@@ -334,7 +322,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 04 2022 19:36:25 GMT+0000 (Coordinated Universal Time)
+                at Tue Oct 04 2022 21:05:01 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

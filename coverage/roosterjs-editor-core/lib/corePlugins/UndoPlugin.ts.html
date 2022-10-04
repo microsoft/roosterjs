@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.3% </span>
+                <span class="strong">96.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>78/81</span>
+                <span class='fraction'>81/84</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">86.52% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>60/66</span>
+                <span class='fraction'>77/89</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.3% </span>
+                <span class="strong">96.43% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>78/81</span>
+                <span class='fraction'>81/84</span>
             </div>
         
             
@@ -308,7 +308,11 @@
 <a name='L249'></a><a href='#L249'>249</a>
 <a name='L250'></a><a href='#L250'>250</a>
 <a name='L251'></a><a href='#L251'>251</a>
-<a name='L252'></a><a href='#L252'>252</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -339,8 +343,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3201x</span>
+<span class="cline-any cline-yes">3201x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -517,6 +521,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -544,9 +550,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3199x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -590,8 +598,8 @@ const MAX_SIZE_LIMIT = 1e7;
  * Provides snapshot based undo service for Editor
  */
 export default class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt; {
-    private editor: IEditor;
-    private lastKeyPress: number;
+    private editor: IEditor | null = null;
+    private lastKeyPress: number | null = null;
     private state: UndoPluginState;
 &nbsp;
     /**
@@ -702,11 +710,11 @@ export default class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt
         if ((evt.which == Keys.BACKSPACE &amp;&amp; !evt.altKey) || evt.which == Keys.DELETE) {
             if (evt.which == Keys.BACKSPACE &amp;&amp; this.canUndoAutoComplete()) {
                 evt.preventDefault();
-                this.editor.undo();
+                this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.u</span>ndo();
                 this.state.autoCompletePosition = null;
                 this.lastKeyPress = evt.which;
             } else {
-                let selectionRange = this.editor.getSelectionRange();
+                let selectionRange = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelectionRange();
 &nbsp;
                 // Add snapshot when
                 // 1. Something has been selected (not collapsed), or
@@ -741,7 +749,7 @@ export default class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
 &nbsp;
-        let range = this.editor.getSelectionRange();
+        let range = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelectionRange();
         if (
             (range &amp;&amp; !range.collapsed) ||
             (evt.which == Keys.SPACE &amp;&amp; this.lastKeyPress != Keys.SPACE) ||
@@ -767,14 +775,16 @@ export default class UndoPlugin implements PluginWithState&lt;UndoPluginState&gt
     }
 &nbsp;
     private canUndoAutoComplete() {
+        const focusedPosition = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etFocusedPosition();
         return (
             this.state.snapshotsService.canUndoAutoComplete() &amp;&amp;
-            this.state.autoCompletePosition<span class="branch-0 cbranch-no" title="branch not covered" >?.e</span>qualTo(this.editor.getFocusedPosition())
+            !!focusedPosition &amp;&amp;
+            !!this.state.autoCompletePosition<span class="branch-0 cbranch-no" title="branch not covered" >?.e</span>qualTo(focusedPosition)
         );
     }
 &nbsp;
     private addUndoSnapshot() {
-        this.editor.addUndoSnapshot();
+        this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>ddUndoSnapshot();
         this.state.autoCompletePosition = null;
     }
 }
@@ -784,7 +794,7 @@ function createUndoSnapshots(): UndoSnapshotsService&lt;Snapshot&gt; {
 &nbsp;
     return {
         canMove: (delta: number): boolean =&gt; canMoveCurrentSnapshot(snapshots, delta),
-        move: <span class="fstat-no" title="function not covered" >(d</span>elta: number): Snapshot =&gt; <span class="cstat-no" title="statement not covered" >moveCurrentSnapshot(snapshots, delta),</span>
+        move: <span class="fstat-no" title="function not covered" >(d</span>elta: number): Snapshot | null =&gt; <span class="cstat-no" title="statement not covered" >moveCurrentSnapshot(snapshots, delta),</span>
         addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =&gt;
             addSnapshotV2(snapshots, snapshot, isAutoCompleteSnapshot),
         clearRedo: () =&gt; clearProceedingSnapshotsV2(snapshots),
@@ -795,10 +805,12 @@ function createUndoSnapshots(): UndoSnapshotsService&lt;Snapshot&gt; {
 function createUndoSnapshotServiceBridge(
     service: UndoSnapshotsService&lt;string&gt; | undefined
 ): UndoSnapshotsService&lt;Snapshot&gt; | undefined {
+    let html: string | null;
     return service
         ? {
               canMove: (delta: number) =&gt; service.canMove(delta),
-              move: (delta: number): Snapshot =&gt; ({ html: service.move(delta), metadata: null }),
+              move: (delta: number): Snapshot | null =&gt;
+                  (html = service.move(delta)) ? { html, metadata: null } : <span class="branch-1 cbranch-no" title="branch not covered" >null,</span>
               addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =&gt;
                   service.addSnapshot(
                       snapshot.html +
@@ -817,7 +829,7 @@ function createUndoSnapshotServiceBridge(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 04 2022 19:36:25 GMT+0000 (Coordinated Universal Time)
+                at Tue Oct 04 2022 21:05:01 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
