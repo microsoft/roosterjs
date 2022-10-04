@@ -158,23 +158,17 @@ function formatBorders(cells: ContentModelTableCell[][], format: TableMetadataFo
             ];
 
             transparentBorderMatrix.forEach((alwaysUseTransparent, i) => {
-                const borderColor = (!alwaysUseTransparent && formatColor[i]) || '';
-
                 cell.format[BorderKeys[i]] = combineBorderValue({
-                    style: getBorderStyleFromColor(borderColor),
+                    style: 'solid',
                     width: '1px',
-                    color: borderColor,
+                    color: (!alwaysUseTransparent && formatColor[i]) || 'transparent',
                 });
             });
         });
     });
 }
 
-function formatBackgroundColors(
-    cells: ContentModelTableCell[][],
-    format: TableMetadataFormat,
-    bgColorOverrides: boolean[][]
-) {
+function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableMetadataFormat) {
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
 
     cells.forEach((row, rowIndex) => {
@@ -204,13 +198,13 @@ function setFirstColumnFormat(
             if (format.hasFirstColumn && cellIndex === 0) {
                 cell.isHeader = true;
 
-                if (rowIndex !== 0 && !bgColorOverrides[rowIndex][cellIndex]) {
-                    setBorderColor(cell.format, 'borderTop');
-                    setTableCellBackgroundColor(cell, null /*color*/);
+                if (rowIndex !== 0 && !cell.format.bgColorOverride) {
+                    setBorderColor(cell.format, 'borderTop', 'transparent');
+                    setBackgroundColor(cell.format, null /*color*/);
                 }
 
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
-                    setBorderColor(cell.format, 'borderBottom');
+                    setBorderColor(cell.format, 'borderBottom', 'transparent');
                 }
             } else {
                 cell.isHeader = false;
@@ -243,11 +237,16 @@ function setHeaderRowFormat(
 
 function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: string) {
     const border = extractBorderValues(format[key]);
-    border.color = value || '';
-    border.style = getBorderStyleFromColor(border.color);
+    border.color = value || 'transparent';
     format[key] = combineBorderValue(border);
 }
 
-function getBorderStyleFromColor(color?: string): string {
-    return !color || color == 'transparent' ? 'none' : 'solid';
+function setBackgroundColor(format: ContentModelTableCellFormat, color: string | null | undefined) {
+    if (color && !format.bgColorOverride) {
+        format.backgroundColor = color;
+
+        // TODO: Handle text color when background color is dark
+    } else {
+        delete format.backgroundColor;
+    }
 }

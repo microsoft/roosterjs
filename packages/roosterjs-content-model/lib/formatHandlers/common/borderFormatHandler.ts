@@ -9,7 +9,6 @@ export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderRight',
     'borderBottom',
     'borderLeft',
-    'borderRadius',
 ];
 
 /**
@@ -21,7 +20,7 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
             const value = element.style[key];
 
             if (value) {
-                format[key] = value == 'none' ? '' : value;
+                format[key] = value;
             }
         });
     },

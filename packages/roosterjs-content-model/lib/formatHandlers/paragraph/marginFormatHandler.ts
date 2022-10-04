@@ -9,39 +9,32 @@ const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
     'marginLeft',
 ];
 
+const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
+    'marginTop',
+    'marginRight',
+    'marginBottom',
+    'marginLeft',
+];
+
 /**
  * @internal
  */
 export const marginFormatHandler: FormatHandler<MarginFormat> = {
-    parse: (format, element, _, defaultStyle) => {
+    parse: (format, element) => {
         MarginKeys.forEach(key => {
-            const value = element.style[key] || defaultStyle[key];
+            const value = element.style[key];
 
             if (value) {
-                switch (key) {
-                    case 'marginTop':
-                    case 'marginBottom':
-                        format[key] = value;
-                        break;
-
-                    case 'marginLeft':
-                    case 'marginRight':
-                        format[key] = format[key]
-                            ? parseValueWithUnit(format[key] || '', element) +
-                              parseValueWithUnit(value, element) +
-                              'px'
-                            : value;
-                        break;
-                }
+                format[key] = value;
             }
         });
     },
-    apply: (format, element, context) => {
+    apply: (format, element) => {
         MarginKeys.forEach(key => {
             const value = format[key];
 
-            if (value != context.implicitFormat[key]) {
-                element.style[key] = value || '0';
+            if (value) {
+                element.style[key] = value;
             }
         });
     },

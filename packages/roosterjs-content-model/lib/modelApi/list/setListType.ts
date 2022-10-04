@@ -1,75 +1,57 @@
-import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
+import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
 import { createListItem } from '../creators/createListItem';
-import { getOperationalBlocks } from '../selection/collectSelections';
+import { getOperationalBlocks } from '../common/getOperationalBlocks';
+import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
-import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 
 /**
  * @internal
  */
 export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') {
+    const paragraphs = getSelectedParagraphs(model);
     const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
-        model,
+        paragraphs,
         ['ListItem'],
         [] // Set stop types to be empty so we can find list items even cross the boundary of table, then we can always operation on the list item if any
     );
     const alreadyInExpectedType = paragraphOrListItems.every(
-        ({ block }) =>
-            isBlockGroupOfType<ContentModelListItem>(block, 'ListItem') &&
-            block.levels[block.levels.length - 1]?.listType == listType
+        item =>
+            isBlockGroupOfType(item, 'ListItem') &&
+            item.levels[item.levels.length - 1]?.listType == listType
     );
 
-    paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
-        if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-            const level = block.levels.pop();
+    paragraphOrListItems.forEach((item, itemIndex) => {
+        if (isBlockGroupOfType(item, 'ListItem')) {
+            const level = item.levels.pop();
 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
-                block.levels.push(level);
-            } else if (block.blocks.length == 1) {
-                setParagraphNotImplicit(block.blocks[0]);
+                item.levels.push(level);
             }
         } else {
-            const index = parent.blocks.indexOf(block);
-
-            if (index >= 0) {
-                const prevBlock = parent.blocks[index - 1];
-                const segmentFormat =
-                    (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
-                const newListItem = createListItem(
-                    [
-                        {
-                            listType,
-                            startNumberOverride:
-                                itemIndex > 0 ||
-                                (prevBlock?.blockType == 'BlockGroup' &&
-                                    prevBlock.blockGroupType == 'ListItem' &&
-                                    prevBlock.levels[0]?.listType == 'OL')
-                                    ? undefined
-                                    : 1,
-                            direction: block.format.direction,
-                            textAlign: block.format.textAlign,
-                        },
-                    ],
-                    // For list bullet, we only want to carry over these formats from segments:
+            const group = item.path[0];
+            const index = group.blocks.indexOf(item.paragraph);
+            const prevBlock = group.blocks[index - 1];
+            const newListItem = createListItem(
+                [
                     {
-                        fontFamily: segmentFormat.fontFamily,
-                        fontSize: segmentFormat.fontSize,
-                        textColor: segmentFormat.textColor,
-                    }
-                );
+                        listType,
+                        startNumberOverride:
+                            itemIndex > 0 ||
+                            (prevBlock?.blockType == 'BlockGroup' &&
+                                prevBlock.blockGroupType == 'ListItem' &&
+                                prevBlock.levels[0]?.listType == 'OL')
+                                ? undefined
+                                : 1,
+                    },
+                ],
+                item.paragraph.segments[0]?.format
+            );
 
-                // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
-                // TODO: Do we need to keep the CSS styles applied to original DIV?
-                if (block.blockType == 'Paragraph') {
-                    block.isImplicit = true;
-                }
+            newListItem.blocks.push(item.paragraph);
 
-                newListItem.blocks.push(block);
-
-                parent.blocks.splice(index, 1, newListItem);
-            }
+            group.blocks.splice(index, 1, newListItem);
         }
     });
 

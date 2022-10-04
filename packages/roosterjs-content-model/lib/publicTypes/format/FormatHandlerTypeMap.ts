@@ -1,11 +1,13 @@
 import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
+import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
+import { PaddingFormat } from './formatParts/PaddingFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
@@ -34,6 +36,11 @@ export interface FormatHandlerTypeMap {
      * Format for BorderFormat
      */
     border: BorderFormat;
+
+    /**
+     * Format for BorderBoxFormat
+     */
+    borderBox: BorderBoxFormat;
 
     /**
      * Format for FontFamilyFormat
@@ -84,6 +91,11 @@ export interface FormatHandlerTypeMap {
      * Format for MarginFormat
      */
     margin: MarginFormat;
+
+    /**
+     * Format for PaddingFormat
+     */
+    padding: PaddingFormat;
 
     /**
      * Format for StrikeFormat

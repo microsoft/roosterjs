@@ -30,7 +30,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     MarginFormatRenderer,
     ...BorderFormatRenderers,
     BorderBoxFormatRenderer,
-    DisplayFormatRenderer,
+    ...TableMetadataFormatRenders,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {

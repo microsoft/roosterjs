@@ -2,6 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -93,14 +94,13 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 }
             }
 
-            table.widths = calcSizes(columnPositions);
-            table.heights = calcSizes(rowPositions);
+        table.widths = calcSizes(columnPositions);
+        table.heights = calcSizes(rowPositions);
 
-            if (context.alwaysNormalizeTable) {
-                normalizeTable(table);
-            }
+        if (context.alwaysNormalizeTable) {
+            normalizeTable(table);
         }
-    );
+    });
 };
 
 function calcSizes(positions: number[]): number[] {

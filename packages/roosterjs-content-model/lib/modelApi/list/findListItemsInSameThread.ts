@@ -1,6 +1,6 @@
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
+import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
 
 /**
  * @internal

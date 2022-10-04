@@ -6,7 +6,7 @@ import { findListItemsInSameThread } from '../../../lib/modelApi/list/findListIt
 
 describe('findListItemsInSameThread', () => {
     it('Empty group', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const currentItem = createListItem([]);
 
         const result = findListItemsInSameThread(group, currentItem);
@@ -15,7 +15,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Single list item', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const currentItem = createListItem([]);
 
         group.blocks.push(currentItem);
@@ -26,7 +26,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple list items, in the same thread', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'OL' }]);
@@ -41,7 +41,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple list items, not in the same thread by start number - 1', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL', startNumberOverride: 1 }]);
         const item3 = createListItem([{ listType: 'OL', startNumberOverride: 2 }]);
@@ -56,7 +56,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple list items, not in the same thread by start number - 2', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL', startNumberOverride: 1 }]);
         const item2 = createListItem([{ listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'OL', startNumberOverride: 2 }]);
@@ -71,7 +71,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple list items, not in the same thread by list type', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'UL' }]);
         const item3 = createListItem([{ listType: 'OL' }]);
@@ -86,7 +86,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple list items in the same thread, with interrupting UL', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'UL' }]);
         const item3 = createListItem([{ listType: 'OL' }]);
@@ -105,7 +105,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple list items in the same thread, with interrupting paragraph', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'OL' }]);
@@ -124,7 +124,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Single UL', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'UL' }]);
 
         group.blocks.push(item1);
@@ -135,7 +135,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple UL', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'UL' }]);
         const item2 = createListItem([{ listType: 'UL' }]);
         const item3 = createListItem([{ listType: 'UL' }]);
@@ -150,7 +150,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple UL interrupted by Para', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'UL' }]);
         const item2 = createListItem([{ listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'UL' }]);
@@ -169,7 +169,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple UL interrupted by OL', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'UL' }]);
         const item2 = createListItem([{ listType: 'UL' }]);
         const item3 = createListItem([{ listType: 'UL' }]);
@@ -188,7 +188,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple UL under different group', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'UL' }]);
         const item2 = createListItem([{ listType: 'UL' }]);
         const item3 = createListItem([{ listType: 'UL' }]);
@@ -208,7 +208,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple OL under different group', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'OL' }]);
@@ -228,7 +228,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple OL with different levels - 1', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }, { listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'OL' }, { listType: 'OL' }, { listType: 'OL' }]);
@@ -248,7 +248,7 @@ describe('findListItemsInSameThread', () => {
     });
 
     it('Multiple OL with different levels - 1', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
         const item3 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }, { listType: 'OL' }]);
         const item1 = createListItem([{ listType: 'OL' }, { listType: 'OL' }, { listType: 'OL' }]);

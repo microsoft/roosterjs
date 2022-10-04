@@ -1,5 +1,5 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { setListType } from '../../modelApi/list/setListType';
 
 /**
@@ -8,6 +8,6 @@ import { setListType } from '../../modelApi/list/setListType';
  * - When all blocks are already in numbering list, turn off / outdent there list type
  * @param editor The editor to operate on
  */
-export default function toggleNumbering(editor: IContentModelEditor) {
+export default function toggleNumbering(editor: IExperimentalContentModelEditor) {
     formatWithContentModel(editor, 'toggleNumbering', model => setListType(model, 'OL'));
 }

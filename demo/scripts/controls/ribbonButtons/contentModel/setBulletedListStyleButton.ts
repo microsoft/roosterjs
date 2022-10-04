@@ -1,5 +1,5 @@
+import isContentModelEditor from '../../editor/isContentModelEditor';
 import { BulletListType } from 'roosterjs-editor-types';
-import { isContentModelEditor } from 'roosterjs-content-model';
 import { RibbonButton } from 'roosterjs-react';
 import { setListStyle } from 'roosterjs-content-model';
 

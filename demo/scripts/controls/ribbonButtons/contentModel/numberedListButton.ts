@@ -1,4 +1,4 @@
-import { isContentModelEditor } from 'roosterjs-content-model';
+import isContentModelEditor from '../../editor/isContentModelEditor';
 import { NumberedListButtonStringKey, RibbonButton } from 'roosterjs-react';
 import { toggleNumbering } from 'roosterjs-content-model';
 

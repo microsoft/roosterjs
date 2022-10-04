@@ -1,3 +1,4 @@
+import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';

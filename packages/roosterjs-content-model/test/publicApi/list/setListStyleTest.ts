@@ -1,6 +1,6 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import setListStyle from '../../../lib/publicApi/list/setListStyle';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { ListMetadataFormat } from '../../../lib/publicTypes/format/formatParts/ListMetadataFormat';
 
 describe('setListStyle', () => {
@@ -28,12 +28,12 @@ describe('setListStyle', () => {
     it('no list selected', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [],
         };
 
@@ -43,7 +43,7 @@ describe('setListStyle', () => {
     it('list is selected after paragraph', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -54,7 +54,6 @@ describe('setListStyle', () => {
                             isSelected: true,
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -71,16 +70,14 @@ describe('setListStyle', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -91,7 +88,6 @@ describe('setListStyle', () => {
                             isSelected: true,
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -108,10 +104,8 @@ describe('setListStyle', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
@@ -122,7 +116,7 @@ describe('setListStyle', () => {
     it('single selected list item', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -140,16 +134,14 @@ describe('setListStyle', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -167,10 +159,8 @@ describe('setListStyle', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
@@ -181,7 +171,7 @@ describe('setListStyle', () => {
     it('deeper selected list item', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -202,16 +192,14 @@ describe('setListStyle', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -232,10 +220,8 @@ describe('setListStyle', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
@@ -246,7 +232,7 @@ describe('setListStyle', () => {
     it('Multiple list items', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -263,10 +249,8 @@ describe('setListStyle', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -284,10 +268,8 @@ describe('setListStyle', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -304,16 +286,14 @@ describe('setListStyle', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -330,10 +310,8 @@ describe('setListStyle', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -351,10 +329,8 @@ describe('setListStyle', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -371,10 +347,8 @@ describe('setListStyle', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };

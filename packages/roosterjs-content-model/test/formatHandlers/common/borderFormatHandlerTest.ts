@@ -3,6 +3,7 @@ import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFo
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('borderFormatHandler.parse', () => {
@@ -50,29 +51,6 @@ describe('borderFormatHandler.parse', () => {
             borderBottom: '3px solid red',
             borderLeft: '4px solid red',
         });
-    });
-
-    it('Has border width none value', () => {
-        div.style.borderWidth = '1px 2px 3px 4px';
-        div.style.borderStyle = 'none';
-        div.style.borderColor = 'red';
-
-        borderFormatHandler.parse(format, div, context, {});
-
-        expect(format).toEqual({
-            borderTop: '1px none red',
-            borderRight: '2px none red',
-            borderBottom: '3px none red',
-            borderLeft: '4px none red',
-        });
-    });
-
-    it('Has border width none value only', () => {
-        div.style.borderStyle = '';
-
-        borderFormatHandler.parse(format, div, context, {});
-
-        expect(format).toEqual({});
     });
 });
 

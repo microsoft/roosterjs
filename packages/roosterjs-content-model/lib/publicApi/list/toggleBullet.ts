@@ -1,5 +1,5 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { setListType } from '../../modelApi/list/setListType';
 
 /**
@@ -8,6 +8,6 @@ import { setListType } from '../../modelApi/list/setListType';
  * - When all blocks are already in bullet list, turn off / outdent there list type
  * @param editor The editor to operate on
  */
-export default function toggleBullet(editor: IContentModelEditor) {
+export default function toggleBullet(editor: IExperimentalContentModelEditor) {
     formatWithContentModel(editor, 'toggleBullet', model => setListType(model, 'UL'));
 }

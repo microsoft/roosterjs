@@ -1,6 +1,6 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import setListStartNumber from '../../../lib/publicApi/list/setListStartNumber';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 
 describe('setListStartNumber', () => {
     function runTest(
@@ -26,12 +26,12 @@ describe('setListStartNumber', () => {
     it('no list selected', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [],
         };
 
@@ -41,7 +41,7 @@ describe('setListStartNumber', () => {
     it('list is selected after paragraph', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -52,7 +52,6 @@ describe('setListStartNumber', () => {
                             isSelected: true,
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -69,16 +68,14 @@ describe('setListStartNumber', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -89,7 +86,6 @@ describe('setListStartNumber', () => {
                             isSelected: true,
                         },
                     ],
-                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -106,10 +102,8 @@ describe('setListStartNumber', () => {
                                     format: {},
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
@@ -120,7 +114,7 @@ describe('setListStartNumber', () => {
     it('single selected list item', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -138,16 +132,14 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -165,10 +157,8 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
@@ -179,7 +169,7 @@ describe('setListStartNumber', () => {
     it('deeper selected list item', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -197,16 +187,14 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-
+            document: document,
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -227,10 +215,8 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
-                            format: {},
                         },
                     ],
-                    format: {},
                 },
             ],
         };

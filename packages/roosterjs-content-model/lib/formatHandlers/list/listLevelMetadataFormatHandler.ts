@@ -2,6 +2,13 @@ import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { FormatHandler } from '../FormatHandler';
 import { getObjectKeys, getTagOfNode, safeInstanceOf } from 'roosterjs-editor-dom';
 import { ListMetadataFormat } from '../../publicTypes/format/formatParts/ListMetadataFormat';
+import {
+    createNumberDefinition,
+    createObjectDefinition,
+    getObjectKeys,
+    getTagOfNode,
+    safeInstanceOf,
+} from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -52,11 +59,19 @@ const OLTypeToStyleMap: Record<string, string> = {
     I: 'upper-roman',
 };
 
+const OLTypeToStyleMap: Record<string, string> = {
+    '1': 'decimal',
+    a: 'lower-alpha',
+    A: 'upper-alpha',
+    i: 'lower-roman',
+    I: 'upper-roman',
+};
+
 /**
  * @internal
  */
 export const listLevelMetadataFormatHandler: FormatHandler<ListMetadataFormat> = {
-    parse: (format, element) => {
+    parse: (format, element, context, defaultStyle) => {
         const listStyle =
             element.style.listStyleType ||
             (safeInstanceOf(element, 'HTMLOListElement') && OLTypeToStyleMap[element.type]);
