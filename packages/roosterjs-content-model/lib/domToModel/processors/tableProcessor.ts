@@ -3,6 +3,7 @@ import { containerProcessor } from './containerProcessor';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { parseFormat } from '../utils/parseFormat';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
@@ -109,6 +110,10 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
         table.widths = calcSizes(columnPositions);
         table.heights = calcSizes(rowPositions);
+
+        if (context.alwaysNormalizeTable) {
+            normalizeTable(table);
+        }
     });
 };
 

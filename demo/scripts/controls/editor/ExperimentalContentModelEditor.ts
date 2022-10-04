@@ -52,6 +52,7 @@ export default class ExperimentalContentModelEditor extends Editor
         return domToContentModel(startNode || this.contentDiv, this.createEditorContext(), {
             includeRoot: !!startNode,
             selectionRange: this.getSelectionRangeEx(),
+            alwaysNormalizeTable: true,
             ...(option || {}),
         });
     }
