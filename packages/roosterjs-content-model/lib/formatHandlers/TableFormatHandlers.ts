@@ -6,6 +6,7 @@ import { FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 export const TableFormatHandlers: FormatKey[] = [
     'id',
     'border',
+    'borderBox',
     'tableMetadata',
     'tableSpacing',
     'margin',

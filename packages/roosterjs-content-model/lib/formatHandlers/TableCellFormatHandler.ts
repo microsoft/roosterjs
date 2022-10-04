@@ -5,7 +5,9 @@ import { FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
  */
 export const TableCellFormatHandlers: FormatKey[] = [
     'border',
+    'borderBox',
     'backgroundColor',
+    'padding',
     'textAlign',
     'verticalAlign',
     'tableCellMetadata',

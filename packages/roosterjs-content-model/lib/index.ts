@@ -13,7 +13,7 @@ export { default as hasSelectionInSegment } from './publicApi/selection/hasSelec
 export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export { default as setIndentation } from './publicApi/block/setIndentation';
 
-export { extractBorderValues, combineBorderValue, BorderIndex } from './domUtils/borderValues';
+export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
 
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
@@ -48,6 +48,7 @@ export { TextAlignFormat } from './publicTypes/format/formatParts/TextAlignForma
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';
 export { BorderFormat } from './publicTypes/format/formatParts/BorderFormat';
+export { BorderBoxFormat } from './publicTypes/format/formatParts/BorderBoxFormat';
 export { IdFormat } from './publicTypes/format/formatParts/IdFormat';
 export { SizeFormat } from './publicTypes/format/formatParts/SizeFormat';
 export { SpacingFormat } from './publicTypes/format/formatParts/SpacingFormat';
@@ -62,6 +63,7 @@ export { SuperOrSubScriptFormat } from './publicTypes/format/formatParts/SuperOr
 export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetadataFormat';
 export { ContentModelFormatBase } from './publicTypes/format/ContentModelFormatBase';
 export { MarginFormat } from './publicTypes/format/formatParts/MarginFormat';
+export { PaddingFormat } from './publicTypes/format/formatParts/PaddingFormat';
 export { ListTypeFormat } from './publicTypes/format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './publicTypes/format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './publicTypes/format/formatParts/ListMetadataFormat';
