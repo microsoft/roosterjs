@@ -1,77 +1,68 @@
 import { BorderFormat, combineBorderValue, extractBorderValues } from 'roosterjs-content-model';
-import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
-import { createColorFormatRendererGroup } from '../utils/createColorFormatRender';
-import { createDropDownFormatRendererGroup } from '../utils/createDropDownFormatRenderer';
-import { createTextFormatRendererGroup } from '../utils/createTextFormatRenderer';
+import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
+import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
 
-type BorderStyle = 'dashed' | 'dotted' | 'double' | 'groove' | 'none' | 'outset' | 'solid';
-const BorderStyleValues: BorderStyle[] = [
-    'dashed',
+type BorderStyle =
+    | 'dashed'
+    | 'dotted'
+    | 'double'
+    | 'groove'
+    | 'none'
+    | 'outset'
+    | 'solid'
+    | 'hidden'
+    | 'ridge'
+    | 'inset';
+const BorderStyles: BorderStyle[] = [
+    'none',
+    'hidden',
     'dotted',
+    'dashed',
+    'solid',
     'double',
     'groove',
-    'none',
+    'ridge',
+    'inset',
     'outset',
-    'solid',
 ];
 
-type BorderWidthName = 'Width-top' | 'Width-right' | 'Width-Bottom' | 'Width-Left';
-type BorderStyleName = 'Style-top' | 'Style-right' | 'Style-Bottom' | 'Style-Left';
-type BorderColorName = 'Color-top' | 'Color-right' | 'Color-Bottom' | 'Color-Left';
-
-const BorderWidthNames: BorderWidthName[] = [
-    'Width-top',
-    'Width-right',
-    'Width-Bottom',
-    'Width-Left',
-];
-const BorderStyleNames: BorderStyleName[] = [
-    'Style-top',
-    'Style-right',
-    'Style-Bottom',
-    'Style-Left',
-];
-const BorderColorNames: BorderColorName[] = [
-    'Color-top',
-    'Color-right',
-    'Color-Bottom',
-    'Color-Left',
-];
+function createBorderRenderer(position: keyof BorderFormat): FormatRenderer<BorderFormat>[] {
+    return [
+        createTextFormatRenderer<BorderFormat>(
+            position + 'Width',
+            format => extractBorderValues(format[position]).width,
+            (format, newValue) => {
+                const border = extractBorderValues(format[position]);
+                border.width = newValue;
+                format[position] = combineBorderValue(border);
+            }
+        ),
+        createDropDownFormatRenderer<BorderFormat, BorderStyle>(
+            position + 'Style',
+            BorderStyles,
+            format => extractBorderValues(format[position]).style as BorderStyle,
+            (format, newValue) => {
+                const border = extractBorderValues(format[position]);
+                border.style = newValue;
+                format[position] = combineBorderValue(border);
+            }
+        ),
+        createTextFormatRenderer<BorderFormat>(
+            position + 'Color',
+            format => extractBorderValues(format[position]).color,
+            (format, newValue) => {
+                const border = extractBorderValues(format[position]);
+                border.color = newValue;
+                format[position] = combineBorderValue(border);
+            }
+        ),
+    ];
+}
 
 export const BorderFormatRenderers: FormatRenderer<BorderFormat>[] = [
-    createTextFormatRendererGroup<BorderFormat, BorderWidthName>(
-        BorderWidthNames,
-        format => extractBorderValues(format.borderWidth),
-        (format, name, value) => {
-            const values = extractBorderValues(format.borderWidth);
-            values[BorderWidthNames.indexOf(name)] = value;
-            format.borderWidth = combineBorderValue(values, '0');
-        }
-    ),
-    createDropDownFormatRendererGroup<BorderFormat, BorderStyle, BorderStyleName>(
-        BorderStyleNames,
-        BorderStyleValues,
-        format => extractBorderValues(format.borderStyle) as BorderStyle[],
-        (format, name, value) => {
-            const values = extractBorderValues(format.borderStyle);
-            values[BorderStyleNames.indexOf(name)] = value;
-            format.borderStyle = combineBorderValue(values, 'none');
-        }
-    ),
-    createColorFormatRendererGroup<BorderFormat, BorderColorName>(
-        BorderColorNames,
-        format => extractBorderValues(format.borderColor),
-        (format, name, value) => {
-            const values = extractBorderValues(format.borderColor);
-            values[BorderColorNames.indexOf(name)] = value;
-            format.borderColor = combineBorderValue(values, 'transparent');
-        }
-    ),
-
-    createCheckboxFormatRenderer<BorderFormat>(
-        'UseBorderBox',
-        format => format.useBorderBox,
-        (format, value) => (format.useBorderBox = value)
-    ),
+    ...createBorderRenderer('borderTop'),
+    ...createBorderRenderer('borderRight'),
+    ...createBorderRenderer('borderBottom'),
+    ...createBorderRenderer('borderLeft'),
 ];

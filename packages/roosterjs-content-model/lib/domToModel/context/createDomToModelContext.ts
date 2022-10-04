@@ -42,6 +42,10 @@ export function createDomToModelContext(
         formatParsers: getFormatParsers(options?.formatParserOverride),
     };
 
+    if (options?.alwaysNormalizeTable) {
+        context.alwaysNormalizeTable = true;
+    }
+
     const range = options?.selectionRange;
 
     switch (range?.type) {

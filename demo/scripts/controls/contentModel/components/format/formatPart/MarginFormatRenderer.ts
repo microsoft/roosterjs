@@ -1,19 +1,17 @@
-import { combineBorderValue, extractBorderValues, MarginFormat } from 'roosterjs-content-model';
 import { createTextFormatRendererGroup } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
+import { MarginFormat } from 'roosterjs-content-model';
 
-type MarginName = 'Margin-top' | 'Margin-right' | 'Margin-bottom' | 'Margin-left';
-const MarginNames: MarginName[] = ['Margin-top', 'Margin-right', 'Margin-bottom', 'Margin-left'];
+type MarginName = keyof MarginFormat;
+const MarginNames: MarginName[] = ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'];
 
 export const MarginFormatRenderer: FormatRenderer<MarginFormat> = createTextFormatRendererGroup<
     MarginFormat,
     MarginName
 >(
     MarginNames,
-    format => extractBorderValues(format.margin),
+    format => MarginNames.map(name => format[name]),
     (format, name, value) => {
-        const values = extractBorderValues(format.margin);
-        values[MarginNames.indexOf(name)] = value;
-        format.margin = combineBorderValue(values, '0');
+        format[name] = value;
     }
 );

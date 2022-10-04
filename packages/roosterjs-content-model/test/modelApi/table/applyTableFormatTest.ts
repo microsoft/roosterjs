@@ -1,5 +1,4 @@
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
-import { combineBorderValue } from '../../../lib/domUtils/borderValues';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/ContentModelTableCell';
 import { TableBorderFormat } from 'roosterjs-editor-types';
@@ -65,10 +64,15 @@ describe('applyTableFormat', () => {
                     `BackgroundColor Row=${row} Col=${col}`
                 );
 
-                expect(table.cells[row][col].format.borderColor).toEqual(
-                    combineBorderValue(expectedBorderColors[row][col], ''),
-                    `BorderColor Row=${row} Col=${col}`
-                );
+                const { borderTop, borderRight, borderLeft, borderBottom } = table.cells[row][
+                    col
+                ].format;
+                const colors = expectedBorderColors[row][col];
+
+                expect(borderTop).toBe('1px solid ' + colors[0]);
+                expect(borderRight).toBe('1px solid ' + colors[1]);
+                expect(borderBottom).toBe('1px solid ' + colors[2]);
+                expect(borderLeft).toBe('1px solid ' + colors[3]);
             }
         }
     }

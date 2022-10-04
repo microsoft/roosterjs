@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { applyTableFormat } from 'roosterjs-content-model/lib/modelApi/table/applyTableFormat';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
+import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
 import { ContentModelView } from '../ContentModelView';
@@ -25,6 +26,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     BackgroundColorFormatRenderer,
     MarginFormatRenderer,
     ...BorderFormatRenderers,
+    BorderBoxFormatRenderer,
     ...TableMetadataFormatRenders,
 ];
 

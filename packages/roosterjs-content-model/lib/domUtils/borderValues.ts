@@ -1,40 +1,58 @@
-// Match a word or word with "(...)" that may have space inside
-// e.g.
-//   test
-//   test(1, 2, 3)
-const BorderValuesRegex = /(\w*\([^\)]*\)\w*|[^\s]+)/g;
-
 /**
- * Index of border values
+ * A combination of CSS border value.
+ * See https://developer.mozilla.org/en-US/docs/Web/CSS/border for more information
  */
-export const BorderIndex = {
-    Top: 0,
-    Right: 1,
-    Bottom: 2,
-    Left: 3,
-};
+export interface Border {
+    /**
+     * Width of the border
+     */
+    width?: string;
+
+    /**
+     * Style of the border
+     */
+    style?: string;
+
+    /**
+     * Color of the border
+     */
+    color?: string;
+}
+
+const BorderStyles = [
+    'none',
+    'hidden',
+    'dotted',
+    'dashed',
+    'solid',
+    'double',
+    'groove',
+    'ridge',
+    'inset',
+    'outset',
+];
+const BorderSizeRegex = /^(thin|medium|thick|[\d\.]+\w*)$/;
 
 /**
- * Extract an integrated border string (something like 'top right bottom left') to value array
+ * Extract an integrated border string with border width, style, color to value tuple
  * @param combinedBorder The integrated border style string
  * @returns An array with the splitted values
  */
-export function extractBorderValues(combinedBorder?: string): string[] {
-    combinedBorder = combinedBorder || '';
-    let match = BorderValuesRegex.exec(combinedBorder);
-    const result: string[] = [];
+export function extractBorderValues(combinedBorder?: string): Border {
+    const result: Border = {};
+    const values = (combinedBorder || '').replace(/, /g, ',').split(' ');
 
-    while (match) {
-        result.push(match[0]);
-        match = BorderValuesRegex.exec(combinedBorder);
-    }
+    values.forEach(v => {
+        if (BorderStyles.indexOf(v) >= 0 && !result.style) {
+            result.style = v;
+        } else if (BorderSizeRegex.test(v) && !result.width) {
+            result.width = v;
+        } else if (v && !result.color) {
+            result.color = v; // TODO: Do we need to use a regex to match all possible colors?
+        }
+    });
 
-    result[0] = result[0] || '';
-    result[1] = result[1] || result[0];
-    result[2] = result[2] || result[0];
-    result[3] = result[3] || result[1];
-
-    return result.slice(0, 4);
+    return result;
 }
 
 /**
@@ -42,9 +60,6 @@ export function extractBorderValues(combinedBorder?: string): string[] {
  * @param values Input string values
  * @param initialValue Initial value for those items without valid value
  */
-export function combineBorderValue(values: string[], initialValue: string): string {
-    return values
-        .slice(0, 4)
-        .map(v => v || initialValue)
-        .join(' ');
+export function combineBorderValue(value: Border): string {
+    return [value.width || '', value.style || '', value.color || ''].join(' ').trim() || 'none';
 }

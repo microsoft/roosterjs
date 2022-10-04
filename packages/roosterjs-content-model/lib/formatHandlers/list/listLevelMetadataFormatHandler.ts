@@ -7,6 +7,7 @@ import {
     createObjectDefinition,
     getObjectKeys,
     getTagOfNode,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -21,7 +22,7 @@ export const OrderedMap: Record<NumberingListType, string> = {
     [NumberingListType.LowerAlphaDash]: '"${LowerAlpha}- "',
     [NumberingListType.LowerAlphaParenthesis]: '"${LowerAlpha}) "',
     [NumberingListType.LowerAlphaDoubleParenthesis]: '"(${LowerAlpha}) "',
-    [NumberingListType.UpperAlpha]: '"${UpperAlpha}. "',
+    [NumberingListType.UpperAlpha]: 'upper-alpha',
     [NumberingListType.UpperAlphaDash]: '"${UpperAlpha}- "',
     [NumberingListType.UpperAlphaParenthesis]: '"${UpperAlpha}) "',
     [NumberingListType.UpperAlphaDoubleParenthesis]: '"(${UpperAlpha}) "',
@@ -29,7 +30,7 @@ export const OrderedMap: Record<NumberingListType, string> = {
     [NumberingListType.LowerRomanDash]: '"${LowerRoman}- "',
     [NumberingListType.LowerRomanParenthesis]: '"${LowerRoman}) "',
     [NumberingListType.LowerRomanDoubleParenthesis]: '"(${LowerRoman}) "',
-    [NumberingListType.UpperRoman]: '"${UpperRoman}. "',
+    [NumberingListType.UpperRoman]: 'upper-roman',
     [NumberingListType.UpperRomanDash]: '"${UpperRoman}- "',
     [NumberingListType.UpperRomanParenthesis]: '"${UpperRoman}) "',
     [NumberingListType.UpperRomanDoubleParenthesis]: '"(${UpperRoman}) "',
@@ -76,12 +77,22 @@ const listMetadataFormatHandlerInternal = createMetadataFormatHandler<ListMetada
     })
 );
 
+const OLTypeToStyleMap: Record<string, string> = {
+    '1': 'decimal',
+    a: 'lower-alpha',
+    A: 'upper-alpha',
+    i: 'lower-roman',
+    I: 'upper-roman',
+};
+
 /**
  * @internal
  */
 export const listLevelMetadataFormatHandler: FormatHandler<ListMetadataFormat> = {
     parse: (format, element, context, defaultStyle) => {
-        const listStyle = element.style.listStyleType;
+        const listStyle =
+            element.style.listStyleType ||
+            (safeInstanceOf(element, 'HTMLOListElement') && OLTypeToStyleMap[element.type]);
         const tag = getTagOfNode(element);
 
         listMetadataFormatHandlerInternal.parse(format, element, context, defaultStyle);

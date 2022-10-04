@@ -4,43 +4,33 @@ import { FormatHandler } from '../FormatHandler';
 /**
  * @internal
  */
+export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
+    'borderTop',
+    'borderRight',
+    'borderBottom',
+    'borderLeft',
+];
+
+/**
+ * @internal
+ */
 export const borderFormatHandler: FormatHandler<BorderFormat> = {
     parse: (format, element) => {
-        const borderColor = element.style.borderColor;
-        const borderWidth = element.style.borderWidth;
-        const borderStyle = element.style.borderStyle;
+        BorderKeys.forEach(key => {
+            const value = element.style[key];
 
-        if (borderColor) {
-            format.borderColor = borderColor;
-        }
-
-        if (borderWidth) {
-            format.borderWidth = borderWidth;
-        }
-
-        if (borderStyle) {
-            format.borderStyle = borderStyle;
-        }
-
-        if (element.style?.boxSizing == 'border-box') {
-            format.useBorderBox = true;
-        }
+            if (value) {
+                format[key] = value;
+            }
+        });
     },
     apply: (format, element) => {
-        if (format.borderColor) {
-            element.style.borderColor = format.borderColor;
-        }
+        BorderKeys.forEach(key => {
+            const value = format[key];
 
-        if (format.borderWidth) {
-            element.style.borderWidth = format.borderWidth;
-        }
-
-        if (format.borderStyle) {
-            element.style.borderStyle = format.borderStyle;
-        }
-
-        if (format.useBorderBox) {
-            element.style.boxSizing = 'border-box';
-        }
+            if (value) {
+                element.style[key] = value;
+            }
+        });
     },
 };

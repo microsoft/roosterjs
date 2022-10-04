@@ -130,6 +130,37 @@ describe('listLevelMetadataFormatHandler.parse', () => {
         });
     });
 
+    it('OL with type attribute', () => {
+        const ol = document.createElement('ol');
+
+        ol.type = 'I';
+
+        listLevelMetadataFormatHandler.parse(format, ol, context, {});
+
+        expect(format.orderedStyleType).toBe(NumberingListType.UpperRoman);
+        expect(format.unorderedStyleType).toBeUndefined();
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            levels: [],
+        });
+    });
+
+    it('OL with type attribute and list-style-type', () => {
+        const ol = document.createElement('ol');
+
+        ol.style.listStyleType = 'lower-roman';
+        ol.type = 'I';
+
+        listLevelMetadataFormatHandler.parse(format, ol, context, {});
+
+        expect(format.orderedStyleType).toBe(NumberingListType.LowerRoman);
+        expect(format.unorderedStyleType).toBeUndefined();
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            levels: [],
+        });
+    });
+
     it('OL with conflict metadata and list type', () => {
         const ol = document.createElement('ol');
 
@@ -189,7 +220,7 @@ describe('listLevelMetadataFormatHandler.parse', () => {
         listLevelMetadataFormatHandler.apply(format, ol, context);
 
         expect(ol.outerHTML).toBe(
-            '<ol data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}"></ol>'
+            '<ol data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha;"></ol>'
         );
     });
 
