@@ -1,4 +1,6 @@
-import { BorderIndex, combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
+import { BorderFormat } from '../../publicTypes/format/formatParts/BorderFormat';
+import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
+import { combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
 import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
@@ -125,24 +127,22 @@ function formatBorders(cells: ContentModelTableCell[][], format: TableMetadataFo
                 lastColumn: cellIndex === row.length - 1,
             });
 
-            // Set to default value first
-            cell.format.borderStyle = 'solid';
-            cell.format.borderWidth = '1px';
-            cell.format.borderColor = combineBorderValue(
-                [
-                    getBorder(format.topBorderColor, transparentBorderMatrix[0]),
-                    getBorder(format.verticalBorderColor, transparentBorderMatrix[1]),
-                    getBorder(format.bottomBorderColor, transparentBorderMatrix[2]),
-                    getBorder(format.verticalBorderColor, transparentBorderMatrix[3]),
-                ],
-                'transparent'
-            );
+            const formatColor = [
+                format.topBorderColor,
+                format.verticalBorderColor,
+                format.bottomBorderColor,
+                format.verticalBorderColor,
+            ];
+
+            transparentBorderMatrix.forEach((alwaysUseTransparent, i) => {
+                cell.format[BorderKeys[i]] = combineBorderValue({
+                    style: 'solid',
+                    width: '1px',
+                    color: (!alwaysUseTransparent && formatColor[i]) || 'transparent',
+                });
+            });
         });
     });
-}
-
-function getBorder(style: string | null | undefined, alwaysUseTransparent: boolean) {
-    return (!alwaysUseTransparent && style) || '';
 }
 
 function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableMetadataFormat) {
@@ -173,19 +173,15 @@ function setFirstColumnFormat(
         row.forEach((cell, cellIndex) => {
             if (format.hasFirstColumn && cellIndex === 0) {
                 cell.isHeader = true;
-                const borders = extractBorderValues(cell.format.borderColor!);
 
                 if (rowIndex !== 0 && !cell.format.bgColorOverride) {
-                    borders[BorderIndex.Top] = 'transparent';
-
+                    setBorderColor(cell.format, 'borderTop', 'transparent');
                     setBackgroundColor(cell.format, null /*color*/);
                 }
 
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
-                    borders[BorderIndex.Bottom] = 'transparent';
+                    setBorderColor(cell.format, 'borderBottom', 'transparent');
                 }
-
-                cell.format.borderColor = combineBorderValue(borders, 'transparent');
             } else {
                 cell.isHeader = false;
             }
@@ -200,15 +196,17 @@ function setHeaderRowFormat(cells: ContentModelTableCell[][], format: TableMetad
         if (format.hasHeaderRow && format.headerRowColor) {
             setBackgroundColor(cell.format, format.headerRowColor);
 
-            const borders = extractBorderValues(cell.format.borderColor!);
-
-            borders[BorderIndex.Top] = format.headerRowColor;
-            borders[BorderIndex.Right] = format.headerRowColor;
-            borders[BorderIndex.Left] = format.headerRowColor;
-
-            cell.format.borderColor = combineBorderValue(borders, 'transparent');
+            setBorderColor(cell.format, 'borderTop', format.headerRowColor);
+            setBorderColor(cell.format, 'borderRight', format.headerRowColor);
+            setBorderColor(cell.format, 'borderLeft', format.headerRowColor);
         }
     });
+}
+
+function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: string) {
+    const border = extractBorderValues(format[key]);
+    border.color = value || 'transparent';
+    format[key] = combineBorderValue(border);
 }
 
 function setBackgroundColor(format: ContentModelTableCellFormat, color: string | null | undefined) {

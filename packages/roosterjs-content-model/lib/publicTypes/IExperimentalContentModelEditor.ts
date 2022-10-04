@@ -33,6 +33,13 @@ export interface DomToModelOption {
      * Overrides default format handlers
      */
     formatParserOverride?: Partial<FormatParsers>;
+
+    /**
+     * When process table, whether we should always normalize it.
+     * This can help persist the size of table that is not created from Content Model
+     * @default false
+     */
+    alwaysNormalizeTable?: boolean;
 }
 
 /**

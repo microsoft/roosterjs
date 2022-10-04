@@ -3,7 +3,22 @@
  */
 export type MarginFormat = {
     /**
-     * Margin value in order of "top right bottom left"
+     * Margin top value
      */
-    margin?: string;
+    marginTop?: string;
+
+    /**
+     * Margin right value
+     */
+    marginRight?: string;
+
+    /**
+     * Margin bottom value
+     */
+    marginBottom?: string;
+
+    /**
+     * Margin left value
+     */
+    marginLeft?: string;
 };

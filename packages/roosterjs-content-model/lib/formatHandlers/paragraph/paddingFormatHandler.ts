@@ -1,22 +1,19 @@
-import { BorderFormat } from '../../publicTypes/format/formatParts/BorderFormat';
 import { FormatHandler } from '../FormatHandler';
+import { PaddingFormat } from '../../publicTypes/format/formatParts/PaddingFormat';
 
-/**
- * @internal
- */
-export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
-    'borderTop',
-    'borderRight',
-    'borderBottom',
-    'borderLeft',
+const PaddingKeys: (keyof PaddingFormat & keyof CSSStyleDeclaration)[] = [
+    'paddingTop',
+    'paddingRight',
+    'paddingBottom',
+    'paddingLeft',
 ];
 
 /**
  * @internal
  */
-export const borderFormatHandler: FormatHandler<BorderFormat> = {
+export const paddingFormatHandler: FormatHandler<PaddingFormat> = {
     parse: (format, element) => {
-        BorderKeys.forEach(key => {
+        PaddingKeys.forEach(key => {
             const value = element.style[key];
 
             if (value) {
@@ -25,9 +22,8 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
         });
     },
     apply: (format, element) => {
-        BorderKeys.forEach(key => {
+        PaddingKeys.forEach(key => {
             const value = format[key];
-
             if (value) {
                 element.style[key] = value;
             }

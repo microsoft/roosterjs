@@ -1,5 +1,6 @@
 import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { boldFormatHandler } from './segment/boldFormatHandler';
+import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
@@ -16,6 +17,7 @@ import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHa
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
 import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
+import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
 import { tableCellMetadataFormatHandler } from './table/tableCellMetadataFormatHandler';
@@ -34,6 +36,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     backgroundColor: backgroundColorFormatHandler,
     bold: boldFormatHandler,
     border: borderFormatHandler,
+    borderBox: borderBoxFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
@@ -44,6 +47,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listLevelThread: listLevelThreadFormatHandler,
     listType: listTypeFormatHandler,
     margin: marginFormatHandler,
+    padding: paddingFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
     tableCellMetadata: tableCellMetadataFormatHandler,
