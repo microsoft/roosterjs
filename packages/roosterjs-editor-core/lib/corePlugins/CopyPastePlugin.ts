@@ -138,7 +138,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
                         if (isCut) {
                             editor.addUndoSnapshot(() => {
-                                const position = this.editor!.deleteSelectedContent();
+                                const position = editor.deleteSelectedContent();
                                 editor.focus();
                                 editor.select(position);
                             }, ChangeSource.Cut);
@@ -150,22 +150,25 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private onPaste = (event: Event) => {
-        let range: Range;
+        let range: Range | null = null;
         if (this.editor) {
+            const editor = this.editor;
             extractClipboardEvent(
                 event as ClipboardEvent,
-                clipboardData => this.editor.paste(clipboardData),
+                clipboardData => editor.paste(clipboardData),
                 {
                     allowedCustomPasteType: this.state.allowedCustomPasteType,
                     getTempDiv: () => {
-                        range = this.editor.getSelectionRange();
-                        return this.getTempDiv(this.editor);
+                        range = editor.getSelectionRange() ?? null;
+                        return this.getTempDiv(editor);
                     },
                     removeTempDiv: div => {
-                        this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
+                        if (range) {
+                            this.cleanUpAndRestoreSelection(div, range, false /* isCopy */);
+                        }
                     },
                 },
-                this.editor.getSelectionRange()
+                this.editor.getSelectionRange() ?? undefined
             );
         }
     };

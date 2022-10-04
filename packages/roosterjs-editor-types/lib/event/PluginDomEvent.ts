@@ -108,7 +108,7 @@ export interface PluginInputEvent extends PluginDomEventBase<PluginEventType.Inp
  */
 export interface PluginScrollEvent
     extends PluginScrollEventData,
-        PluginDomEventBase<PluginEventType.Scroll, UIEvent> {}
+        PluginDomEventBase<PluginEventType.Scroll, Event> {}
 
 /**
  * This interface represents a PluginEvent wrapping native CompositionEnd event

@@ -91,7 +91,7 @@ export default interface IEditor {
      * @param node The node to check
      * @returns True if the given node is in editor content, otherwise false
      */
-    contains(node: Node): boolean;
+    contains(node: Node | null): boolean;
 
     /**
      * Check if the range falls in the editor content
@@ -261,7 +261,7 @@ export default interface IEditor {
      * @param position The position to select
      * @returns True if content is selected, otherwise false
      */
-    select(position: NodePosition): boolean;
+    select(position: NodePosition | null): boolean;
 
     /**
      * Select content by a start and end position

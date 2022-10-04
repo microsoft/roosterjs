@@ -29,8 +29,8 @@ const MAX_SIZE_LIMIT = 1e7;
  * Provides snapshot based undo service for Editor
  */
 export default class UndoPlugin implements PluginWithState<UndoPluginState> {
-    private editor: IEditor;
-    private lastKeyPress: number;
+    private editor: IEditor | null = null;
+    private lastKeyPress: number | null = null;
     private state: UndoPluginState;
 
     /**
@@ -141,11 +141,11 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         if ((evt.which == Keys.BACKSPACE && !evt.altKey) || evt.which == Keys.DELETE) {
             if (evt.which == Keys.BACKSPACE && this.canUndoAutoComplete()) {
                 evt.preventDefault();
-                this.editor.undo();
+                this.editor?.undo();
                 this.state.autoCompletePosition = null;
                 this.lastKeyPress = evt.which;
             } else {
-                let selectionRange = this.editor.getSelectionRange();
+                let selectionRange = this.editor?.getSelectionRange();
 
                 // Add snapshot when
                 // 1. Something has been selected (not collapsed), or
@@ -180,7 +180,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             return;
         }
 
-        let range = this.editor.getSelectionRange();
+        let range = this.editor?.getSelectionRange();
         if (
             (range && !range.collapsed) ||
             (evt.which == Keys.SPACE && this.lastKeyPress != Keys.SPACE) ||
@@ -206,14 +206,16 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
     }
 
     private canUndoAutoComplete() {
+        const focusedPosition = this.editor?.getFocusedPosition();
         return (
             this.state.snapshotsService.canUndoAutoComplete() &&
-            this.state.autoCompletePosition?.equalTo(this.editor.getFocusedPosition())
+            !!focusedPosition &&
+            !!this.state.autoCompletePosition?.equalTo(focusedPosition)
         );
     }
 
     private addUndoSnapshot() {
-        this.editor.addUndoSnapshot();
+        this.editor?.addUndoSnapshot();
         this.state.autoCompletePosition = null;
     }
 }
@@ -223,7 +225,7 @@ function createUndoSnapshots(): UndoSnapshotsService<Snapshot> {
 
     return {
         canMove: (delta: number): boolean => canMoveCurrentSnapshot(snapshots, delta),
-        move: (delta: number): Snapshot => moveCurrentSnapshot(snapshots, delta),
+        move: (delta: number): Snapshot | null => moveCurrentSnapshot(snapshots, delta),
         addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =>
             addSnapshotV2(snapshots, snapshot, isAutoCompleteSnapshot),
         clearRedo: () => clearProceedingSnapshotsV2(snapshots),
@@ -234,10 +236,12 @@ function createUndoSnapshots(): UndoSnapshotsService<Snapshot> {
 function createUndoSnapshotServiceBridge(
     service: UndoSnapshotsService<string> | undefined
 ): UndoSnapshotsService<Snapshot> | undefined {
+    let html: string | null;
     return service
         ? {
               canMove: (delta: number) => service.canMove(delta),
-              move: (delta: number): Snapshot => ({ html: service.move(delta), metadata: null }),
+              move: (delta: number): Snapshot | null =>
+                  (html = service.move(delta)) ? { html, metadata: null } : null,
               addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =>
                   service.addSnapshot(
                       snapshot.html +

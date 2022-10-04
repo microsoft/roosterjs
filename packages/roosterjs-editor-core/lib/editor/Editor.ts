@@ -233,7 +233,10 @@ export default class Editor implements IEditor {
         return getBlockElementAtNode(this.getCore().contentDiv, node);
     }
 
-    public contains(arg: Node | Range): boolean {
+    public contains(arg: Node | Range | null): boolean {
+        if (!arg) {
+            return false;
+        }
         return contains(this.getCore().contentDiv, <Node>arg);
     }
 
@@ -760,7 +763,7 @@ export default class Editor implements IEditor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
-        return this.getCore().lifecycle.defaultFormat;
+        return this.getCore().lifecycle.defaultFormat ?? {};
     }
 
     /**
