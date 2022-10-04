@@ -53,14 +53,19 @@ describe('convertPastedContentFromWord', () => {
         runTest(source, '<p><a></a><a></a></p>');
     });
 
-    it('Remove Comment | mso-comment-continuation', () => {
+    it('Remove Comment | mso-comment-continuation, remove style 1', () => {
         let source = '<span><span style="mso-comment-continuation:3"></span></span>';
+        runTest(source, '<span><span></span></span>');
+    });
+
+    it('Remove Comment | mso-comment-continuation, remove style 2', () => {
+        let source = '<span style="mso-comment-continuation:3"></span>';
         runTest(source, '<span></span>');
     });
 
-    it('Remove Comment | mso-comment-continuation, no parent so no remove', () => {
-        let source = '<span style="mso-comment-continuation:3"></span>';
-        runTest(source, '<span style="mso-comment-continuation:3"></span>');
+    it('Remove Comment | mso-comment-done, remove style', () => {
+        let source = '<span style="mso-comment-done:yes"></span>';
+        runTest(source, '<span></span>');
     });
 
     it('Remove Comment | mso-special-character:comment', () => {

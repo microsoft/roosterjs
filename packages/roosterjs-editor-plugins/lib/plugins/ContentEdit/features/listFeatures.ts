@@ -271,11 +271,18 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
                 if (textRange) {
+                    const number = parseInt(textBeforeCursor);
+                    const previousNode = editor
+                        .getBodyTraverser(textRange.startContainer)
+                        .getPreviousBlockElement();
+                    const isLi = previousNode
+                        ? getTagOfNode(previousNode?.collapseToSingleElement()) === 'LI'
+                        : false;
                     const listStyle = getAutoNumberingListStyle(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
                         editor,
-                        undefined /** startNumber */,
+                        isLi ? undefined : number /** startNumber */,
                         listStyle,
                         'autoToggleList' /** apiNameOverride */
                     );
@@ -366,20 +373,16 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
 function shouldTriggerList(
     event: PluginKeyboardEvent,
     editor: IEditor,
-    getListStyle: (text: string, isTheFirstItem?: boolean) => number
+    getListStyle: (text: string, previousListChain?: VListChain[]) => number
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
     const itHasSpace = /\s/g.test(textBeforeCursor);
-    const element = editor.getElementAtCursor();
-    const previousNode = editor.getBodyTraverser(element).getPreviousBlockElement();
-    const isLi = previousNode
-        ? getTagOfNode(previousNode?.collapseToSingleElement()) === 'LI'
-        : false;
+    const listChains = getListChains(editor);
     return (
         !itHasSpace &&
         !searcher.getNearestNonTextInlineElement() &&
-        getListStyle(textBeforeCursor, !isLi)
+        getListStyle(textBeforeCursor, listChains)
     );
 }
 

@@ -1,6 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
 import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
+import { DomToModelListFormat } from '../../../lib/publicTypes/context/DomToModelFormatContext';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
 import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
@@ -11,6 +12,10 @@ describe('createDomToModelContext', () => {
         zoomScale: 1,
         isRightToLeft: false,
         getDarkColor: undefined,
+    };
+    const listFormat: DomToModelListFormat = {
+        threadItemCounts: [],
+        levels: [],
     };
     const contextOptions = {
         elementProcessors: defaultProcessorMap,
@@ -24,6 +29,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             isInSelection: false,
+            listFormat,
             ...contextOptions,
         });
     });
@@ -42,6 +48,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             isInSelection: false,
+            listFormat,
             ...contextOptions,
         });
     });
@@ -55,9 +62,11 @@ describe('createDomToModelContext', () => {
             collapsed: false,
         } as any) as Range;
         const context = createDomToModelContext(undefined, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [mockedRange],
-            areAllCollapsed: false,
+            selectionRange: {
+                type: SelectionRangeTypes.Normal,
+                ranges: [mockedRange],
+                areAllCollapsed: false,
+            },
         });
 
         expect(context).toEqual({
@@ -71,19 +80,22 @@ describe('createDomToModelContext', () => {
                 endOffset: 1,
                 isSelectionCollapsed: false,
             },
+            listFormat,
             ...contextOptions,
         });
     });
 
     it('with table selection', () => {
         const context = createDomToModelContext(undefined, {
-            type: SelectionRangeTypes.TableSelection,
-            ranges: [],
-            areAllCollapsed: false,
-            table: 'TABLE' as any,
-            coordinates: {
-                firstCell: { x: 1, y: 2 },
-                lastCell: { x: 3, y: 4 },
+            selectionRange: {
+                type: SelectionRangeTypes.TableSelection,
+                ranges: [],
+                areAllCollapsed: false,
+                table: 'TABLE' as any,
+                coordinates: {
+                    firstCell: { x: 1, y: 2 },
+                    lastCell: { x: 3, y: 4 },
+                },
             },
         });
 
@@ -96,6 +108,7 @@ describe('createDomToModelContext', () => {
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
             },
+            listFormat,
             ...contextOptions,
         });
     });

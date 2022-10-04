@@ -1,10 +1,15 @@
 import { createDomToModelContext } from '../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../lib/domToModel/context/defaultProcessors';
 import { defaultStyleMap } from '../../lib/domToModel/context/defaultStyles';
+import { DomToModelListFormat } from '../../lib/publicTypes/context/DomToModelFormatContext';
 import { getFormatParsers } from '../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createFormatContextTest', () => {
+    const listFormat: DomToModelListFormat = {
+        levels: [],
+        threadItemCounts: [],
+    };
     const contextOptions = {
         elementProcessors: defaultProcessorMap,
         defaultStyles: defaultStyleMap,
@@ -21,6 +26,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: undefined,
             isInSelection: false,
             segmentFormat: {},
+            listFormat,
             ...contextOptions,
         });
     });
@@ -42,6 +48,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            listFormat,
             ...contextOptions,
         });
     });
@@ -62,9 +69,11 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                ranges: [range],
-                areAllCollapsed: false,
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [range],
+                    areAllCollapsed: false,
+                },
             }
         );
 
@@ -82,6 +91,7 @@ describe('createFormatContextTest', () => {
                 isSelectionCollapsed: false,
             },
             segmentFormat: {},
+            listFormat,
             ...contextOptions,
         });
     });
@@ -99,18 +109,20 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: table,
-                coordinates: {
-                    firstCell: {
-                        x: 1,
-                        y: 2,
-                    },
-                    lastCell: {
-                        x: 3,
-                        y: 4,
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: table,
+                    coordinates: {
+                        firstCell: {
+                            x: 1,
+                            y: 2,
+                        },
+                        lastCell: {
+                            x: 3,
+                            y: 4,
+                        },
                     },
                 },
             }
@@ -134,6 +146,7 @@ describe('createFormatContextTest', () => {
                 },
             },
             segmentFormat: {},
+            listFormat,
             ...contextOptions,
         });
     });
@@ -149,9 +162,11 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                ranges: [],
-                areAllCollapsed: true,
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [],
+                    areAllCollapsed: true,
+                },
             }
         );
 
@@ -162,6 +177,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            listFormat,
             ...contextOptions,
         });
     });
@@ -177,11 +193,13 @@ describe('createFormatContextTest', () => {
                 getDarkColor,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: null!,
-                coordinates: null!,
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: null!,
+                    coordinates: null!,
+                },
             }
         );
 
@@ -192,6 +210,7 @@ describe('createFormatContextTest', () => {
             getDarkColor: getDarkColor,
             isInSelection: false,
             segmentFormat: {},
+            listFormat,
             ...contextOptions,
         });
     });

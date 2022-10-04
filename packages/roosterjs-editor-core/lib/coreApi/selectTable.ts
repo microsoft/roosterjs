@@ -1,9 +1,10 @@
+import addSelectionStyle from './utils/addSelectionStyle';
+import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
-    getStyles,
     getTagOfNode,
     Position,
-    setStyles,
+    removeImportantStyleRule,
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -37,8 +38,8 @@ export const selectTable: SelectTable = (
     unselect(core);
 
     if (areValidCoordinates(coordinates) && table) {
-        ensureUniqueId(table, TABLE_ID);
-        ensureUniqueId(core.contentDiv, CONTENT_DIV_ID);
+        addUniqueId(table, TABLE_ID);
+        addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
         const ranges = select(core, table, coordinates);
         if (!isMergedCell(table, coordinates)) {
@@ -159,19 +160,9 @@ function buildCss(
 }
 
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
-    const doc = core.contentDiv.ownerDocument;
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
-
-    let styleElement = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
-    if (!styleElement) {
-        styleElement = doc.createElement('style');
-        doc.head.appendChild(styleElement);
-        styleElement.id = STYLE_ID + core.contentDiv.id;
-    }
-
-    styleElement.sheet?.insertRule(css);
-
+    addSelectionStyle(core, css, STYLE_ID);
     return ranges;
 }
 
@@ -181,29 +172,6 @@ function unselect(core: EditorCore) {
     if (styleElement?.sheet?.cssRules) {
         while (styleElement.sheet.cssRules.length > 0) {
             styleElement.sheet.deleteRule(0);
-        }
-    }
-}
-
-function ensureUniqueId(el: HTMLElement, idPrefix: string) {
-    const doc = el.ownerDocument;
-
-    if (!el.id) {
-        let cont = 0;
-        const getElement = () => doc.getElementById(idPrefix + cont);
-        //Ensure that there are no elements with the same ID
-        let element = getElement();
-        while (element) {
-            cont++;
-            element = getElement();
-        }
-
-        el.id = idPrefix + cont;
-    } else {
-        const elements = doc.querySelectorAll(`#${el.id}`);
-        if (elements.length > 1) {
-            el.removeAttribute('id');
-            ensureUniqueId(el, idPrefix);
         }
     }
 }
@@ -233,19 +201,7 @@ function generateCssFromCell(
 
 function removeImportant(cell: HTMLTableCellElement) {
     if (cell) {
-        const styles = getStyles(cell);
-        let modifiedStyles = 0;
-        ['background-color', 'background'].forEach(style => {
-            if (styles[style]?.indexOf('!important') > -1) {
-                const index = styles[style].indexOf('!');
-                styles[style] = styles[style].substring(0, index);
-                modifiedStyles++;
-            }
-        });
-
-        if (modifiedStyles > 0) {
-            setStyles(cell, styles);
-        }
+        removeImportantStyleRule(cell, ['background-color', 'background']);
     }
 }
 

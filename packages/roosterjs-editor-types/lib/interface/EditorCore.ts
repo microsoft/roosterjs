@@ -9,12 +9,11 @@ import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
-import { ImageSelectionRange } from './SelectionRangeEx';
+import { ImageSelectionRange, SelectionRangeEx } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
-import { SelectionRangeEx } from './SelectionRangeEx';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TableSelectionRange } from './SelectionRangeEx';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
@@ -68,6 +67,11 @@ export default interface EditorCore extends PluginState {
      * Retrieves the Visible Viewport of the editor.
      */
     getVisibleViewport: () => Rect | null;
+
+    /**
+     * Color of the border of a selectedImage. Default color: '#DB626C'
+     */
+    imageSelectionBorderColor?: string;
 }
 
 /**
@@ -274,10 +278,14 @@ export type SelectTable = (
 
 /**
  * Select a table and save data of the selected range
+ * @param core The EditorCore object
  * @param image image to select
  * @returns true if successful
  */
-export type SelectImage = (image: HTMLImageElement | null) => ImageSelectionRange | null;
+export type SelectImage = (
+    core: EditorCore,
+    image: HTMLImageElement | null
+) => ImageSelectionRange | null;
 
 /**
  * The interface for the map of core API.

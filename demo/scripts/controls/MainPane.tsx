@@ -429,6 +429,7 @@ class MainPane extends MainPaneBase {
             ...this.toggleablePlugins,
             this.ribbonPlugin,
             this.contentModelRibbonPlugin,
+            this.contentModelPlugin.getInnerRibbonPlugin(),
             this.pasteOptionPlugin,
             this.emojiPlugin,
         ];

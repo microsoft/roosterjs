@@ -105,7 +105,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 const { image } = core.domEvent.imageSelectionRange;
                 const imageElement = core.contentDiv.querySelector('#' + image.id);
                 if (imageElement) {
-                    core.domEvent.imageSelectionRange = core.api.selectImage(image);
+                    core.api.selectImage(core, image);
                 }
             }
 

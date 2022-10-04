@@ -1,4 +1,5 @@
 import { NumberingListType } from 'roosterjs-editor-types';
+import { VListChain } from 'roosterjs-editor-dom';
 
 const enum NumberingTypes {
     Decimal = 1,
@@ -103,20 +104,27 @@ const identifyNumberingListType = (
 /**
  * @internal
  * @param textBeforeCursor The trigger character
- * @param isTheFirstItem (Optional) Is the start number of a list.
+ * @param previousListChain (Optional) This parameters is used to keep the list chain, if the is not a new list
  * @returns The style of a numbering list triggered by a string
  */
 export default function getAutoNumberingListStyle(
     textBeforeCursor: string,
-    isTheFirstItem?: boolean
+    previousListChain?: VListChain[]
 ): NumberingListType {
     const trigger = textBeforeCursor.trim();
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
     //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
+    const index = parseInt(listIndex);
 
-    if (isTheFirstItem && numberingTriggers.indexOf(listIndex) < 0) {
-        return null;
+    if (previousListChain && index > 1) {
+        if (
+            (previousListChain.length < 1 && numberingTriggers.indexOf(listIndex) < 0) ||
+            (previousListChain?.length > 0 &&
+                !previousListChain[previousListChain.length - 1]?.canAppendAtCursor(index))
+        ) {
+            return null;
+        }
     }
 
     // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check

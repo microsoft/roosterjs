@@ -4,14 +4,13 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
-import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
 export function createDomToModelContext(
     editorContext?: EditorContext,
-    range?: SelectionRangeEx,
     options?: DomToModelOption
 ): DomToModelContext {
     const context: DomToModelContext = {
@@ -25,6 +24,11 @@ export function createDomToModelContext(
         segmentFormat: {},
         isInSelection: false,
 
+        listFormat: {
+            levels: [],
+            threadItemCounts: [],
+        },
+
         elementProcessors: {
             ...defaultProcessorMap,
             ...(options?.processorOverride || {}),
@@ -37,6 +41,12 @@ export function createDomToModelContext(
 
         formatParsers: getFormatParsers(options?.formatParserOverride),
     };
+
+    if (options?.alwaysNormalizeTable) {
+        context.alwaysNormalizeTable = true;
+    }
+
+    const range = options?.selectionRange;
 
     switch (range?.type) {
         case SelectionRangeTypes.Normal:

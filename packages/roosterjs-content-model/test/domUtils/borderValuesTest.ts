@@ -2,81 +2,86 @@ import { combineBorderValue, extractBorderValues } from '../../lib/domUtils/bord
 
 describe('extractBorderValues', () => {
     it('undefined string', () => {
-        expect(extractBorderValues(undefined)).toEqual(['', '', '', '']);
+        expect(extractBorderValues(undefined)).toEqual({});
     });
 
     it('empty string', () => {
-        expect(extractBorderValues('')).toEqual(['', '', '', '']);
+        expect(extractBorderValues('')).toEqual({});
     });
 
     it('Single value', () => {
-        expect(extractBorderValues('test1')).toEqual(['test1', 'test1', 'test1', 'test1']);
+        expect(extractBorderValues('test1')).toEqual({
+            color: 'test1',
+        });
     });
 
     it('Two values', () => {
-        expect(extractBorderValues('test1 test2')).toEqual(['test1', 'test2', 'test1', 'test2']);
+        expect(extractBorderValues('test1 test2')).toEqual({
+            color: 'test1',
+        });
     });
 
-    it('Three values', () => {
-        expect(extractBorderValues('test1 test2 test3')).toEqual([
-            'test1',
-            'test2',
-            'test3',
-            'test2',
-        ]);
+    it('value with rgb color', () => {
+        expect(extractBorderValues('rgb(1, 2, 3)')).toEqual({
+            color: 'rgb(1,2,3)',
+        });
     });
 
-    it('Four values', () => {
-        expect(extractBorderValues('test1 test2 test3 test4')).toEqual([
-            'test1',
-            'test2',
-            'test3',
-            'test4',
-        ]);
+    it('value with style', () => {
+        expect(extractBorderValues('none')).toEqual({
+            style: 'none',
+        });
     });
 
-    it('Five values', () => {
-        expect(extractBorderValues('test1 test2 test3 test4 test5')).toEqual([
-            'test1',
-            'test2',
-            'test3',
-            'test4',
-        ]);
+    it('value with width 1', () => {
+        expect(extractBorderValues('thin')).toEqual({
+            width: 'thin',
+        });
     });
 
-    it('value with ()', () => {
-        expect(extractBorderValues('test1 ( ) test2 (test 3)')).toEqual([
-            'test1',
-            '( )',
-            'test2',
-            '(test 3)',
-        ]);
+    it('value with width 2', () => {
+        expect(extractBorderValues('2px')).toEqual({
+            width: '2px',
+        });
     });
 
-    it('value rgb', () => {
-        expect(extractBorderValues('rgb(1, 2, 3) transparent')).toEqual([
-            'rgb(1, 2, 3)',
-            'transparent',
-            'rgb(1, 2, 3)',
-            'transparent',
-        ]);
+    it('full value 1', () => {
+        expect(extractBorderValues('red 2px solid')).toEqual({
+            color: 'red',
+            width: '2px',
+            style: 'solid',
+        });
+    });
+
+    it('full value 2', () => {
+        expect(extractBorderValues('rgb(1, 2, 3) thick solid')).toEqual({
+            color: 'rgb(1,2,3)',
+            width: 'thick',
+            style: 'solid',
+        });
     });
 });
 
 describe('combineBorderValue', () => {
     it('empty array', () => {
-        expect(combineBorderValue([], 'default')).toEqual('');
+        expect(combineBorderValue({})).toEqual('none');
     });
 
     it('array with partial values', () => {
-        expect(combineBorderValue(['a', undefined!, 'b'], 'default')).toEqual('a default b');
+        expect(
+            combineBorderValue({
+                color: 'red',
+            })
+        ).toEqual('red');
     });
 
     it('array with full values', () => {
-        expect(combineBorderValue(['a', 'b', 'c', 'd'], 'default')).toEqual('a b c d');
-    });
-
-    it('array with extract values', () => {
-        expect(combineBorderValue(['a', 'b', 'c', 'd', 'e'], 'default')).toEqual('a b c d');
+        expect(
+            combineBorderValue({
+                color: 'rgb(1,2,3)',
+                style: 'solid',
+                width: 'thick',
+            })
+        ).toEqual('thick solid rgb(1,2,3)');
     });
 });

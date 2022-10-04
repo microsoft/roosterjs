@@ -1,5 +1,6 @@
 import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { boldFormatHandler } from './segment/boldFormatHandler';
+import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
@@ -10,7 +11,13 @@ import { FormatParsers } from '../publicTypes/context/DomToModelSettings';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
+import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
+import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
+import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
+import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
+import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
 import { tableCellMetadataFormatHandler } from './table/tableCellMetadataFormatHandler';
@@ -29,11 +36,18 @@ const defaultFormatHandlerMap: FormatHandlers = {
     backgroundColor: backgroundColorFormatHandler,
     bold: boldFormatHandler,
     border: borderFormatHandler,
+    borderBox: borderBoxFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
     italic: italicFormatHandler,
+    listItemMetadata: listItemMetadataFormatHandler,
+    listItemThread: listItemThreadFormatHandler,
+    listLevelMetadata: listLevelMetadataFormatHandler,
+    listLevelThread: listLevelThreadFormatHandler,
+    listType: listTypeFormatHandler,
     margin: marginFormatHandler,
+    padding: paddingFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
     tableCellMetadata: tableCellMetadataFormatHandler,
@@ -50,7 +64,8 @@ const defaultFormatHandlerMap: FormatHandlers = {
  */
 export function getFormatParsers(option?: Partial<FormatParsers>): FormatParsers {
     return getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
-        parsers[key] = option?.[key] || defaultFormatHandlerMap[key].parse;
+        const parser = option?.[key];
+        parsers[key] = typeof parser === 'undefined' ? defaultFormatHandlerMap[key].parse : parser;
 
         return parsers;
     }, <FormatParsers>{});
@@ -60,9 +75,11 @@ export function getFormatParsers(option?: Partial<FormatParsers>): FormatParsers
  * @internal
  */
 export function getFormatAppliers(option?: Partial<FormatAppliers>): FormatAppliers {
-    return getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
-        parsers[key] = option?.[key] || defaultFormatHandlerMap[key].apply;
+    return getObjectKeys(defaultFormatHandlerMap).reduce((appliers, key) => {
+        const applier = option?.[key];
+        appliers[key] =
+            typeof applier === 'undefined' ? defaultFormatHandlerMap[key].apply : applier;
 
-        return parsers;
+        return appliers;
     }, <FormatAppliers>{});
 }
