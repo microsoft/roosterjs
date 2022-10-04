@@ -1,7 +1,14 @@
 import * as React from 'react';
+import { bulletedListButton } from './bulletedListButton';
+import { decreaseIndentButton } from './decreaseIndentButton';
 import { formatTableButton } from './formatTableButton';
+import { increaseIndentButton } from './increaseIndentButton';
 import { insertTableButton } from './insertTableButton';
+import { listStartNumberButton } from './listStartNumberButton';
+import { numberedListButton } from './numberedListButton';
 import { Ribbon, RibbonPlugin } from 'roosterjs-react';
+import { setBulletedListStyleButton } from './setBulletedListStyleButton';
+import { setNumberedListStyleButton } from './setNumberedListStyleButton';
 import { setTableCellShadeButton } from './setTableCellShadeButton';
 import { setTableHeaderButton } from './setTableHeaderButton';
 import {
@@ -14,6 +21,13 @@ import {
 } from './tableEditButtons';
 
 const buttons = [
+    bulletedListButton,
+    numberedListButton,
+    decreaseIndentButton,
+    increaseIndentButton,
+    setBulletedListStyleButton,
+    setNumberedListStyleButton,
+    listStartNumberButton,
     insertTableButton,
     formatTableButton,
     setTableCellShadeButton,
