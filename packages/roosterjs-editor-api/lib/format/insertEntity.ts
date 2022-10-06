@@ -1,8 +1,11 @@
 import {
     commitEntity,
+    createElement,
     getEntityFromElement,
     getEntitySelector,
     Position,
+    splitParentNode,
+    splitTextNode,
     wrap,
 } from 'roosterjs-editor-dom';
 import {
@@ -10,7 +13,9 @@ import {
     ContentPosition,
     Entity,
     IEditor,
+    KnownCreateElementDataIndex,
     NodePosition,
+    NodeType,
     PositionType,
 } from 'roosterjs-editor-types';
 
@@ -30,7 +35,8 @@ export default function insertEntity(
     contentNode: Node,
     isBlock: boolean,
     isReadonly: boolean,
-    position?: NodePosition | ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd
+    position?: NodePosition | ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd,
+    forceInsertAtRootOfRegion?: boolean
 ): Entity {
     const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
 
@@ -71,6 +77,39 @@ export default function insertEntity(
         } else {
             editor.focus();
             contentPosition = ContentPosition.SelectionStart;
+            position = Position.getStart(editor.getSelectionRange());
+        }
+
+        if (
+            forceInsertAtRootOfRegion &&
+            contentPosition == ContentPosition.SelectionStart &&
+            typeof position == 'object'
+        ) {
+            const region = editor.getSelectedRegions()[0];
+            let node = position.node;
+
+            if (node.nodeType == NodeType.Text && !position.isAtEnd) {
+                node = splitTextNode(node as Text, position.offset, true /*returnFirstPart*/);
+            }
+
+            while (region && node && node.parentNode != region.rootNode) {
+                splitParentNode(node, false /*splitBefore*/);
+                node = node.parentNode;
+            }
+
+            if (node) {
+                position = new Position(node, PositionType.After);
+                editor.select(position);
+
+                const newline = createElement(
+                    KnownCreateElementDataIndex.EmptyLine,
+                    editor.getDocument()
+                );
+
+                editor.insertNode(newline);
+
+                editor.select(newline, PositionType.Begin);
+            }
         }
 
         editor.insertNode(wrapper, {
