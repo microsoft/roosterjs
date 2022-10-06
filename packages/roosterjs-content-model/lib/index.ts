@@ -1,5 +1,9 @@
 export { default as domToContentModel } from './publicApi/domToContentModel';
 export { default as contentModelToDom } from './publicApi/contentModelToDom';
+export {
+    default as mergeFragmentWithEntity,
+    preprocessEntitiesFromContentModel,
+} from './publicApi/mergeFragmentWithEntity';
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
 export { default as setTableCellShade } from './publicApi/table/setTableCellShade';

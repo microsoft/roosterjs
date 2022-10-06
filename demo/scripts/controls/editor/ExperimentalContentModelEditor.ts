@@ -1,5 +1,5 @@
-import { ContentPosition, EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
     EditorContext,
@@ -9,6 +9,7 @@ import {
     DomToModelOption,
     IExperimentalContentModelEditor,
     ModelToDomOption,
+    mergeFragmentWithEntity,
 } from 'roosterjs-content-model';
 
 /**
@@ -69,7 +70,7 @@ export default class ExperimentalContentModelEditor extends Editor
             this.createEditorContext(),
             option
         );
-        const mergingCallback = option?.mergingCallback || this.defaultMergingCallback;
+        const mergingCallback = option?.mergingCallback || mergeFragmentWithEntity;
 
         switch (range?.type) {
             case SelectionRangeTypes.Normal:
@@ -90,12 +91,4 @@ export default class ExperimentalContentModelEditor extends Editor
                 break;
         }
     }
-
-    private defaultMergingCallback = (fragment: DocumentFragment) => {
-        while (this.contentDiv.firstChild) {
-            this.contentDiv.removeChild(this.contentDiv.firstChild);
-        }
-
-        this.insertNode(fragment, { position: ContentPosition.Begin });
-    };
 }
