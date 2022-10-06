@@ -41,12 +41,12 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             shadowEditSelectionPath = range && getSelectionPath(contentDiv, range);
             shadowEditTableSelectionPath = getShadowEditSelectionPath(
                 SelectionRangeTypes.TableSelection,
-                selection
+                selection ?? undefined
             );
             shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
             shadowEditImageSelectionPath = getShadowEditSelectionPath(
                 SelectionRangeTypes.ImageSelection,
-                selection
+                selection ?? undefined
             );
 
             moveChildNodes(shadowEditFragment, contentDiv);
