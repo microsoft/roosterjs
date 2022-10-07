@@ -94,7 +94,7 @@ function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) 
                       isDarkMode,
                       start: [],
                       end: [],
-                      ...(getSelectionPath(core.contentDiv, rangeEx?.ranges[0] ?? null) || {}),
+                      ...(getSelectionPath(core.contentDiv, rangeEx.ranges[0]) || {}),
                   };
 
         core.undo.snapshotsService.addSnapshot(
