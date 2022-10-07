@@ -64,7 +64,11 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
-        const [fragment, range] = contentModelToDom(model, this.createEditorContext(), option);
+        const [fragment, range, entityPairs] = contentModelToDom(
+            model,
+            this.createEditorContext(),
+            option
+        );
         const mergingCallback = option?.mergingCallback || this.defaultMergingCallback;
 
         switch (range?.type) {
@@ -72,17 +76,17 @@ export default class ExperimentalContentModelEditor extends Editor
                 const start = Position.getStart(range.ranges[0]);
                 const end = Position.getEnd(range.ranges[0]);
 
-                mergingCallback(fragment);
+                mergingCallback(fragment, this.contentDiv, entityPairs);
                 this.select(start, end);
                 break;
 
             case SelectionRangeTypes.TableSelection:
-                mergingCallback(fragment);
+                mergingCallback(fragment, this.contentDiv, entityPairs);
                 this.select(range.table, range.coordinates);
                 break;
 
             case undefined:
-                mergingCallback(fragment);
+                mergingCallback(fragment, this.contentDiv, entityPairs);
                 break;
         }
     }
