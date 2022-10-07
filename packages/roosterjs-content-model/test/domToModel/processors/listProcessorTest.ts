@@ -36,7 +36,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -61,7 +61,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([0]);
         expect(context.segmentFormat).toEqual({});
@@ -94,7 +94,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([0]);
         expect(context.segmentFormat).toEqual({});
@@ -116,7 +116,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -153,7 +153,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
 
@@ -200,7 +200,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -225,7 +225,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -258,7 +258,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -280,7 +280,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -317,7 +317,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
 
