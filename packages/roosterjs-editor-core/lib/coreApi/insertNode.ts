@@ -8,6 +8,7 @@ import {
     NodeType,
     PositionType,
     NodePosition,
+    RegionType,
 } from 'roosterjs-editor-types';
 import {
     createRange,
@@ -20,6 +21,9 @@ import {
     toArray,
     wrap,
     adjustInsertPosition,
+    getRegionsFromRange,
+    splitTextNode,
+    splitParentNode,
 } from 'roosterjs-editor-dom';
 
 function getInitialRange(
@@ -58,6 +62,7 @@ export const insertNode: InsertNode = (
         insertOnNewLine: false,
         updateCursor: true,
         replaceSelection: true,
+        insertToRegionRoot: false,
     };
     let contentDiv = core.contentDiv;
 
@@ -156,7 +161,9 @@ export const insertNode: InsertNode = (
                     let pos: NodePosition = Position.getStart(range);
                     let blockElement: BlockElement | null;
 
-                    if (
+                    if (option.insertOnNewLine && option.insertToRegionRoot) {
+                        pos = adjustInertPositionRegionRoot(core, range, pos);
+                    } else if (
                         option.insertOnNewLine &&
                         (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
                     ) {
@@ -189,6 +196,29 @@ export const insertNode: InsertNode = (
 
     return true;
 };
+
+function adjustInertPositionRegionRoot(core: EditorCore, range: Range, position: NodePosition) {
+    const region = getRegionsFromRange(core.contentDiv, range, RegionType.Table)[0];
+    let node: Node | null = position.node;
+
+    if (region) {
+        if (node.nodeType == NodeType.Text && !position.isAtEnd) {
+            node = splitTextNode(node as Text, position.offset, true /*returnFirstPart*/);
+        }
+
+        while (node && node.parentNode != region.rootNode) {
+            splitParentNode(node, false /*splitBefore*/);
+            node = node.parentNode;
+        }
+
+        if (node) {
+            position = new Position(node, PositionType.After);
+        }
+    }
+
+    return position;
+}
+
 function adjustInsertPositionNewLine(blockElement: BlockElement, core: EditorCore, pos: Position) {
     let tempPos = new Position(blockElement.getEndNode(), PositionType.After);
     if (safeInstanceOf(tempPos.node, 'HTMLTableRowElement')) {
