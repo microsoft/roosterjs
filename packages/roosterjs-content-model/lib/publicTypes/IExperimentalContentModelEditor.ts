@@ -2,6 +2,7 @@ import { ContentModelDocument } from './block/group/ContentModelDocument';
 import { DefaultStyleMap, FormatParsers } from './context/DomToModelSettings';
 import { EditorContext } from './context/EditorContext';
 import { ElementProcessor } from './context/ElementProcessor';
+import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
 import { FormatAppliers } from './context/ModelToDomSettings';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 
@@ -47,10 +48,16 @@ export interface DomToModelOption {
  */
 export interface ModelToDomOption {
     /**
-     * A callback to indicate how should the new content be integrated into existing content
-
+     * A callback to specify how to merge DOM tree generated from Content Model in to existing container
+     * @param source Source document fragment that is generated from Content Model
+     * @param target Target container, usually to be editor root container
+     * @param entityPairs An array of entity wrapper - placeholder pairs, used for reuse existing DOM structure for entity
      */
-    mergingCallback?: (fragment: DocumentFragment) => void;
+    mergingCallback?: (
+        source: DocumentFragment,
+        target: HTMLElement,
+        entityPairs: EntityPlaceholderPair[]
+    ) => void;
 
     /**
      * Overrides default format appliers
