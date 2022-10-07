@@ -271,7 +271,10 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
                 if (textRange) {
-                    const number = parseInt(textBeforeCursor);
+                    const number = isFirstItemOfAList(textBeforeCursor)
+                        ? 1
+                        : parseInt(textBeforeCursor);
+
                     const previousNode = editor
                         .getBodyTraverser(textRange.startContainer)
                         .getPreviousBlockElement();
@@ -282,7 +285,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
                         editor,
-                        isLi ? undefined : number /** startNumber */,
+                        isLi && number !== 1 ? undefined : number /** startNumber */,
                         listStyle,
                         'autoToggleList' /** apiNameOverride */
                     );
@@ -293,6 +296,16 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
             true /*canUndoByBackspace*/
         );
     },
+};
+
+const isFirstItemOfAList = (item: string) => {
+    const number = parseInt(item);
+    if (number && number === 1) {
+        return 1;
+    } else {
+        const letter = item.replace(/\(|\)|\-|\./g, '').trim();
+        return letter.length === 1 && ['i', 'a', 'I', 'A'].indexOf(letter) > 0 ? 1 : undefined;
+    }
 };
 
 /**
