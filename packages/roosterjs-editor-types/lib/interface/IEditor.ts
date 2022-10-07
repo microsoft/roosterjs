@@ -229,7 +229,7 @@ export default interface IEditor {
      * It does a live pull on the selection.
      * @returns current selection range, or null if editor never got focus before
      */
-    getSelectionRangeEx(): SelectionRangeEx | null;
+    getSelectionRangeEx(): SelectionRangeEx;
 
     /**
      * Get current selection in a serializable format
