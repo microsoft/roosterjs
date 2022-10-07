@@ -206,9 +206,11 @@ function adjustInertPositionRegionRoot(core: EditorCore, range: Range, position:
             node = splitTextNode(node as Text, position.offset, true /*returnFirstPart*/);
         }
 
-        while (node && node.parentNode != region.rootNode) {
-            splitParentNode(node, false /*splitBefore*/);
-            node = node.parentNode;
+        if (node != region.rootNode) {
+            while (node && node.parentNode != region.rootNode) {
+                splitParentNode(node, false /*splitBefore*/);
+                node = node.parentNode;
+            }
         }
 
         if (node) {
