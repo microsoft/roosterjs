@@ -22,7 +22,7 @@ function generateBasicMarkdownFeature(
     return {
         keys: [key],
         shouldHandleEvent: (event, editor) =>
-            event.rawEvent?.shiftKey === useShiftKey &&
+            event.rawEvent.shiftKey === useShiftKey &&
             !!cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter),
         handleEvent: (event, editor) => {
             // runAsync is here to allow the event to complete so autocomplete will present the trigger character.
@@ -97,7 +97,6 @@ function handleMarkdownEvent(
         () => {
             const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
             if (!!range) {
-                console.log(range.startContainer);
                 // get the text content range
                 const textContentRange = range.cloneRange();
                 textContentRange.setStart(
