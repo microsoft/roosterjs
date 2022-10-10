@@ -87,10 +87,12 @@ describe('containerProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
+                    format: {},
                     segments: [],
                 },
                 {
                     blockType: 'Paragraph',
+                    format: {},
                     segments: [],
                 },
             ],
@@ -137,6 +139,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -166,6 +169,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -196,6 +200,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -225,6 +230,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -250,6 +256,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -265,6 +272,7 @@ describe('containerProcessor', () => {
             blockType: 'Paragraph',
             segments: [{ segmentType: 'Text', text: 'test', format: { a: 'b' } as any }],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -288,6 +296,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'SelectionMarker', format: { a: 'b' } as any, isSelected: true },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 });
