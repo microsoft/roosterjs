@@ -30,6 +30,8 @@ export default function editTable(
                     vtable.getCell(cellToSelect.newRow, cellToSelect.newCol).td,
                     PositionType.Begin
                 );
+
+                return operation;
             },
             'editTable'
         );
