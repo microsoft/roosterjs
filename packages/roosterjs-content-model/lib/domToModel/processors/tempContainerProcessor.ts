@@ -5,16 +5,8 @@ import { knownElementProcessor } from './knownElementProcessor';
 
 // Temporarily ignore these attributes and CSS styles since they are processed by format handlers.
 // We didn't really process tabindex, vlink, link, but given they don't have too much impact in editor, we can ignore them
-const HandledAttributeNames: string[] = [
-    'dir',
-    'style',
-    'bgcolor',
-    'tabindex',
-    'vlink',
-    'link',
-    'class',
-];
-const HandledStyleNames: string[] = [
+const HandledAttributeNames = ['dir', 'style', 'bgcolor', 'tabindex', 'vlink', 'link', 'class'];
+const HandledStyleNames = [
     'background-color',
     'direction',
     'text-decoration',
@@ -25,7 +17,7 @@ const HandledStyleNames: string[] = [
     'color',
 ];
 // TODO: Put empty array for now, later we will have some change to allow overwrite it
-const HandledClassNames: string[] = [];
+const HandledClassNames = [''];
 
 /**
  * @internal
