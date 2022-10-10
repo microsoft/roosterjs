@@ -50,7 +50,6 @@ export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegm
 export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentModelListItemLevelFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 
-export { TextAlignFormat } from './publicTypes/format/formatParts/TextAlignFormat';
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';
 export { BorderFormat } from './publicTypes/format/formatParts/BorderFormat';
@@ -58,6 +57,7 @@ export { BorderBoxFormat } from './publicTypes/format/formatParts/BorderBoxForma
 export { IdFormat } from './publicTypes/format/formatParts/IdFormat';
 export { SizeFormat } from './publicTypes/format/formatParts/SizeFormat';
 export { SpacingFormat } from './publicTypes/format/formatParts/SpacingFormat';
+export { DirectionFormat } from './publicTypes/format/formatParts/DirectionFormat';
 export { TextColorFormat } from './publicTypes/format/formatParts/TextColorFormat';
 export { FontSizeFormat } from './publicTypes/format/formatParts/FontSizeFormat';
 export { FontFamilyFormat } from './publicTypes/format/formatParts/FontFamilyFormat';

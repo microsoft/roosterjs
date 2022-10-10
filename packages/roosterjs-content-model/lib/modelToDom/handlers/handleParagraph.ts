@@ -1,6 +1,8 @@
+import { applyFormat } from '../utils/applyFormat';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { handleSegment } from './handleSegment';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { ParagraphFormatHandlers } from '../../formatHandlers/ParagraphFormatHandlers';
 
 /**
  * @internal
@@ -18,6 +20,8 @@ export function handleParagraph(
     } else {
         container = doc.createElement('div');
         parent.appendChild(container);
+
+        applyFormat(container, ParagraphFormatHandlers, paragraph.format, context);
     }
 
     context.regularSelection.current = {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { ContentModelSegmentView } from './ContentModelSegmentView';
 import { ContentModelView } from '../ContentModelView';
+import { DirectionFormatRenderers } from '../format/formatPart/DirectionFormatRenderers';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { useProperty } from '../../hooks/useProperty';
@@ -15,6 +16,7 @@ const styles = require('./ContentModelParagraphView.scss');
 
 const ParagraphFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
     BackgroundColorFormatRenderer,
+    ...DirectionFormatRenderers,
 ];
 
 export function ContentModelParagraphView(props: { paragraph: ContentModelParagraph }) {
