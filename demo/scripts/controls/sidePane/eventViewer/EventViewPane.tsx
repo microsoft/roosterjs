@@ -174,6 +174,8 @@ export default class EventViewPane extends React.Component<
                         Source=
                         {event.source}, Data=
                         {event.data && event.data.toString && event.data.toString()}
+                        {event.additionalData?.formatApiName &&
+                            ',Format API = "' + event.additionalData?.formatApiName + '"'}
                     </span>
                 );
 

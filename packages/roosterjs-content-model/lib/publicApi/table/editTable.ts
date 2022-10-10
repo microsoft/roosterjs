@@ -105,6 +105,8 @@ export default function editTable(
                         },
                     });
                 }
+
+                return operation;
             },
             ChangeSource.Format,
             false /*canUndoByBackspace*/,
