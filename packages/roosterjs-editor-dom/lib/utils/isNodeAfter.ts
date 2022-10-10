@@ -1,7 +1,6 @@
 import { DocumentPosition } from 'roosterjs-editor-types';
 
 /**
- * @internal
  * Checks if node1 is after node2
  * @param node1 The node to check if it is after another node
  * @param node2 The node to check if another node is after this one
