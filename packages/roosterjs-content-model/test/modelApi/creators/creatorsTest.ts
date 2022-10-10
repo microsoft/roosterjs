@@ -3,6 +3,7 @@ import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/Conte
 import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
@@ -12,6 +13,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { Entity } from 'roosterjs-editor-types';
 
 describe('Creators', () => {
     it('createContentModelDocument', () => {
@@ -320,6 +322,25 @@ describe('Creators', () => {
             blockType: 'BlockGroup',
             blockGroupType: 'Quote',
             blocks: [],
+        });
+    });
+
+    it('createEntity', () => {
+        const id = 'entity_1';
+        const type = 'entity';
+        const isReadonly = true;
+        const wrapper = document.createElement('div');
+        const entity: Entity = { id, type, isReadonly, wrapper };
+        const entityModel = createEntity(entity);
+
+        expect(entityModel).toEqual({
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            id,
+            type,
+            isReadonly,
+            wrapper,
         });
     });
 });
