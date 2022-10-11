@@ -324,7 +324,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
 
 const getPreviousList = (editor: IEditor, textRange: Range) => {
     const previousNode = editor
-        .getBodyTraverser(textRange.startContainer)
+        .getBodyTraverser(textRange?.startContainer)
         .getPreviousBlockElement()
         ?.collapseToSingleElement();
     return getTagOfNode(previousNode) === 'LI' ? previousNode : undefined;
@@ -443,7 +443,10 @@ function shouldTriggerList(
     const isFirstItem = isFirstItemOfAList(textBeforeCursor);
     const listStyle = getListStyle(textBeforeCursor, listChains, previousListType);
     const shouldTriggerNewListStyle =
-        isFirstItem || previousListType === listStyle || listType === ListType.Unordered;
+        isFirstItem ||
+        !previousListType ||
+        previousListType === listStyle ||
+        listType === ListType.Unordered;
 
     return (
         !itHasSpace &&

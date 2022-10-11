@@ -22,17 +22,28 @@ const characters: Record<string, number> = {
     ')': Character.Parenthesis,
 };
 
+const lowerRomanTypes = [
+    NumberingListType.LowerRoman,
+    NumberingListType.LowerRomanDash,
+    NumberingListType.LowerRomanDoubleParenthesis,
+    NumberingListType.LowerRomanParenthesis,
+];
+const upperRomanTypes = [
+    NumberingListType.UpperRoman,
+    NumberingListType.UpperRomanDash,
+    NumberingListType.UpperRomanDoubleParenthesis,
+    NumberingListType.UpperRomanParenthesis,
+];
 const numberingTriggers = ['1', 'a', 'A', 'I', 'i'];
 const lowerRomanNumbers = ['i', 'v', 'x', 'l', 'c', 'd', 'm'];
 const upperRomanNumbers = ['I', 'V', 'X', 'L', 'C', 'D', 'M'];
 
 const identifyNumberingType = (text: string, previousListStyle?: NumberingListType) => {
-    console.log(lowerRomanNumbers.indexOf(text[0]) > -1);
     if (!isNaN(parseInt(text))) {
         return NumberingTypes.Decimal;
     } else if (/[a-z]+/g.test(text)) {
         if (
-            (previousListStyle === NumberingListType.LowerRoman &&
+            (lowerRomanTypes.indexOf(previousListStyle) > -1 &&
                 lowerRomanNumbers.indexOf(text[0]) > -1) ||
             (!previousListStyle && text === 'i')
         ) {
@@ -42,7 +53,7 @@ const identifyNumberingType = (text: string, previousListStyle?: NumberingListTy
         }
     } else if (/[A-Z]+/g.test(text)) {
         if (
-            (previousListStyle === NumberingListType.LowerRoman &&
+            (upperRomanTypes.indexOf(previousListStyle) > -1 &&
                 upperRomanNumbers.indexOf(text[0]) > -1) ||
             (!previousListStyle && text === 'I')
         ) {
@@ -106,8 +117,7 @@ const identifyNumberingListType = (
         : characters[numbering[numbering.length - 1]];
     // if separator is not valid, no need to check if the number is valid.
     if (separatorCharacter) {
-        const number = numbering.slice(0, -1);
-        console.log(number, previousListStyle);
+        const number = isDoubleParenthesis ? numbering.slice(1, -1) : numbering.slice(0, -1);
         const numberingType = identifyNumberingType(number, previousListStyle);
         return numberingType ? numberingListTypes[numberingType](separatorCharacter) : null;
     }
@@ -117,7 +127,8 @@ const identifyNumberingListType = (
 /**
  * @internal
  * @param textBeforeCursor The trigger character
- * @param previousListChain (Optional) This parameters is used to keep the list chain, if the is not a new list
+ * @param previousListChain @optional This parameters is used to keep the list chain, if the is not a new list
+ * @param previousListStyle @optional The list style of the previous list
  * @returns The style of a numbering list triggered by a string
  */
 export default function getAutoNumberingListStyle(
