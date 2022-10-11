@@ -1,14 +1,11 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
 import { ContentModelTableCell } from './group/ContentModelTableCell';
 import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
 /**
  * Content Model of Table
  */
-export interface ContentModelTable
-    extends ContentModelBlockBase<'Table'>,
-        ContentModelWithFormat<ContentModelTableFormat> {
+export interface ContentModelTable extends ContentModelBlockBase<'Table', ContentModelTableFormat> {
     /**
      * Widths of each column
      */
