@@ -424,7 +424,7 @@ export default class Editor implements IEditor {
      * Default value is true
      * @returns current selection range, or null if editor never got focus before
      */
-    public getSelectionRangeEx(): SelectionRangeEx | null {
+    public getSelectionRangeEx(): SelectionRangeEx {
         const core = this.getCore();
         return core.api.getSelectionRangeEx(core);
     }
@@ -506,13 +506,11 @@ export default class Editor implements IEditor {
                   <number | PositionType>arg4
               );
 
-        if (range) {
-            this.triggerSelectionChanged({
-                type: SelectionRangeTypes.Normal,
-                ranges: [range],
-                areAllCollapsed: range.collapsed,
-            });
-        }
+        this.triggerSelectionChanged({
+            type: SelectionRangeTypes.Normal,
+            ranges: range ? [range] : [],
+            areAllCollapsed: range ? range.collapsed : true,
+        });
 
         return !!range && this.contains(range) && core.api.selectRange(core, range);
     }
@@ -596,7 +594,7 @@ export default class Editor implements IEditor {
         const selection = this.getSelectionRangeEx();
         const result: Region[] = [];
         const contentDiv = this.getCore().contentDiv;
-        selection?.ranges.forEach(range => {
+        selection.ranges.forEach(range => {
             result.push(...(range ? getRegionsFromRange(contentDiv, range, type) : []));
         });
         return result.filter((value, index, self) => {

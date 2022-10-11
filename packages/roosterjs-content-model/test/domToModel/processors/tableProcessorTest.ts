@@ -249,6 +249,7 @@ describe('tableProcessor with format', () => {
                                                 } as any,
                                             },
                                         ],
+                                        format: {},
                                     },
                                 ],
                                 spanLeft: false,

@@ -5,8 +5,10 @@ import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 /**
  * Base type of Content Model Segment
  */
-export interface ContentModelSegmentBase<T extends ContentModelSegmentType>
-    extends ContentModelWithFormat<ContentModelSegmentFormat> {
+export interface ContentModelSegmentBase<
+    T extends ContentModelSegmentType,
+    TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
+> extends ContentModelWithFormat<TFormat> {
     /**
      * Type of this segment
      */

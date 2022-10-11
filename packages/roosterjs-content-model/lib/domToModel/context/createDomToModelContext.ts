@@ -21,6 +21,7 @@ export function createDomToModelContext(
             getDarkColor: undefined,
         }),
 
+        blockFormat: {},
         segmentFormat: {},
         isInSelection: false,
 

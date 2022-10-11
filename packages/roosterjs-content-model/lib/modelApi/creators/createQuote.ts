@@ -8,5 +8,6 @@ export function createQuote(): ContentModelQuote {
         blockType: 'BlockGroup',
         blockGroupType: 'Quote',
         blocks: [],
+        format: {},
     };
 }
