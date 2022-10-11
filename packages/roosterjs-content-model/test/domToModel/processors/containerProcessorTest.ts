@@ -332,10 +332,13 @@ describe('containerProcessor', () => {
                                     format: {},
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
+            format: {},
         });
         expect(doc.blocks[1]).toEqual({
             blockType: 'BlockGroup',
@@ -352,8 +355,10 @@ describe('containerProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
+            format: {},
         });
         expect(doc.blocks[2]).toEqual({
             blockType: 'BlockGroup',
@@ -376,10 +381,13 @@ describe('containerProcessor', () => {
                                     format: {},
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
+            format: {},
         });
 
         expect(context.listFormat).toEqual({
