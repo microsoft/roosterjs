@@ -4,16 +4,13 @@
     },
     "extends": "../tsconfig.json",
     "include": ["./lib/**/*.ts"],
-    "exclude": [
-        "./lib/plugins/AutoFormat/*.ts",
-        "./lib/plugins/ContextMenu/*.ts",
-        "./lib/plugins/CustomReplace/*.ts",
-        "./lib/plugins/CutPasteListChain/*.ts",
-        "./lib/plugins/HyperLink/*.ts",
-        "./lib/plugins/Watermark/*.ts"
-    ],
     "references": [
-        { "path": "./lib/plugins/tsconfig.child.json" },
+        { "path": "./lib/plugins/AutoFormat/tsconfig.child.json" },
+        { "path": "./lib/plugins/ContextMenu/tsconfig.child.json" },
+        { "path": "./lib/plugins/CustomReplace/tsconfig.child.json" },
+        { "path": "./lib/plugins/CutPasteListChain/tsconfig.child.json" },
+        { "path": "./lib/plugins/HyperLink/tsconfig.child.json" },
+        { "path": "./lib/plugins/Watermark/tsconfig.child.json" },
         { "path": "../roosterjs-editor-types/tsconfig.child.json" },
         { "path": "../roosterjs-editor-dom/tsconfig.child.json" },
         { "path": "../roosterjs-editor-api/tsconfig.child.json" }
