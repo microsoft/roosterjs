@@ -1,10 +1,21 @@
 import * as React from 'react';
-import { ContentModelParagraph, hasSelectionInBlock } from 'roosterjs-content-model';
+import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { ContentModelSegmentView } from './ContentModelSegmentView';
 import { ContentModelView } from '../ContentModelView';
+import { FormatRenderer } from '../format/utils/FormatRenderer';
+import { FormatView } from '../format/FormatView';
 import { useProperty } from '../../hooks/useProperty';
+import {
+    ContentModelParagraph,
+    ContentModelBlockFormat,
+    hasSelectionInBlock,
+} from 'roosterjs-content-model';
 
 const styles = require('./ContentModelParagraphView.scss');
+
+const ParagraphFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
+    BackgroundColorFormatRenderer,
+];
 
 export function ContentModelParagraphView(props: { paragraph: ContentModelParagraph }) {
     const { paragraph } = props;
@@ -36,6 +47,10 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
         );
     }, [paragraph, value]);
 
+    const getFormat = React.useCallback(() => {
+        return <FormatView format={paragraph.format} renderers={ParagraphFormatRenders} />;
+    }, [paragraph.format]);
+
     return (
         <ContentModelView
             title="Paragraph"
@@ -45,6 +60,7 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
             hasSelection={hasSelectionInBlock(paragraph)}
             jsonSource={paragraph}
             getContent={getContent}
+            getFormat={getFormat}
         />
     );
 }

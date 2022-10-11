@@ -49,6 +49,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                         ],
                     },
@@ -94,6 +95,7 @@ describe('normalizeTable', () => {
                             {
                                 blockType: 'Paragraph',
                                 segments: [],
+                                format: {},
                             },
                         ],
                     },
@@ -109,6 +111,7 @@ describe('normalizeTable', () => {
                             {
                                 blockType: 'Paragraph',
                                 segments: [],
+                                format: {},
                             },
                         ],
                     },
@@ -172,6 +175,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                             {
                                 blockType: 'Paragraph',
@@ -182,6 +186,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                         ],
                     },
@@ -201,6 +206,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                         ],
                     },
@@ -246,6 +252,7 @@ describe('normalizeTable', () => {
                             {
                                 blockType: 'Paragraph',
                                 segments: [],
+                                format: {},
                             },
                         ],
                     },
@@ -389,6 +396,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                             {
                                 blockType: 'Paragraph',
@@ -399,6 +407,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                         ],
                     },
@@ -418,6 +427,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                             {
                                 blockType: 'Paragraph',
@@ -428,6 +438,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                         ],
                     },
@@ -492,6 +503,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                             {
                                 blockType: 'Paragraph',
@@ -502,6 +514,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                             {
                                 blockType: 'Paragraph',
@@ -512,6 +525,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                             {
                                 blockType: 'Paragraph',
@@ -522,6 +536,7 @@ describe('normalizeTable', () => {
                                         format: {},
                                     },
                                 ],
+                                format: {},
                             },
                         ],
                     },

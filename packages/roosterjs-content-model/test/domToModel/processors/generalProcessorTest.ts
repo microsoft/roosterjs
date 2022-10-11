@@ -24,6 +24,7 @@ describe('generalProcessor', () => {
             blockGroupType: 'General',
             element: div,
             blocks: [],
+            format: {},
         };
 
         spyOn(createGeneralBlock, 'createGeneralBlock').and.returnValue(block);
@@ -63,6 +64,7 @@ describe('generalProcessor', () => {
                     blockType: 'Paragraph',
                     isImplicit: true,
                     segments: [segment],
+                    format: {},
                 },
             ],
             document: document,
@@ -96,6 +98,7 @@ describe('generalProcessor', () => {
                             element: span,
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
