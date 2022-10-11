@@ -1,15 +1,20 @@
 import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
+import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
+import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
+import { ListThreadFormat } from './formatParts/ListThreadFormat';
+import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
+import { PaddingFormat } from './formatParts/PaddingFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
-import { TableCellMetadataFormat } from './formatParts/TableCellMetadataFormat';
+import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
 import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
@@ -36,6 +41,11 @@ export interface FormatHandlerTypeMap {
     border: BorderFormat;
 
     /**
+     * Format for BorderBoxFormat
+     */
+    borderBox: BorderBoxFormat;
+
+    /**
      * Format for FontFamilyFormat
      */
     fontFamily: FontFamilyFormat;
@@ -56,9 +66,39 @@ export interface FormatHandlerTypeMap {
     italic: ItalicFormat;
 
     /**
+     * Format for ListMetadataFormat (used by list item)
+     */
+    listItemMetadata: ListMetadataFormat;
+
+    /**
+     * Format for ListThreadFormat (used by list item)
+     */
+    listItemThread: ListThreadFormat;
+
+    /**
+     * Format for ListMetadataFormat (used by list level)
+     */
+    listLevelMetadata: ListMetadataFormat;
+
+    /**
+     * Format for ListThreadFormat (used by list level)
+     */
+    listLevelThread: ListThreadFormat;
+
+    /**
+     * Format for ListTypeFormat
+     */
+    listType: ListTypeFormat;
+
+    /**
      * Format for MarginFormat
      */
     margin: MarginFormat;
+
+    /**
+     * Format for PaddingFormat
+     */
+    padding: PaddingFormat;
 
     /**
      * Format for StrikeFormat

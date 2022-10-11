@@ -25,6 +25,11 @@ export function createModelToDomContext(
                 segment: null,
             },
         },
+        listFormat: {
+            threadItemCounts: [],
+            nodeStack: [],
+        },
         formatAppliers: getFormatAppliers(options?.formatApplierOverride),
+        entityPairs: [],
     };
 }

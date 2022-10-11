@@ -1,6 +1,7 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
+import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
 
 /**
@@ -21,7 +22,10 @@ export default function setTableCellShade(editor: IExperimentalContentModelEdito
                 editor.focus();
                 if (model && table) {
                     editor.setContentModel(model, {
-                        mergingCallback: fragment => editor.replaceNode(table, fragment),
+                        mergingCallback: (target, fragment, entityPairs) => {
+                            preprocessEntitiesFromContentModel(entityPairs);
+                            editor.replaceNode(table, fragment);
+                        },
                     });
                 }
             },

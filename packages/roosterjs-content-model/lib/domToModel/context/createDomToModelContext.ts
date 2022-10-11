@@ -24,6 +24,11 @@ export function createDomToModelContext(
         segmentFormat: {},
         isInSelection: false,
 
+        listFormat: {
+            levels: [],
+            threadItemCounts: [],
+        },
+
         elementProcessors: {
             ...defaultProcessorMap,
             ...(options?.processorOverride || {}),
@@ -36,6 +41,10 @@ export function createDomToModelContext(
 
         formatParsers: getFormatParsers(options?.formatParserOverride),
     };
+
+    if (options?.alwaysNormalizeTable) {
+        context.alwaysNormalizeTable = true;
+    }
 
     const range = options?.selectionRange;
 

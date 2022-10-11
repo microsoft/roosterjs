@@ -1,5 +1,5 @@
-import { ContentPosition, EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
     EditorContext,
@@ -9,6 +9,7 @@ import {
     DomToModelOption,
     IExperimentalContentModelEditor,
     ModelToDomOption,
+    mergeFragmentWithEntity,
 } from 'roosterjs-content-model';
 
 /**
@@ -52,6 +53,7 @@ export default class ExperimentalContentModelEditor extends Editor
         return domToContentModel(startNode || this.contentDiv, this.createEditorContext(), {
             includeRoot: !!startNode,
             selectionRange: this.getSelectionRangeEx(),
+            alwaysNormalizeTable: true,
             ...(option || {}),
         });
     }
@@ -63,34 +65,30 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
-        const [fragment, range] = contentModelToDom(model, this.createEditorContext(), option);
-        const mergingCallback = option?.mergingCallback || this.defaultMergingCallback;
+        const [fragment, range, entityPairs] = contentModelToDom(
+            model,
+            this.createEditorContext(),
+            option
+        );
+        const mergingCallback = option?.mergingCallback || mergeFragmentWithEntity;
 
         switch (range?.type) {
             case SelectionRangeTypes.Normal:
                 const start = Position.getStart(range.ranges[0]);
                 const end = Position.getEnd(range.ranges[0]);
 
-                mergingCallback(fragment);
+                mergingCallback(fragment, this.contentDiv, entityPairs);
                 this.select(start, end);
                 break;
 
             case SelectionRangeTypes.TableSelection:
-                mergingCallback(fragment);
+                mergingCallback(fragment, this.contentDiv, entityPairs);
                 this.select(range.table, range.coordinates);
                 break;
 
             case undefined:
-                mergingCallback(fragment);
+                mergingCallback(fragment, this.contentDiv, entityPairs);
                 break;
         }
     }
-
-    private defaultMergingCallback = (fragment: DocumentFragment) => {
-        while (this.contentDiv.firstChild) {
-            this.contentDiv.removeChild(this.contentDiv.firstChild);
-        }
-
-        this.insertNode(fragment, { position: ContentPosition.Begin });
-    };
 }

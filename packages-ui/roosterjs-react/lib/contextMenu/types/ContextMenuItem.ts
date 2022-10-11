@@ -31,7 +31,7 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
         targetNode: Node,
         strings: LocalizedStrings<TString> | undefined,
         uiUtilities: UIUtilities,
-        context: TContext
+        context?: TContext
     ) => void;
 
     /**
@@ -40,7 +40,7 @@ export default interface ContextMenuItem<TString extends string, TContext = neve
      * @param targetNode The node that user is clicking onto
      * @param context A context object that passed in from context menu provider, can be anything
      */
-    shouldShow?: (editor: IEditor, targetNode: Node, context: TContext) => boolean;
+    shouldShow?: (editor: IEditor, targetNode: Node, context?: TContext) => boolean;
 
     /**
      * A key-value map for sub menu items, key is the key of menu item, value is unlocalized string

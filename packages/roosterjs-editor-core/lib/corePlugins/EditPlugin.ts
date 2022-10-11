@@ -14,7 +14,7 @@ import {
  * Edit Component helps handle Content edit features
  */
 export default class EditPlugin implements PluginWithState<EditPluginState> {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
     private state: EditPluginState;
 
     /**
@@ -62,12 +62,12 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
      */
     onPluginEvent(event: PluginEvent) {
         let hasFunctionKey = false;
-        let features: GenericContentEditFeature<PluginEvent>[];
+        let features: GenericContentEditFeature<PluginEvent>[] | null = null;
         let ctrlOrMeta = false;
 
         if (event.eventType == PluginEventType.KeyDown) {
             const rawEvent = event.rawEvent;
-            const range = this.editor.getSelectionRange();
+            const range = this.editor?.getSelectionRange();
 
             ctrlOrMeta = isCtrlOrMetaPressed(rawEvent);
             hasFunctionKey = ctrlOrMeta || rawEvent.altKey;
@@ -78,10 +78,11 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
             features = this.state.features[Keys.CONTENTCHANGED];
         }
 
-        for (let i = 0; i < features?.length; i++) {
+        for (let i = 0; features && i < features?.length; i++) {
             const feature = features[i];
             if (
                 (feature.allowFunctionKeys || !hasFunctionKey) &&
+                this.editor &&
                 feature.shouldHandleEvent(event, this.editor, ctrlOrMeta)
             ) {
                 feature.handleEvent(event, this.editor);

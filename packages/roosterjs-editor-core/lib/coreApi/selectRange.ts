@@ -56,7 +56,7 @@ function restorePendingFormatState(core: EditorCore) {
         const document = contentDiv.ownerDocument;
         let formatState = getPendableFormatState(document);
         getObjectKeys(PendableFormatCommandMap).forEach(key => {
-            if (!!pendingFormatState.pendableFormatState[key] != formatState[key]) {
+            if (!!pendingFormatState.pendableFormatState?.[key] != formatState[key]) {
                 document.execCommand(
                     PendableFormatCommandMap[key],
                     false /* showUI */,

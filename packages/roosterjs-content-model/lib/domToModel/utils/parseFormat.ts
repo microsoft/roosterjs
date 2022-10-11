@@ -15,6 +15,6 @@ export function parseFormat<T extends ContentModelFormatBase>(
     const defaultStyle = styleItem || {};
 
     handlerKeys.forEach(key => {
-        context.formatParsers[key](format, element, context, defaultStyle);
+        context.formatParsers[key]?.(format, element, context, defaultStyle);
     });
 }

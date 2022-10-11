@@ -87,12 +87,12 @@ const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> 
     unlocalizedText: 'Crop image',
     shouldShow: (_, node, imageEdit) => {
         return (
-            imageEdit.isOperationAllowed(ImageEditOperation.Crop) &&
+            !!imageEdit?.isOperationAllowed(ImageEditOperation.Crop) &&
             canRegenerateImage(node as HTMLImageElement)
         );
     },
     onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
-        imageEdit.setEditingImage(node as HTMLImageElement, ImageEditOperation.Crop);
+        imageEdit?.setEditingImage(node as HTMLImageElement, ImageEditOperation.Crop);
     },
 };
 
@@ -103,7 +103,7 @@ const ImageRemoveMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
         if (editor.contains(node)) {
             editor.addUndoSnapshot(() => {
                 editor.deleteNode(node);
-                imageEdit.setEditingImage(null /*editingImage*/);
+                imageEdit?.setEditingImage(null /*editingImage*/);
             }, 'DeleteImage');
         }
     },

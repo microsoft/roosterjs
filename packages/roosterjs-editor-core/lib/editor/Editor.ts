@@ -33,6 +33,7 @@ import {
     RegionType,
     SelectionPath,
     SelectionRangeEx,
+    SelectionRangeTypes,
     SizeTransformer,
     StyleBasedFormatState,
     TableSelection,
@@ -232,7 +233,10 @@ export default class Editor implements IEditor {
         return getBlockElementAtNode(this.getCore().contentDiv, node);
     }
 
-    public contains(arg: Node | Range): boolean {
+    public contains(arg: Node | Range | null): boolean {
+        if (!arg) {
+            return false;
+        }
         return contains(this.getCore().contentDiv, <Node>arg);
     }
 
@@ -470,7 +474,7 @@ export default class Editor implements IEditor {
         if (arg1 && 'rows' in arg1) {
             const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
             core.domEvent.tableSelectionRange = selection;
-
+            this.triggerSelectionChanged(selection);
             return !!selection;
         } else {
             core.api.selectTable(core, null);
@@ -483,11 +487,10 @@ export default class Editor implements IEditor {
             !arg2
         ) {
             const selection = core.api.selectImage(core, arg1);
-            core.domEvent.imageSelectionRange = selection;
+            this.triggerSelectionChanged(selection);
             return !!selection;
         } else {
             core.api.selectImage(core, null);
-            core.domEvent.imageSelectionRange = null;
         }
 
         let range = !arg1
@@ -502,7 +505,24 @@ export default class Editor implements IEditor {
                   <Node>arg3,
                   <number | PositionType>arg4
               );
+
+        this.triggerSelectionChanged({
+            type: SelectionRangeTypes.Normal,
+            ranges: range ? [range] : [],
+            areAllCollapsed: range ? range.collapsed : true,
+        });
+
         return !!range && this.contains(range) && core.api.selectRange(core, range);
+    }
+
+    private triggerSelectionChanged(selection: SelectionRangeEx | null) {
+        this.triggerPluginEvent(
+            PluginEventType.SelectionChanged,
+            {
+                selectionRangeEx: selection,
+            },
+            true /** broadcast **/
+        );
     }
 
     /**
@@ -741,7 +761,7 @@ export default class Editor implements IEditor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
-        return this.getCore().lifecycle.defaultFormat;
+        return this.getCore().lifecycle.defaultFormat ?? {};
     }
 
     /**
@@ -873,6 +893,24 @@ export default class Editor implements IEditor {
             let array = core.edit.features[key] || [];
             array.push(feature);
             core.edit.features[key] = array;
+        });
+    }
+
+    /**
+     * Remove a Content Edit feature.
+     * @param feature The feature to remove
+     */
+    public removeContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        const core = this.getCore();
+        feature?.keys.forEach(key => {
+            const featureSet = core.edit.features[key];
+            const index = featureSet?.indexOf(feature) ?? -1;
+            if (index >= 0) {
+                core.edit.features[key].splice(index, 1);
+                if (core.edit.features[key].length < 1) {
+                    delete core.edit.features[key];
+                }
+            }
         });
     }
 

@@ -6,7 +6,7 @@ import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-e
  * Typing Component helps to ensure typing is always happening under a DOM container
  */
 export default class TypeInContainerPlugin implements EditorPlugin {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
 
     /**
      * Get a friendly name of  this plugin
@@ -47,7 +47,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyPress) {
+        if (event.eventType == PluginEventType.KeyPress && this.editor) {
             // If normalization was not possible before the keypress,
             // check again after the keyboard event has been processed by browser native behavior.
             //
@@ -57,13 +57,11 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             // Only schedule when the range is not collapsed to catch this edge case.
             let range = this.editor.getSelectionRange();
 
-            if (
-                !range ||
-                (!this.isRangeEmpty(range) &&
-                    this.editor.contains(
-                        findClosestElementAncestor(range.startContainer, null /* root */, '[style]')
-                    ))
-            ) {
+            const styledAncestor =
+                range &&
+                findClosestElementAncestor(range.startContainer, undefined /* root */, '[style]');
+
+            if (!range || (!this.isRangeEmpty(range) && this.editor.contains(styledAncestor))) {
                 return;
             }
 
@@ -71,16 +69,14 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                 this.editor.ensureTypeInContainer(Position.getStart(range), event.rawEvent);
             } else {
                 const callback = () => {
-                    if (this.editor) {
-                        this.editor.ensureTypeInContainer(
-                            this.editor.getFocusedPosition(),
-                            event.rawEvent
-                        );
+                    const focusedPosition = this.editor?.getFocusedPosition();
+                    if (focusedPosition) {
+                        this.editor?.ensureTypeInContainer(focusedPosition, event.rawEvent);
                     }
                 };
 
                 if (Browser.isMobileOrTablet) {
-                    this.editor.getDocument().defaultView.setTimeout(callback, 100);
+                    this.editor.getDocument().defaultView?.setTimeout(callback, 100);
                 } else {
                     this.editor.runAsync(callback);
                 }

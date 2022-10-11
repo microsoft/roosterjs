@@ -1,13 +1,19 @@
+import { ContentModelListItemLevelFormat } from '../../../lib/publicTypes/format/ContentModelListItemLevelFormat';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
+import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { Entity } from 'roosterjs-editor-types';
 
 describe('Creators', () => {
     it('createContentModelDocument', () => {
@@ -256,5 +262,85 @@ describe('Creators', () => {
         (<any>br.format).a = 2;
 
         expect(format).toEqual({ a: 1 });
+    });
+
+    it('createListItem', () => {
+        const listItem = createListItem([]);
+
+        expect(listItem).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [],
+            levels: [],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: true,
+                format: {},
+            },
+        });
+    });
+
+    it('createListItem with format and levels', () => {
+        const format: ContentModelSegmentFormat = { fontSize: 'a' };
+        const levels: ContentModelListItemLevelFormat[] = [{ listType: 'OL' }];
+        const listItem = createListItem(levels, format);
+
+        expect(listItem).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [],
+            levels: [{ listType: 'OL' }],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: true,
+                format: { fontSize: 'a' },
+            },
+        });
+
+        format.fontSize = 'b';
+        levels[0].listType = 'UL';
+        levels.push({ listType: 'UL' });
+
+        // format and levels in list item should not be impacted by the change of format and levels object
+        expect(listItem).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [],
+            levels: [{ listType: 'OL' }],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: true,
+                format: { fontSize: 'a' },
+            },
+        });
+    });
+
+    it('createQuote', () => {
+        const quote = createQuote();
+
+        expect(quote).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Quote',
+            blocks: [],
+        });
+    });
+
+    it('createEntity', () => {
+        const id = 'entity_1';
+        const type = 'entity';
+        const isReadonly = true;
+        const wrapper = document.createElement('div');
+        const entity: Entity = { id, type, isReadonly, wrapper };
+        const entityModel = createEntity(entity);
+
+        expect(entityModel).toEqual({
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            id,
+            type,
+            isReadonly,
+            wrapper,
+        });
     });
 });
