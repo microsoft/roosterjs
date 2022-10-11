@@ -30,6 +30,7 @@ describe('handleBlock', () => {
         const paragraph: ContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
+            format: {},
         };
 
         runTest(paragraph, '');
@@ -50,6 +51,7 @@ describe('handleBlock', () => {
             blockGroupType: 'General',
             blocks: [],
             element: element,
+            format: {},
         };
 
         runTest(block, '<span></span>');
@@ -62,12 +64,14 @@ describe('handleBlock', () => {
         const paragraph: ContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
+            format: {},
         };
         const block: ContentModelBlock = {
             blockType: 'BlockGroup',
             blockGroupType: 'General',
             blocks: [paragraph],
             element: element,
+            format: {},
         };
 
         runTest(block, '<span></span>');
