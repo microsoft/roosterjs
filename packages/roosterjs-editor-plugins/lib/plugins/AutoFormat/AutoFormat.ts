@@ -43,6 +43,9 @@ export default class AutoFormat implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        if (!this.editor) {
+            return;
+        }
         if (
             event.eventType === PluginEventType.ContentChanged ||
             event.eventType === PluginEventType.MouseDown ||
@@ -62,8 +65,7 @@ export default class AutoFormat implements EditorPlugin {
                 this.lastKeyTyped === '-' &&
                 !specialCharacters.test(keyTyped) &&
                 keyTyped !== ' ' &&
-                keyTyped !== '-' &&
-                this.editor
+                keyTyped !== '-'
             ) {
                 const searcher = this.editor.getContentSearcherOfCursor(event);
                 const textBeforeCursor = searcher?.getSubStringBefore(3);
@@ -82,12 +84,12 @@ export default class AutoFormat implements EditorPlugin {
 
                 const textRange = searcher?.getRangeFromText(dashes, true /* exactMatch */);
                 const nodeHyphen = document.createTextNode('—');
-                this.editor?.addUndoSnapshot(
+                this.editor.addUndoSnapshot(
                     () => {
-                        if (textRange && this.editor) {
+                        if (textRange) {
                             textRange.deleteContents();
                             textRange.insertNode(nodeHyphen);
-                            this.editor.select(nodeHyphen, PositionType.End);
+                            this.editor!.select(nodeHyphen, PositionType.End);
                         }
                     },
                     ChangeSource.Format /*changeSource*/,
