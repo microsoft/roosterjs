@@ -54,6 +54,8 @@ function cacheGetRangeForMarkdownOperation(
                 return false;
             }
 
+            //if the text is pasted, it might create a inner element inside the text element,
+            // then is necessary to check the parent block to get whole text
             const parentBlockText = textInlineElement.getParentBlock().getTextContent();
 
             // special case for consecutive trigger characters
