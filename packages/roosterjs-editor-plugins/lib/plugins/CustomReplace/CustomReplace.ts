@@ -36,10 +36,10 @@ const defaultReplacements: CustomReplacement[] = [
  * content edit feature
  */
 export default class CustomReplacePlugin implements EditorPlugin {
-    private longestReplacementLength: number;
-    private editor: IEditor;
-    private replacements: CustomReplacement[];
-    private replacementEndCharacters: Set<string>;
+    private longestReplacementLength: number | null = null;
+    private editor: IEditor | null = null;
+    private replacements: CustomReplacement[] | null = null;
+    private replacementEndCharacters: Set<string> | null = null;
 
     /**
      * Create instance of CustomReplace plugin
@@ -86,33 +86,29 @@ export default class CustomReplacePlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (event.eventType != PluginEventType.Input || this.editor.isInIME()) {
+        if (event.eventType != PluginEventType.Input || !this.editor || this.editor.isInIME()) {
             return;
         }
 
         // Exit early on input events that do not insert a replacement's final character.
-        if (!event.rawEvent.data || !this.replacementEndCharacters.has(event.rawEvent.data)) {
+        if (!event.rawEvent.data || !this.replacementEndCharacters?.has(event.rawEvent.data)) {
             return;
         }
 
         // Get the matching replacement
-        const range = this.editor.getSelectionRange();
-        if (range == null) {
+        const searcher = this.editor.getContentSearcherOfCursor(event);
+        if (!searcher || this.longestReplacementLength == null) {
             return;
         }
-
-        const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
-        const sourceEditor = this.editor;
 
         const replacement = this.getMatchingReplacement(stringToSearch);
-        if (replacement == null) {
-            return;
-        }
 
         if (
-            replacement.shouldReplace &&
-            !replacement.shouldReplace(replacement, searcher.getWordBefore(), sourceEditor)
+            !replacement ||
+            (replacement.shouldReplace &&
+                searcher &&
+                !replacement.shouldReplace(replacement, searcher.getWordBefore(), this.editor))
         ) {
             return;
         }
@@ -130,19 +126,21 @@ export default class CustomReplacePlugin implements EditorPlugin {
             parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : parsingSpan;
 
         // Switch the node for the selection range
-        this.editor.addUndoSnapshot(
-            () => {
-                matchingRange.deleteContents();
-                matchingRange.insertNode(nodeToInsert);
-                this.editor.select(nodeToInsert, PositionType.End);
-            },
-            null /*changeSource*/,
-            true /*canUndoByBackspace*/
-        );
+        if (matchingRange) {
+            this.editor.addUndoSnapshot(
+                () => {
+                    matchingRange.deleteContents();
+                    matchingRange.insertNode(nodeToInsert);
+                    this.editor?.select(nodeToInsert, PositionType.End);
+                },
+                undefined /*changeSource*/,
+                true /*canUndoByBackspace*/
+            );
+        }
     }
 
     private getMatchingReplacement(stringToSearch: string): CustomReplacement | null {
-        if (stringToSearch.length == 0) {
+        if (stringToSearch.length == 0 || !this.replacements) {
             return null;
         }
         const originalStringToSearch = stringToSearch.replace(/\s/g, ' ');
