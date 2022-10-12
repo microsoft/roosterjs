@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.67% </span>
+                <span class="strong">97.22% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/30</span>
+                <span class='fraction'>35/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.35% </span>
+                <span class="strong">80.95% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/17</span>
+                <span class='fraction'>17/21</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.67% </span>
+                <span class="strong">97.22% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>29/30</span>
+                <span class='fraction'>35/36</span>
             </div>
         
             
@@ -137,7 +137,15 @@
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,10 +160,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,6 +208,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -215,6 +228,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { commitListChains } from 'roosterjs-editor-api';
@@ -232,10 +248,10 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  * Maintain list numbers of list chain when content is modified by cut/paste/drag&amp;drop
  */
 export default class CutPasteListChain implements EditorPlugin {
-    private chains: VListChain[];
-    private expectedChangeSource: ChangeSource | CompatibleChangeSource;
-    private editor: IEditor;
-    private disposer: () =&gt; void;
+    private chains: VListChain[] | null = null;
+    private expectedChangeSource: ChangeSource | CompatibleChangeSource | null = null;
+    private editor: IEditor | null = null;
+    private disposer: (() =&gt; void) | null = null;
 &nbsp;
     /**
      * Get a friendly name of this plugin
@@ -279,7 +295,12 @@ export default class CutPasteListChain implements EditorPlugin {
                 break;
 &nbsp;
             case PluginEventType.ContentChanged:
-                if (this.chains<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength &gt; 0 &amp;&amp; this.expectedChangeSource == event.source) {
+                if (
+                    this.chains &amp;&amp;
+                    this.chains.length &gt; 0 &amp;&amp;
+                    this.expectedChangeSource == event.source &amp;&amp;
+                    this.editor
+                ) {
                     commitListChains(this.editor, this.chains);
                     this.chains = null;
                     this.expectedChangeSource = null;
@@ -293,8 +314,11 @@ export default class CutPasteListChain implements EditorPlugin {
     };
 &nbsp;
     private cacheListChains(source: ChangeSource) {
-        this.chains = VListChain.createListChains(this.editor.getSelectedRegions());
-        this.expectedChangeSource = source;
+        const selectedRegions = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelectedRegions();
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (selectedRegions) {
+            this.chains = VListChain.createListChains(selectedRegions);
+            this.expectedChangeSource = source;
+        }
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -304,7 +328,7 @@ export default class CutPasteListChain implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 11 2022 16:46:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Oct 12 2022 16:18:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

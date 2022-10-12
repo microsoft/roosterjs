@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.89% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>68/74</span>
+                <span class='fraction'>70/75</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">82.22% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>24/30</span>
+                <span class='fraction'>37/45</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">92.54% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>60/66</span>
+                <span class='fraction'>62/67</span>
             </div>
         
             
@@ -244,9 +244,7 @@
 <a name='L185'></a><a href='#L185'>185</a>
 <a name='L186'></a><a href='#L186'>186</a>
 <a name='L187'></a><a href='#L187'>187</a>
-<a name='L188'></a><a href='#L188'>188</a>
-<a name='L189'></a><a href='#L189'>189</a>
-<a name='L190'></a><a href='#L190'>190</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L188'></a><a href='#L188'>188</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -284,10 +282,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -348,17 +346,13 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -379,10 +373,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -473,10 +469,10 @@ const defaultReplacements: CustomReplacement[] = [
  * content edit feature
  */
 export default class CustomReplacePlugin implements EditorPlugin {
-    private longestReplacementLength: number;
-    private editor: IEditor;
-    private replacements: CustomReplacement[];
-    private replacementEndCharacters: Set&lt;string&gt;;
+    private longestReplacementLength: number | null = null;
+    private editor: IEditor | null = null;
+    private replacements: CustomReplacement[] | null = null;
+    private replacementEndCharacters: Set&lt;string&gt; | null = null;
 &nbsp;
     /**
      * Create instance of CustomReplace plugin
@@ -523,33 +519,29 @@ export default class CustomReplacePlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     public onPluginEvent(event: PluginEvent) {
-        if (event.eventType != PluginEventType.Input || this.editor.isInIME()) {
+        if (event.eventType != PluginEventType.Input || !this.editor || this.editor.isInIME()) {
             return;
         }
 &nbsp;
         // Exit early on input events that do not insert a replacement's final character.
-        if (!event.rawEvent.data || !this.replacementEndCharacters.has(event.rawEvent.data)) {
+        if (!event.rawEvent.data || !this.replacementEndCharacters<span class="branch-0 cbranch-no" title="branch not covered" >?.h</span>as(event.rawEvent.data)) {
             return;
         }
 &nbsp;
         // Get the matching replacement
-        const range = this.editor.getSelectionRange();
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (range == null) {
+        const searcher = this.editor.getContentSearcherOfCursor(event);
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!searcher || this.longestReplacementLength == null) {
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
-&nbsp;
-        const searcher = this.editor.getContentSearcherOfCursor(event);
         const stringToSearch = searcher.getSubStringBefore(this.longestReplacementLength);
-        const sourceEditor = this.editor;
 &nbsp;
         const replacement = this.getMatchingReplacement(stringToSearch);
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (replacement == null) {
-<span class="cstat-no" title="statement not covered" >            return;</span>
-        }
 &nbsp;
         if (
-            replacement.shouldReplace &amp;&amp;
-            !replacement.shouldReplace(replacement, searcher.getWordBefore(), sourceEditor)
+            !replacement ||
+            (replacement.shouldReplace &amp;&amp;
+                searcher &amp;&amp;
+                !replacement.shouldReplace(replacement, searcher.getWordBefore(), this.editor))
         ) {
             return;
         }
@@ -567,19 +559,21 @@ export default class CustomReplacePlugin implements EditorPlugin {
             parsingSpan.childNodes.length == 1 ? parsingSpan.childNodes[0] : <span class="branch-1 cbranch-no" title="branch not covered" >parsingSpan;</span>
 &nbsp;
         // Switch the node for the selection range
-        this.editor.addUndoSnapshot(
-            () =&gt; {
-                matchingRange.deleteContents();
-                matchingRange.insertNode(nodeToInsert);
-                this.editor.select(nodeToInsert, PositionType.End);
-            },
-            null /*changeSource*/,
-            true /*canUndoByBackspace*/
-        );
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (matchingRange) {
+            this.editor.addUndoSnapshot(
+                () =&gt; {
+                    matchingRange.deleteContents();
+                    matchingRange.insertNode(nodeToInsert);
+                    this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>elect(nodeToInsert, PositionType.End);
+                },
+                undefined /*changeSource*/,
+                true /*canUndoByBackspace*/
+            );
+        }
     }
 &nbsp;
     private getMatchingReplacement(stringToSearch: string): CustomReplacement | null {
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (stringToSearch.length == 0) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (stringToSearch.length == 0 || !this.replacements) {
 <span class="cstat-no" title="statement not covered" >            return null;</span>
         }
         const originalStringToSearch = stringToSearch.replace(/\s/g, ' ');
@@ -631,7 +625,7 @@ function getReplacementEndCharacters(replacements: CustomReplacement[]): Set&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 11 2022 16:46:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Oct 12 2022 16:18:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

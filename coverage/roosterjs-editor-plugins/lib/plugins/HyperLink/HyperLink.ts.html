@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.18% </span>
+                <span class="strong">39.02% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/78</span>
+                <span class='fraction'>32/82</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.06% </span>
+                <span class="strong">7.29% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/64</span>
+                <span class='fraction'>7/96</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.33% </span>
+                <span class="strong">39.24% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/75</span>
+                <span class='fraction'>31/79</span>
             </div>
         
             
@@ -278,17 +278,34 @@
 <a name='L219'></a><a href='#L219'>219</a>
 <a name='L220'></a><a href='#L220'>220</a>
 <a name='L221'></a><a href='#L221'>221</a>
-<a name='L222'></a><a href='#L222'>222</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L222'></a><a href='#L222'>222</a>
+<a name='L223'></a><a href='#L223'>223</a>
+<a name='L224'></a><a href='#L224'>224</a>
+<a name='L225'></a><a href='#L225'>225</a>
+<a name='L226'></a><a href='#L226'>226</a>
+<a name='L227'></a><a href='#L227'>227</a>
+<a name='L228'></a><a href='#L228'>228</a>
+<a name='L229'></a><a href='#L229'>229</a>
+<a name='L230'></a><a href='#L230'>230</a>
+<a name='L231'></a><a href='#L231'>231</a>
+<a name='L232'></a><a href='#L232'>232</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -323,10 +340,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -435,6 +453,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -500,16 +520,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Browser, isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    DOMEventHandler,
+    EditorPlugin,
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 &nbsp;
 /**
  * An editor plugin that show a tooltip for existing link
  */
 export default class HyperLink implements EditorPlugin {
-    private originalHref: string;
-    private trackedLink: HTMLAnchorElement = null;
-    private editor: IEditor;
-    private disposer: () =&gt; void;
+    private originalHref: string | null = null;
+    private trackedLink: HTMLAnchorElement | null = null;
+    private editor: IEditor | null = null;
+    private disposer: (() =&gt; void) | null = null;
 &nbsp;
     /**
      * Create a new instance of HyperLink class
@@ -537,21 +564,22 @@ export default class HyperLink implements EditorPlugin {
      */
     public initialize(editor: IEditor): void {
         this.editor = editor;
-        this.disposer =
-            this.getTooltipCallback &amp;&amp;
-            editor.addDomEventHandler({
-                mouseover: this.onMouse,
-                mouseout: this.onMouse,
-                blur: this.onBlur,
-            });
+        this.disposer = editor.addDomEventHandler({
+            mouseover: &lt;DOMEventHandler&gt;this.onMouse,
+            mouseout: &lt;DOMEventHandler&gt;this.onMouse,
+            blur: &lt;DOMEventHandler&gt;this.onBlur,
+        });
     }
 &nbsp;
     protected onMouse = <span class="fstat-no" title="function not covered" >(e</span>: MouseEvent) =&gt; {
-        const a = <span class="cstat-no" title="statement not covered" >this.editor.getElementAtCursor('a[href]', &lt;Node&gt;e.target) as HTMLAnchorElement;</span>
-        const href = <span class="cstat-no" title="statement not covered" >this.tryGetHref(a);</span>
+        const a = <span class="cstat-no" title="statement not covered" >this.editor?.getElementAtCursor(</span>
+            'a[href]',
+            &lt;Node&gt;e.target
+        ) as HTMLAnchorElement | null;
+        const href = <span class="cstat-no" title="statement not covered" >a &amp;&amp; this.tryGetHref(a);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (href) {</span>
-<span class="cstat-no" title="statement not covered" >            this.editor.setEditorDomAttribute(</span>
+<span class="cstat-no" title="statement not covered" >            this.editor?.setEditorDomAttribute(</span>
                 'title',
                 e.type == 'mouseover' ? this.getTooltipCallback(href, a) : null
             );
@@ -588,14 +616,14 @@ export default class HyperLink implements EditorPlugin {
                 (<span class="branch-2 cbranch-no" title="branch not covered" >!this.isContentEditValue(event.rawEvent) </span>|| <span class="branch-3 cbranch-no" title="branch not covered" >event.rawEvent.which == Keys.SPACE)</span>) ||
             event.eventType == PluginEventType.ContentChanged
         ) {
-            const anchor = <span class="cstat-no" title="statement not covered" >this.editor.getElementAtCursor(</span>
+            const anchor = <span class="cstat-no" title="statement not covered" >this.editor?.getElementAtCursor(</span>
                 'A[href]',
-                null /*startFrom*/,
+                undefined /*startFrom*/,
                 event
-            ) as HTMLAnchorElement;
+            ) as HTMLAnchorElement | null;
 &nbsp;
             const shouldCheckUpdateLink =
-<span class="cstat-no" title="statement not covered" >                anchor !== this.trackedLink ||</span>
+<span class="cstat-no" title="statement not covered" >                (anchor &amp;&amp; anchor !== this.trackedLink) ||</span>
                 event.eventType == PluginEventType.KeyUp ||
                 event.eventType == PluginEventType.ContentChanged;
 &nbsp;
@@ -615,24 +643,24 @@ export default class HyperLink implements EditorPlugin {
             }
 &nbsp;
             // Cache link and href value if its href attribute currently matches its display text
-<span class="cstat-no" title="statement not covered" >            if (!this.trackedLink &amp;&amp; this.doesLinkDisplayMatchHref(anchor)) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!this.trackedLink &amp;&amp; anchor &amp;&amp; this.doesLinkDisplayMatchHref(anchor)) {</span>
 <span class="cstat-no" title="statement not covered" >                this.trackedLink = anchor;</span>
 <span class="cstat-no" title="statement not covered" >                this.originalHref = this.tryGetHref(anchor);</span>
             }
         }
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (event.eventType == PluginEventType.MouseUp) {
-            const anchor = <span class="cstat-no" title="statement not covered" >this.editor.getElementAtCursor(</span>
+            const anchor = <span class="cstat-no" title="statement not covered" >this.editor?.getElementAtCursor(</span>
                 'A',
                 &lt;Node&gt;event.rawEvent.srcElement
-            ) as HTMLAnchorElement;
+            ) as HTMLAnchorElement | null;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (anchor) {</span>
 <span class="cstat-no" title="statement not covered" >                if (this.onLinkClick &amp;&amp; this.onLinkClick(anchor, event.rawEvent) !== false) {</span>
 <span class="cstat-no" title="statement not covered" >                    return;</span>
                 }
 &nbsp;
-                let href<span class="cstat-no" title="statement not covered" >: string;</span>
+                let href<span class="cstat-no" title="statement not covered" >: string | null;</span>
 <span class="cstat-no" title="statement not covered" >                if (</span>
                     !Browser.isFirefox &amp;&amp;
                     (href = this.tryGetHref(anchor)) &amp;&amp;
@@ -641,8 +669,8 @@ export default class HyperLink implements EditorPlugin {
                 ) {
 <span class="cstat-no" title="statement not covered" >                    try {</span>
                         const target = <span class="cstat-no" title="statement not covered" >this.target || '_blank';</span>
-                        const window = <span class="cstat-no" title="statement not covered" >this.editor.getDocument().defaultView;</span>
-<span class="cstat-no" title="statement not covered" >                        window.open(href, target);</span>
+                        const window = <span class="cstat-no" title="statement not covered" >this.editor?.getDocument().defaultView;</span>
+<span class="cstat-no" title="statement not covered" >                        window?.open(href, target);</span>
                     } catch {}
                 }
             }
@@ -654,10 +682,12 @@ export default class HyperLink implements EditorPlugin {
      * The reason this is put in a try-catch is that
      * it has been seen that accessing href may throw an exception, in particular on IE/Edge
      */
-<span class="fstat-no" title="function not covered" >    private t</span>ryGetHref(anchor: HTMLAnchorElement): string {
+<span class="fstat-no" title="function not covered" >    private t</span>ryGetHref(anchor: HTMLAnchorElement): string | null {
 <span class="cstat-no" title="statement not covered" >        try {</span>
 <span class="cstat-no" title="statement not covered" >            return anchor ? anchor.href : null;</span>
-        } catch {}
+        } catch {
+<span class="cstat-no" title="statement not covered" >            return null;</span>
+        }
     }
 &nbsp;
     /**
@@ -673,7 +703,7 @@ export default class HyperLink implements EditorPlugin {
      * Updates the href of the tracked link if the display text doesn't match href anymore
      */
 <span class="fstat-no" title="function not covered" >    private u</span>pdateLinkHrefIfShouldUpdate() {
-<span class="cstat-no" title="statement not covered" >        if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {</span>
+<span class="cstat-no" title="statement not covered" >        if (this.trackedLink &amp;&amp; !this.doesLinkDisplayMatchHref(this.trackedLink)) {</span>
 <span class="cstat-no" title="statement not covered" >            this.updateLinkHref();</span>
         }
     }
@@ -713,8 +743,8 @@ export default class HyperLink implements EditorPlugin {
 <span class="cstat-no" title="statement not covered" >        if (this.trackedLink) {</span>
             let linkData = <span class="cstat-no" title="statement not covered" >matchLink(this.trackedLink.innerText.trim());</span>
 <span class="cstat-no" title="statement not covered" >            if (linkData !== null) {</span>
-<span class="cstat-no" title="statement not covered" >                this.editor.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >                    this.trackedLink.href = linkData.normalizedUrl;</span>
+<span class="cstat-no" title="statement not covered" >                this.editor?.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >                    this.trackedLink!.href = linkData!.normalizedUrl;</span>
                 });
             }
         }
@@ -727,7 +757,7 @@ export default class HyperLink implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 11 2022 16:46:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Oct 12 2022 16:18:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

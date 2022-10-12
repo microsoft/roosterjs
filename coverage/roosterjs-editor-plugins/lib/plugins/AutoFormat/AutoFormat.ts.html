@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.91% </span>
+                <span class="strong">89.47% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/33</span>
+                <span class='fraction'>34/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.48% </span>
+                <span class="strong">80.43% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/21</span>
+                <span class='fraction'>37/46</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.63% </span>
+                <span class="strong">89.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>29/32</span>
+                <span class='fraction'>33/37</span>
             </div>
         
             
@@ -158,7 +158,13 @@
 <a name='L99'></a><a href='#L99'>99</a>
 <a name='L100'></a><a href='#L100'>100</a>
 <a name='L101'></a><a href='#L101'>101</a>
-<a name='L102'></a><a href='#L102'>102</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,8 +179,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -203,6 +209,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -235,6 +244,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -245,6 +255,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -274,8 +286,8 @@ const specialCharacters = /[`!@#$%^&amp;*()_+\=\[\]{};':"\\|,.&lt;&gt;\/?~]/;
  * Automatically transform -- into hyphen, if typed between two words.
  */
 export default class AutoFormat implements EditorPlugin {
-    private editor: IEditor;
-    private lastKeyTyped: string;
+    private editor: IEditor | null = null;
+    private lastKeyTyped: string | null = null;
 &nbsp;
     /**
      * Get a friendly name of this plugin
@@ -304,6 +316,9 @@ export default class AutoFormat implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.editor) {
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
         if (
             event.eventType === PluginEventType.ContentChanged ||
             event.eventType === PluginEventType.MouseDown ||
@@ -326,26 +341,29 @@ export default class AutoFormat implements EditorPlugin {
                 keyTyped !== '-'
             ) {
                 const searcher = this.editor.getContentSearcherOfCursor(event);
-                const textBeforeCursor = searcher.getSubStringBefore(3);
-                const dashes = searcher.getSubStringBefore(2);
-                const isPrecededByADash = textBeforeCursor[0] === '-';
-                const isPrecededByASpace = textBeforeCursor[0] === ' ';
+                const textBeforeCursor = searcher<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSubStringBefore(3);
+                const dashes = searcher<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSubStringBefore(2);
+                const isPrecededByADash = textBeforeCursor<span class="branch-0 cbranch-no" title="branch not covered" >?.[0</span>] === '-';
+                const isPrecededByASpace = textBeforeCursor<span class="branch-0 cbranch-no" title="branch not covered" >?.[0</span>] === ' ';
                 <span class="missing-if-branch" title="if path not taken" >I</span>if (
                     isPrecededByADash ||
                     isPrecededByASpace ||
-                    specialCharacters.test(textBeforeCursor[0]) ||
+                    (typeof textBeforeCursor === 'string' &amp;&amp;
+                        specialCharacters.test(textBeforeCursor[0])) ||
                     dashes !== '--'
                 ) {
 <span class="cstat-no" title="statement not covered" >                    return;</span>
                 }
 &nbsp;
-                const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
+                const textRange = searcher<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etRangeFromText(dashes, true /* exactMatch */);
                 const nodeHyphen = document.createTextNode('—');
                 this.editor.addUndoSnapshot(
                     () =&gt; {
-                        textRange.deleteContents();
-                        textRange.insertNode(nodeHyphen);
-                        this.editor.select(nodeHyphen, PositionType.End);
+                        <span class="missing-if-branch" title="else path not taken" >E</span>if (textRange) {
+                            textRange.deleteContents();
+                            textRange.insertNode(nodeHyphen);
+                            this.editor!.select(nodeHyphen, PositionType.End);
+                        }
                     },
                     ChangeSource.Format /*changeSource*/,
                     true /*canUndoByBackspace*/,
@@ -367,7 +385,7 @@ export default class AutoFormat implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 11 2022 16:46:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Oct 12 2022 16:18:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

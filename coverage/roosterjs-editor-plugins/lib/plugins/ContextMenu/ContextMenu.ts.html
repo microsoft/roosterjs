@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.06% </span>
+                <span class="strong">97.37% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/34</span>
+                <span class='fraction'>37/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">82.35% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/18</span>
+                <span class='fraction'>28/34</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.97% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>32/33</span>
+                <span class='fraction'>36/37</span>
             </div>
         
             
@@ -173,7 +173,9 @@
 <a name='L114'></a><a href='#L114'>114</a>
 <a name='L115'></a><a href='#L115'>115</a>
 <a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -212,9 +214,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -270,6 +272,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -278,6 +281,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -328,9 +332,9 @@ export interface ContextMenuOptions&lt;T&gt; {
  * An editor plugin that support showing a context menu using render() function from options parameter
  */
 export default class ContextMenu&lt;T&gt; implements EditorPlugin {
-    private container: HTMLElement;
-    private editor: IEditor;
-    private isMenuShowing: boolean;
+    private container: HTMLElement | null = null;
+    private editor: IEditor | null = null;
+    private isMenuShowing: boolean = false;
 &nbsp;
     /**
      * Create a new instance of ContextMenu class
@@ -359,7 +363,7 @@ export default class ContextMenu&lt;T&gt; implements EditorPlugin {
     dispose() {
         this.onDismiss();
 &nbsp;
-        if (this.container) {
+        if (this.container?.parentNode) {
             this.container.parentNode.removeChild(this.container);
             this.container = null;
         }
@@ -380,22 +384,24 @@ export default class ContextMenu&lt;T&gt; implements EditorPlugin {
                 rawEvent.preventDefault();
             }
 &nbsp;
-            this.initContainer(rawEvent.pageX, rawEvent.pageY);
-            this.options.render(this.container, items as T[], this.onDismiss);
-            this.isMenuShowing = true;
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (this.initContainer(rawEvent.pageX, rawEvent.pageY)) {
+                this.options.render(this.container!, items as T[], this.onDismiss);
+                this.isMenuShowing = true;
+            }
         }
     }
 &nbsp;
     private initContainer(x: number, y: number) {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.container) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.container &amp;&amp; this.editor) {
             this.container = createElement(
                 KnownCreateElementDataIndex.ContextMenuWrapper,
                 this.editor.getDocument()
             ) as HTMLElement;
             this.editor.getDocument().body.appendChild(this.container);
         }
-        this.container.style.left = x + 'px';
-        this.container.style.top = y + 'px';
+        this.container<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>tyle.setProperty('left', x + 'px');
+        this.container<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>tyle.setProperty('top', y + 'px');
+        return !!this.container;
     }
 &nbsp;
     private onDismiss = () =&gt; {
@@ -412,7 +418,7 @@ export default class ContextMenu&lt;T&gt; implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 11 2022 16:46:24 GMT+0000 (Coordinated Universal Time)
+                at Wed Oct 12 2022 16:18:09 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
