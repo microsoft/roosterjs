@@ -4,6 +4,7 @@ import { ContentModelDocument } from '../../../lib/publicTypes/block/group/Conte
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 
 describe('containerProcessor', () => {
     let doc: ContentModelDocument;
@@ -87,10 +88,12 @@ describe('containerProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
+                    format: {},
                     segments: [],
                 },
                 {
                     blockType: 'Paragraph',
+                    format: {},
                     segments: [],
                 },
             ],
@@ -137,6 +140,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -166,6 +170,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -196,6 +201,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -225,6 +231,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test2test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -250,6 +257,7 @@ describe('containerProcessor', () => {
                 { segmentType: 'Text', text: 'test3', format: {} },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -265,6 +273,7 @@ describe('containerProcessor', () => {
             blockType: 'Paragraph',
             segments: [{ segmentType: 'Text', text: 'test', format: { a: 'b' } as any }],
             isImplicit: true,
+            format: {},
         });
     });
 
@@ -288,6 +297,103 @@ describe('containerProcessor', () => {
                 { segmentType: 'SelectionMarker', format: { a: 'b' } as any, isSelected: true },
             ],
             isImplicit: true,
+            format: {},
+        });
+    });
+
+    it('Process lists that are under different container', () => {
+        const div = document.createElement('div');
+        div.innerHTML =
+            '<div id="div1"><ol><li>test1</li></ol></div><div id="div2">test2</div><div id="div3"><ol><li>test3</li></ol></div>';
+
+        context.elementProcessors.DIV = generalProcessor;
+
+        containerProcessor(doc, div, context);
+
+        expect(doc.blocks.length).toBe(3);
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            element: div.querySelector('#div1') as HTMLElement,
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [{ listType: 'OL' }],
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test1',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+        expect(doc.blocks[1]).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            element: div.querySelector('#div2') as HTMLElement,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test2',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+        expect(doc.blocks[2]).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            element: div.querySelector('#div3') as HTMLElement,
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [{ listType: 'OL', startNumberOverride: 1 }],
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test3',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+
+        expect(context.listFormat).toEqual({
+            levels: [],
+            listParent: undefined,
+            threadItemCounts: [1],
         });
     });
 });

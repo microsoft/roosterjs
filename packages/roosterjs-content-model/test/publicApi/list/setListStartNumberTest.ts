@@ -52,6 +52,7 @@ describe('setListStartNumber', () => {
                             isSelected: true,
                         },
                     ],
+                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -68,8 +69,10 @@ describe('setListStartNumber', () => {
                                     format: {},
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
         };
@@ -86,6 +89,7 @@ describe('setListStartNumber', () => {
                             isSelected: true,
                         },
                     ],
+                    format: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -102,8 +106,10 @@ describe('setListStartNumber', () => {
                                     format: {},
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
         };
@@ -132,8 +138,10 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
         };
@@ -157,8 +165,10 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
         };
@@ -187,8 +197,10 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
         };
@@ -215,8 +227,10 @@ describe('setListStartNumber', () => {
                                     isSelected: true,
                                 },
                             ],
+                            format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
         };
