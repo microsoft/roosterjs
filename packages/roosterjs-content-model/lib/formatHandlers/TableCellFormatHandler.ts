@@ -11,4 +11,5 @@ export const TableCellFormatHandlers: FormatKey[] = [
     'direction',
     'verticalAlign',
     'tableCellMetadata',
+    'tableCellCustomize',
 ];

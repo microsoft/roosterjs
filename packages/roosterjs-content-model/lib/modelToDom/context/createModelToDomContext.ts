@@ -1,7 +1,23 @@
+import { defaultFormatHandlerMap } from '../../formatHandlers/defaultFormatHandlers';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
-import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
+import { FormatAppliers } from '../../publicTypes/context/ModelToDomSettings';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
+
+const defaultApplierMap = getObjectKeys(defaultFormatHandlerMap).reduce((appliers, key) => {
+    appliers[key] = defaultFormatHandlerMap[key].apply;
+    return appliers;
+}, <FormatAppliers>{});
+
+function getFormatAppliers(option?: Partial<FormatAppliers>): FormatAppliers {
+    return getObjectKeys(defaultApplierMap).reduce((appliers, key) => {
+        const applier = option?.[key];
+        appliers[key] = typeof applier === 'undefined' ? defaultApplierMap[key] : applier;
+
+        return appliers;
+    }, <FormatAppliers>{});
+}
 
 /**
  * @internal
@@ -30,6 +46,7 @@ export function createModelToDomContext(
             nodeStack: [],
         },
         formatAppliers: getFormatAppliers(options?.formatApplierOverride),
+        originalFormatAppliers: defaultApplierMap,
         entityPairs: [],
     };
 }

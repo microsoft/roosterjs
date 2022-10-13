@@ -1,10 +1,12 @@
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
 import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
 import { DomToModelListFormat } from '../../../lib/publicTypes/context/DomToModelFormatContext';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
-import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    createDomToModelContext,
+    defaultParserMap,
+} from '../../../lib/domToModel/context/createDomToModelContext';
 
 describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {
@@ -20,7 +22,7 @@ describe('createDomToModelContext', () => {
     const contextOptions = {
         elementProcessors: defaultProcessorMap,
         defaultStyles: defaultStyleMap,
-        formatParsers: getFormatParsers(),
+        formatParsers: defaultParserMap,
     };
     it('no param', () => {
         const context = createDomToModelContext();
@@ -31,6 +33,9 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             isInSelection: false,
             listFormat,
+            originalDefaultStyles: defaultStyleMap,
+            originalElementProcessors: defaultProcessorMap,
+            originalFormatParsers: defaultParserMap,
             ...contextOptions,
         });
     });
@@ -53,6 +58,9 @@ describe('createDomToModelContext', () => {
             },
             isInSelection: false,
             listFormat,
+            originalDefaultStyles: defaultStyleMap,
+            originalElementProcessors: defaultProcessorMap,
+            originalFormatParsers: defaultParserMap,
             ...contextOptions,
         });
     });
@@ -86,6 +94,9 @@ describe('createDomToModelContext', () => {
                 isSelectionCollapsed: false,
             },
             listFormat,
+            originalDefaultStyles: defaultStyleMap,
+            originalElementProcessors: defaultProcessorMap,
+            originalFormatParsers: defaultParserMap,
             ...contextOptions,
         });
     });
@@ -115,6 +126,9 @@ describe('createDomToModelContext', () => {
                 lastCell: { x: 3, y: 4 },
             },
             listFormat,
+            originalDefaultStyles: defaultStyleMap,
+            originalElementProcessors: defaultProcessorMap,
+            originalFormatParsers: defaultParserMap,
             ...contextOptions,
         });
     });

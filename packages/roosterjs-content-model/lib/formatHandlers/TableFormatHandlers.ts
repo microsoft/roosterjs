@@ -11,4 +11,5 @@ export const TableFormatHandlers: FormatKey[] = [
     'tableSpacing',
     'margin',
     'backgroundColor',
+    'tableCustomize',
 ];

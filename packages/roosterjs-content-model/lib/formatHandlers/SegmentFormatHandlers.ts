@@ -14,4 +14,5 @@ export const SegmentFormatHandlers: FormatKey[] = [
     'bold',
     'textColor',
     'backgroundColor',
+    'segmentCustomize',
 ];

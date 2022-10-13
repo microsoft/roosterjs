@@ -1,5 +1,4 @@
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { generalProcessor } from './generalProcessor';
 import { getObjectKeys, getStyles, toArray } from 'roosterjs-editor-dom';
 import { knownElementProcessor } from './knownElementProcessor';
 
@@ -16,29 +15,37 @@ const HandledStyleNames = [
     'font-weight',
     'color',
 ];
-// TODO: Put empty array for now, later we will have some change to allow overwrite it
+
+// Put empty array for now, later we will have some change to allow overwrite it
 const HandledClassNames = [''];
 
 /**
  * @internal
- * A temp processor to handle DIV and SPAN that don't have any attribute, to reduce unnecessary general blocks/segments
+ * Create a temp processor to handle DIV and SPAN that don't have any attribute, to reduce unnecessary general blocks/segments
  */
-export const tempContainerProcessor: ElementProcessor = (group, element, context) => {
-    const processor: ElementProcessor = areAllAttributesProcessed(element)
-        ? knownElementProcessor
-        : generalProcessor;
+export function createTempContainerProcessor<T extends HTMLElement>(
+    additionalHandleClassNames: string[] = [],
+    additionalHandledStyleNames: string[] = [],
+    additionalHandledAttributes: string[] = []
+): ElementProcessor<T> {
+    const handledAttributeNames = HandledAttributeNames.concat(additionalHandledAttributes);
+    const handledStyleNames = HandledStyleNames.concat(additionalHandledStyleNames);
+    const handledClassNames = HandledClassNames.concat(additionalHandleClassNames);
 
-    processor(group, element, context);
-};
+    return (group, element, context) => {
+        const attributeNames = toArray(element.attributes).map(a => a.name);
+        const classNames = element.className.split(' ');
+        const styleNames = getObjectKeys(getStyles(element));
 
-function areAllAttributesProcessed(element: HTMLElement): boolean {
-    const attributeNames = toArray(element.attributes).map(a => a.name);
-    const classNames = element.className.split(' ');
-    const styleNames = getObjectKeys(getStyles(element));
+        const allAttributesProcessed =
+            attributeNames.every(name => handledAttributeNames.indexOf(name) >= 0) &&
+            styleNames.every(name => handledStyleNames.indexOf(name) >= 0) &&
+            classNames.every(name => handledClassNames.indexOf(name) >= 0);
 
-    return (
-        attributeNames.every(name => HandledAttributeNames.indexOf(name) >= 0) &&
-        classNames.every(name => HandledClassNames.indexOf(name) >= 0) &&
-        styleNames.every(name => HandledStyleNames.indexOf(name) >= 0)
-    );
+        const processor = allAttributesProcessed
+            ? knownElementProcessor
+            : context.elementProcessors['*'];
+
+        processor(group, element, context);
+    };
 }

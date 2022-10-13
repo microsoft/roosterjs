@@ -7,4 +7,5 @@ export const ListLevelFormatHandlers: FormatKey[] = [
     'listType',
     'listLevelThread',
     'listLevelMetadata',
+    'listLevelCustomize',
 ];

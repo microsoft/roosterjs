@@ -22,9 +22,9 @@ import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 
 /**
- * Represents a record of all format handlers
+ * Represents a record of all basic format handlers
  */
-export interface FormatHandlerTypeMap {
+export interface BasicFormatHandlerTypeMap {
     /**
      * Format for BackgroundColorFormat
      */
@@ -145,6 +145,48 @@ export interface FormatHandlerTypeMap {
      */
     verticalAlign: VerticalAlignFormat;
 }
+
+/**
+ * Represents a record of all customized format handlers
+ */
+export interface CustomizedFormatHandlerTypeMap {
+    /**
+     * Customize format for block that allows caller to pass in a customize format handler to do additional format handling
+     */
+    blockCustomize: {};
+
+    /**
+     * Customize format for list item that allows caller to pass in a customize format handler to do additional format handling
+     */
+    listItemCustomize: {};
+
+    /**
+     * Customize format for list level that allows caller to pass in a customize format handler to do additional format handling
+     */
+    listLevelCustomize: {};
+
+    /**
+     * Customize format for segment that allows caller to pass in a customize format handler to do additional format handling
+     */
+    segmentCustomize: {};
+
+    /**
+     * Customize format for table cell that allows caller to pass in a customize format handler to do additional format handling
+     */
+    tableCellCustomize: {};
+
+    /**
+     * Customize format for table that allows caller to pass in a customize format handler to do additional format handling
+     */
+    tableCustomize: {};
+}
+
+/**
+ * Represents a record of all format handlers
+ */
+export interface FormatHandlerTypeMap
+    extends BasicFormatHandlerTypeMap,
+        CustomizedFormatHandlerTypeMap {}
 
 /**
  * Key of all format handler

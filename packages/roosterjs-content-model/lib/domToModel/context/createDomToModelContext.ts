@@ -1,10 +1,29 @@
+import { defaultFormatHandlerMap } from '../../formatHandlers/defaultFormatHandlers';
 import { defaultProcessorMap } from './defaultProcessors';
 import { defaultStyleMap } from './defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
-import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
+import { FormatParsers } from '../../publicTypes/context/DomToModelSettings';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
+
+/**
+ * @internal export for test only
+ */
+export const defaultParserMap = getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
+    parsers[key] = defaultFormatHandlerMap[key].parse;
+    return parsers;
+}, <FormatParsers>{});
+
+function getFormatParsers(option?: Partial<FormatParsers>): FormatParsers {
+    return getObjectKeys(defaultParserMap).reduce((parsers, key) => {
+        const parser = option?.[key];
+        parsers[key] = typeof parser === 'undefined' ? defaultParserMap[key] : parser;
+
+        return parsers;
+    }, <FormatParsers>{});
+}
 
 /**
  * @internal
@@ -41,6 +60,10 @@ export function createDomToModelContext(
         },
 
         formatParsers: getFormatParsers(options?.formatParserOverride),
+
+        originalDefaultStyles: defaultStyleMap,
+        originalElementProcessors: defaultProcessorMap,
+        originalFormatParsers: defaultParserMap,
     };
 
     if (editorContext?.isRightToLeft) {

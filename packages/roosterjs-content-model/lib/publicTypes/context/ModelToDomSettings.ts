@@ -29,4 +29,9 @@ export interface ModelToDomSettings {
      * Map of format appliers
      */
     formatAppliers: FormatAppliers;
+
+    /**
+     * Original map of format appliers
+     */
+    readonly originalFormatAppliers: Readonly<FormatAppliers>;
 }

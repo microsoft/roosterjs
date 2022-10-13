@@ -42,7 +42,12 @@ export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGe
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
 
-export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
+export {
+    FormatHandlerTypeMap,
+    BasicFormatHandlerTypeMap,
+    CustomizedFormatHandlerTypeMap,
+    FormatKey,
+} from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './publicTypes/format/ContentModelTableCellFormat';
 export { ContentModelBlockFormat } from './publicTypes/format/ContentModelBlockFormat';
@@ -90,6 +95,7 @@ export {
     DefaultStyleMap,
     FormatParser,
     FormatParsers,
+    ElementProcessorMap,
 } from './publicTypes/context/DomToModelSettings';
 export { DomToModelContext } from './publicTypes/context/DomToModelContext';
 export { ModelToDomContext } from './publicTypes/context/ModelToDomContext';

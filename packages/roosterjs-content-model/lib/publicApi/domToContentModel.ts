@@ -1,11 +1,9 @@
-import { containerProcessor } from '../domToModel/processors/containerProcessor';
 import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
 import { DomToModelOption } from '../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { normalizeModel } from '../modelApi/common/normalizeContentModel';
-import { singleElementProcessor } from '../domToModel/processors/singleElementProcessor';
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -23,9 +21,9 @@ export default function domToContentModel(
     const domToModelContext = createDomToModelContext(editorContext, option);
 
     if (option.includeRoot) {
-        singleElementProcessor(model, root, domToModelContext);
+        domToModelContext.elementProcessors.element(model, root, domToModelContext);
     } else {
-        containerProcessor(model, root, domToModelContext);
+        domToModelContext.elementProcessors.child(model, root, domToModelContext);
     }
 
     normalizeModel(model);

@@ -5,11 +5,8 @@ import { borderFormatHandler } from './common/borderFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
-import { FormatAppliers } from '../publicTypes/context/ModelToDomSettings';
 import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
-import { FormatParsers } from '../publicTypes/context/DomToModelSettings';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
@@ -28,11 +25,22 @@ import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 
-type FormatHandlers = {
+const emptyHandler: FormatHandler<{}> = {
+    parse: () => {},
+    apply: () => {},
+};
+
+/**
+ * @internal
+ */
+export type FormatHandlers = {
     [Key in FormatKey]: FormatHandler<FormatHandlerTypeMap[Key]>;
 };
 
-const defaultFormatHandlerMap: FormatHandlers = {
+/**
+ * @internal
+ */
+export const defaultFormatHandlerMap: FormatHandlers = {
     backgroundColor: backgroundColorFormatHandler,
     bold: boldFormatHandler,
     border: borderFormatHandler,
@@ -57,29 +65,11 @@ const defaultFormatHandlerMap: FormatHandlers = {
     textColor: textColorFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
+
+    blockCustomize: emptyHandler,
+    listItemCustomize: emptyHandler,
+    listLevelCustomize: emptyHandler,
+    segmentCustomize: emptyHandler,
+    tableCellCustomize: emptyHandler,
+    tableCustomize: emptyHandler,
 };
-
-/**
- * @internal
- */
-export function getFormatParsers(option?: Partial<FormatParsers>): FormatParsers {
-    return getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
-        const parser = option?.[key];
-        parsers[key] = typeof parser === 'undefined' ? defaultFormatHandlerMap[key].parse : parser;
-
-        return parsers;
-    }, <FormatParsers>{});
-}
-
-/**
- * @internal
- */
-export function getFormatAppliers(option?: Partial<FormatAppliers>): FormatAppliers {
-    return getObjectKeys(defaultFormatHandlerMap).reduce((appliers, key) => {
-        const applier = option?.[key];
-        appliers[key] =
-            typeof applier === 'undefined' ? defaultFormatHandlerMap[key].apply : applier;
-
-        return appliers;
-    }, <FormatAppliers>{});
-}
