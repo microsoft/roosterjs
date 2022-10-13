@@ -11,6 +11,7 @@ export type ShallowObjectStackType = 'shallowClone' | 'empty';
  */
 export interface StackFormatOptions {
     segment?: ShallowObjectStackType;
+    paragraph?: ShallowObjectStackType;
 }
 
 /**
@@ -21,15 +22,17 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () => void
 ) {
-    const { segmentFormat } = context;
-    const { segment } = options;
+    const { segmentFormat, blockFormat } = context;
+    const { segment, paragraph } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
+        context.blockFormat = stackFormatInternal(blockFormat, paragraph);
 
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
+        context.blockFormat = blockFormat;
     }
 }
 
