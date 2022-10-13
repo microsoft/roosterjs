@@ -14,6 +14,7 @@ const generalBlockProcessor: ElementProcessor = (group, element, context) => {
         context,
         {
             segment: 'empty',
+            paragraph: 'empty',
         },
         () => {
             addBlock(group, block);

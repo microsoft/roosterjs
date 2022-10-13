@@ -12,5 +12,5 @@ export const brProcessor: ElementProcessor = (group, element, context) => {
         br.isSelected = true;
     }
 
-    addSegment(group, br);
+    addSegment(group, br, context.blockFormat);
 };
