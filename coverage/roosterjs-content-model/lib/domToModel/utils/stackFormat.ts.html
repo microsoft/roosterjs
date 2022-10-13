@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -98,7 +98,11 @@
 <a name='L39'></a><a href='#L39'>39</a>
 <a name='L40'></a><a href='#L40'>40</a>
 <a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -121,23 +125,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">76x</span>
-<span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-yes">152x</span>
+<span class="cline-any cline-yes">152x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">76x</span>
 <span class="cline-any cline-yes">76x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">76x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">76x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">152x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
@@ -152,6 +158,7 @@ export type ShallowObjectStackType = 'shallowClone' | 'empty';
  */
 export interface StackFormatOptions {
     segment?: ShallowObjectStackType;
+    paragraph?: ShallowObjectStackType;
 }
 &nbsp;
 /**
@@ -162,15 +169,17 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () =&gt; void
 ) {
-    const { segmentFormat } = context;
-    const { segment } = options;
+    const { segmentFormat, blockFormat } = context;
+    const { segment, paragraph } = options;
 &nbsp;
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
+        context.blockFormat = stackFormatInternal(blockFormat, paragraph);
 &nbsp;
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
+        context.blockFormat = blockFormat;
     }
 }
 &nbsp;
@@ -178,7 +187,7 @@ function stackFormatInternal&lt;T extends ContentModelFormatBase&gt;(
     format: T,
     processType: ShallowObjectStackType | undefined
 ): T | {} {
-    return processType == 'empty' ? {} : processType == 'shallowClone' ? { ...format } : <span class="branch-1 cbranch-no" title="branch not covered" >format;</span>
+    return processType == 'empty' ? {} : processType == 'shallowClone' ? { ...format } : format;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -187,7 +196,7 @@ function stackFormatInternal&lt;T extends ContentModelFormatBase&gt;(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Oct 12 2022 16:18:09 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 13 2022 20:36:19 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
