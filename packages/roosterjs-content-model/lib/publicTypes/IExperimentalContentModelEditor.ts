@@ -1,4 +1,5 @@
 import { ContentModelDocument } from './block/group/ContentModelDocument';
+import { ContentModelHandlerMap } from './context/ModelToDomSettings';
 import { DefaultStyleMap, FormatParsers } from './context/DomToModelSettings';
 import { EditorContext } from './context/EditorContext';
 import { ElementProcessor } from './context/ElementProcessor';
@@ -63,6 +64,10 @@ export interface ModelToDomOption {
      * Overrides default format appliers
      */
     formatApplierOverride?: Partial<FormatAppliers>;
+    /**
+     * Overrides default model handlers
+     */
+    modelHandlerOverride?: Partial<ContentModelHandlerMap>;
 }
 
 /**

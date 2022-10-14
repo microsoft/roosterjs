@@ -1,18 +1,18 @@
 import { applyFormat } from '../utils/applyFormat';
 import { BlockFormatHandlers } from '../../formatHandlers/BlockFormatHandlers';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { handleSegment } from './handleSegment';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
  * @internal
  */
-export function handleParagraph(
+export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
     doc: Document,
     parent: Node,
     paragraph: ContentModelParagraph,
     context: ModelToDomContext
-) {
+) => {
     let container: HTMLElement;
 
     if (paragraph.isImplicit) {
@@ -30,6 +30,6 @@ export function handleParagraph(
     };
 
     paragraph.segments.forEach(segment => {
-        handleSegment(doc, container, segment, context);
+        context.modelHandlers.segment(doc, container, segment, context);
     });
-}
+};
