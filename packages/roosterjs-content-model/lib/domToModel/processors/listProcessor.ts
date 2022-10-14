@@ -22,6 +22,8 @@ export const listProcessor: ElementProcessor = (group, element, context) => {
             parseFormat(element, ListLevelFormatHandlers, level, context);
             parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
 
+            const originalListParent = listFormat.listParent;
+
             listFormat.listParent = listFormat.listParent || group;
             listFormat.levels.push(level);
 
@@ -29,6 +31,7 @@ export const listProcessor: ElementProcessor = (group, element, context) => {
                 containerProcessor(group, element, context);
             } finally {
                 listFormat.levels.pop();
+                listFormat.listParent = originalListParent;
             }
         }
     );

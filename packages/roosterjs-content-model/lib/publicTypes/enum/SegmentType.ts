@@ -20,4 +20,9 @@ export type ContentModelSegmentType =
     /**
      * Represents a general segment that doesn't have a special type
      */
-    | 'General';
+    | 'General'
+
+    /**
+     * Represents an inline entity
+     */
+    | 'Entity';

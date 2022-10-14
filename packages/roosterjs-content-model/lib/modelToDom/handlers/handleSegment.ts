@@ -1,6 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { handleBlock } from './handleBlock';
+import { handleEntity } from './handleEntity';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
@@ -43,6 +44,10 @@ export function handleSegment(
 
         case 'General':
             handleBlock(doc, parent, segment, context);
+            break;
+
+        case 'Entity':
+            handleEntity(doc, parent, segment, context);
             break;
     }
 

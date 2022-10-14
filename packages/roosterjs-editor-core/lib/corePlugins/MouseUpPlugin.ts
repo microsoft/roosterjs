@@ -6,10 +6,10 @@ import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-e
  * as long as the mouse was pressed within Editor before
  */
 export default class MouseUpPlugin implements EditorPlugin {
-    private editor: IEditor;
-    private mouseUpEventListerAdded: boolean;
-    private mouseDownX: number;
-    private mouseDownY: number;
+    private editor: IEditor | null = null;
+    private mouseUpEventListerAdded: boolean = false;
+    private mouseDownX: number | null = null;
+    private mouseDownY: number | null = null;
 
     /**
      * Get a friendly name of  this plugin
@@ -39,7 +39,11 @@ export default class MouseUpPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.MouseDown && !this.mouseUpEventListerAdded) {
+        if (
+            this.editor &&
+            event.eventType == PluginEventType.MouseDown &&
+            !this.mouseUpEventListerAdded
+        ) {
             this.editor
                 .getDocument()
                 .addEventListener('mouseup', this.onMouseUp, true /*setCapture*/);
@@ -49,7 +53,7 @@ export default class MouseUpPlugin implements EditorPlugin {
         }
     }
     private removeMouseUpEventListener() {
-        if (this.mouseUpEventListerAdded) {
+        if (this.editor && this.mouseUpEventListerAdded) {
             this.mouseUpEventListerAdded = false;
             this.editor.getDocument().removeEventListener('mouseup', this.onMouseUp, true);
         }

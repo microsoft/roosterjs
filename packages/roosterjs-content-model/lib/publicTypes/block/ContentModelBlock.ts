@@ -1,3 +1,4 @@
+import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelGeneralBlock } from './group/ContentModelGeneralBlock';
 import { ContentModelListItem } from './group/ContentModelListItem';
 import { ContentModelParagraph } from './ContentModelParagraph';
@@ -12,4 +13,5 @@ export type ContentModelBlock =
     | ContentModelListItem
     | ContentModelGeneralBlock
     | ContentModelTable
-    | ContentModelParagraph;
+    | ContentModelParagraph
+    | ContentModelEntity;

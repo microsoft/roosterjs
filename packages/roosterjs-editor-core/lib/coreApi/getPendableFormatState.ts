@@ -28,7 +28,10 @@ export const getPendableFormatState: GetPendableFormatState = (
     const cachedPosition = core.pendingFormatState.pendableFormatPosition?.normalize();
     const currentPosition = range && Position.getStart(range).normalize();
     const isSamePosition =
-        currentPosition && range.collapsed && currentPosition.equalTo(cachedPosition);
+        currentPosition &&
+        cachedPosition &&
+        range.collapsed &&
+        currentPosition.equalTo(cachedPosition);
 
     if (range && cachedPendableFormatState && isSamePosition && !forceGetStateFromDOM) {
         return cachedPendableFormatState;

@@ -13,6 +13,7 @@ import {
     PluginEvent,
     PluginEventType,
     PluginKeyboardEvent,
+    PluginKeyDownEvent,
     PositionType,
 } from 'roosterjs-editor-types';
 import {
@@ -102,7 +103,7 @@ class EmojiPlugin implements ReactEditorPlugin {
      * Try to insert emoji is possible
      * Intercept arrow keys to move selection if popup is shown
      */
-    private onKeyDownSuggestingDomEvent(event: PluginDomEvent): void {
+    private onKeyDownSuggestingDomEvent(event: PluginKeyDownEvent): void {
         // If key is enter, try insert emoji at selection
         // If key is space and selection is shortcut, try insert emoji
 

@@ -56,9 +56,9 @@ const REMOVE_ENTITY_OPERATIONS: (EntityOperation | CompatibleEntityOperation)[] 
  * Entity Plugin helps handle all operations related to an entity and generate entity specified events
  */
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
     private state: EntityPluginState;
-    private cancelAsyncRun: () => void;
+    private cancelAsyncRun: (() => void) | null = null;
 
     /**
      * Construct a new instance of EntityPlugin
@@ -158,7 +158,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
     private handleContextMenuEvent(event: UIEvent) {
         const node = event.target as Node;
-        const entityElement = node && this.editor.getElementAtCursor(getEntitySelector(), node);
+        const entityElement = node && this.editor?.getElementAtCursor(getEntitySelector(), node);
 
         if (entityElement) {
             event.preventDefault();
@@ -167,7 +167,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private handleCutEvent = (event: ClipboardEvent) => {
-        const range = this.editor.getSelectionRange();
+        const range = this.editor?.getSelectionRange();
         if (range && !range.collapsed) {
             this.checkRemoveEntityForRange(event);
         }
@@ -176,9 +176,10 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     private handleMouseUpEvent(event: PluginMouseUpEvent) {
         const { rawEvent, isClicking } = event;
         const node = rawEvent.target as Node;
-        let entityElement: HTMLElement;
+        let entityElement: HTMLElement | null;
 
         if (
+            this.editor &&
             isClicking &&
             node &&
             !!(entityElement = this.editor.getElementAtCursor(getEntitySelector(), node))
@@ -196,7 +197,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             event.which == Keys.DELETE ||
             event.which == Keys.ENTER
         ) {
-            const range = this.editor.getSelectionRange();
+            const range = this.editor?.getSelectionRange();
             if (range && !range.collapsed) {
                 this.checkRemoveEntityForRange(event);
             }
@@ -204,13 +205,15 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private handleBeforePasteEvent(sanitizingOption: HtmlSanitizerOptions) {
-        const range = this.editor.getSelectionRange();
+        const range = this.editor?.getSelectionRange();
 
-        if (!range.collapsed) {
-            this.checkRemoveEntityForRange(null /*rawEvent*/);
+        if (range && !range.collapsed) {
+            this.checkRemoveEntityForRange(null! /*rawEvent*/);
         }
 
-        arrayPush(sanitizingOption.additionalAllowedCssClasses, ALLOWED_CSS_CLASSES);
+        if (sanitizingOption.additionalAllowedCssClasses) {
+            arrayPush(sanitizingOption.additionalAllowedCssClasses, ALLOWED_CSS_CLASSES);
+        }
     }
 
     private handleBeforeSetContentEvent() {
@@ -221,7 +224,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         // 1. find removed entities
         for (let i = this.state.knownEntityElements.length - 1; i >= 0; i--) {
             const element = this.state.knownEntityElements[i];
-            if (!this.editor.contains(element)) {
+            if (this.editor && !this.editor.contains(element)) {
                 this.setIsEntityKnown(element, false /*isKnown*/);
 
                 if (element.shadowRoot) {
@@ -233,7 +236,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         // 2. collect all new entities
         const knownIds = this.state.knownEntityElements
             .map(e => getEntityFromElement(e)?.id)
-            .filter(x => !!x);
+            .filter((x): x is string => !!x);
         const newEntities =
             event?.source == ChangeSource.InsertEntity && event.data
                 ? [event.data as Entity]
@@ -255,7 +258,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private handleEntityOperationEvent(event: EntityOperationEvent) {
-        if (REMOVE_ENTITY_OPERATIONS.indexOf(event.operation) >= 0) {
+        if (this.editor && REMOVE_ENTITY_OPERATIONS.indexOf(event.operation) >= 0) {
             this.cancelAsyncRun?.();
             this.cancelAsyncRun = this.editor.runAsync(() => {
                 this.cancelAsyncRun = null;
@@ -275,7 +278,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     private checkRemoveEntityForRange(event: Event) {
         const editableEntityElements: HTMLElement[] = [];
         const selector = getEntitySelector();
-        this.editor.queryElements(selector, QueryScope.OnSelection, element => {
+        this.editor?.queryElements(selector, QueryScope.OnSelection, element => {
             if (element.isContentEditable) {
                 editableEntityElements.push(element);
             } else {
@@ -285,7 +288,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
         // For editable entities, we need to check if it is fully or partially covered by current selection,
         // and trigger different events;
-        if (editableEntityElements.length > 0) {
+        if (this.editor && editableEntityElements.length > 0) {
             const inSelectionEntityElements = this.editor.queryElements(
                 selector,
                 QueryScope.InSelection
@@ -310,7 +313,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         const entity = element && getEntityFromElement(element);
 
         if (entity) {
-            this.editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+            this.editor?.triggerPluginEvent(PluginEventType.EntityOperation, {
                 operation,
                 rawEvent,
                 entity,
@@ -321,11 +324,11 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
     private handleNewEntity(entity: Entity) {
         const { wrapper } = entity;
-        const fragment = this.editor.getDocument().createDocumentFragment();
+        const fragment = this.editor?.getDocument().createDocumentFragment();
         const cache = this.state.shadowEntityCache[entity.id];
         delete this.state.shadowEntityCache[entity.id];
 
-        if (cache?.shadowRoot) {
+        if (fragment && cache?.shadowRoot) {
             moveChildNodes(fragment, cache.shadowRoot);
         }
 
@@ -333,7 +336,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
         // If there is element to hydrate for shadow entity, create shadow root and mount these elements to shadow root
         // Then trigger AddShadowRoot so that plugins can do further actions
-        if (fragment.firstChild) {
+        if (fragment?.firstChild) {
             if (wrapper.shadowRoot) {
                 moveChildNodes(wrapper.shadowRoot, fragment);
             } else {
@@ -345,7 +348,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
             const newWrapper = wrapper.cloneNode() as HTMLElement;
             moveChildNodes(newWrapper, wrapper);
-            this.editor.replaceNode(wrapper, newWrapper);
+            this.editor?.replaceNode(wrapper, newWrapper);
             entity.wrapper = newWrapper;
         }
 
@@ -353,10 +356,13 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private getExistingEntities(shadowEntityOnly?: boolean): Entity[] {
-        return this.editor
-            .queryElements(getEntitySelector())
-            .map(getEntityFromElement)
-            .filter(x => !!x && (!shadowEntityOnly || !!x.wrapper.shadowRoot));
+        return (
+            this.editor
+                ?.queryElements(getEntitySelector())
+                .map(getEntityFromElement)
+                .filter((x): x is Entity => !!x && (!shadowEntityOnly || !!x.wrapper.shadowRoot)) ??
+            []
+        );
     }
 
     private createShadowRoot(wrapper: HTMLElement, shadowContentContainer?: Node) {
