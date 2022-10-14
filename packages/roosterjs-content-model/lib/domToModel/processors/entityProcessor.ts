@@ -7,7 +7,7 @@ import { getEntityFromElement, isBlockElement } from 'roosterjs-editor-dom';
 /**
  * @internal
  */
-export const entityProcessor: ElementProcessor = (group, element, context) => {
+export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const entity = getEntityFromElement(element);
 
     if (entity) {

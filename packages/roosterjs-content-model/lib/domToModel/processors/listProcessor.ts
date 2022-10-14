@@ -1,4 +1,3 @@
-import { containerProcessor } from './containerProcessor';
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { ListLevelFormatHandlers } from '../../formatHandlers/ListLevelFormatHandlers';
@@ -9,7 +8,11 @@ import { stackFormat } from '../utils/stackFormat';
 /**
  * @internal
  */
-export const listProcessor: ElementProcessor = (group, element, context) => {
+export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = (
+    group,
+    element,
+    context
+) => {
     const level: ContentModelListItemLevelFormat = {};
     const { listFormat } = context;
 
@@ -28,7 +31,7 @@ export const listProcessor: ElementProcessor = (group, element, context) => {
             listFormat.levels.push(level);
 
             try {
-                containerProcessor(group, element, context);
+                context.elementProcessors.child(group, element, context);
             } finally {
                 listFormat.levels.pop();
                 listFormat.listParent = originalListParent;

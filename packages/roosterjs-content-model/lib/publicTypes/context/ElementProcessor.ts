@@ -7,8 +7,8 @@ import { DomToModelContext } from './DomToModelContext';
  * @param element The element to process
  * @param context The context object to provide related information
  */
-export type ElementProcessor = (
+export type ElementProcessor<T extends Node> = (
     group: ContentModelBlockGroup,
-    element: HTMLElement,
+    element: T,
     context: DomToModelContext
 ) => void;

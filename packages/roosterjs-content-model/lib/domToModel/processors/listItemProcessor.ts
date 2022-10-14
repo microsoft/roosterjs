@@ -1,7 +1,5 @@
-import { containerProcessor } from './containerProcessor';
 import { createListItem } from '../../modelApi/creators/createListItem';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { generalProcessor } from './generalProcessor';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { ListItemFormatHandlers } from '../../formatHandlers/ListItemFormatHandlers';
 import { parseFormat } from '../utils/parseFormat';
@@ -11,7 +9,7 @@ import { stackFormat } from '../utils/stackFormat';
 /**
  * @internal
  */
-export const listItemProcessor: ElementProcessor = (group, element, context) => {
+export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, element, context) => {
     const { listFormat } = context;
 
     if (
@@ -38,13 +36,17 @@ export const listItemProcessor: ElementProcessor = (group, element, context) => 
                     context
                 );
 
-                containerProcessor(listItem, element, context);
+                context.elementProcessors.child(listItem, element, context);
             }
         );
     } else {
         const currentBlocks = listFormat.listParent?.blocks;
         const lastItem = currentBlocks?.[currentBlocks?.length - 1];
 
-        generalProcessor(lastItem?.blockType == 'BlockGroup' ? lastItem : group, element, context);
+        context.elementProcessors['*'](
+            lastItem?.blockType == 'BlockGroup' ? lastItem : group,
+            element,
+            context
+        );
     }
 };
