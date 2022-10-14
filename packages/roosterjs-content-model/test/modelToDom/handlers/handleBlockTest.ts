@@ -1,6 +1,7 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
+import * as handleEntity from '../../../lib/modelToDom/handlers/handleEntity';
+import * as handleParagraph from '../../../lib/modelToDom/handlers/handleParagraph';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelDivider } from '../../../lib/publicTypes/block/ContentModelDivider';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
@@ -113,5 +114,25 @@ describe('handleBlock', () => {
             block.format,
             context
         );
+    });
+
+    it('Entity block', () => {
+        const element = document.createElement('div');
+        const block: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            wrapper: element,
+            type: 'entity',
+            id: 'entity_1',
+            isReadonly: true,
+        };
+
+        parent = document.createElement('div');
+
+        spyOn(handleEntity, 'handleEntity');
+        handleBlock(document, parent, block, context);
+
+        expect(handleEntity.handleEntity).toHaveBeenCalledWith(document, parent, block, context);
     });
 });

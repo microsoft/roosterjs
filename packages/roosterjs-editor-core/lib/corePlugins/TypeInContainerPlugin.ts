@@ -60,13 +60,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        // We need to check if the ctrl key or the meta key is pressed,
-        // browsers like Safari fire the "keypress" event when the meta key is pressed.
-        if (
-            event.eventType == PluginEventType.KeyPress &&
-            this.editor &&
-            !(event.rawEvent && isCtrlOrMetaPressed(event.rawEvent))
-        ) {
+        if (event.eventType == PluginEventType.KeyPress && this.editor) {
             // If normalization was not possible before the keypress,
             // check again after the keyboard event has been processed by browser native behavior.
             //

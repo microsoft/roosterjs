@@ -218,34 +218,4 @@ describe('hasSelectionInBlock', () => {
 
         expect(result).toBeTrue();
     });
-
-    it('HR has selection', () => {
-        const block: ContentModelDivider = {
-            blockType: 'Divider',
-            tagName: 'hr',
-            format: {},
-            isSelected: true,
-        };
-
-        const result = hasSelectionInBlock(block);
-
-        expect(result).toBeTrue();
-    });
-
-    it('Entity has selection', () => {
-        const block: ContentModelEntity = {
-            blockType: 'Entity',
-            segmentType: 'Entity',
-            format: {},
-            isSelected: true,
-            type: 'entity',
-            id: 'entity',
-            wrapper: null!,
-            isReadonly: false,
-        };
-
-        const result = hasSelectionInBlock(block);
-
-        expect(result).toBeTrue();
-    });
 });

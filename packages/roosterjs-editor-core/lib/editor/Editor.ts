@@ -555,6 +555,13 @@ export default class Editor implements IEditor {
                   <Node>arg3,
                   <number | PositionType>arg4
               );
+
+        this.triggerSelectionChanged({
+            type: SelectionRangeTypes.Normal,
+            ranges: range ? [range] : [],
+            areAllCollapsed: range ? range.collapsed : true,
+        });
+
         return !!range && this.contains(range) && core.api.selectRange(core, range);
     }
 

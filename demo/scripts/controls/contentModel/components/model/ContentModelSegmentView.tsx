@@ -25,8 +25,5 @@ export function ContentModelSegmentView(props: { segment: ContentModelSegment })
 
         case 'Entity':
             return <ContentModelEntityView entity={segment} />;
-
-        case 'Image':
-            return <ContentModelImageView image={segment} />;
     }
 }

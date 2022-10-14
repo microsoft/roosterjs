@@ -1,4 +1,4 @@
-import { isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
+import { Browser, isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
 import {
     DOMEventHandler,
     EditorPlugin,

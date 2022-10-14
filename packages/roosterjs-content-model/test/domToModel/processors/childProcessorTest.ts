@@ -4,6 +4,7 @@ import { ContentModelDocument } from '../../../lib/publicTypes/block/group/Conte
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 
 describe('childProcessor', () => {
     let doc: ContentModelDocument;
@@ -85,10 +86,12 @@ describe('childProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
+                    format: {},
                     segments: [],
                 },
                 {
                     blockType: 'Paragraph',
+                    format: {},
                     segments: [],
                 },
             ],
@@ -301,9 +304,9 @@ describe('childProcessor', () => {
         div.innerHTML =
             '<div id="div1"><ol><li>test1</li></ol></div><div id="div2">test2</div><div id="div3"><ol><li>test3</li></ol></div>';
 
-        context.elementProcessors.div = generalProcessor;
+        context.elementProcessors.DIV = generalProcessor;
 
-        childProcessor(doc, div, context);
+        containerProcessor(doc, div, context);
 
         expect(doc.blocks.length).toBe(3);
         expect(doc.blocks[0]).toEqual({

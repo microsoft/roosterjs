@@ -1,6 +1,7 @@
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { handleBlock } from './handleBlock';
+import { handleEntity } from './handleEntity';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
@@ -45,6 +46,11 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
         case 'General':
             context.modelHandlers.general(doc, parent, segment, context);
             break;
+
+        case 'Entity':
+            handleEntity(doc, parent, segment, context);
+            break;
+    }
 
         case 'Entity':
             context.modelHandlers.entity(doc, parent, segment, context);

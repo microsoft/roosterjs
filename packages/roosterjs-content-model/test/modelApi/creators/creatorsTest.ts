@@ -3,7 +3,6 @@ import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/Conte
 import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
@@ -16,6 +15,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { Entity } from 'roosterjs-editor-types';
 
 describe('Creators', () => {
     it('createContentModelDocument', () => {
@@ -377,21 +377,6 @@ describe('Creators', () => {
             blockGroupType: 'Quote',
             blocks: [],
             format: {},
-            quoteSegmentFormat: {},
-        });
-    });
-
-    it('createQuote with format', () => {
-        const quote = createQuote({
-            borderLeft: 'solid 1px black',
-        });
-
-        expect(quote).toEqual({
-            blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
-            blocks: [],
-            format: { borderLeft: 'solid 1px black' },
-            quoteSegmentFormat: {},
         });
     });
 
@@ -400,7 +385,8 @@ describe('Creators', () => {
         const type = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, undefined, id, type);
+        const entity: Entity = { id, type, isReadonly, wrapper };
+        const entityModel = createEntity(entity);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
@@ -410,63 +396,6 @@ describe('Creators', () => {
             type,
             isReadonly,
             wrapper,
-        });
-    });
-
-    it('createEntity with format', () => {
-        const id = 'entity_1';
-        const type = 'entity';
-        const isReadonly = true;
-        const wrapper = document.createElement('div');
-        const entityModel = createEntity(
-            wrapper,
-            isReadonly,
-            {
-                fontSize: '10pt',
-            },
-            id,
-            type
-        );
-
-        expect(entityModel).toEqual({
-            blockType: 'Entity',
-            segmentType: 'Entity',
-            format: { fontSize: '10pt' },
-            id,
-            type,
-            isReadonly,
-            wrapper,
-        });
-    });
-
-    it('createImage', () => {
-        const imageModel = createImage('test');
-
-        expect(imageModel).toEqual({
-            segmentType: 'Image',
-            format: {},
-            src: 'test',
-            dataset: {},
-        });
-    });
-
-    it('createDivider', () => {
-        const hr = createDivider('hr');
-
-        expect(hr).toEqual({
-            blockType: 'Divider',
-            tagName: 'hr',
-            format: {},
-        });
-    });
-
-    it('createDivider with format', () => {
-        const hr = createDivider('div', { marginTop: '10px' });
-
-        expect(hr).toEqual({
-            blockType: 'Divider',
-            tagName: 'div',
-            format: { marginTop: '10px' },
         });
     });
 });

@@ -24,5 +24,6 @@ export function createModelToDomContext(
             },
         },
         formatAppliers: getFormatAppliers(options?.formatApplierOverride),
+        entityPairs: [],
     };
 }

@@ -13,7 +13,6 @@ export function createQuote(
         blockType: 'BlockGroup',
         blockGroupType: 'Quote',
         blocks: [],
-        format: { ...(format || {}) },
-        quoteSegmentFormat: { ...(quoteSegmentFormat || {}) },
+        format: {},
     };
 }

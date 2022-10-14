@@ -11,9 +11,8 @@ export type ShallowObjectStackType = 'shallowClone' | 'empty';
  * @internal
  */
 export interface StackFormatOptions {
-    segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
-    paragraph?: 'shallowClone' | 'shallowCopyInherit' | 'empty';
-    link?: 'linkDefault' | 'empty';
+    segment?: ShallowObjectStackType;
+    paragraph?: ShallowObjectStackType;
 }
 
 // Some styles, such as background color, won't be inherited by block element if it was originally
@@ -42,40 +41,17 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () => void
 ) {
-    const { segmentFormat, blockFormat, link: linkFormat } = context;
-    const { segment, paragraph, link } = options;
+    const { segmentFormat, blockFormat } = context;
+    const { segment, paragraph } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
-        context.link = stackLinkInternal(linkFormat, link);
 
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
         context.blockFormat = blockFormat;
-        context.link = linkFormat;
-    }
-}
-
-function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 'empty') {
-    switch (link) {
-        case 'linkDefault':
-            return {
-                format: {
-                    underline: true,
-                },
-                dataset: {},
-            };
-
-        case 'empty':
-            return {
-                format: {},
-                dataset: {},
-            };
-
-        default:
-            return linkFormat;
     }
 }
 

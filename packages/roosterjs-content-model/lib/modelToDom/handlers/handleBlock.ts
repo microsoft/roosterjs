@@ -1,5 +1,6 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { handleBlockGroup } from './handleBlockGroup';
+import { handleEntity } from './handleEntity';
 import { handleParagraph } from './handleParagraph';
 import { handleTable } from './handleTable';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -28,6 +29,9 @@ export const handleBlock: ContentModelHandler<ContentModelBlock> = (
             break;
         case 'Divider':
             context.modelHandlers.divider(doc, parent, block, context);
+            break;
+        case 'Entity':
+            handleEntity(doc, parent, block, context);
             break;
     }
 }

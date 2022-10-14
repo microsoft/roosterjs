@@ -19,6 +19,7 @@ export function createDomToModelContext(
             getDarkColor: undefined,
         }),
 
+        blockFormat: {},
         segmentFormat: {},
         isInSelection: false,
 
@@ -34,6 +35,10 @@ export function createDomToModelContext(
 
         formatParsers: getFormatParsers(options?.formatParserOverride),
     };
+
+    if (editorContext?.isRightToLeft) {
+        context.blockFormat.direction = 'rtl';
+    }
 
     if (options?.alwaysNormalizeTable) {
         context.alwaysNormalizeTable = true;

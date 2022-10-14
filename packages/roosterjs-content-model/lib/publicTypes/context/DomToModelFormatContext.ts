@@ -1,9 +1,17 @@
+import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
+import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Represents format info used by DOM to Content Model conversion
  */
 export interface DomToModelFormatContext {
+    /**
+     * Format of current block
+     */
+    blockFormat: ContentModelBlockFormat;
+
     /**
      * Format of current segment
      */

@@ -68,7 +68,6 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
                 textModel.isSelected = true;
             }
 
-            addLink(textModel, context.link);
             addSegment(group, textModel, context.blockFormat);
         }
     }

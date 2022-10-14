@@ -63,7 +63,9 @@ export default class NormalizeTablePlugin implements EditorPlugin {
         switch (event.eventType) {
             case PluginEventType.EditorReady:
             case PluginEventType.ContentChanged:
-                this.normalizeTables(this.editor.queryElements('table'));
+                if (this.editor) {
+                    this.normalizeTables(this.editor.queryElements('table'));
+                }
                 break;
 
             case PluginEventType.BeforePaste:
@@ -81,7 +83,9 @@ export default class NormalizeTablePlugin implements EditorPlugin {
                 break;
 
             case PluginEventType.ExtractContentWithDom:
-                normalizeListsForExport(event.clonedRoot);
+                if (this.editor?.isFeatureEnabled(ExperimentalFeatures.NormalizeList)) {
+                    normalizeListsForExport(event.clonedRoot);
+                }
                 break;
         }
     }

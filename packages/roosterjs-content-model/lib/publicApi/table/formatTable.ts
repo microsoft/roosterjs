@@ -1,7 +1,7 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { ChangeSource } from 'roosterjs-editor-types';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**
@@ -26,7 +26,10 @@ export default function formatTable(
                 editor.focus();
                 if (model && table) {
                     editor.setContentModel(model, {
-                        mergingCallback: fragment => editor.replaceNode(table, fragment),
+                        mergingCallback: (target, fragment, entityPairs) => {
+                            preprocessEntitiesFromContentModel(entityPairs);
+                            editor.replaceNode(table, fragment);
+                        },
                     });
                 }
             },

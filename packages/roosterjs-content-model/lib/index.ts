@@ -1,5 +1,9 @@
 export { default as domToContentModel } from './publicApi/domToContentModel';
 export { default as contentModelToDom } from './publicApi/contentModelToDom';
+export {
+    default as mergeFragmentWithEntity,
+    preprocessEntitiesFromContentModel,
+} from './publicApi/mergeFragmentWithEntity';
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
 export { default as setTableCellShade } from './publicApi/table/setTableCellShade';
@@ -34,14 +38,15 @@ export { ContentModelText } from './publicTypes/segment/ContentModelText';
 export { ContentModelBr } from './publicTypes/segment/ContentModelBr';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
+export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './publicTypes/format/ContentModelTableCellFormat';
+export { ContentModelBlockFormat } from './publicTypes/format/ContentModelBlockFormat';
 export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegmentFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 
-export { TextAlignFormat } from './publicTypes/format/formatParts/TextAlignFormat';
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';
 export { BorderFormat } from './publicTypes/format/formatParts/BorderFormat';
@@ -49,6 +54,7 @@ export { BorderBoxFormat } from './publicTypes/format/formatParts/BorderBoxForma
 export { IdFormat } from './publicTypes/format/formatParts/IdFormat';
 export { SizeFormat } from './publicTypes/format/formatParts/SizeFormat';
 export { SpacingFormat } from './publicTypes/format/formatParts/SpacingFormat';
+export { DirectionFormat } from './publicTypes/format/formatParts/DirectionFormat';
 export { TextColorFormat } from './publicTypes/format/formatParts/TextColorFormat';
 export { FontSizeFormat } from './publicTypes/format/formatParts/FontSizeFormat';
 export { FontFamilyFormat } from './publicTypes/format/formatParts/FontFamilyFormat';
@@ -93,6 +99,10 @@ export {
     FormatApplier,
     FormatAppliers,
 } from './publicTypes/context/ModelToDomSettings';
+export {
+    ModelToDomEntityContext,
+    EntityPlaceholderPair,
+} from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
 
 export {

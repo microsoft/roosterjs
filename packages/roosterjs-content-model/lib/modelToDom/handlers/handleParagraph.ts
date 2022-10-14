@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { BlockFormatHandlers } from '../../formatHandlers/BlockFormatHandlers';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { handleSegment } from './handleSegment';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -15,9 +15,14 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
 ) => {
     let container: HTMLElement;
 
-    stackFormat(context, paragraph.decorator?.tagName || null, () => {
-        if (paragraph.decorator) {
-            const { tagName, format } = paragraph.decorator;
+    if (paragraph.isImplicit) {
+        container = parent as HTMLElement;
+    } else {
+        container = doc.createElement('div');
+        parent.appendChild(container);
+
+        applyFormat(container, BlockFormatHandlers, paragraph.format, context);
+    }
 
             container = doc.createElement(tagName);
 
