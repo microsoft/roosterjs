@@ -30,5 +30,6 @@ export function createModelToDomContext(
             nodeStack: [],
         },
         formatAppliers: getFormatAppliers(options?.formatApplierOverride),
+        entityPairs: [],
     };
 }

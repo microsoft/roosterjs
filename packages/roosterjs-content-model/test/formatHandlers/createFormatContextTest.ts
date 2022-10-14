@@ -25,6 +25,7 @@ describe('createFormatContextTest', () => {
             isRightToLeft: false,
             getDarkColor: undefined,
             isInSelection: false,
+            blockFormat: {},
             segmentFormat: {},
             listFormat,
             ...contextOptions,
@@ -47,6 +48,9 @@ describe('createFormatContextTest', () => {
             isRightToLeft: true,
             getDarkColor: getDarkColor,
             isInSelection: false,
+            blockFormat: {
+                direction: 'rtl',
+            },
             segmentFormat: {},
             listFormat,
             ...contextOptions,
@@ -89,6 +93,9 @@ describe('createFormatContextTest', () => {
                 endContainer: text,
                 endOffset: 2,
                 isSelectionCollapsed: false,
+            },
+            blockFormat: {
+                direction: 'rtl',
             },
             segmentFormat: {},
             listFormat,
@@ -145,6 +152,9 @@ describe('createFormatContextTest', () => {
                     y: 4,
                 },
             },
+            blockFormat: {
+                direction: 'rtl',
+            },
             segmentFormat: {},
             listFormat,
             ...contextOptions,
@@ -176,6 +186,9 @@ describe('createFormatContextTest', () => {
             isRightToLeft: true,
             getDarkColor: getDarkColor,
             isInSelection: false,
+            blockFormat: {
+                direction: 'rtl',
+            },
             segmentFormat: {},
             listFormat,
             ...contextOptions,
@@ -209,6 +222,9 @@ describe('createFormatContextTest', () => {
             isRightToLeft: true,
             getDarkColor: getDarkColor,
             isInSelection: false,
+            blockFormat: {
+                direction: 'rtl',
+            },
             segmentFormat: {},
             listFormat,
             ...contextOptions,

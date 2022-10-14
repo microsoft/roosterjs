@@ -32,7 +32,7 @@ export function textProcessor(
                 textModel.isSelected = true;
             }
 
-            addSegment(group, textModel);
+            addSegment(group, textModel, context.blockFormat);
         }
     }
 }

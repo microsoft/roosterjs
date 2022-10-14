@@ -2,6 +2,7 @@ import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDoc
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
+import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
 import { handleBlockGroup } from '../modelToDom/handlers/handleBlockGroup';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
@@ -20,14 +21,16 @@ import {
  * @param model The content model document to generate DOM tree from
  * @param editorContext Content for Content Model editor
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
- * @returns A Document Fragment that contains the DOM tree generated from the given model,
- * and a SelectionRangeEx object that contains selection info from the model if any, or null
+ * @returns A tuple of the following 3 objects:
+ * 1. Document Fragment that contains the DOM tree generated from the given model
+ * 2. A SelectionRangeEx object that contains selection info from the model if any, or null
+ * 3. An array entity DOM wrapper and its placeholder node pair for reusable root level entities.
  */
 export default function contentModelToDom(
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null] {
+): [DocumentFragment, SelectionRangeEx | null, EntityPlaceholderPair[]] {
     const fragment = model.document.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
@@ -38,7 +41,7 @@ export default function contentModelToDom(
 
     fragment.normalize();
 
-    return [fragment, range];
+    return [fragment, range, modelToDomContext.entityPairs];
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {

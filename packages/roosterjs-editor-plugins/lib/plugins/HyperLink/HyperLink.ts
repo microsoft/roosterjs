@@ -1,14 +1,21 @@
 import { Browser, isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    DOMEventHandler,
+    EditorPlugin,
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 /**
  * An editor plugin that show a tooltip for existing link
  */
 export default class HyperLink implements EditorPlugin {
-    private originalHref: string;
-    private trackedLink: HTMLAnchorElement = null;
-    private editor: IEditor;
-    private disposer: () => void;
+    private originalHref: string | null = null;
+    private trackedLink: HTMLAnchorElement | null = null;
+    private editor: IEditor | null = null;
+    private disposer: (() => void) | null = null;
 
     /**
      * Create a new instance of HyperLink class
@@ -36,21 +43,22 @@ export default class HyperLink implements EditorPlugin {
      */
     public initialize(editor: IEditor): void {
         this.editor = editor;
-        this.disposer =
-            this.getTooltipCallback &&
-            editor.addDomEventHandler({
-                mouseover: this.onMouse,
-                mouseout: this.onMouse,
-                blur: this.onBlur,
-            });
+        this.disposer = editor.addDomEventHandler({
+            mouseover: <DOMEventHandler>this.onMouse,
+            mouseout: <DOMEventHandler>this.onMouse,
+            blur: <DOMEventHandler>this.onBlur,
+        });
     }
 
     protected onMouse = (e: MouseEvent) => {
-        const a = this.editor.getElementAtCursor('a[href]', <Node>e.target) as HTMLAnchorElement;
-        const href = this.tryGetHref(a);
+        const a = this.editor?.getElementAtCursor(
+            'a[href]',
+            <Node>e.target
+        ) as HTMLAnchorElement | null;
+        const href = a && this.tryGetHref(a);
 
         if (href) {
-            this.editor.setEditorDomAttribute(
+            this.editor?.setEditorDomAttribute(
                 'title',
                 e.type == 'mouseover' ? this.getTooltipCallback(href, a) : null
             );
@@ -87,14 +95,14 @@ export default class HyperLink implements EditorPlugin {
                 (!this.isContentEditValue(event.rawEvent) || event.rawEvent.which == Keys.SPACE)) ||
             event.eventType == PluginEventType.ContentChanged
         ) {
-            const anchor = this.editor.getElementAtCursor(
+            const anchor = this.editor?.getElementAtCursor(
                 'A[href]',
-                null /*startFrom*/,
+                undefined /*startFrom*/,
                 event
-            ) as HTMLAnchorElement;
+            ) as HTMLAnchorElement | null;
 
             const shouldCheckUpdateLink =
-                anchor !== this.trackedLink ||
+                (anchor && anchor !== this.trackedLink) ||
                 event.eventType == PluginEventType.KeyUp ||
                 event.eventType == PluginEventType.ContentChanged;
 
@@ -114,24 +122,24 @@ export default class HyperLink implements EditorPlugin {
             }
 
             // Cache link and href value if its href attribute currently matches its display text
-            if (!this.trackedLink && this.doesLinkDisplayMatchHref(anchor)) {
+            if (!this.trackedLink && anchor && this.doesLinkDisplayMatchHref(anchor)) {
                 this.trackedLink = anchor;
                 this.originalHref = this.tryGetHref(anchor);
             }
         }
 
         if (event.eventType == PluginEventType.MouseUp) {
-            const anchor = this.editor.getElementAtCursor(
+            const anchor = this.editor?.getElementAtCursor(
                 'A',
                 <Node>event.rawEvent.srcElement
-            ) as HTMLAnchorElement;
+            ) as HTMLAnchorElement | null;
 
             if (anchor) {
                 if (this.onLinkClick && this.onLinkClick(anchor, event.rawEvent) !== false) {
                     return;
                 }
 
-                let href: string;
+                let href: string | null;
                 if (
                     !Browser.isFirefox &&
                     (href = this.tryGetHref(anchor)) &&
@@ -140,8 +148,8 @@ export default class HyperLink implements EditorPlugin {
                 ) {
                     try {
                         const target = this.target || '_blank';
-                        const window = this.editor.getDocument().defaultView;
-                        window.open(href, target);
+                        const window = this.editor?.getDocument().defaultView;
+                        window?.open(href, target);
                     } catch {}
                 }
             }
@@ -153,10 +161,12 @@ export default class HyperLink implements EditorPlugin {
      * The reason this is put in a try-catch is that
      * it has been seen that accessing href may throw an exception, in particular on IE/Edge
      */
-    private tryGetHref(anchor: HTMLAnchorElement): string {
+    private tryGetHref(anchor: HTMLAnchorElement): string | null {
         try {
             return anchor ? anchor.href : null;
-        } catch {}
+        } catch {
+            return null;
+        }
     }
 
     /**
@@ -172,7 +182,7 @@ export default class HyperLink implements EditorPlugin {
      * Updates the href of the tracked link if the display text doesn't match href anymore
      */
     private updateLinkHrefIfShouldUpdate() {
-        if (!this.doesLinkDisplayMatchHref(this.trackedLink)) {
+        if (this.trackedLink && !this.doesLinkDisplayMatchHref(this.trackedLink)) {
             this.updateLinkHref();
         }
     }
@@ -212,8 +222,8 @@ export default class HyperLink implements EditorPlugin {
         if (this.trackedLink) {
             let linkData = matchLink(this.trackedLink.innerText.trim());
             if (linkData !== null) {
-                this.editor.addUndoSnapshot(() => {
-                    this.trackedLink.href = linkData.normalizedUrl;
+                this.editor?.addUndoSnapshot(() => {
+                    this.trackedLink!.href = linkData!.normalizedUrl;
                 });
             }
         }
