@@ -94,6 +94,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.insertoptionrange.html#insertonnewline" class="tsd-kind-icon">insert<wbr>OnNew<wbr>Line</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.insertoptionrange.html#inserttoregionroot" class="tsd-kind-icon">insert<wbr>ToRegion<wbr>Root</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.insertoptionrange.html#position" class="tsd-kind-icon">position</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.insertoptionrange.html#range" class="tsd-kind-icon">range</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.insertoptionrange.html#replaceselection" class="tsd-kind-icon">replace<wbr>Selection</a></li>
@@ -112,7 +113,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.insertoptionbase.html">InsertOptionBase</a>.<a href="roosterjs_editor_types.insertoptionbase.html#insertonnewline">insertOnNewLine</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ed65ea9/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L17">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f973090/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L17">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -122,13 +123,31 @@
 						</div>
 					</div>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="inserttoregionroot" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> insert<wbr>ToRegion<wbr>Root</h3>
+					<div class="tsd-signature tsd-kind-icon">insert<wbr>ToRegion<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.insertoptionbase.html">InsertOptionBase</a>.<a href="roosterjs_editor_types.insertoptionbase.html#inserttoregionroot">insertToRegionRoot</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f973090/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L30">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:30</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Boolean flag for inserting the content onto root node of current region.
+								If current position is not at root of region, break parent node until insert can happen at root of region.
+							This option only takes effect when insertOnNewLine is true, otherwise it will be ignored.</p>
+						</div>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="position" class="tsd-anchor"></a>
 					<h3>position</h3>
 					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <a href="../enums/roosterjs_editor_types.contentposition.html#range" class="tsd-signature-type" data-tsd-kind="Enumeration member">Range</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatiblecontentposition.html#range" class="tsd-signature-type" data-tsd-kind="Enumeration member">Range</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ed65ea9/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L42">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f973090/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L49">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -138,7 +157,7 @@
 					<div class="tsd-signature tsd-kind-icon">range<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Range</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ed65ea9/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L47">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f973090/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L54">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:54</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -154,7 +173,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.insertoptionbase.html">InsertOptionBase</a>.<a href="roosterjs_editor_types.insertoptionbase.html#replaceselection">replaceSelection</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ed65ea9/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L23">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f973090/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L23">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -171,7 +190,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.insertoptionbase.html">InsertOptionBase</a>.<a href="roosterjs_editor_types.insertoptionbase.html#updatecursor">updateCursor</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/ed65ea9/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L11">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/f973090/packages/roosterjs-editor-types/lib/interface/InsertOption.ts#L11">packages/roosterjs-editor-types/lib/interface/InsertOption.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -226,6 +245,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_types.insertoptionrange.html#insertonnewline" class="tsd-kind-icon">insert<wbr>OnNew<wbr>Line</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_types.insertoptionrange.html#inserttoregionroot" class="tsd-kind-icon">insert<wbr>ToRegion<wbr>Root</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.insertoptionrange.html#position" class="tsd-kind-icon">position</a>
