@@ -506,13 +506,11 @@ export default class Editor implements IEditor {
                   <number | PositionType>arg4
               );
 
-        if (range) {
-            this.triggerSelectionChanged({
-                type: SelectionRangeTypes.Normal,
-                ranges: [range],
-                areAllCollapsed: range.collapsed,
-            });
-        }
+        this.triggerSelectionChanged({
+            type: SelectionRangeTypes.Normal,
+            ranges: range ? [range] : [],
+            areAllCollapsed: range ? range.collapsed : true,
+        });
 
         return !!range && this.contains(range) && core.api.selectRange(core, range);
     }
@@ -838,7 +836,7 @@ export default class Editor implements IEditor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    public setEditorDomAttribute(name: string, value: string) {
+    public setEditorDomAttribute(name: string, value: string | null) {
         if (value === null) {
             this.getCore().contentDiv.removeAttribute(name);
         } else {

@@ -33,6 +33,7 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 segments: [],
+                format: {},
             },
             '<div></div>',
             0
@@ -45,6 +46,7 @@ describe('handleParagraph', () => {
                 blockType: 'Paragraph',
                 segments: [],
                 isImplicit: true,
+                format: {},
             },
             '',
             0
@@ -61,6 +63,7 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 segments: [segment],
+                format: {},
             },
             '<div></div>',
             1
@@ -85,6 +88,7 @@ describe('handleParagraph', () => {
                 blockType: 'Paragraph',
                 segments: [segment],
                 isImplicit: true,
+                format: {},
             },
             '',
             1
@@ -116,6 +120,7 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 segments: [segment1, segment2],
+                format: {},
             },
             '<div></div>',
             2

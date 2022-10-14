@@ -27,6 +27,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -38,6 +39,7 @@ describe('textProcessor', () => {
         doc.blocks.push({
             blockType: 'Paragraph',
             segments: [],
+            format: {},
         });
 
         textProcessor(doc, 'test', context);
@@ -54,6 +56,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -71,6 +74,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
         textProcessor(doc, 'test1', context);
@@ -87,6 +91,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -107,6 +112,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
         textProcessor(doc, 'test', context);
@@ -131,6 +137,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -148,6 +155,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
         context.isInSelection = true;
@@ -169,6 +177,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
     });
 
@@ -184,6 +193,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
         textProcessor(doc, 'test2', context);
@@ -203,6 +213,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
     });
 
@@ -218,6 +229,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
         context.isInSelection = true;
@@ -234,6 +246,7 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
     });
 
@@ -254,6 +267,7 @@ describe('textProcessor', () => {
                 },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 });
