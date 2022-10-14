@@ -162,7 +162,7 @@ export const insertNode: InsertNode = (
                     let blockElement: BlockElement | null;
 
                     if (option.insertOnNewLine && option.insertToRegionRoot) {
-                        pos = adjustInertPositionRegionRoot(core, range, pos);
+                        pos = adjustInsertPositionRegionRoot(core, range, pos);
                     } else if (
                         option.insertOnNewLine &&
                         (blockElement = getBlockElementAtNode(contentDiv, pos.normalize().node))
@@ -197,7 +197,7 @@ export const insertNode: InsertNode = (
     return true;
 };
 
-function adjustInertPositionRegionRoot(core: EditorCore, range: Range, position: NodePosition) {
+function adjustInsertPositionRegionRoot(core: EditorCore, range: Range, position: NodePosition) {
     const region = getRegionsFromRange(core.contentDiv, range, RegionType.Table)[0];
     let node: Node | null = position.node;
 
