@@ -108,4 +108,29 @@ describe('handleSegment', () => {
         expect(parent.innerHTML).toBe('');
         expect(handleImage).toHaveBeenCalledWith(document, parent, segment, context);
     });
+
+    it('entity segment', () => {
+        const div = document.createElement('div');
+        const segment: ContentModelSegment = {
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            type: 'entity',
+            id: 'entity_1',
+            wrapper: div,
+            isReadonly: true,
+        };
+        runTest(segment, '<!--Entity:entity_1-->', 0);
+
+        expect(context.entityPairs).toEqual([
+            {
+                entityWrapper: div,
+                placeholder: document.createComment('Entity:entity_1'),
+            },
+        ]);
+
+        expect(div.outerHTML).toBe(
+            '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
+        );
+    });
 });

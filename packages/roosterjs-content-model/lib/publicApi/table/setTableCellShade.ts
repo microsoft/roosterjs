@@ -3,6 +3,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
+import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
 
 /**

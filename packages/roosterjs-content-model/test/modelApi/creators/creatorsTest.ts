@@ -17,6 +17,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { Entity } from 'roosterjs-editor-types';
 
 describe('Creators', () => {
     it('createContentModelDocument', () => {

@@ -81,7 +81,6 @@ const defaultFormatHandlerMap: FormatHandlers = {
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
-    textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     underline: underlineFormatHandler,

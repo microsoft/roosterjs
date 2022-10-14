@@ -30,6 +30,8 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
 
             const originalListParent = listFormat.listParent;
 
+            const originalListParent = listFormat.listParent;
+
             listFormat.listParent = listFormat.listParent || group;
             listFormat.levels.push(level);
 
