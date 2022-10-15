@@ -1,3 +1,4 @@
+import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -30,6 +31,10 @@ export function createModelToDomContext(
             nodeStack: [],
         },
         formatAppliers: getFormatAppliers(options?.formatApplierOverride),
+        modelHandlers: {
+            ...defaultContentModelHandlers,
+            ...(options?.modelHandlerOverride || {}),
+        },
         entityPairs: [],
     };
 }

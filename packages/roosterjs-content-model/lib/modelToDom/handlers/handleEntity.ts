@@ -1,16 +1,17 @@
 import { commitEntity } from 'roosterjs-editor-dom';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
  * @internal
  */
-export function handleEntity(
+export const handleEntity: ContentModelHandler<ContentModelEntity> = (
     doc: Document,
     parent: Node,
     entityModel: ContentModelEntity,
     context: ModelToDomContext
-) {
+) => {
     const { wrapper, id, type, isReadonly } = entityModel;
 
     // Commit the entity attributes in case there is any change
@@ -29,4 +30,4 @@ export function handleEntity(
         entityWrapper: wrapper,
         placeholder: placeholder,
     });
-}
+};

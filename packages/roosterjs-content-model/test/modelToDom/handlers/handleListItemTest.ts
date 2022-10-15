@@ -1,6 +1,7 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
-import * as handleBlockGroupChildren from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
-import * as handleList from '../../../lib/modelToDom/handlers/handleList';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
+import { ContentModelListItem } from '../../../lib/publicTypes/block/group/ContentModelListItem';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -11,12 +12,19 @@ import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormat
 
 describe('handleListItem', () => {
     let context: ModelToDomContext;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleList: jasmine.Spy<ContentModelHandler<ContentModelListItem>>;
 
     beforeEach(() => {
-        context = createModelToDomContext();
+        handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
+        handleList = jasmine.createSpy('handleList');
+        context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: handleBlockGroupChildren,
+                list: handleList,
+            },
+        });
 
-        spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
-        spyOn(handleList, 'handleList');
         spyOn(applyFormat, 'applyFormat').and.callThrough();
     });
 
@@ -34,16 +42,11 @@ describe('handleListItem', () => {
             threadItemCounts: [],
             nodeStack: [],
         });
-        expect(handleList.handleList).toHaveBeenCalledTimes(1);
-        expect(handleList.handleList).toHaveBeenCalledWith(document, parent, listItem, context);
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(applyFormat.applyFormat).not.toHaveBeenCalled();
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
-            document,
-            parent,
-            listItem,
-            context
-        );
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(paragraph.isImplicit).toBeFalse();
     });
 
@@ -79,8 +82,8 @@ describe('handleListItem', () => {
                 },
             ],
         });
-        expect(handleList.handleList).toHaveBeenCalledTimes(1);
-        expect(handleList.handleList).toHaveBeenCalledWith(document, parent, listItem, context);
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
@@ -94,8 +97,8 @@ describe('handleListItem', () => {
             listItem.levels[0],
             context
         );
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             listItem,
@@ -135,8 +138,8 @@ describe('handleListItem', () => {
                 },
             ],
         });
-        expect(handleList.handleList).toHaveBeenCalledTimes(1);
-        expect(handleList.handleList).toHaveBeenCalledWith(document, parent, listItem, context);
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
@@ -150,8 +153,8 @@ describe('handleListItem', () => {
             listItem.levels[0],
             context
         );
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             listItem,
@@ -162,17 +165,23 @@ describe('handleListItem', () => {
 
 describe('handleListItem without format handler', () => {
     let context: ModelToDomContext;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleList: jasmine.Spy<ContentModelHandler<ContentModelListItem>>;
 
     beforeEach(() => {
+        handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
+        handleList = jasmine.createSpy('handleList');
         context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: handleBlockGroupChildren,
+                list: handleList,
+            },
             formatApplierOverride: {
                 listItemThread: null,
                 listItemMetadata: null,
             },
         });
 
-        spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
-        spyOn(handleList, 'handleList');
         spyOn(applyFormat, 'applyFormat').and.callThrough();
     });
 
@@ -190,16 +199,11 @@ describe('handleListItem without format handler', () => {
             threadItemCounts: [],
             nodeStack: [],
         });
-        expect(handleList.handleList).toHaveBeenCalledTimes(1);
-        expect(handleList.handleList).toHaveBeenCalledWith(document, parent, listItem, context);
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(applyFormat.applyFormat).not.toHaveBeenCalled();
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
-            document,
-            parent,
-            listItem,
-            context
-        );
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(paragraph.isImplicit).toBeFalse();
     });
 
@@ -235,8 +239,8 @@ describe('handleListItem without format handler', () => {
                 },
             ],
         });
-        expect(handleList.handleList).toHaveBeenCalledTimes(1);
-        expect(handleList.handleList).toHaveBeenCalledWith(document, parent, listItem, context);
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
@@ -250,8 +254,8 @@ describe('handleListItem without format handler', () => {
             listItem.levels[0],
             context
         );
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             listItem,
@@ -291,8 +295,8 @@ describe('handleListItem without format handler', () => {
                 },
             ],
         });
-        expect(handleList.handleList).toHaveBeenCalledTimes(1);
-        expect(handleList.handleList).toHaveBeenCalledWith(document, parent, listItem, context);
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context);
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
@@ -306,8 +310,8 @@ describe('handleListItem without format handler', () => {
             listItem.levels[0],
             context
         );
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             listItem,
