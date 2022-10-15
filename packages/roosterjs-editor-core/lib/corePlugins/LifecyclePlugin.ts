@@ -45,6 +45,8 @@ const DARK_MODE_DEFAULT_FORMAT = {
     },
 };
 
+const COLOR_VAR_REGEX = /^\s*var\(\s*[a-zA-Z0-9-_]+\s*(,\s*(.*))?\)\s*$/;
+
 /**
  * @internal
  * Lifecycle plugin handles editor initialization and disposing
@@ -57,6 +59,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     private initializer: (() => void) | null = null;
     private disposer: (() => void) | null = null;
     private adjustColor: () => void;
+    private internalGetDarkColor: (color: string) => string;
 
     /**
      * Construct a new instance of LifecyclePlugin
@@ -88,12 +91,13 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                   setColor(contentDiv, textColors, false /*isBackground*/, isDarkMode);
                   setColor(contentDiv, backgroundColors, true /*isBackground*/, isDarkMode);
               };
+        this.internalGetDarkColor = options.getDarkColor || (color => color);
 
         this.state = {
             customData: {},
             defaultFormat: options.defaultFormat ?? null,
             isDarkMode: !!options.inDarkMode,
-            getDarkColor: options.getDarkColor ?? ((color: string) => color),
+            getDarkColor: this.getDarkColor,
             onExternalContentTransform: options.onExternalContentTransform ?? null,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
@@ -246,4 +250,17 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             underline: underline,
         };
     }
+
+    private getDarkColor = (color: string) => {
+        color = (color || '').trim();
+
+        // Need to handle color that is in var format. e.g.: var(--name, value)
+        if (color.indexOf('var(') == 0) {
+            const match = COLOR_VAR_REGEX.exec(color);
+
+            color = match?.[2] || 'black'; // If no fallback color, browser will treat it as black
+        }
+
+        return this.internalGetDarkColor(color);
+    };
 }
