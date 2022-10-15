@@ -30,7 +30,10 @@ export function createModelToDomContext(
             threadItemCounts: [],
             nodeStack: [],
         },
-        formatAppliers: getFormatAppliers(options?.formatApplierOverride),
+        formatAppliers: getFormatAppliers(
+            options?.formatApplierOverride,
+            options?.additionalFormatAppliers
+        ),
         modelHandlers: {
             ...defaultContentModelHandlers,
             ...(options?.modelHandlerOverride || {}),

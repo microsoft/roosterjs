@@ -7,7 +7,6 @@ import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentMod
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
@@ -104,7 +103,7 @@ describe('handleBlock', () => {
         expect(context.regularSelection.current.segment).toBe(parent.firstChild);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             block.format,
             context
         );
