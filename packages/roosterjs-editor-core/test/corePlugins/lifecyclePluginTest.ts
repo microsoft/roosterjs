@@ -40,7 +40,7 @@ describe('LifecyclePlugin', () => {
             shadowEditFragment: null,
             shadowEditTableSelectionPath: null,
             shadowEditImageSelectionPath: null,
-            getDarkColor,
+            getDarkColor: (<any>plugin).getDarkColor,
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -94,7 +94,7 @@ describe('LifecyclePlugin', () => {
             shadowEditSelectionPath: null,
             shadowEditTableSelectionPath: null,
             shadowEditImageSelectionPath: null,
-            getDarkColor,
+            getDarkColor: (<any>plugin).getDarkColor,
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -336,5 +336,19 @@ describe('recalculateDefaultFormat', () => {
             italic: undefined,
             underline: undefined,
         });
+    });
+});
+
+describe('dark color with variable', () => {
+    it('init', () => {
+        const div = document.createElement('div');
+        const plugin = new LifecyclePlugin({ getDarkColor: s => s + 'test' }, div);
+        const state = plugin.getState();
+
+        expect(state.getDarkColor('red')).toBe('redtest');
+        expect(state.getDarkColor('var(--test, green)')).toBe('greentest');
+        expect(state.getDarkColor('var(--test,   #123456 )')).toBe('#123456 test');
+        expect(state.getDarkColor('var(--test,   var( 1, 2 , 3)  )')).toBe('var( 1, 2 , 3)  test');
+        expect(state.getDarkColor('var(--test)')).toBe('blacktest');
     });
 });
