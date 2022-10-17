@@ -512,7 +512,7 @@ export default interface IEditor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    setEditorDomAttribute(name: string, value: string): void;
+    setEditorDomAttribute(name: string, value: string | null): void;
 
     /**
      * Get DOM attribute of editor content DIV, null if there is no such attribute.

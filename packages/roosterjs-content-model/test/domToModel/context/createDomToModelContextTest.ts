@@ -48,7 +48,9 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
-            blockFormat: {},
+            blockFormat: {
+                direction: 'rtl',
+            },
             isInSelection: false,
             listFormat,
             ...contextOptions,

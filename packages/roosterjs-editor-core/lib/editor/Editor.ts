@@ -836,7 +836,7 @@ export default class Editor implements IEditor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    public setEditorDomAttribute(name: string, value: string) {
+    public setEditorDomAttribute(name: string, value: string | null) {
         if (value === null) {
             this.getCore().contentDiv.removeAttribute(name);
         } else {
