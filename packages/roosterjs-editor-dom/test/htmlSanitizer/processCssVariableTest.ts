@@ -18,7 +18,7 @@ describe('processCssVariable', () => {
 
     it('var with fallback that has complex value', () => {
         const result = processCssVariable('var(--test, rgb(1, 2, 3))');
-        expect(result).toBe('rgb(1, 2, 3');
+        expect(result).toBe('rgb(1, 2, 3)');
     });
 
     it('var with fallback and more spaces', () => {
