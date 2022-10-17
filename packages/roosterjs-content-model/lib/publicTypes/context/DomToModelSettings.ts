@@ -30,13 +30,55 @@ export type FormatParsers = {
 };
 
 /**
+ * A map from element processor name to its processor type
+ */
+export type ElementProcessorMap = {
+    [key in keyof HTMLElementDeprecatedTagNameMap]?: ElementProcessor<
+        HTMLElementDeprecatedTagNameMap[key]
+    >;
+} &
+    {
+        [key in keyof HTMLElementTagNameMap]?: ElementProcessor<HTMLElementTagNameMap[key]>;
+    } & {
+        /**
+         * Processors for all other HTML elements
+         */
+        '*': ElementProcessor<HTMLElement>;
+
+        /**
+         * Processor for text node
+         */
+        '#text': ElementProcessor<Text>;
+
+        /**
+         * Processor for entity
+         */
+        entity: ElementProcessor<HTMLElement>;
+
+        /**
+         * Common processor dispatch for all elements
+         */
+        element: ElementProcessor<HTMLElement>;
+
+        /**
+         * Common processor for child nodes of a given element
+         */
+        child: ElementProcessor<HTMLElement>;
+
+        /**
+         * Workaround for typescript 4.4.4 that doesn't have element "strike" in its element type
+         */
+        strike?: ElementProcessor<HTMLElement>;
+    };
+
+/**
  * Represents settings to customize DOM to Content Model conversion
  */
 export interface DomToModelSettings {
     /**
      * Map of element processors
      */
-    elementProcessors: Record<string, ElementProcessor>;
+    elementProcessors: ElementProcessorMap;
 
     /**
      * Map of default styles

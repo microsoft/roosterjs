@@ -88,6 +88,7 @@ export {
 export {
     DomToModelSettings,
     DefaultStyleMap,
+    ElementProcessorMap,
     FormatParser,
     FormatParsers,
 } from './publicTypes/context/DomToModelSettings';
