@@ -75,6 +75,7 @@ describe('entityProcessor', () => {
                             wrapper: span,
                         },
                     ],
+                    format: {},
                 },
             ],
         });

@@ -4,11 +4,11 @@ import { BlockGroupContentView } from './BlockGroupContentView';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelView } from '../ContentModelView';
+import { DirectionFormatRenderers } from '../format/formatPart/DirectionFormatRenderers';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
-import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignFormatRenderer';
 import {
@@ -21,10 +21,10 @@ const styles = require('./ContentModelTableCellView.scss');
 
 const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = [
     ...BorderFormatRenderers,
+    ...DirectionFormatRenderers,
     BorderBoxFormatRenderer,
     BackgroundColorFormatRenderer,
     PaddingFormatRenderer,
-    TextAlignFormatRenderer,
     VerticalAlignFormatRenderer,
     TableCellMetadataFormatRender,
 ];

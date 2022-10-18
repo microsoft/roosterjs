@@ -22,21 +22,43 @@ const characters: Record<string, number> = {
     ')': Character.Parenthesis,
 };
 
+const lowerRomanTypes = [
+    NumberingListType.LowerRoman,
+    NumberingListType.LowerRomanDash,
+    NumberingListType.LowerRomanDoubleParenthesis,
+    NumberingListType.LowerRomanParenthesis,
+];
+const upperRomanTypes = [
+    NumberingListType.UpperRoman,
+    NumberingListType.UpperRomanDash,
+    NumberingListType.UpperRomanDoubleParenthesis,
+    NumberingListType.UpperRomanParenthesis,
+];
 const numberingTriggers = ['1', 'a', 'A', 'I', 'i'];
+const lowerRomanNumbers = ['i', 'v', 'x', 'l', 'c', 'd', 'm'];
+const upperRomanNumbers = ['I', 'V', 'X', 'L', 'C', 'D', 'M'];
 
-const identifyNumberingType = (text: string) => {
+const identifyNumberingType = (text: string, previousListStyle?: NumberingListType) => {
     if (!isNaN(parseInt(text))) {
         return NumberingTypes.Decimal;
     } else if (/[a-z]+/g.test(text)) {
-        if (text === 'i') {
+        if (
+            (lowerRomanTypes.indexOf(previousListStyle) > -1 &&
+                lowerRomanNumbers.indexOf(text[0]) > -1) ||
+            (!previousListStyle && text === 'i')
+        ) {
             return NumberingTypes.LowerRoman;
-        } else {
+        } else if (previousListStyle || (!previousListStyle && text === 'a')) {
             return NumberingTypes.LowerAlpha;
         }
     } else if (/[A-Z]+/g.test(text)) {
-        if (text === 'I') {
+        if (
+            (upperRomanTypes.indexOf(previousListStyle) > -1 &&
+                upperRomanNumbers.indexOf(text[0]) > -1) ||
+            (!previousListStyle && text === 'I')
+        ) {
             return NumberingTypes.UpperRoman;
-        } else {
+        } else if (previousListStyle || (!previousListStyle && text === 'A')) {
             return NumberingTypes.UpperAlpha;
         }
     }
@@ -87,15 +109,16 @@ const DecimalsTypes: Record<number, number> = {
 
 const identifyNumberingListType = (
     numbering: string,
-    isDoubleParenthesis: boolean
+    isDoubleParenthesis: boolean,
+    previousListStyle?: NumberingListType
 ): NumberingListType | null => {
     const separatorCharacter = isDoubleParenthesis
         ? Character.DoubleParenthesis
-        : characters[numbering[1]];
+        : characters[numbering[numbering.length - 1]];
     // if separator is not valid, no need to check if the number is valid.
     if (separatorCharacter) {
-        const number = numbering[numbering.length - 2];
-        const numberingType = identifyNumberingType(number);
+        const number = isDoubleParenthesis ? numbering.slice(1, -1) : numbering.slice(0, -1);
+        const numberingType = identifyNumberingType(number, previousListStyle);
         return numberingType ? numberingListTypes[numberingType](separatorCharacter) : null;
     }
     return null;
@@ -104,12 +127,14 @@ const identifyNumberingListType = (
 /**
  * @internal
  * @param textBeforeCursor The trigger character
- * @param previousListChain (Optional) This parameters is used to keep the list chain, if the is not a new list
+ * @param previousListChain @optional This parameters is used to keep the list chain, if the is not a new list
+ * @param previousListStyle @optional The list style of the previous list
  * @returns The style of a numbering list triggered by a string
  */
 export default function getAutoNumberingListStyle(
     textBeforeCursor: string,
-    previousListChain?: VListChain[]
+    previousListChain?: VListChain[],
+    previousListStyle?: NumberingListType
 ): NumberingListType {
     const trigger = textBeforeCursor.trim();
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
@@ -127,12 +152,11 @@ export default function getAutoNumberingListStyle(
         }
     }
 
-    // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
-    // If the marker length is 3, the marker style is double parenthesis such as (1), (A).
-    const isDoubleParenthesis = trigger.length === 3 && trigger[0] === '(' && trigger[2] === ')';
-    const numberingType =
-        trigger.length === 2 || isDoubleParenthesis
-            ? identifyNumberingListType(trigger, isDoubleParenthesis)
-            : null;
+    const isDoubleParenthesis = trigger[0] === '(' && trigger[trigger.length - 1] === ')';
+    const numberingType = identifyNumberingListType(
+        trigger,
+        isDoubleParenthesis,
+        previousListStyle
+    );
     return numberingType;
 }

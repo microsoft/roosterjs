@@ -5,12 +5,12 @@ import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 /**
  * @internal
  */
-export const brProcessor: ElementProcessor = (group, element, context) => {
+export const brProcessor: ElementProcessor<HTMLBRElement> = (group, element, context) => {
     const br = createBr(context.segmentFormat);
 
     if (context.isInSelection) {
         br.isSelected = true;
     }
 
-    addSegment(group, br);
+    addSegment(group, br, context.blockFormat);
 };

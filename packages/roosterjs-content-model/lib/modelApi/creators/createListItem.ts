@@ -16,5 +16,6 @@ export function createListItem(
         blocks: [],
         levels: levels ? levels.map(level => ({ ...level })) : [],
         formatHolder: createSelectionMarker(format),
+        format: {},
     };
 }

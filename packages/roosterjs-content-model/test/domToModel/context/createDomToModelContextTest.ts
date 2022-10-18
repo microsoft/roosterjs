@@ -28,6 +28,7 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
+            blockFormat: {},
             isInSelection: false,
             listFormat,
             ...contextOptions,
@@ -47,6 +48,9 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
+            blockFormat: {
+                direction: 'rtl',
+            },
             isInSelection: false,
             listFormat,
             ...contextOptions,
@@ -72,6 +76,7 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
+            blockFormat: {},
             isInSelection: false,
             regularSelection: {
                 startContainer: 'DIV 1' as any,
@@ -102,6 +107,7 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
+            blockFormat: {},
             isInSelection: false,
             tableSelection: {
                 table: 'TABLE' as any,

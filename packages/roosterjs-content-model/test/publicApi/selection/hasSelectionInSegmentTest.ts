@@ -88,6 +88,7 @@ describe('hasSelectionInSegment', () => {
                 {
                     blockType: 'Paragraph',
                     segments: [],
+                    format: {},
                 },
             ],
             format: {},
@@ -112,6 +113,7 @@ describe('hasSelectionInSegment', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             element: null!,

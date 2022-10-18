@@ -9,5 +9,6 @@ export function createGeneralBlock(element: HTMLElement): ContentModelGeneralBlo
         blockGroupType: 'General',
         element: element,
         blocks: [],
+        format: {},
     };
 }

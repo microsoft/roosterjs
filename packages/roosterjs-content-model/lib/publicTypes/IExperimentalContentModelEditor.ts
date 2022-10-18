@@ -1,7 +1,7 @@
 import { ContentModelDocument } from './block/group/ContentModelDocument';
-import { DefaultStyleMap, FormatParsers } from './context/DomToModelSettings';
+import { ContentModelHandlerMap } from './context/ModelToDomSettings';
+import { DefaultStyleMap, ElementProcessorMap, FormatParsers } from './context/DomToModelSettings';
 import { EditorContext } from './context/EditorContext';
-import { ElementProcessor } from './context/ElementProcessor';
 import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
 import { FormatAppliers } from './context/ModelToDomSettings';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
@@ -23,7 +23,7 @@ export interface DomToModelOption {
     /**
      * Overrides default element processors
      */
-    processorOverride?: Record<string, ElementProcessor>;
+    processorOverride?: Partial<ElementProcessorMap>;
 
     /**
      * Overrides default element styles
@@ -63,6 +63,10 @@ export interface ModelToDomOption {
      * Overrides default format appliers
      */
     formatApplierOverride?: Partial<FormatAppliers>;
+    /**
+     * Overrides default model handlers
+     */
+    modelHandlerOverride?: Partial<ContentModelHandlerMap>;
 }
 
 /**

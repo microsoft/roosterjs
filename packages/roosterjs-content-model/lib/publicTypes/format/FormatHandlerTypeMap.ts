@@ -2,6 +2,7 @@ import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
+import { DirectionFormat } from './formatParts/DirectionFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
@@ -16,7 +17,6 @@ import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
-import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -44,6 +44,11 @@ export interface FormatHandlerTypeMap {
      * Format for BorderBoxFormat
      */
     borderBox: BorderBoxFormat;
+
+    /**
+     * Format for DirectionFormat
+     */
+    direction: DirectionFormat;
 
     /**
      * Format for FontFamilyFormat
@@ -124,11 +129,6 @@ export interface FormatHandlerTypeMap {
      * Format for SpacingFormat
      */
     tableSpacing: SpacingFormat;
-
-    /**
-     * Format for TextAlignFormat
-     */
-    textAlign: TextAlignFormat;
 
     /**
      * Format for TextColorFormat
