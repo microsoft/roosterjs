@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { handleBlockGroup } from './handleBlockGroup';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
@@ -9,12 +9,12 @@ import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 /**
  * @internal
  */
-export function handleTable(
+export const handleTable: ContentModelHandler<ContentModelTable> = (
     doc: Document,
     parent: Node,
     table: ContentModelTable,
     context: ModelToDomContext
-) {
+) => {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return
         return;
@@ -82,8 +82,8 @@ export function handleTable(
                     td.colSpan = colSpan;
                 }
 
-                handleBlockGroup(doc, td, cell, context);
+                context.modelHandlers.blockGroup(doc, td, cell, context);
             }
         }
     }
-}
+};
