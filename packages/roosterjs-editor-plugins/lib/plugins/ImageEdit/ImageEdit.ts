@@ -320,18 +320,23 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null);
+        this.setEditingImage(null, true);
     };
 
     /**
      * Create editing wrapper for the image
      */
     private createWrapper(operation: ImageEditOperation | CompatibleImageEditOperation) {
+        // This image wrapper will overlay the selection border, so we copy the selection border style in this element
+        const border = this.getStylePropertyValue(this.image, 'border');
+        const imageWrapper = wrap(this.image, KnownCreateElementDataIndex.ImageEditWrapper);
+        imageWrapper.style.border = border;
+
         // Wrap the image with an entity so that we can easily retrieve it later
         const { wrapper } = insertEntity(
             this.editor,
             IMAGE_EDIT_WRAPPER_ENTITY_TYPE,
-            wrap(this.image, KnownCreateElementDataIndex.ImageEditWrapper),
+            imageWrapper,
             false /*isBlock*/,
             true /*isReadonly*/
         );
@@ -339,12 +344,11 @@ export default class ImageEdit implements EditorPlugin {
         wrapper.style.position = 'relative';
         wrapper.style.maxWidth = '100%';
         // keep the same vertical align
-        const originalVerticalAlign = this.image.ownerDocument.defaultView
-            .getComputedStyle(this.image)
-            .getPropertyValue('vertical-align');
+        const originalVerticalAlign = this.getStylePropertyValue(this.image, 'vertical-align');
         if (originalVerticalAlign) {
             wrapper.style.verticalAlign = originalVerticalAlign;
         }
+
         wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         // Cache current src so that we can compare it after edit see if src is changed
@@ -388,6 +392,12 @@ export default class ImageEdit implements EditorPlugin {
             }
         });
         return wrapper;
+    }
+
+    private getStylePropertyValue(element: HTMLElement, property: string): string {
+        return element.ownerDocument.defaultView
+            .getComputedStyle(this.image)
+            .getPropertyValue(property);
     }
 
     /**
