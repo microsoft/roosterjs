@@ -41,11 +41,11 @@ export const OrderedMap: Record<NumberingListType, string> = {
  */
 export const UnorderedMap: Record<BulletListType, string> = {
     [BulletListType.Disc]: 'disc',
-    [BulletListType.Square]: 'square',
+    [BulletListType.Square]: '"∎ "',
     [BulletListType.Circle]: 'circle',
     [BulletListType.Dash]: '"- "',
-    [BulletListType.LongArrow]: '"→ "',
-    [BulletListType.DoubleLongArrow]: '"→ "',
+    [BulletListType.LongArrow]: '"➔ "',
+    [BulletListType.DoubleLongArrow]: '"➔ "',
     [BulletListType.ShortArrow]: '"➢ "',
     [BulletListType.UnfilledArrow]: '"➪ "',
     [BulletListType.Hyphen]: '"— "',
