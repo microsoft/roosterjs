@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.67% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/24</span>
+                <span class='fraction'>16/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">41.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/12</span>
+                <span class='fraction'>5/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.3% </span>
+                <span class="strong">65.22% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/23</span>
+                <span class='fraction'>15/23</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -149,12 +149,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">38x</span>
-<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
@@ -169,21 +169,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -221,7 +221,7 @@ export default function execCommand(
     let formatter = () =&gt; editor.getDocument().execCommand(command, false, null);
 &nbsp;
     let selection = editor.getSelectionRangeEx();
-    if (selection &amp;&amp; selection.areAllCollapsed) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (selection &amp;&amp; selection.areAllCollapsed) {
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
         formatter();
@@ -236,21 +236,21 @@ export default function execCommand(
             });
         }
     } else {
-        formatUndoSnapshot(
+<span class="cstat-no" title="statement not covered" >        formatUndoSnapshot(</span>
             editor,
-            () =&gt; {
+<span class="fstat-no" title="function not covered" >            () =&gt; {</span>
                 let tempRange: Range;
-                selection.ranges.forEach(range =&gt; {
-                    <span class="missing-if-branch" title="if path not taken" >I</span>if (selection.type == SelectionRangeTypes.TableSelection) {
+<span class="cstat-no" title="statement not covered" >                selection.ranges.forEach(<span class="fstat-no" title="function not covered" >range </span>=&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    if (selection.type == SelectionRangeTypes.TableSelection) {</span>
 <span class="cstat-no" title="statement not covered" >                        editor.select(range);</span>
                     }
 &nbsp;
-                    formatter();
+<span class="cstat-no" title="statement not covered" >                    formatter();</span>
 &nbsp;
-                    tempRange = range;
+<span class="cstat-no" title="statement not covered" >                    tempRange = range;</span>
                 });
 &nbsp;
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (tempRange &amp;&amp; selection.type == SelectionRangeTypes.TableSelection) {
+<span class="cstat-no" title="statement not covered" >                if (tempRange &amp;&amp; selection.type == SelectionRangeTypes.TableSelection) {</span>
 <span class="cstat-no" title="statement not covered" >                    editor.select(selection.table, selection.coordinates);</span>
                 }
             },
@@ -265,7 +265,7 @@ export default function execCommand(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Oct 18 2022 16:59:02 GMT+0000 (Coordinated Universal Time)
+                at Tue Oct 18 2022 17:27:24 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
