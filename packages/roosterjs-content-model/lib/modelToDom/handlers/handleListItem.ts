@@ -1,8 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
 import { getTagOfNode } from 'roosterjs-editor-dom';
-import { handleBlockGroupChildren } from './handleBlockGroupChildren';
-import { handleList } from './handleList';
 import { ListItemFormatHandlers } from '../../formatHandlers/ListItemFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
@@ -10,13 +9,13 @@ import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandler
 /**
  * @internal
  */
-export function handleListItem(
+export const handleListItem: ContentModelHandler<ContentModelListItem> = (
     doc: Document,
     parent: Node,
     listItem: ContentModelListItem,
     context: ModelToDomContext
-) {
-    handleList(doc, parent, listItem, context);
+) => {
+    context.modelHandlers.list(doc, parent, listItem, context);
 
     const { nodeStack } = context.listFormat;
 
@@ -45,5 +44,5 @@ export function handleListItem(
         });
     }
 
-    handleBlockGroupChildren(doc, listParent, listItem, context);
-}
+    context.modelHandlers.blockGroupChildren(doc, listParent, listItem, context);
+};
