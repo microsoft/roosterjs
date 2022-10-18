@@ -1,5 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { containerProcessor } from './containerProcessor';
+import { BlockFormatHandlers } from '../../formatHandlers/BlockFormatHandlers';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { isBlockElement } from 'roosterjs-editor-dom';
@@ -10,27 +10,29 @@ import { stackFormat } from '../utils/stackFormat';
 /**
  * @internal
  */
-export const knownElementProcessor: ElementProcessor = (group, element, context) => {
+export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     if (isBlockElement(element)) {
         stackFormat(
             context,
             {
                 segment: 'shallowClone',
+                paragraph: 'shallowClone',
             },
             () => {
+                parseFormat(element, BlockFormatHandlers, context.blockFormat, context);
                 parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
 
-                addBlock(group, createParagraph(false /*isImplicit*/));
+                addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
 
-                containerProcessor(group, element, context);
+                context.elementProcessors.child(group, element, context);
             }
         );
 
-        addBlock(group, createParagraph(false /*isImplicit*/));
+        addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
     } else {
         stackFormat(context, { segment: 'shallowClone' }, () => {
             parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
-            containerProcessor(group, element, context);
+            context.elementProcessors.child(group, element, context);
         });
     }
 };

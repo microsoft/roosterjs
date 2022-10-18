@@ -1,8 +1,6 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { containerProcessor } from './containerProcessor';
 import { createQuote } from '../../modelApi/creators/createQuote';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { generalProcessor } from './generalProcessor';
 import { getObjectKeys, getStyles } from 'roosterjs-editor-dom';
 
 const KnownQuoteStyleNames = ['margin-top', 'margin-bottom'];
@@ -10,7 +8,7 @@ const KnownQuoteStyleNames = ['margin-top', 'margin-bottom'];
 /**
  * @internal
  */
-export const quoteProcessor: ElementProcessor = (group, element, context) => {
+export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, element, context) => {
     const styles = getStyles(element);
 
     if (
@@ -23,8 +21,8 @@ export const quoteProcessor: ElementProcessor = (group, element, context) => {
         const quote = createQuote();
 
         addBlock(group, quote);
-        containerProcessor(quote, element, context);
+        context.elementProcessors.child(quote, element, context);
     } else {
-        generalProcessor(group, element, context);
+        context.elementProcessors['*'](group, element, context);
     }
 };

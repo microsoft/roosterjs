@@ -462,4 +462,32 @@ describe('insertNode', () => {
             '<div id="div"><table></table><br><table id="table1"></table></div>'
         );
     });
+
+    it('Insert node at root of region', () => {
+        const core = createEditorCore(div, {});
+        div.contentEditable = 'true';
+        div.innerHTML =
+            '<div><div>textBefore</div><div id="innerDiv">text</div><div>textAfter</div></div>';
+        div.focus();
+
+        const text = div.querySelector('#innerDiv')!.firstChild!;
+        const sel = document.createRange();
+        sel.setStart(text, 2);
+        sel.setEnd(text, 2);
+        addRange(sel);
+
+        const nodeToInsert = document.createElement('div');
+        nodeToInsert.id = 'newDiv';
+
+        insertNode(core, nodeToInsert, {
+            position: ContentPosition.SelectionStart,
+            insertOnNewLine: true,
+            updateCursor: true,
+            replaceSelection: true,
+            insertToRegionRoot: true,
+        });
+        expect(div.innerHTML).toBe(
+            '<div><div>textBefore</div><div id="innerDiv">te</div></div><div id="newDiv"></div><div><div>xt</div><div>textAfter</div></div>'
+        );
+    });
 });

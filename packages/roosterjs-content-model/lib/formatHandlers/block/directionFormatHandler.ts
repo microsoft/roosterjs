@@ -1,5 +1,5 @@
+import { DirectionFormat } from '../../publicTypes/format/formatParts/DirectionFormat';
 import { FormatHandler } from '../FormatHandler';
-import { TextAlignFormat } from '../../publicTypes/format/formatParts/TextAlignFormat';
 
 const ResultMap = {
     start: {
@@ -19,9 +19,14 @@ const ResultMap = {
 /**
  * @internal
  */
-export const textAlignFormatHandler: FormatHandler<TextAlignFormat> = {
-    parse: (format, element, context) => {
+export const directionFormatHandler: FormatHandler<DirectionFormat> = {
+    parse: (format, element, context, defaultStyle) => {
+        const dir = element.style.direction || element.dir || defaultStyle.direction;
         const align = element.style.textAlign || element.getAttribute('align');
+
+        if (dir) {
+            format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
+        }
 
         switch (align) {
             case 'center':
@@ -29,11 +34,11 @@ export const textAlignFormatHandler: FormatHandler<TextAlignFormat> = {
                 break;
 
             case 'left':
-                format.textAlign = context.isRightToLeft ? 'end' : 'start';
+                format.textAlign = dir == 'rtl' ? 'end' : 'start';
                 break;
 
             case 'right':
-                format.textAlign = context.isRightToLeft ? 'start' : 'end';
+                format.textAlign = dir == 'rtl' ? 'start' : 'end';
                 break;
 
             case 'start':
@@ -42,10 +47,14 @@ export const textAlignFormatHandler: FormatHandler<TextAlignFormat> = {
                 break;
         }
     },
-    apply: (format, element, context) => {
+    apply: (format, element) => {
+        if (format.direction) {
+            element.style.direction = format.direction;
+        }
+
         if (format.textAlign) {
             element.style.textAlign =
-                ResultMap[format.textAlign][context.isRightToLeft ? 'rtl' : 'ltr'];
+                ResultMap[format.textAlign][format.direction == 'rtl' ? 'rtl' : 'ltr'];
         }
     },
 };

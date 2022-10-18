@@ -1,4 +1,3 @@
-import { containerProcessor } from './containerProcessor';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
@@ -23,7 +22,7 @@ function getFontSize(size: string | null) {
 /**
  * @internal
  */
-export const fontProcessor: ElementProcessor = (group, element, context) => {
+export const fontProcessor: ElementProcessor<HTMLFontElement> = (group, element, context) => {
     stackFormat(
         context,
         {
@@ -49,7 +48,7 @@ export const fontProcessor: ElementProcessor = (group, element, context) => {
 
             parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
 
-            containerProcessor(group, element, context);
+            context.elementProcessors.child(group, element, context);
         }
     );
 };

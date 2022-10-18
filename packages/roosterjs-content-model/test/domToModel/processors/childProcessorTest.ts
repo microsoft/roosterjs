@@ -1,60 +1,66 @@
-import * as textProcessor from '../../../lib/domToModel/processors/textProcessor';
-import { containerProcessor } from '../../../lib/domToModel/processors/containerProcessor';
+import { childProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 
-describe('containerProcessor', () => {
+describe('childProcessor', () => {
     let doc: ContentModelDocument;
     let context: DomToModelContext;
+    let textProcessor: jasmine.Spy<ElementProcessor<Text>>;
 
     beforeEach(() => {
+        textProcessor = jasmine.createSpy('textProcessor');
         doc = createContentModelDocument(document);
-        context = createDomToModelContext();
-        spyOn(textProcessor, 'textProcessor');
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                '#text': textProcessor,
+            },
+        });
     });
 
     it('Process a document fragment', () => {
         const fragment = document.createDocumentFragment();
 
-        containerProcessor(doc, fragment, context);
+        childProcessor(doc, fragment, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(textProcessor.textProcessor).not.toHaveBeenCalled();
+        expect(textProcessor).not.toHaveBeenCalled();
     });
 
     it('Process an empty DIV', () => {
         const div = document.createElement('div');
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(textProcessor.textProcessor).not.toHaveBeenCalled();
+        expect(textProcessor).not.toHaveBeenCalled();
     });
 
     it('Process a DIV with text node', () => {
         const div = document.createElement('div');
-        div.textContent = 'test';
+        const text = document.createTextNode('test');
+        div.appendChild(text);
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(textProcessor.textProcessor).toHaveBeenCalledTimes(1);
-        expect(textProcessor.textProcessor).toHaveBeenCalledWith(doc, 'test', context);
+        expect(textProcessor).toHaveBeenCalledTimes(1);
+        expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
     });
 
     it('Process a DIV with SPAN node', () => {
@@ -62,14 +68,14 @@ describe('containerProcessor', () => {
         const span = document.createElement('span');
         div.appendChild(span);
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
             document: document,
         });
-        expect(textProcessor.textProcessor).not.toHaveBeenCalled();
+        expect(textProcessor).not.toHaveBeenCalled();
     });
 
     it('Process a DIV with SPAN, DIV and text node', () => {
@@ -81,7 +87,7 @@ describe('containerProcessor', () => {
         div.appendChild(innerDiv);
         div.appendChild(text);
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -99,12 +105,12 @@ describe('containerProcessor', () => {
             ],
             document: document,
         });
-        expect(textProcessor.textProcessor).toHaveBeenCalledTimes(1);
-        expect(textProcessor.textProcessor).toHaveBeenCalledWith(doc, 'test', context);
+        expect(textProcessor).toHaveBeenCalledTimes(1);
+        expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
     });
 });
 
-describe('containerProcessor', () => {
+describe('childProcessor', () => {
     let doc: ContentModelDocument;
     let context: DomToModelContext;
 
@@ -124,7 +130,7 @@ describe('containerProcessor', () => {
             isSelectionCollapsed: false,
         };
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -155,7 +161,7 @@ describe('containerProcessor', () => {
             isSelectionCollapsed: true,
         };
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -185,7 +191,7 @@ describe('containerProcessor', () => {
             isSelectionCollapsed: false,
         };
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -216,7 +222,7 @@ describe('containerProcessor', () => {
             isSelectionCollapsed: true,
         };
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -246,7 +252,7 @@ describe('containerProcessor', () => {
             isSelectionCollapsed: false,
         };
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -266,7 +272,7 @@ describe('containerProcessor', () => {
         div.innerHTML = 'test';
         context.segmentFormat = { a: 'b' } as any;
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -288,7 +294,7 @@ describe('containerProcessor', () => {
             isSelectionCollapsed: true,
         };
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(context.isInSelection).toBeFalse();
         expect(doc.blocks[0]).toEqual({
@@ -306,9 +312,9 @@ describe('containerProcessor', () => {
         div.innerHTML =
             '<div id="div1"><ol><li>test1</li></ol></div><div id="div2">test2</div><div id="div3"><ol><li>test3</li></ol></div>';
 
-        context.elementProcessors.DIV = generalProcessor;
+        context.elementProcessors.div = generalProcessor;
 
-        containerProcessor(doc, div, context);
+        childProcessor(doc, div, context);
 
         expect(doc.blocks.length).toBe(3);
         expect(doc.blocks[0]).toEqual({
