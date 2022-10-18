@@ -12,17 +12,16 @@ export default function setBulletListMarkers(
     listStyleType: BulletListType | CompatibleBulletListType
 ) {
     const marker = bulletListStyle[listStyleType];
-    const isDiscOrSquare =
-        listStyleType === BulletListType.Disc || listStyleType === BulletListType.Square;
-    li.style.listStyleType = isDiscOrSquare ? marker : `"${marker}"`;
+    const isDisc = listStyleType === BulletListType.Disc;
+    li.style.listStyleType = isDisc ? marker : `"${marker}"`;
 }
 
 const bulletListStyle: Record<string, string> = {
     [BulletListType.Disc]: 'disc',
-    [BulletListType.Square]: 'square',
+    [BulletListType.Square]: '∎ ',
     [BulletListType.Dash]: '- ',
-    [BulletListType.LongArrow]: '→ ',
-    [BulletListType.DoubleLongArrow]: '→ ',
+    [BulletListType.LongArrow]: '➔ ',
+    [BulletListType.DoubleLongArrow]: '➔ ',
     [BulletListType.ShortArrow]: '➢ ',
     [BulletListType.UnfilledArrow]: '➪ ',
     [BulletListType.Hyphen]: '— ',
