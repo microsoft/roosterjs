@@ -45,7 +45,11 @@ export default function setAlignment(editor: IEditor, alignment: Alignment | Com
                 editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
             ) {
                 alignList(editor, alignment);
-            } else if (selection && selection.type === SelectionRangeTypes.ImageSelection) {
+            } else if (
+                editor.isFeatureEnabled(ExperimentalFeatures.ImageSelection) &&
+                selection &&
+                selection.type === SelectionRangeTypes.ImageSelection
+            ) {
                 editor.select(selection.ranges[0]);
                 alignText(editor, alignment);
                 editor.select(selection.image);
