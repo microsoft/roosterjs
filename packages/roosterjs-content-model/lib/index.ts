@@ -109,12 +109,15 @@ export {
     ModelToDomSettings,
     FormatApplier,
     FormatAppliers,
+    ContentModelHandlerMap,
+    ContentModelHandlerTypeMap,
 } from './publicTypes/context/ModelToDomSettings';
 export {
     ModelToDomEntityContext,
     EntityPlaceholderPair,
 } from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
+export { ContentModelHandler } from './publicTypes/context/ContentModelHandler';
 
 export {
     IExperimentalContentModelEditor,
