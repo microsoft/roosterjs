@@ -8,6 +8,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import setStyles from '../style/setStyles';
 import toArray from '../jsUtils/toArray';
 import { cloneObject } from './cloneObject';
+import { isCssVariable, processCssVariable } from './processCssVariable';
 import {
     getAllowedAttributes,
     getAllowedCssClassesRegex,
@@ -258,11 +259,22 @@ export default class HtmlSanitizer {
     private processCss(element: HTMLElement, thisStyle: StringMap, context: Object) {
         const styles = getStyles(element);
         getObjectKeys(styles).forEach(name => {
-            const value = styles[name];
+            let value = styles[name];
             let callback = this.styleCallbacks[name];
             let isInheritable = thisStyle[name] != undefined;
-            let keep =
-                (!callback || callback(value, element, thisStyle, context)) &&
+            let keep = true;
+
+            if (keep && !!callback) {
+                keep = callback(value, element, thisStyle, context);
+            }
+
+            if (keep && isCssVariable(value)) {
+                value = processCssVariable(value);
+                keep = !!value;
+            }
+
+            keep =
+                keep &&
                 value != 'inherit' &&
                 value.indexOf('expression') < 0 &&
                 name.substr(0, 1) != '-' &&
@@ -273,7 +285,9 @@ export default class HtmlSanitizer {
                 thisStyle[name] = value;
             }
 
-            if (!keep) {
+            if (keep) {
+                styles[name] = value;
+            } else {
                 delete styles[name];
             }
         });
