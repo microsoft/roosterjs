@@ -1,16 +1,24 @@
-import * as handleBlockGroupChildren from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { handleBlockGroupChildren as originalHandleBlockGroupChildren } from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
 import { handleQuote } from '../../../lib/modelToDom/handlers/handleQuote';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('handleQuote', () => {
     let context: ModelToDomContext;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
 
     beforeEach(() => {
-        context = createModelToDomContext();
+        handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
+        context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: handleBlockGroupChildren,
+            },
+        });
     });
 
     it('Empty quote', () => {
@@ -30,15 +38,15 @@ describe('handleQuote', () => {
         quote.blocks.push(paragraph);
         paragraph.segments.push(text);
 
-        spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren').and.callThrough();
+        handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
 
         handleQuote(document, parent, quote, context);
 
         expect(parent.outerHTML).toBe(
             '<div><blockquote style="margin-top: 0px; margin-bottom: 0px;"><div><span>test</span></div></blockquote></div>'
         );
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             quote,
