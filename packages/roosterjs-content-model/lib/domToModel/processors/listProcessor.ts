@@ -1,8 +1,6 @@
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { ListLevelFormatHandlers } from '../../formatHandlers/ListLevelFormatHandlers';
 import { parseFormat } from '../utils/parseFormat';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
@@ -22,8 +20,8 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
             segment: 'shallowClone',
         },
         () => {
-            parseFormat(element, ListLevelFormatHandlers, level, context);
-            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
+            parseFormat(element, context.formatParsers.listLevel, level, context);
+            parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
 
             const originalListParent = listFormat.listParent;
 

@@ -1,4 +1,5 @@
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
+import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { DomToModelContext } from './DomToModelContext';
 import { ElementProcessor } from './ElementProcessor';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
@@ -27,6 +28,13 @@ export type FormatParser<TFormat extends ContentModelFormatBase> = (
  */
 export type FormatParsers = {
     [Key in FormatKey]: FormatParser<FormatHandlerTypeMap[Key]> | null;
+};
+
+/**
+ * A map from format parser category name to an array of parsers
+ */
+export type FormatParsersPerCategory = {
+    [Key in keyof ContentModelFormatMap]: (FormatParser<ContentModelFormatMap[Key]> | null)[];
 };
 
 /**
@@ -88,5 +96,5 @@ export interface DomToModelSettings {
     /**
      * Map of format parsers
      */
-    formatParsers: FormatParsers;
+    formatParsers: FormatParsersPerCategory;
 }

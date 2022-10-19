@@ -1,7 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
-import { ListLevelFormatHandlers } from '../../formatHandlers/ListLevelFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
@@ -47,7 +46,7 @@ export const handleList: ContentModelHandler<ContentModelListItem> = (
         const lastParent = nodeStack[nodeStack.length - 1].node;
 
         lastParent.appendChild(newList);
-        applyFormat(newList, ListLevelFormatHandlers, level, context);
+        applyFormat(newList, context.formatAppliers.listLevel, level, context);
 
         nodeStack.push({ node: newList, ...level });
     }

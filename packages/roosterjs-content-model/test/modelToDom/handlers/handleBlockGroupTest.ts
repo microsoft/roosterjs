@@ -11,7 +11,6 @@ import { createModelToDomContext } from '../../../lib/modelToDom/context/createM
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { handleBlockGroup } from '../../../lib/modelToDom/handlers/handleBlockGroup';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlockGroup', () => {
     let context: ModelToDomContext;
@@ -96,7 +95,7 @@ describe('handleBlockGroup', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             clonedChild,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             group.format,
             context
         );
@@ -129,7 +128,7 @@ describe('handleBlockGroup', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             clonedChild,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             group.format,
             context
         );

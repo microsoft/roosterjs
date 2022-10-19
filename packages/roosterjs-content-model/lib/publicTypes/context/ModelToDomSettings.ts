@@ -2,6 +2,7 @@ import { ContentModelBlock } from '../block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
+import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelHandler } from './ContentModelHandler';
 import { ContentModelListItem } from '../block/group/ContentModelListItem';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
@@ -28,6 +29,13 @@ export type FormatApplier<TFormat extends ContentModelFormatBase> = (
  */
 export type FormatAppliers = {
     [Key in FormatKey]: FormatApplier<FormatHandlerTypeMap[Key]> | null;
+};
+
+/**
+ * A map from format parser category name to an array of parsers
+ */
+export type FormatAppliersPerCategory = {
+    [Key in keyof ContentModelFormatMap]: (FormatApplier<ContentModelFormatMap[Key]> | null)[];
 };
 
 /**
@@ -104,5 +112,5 @@ export interface ModelToDomSettings {
     /**
      * Map of format appliers
      */
-    formatAppliers: FormatAppliers;
+    formatAppliers: FormatAppliersPerCategory;
 }
