@@ -1,9 +1,7 @@
 import { createListItem } from '../../modelApi/creators/createListItem';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getTagOfNode } from 'roosterjs-editor-dom';
-import { ListItemFormatHandlers } from '../../formatHandlers/ListItemFormatHandlers';
 import { parseFormat } from '../utils/parseFormat';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
@@ -24,14 +22,19 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                 segment: 'shallowClone',
             },
             () => {
-                parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
+                parseFormat(
+                    element,
+                    context.formatParsers.segmentOnBlock,
+                    context.segmentFormat,
+                    context
+                );
 
                 const listItem = createListItem(listFormat.levels, context.segmentFormat);
                 listFormat.listParent!.blocks.push(listItem);
 
                 parseFormat(
                     element,
-                    ListItemFormatHandlers,
+                    context.formatParsers.listItem,
                     listItem.levels[listItem.levels.length - 1],
                     context
                 );

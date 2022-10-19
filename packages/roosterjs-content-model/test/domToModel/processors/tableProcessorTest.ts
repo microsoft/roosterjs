@@ -6,9 +6,6 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
-import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
-import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
 describe('tableProcessor', () => {
@@ -211,15 +208,15 @@ describe('tableProcessor with format', () => {
         spyOn(stackFormat, 'stackFormat').and.callThrough();
         spyOn(parseFormat, 'parseFormat').and.callFake((element, handlers, format, context) => {
             if (element == table) {
-                if (handlers == TableFormatHandlers) {
+                if (handlers == context.formatParsers.table) {
                     (<any>format).format1 = 'table';
-                } else if (handlers == SegmentFormatHandlers) {
+                } else if (handlers == context.formatParsers.segmentOnBlock) {
                     (<any>format).format2 = 'tableSegment';
                 }
             } else if (element == td) {
-                if (handlers == TableCellFormatHandlers) {
+                if (handlers == context.formatParsers.tableCell) {
                     (<any>format).format3 = 'td';
-                } else if (handlers == SegmentFormatHandlers) {
+                } else if (handlers == context.formatParsers.segmentOnBlock) {
                     (<any>format).format4 = 'tdSegment';
                 }
             }

@@ -1,10 +1,8 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { BlockFormatHandlers } from '../../formatHandlers/BlockFormatHandlers';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { isBlockElement } from 'roosterjs-editor-dom';
 import { parseFormat } from '../utils/parseFormat';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
@@ -19,8 +17,13 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 paragraph: 'shallowClone',
             },
             () => {
-                parseFormat(element, BlockFormatHandlers, context.blockFormat, context);
-                parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
+                parseFormat(element, context.formatParsers.block, context.blockFormat, context);
+                parseFormat(
+                    element,
+                    context.formatParsers.segmentOnBlock,
+                    context.segmentFormat,
+                    context
+                );
 
                 addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
 
@@ -31,7 +34,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
     } else {
         stackFormat(context, { segment: 'shallowClone' }, () => {
-            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
+            parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             context.elementProcessors.child(group, element, context);
         });
     }
