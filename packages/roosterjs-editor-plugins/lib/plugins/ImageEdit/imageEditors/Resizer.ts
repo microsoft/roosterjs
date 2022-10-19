@@ -11,11 +11,7 @@ import { ImageEditElementClass } from '../types/ImageEditElementClass';
  * will be picked up by ImageEdit code
  */
 export interface OnShowResizeHandle {
-    (
-        elementData: CreateElementData,
-        x: DNDDirectionX,
-        y: DnDDirectionY
-    ): void
+    (elementData: CreateElementData, x: DNDDirectionX, y: DnDDirectionY): void;
 }
 
 const enum HandleTypes {
@@ -55,17 +51,17 @@ export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
                 // first sure newHeight is right，calculate newWidth
                 newWidth = newHeight * ratio;
                 if (newWidth < options.minWidth) {
-                  newWidth = options.minWidth;
-                  newHeight = newWidth / ratio;
+                    newWidth = options.minWidth;
+                    newHeight = newWidth / ratio;
                 }
-              } else {
+            } else {
                 // first sure newWidth is right，calculate newHeight
                 newHeight = newWidth / ratio;
                 if (newHeight < options.minHeight) {
-                  newHeight = options.minHeight;
-                  newWidth = newHeight * ratio;
+                    newHeight = options.minHeight;
+                    newWidth = newHeight * ratio;
                 }
-              }
+            }
         }
 
         editInfo.widthPx = newWidth;
@@ -136,24 +132,27 @@ export function getCornerResizeHTML(
         borderColor: resizeBorderColor,
         handlesExperimentalFeatures: handlesExperimentalFeatures,
     }: ImageHtmlOptions,
-    onShowResizeHandle?: OnShowResizeHandle
+    onShowResizeHandle?: OnShowResizeHandle,
+    isImageSelectionEnabled?: boolean
 ): CreateElementData[] {
     const result: CreateElementData[] = [];
 
     Xs.forEach(x =>
         Ys.forEach(y => {
-            let elementData = (x == '') == (y == '')
-            ? getResizeHandleHTML(
-                  x,
-                  y,
-                  resizeBorderColor,
-                  handlesExperimentalFeatures
-                      ? HandleTypes.CircularHandlesCorner
-                      : HandleTypes.SquareHandles
-              )
-            : null;
+            let elementData =
+                (x == '') == (y == '')
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles,
+                          isImageSelectionEnabled
+                      )
+                    : null;
             if (onShowResizeHandle) {
-                onShowResizeHandle(elementData, x, y)
+                onShowResizeHandle(elementData, x, y);
             }
             result.push(elementData);
         })
@@ -171,7 +170,8 @@ export function getSideResizeHTML(
         isSmallImage: isSmallImage,
         handlesExperimentalFeatures: handlesExperimentalFeatures,
     }: ImageHtmlOptions,
-    onShowResizeHandle?: OnShowResizeHandle
+    onShowResizeHandle?: OnShowResizeHandle,
+    isImageSelectionEnabled?: boolean
 ): CreateElementData[] {
     if (isSmallImage) {
         return null;
@@ -179,16 +179,18 @@ export function getSideResizeHTML(
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y => {
-            let elementData = (x == '') != (y == '')
-            ? getResizeHandleHTML(
-                  x,
-                  y,
-                  resizeBorderColor,
-                  handlesExperimentalFeatures
-                      ? HandleTypes.CircularHandlesCorner
-                      : HandleTypes.SquareHandles
-              )
-            : null;
+            let elementData =
+                (x == '') != (y == '')
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles,
+                          isImageSelectionEnabled
+                      )
+                    : null;
             if (onShowResizeHandle) {
                 onShowResizeHandle(elementData, x, y);
             }
@@ -215,12 +217,13 @@ function getResizeHandleHTML(
     x: DNDDirectionX,
     y: DnDDirectionY,
     borderColor: string,
-    handleTypes: HandleTypes
+    handleTypes: HandleTypes,
+    isImageSelectionEnabled?: boolean
 ): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
-    const leftOrRightValue = x == '' ? '50%' : '0px';
-    const topOrBottomValue = y == '' ? '50%' : '0px';
+    const leftOrRightValue = x == '' ? '50%' : isImageSelectionEnabled ? '-2px' : '0px';
+    const topOrBottomValue = y == '' ? '50%' : isImageSelectionEnabled ? '-2px' : '0px';
     const direction = y + x;
     return x == '' && y == ''
         ? null
