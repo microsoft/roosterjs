@@ -233,6 +233,7 @@ export default class ImageEdit implements EditorPlugin {
                 } else if (key == Keys.ESCAPE && this.image) {
                     // Press ESC should cancel current editing operation, resume back to original edit info
                     this.editInfo = getEditInfoFromImage(this.image);
+                    this.setEditingImage(null);
                     e.rawEvent.preventDefault();
                 } else if (key != SHIFT_KEYCODE && key != CTRL_KEYCODE && key != ALT_KEYCODE) {
                     // For other key, just unselect current image and select it. If this is an input key, the image will be replaced
