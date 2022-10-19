@@ -210,13 +210,13 @@ describe('tableProcessor with format', () => {
             if (element == table) {
                 if (handlers == context.formatParsers.table) {
                     (<any>format).format1 = 'table';
-                } else if (handlers == context.formatParsers.segment) {
+                } else if (handlers == context.formatParsers.segmentOnBlock) {
                     (<any>format).format2 = 'tableSegment';
                 }
             } else if (element == td) {
                 if (handlers == context.formatParsers.tableCell) {
                     (<any>format).format3 = 'td';
-                } else if (handlers == context.formatParsers.segment) {
+                } else if (handlers == context.formatParsers.segmentOnBlock) {
                     (<any>format).format4 = 'tdSegment';
                 }
             }
