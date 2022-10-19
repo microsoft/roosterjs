@@ -6,7 +6,6 @@ import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandl
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
 /**
  * @internal
@@ -29,7 +28,7 @@ export const handleBlockGroup: ContentModelHandler<ContentModelBlockGroup> = (
                     context.regularSelection.current.segment = newParent;
                 }
 
-                applyFormat(newParent, SegmentFormatHandlers, group.format, context);
+                applyFormat(newParent, context.formatAppliers.segment, group.format, context);
             }
 
             break;

@@ -40,7 +40,10 @@ export function createDomToModelContext(
             ...(options?.defaultStyleOverride || {}),
         },
 
-        formatParsers: getFormatParsers(options?.formatParserOverride),
+        formatParsers: getFormatParsers(
+            options?.formatParserOverride,
+            options?.additionalFormatParsers
+        ),
     };
 
     if (editorContext?.isRightToLeft) {

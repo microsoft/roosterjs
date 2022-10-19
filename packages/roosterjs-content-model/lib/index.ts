@@ -74,6 +74,8 @@ export { ListTypeFormat } from './publicTypes/format/formatParts/ListTypeFormat'
 export { ListThreadFormat } from './publicTypes/format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './publicTypes/format/formatParts/ListMetadataFormat';
 
+export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
+
 export { EditorContext } from './publicTypes/context/EditorContext';
 export {
     DomToModelListFormat,
@@ -91,6 +93,7 @@ export {
     ElementProcessorMap,
     FormatParser,
     FormatParsers,
+    FormatParsersPerCategory,
 } from './publicTypes/context/DomToModelSettings';
 export { DomToModelContext } from './publicTypes/context/DomToModelContext';
 export { ModelToDomContext } from './publicTypes/context/ModelToDomContext';
@@ -109,6 +112,7 @@ export {
     ModelToDomSettings,
     FormatApplier,
     FormatAppliers,
+    FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
 } from './publicTypes/context/ModelToDomSettings';
@@ -124,3 +128,5 @@ export {
     DomToModelOption,
     ModelToDomOption,
 } from './publicTypes/IExperimentalContentModelEditor';
+
+export { createTempContainerProcessor } from './domToModel/processors/tempContainerProcessor';

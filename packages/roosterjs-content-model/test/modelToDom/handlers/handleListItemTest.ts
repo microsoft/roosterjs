@@ -6,9 +6,7 @@ import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { handleListItem } from '../../../lib/modelToDom/handlers/handleListItem';
-import { ListItemFormatHandlers } from '../../../lib/formatHandlers/ListItemFormatHandlers';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleListItem', () => {
     let context: ModelToDomContext;
@@ -87,13 +85,13 @@ describe('handleListItem', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             listItem.formatHolder.format,
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            ListItemFormatHandlers,
+            context.formatAppliers.listItem,
             listItem.levels[0],
             context
         );
@@ -143,13 +141,13 @@ describe('handleListItem', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             listItem.formatHolder.format,
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            ListItemFormatHandlers,
+            context.formatAppliers.listItem,
             listItem.levels[0],
             context
         );
@@ -244,13 +242,13 @@ describe('handleListItem without format handler', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             listItem.formatHolder.format,
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            ListItemFormatHandlers,
+            context.formatAppliers.listItem,
             listItem.levels[0],
             context
         );
@@ -300,13 +298,13 @@ describe('handleListItem without format handler', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             listItem.formatHolder.format,
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            ListItemFormatHandlers,
+            context.formatAppliers.listItem,
             listItem.levels[0],
             context
         );
