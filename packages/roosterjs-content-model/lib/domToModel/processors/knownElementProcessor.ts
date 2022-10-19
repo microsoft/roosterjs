@@ -18,7 +18,12 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
             },
             () => {
                 parseFormat(element, context.formatParsers.block, context.blockFormat, context);
-                parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
+                parseFormat(
+                    element,
+                    context.formatParsers.segmentOnBlock,
+                    context.segmentFormat,
+                    context
+                );
 
                 addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
 
