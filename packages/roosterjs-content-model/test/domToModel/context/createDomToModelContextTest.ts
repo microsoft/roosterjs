@@ -118,4 +118,27 @@ describe('createDomToModelContext', () => {
             ...contextOptions,
         });
     });
+
+    it('with image selection', () => {
+        const context = createDomToModelContext(undefined, {
+            selectionRange: {
+                type: SelectionRangeTypes.ImageSelection,
+                ranges: [],
+                areAllCollapsed: false,
+                image: 'IMAGE' as any,
+            },
+        });
+
+        expect(context).toEqual({
+            ...editorContext,
+            segmentFormat: {},
+            blockFormat: {},
+            isInSelection: false,
+            imageSelection: {
+                image: 'IMAGE' as any,
+            },
+            listFormat,
+            ...contextOptions,
+        });
+    });
 });

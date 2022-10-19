@@ -38,6 +38,7 @@ export { ContentModelSegmentBase } from './publicTypes/segment/ContentModelSegme
 export { ContentModelSelectionMarker } from './publicTypes/segment/ContentModelSelectionMarker';
 export { ContentModelText } from './publicTypes/segment/ContentModelText';
 export { ContentModelBr } from './publicTypes/segment/ContentModelBr';
+export { ContentModelImage } from './publicTypes/segment/ContentModelImage';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
@@ -106,6 +107,7 @@ export {
     ModelToDomBlockAndSegmentNode,
     ModelToDomRegularSelection,
     ModelToDomTableSelection,
+    ModelToDomImageSelection,
     ModelToDomSelectionContext,
 } from './publicTypes/context/ModelToDomSelectionContext';
 export {

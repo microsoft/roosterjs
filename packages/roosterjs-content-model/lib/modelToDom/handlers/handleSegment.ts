@@ -40,6 +40,23 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
             regularSelection.current.segment = element;
             break;
 
+        case 'Image':
+            const img = doc.createElement('img');
+            img.src = segment.src;
+
+            element = img;
+            applyFormat(element, context.formatAppliers.segment, segment.format, context);
+
+            regularSelection.current.segment = element;
+
+            if (segment.isSelectedAsImageSelection) {
+                context.imageSelection = {
+                    image: img,
+                };
+            }
+
+            break;
+
         case 'General':
             context.modelHandlers.block(doc, parent, segment, context);
             break;
