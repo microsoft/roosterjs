@@ -1,6 +1,5 @@
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
 
 const FontSizes = ['10px', '13px', '16px', '18px', '24px', '32px', '48px'];
@@ -46,7 +45,7 @@ export const fontProcessor: ElementProcessor<HTMLFontElement> = (group, element,
                 format.textColor = textColor;
             }
 
-            parseFormat(element, SegmentFormatHandlers, context.segmentFormat, context);
+            parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
 
             context.elementProcessors.child(group, element, context);
         }

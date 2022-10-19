@@ -1,5 +1,4 @@
 import { applyFormat } from '../utils/applyFormat';
-import { BlockFormatHandlers } from '../../formatHandlers/BlockFormatHandlers';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -21,7 +20,7 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
         container = doc.createElement('div');
         parent.appendChild(container);
 
-        applyFormat(container, BlockFormatHandlers, paragraph.format, context);
+        applyFormat(container, context.formatAppliers.block, paragraph.format, context);
     }
 
     context.regularSelection.current = {
