@@ -486,7 +486,7 @@ describe('VListItem.applyListStyle', () => {
     });
 
     it('LongArrow Bullet List', () => {
-        runTest(ListType.Unordered, undefined, BulletListType.LongArrow, '"→ "');
+        runTest(ListType.Unordered, undefined, BulletListType.LongArrow, '"➔ "');
     });
 
     it('ShortArrow Bullet List', () => {
@@ -502,7 +502,7 @@ describe('VListItem.applyListStyle', () => {
     });
 
     it('Square Bullet List', () => {
-        runTest(ListType.Unordered, undefined, BulletListType.Square, 'square');
+        runTest(ListType.Unordered, undefined, BulletListType.Square, '"∎ "');
     });
 
     it('Square Bullet List', () => {
