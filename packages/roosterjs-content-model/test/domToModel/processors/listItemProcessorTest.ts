@@ -9,7 +9,7 @@ describe('listItemProcessor', () => {
     beforeEach(() => {
         context = createDomToModelContext(undefined, {
             processorOverride: {
-                LI: listItemProcessor,
+                li: listItemProcessor,
             },
         });
     });
@@ -189,7 +189,7 @@ describe('listItemProcessor without format handlers', () => {
     beforeEach(() => {
         context = createDomToModelContext(undefined, {
             processorOverride: {
-                LI: listItemProcessor,
+                li: listItemProcessor,
             },
             formatParserOverride: {
                 listItemThread: null,
