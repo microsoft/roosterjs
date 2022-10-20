@@ -31,7 +31,12 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
     stackFormat(context, { segment: 'shallowClone' }, () => {
         parseFormat(tableElement, context.formatParsers.table, table.format, context);
-        parseFormat(tableElement, context.formatParsers.segment, context.segmentFormat, context);
+        parseFormat(
+            tableElement,
+            context.formatParsers.segmentOnBlock,
+            context.segmentFormat,
+            context
+        );
         addBlock(group, table);
 
         const columnPositions: number[] = [0];
@@ -89,7 +94,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                 );
                                 parseFormat(
                                     td,
-                                    context.formatParsers.segment,
+                                    context.formatParsers.segmentOnBlock,
                                     context.segmentFormat,
                                     context
                                 );

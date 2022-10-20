@@ -22,7 +22,12 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                 segment: 'shallowClone',
             },
             () => {
-                parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
+                parseFormat(
+                    element,
+                    context.formatParsers.segmentOnBlock,
+                    context.segmentFormat,
+                    context
+                );
 
                 const listItem = createListItem(listFormat.levels, context.segmentFormat);
                 listFormat.listParent!.blocks.push(listItem);

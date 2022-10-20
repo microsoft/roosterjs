@@ -19,6 +19,13 @@ export interface ContentModelFormatMap {
     segment: ContentModelSegmentFormat;
 
     /**
+     * Format type for segment on block.
+     * Block can have format that can impact segment, such as font and color.
+     * But some segment format should not be read from block, like background color.
+     */
+    segmentOnBlock: ContentModelSegmentFormat;
+
+    /**
      * Format type for table
      */
     table: ContentModelTableFormat;

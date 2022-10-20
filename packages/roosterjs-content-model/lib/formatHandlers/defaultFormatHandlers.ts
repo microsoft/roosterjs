@@ -85,6 +85,7 @@ const defaultFormatKeysPerCategory: {
         'textColor',
         'backgroundColor',
     ],
+    segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
     tableCell: [
         'border',
         'borderBox',
