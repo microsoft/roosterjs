@@ -41,5 +41,19 @@ export interface TableContentMetadata
 /**
  * A content metadata is a data structure storing information other than HTML content,
  * such as dark mode info, selection info, ...
+ *
+ * ImageContentMetadata is content metadata for image selection with image id
+ *
+ * When do any change to this type, also need to fix function isUndoMetadata to make sure
+ * the check is correct
  */
-export type ContentMetadata = NormalContentMetadata | TableContentMetadata;
+export interface ImageContentMetadata
+    extends ContentMetadataBase<SelectionRangeTypes.ImageSelection> {
+    imageId: string;
+}
+
+/**
+ * A content metadata is a data structure storing information other than HTML content,
+ * such as dark mode info, selection info, ...
+ */
+export type ContentMetadata = NormalContentMetadata | TableContentMetadata | ImageContentMetadata;
