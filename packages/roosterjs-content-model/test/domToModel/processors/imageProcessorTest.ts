@@ -124,4 +124,44 @@ describe('imageProcessor', () => {
             ],
         });
     });
+
+    it('Image with id and display:block', () => {
+        const doc = createContentModelDocument(document);
+        const img = document.createElement('img');
+
+        img.id = 'id1';
+        img.style.display = 'block';
+
+        context.imageSelection = { image: img };
+
+        imageProcessor(doc, img, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            format: {
+                                id: 'id1',
+                            },
+                            src: '',
+                            isSelected: true,
+                            isSelectedAsImageSelection: true,
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

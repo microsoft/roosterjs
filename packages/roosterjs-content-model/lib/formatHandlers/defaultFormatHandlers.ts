@@ -10,6 +10,7 @@ import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
+import { imageMetadataFormatHandler } from './image/imageMetadataFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
@@ -18,6 +19,7 @@ import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandle
 import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
 import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
+import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
 import { tableCellMetadataFormatHandler } from './table/tableCellMetadataFormatHandler';
@@ -50,6 +52,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
+    imageMetadata: imageMetadataFormatHandler,
     italic: italicFormatHandler,
     listItemMetadata: listItemMetadataFormatHandler,
     listItemThread: listItemThreadFormatHandler,
@@ -58,6 +61,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listType: listTypeFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
+    size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
     tableCellMetadata: tableCellMetadataFormatHandler,
@@ -104,6 +108,7 @@ const defaultFormatKeysPerCategory: {
         'margin',
         'backgroundColor',
     ],
+    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'imageMetadata'],
 };
 
 /**

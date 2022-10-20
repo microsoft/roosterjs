@@ -1,6 +1,5 @@
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
-import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
@@ -92,30 +91,5 @@ describe('handleSegment', () => {
         expect(div.outerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
         );
-    });
-
-    it('image segment', () => {
-        const segment: ContentModelImage = {
-            segmentType: 'Image',
-            src: 'http://test.com/test',
-            format: {},
-        };
-
-        runTest(segment, '<img src="http://test.com/test">', 0);
-
-        expect(context.imageSelection).toBeUndefined();
-    });
-
-    it('image segment with image selection', () => {
-        const segment: ContentModelImage = {
-            segmentType: 'Image',
-            src: 'http://test.com/test',
-            format: {},
-            isSelectedAsImageSelection: true,
-        };
-
-        runTest(segment, '<img src="http://test.com/test">', 0);
-
-        expect(context.imageSelection!.image.src).toBe('http://test.com/test');
     });
 });

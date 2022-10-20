@@ -1,6 +1,10 @@
+import { addBlock } from '../../modelApi/common/addBlock';
 import { addSegment } from '../../modelApi/common/addSegment';
+import { ContentModelImageFormat } from '../../publicTypes/format/ContentModelImageFormat';
 import { createImage } from '../../modelApi/creators/createImage';
+import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { isBlockElement } from 'roosterjs-editor-dom';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -8,25 +12,48 @@ import { stackFormat } from '../utils/stackFormat';
  * @internal
  */
 export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, element, context) => {
-    stackFormat(context, { segment: 'shallowClone' }, () => {
-        parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
+    const isBlock = isBlockElement(element);
 
-        const image = createImage(element.src, context.segmentFormat);
-        const alt = element.alt || element.title;
+    stackFormat(
+        context,
+        {
+            segment: 'shallowClone',
+            paragraph: isBlock ? 'empty' : 'shallowClone',
+        },
+        () => {
+            const imageFormat: ContentModelImageFormat = context.segmentFormat;
 
-        if (alt) {
-            image.alt = alt;
+            parseFormat(element, context.formatParsers.segment, imageFormat, context);
+            parseFormat(element, context.formatParsers.image, imageFormat, context);
+            parseFormat(element, context.formatParsers.block, context.blockFormat, context);
+
+            const image = createImage(element.src, imageFormat);
+            const alt = element.alt;
+            const title = element.title;
+
+            if (alt) {
+                image.alt = alt;
+            }
+            if (title) {
+                image.title = title;
+            }
+            if (context.isInSelection) {
+                image.isSelected = true;
+            }
+            if (context.imageSelection?.image == element) {
+                image.isSelectedAsImageSelection = true;
+                image.isSelected = true;
+            }
+
+            if (isBlock) {
+                addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
+            }
+
+            addSegment(group, image);
         }
+    );
 
-        if (context.isInSelection) {
-            image.isSelected = true;
-        }
-
-        if (context.imageSelection?.image == element) {
-            image.isSelectedAsImageSelection = true;
-            image.isSelected = true;
-        }
-
-        addSegment(group, image);
-    });
+    if (isBlock) {
+        addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
+    }
 };

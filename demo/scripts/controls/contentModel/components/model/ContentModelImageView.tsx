@@ -1,10 +1,25 @@
 import * as React from 'react';
-import { ContentModelImage } from 'roosterjs-content-model';
+import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
+import { FormatRenderer } from '../format/utils/FormatRenderer';
+import { FormatView } from '../format/FormatView';
+import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
+import { ImageMetadataFormatRenderers } from '../format/formatPart/ImageMetadataFormatRenderers';
+import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
+import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { SegmentFormatView } from '../format/SegmentFormatView';
+import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelImageView.scss');
+
+const ImageFormatRenderers: FormatRenderer<ContentModelImageFormat>[] = [
+    IdFormatRenderer,
+    ...SizeFormatRenderers,
+    ...ImageMetadataFormatRenderers,
+    MarginFormatRenderer,
+    PaddingFormatRenderer,
+];
 
 export function ContentModelImageView(props: { image: ContentModelImage }) {
     const { image } = props;
@@ -17,7 +32,12 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
     );
 
     const getFormat = React.useCallback(() => {
-        return <SegmentFormatView format={image.format} />;
+        return (
+            <>
+                <SegmentFormatView format={image.format} />
+                <FormatView format={image.format} renderers={ImageFormatRenderers} />
+            </>
+        );
     }, [image.format]);
 
     const getContent = React.useCallback(() => {
