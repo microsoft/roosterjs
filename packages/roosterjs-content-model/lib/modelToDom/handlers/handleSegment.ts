@@ -36,8 +36,12 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
             break;
 
         case 'Br':
-            element = doc.createElement('br');
-            regularSelection.current.segment = element;
+            const br = doc.createElement('br');
+            element = doc.createElement('span');
+            element.appendChild(br);
+            regularSelection.current.segment = br;
+
+            applyFormat(element, context.formatAppliers.segment, segment.format, context);
             break;
 
         case 'Image':
