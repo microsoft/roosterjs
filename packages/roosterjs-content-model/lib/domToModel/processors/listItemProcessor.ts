@@ -1,6 +1,6 @@
 import { createListItem } from '../../modelApi/creators/createListItem';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { getDefaultStyle } from '../utils/getDefaultStyle';
+import { getTagOfNode } from 'roosterjs-editor-dom';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 

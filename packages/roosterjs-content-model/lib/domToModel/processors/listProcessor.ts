@@ -23,11 +23,8 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
             segment: 'shallowCloneForBlock',
         },
         () => {
-            processMetadata(element, context, level);
             parseFormat(element, context.formatParsers.listLevel, level, context);
             parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
-
-            const originalListParent = listFormat.listParent;
 
             const originalListParent = listFormat.listParent;
 

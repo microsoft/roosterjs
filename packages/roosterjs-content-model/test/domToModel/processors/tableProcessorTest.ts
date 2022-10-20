@@ -1,4 +1,3 @@
-import * as getBoundingClientRect from '../../../lib/domToModel/utils/getBoundingClientRect';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
@@ -6,9 +5,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
-import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
-import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
+import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
 describe('tableProcessor', () => {
@@ -22,11 +19,6 @@ describe('tableProcessor', () => {
                 child: childProcessor,
             },
         });
-
-        spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
-            width: 100,
-            height: 200,
-        } as any) as DOMRect);
     });
 
     function runTest(tableHTML: string, expectedModel: ContentModelBlock) {
@@ -238,7 +230,7 @@ describe('tableProcessor with format', () => {
             } else if (element == td) {
                 if (handlers == context.formatParsers.tableCell) {
                     (<any>format).format3 = 'td';
-                } else if (handlers == context.formatParsers.segmentOnTableCell) {
+                } else if (handlers == context.formatParsers.segmentOnBlock) {
                     (<any>format).format4 = 'tdSegment';
                 }
             }
@@ -352,7 +344,35 @@ describe('tableProcessor with format', () => {
         });
     });
 
-    it('parse dataset', () => {
+describe('tableProcessor', () => {
+    let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+
+    beforeEach(() => {
+        childProcessor = jasmine.createSpy();
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
+    });
+
+    it('list context is stacked during table processing', () => {
+        const listLevels = { value: 'test1' } as any;
+        const listParent = { value: 'test2' } as any;
+        const threadItemCounts = { value: 'test3' } as any;
+
+        context.listFormat.levels = listLevels;
+        context.listFormat.listParent = listParent;
+        context.listFormat.threadItemCounts = threadItemCounts;
+
+        childProcessor.and.callFake((group, parent, context) => {
+            expect(context.listFormat.levels).toEqual([]);
+            expect(context.listFormat.listParent).toBeUndefined();
+            expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
+        });
+
+        const group = createContentModelDocument(document);
         const mockedTable = ({
             tagName: 'table',
             rows: [

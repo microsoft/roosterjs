@@ -1,9 +1,8 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 
 /**
  * @internal

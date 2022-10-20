@@ -2,9 +2,12 @@ import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 
 /**
  * @internal
@@ -21,7 +24,7 @@ export const textProcessor: ElementProcessor<Text> = (
         addTextSegment(group, txt.substring(0, txtStartOffset), context);
         context.isInSelection = true;
 
-        addSelectionMarker(group, context);
+        addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
 
         txt = txt.substring(txtStartOffset);
         txtEndOffset -= txtStartOffset;
@@ -31,7 +34,7 @@ export const textProcessor: ElementProcessor<Text> = (
         addTextSegment(group, txt.substring(0, txtEndOffset), context);
 
         if (!context.regularSelection!.isSelectionCollapsed) {
-            addSelectionMarker(group, context);
+            addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
         }
 
         context.isInSelection = false;
@@ -40,9 +43,6 @@ export const textProcessor: ElementProcessor<Text> = (
 
     addTextSegment(group, txt, context);
 };
-
-// When we see these values of white-space style, need to preserve spaces and line-breaks and let browser handle it for us.
-const WhiteSpaceValuesNeedToHandle = ['pre', 'pre-wrap', 'pre-line', 'break-spaces'];
 
 function addTextSegment(group: ContentModelBlockGroup, text: string, context: DomToModelContext) {
     if (text) {

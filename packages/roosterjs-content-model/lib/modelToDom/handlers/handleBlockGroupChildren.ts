@@ -1,4 +1,4 @@
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 

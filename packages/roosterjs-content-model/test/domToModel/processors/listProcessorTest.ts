@@ -1,5 +1,4 @@
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { childProcessor as originalChildProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';

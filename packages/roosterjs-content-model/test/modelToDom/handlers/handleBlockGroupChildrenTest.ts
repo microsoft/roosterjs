@@ -23,7 +23,7 @@ describe('handleBlockGroupChildren', () => {
     });
 
     it('Empty block group', () => {
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
 
         handleBlockGroupChildren(document, parent, group, context);
 

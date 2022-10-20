@@ -109,7 +109,7 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
                 editor.focus();
                 if (model && table) {
                     editor.setContentModel(model, {
-                        mergingCallback: (target, fragment, entityPairs) => {
+                        mergingCallback: (fragment, _, entityPairs) => {
                             preprocessEntitiesFromContentModel(entityPairs);
                             editor.replaceNode(table, fragment);
                         },

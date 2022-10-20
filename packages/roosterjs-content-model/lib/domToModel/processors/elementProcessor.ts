@@ -13,14 +13,12 @@ export const elementProcessor: ElementProcessor<HTMLElement> = (group, element, 
     const tagName = element.tagName.toLowerCase() as keyof ElementProcessorMap;
     const processor = (tryGetProcessorForEntity(element, context) ||
         context.elementProcessors[tagName] ||
-        (tagName.indexOf(':') >= 0 && context.elementProcessors.child) ||
         context.elementProcessors['*']) as ElementProcessor<Node>;
     processor(group, element, context);
 };
 
 function tryGetProcessorForEntity(element: HTMLElement, context: DomToModelContext) {
-    return (element.className && getEntityFromElement(element)) ||
-        element.contentEditable == 'false' // For readonly element, treat as an entity
+    return element.className && getEntityFromElement(element)
         ? context.elementProcessors.entity
         : null;
 }

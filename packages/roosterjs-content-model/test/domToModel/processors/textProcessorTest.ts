@@ -13,7 +13,7 @@ describe('textProcessor', () => {
     });
 
     it('Empty group', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
         textProcessor(doc, text, context);
@@ -38,7 +38,7 @@ describe('textProcessor', () => {
     });
 
     it('Group with empty paragraph', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
         doc.blocks.push({
             blockType: 'Paragraph',
@@ -67,7 +67,7 @@ describe('textProcessor', () => {
     });
 
     it('Group with paragraph with text segment', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test1');
 
         doc.blocks.push({
@@ -103,7 +103,7 @@ describe('textProcessor', () => {
     });
 
     it('Group with paragraph with different type of segment', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
         doc.blocks.push({
@@ -150,7 +150,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with selection 1', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test2');
 
         doc.blocks.push({
@@ -189,7 +189,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with selection 2', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test2');
 
         doc.blocks.push({
@@ -227,7 +227,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with selection 3', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test2');
 
         doc.blocks.push({
@@ -262,7 +262,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with format', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
         context.segmentFormat = { a: 'b' } as any;

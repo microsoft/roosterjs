@@ -23,7 +23,7 @@ export default function setTableCellShade(editor: IContentModelEditor, color: st
                 editor.focus();
                 if (model && table) {
                     editor.setContentModel(model, {
-                        mergingCallback: (target, fragment, entityPairs) => {
+                        mergingCallback: (fragment, _, entityPairs) => {
                             preprocessEntitiesFromContentModel(entityPairs);
                             editor.replaceNode(table, fragment);
                         },

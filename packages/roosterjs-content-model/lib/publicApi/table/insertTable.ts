@@ -43,7 +43,7 @@ export default function insertTable(
     editor.addUndoSnapshot(
         () => {
             editor.setContentModel(doc, {
-                mergingCallback: (target, fragment, entityPairs) => {
+                mergingCallback: (fragment, _, entityPairs) => {
                     preprocessEntitiesFromContentModel(entityPairs);
                     editor.insertNode(fragment);
                 },

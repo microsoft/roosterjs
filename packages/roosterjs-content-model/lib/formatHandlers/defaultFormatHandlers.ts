@@ -2,13 +2,12 @@ import { backgroundColorFormatHandler } from './common/backgroundColorFormatHand
 import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
+import { ContentModelFormatMap } from '../publicTypes/format/ContentModelFormatMap';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
-import { FormatAppliers } from '../publicTypes/context/ModelToDomSettings';
 import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
-import { FormatParsers } from '../publicTypes/context/DomToModelSettings';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
@@ -22,6 +21,16 @@ import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
+import {
+    FormatApplier,
+    FormatAppliers,
+    FormatAppliersPerCategory,
+} from '../publicTypes/context/ModelToDomSettings';
+import {
+    FormatParser,
+    FormatParsers,
+    FormatParsersPerCategory,
+} from '../publicTypes/context/DomToModelSettings';
 
 type FormatHandlers = {
     [Key in FormatKey]: FormatHandler<FormatHandlerTypeMap[Key]>;
@@ -49,24 +58,84 @@ const defaultFormatHandlerMap: FormatHandlers = {
     verticalAlign: verticalAlignFormatHandler,
 };
 
+const defaultFormatKeysPerCategory: {
+    [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
+} = {
+    block: ['backgroundColor', 'direction'],
+    listItem: ['listItemThread', 'listItemMetadata'],
+    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
+    segment: [
+        'superOrSubScript',
+        'strike',
+        'fontFamily',
+        'fontSize',
+        'underline',
+        'italic',
+        'bold',
+        'textColor',
+        'backgroundColor',
+    ],
+    segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
+    tableCell: [
+        'border',
+        'borderBox',
+        'backgroundColor',
+        'padding',
+        'direction',
+        'verticalAlign',
+        'tableCellMetadata',
+    ],
+    table: [
+        'id',
+        'border',
+        'borderBox',
+        'tableMetadata',
+        'tableSpacing',
+        'margin',
+        'backgroundColor',
+    ],
+};
+
 /**
  * @internal
  */
-export function getFormatParsers(option?: Partial<FormatParsers>): FormatParsers {
-    return getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
-        parsers[key] = option?.[key] || defaultFormatHandlerMap[key].parse;
+export function getFormatParsers(
+    override: Partial<FormatParsers> = {},
+    additionalParsers: Partial<FormatParsersPerCategory> = {}
+): FormatParsersPerCategory {
+    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
+        const value = defaultFormatKeysPerCategory[key]
+            .map(formatKey =>
+                override[formatKey] === undefined
+                    ? defaultFormatHandlerMap[formatKey].parse
+                    : override[formatKey]
+            )
+            .concat(additionalParsers[key] || []) as FormatParser<any>[];
 
-        return parsers;
-    }, <FormatParsers>{});
+        result[key] = value;
+
+        return result;
+    }, {} as FormatParsersPerCategory);
 }
 
 /**
  * @internal
  */
-export function getFormatAppliers(option?: Partial<FormatAppliers>): FormatAppliers {
-    return getObjectKeys(defaultFormatHandlerMap).reduce((parsers, key) => {
-        parsers[key] = option?.[key] || defaultFormatHandlerMap[key].apply;
+export function getFormatAppliers(
+    override: Partial<FormatAppliers> = {},
+    additionalAppliers: Partial<FormatAppliersPerCategory> = {}
+): FormatAppliersPerCategory {
+    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
+        const value = defaultFormatKeysPerCategory[key]
+            .map(formatKey =>
+                override[formatKey] === undefined
+                    ? defaultFormatHandlerMap[formatKey].apply
+                    : override[formatKey]
+            )
+            .concat(additionalAppliers[key] || []) as FormatApplier<any>[];
 
-        return parsers;
-    }, <FormatAppliers>{});
+        result[key] = value;
+
+        return result;
+    }, {} as FormatAppliersPerCategory);
 }

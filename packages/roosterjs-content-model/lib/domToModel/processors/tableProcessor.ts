@@ -25,17 +25,18 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     tableElement,
     context
 ) => {
-    stackFormat(
-        context,
-        { segment: 'shallowCloneForBlock', paragraph: 'shallowCopyInherit' },
-        () => {
-            const table = createTable(tableElement.rows.length, context.blockFormat);
-            const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
-            const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
+    const table = createTable(tableElement.rows.length);
+    const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
+    const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
     stackFormat(context, { segment: 'shallowClone' }, () => {
-        parseFormat(tableElement, TableFormatHandlers, table.format, context);
-        parseFormat(tableElement, SegmentFormatHandlers, context.segmentFormat, context);
+        parseFormat(tableElement, context.formatParsers.table, table.format, context);
+        parseFormat(
+            tableElement,
+            context.formatParsers.segmentOnBlock,
+            context.segmentFormat,
+            context
+        );
         addBlock(group, table);
 
         const columnPositions: number[] = [0];
@@ -79,15 +80,30 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                         if (hasTd) {
                             stackFormat(context, { segment: 'shallowClone' }, () => {
-                                parseFormat(td, TableCellFormatHandlers, cell.format, context);
                                 parseFormat(
                                     td,
-                                    SegmentFormatHandlers,
+                                    context.formatParsers.tableCell,
+                                    cell.format,
+                                    context
+                                );
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.segmentOnBlock,
                                     context.segmentFormat,
                                     context
                                 );
 
-                                containerProcessor(cell, td, context);
+                                const { listParent, levels } = context.listFormat;
+
+                                context.listFormat.listParent = undefined;
+                                context.listFormat.levels = [];
+
+                                try {
+                                    context.elementProcessors.child(cell, td, context);
+                                } finally {
+                                    context.listFormat.listParent = listParent;
+                                    context.listFormat.levels = levels;
+                                }
                             });
                         }
                     }

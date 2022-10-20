@@ -1,7 +1,7 @@
-import { addSelectionMarker } from '../utils/addSelectionMarker';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { addSegment } from '../../modelApi/common/addSegment';
+import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
@@ -9,44 +9,30 @@ import { NodeType } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export const childProcessor: ElementProcessor<ParentNode> = (
+export function childProcessor(
     group: ContentModelBlockGroup,
     parent: ParentNode,
     context: DomToModelContext
-) => {
+) {
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
     let index = 0;
 
     for (let child = parent.firstChild; child; child = child.nextSibling) {
-        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+        handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 
-        processChildNode(group, child, context);
+        if (isNodeOfType(child, NodeType.Element)) {
+            context.elementProcessors.element(group, child, context);
+        } else if (isNodeOfType(child, NodeType.Text)) {
+            context.elementProcessors['#text'](group, child, context);
+        }
 
         index++;
     }
 
-    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
-};
-
-/**
- * @internal
- */
-export function processChildNode(
-    group: ContentModelBlockGroup,
-    child: Node,
-    context: DomToModelContext
-) {
-    if (isNodeOfType(child, NodeType.Element) && child.style.display != 'none') {
-        context.elementProcessors.element(group, child, context);
-    } else if (isNodeOfType(child, NodeType.Text)) {
-        context.elementProcessors['#text'](group, child, context);
-    }
+    handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 }
 
-/**
- * @internal
- */
-export function handleRegularSelection(
+function handleSelection(
     index: number,
     context: DomToModelContext,
     group: ContentModelBlockGroup,
@@ -56,12 +42,12 @@ export function handleRegularSelection(
     if (index == nodeStartOffset) {
         context.isInSelection = true;
 
-        addSelectionMarker(group, context);
+        addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
     }
 
     if (index == nodeEndOffset) {
         if (!context.regularSelection!.isSelectionCollapsed) {
-            addSelectionMarker(group, context);
+            addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
         }
         context.isInSelection = false;
     }

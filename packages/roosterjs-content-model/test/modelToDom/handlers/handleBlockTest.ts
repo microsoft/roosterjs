@@ -1,6 +1,4 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
-import * as handleEntity from '../../../lib/modelToDom/handlers/handleEntity';
-import * as handleParagraph from '../../../lib/modelToDom/handlers/handleParagraph';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
@@ -9,25 +7,20 @@ import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentMod
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
     let handleEntity: jasmine.Spy<ContentModelHandler<ContentModelEntity>>;
     let handleParagraph: jasmine.Spy<ContentModelHandler<ContentModelParagraph>>;
-    let handleDivider: jasmine.Spy<ContentModelHandler<ContentModelDivider>>;
 
     beforeEach(() => {
         handleEntity = jasmine.createSpy('handleEntity');
         handleParagraph = jasmine.createSpy('handleParagraph');
-        handleDivider = jasmine.createSpy('handleDivider');
-
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
                 entity: handleEntity,
                 paragraph: handleParagraph,
-                divider: handleDivider,
             },
         });
     });
@@ -110,7 +103,7 @@ describe('handleBlock', () => {
         expect(context.regularSelection.current.segment).toBe(parent.firstChild);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            SegmentFormatHandlers,
+            context.formatAppliers.segment,
             block.format,
             context
         );
@@ -130,9 +123,8 @@ describe('handleBlock', () => {
 
         parent = document.createElement('div');
 
-        spyOn(handleEntity, 'handleEntity');
         handleBlock(document, parent, block, context);
 
-        expect(handleEntity.handleEntity).toHaveBeenCalledWith(document, parent, block, context);
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context);
     });
 });

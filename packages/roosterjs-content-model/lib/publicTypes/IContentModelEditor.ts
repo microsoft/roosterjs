@@ -1,13 +1,9 @@
 import { ContentModelDocument } from './block/group/ContentModelDocument';
-import { DefaultStyleMap, FormatParsers } from './context/DomToModelSettings';
 import { EditorContext } from './context/EditorContext';
-import { ElementProcessor } from './context/ElementProcessor';
 import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
-import { FormatAppliers } from './context/ModelToDomSettings';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
-    DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
@@ -48,6 +44,11 @@ export interface DomToModelOption {
     formatParserOverride?: Partial<FormatParsers>;
 
     /**
+     * Provide additional format parsers for each format type
+     */
+    additionalFormatParsers?: Partial<FormatParsersPerCategory>;
+
+    /**
      * When process table, whether we should always normalize it.
      * This can help persist the size of table that is not created from Content Model
      * @default false
@@ -85,11 +86,6 @@ export interface ModelToDomOption {
      * Overrides default model handlers
      */
     modelHandlerOverride?: Partial<ContentModelHandlerMap>;
-
-    /**
-     * Overrides default element styles
-     */
-    defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
 }
 
 /**

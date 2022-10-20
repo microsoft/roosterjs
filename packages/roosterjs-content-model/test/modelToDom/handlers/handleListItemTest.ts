@@ -1,7 +1,7 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
-import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
+import { ContentModelListItem } from '../../../lib/publicTypes/block/group/ContentModelListItem';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
