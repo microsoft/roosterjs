@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>28/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>29/29</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>28/28</span>
             </div>
         
             
@@ -161,7 +161,14 @@
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
 <a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -199,6 +206,12 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -237,33 +250,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">444x</span>
+<span class="cline-any cline-yes">365x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">443x</span>
-<span class="cline-any cline-yes">443x</span>
+<span class="cline-any cline-yes">364x</span>
+<span class="cline-any cline-yes">364x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">443x</span>
+<span class="cline-any cline-yes">364x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">443x</span>
-<span class="cline-any cline-yes">145x</span>
-<span class="cline-any cline-yes">145x</span>
+<span class="cline-any cline-yes">364x</span>
+<span class="cline-any cline-yes">143x</span>
+<span class="cline-any cline-yes">143x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">141x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">133x</span>
-<span class="cline-any cline-yes">133x</span>
-<span class="cline-any cline-yes">133x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">133x</span>
+<span class="cline-any cline-yes">139x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">310x</span>
+<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">233x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import createRange from './createRange';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -279,11 +293,11 @@ import {
     ContentMetadata,
     SelectionRangeTypes,
     TrustedHTMLHandler,
+    ImageContentMetadata,
     NormalContentMetadata,
     TableContentMetadata,
     Coordinates,
 } from 'roosterjs-editor-types';
-&nbsp;
 const NumberArrayDefinition = createArrayDefinition&lt;number&gt;(createNumberDefinition());
 &nbsp;
 const CoordinatesDefinition = createObjectDefinition&lt;Coordinates&gt;({
@@ -306,6 +320,12 @@ const TableContentMetadataDefinition = createObjectDefinition&lt;TableContentMet
     tableId: createStringDefinition(),
     firstCell: CoordinatesDefinition,
     lastCell: CoordinatesDefinition,
+});
+&nbsp;
+const ImageContentMetadataDefinition = createObjectDefinition&lt;ImageContentMetadata&gt;({
+    type: createNumberDefinition(false /*isOptional*/, SelectionRangeTypes.ImageSelection),
+    isDarkMode: IsDarkModeDefinition,
+    imageId: createStringDefinition(),
 });
 &nbsp;
 /**
@@ -356,7 +376,8 @@ export function setHtmlWithMetadata(
 &nbsp;
             if (
                 validate(obj, NormalContentMetadataDefinition) ||
-                validate(obj, TableContentMetadataDefinition)
+                validate(obj, TableContentMetadataDefinition) ||
+                validate(obj, ImageContentMetadataDefinition)
             ) {
                 rootNode.removeChild(potentialMetadataComment);
                 obj.type = typeof obj.type === 'undefined' ? SelectionRangeTypes.Normal : obj.type;
@@ -376,7 +397,7 @@ export function setHtmlWithMetadata(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Oct 19 2022 21:52:06 GMT+0000 (Coordinated Universal Time)
+                at Thu Oct 20 2022 04:30:10 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
