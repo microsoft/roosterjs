@@ -210,6 +210,8 @@ export default class TableCellSelection implements EditorPlugin {
                     this.tableSelection = false;
                 }
             });
+        } else if (this.editor.getSelectionRangeEx()?.type == SelectionRangeTypes.TableSelection) {
+            this.editor.select(null);
         }
     }
 

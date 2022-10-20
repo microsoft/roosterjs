@@ -111,7 +111,15 @@ describe('TableFeature', () => {
                 runTest(true, 1, 0);
             });
             it('Shift + Tab in 1st cell', () => {
-                runTest(true, 0, 0);
+                const event = shiftKeyboardEvent;
+                let cells = table?.querySelectorAll('td,th')!;
+                const target = cells[0]!;
+
+                editor.select(target, 0);
+                feature.handleEvent(event, editor);
+
+                const focusedPos = editor.getFocusedPosition();
+                expect(focusedPos.node).toBe(table?.parentNode);
             });
             it('Tab in last cell to create new row', () => {
                 runTest(false, 3, 4);

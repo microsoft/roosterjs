@@ -38,6 +38,7 @@ export {
     ContentMetadataBase,
     NormalContentMetadata,
     TableContentMetadata,
+    ImageContentMetadata,
     ContentMetadata,
 } from './ContentMetadata';
 export { default as Snapshot } from './Snapshot';
