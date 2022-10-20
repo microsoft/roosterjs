@@ -280,9 +280,8 @@ describe('handleBlockGroup', () => {
 
         parent = document.createElement('div');
 
-        spyOn(handleEntity, 'handleEntity');
         handleBlock(document, parent, block, context);
 
-        expect(handleEntity.handleEntity).toHaveBeenCalledWith(document, parent, block, context);
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context);
     });
 });

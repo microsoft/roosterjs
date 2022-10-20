@@ -180,6 +180,44 @@ const defaultFormatKeysPerCategory: {
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
 };
 
+const defaultFormatKeysPerCategory: {
+    [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
+} = {
+    block: ['backgroundColor', 'direction'],
+    listItem: ['listItemThread', 'listItemMetadata'],
+    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
+    segment: [
+        'superOrSubScript',
+        'strike',
+        'fontFamily',
+        'fontSize',
+        'underline',
+        'italic',
+        'bold',
+        'textColor',
+        'backgroundColor',
+    ],
+    segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
+    tableCell: [
+        'border',
+        'borderBox',
+        'backgroundColor',
+        'padding',
+        'direction',
+        'verticalAlign',
+        'tableCellMetadata',
+    ],
+    table: [
+        'id',
+        'border',
+        'borderBox',
+        'tableMetadata',
+        'tableSpacing',
+        'margin',
+        'backgroundColor',
+    ],
+};
+
 /**
  * @internal
  */
