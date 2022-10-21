@@ -16,6 +16,9 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
         case 'BlockGroup':
             return isBlockGroupEmpty(block);
 
+        case 'Entity':
+            return false;
+
         default:
             return false;
     }
@@ -46,7 +49,7 @@ export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
 export function isSegmentEmpty(segment: ContentModelSegment): boolean {
     switch (segment.segmentType) {
         case 'Text':
-            return !segment.text || /^[\r\n]*$/.test(segment.text);
+            return !segment.text || /^[\r\n\s\t]*$/.test(segment.text);
 
         default:
             return false;
