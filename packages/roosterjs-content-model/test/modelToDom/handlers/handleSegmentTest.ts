@@ -50,7 +50,7 @@ describe('handleSegment', () => {
                 segmentType: 'Br',
                 format: {},
             },
-            '<br>',
+            '<span><br></span>',
             0
         );
     });

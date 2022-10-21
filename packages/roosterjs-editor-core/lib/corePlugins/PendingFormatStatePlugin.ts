@@ -94,6 +94,7 @@ export default class PendingFormatStatePlugin
                     isCharacterValue(event.rawEvent) &&
                     this.state.pendableFormatSpan
                 ) {
+                    this.state.pendableFormatSpan.removeAttribute('contentEditable');
                     this.editor.insertNode(this.state.pendableFormatSpan);
                     this.editor.select(
                         this.state.pendableFormatSpan,
