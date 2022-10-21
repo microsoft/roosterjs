@@ -25,7 +25,19 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
  * @internal
  */
 export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
-    return group.blocks.every(isBlockEmpty);
+    switch (group.blockGroupType) {
+        case 'Document':
+        case 'Quote':
+            return group.blocks.every(isBlockEmpty);
+
+        case 'General':
+        case 'ListItem':
+        case 'TableCell':
+            return false;
+
+        default:
+            return true;
+    }
 }
 
 /**
