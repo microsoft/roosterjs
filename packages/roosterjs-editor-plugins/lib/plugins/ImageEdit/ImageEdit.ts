@@ -197,7 +197,7 @@ export default class ImageEdit implements EditorPlugin {
             case PluginEventType.ContentChanged:
                 if (
                     (e.source !== ChangeSource.Format && e.source !== ChangeSource.InsertEntity) ||
-                    (<Entity>e.data).type != IMAGE_EDIT_WRAPPER_ENTITY_TYPE
+                    (<Entity>e.data)?.type != IMAGE_EDIT_WRAPPER_ENTITY_TYPE
                 ) {
                     // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
                     this.editor.queryElements(
