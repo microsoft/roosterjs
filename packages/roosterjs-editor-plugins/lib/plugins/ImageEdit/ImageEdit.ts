@@ -19,7 +19,6 @@ import {
     getEntityFromElement,
     getEntitySelector,
     getObjectKeys,
-    matchesSelector,
     safeInstanceOf,
     toArray,
     wrap,
@@ -47,14 +46,8 @@ import {
     KnownCreateElementDataIndex,
     ModeIndependentColor,
     SelectionRangeTypes,
-    Keys,
-    PositionType,
 } from 'roosterjs-editor-types';
 import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
-
-const SHIFT_KEYCODE = 16;
-const CTRL_KEYCODE = 17;
-const ALT_KEYCODE = 18;
 
 const DIRECTIONS = 8;
 const DirectionRad = (Math.PI * 2) / DIRECTIONS;
@@ -184,63 +177,23 @@ export default class ImageEdit implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(e: PluginEvent) {
-        const isImageSelectionEnabled = this.editor.isFeatureEnabled(
-            ExperimentalFeatures.ImageSelection
-        );
-
         switch (e.eventType) {
             case PluginEventType.SelectionChanged:
-                if (isImageSelectionEnabled) {
-                    if (e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection) {
-                        this.setEditingImage(
-                            e.selectionRangeEx?.image,
-                            ImageEditOperation.ResizeAndRotate
-                        );
-                    } else {
-                        this.setEditingImage(null);
-                    }
+                if (
+                    e.selectionRangeEx &&
+                    e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection
+                ) {
+                    this.setEditingImage(
+                        e.selectionRangeEx?.image,
+                        ImageEditOperation.ResizeAndRotate
+                    );
+                } else {
+                    this.setEditingImage(null);
                 }
-
                 break;
             case PluginEventType.MouseDown:
-                if (!isImageSelectionEnabled) {
-                    this.setEditingImage(null);
-                }
-
+                this.setEditingImage(null);
                 break;
-
-            case PluginEventType.MouseUp:
-                const target = e.rawEvent.target;
-                if (
-                    !isImageSelectionEnabled &&
-                    e.isClicking &&
-                    e.rawEvent.button == 0 &&
-                    safeInstanceOf(target, 'HTMLImageElement') &&
-                    target.isContentEditable &&
-                    matchesSelector(target, this.options.imageSelector)
-                ) {
-                    this.setEditingImage(target, ImageEditOperation.ResizeAndRotate);
-                }
-
-                break;
-
-            case PluginEventType.KeyDown:
-                const key = e.rawEvent.which;
-                if (key == Keys.DELETE || key == Keys.BACKSPACE) {
-                    // Set current editing image to null and select the image if any, and do not prevent default of the event
-                    // so that browser will delete the selected image for us
-                    this.setEditingImage(null, true /*selectImage*/);
-                } else if (key == Keys.ESCAPE && this.image) {
-                    // Press ESC should cancel current editing operation, resume back to original edit info
-                    this.editInfo = getEditInfoFromImage(this.image);
-                    this.setEditingImage(null);
-                    e.rawEvent.preventDefault();
-                } else if (key != SHIFT_KEYCODE && key != CTRL_KEYCODE && key != ALT_KEYCODE) {
-                    // For other key, just unselect current image and select it. If this is an input key, the image will be replaced
-                    this.setEditingImage(null, true /*selectImage*/);
-                }
-                break;
-
             case PluginEventType.ContentChanged:
                 if (
                     e.source != ChangeSource.InsertEntity ||
@@ -328,14 +281,9 @@ export default class ImageEdit implements EditorPlugin {
             if (selectImage) {
                 this.editor.select(this.image);
             }
-
             this.image = null;
             this.editInfo = null;
             this.lastSrc = null;
-        }
-
-        if (this.image) {
-            return;
         }
 
         if (!this.image && image?.isContentEditable) {
@@ -354,7 +302,7 @@ export default class ImageEdit implements EditorPlugin {
                 this.allowedOperations;
 
             // Create and update editing wrapper and elements
-            const wrapper = this.createWrapper(operation);
+            this.createWrapper(operation);
             this.updateWrapper();
 
             // Init drag and drop
@@ -364,11 +312,8 @@ export default class ImageEdit implements EditorPlugin {
                 ...this.createDndHelpers(ImageEditElementClass.CropHandle, Cropper),
                 ...this.createDndHelpers(ImageEditElementClass.CropContainer, Cropper),
             ];
-            if (this.editor.isFeatureEnabled(ExperimentalFeatures.ImageSelection)) {
-                this.editor.select(this.image);
-            } else {
-                this.editor.select(wrapper, PositionType.After);
-            }
+
+            this.editor.select(this.image);
         }
     }
 
@@ -376,33 +321,18 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(
-            null,
-            this.editor.isFeatureEnabled(ExperimentalFeatures.ImageSelection) ? true : false
-        );
+        // this.setEditingImage(null, true);
     };
 
     /**
      * Create editing wrapper for the image
      */
     private createWrapper(operation: ImageEditOperation | CompatibleImageEditOperation) {
-        // This image wrapper will overlay the selection border, so we copy the selection border style in this element
-        const isImageSelectionEnabled = this.editor.isFeatureEnabled(
-            ExperimentalFeatures.ImageSelection
-        );
-
-        const imageWrapper = wrap(this.image, KnownCreateElementDataIndex.ImageEditWrapper);
-        if (isImageSelectionEnabled && operation !== ImageEditOperation.Crop) {
-            const border = this.getStylePropertyValue(this.image, 'border');
-            imageWrapper.style.border = border;
-            imageWrapper.style.margin = '-2px';
-        }
-
         // Wrap the image with an entity so that we can easily retrieve it later
         const { wrapper } = insertEntity(
             this.editor,
             IMAGE_EDIT_WRAPPER_ENTITY_TYPE,
-            imageWrapper,
+            wrap(this.image, KnownCreateElementDataIndex.ImageEditWrapper),
             false /*isBlock*/,
             true /*isReadonly*/
         );
@@ -439,19 +369,13 @@ export default class ImageEdit implements EditorPlugin {
             isSmallImage: isASmallImage(this.editInfo, isExperimentalHandlesEnabled),
             handlesExperimentalFeatures: isExperimentalHandlesEnabled,
         };
-        const htmlData: CreateElementData[] = isImageSelectionEnabled
-            ? []
-            : [getResizeBordersHTML(options)];
+        const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
         getObjectKeys(ImageEditHTMLMap).forEach(thisOperation => {
             if ((operation & thisOperation) == thisOperation) {
                 arrayPush(
                     htmlData,
-                    ImageEditHTMLMap[thisOperation](
-                        options,
-                        this.onShowResizeHandle,
-                        isImageSelectionEnabled
-                    )
+                    ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle)
                 );
             }
         });

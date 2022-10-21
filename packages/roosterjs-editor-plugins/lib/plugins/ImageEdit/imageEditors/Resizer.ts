@@ -132,8 +132,7 @@ export function getCornerResizeHTML(
         borderColor: resizeBorderColor,
         handlesExperimentalFeatures: handlesExperimentalFeatures,
     }: ImageHtmlOptions,
-    onShowResizeHandle?: OnShowResizeHandle,
-    isImageSelectionEnabled?: boolean
+    onShowResizeHandle?: OnShowResizeHandle
 ): CreateElementData[] {
     const result: CreateElementData[] = [];
 
@@ -147,8 +146,7 @@ export function getCornerResizeHTML(
                           resizeBorderColor,
                           handlesExperimentalFeatures
                               ? HandleTypes.CircularHandlesCorner
-                              : HandleTypes.SquareHandles,
-                          isImageSelectionEnabled
+                              : HandleTypes.SquareHandles
                       )
                     : null;
             if (onShowResizeHandle) {
@@ -170,8 +168,7 @@ export function getSideResizeHTML(
         isSmallImage: isSmallImage,
         handlesExperimentalFeatures: handlesExperimentalFeatures,
     }: ImageHtmlOptions,
-    onShowResizeHandle?: OnShowResizeHandle,
-    isImageSelectionEnabled?: boolean
+    onShowResizeHandle?: OnShowResizeHandle
 ): CreateElementData[] {
     if (isSmallImage) {
         return null;
@@ -187,8 +184,7 @@ export function getSideResizeHTML(
                           resizeBorderColor,
                           handlesExperimentalFeatures
                               ? HandleTypes.CircularHandlesCorner
-                              : HandleTypes.SquareHandles,
-                          isImageSelectionEnabled
+                              : HandleTypes.SquareHandles
                       )
                     : null;
             if (onShowResizeHandle) {
@@ -222,8 +218,8 @@ function getResizeHandleHTML(
 ): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
-    const leftOrRightValue = x == '' ? '50%' : isImageSelectionEnabled ? '-2px' : '0px';
-    const topOrBottomValue = y == '' ? '50%' : isImageSelectionEnabled ? '-2px' : '0px';
+    const leftOrRightValue = x == '' ? '50%' : '-2px';
+    const topOrBottomValue = y == '' ? '50%' : '-2px';
     const direction = y + x;
     return x == '' && y == ''
         ? null
