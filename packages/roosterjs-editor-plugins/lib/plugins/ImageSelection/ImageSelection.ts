@@ -5,11 +5,11 @@ import {
     IEditor,
     PluginEvent,
     PluginEventType,
-    // PositionType,
+    PositionType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
-// const Escape = 'Escape';
+const Escape = 'Escape';
 const mouseRightButton = 2;
 const mouseLeftButton = 0;
 
@@ -67,19 +67,19 @@ export default class ImageSelection implements EditorPlugin {
                         }
                     }
                     break;
-                // case PluginEventType.KeyDown:
-                //     const key = event.rawEvent.key;
-                //     const keyDownSelection = this.editor.getSelectionRangeEx();
-                //     if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
-                //         if (key === Escape) {
-                //             this.editor.select(keyDownSelection.image, PositionType.Before);
-                //             this.editor.getSelectionRange().collapse();
-                //             event.rawEvent.stopPropagation();
-                //         } else {
-                //             this.editor.select(keyDownSelection.ranges[0]);
-                //         }
-                //     }
-                //     break;
+                case PluginEventType.KeyDown:
+                    const key = event.rawEvent.key;
+                    const keyDownSelection = this.editor.getSelectionRangeEx();
+                    if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
+                        if (key === Escape) {
+                            this.editor.select(keyDownSelection.image, PositionType.Before);
+                            this.editor.getSelectionRange().collapse();
+                            event.rawEvent.stopPropagation();
+                        } else {
+                            this.editor.select(keyDownSelection.ranges[0]);
+                        }
+                    }
+                    break;
             }
         }
     }

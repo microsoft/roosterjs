@@ -41,11 +41,11 @@ import {
     PluginEvent,
     PluginEventType,
     EntityOperation,
-    Entity,
     CreateElementData,
     KnownCreateElementDataIndex,
     ModeIndependentColor,
     SelectionRangeTypes,
+    Entity,
 } from 'roosterjs-editor-types';
 import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
@@ -196,7 +196,7 @@ export default class ImageEdit implements EditorPlugin {
                 break;
             case PluginEventType.ContentChanged:
                 if (
-                    e.source != ChangeSource.InsertEntity ||
+                    (e.source !== ChangeSource.Format && e.source !== ChangeSource.InsertEntity) ||
                     (<Entity>e.data).type != IMAGE_EDIT_WRAPPER_ENTITY_TYPE
                 ) {
                     // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
@@ -207,7 +207,6 @@ export default class ImageEdit implements EditorPlugin {
                 }
 
                 break;
-
             case PluginEventType.EntityOperation:
                 if (e.entity.type == IMAGE_EDIT_WRAPPER_ENTITY_TYPE) {
                     if (e.operation == EntityOperation.ReplaceTemporaryContent) {
@@ -321,7 +320,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        // this.setEditingImage(null, true);
+        this.setEditingImage(null, true);
     };
 
     /**

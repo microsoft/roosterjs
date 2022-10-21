@@ -213,13 +213,12 @@ function getResizeHandleHTML(
     x: DNDDirectionX,
     y: DnDDirectionY,
     borderColor: string,
-    handleTypes: HandleTypes,
-    isImageSelectionEnabled?: boolean
+    handleTypes: HandleTypes
 ): CreateElementData {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
-    const leftOrRightValue = x == '' ? '50%' : '-2px';
-    const topOrBottomValue = y == '' ? '50%' : '-2px';
+    const leftOrRightValue = x == '' ? '50%' : '0px';
+    const topOrBottomValue = y == '' ? '50%' : '0px';
     const direction = y + x;
     return x == '' && y == ''
         ? null
