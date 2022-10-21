@@ -190,7 +190,7 @@ describe('isEmpty', () => {
             blocks: [],
         });
 
-        expect(result).toBeTrue();
+        expect(result).toBeFalse();
     });
 
     it('Document with empty block', () => {
@@ -206,7 +206,7 @@ describe('isEmpty', () => {
             ],
         });
 
-        expect(result).toBeTrue();
+        expect(result).toBeFalse();
     });
 
     it('Document with content', () => {

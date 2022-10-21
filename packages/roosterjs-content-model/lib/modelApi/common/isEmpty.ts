@@ -29,10 +29,10 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
  */
 export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
     switch (group.blockGroupType) {
-        case 'Document':
         case 'Quote':
             return group.blocks.every(isBlockEmpty);
 
+        case 'Document':
         case 'General':
         case 'ListItem':
         case 'TableCell':
