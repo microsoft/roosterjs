@@ -110,10 +110,9 @@ export default class VListChain {
 
         for (let i = 0; i < lists.length; i++) {
             const list = lists[i];
-            list.start = lastNumber + 1;
+            list.start = list.start > 1 ? list.start : lastNumber + 1;
 
             const vlist = new VList(list);
-
             lastNumber = vlist.getLastItemNumber() || 0;
 
             delete list.dataset[CHAIN_DATASET_NAME];
