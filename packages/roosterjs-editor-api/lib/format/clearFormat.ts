@@ -4,6 +4,7 @@ import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
+import setFontWeight from './setFontWeight';
 import setTextColor from './setTextColor';
 import toggleBold from './toggleBold';
 import toggleItalic from './toggleItalic';
@@ -25,6 +26,7 @@ import {
     isNodeInRegion,
     isVoidHtmlElement,
     PartialInlineElement,
+    Position,
     safeInstanceOf,
     setStyles,
     splitBalancedNodeRange,
@@ -38,7 +40,7 @@ const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
     ','
 );
-const HEADING_SELECTOR = 'h1, h2, h3, h4, h5, h6';
+const WRAPPER_SELECTOR = 'h1, h2, h3, h4, h5, h6, blockquote';
 const ATTRIBUTES_TO_PRESERVE = ['href', 'src', 'cellpadding', 'cellspacing'];
 const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
 
@@ -196,6 +198,15 @@ function clearBlockFormat(editor: IEditor) {
     );
 }
 
+function isRangeContainingAll(range: Range) {
+    return (
+        range.startContainer === range.startContainer.parentElement.firstChild &&
+        range.endContainer === range.endContainer.parentElement.lastChild &&
+        range.startOffset === 0 &&
+        Position.getEnd(range).isAtEnd
+    );
+}
+
 function clearInlineFormat(editor: IEditor) {
     editor.focus();
     editor.addUndoSnapshot(() => {
@@ -204,11 +215,17 @@ function clearInlineFormat(editor: IEditor) {
             node.removeAttribute('class')
         );
 
+        let selection = editor.getSelectionRange();
+
         /**
-         * Manually unwrap headings as they're not covered by the `removeFormat` command spec
+         * Manually unwrap headings and blockquotes as they're not covered by the `removeFormat` command spec
          * https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#the-removeformat-command
          */
-        editor.queryElements(HEADING_SELECTOR, QueryScope.OnSelection, unwrap);
+        if (isRangeContainingAll(selection)) {
+            editor.queryElements(WRAPPER_SELECTOR, QueryScope.OnSelection, unwrap);
+        } else {
+            editor.queryElements(WRAPPER_SELECTOR, QueryScope.InSelection, unwrap);
+        }
 
         setDefaultFormat(editor);
 
