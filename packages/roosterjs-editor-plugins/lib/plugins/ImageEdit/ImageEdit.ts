@@ -184,7 +184,7 @@ export default class ImageEdit implements EditorPlugin {
                     e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection
                 ) {
                     this.setEditingImage(
-                        e.selectionRangeEx?.image,
+                        e.selectionRangeEx.image,
                         ImageEditOperation.ResizeAndRotate
                     );
                 } else {
