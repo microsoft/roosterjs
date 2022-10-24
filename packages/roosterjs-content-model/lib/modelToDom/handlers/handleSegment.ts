@@ -44,6 +44,10 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
             applyFormat(element, context.formatAppliers.segment, segment.format, context);
             break;
 
+        case 'Image':
+            context.modelHandlers.image(doc, parent, segment, context);
+            break;
+
         case 'General':
             context.modelHandlers.block(doc, parent, segment, context);
             break;

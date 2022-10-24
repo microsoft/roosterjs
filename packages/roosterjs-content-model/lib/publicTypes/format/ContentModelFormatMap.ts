@@ -1,4 +1,5 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import { ContentModelImageFormat } from './ContentModelImageFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
@@ -44,4 +45,9 @@ export interface ContentModelFormatMap {
      * Format type for listLevel
      */
     listLevel: ContentModelListItemLevelFormat;
+
+    /**
+     * Format type for image
+     */
+    image: ContentModelImageFormat;
 }
