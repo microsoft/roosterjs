@@ -51,6 +51,9 @@ export function isSegmentEmpty(segment: ContentModelSegment): boolean {
         case 'Text':
             return !segment.text || /^[\r\n\s\t]*$/.test(segment.text);
 
+        case 'Image':
+            return !segment.src;
+
         default:
             return false;
     }
