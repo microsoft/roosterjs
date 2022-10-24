@@ -213,7 +213,7 @@ export default class TableCellSelection implements EditorPlugin {
             });
         } else if (
             this.editor.getSelectionRangeEx()?.type == SelectionRangeTypes.TableSelection &&
-            !isCtrlOrMetaPressed(event.rawEvent)
+            (!isCtrlOrMetaPressed(event.rawEvent) || which == Keys.HOME || which == Keys.END)
         ) {
             this.editor.select(null);
         }
