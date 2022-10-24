@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.33% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/15</span>
+                <span class='fraction'>8/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.33% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/12</span>
+                <span class='fraction'>4/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/5</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.33% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/15</span>
+                <span class='fraction'>8/12</span>
             </div>
         
             
@@ -111,17 +111,7 @@
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,18 +165,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
 import ImageEditInfo from '../types/ImageEditInfo';
-&nbsp;
-const IMAGE_EDIT_INFO_NAME = 'roosterEditInfo';
+import { getMetadata, removeMetadata, setMetadata } from 'roosterjs-editor-dom';
 &nbsp;
 /**
  * @internal
@@ -196,7 +177,7 @@ const IMAGE_EDIT_INFO_NAME = 'roosterEditInfo';
  */
 export function <span class="fstat-no" title="function not covered" >saveEditInfo(</span>image: HTMLImageElement, editInfo: ImageEditInfo) {
 <span class="cstat-no" title="statement not covered" >    if (image) {</span>
-<span class="cstat-no" title="statement not covered" >        image.dataset[IMAGE_EDIT_INFO_NAME] = JSON.stringify(editInfo);</span>
+<span class="cstat-no" title="statement not covered" >        setMetadata(image, editInfo);</span>
     }
 }
 &nbsp;
@@ -207,7 +188,7 @@ export function <span class="fstat-no" title="function not covered" >saveEditInf
  */
 export function <span class="fstat-no" title="function not covered" >deleteEditInfo(</span>image: HTMLImageElement) {
 <span class="cstat-no" title="statement not covered" >    if (image) {</span>
-<span class="cstat-no" title="statement not covered" >        delete image.dataset[IMAGE_EDIT_INFO_NAME];</span>
+<span class="cstat-no" title="statement not covered" >        removeMetadata(image);</span>
     }
 }
 &nbsp;
@@ -220,7 +201,7 @@ export function <span class="fstat-no" title="function not covered" >deleteEditI
  * @param image The image to get edit info from
  */
 export function getEditInfoFromImage(image: HTMLImageElement): ImageEditInfo {
-    const obj = safeParseJSON(image<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>ataset[IMAGE_EDIT_INFO_NAME]) as ImageEditInfo;
+    const obj = getMetadata&lt;ImageEditInfo&gt;(image);
     return checkEditInfoState(obj) == ImageEditInfoState.Invalid ? getInitialEditInfo(image) : obj;
 }
 &nbsp;
@@ -238,14 +219,6 @@ function getInitialEditInfo(image: HTMLImageElement): ImageEditInfo {
         angleRad: 0,
     };
 }
-&nbsp;
-function safeParseJSON(json: string): any {
-    try {
-        return JSON.parse(json);
-    } catch {
-        return null;
-    }
-}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -253,7 +226,7 @@ function safeParseJSON(json: string): any {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Oct 20 2022 20:15:29 GMT+0000 (Coordinated Universal Time)
+                at Mon Oct 24 2022 16:55:35 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
