@@ -6,12 +6,14 @@ import { DirectionFormat } from './formatParts/DirectionFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
+import { ImageMetadataFormat } from './formatParts/ImageMetadataFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
 import { PaddingFormat } from './formatParts/PaddingFormat';
+import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
@@ -66,6 +68,11 @@ export interface FormatHandlerTypeMap {
     id: IdFormat;
 
     /**
+     * Format for ImageMetadataFormat
+     */
+    imageMetadata: ImageMetadataFormat;
+
+    /**
      * Format for ItalicFormat
      */
     italic: ItalicFormat;
@@ -104,6 +111,11 @@ export interface FormatHandlerTypeMap {
      * Format for PaddingFormat
      */
     padding: PaddingFormat;
+
+    /**
+     * Format for SizeFormat
+     */
+    size: SizeFormat;
 
     /**
      * Format for StrikeFormat
