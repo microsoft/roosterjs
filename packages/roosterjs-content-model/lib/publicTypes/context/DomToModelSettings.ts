@@ -7,7 +7,15 @@ import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap'
 /**
  * A type of Default style map, from tag name string (in upper case) to a static style object
  */
-export type DefaultStyleMap = Record<string, Partial<CSSStyleDeclaration>>;
+export type DefaultStyleMap = {
+    [key in keyof HTMLElementDeprecatedTagNameMap]?: Readonly<Partial<CSSStyleDeclaration>>;
+} &
+    {
+        [key in keyof HTMLElementTagNameMap]?: Readonly<Partial<CSSStyleDeclaration>>;
+    } & {
+        // Workaround typescript 4.4.4 which does not have strike in its declaration file
+        strike?: Partial<CSSStyleDeclaration>;
+    };
 
 /**
  * Parse format from the given HTML element and default style

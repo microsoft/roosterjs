@@ -14,13 +14,15 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
 ) => {
     let container: HTMLElement;
 
-    if (paragraph.isImplicit) {
-        container = parent as HTMLElement;
-    } else {
-        container = doc.createElement('div');
+    if (shouldCreateElement(paragraph)) {
+        container = doc.createElement(
+            typeof paragraph.headerLevel == 'number' ? 'h' + paragraph.headerLevel : 'div'
+        );
         parent.appendChild(container);
 
         applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+    } else {
+        container = parent as HTMLElement;
     }
 
     context.regularSelection.current = {
@@ -32,3 +34,10 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
         context.modelHandlers.segment(doc, container, segment, context);
     });
 };
+
+function shouldCreateElement(paragraph: ContentModelParagraph) {
+    return (
+        !paragraph.isImplicit ||
+        (typeof paragraph.headerLevel == 'number' && paragraph.headerLevel > 0)
+    );
+}

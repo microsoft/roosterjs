@@ -3,6 +3,7 @@ import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentMod
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagraph';
+import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('handleParagraph', () => {
@@ -135,6 +136,49 @@ describe('handleParagraph', () => {
             parent.firstChild as HTMLElement,
             segment2,
             context
+        );
+    });
+
+    it('handle headers', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                headerLevel: 1,
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1><span>test</span></h1>',
+            1
+        );
+    });
+
+    it('handle headers with implicit block', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                isImplicit: true,
+                format: {},
+                headerLevel: 1,
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1><span>test</span></h1>',
+            1
         );
     });
 });
