@@ -285,6 +285,8 @@ function setDefaultFormat(editor: IEditor) {
         }
         if (defaultFormat.bold) {
             toggleBold(editor);
+        } else {
+            setFontWeight(editor, '400');
         }
         if (defaultFormat.italic) {
             toggleItalic(editor);
@@ -292,8 +294,6 @@ function setDefaultFormat(editor: IEditor) {
         if (defaultFormat.underline) {
             toggleUnderline(editor);
         }
-
-        setFontWeight(editor, '400');
     }
 }
 

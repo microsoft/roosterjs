@@ -280,7 +280,7 @@ describe('clearAutodetectFormat Partial Tests', () => {
         const originalText =
             '<h1 id="testHeader" style="margin-right:0in;margin-left:0in;font-size:24pt;font-family:&quot;Times New Roman&quot;, serif"><span style="font-size: 24pt; font-family: Arial, sans-serif;">Header middle text 1</span></h1>';
         const expectedFormat =
-            '<span style="font-size: 24pt; font-family: Arial, sans-serif;">Header </span><span style="font-family: arial; font-size: 12pt; color: black;">middle</span><span style="font-size: 24pt; font-family: Arial, sans-serif;"> text 1</span>';
+            '<span style="font-size: 24pt; font-family: Arial, sans-serif;">Header </span><span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;">middle</span><span style="font-size: 24pt; font-family: Arial, sans-serif;"> text 1</span>';
         editor.setContent(originalText);
 
         let header = doc.getElementById('testHeader');
