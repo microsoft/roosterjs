@@ -4,6 +4,7 @@ import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelHandler } from './ContentModelHandler';
+import { ContentModelImage } from '../segment/ContentModelImage';
 import { ContentModelListItem } from '../block/group/ContentModelListItem';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelQuote } from '../block/group/ContentModelQuote';
@@ -61,6 +62,11 @@ export interface ContentModelHandlerTypeMap {
      * Content Model type for child models of ContentModelEntity
      */
     entity: ContentModelEntity;
+
+    /**
+     * Content Model type for ContentModelImage
+     */
+    image: ContentModelImage;
 
     /**
      * Content Model type for list group of ContentModelListItem

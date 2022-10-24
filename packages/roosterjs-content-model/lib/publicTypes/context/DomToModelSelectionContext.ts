@@ -1,7 +1,7 @@
 import { Coordinates } from 'roosterjs-editor-types';
 
 /**
- * Represents regular a selection for DOM to Content Model conversion
+ * Represents a regular selection for DOM to Content Model conversion
  */
 export interface DomToModelRegularSelection {
     /**
@@ -31,7 +31,7 @@ export interface DomToModelRegularSelection {
 }
 
 /**
- * Represents regular a table for DOM to Content Model conversion
+ * Represents a table for DOM to Content Model conversion
  */
 export interface DomToModelTableSelection {
     /**
@@ -51,7 +51,7 @@ export interface DomToModelTableSelection {
 }
 
 /**
- * Represents regular an image for DOM to Content Model conversion
+ * Represents an image for DOM to Content Model conversion
  */
 export interface DomToModelImageSelection {
     /**

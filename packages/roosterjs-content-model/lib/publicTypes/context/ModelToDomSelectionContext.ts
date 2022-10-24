@@ -57,6 +57,16 @@ export interface ModelToDomTableSelection {
 }
 
 /**
+ * Represents an image selection for Content Model to DOM conversion
+ */
+export interface ModelToDomImageSelection {
+    /**
+     * Selected image
+     */
+    image: HTMLImageElement;
+}
+
+/**
  * Represents selection info used by Content Model to DOM conversion
  */
 export interface ModelToDomSelectionContext {
@@ -69,4 +79,9 @@ export interface ModelToDomSelectionContext {
      * Table selection info
      */
     tableSelection?: ModelToDomTableSelection;
+
+    /**
+     * Image selection info
+     */
+    imageSelection?: ModelToDomImageSelection;
 }
