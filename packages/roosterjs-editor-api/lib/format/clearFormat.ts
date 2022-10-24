@@ -25,6 +25,7 @@ import {
     isNodeInRegion,
     isVoidHtmlElement,
     PartialInlineElement,
+    Position,
     safeInstanceOf,
     setStyles,
     splitBalancedNodeRange,
@@ -40,6 +41,7 @@ const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H
 );
 const ATTRIBUTES_TO_PRESERVE = ['href', 'src', 'cellpadding', 'cellspacing'];
 const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
+const WRAPPER_SELECTOR = 'h1, h2, h3, h4, h5, h6, blockquote';
 
 /**
  * @param editor The editor instance
@@ -195,6 +197,15 @@ function clearBlockFormat(editor: IEditor) {
     );
 }
 
+function isRangeContainingAll(range: Range) {
+    return (
+        range.startContainer === range.startContainer.parentElement.firstChild &&
+        range.endContainer === range.endContainer.parentElement.lastChild &&
+        range.startOffset === 0 &&
+        Position.getEnd(range).isAtEnd
+    );
+}
+
 function clearInlineFormat(editor: IEditor) {
     editor.focus();
     editor.addUndoSnapshot(() => {
@@ -202,6 +213,18 @@ function clearInlineFormat(editor: IEditor) {
         editor.queryElements('[class]', QueryScope.OnSelection, node =>
             node.removeAttribute('class')
         );
+
+        let selection = editor.getSelectionRange();
+
+        /**
+         * Manually unwrap headings and blockquotes as they're not covered by the `removeFormat` command spec
+         * https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#the-removeformat-command
+         */
+        if (isRangeContainingAll(selection)) {
+            editor.queryElements(WRAPPER_SELECTOR, QueryScope.OnSelection, unwrap);
+        } else {
+            editor.queryElements(WRAPPER_SELECTOR, QueryScope.InSelection, unwrap);
+        }
 
         setDefaultFormat(editor);
 
@@ -261,6 +284,8 @@ function setDefaultFormat(editor: IEditor) {
         }
         if (defaultFormat.bold) {
             toggleBold(editor);
+        } else {
+            setFontWeight(editor, '400');
         }
         if (defaultFormat.italic) {
             toggleItalic(editor);
