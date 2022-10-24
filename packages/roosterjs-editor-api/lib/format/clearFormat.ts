@@ -4,6 +4,7 @@ import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import setBackgroundColor from './setBackgroundColor';
 import setFontName from './setFontName';
 import setFontSize from './setFontSize';
+import setFontWeight from './setFontWeight';
 import setTextColor from './setTextColor';
 import toggleBold from './toggleBold';
 import toggleItalic from './toggleItalic';
