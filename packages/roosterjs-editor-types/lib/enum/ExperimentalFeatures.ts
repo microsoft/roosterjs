@@ -103,6 +103,7 @@ export const enum ExperimentalFeatures {
     NormalizeList = 'NormalizeList',
 
     /**
+     * @deprecated this feature is always enabled
      * When a html image is selected, the selected image data will be stored by editor core.
      */
     ImageSelection = 'ImageSelection',

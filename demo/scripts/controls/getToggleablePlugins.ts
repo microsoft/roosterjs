@@ -39,6 +39,7 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
             : null,
         paste: pluginList.paste ? new Paste() : null,
         watermark: pluginList.watermark ? new Watermark(initState.watermarkText) : null,
+        imageSelection: pluginList.imageSelection ? new ImageSelection() : null,
         imageEdit,
         cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
         tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
@@ -56,7 +57,6 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
                 ? createTableEditMenuProvider()
                 : null,
         contextMenu: pluginList.contextMenu ? createContextMenuPlugin() : null,
-        imageSelection: pluginList.imageSelection ? new ImageSelection() : null,
     };
 
     return Object.values(plugins);

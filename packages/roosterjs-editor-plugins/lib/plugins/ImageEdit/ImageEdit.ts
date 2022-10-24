@@ -192,12 +192,18 @@ export default class ImageEdit implements EditorPlugin {
                 }
                 break;
             case PluginEventType.MouseDown:
+                const target = e.rawEvent.target;
                 this.setEditingImage(null);
+                if (safeInstanceOf(target, 'HTMLImageElement')) {
+                    this.editor.select(target);
+                }
+
                 break;
             case PluginEventType.ContentChanged:
                 if (
                     (e.source !== ChangeSource.Format && e.source !== ChangeSource.InsertEntity) ||
-                    (<Entity>e.data)?.type != IMAGE_EDIT_WRAPPER_ENTITY_TYPE
+                    (e.source === ChangeSource.InsertEntity &&
+                        (<Entity>e.data)?.type != IMAGE_EDIT_WRAPPER_ENTITY_TYPE)
                 ) {
                     // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
                     this.editor.queryElements(
