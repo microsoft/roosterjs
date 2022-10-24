@@ -1,5 +1,5 @@
 const path = require('path');
-const devServerPort = 3001;
+const devServerPort = 3000;
 
 const externalMap = new Map([
     ['react', 'React'],
