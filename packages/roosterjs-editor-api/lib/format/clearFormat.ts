@@ -275,6 +275,8 @@ function setDefaultFormat(editor: IEditor) {
         if (defaultFormat.underline) {
             toggleUnderline(editor);
         }
+
+        setFontWeight(editor, '400');
     }
 }
 
