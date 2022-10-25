@@ -1,5 +1,4 @@
 import applyListItemStyleWrap from '../utils/applyListItemWrap';
-import { getComputedStyle } from 'roosterjs-editor-dom';
 import { IEditor } from 'roosterjs-editor-types';
 
 /**
@@ -13,12 +12,7 @@ export default function setFontWeight(editor: IEditor, fontWeight: string) {
     applyListItemStyleWrap(
         editor,
         'font-weight',
-        element => {
-            let computedFontWeight = getComputedStyle(element, 'font-weight');
-            if (computedFontWeight !== fontWeight) {
-                element.style.fontWeight = '400';
-            }
-        },
+        element => (element.style.fontWeight = fontWeight),
         'setFontWeight'
     );
 }
