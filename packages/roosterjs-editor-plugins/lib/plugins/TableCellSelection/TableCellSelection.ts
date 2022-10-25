@@ -22,6 +22,7 @@ import {
     VTable,
     Position,
     contains,
+    isCtrlOrMetaPressed,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
@@ -210,7 +211,10 @@ export default class TableCellSelection implements EditorPlugin {
                     this.tableSelection = false;
                 }
             });
-        } else if (this.editor.getSelectionRangeEx()?.type == SelectionRangeTypes.TableSelection) {
+        } else if (
+            this.editor.getSelectionRangeEx()?.type == SelectionRangeTypes.TableSelection &&
+            (!isCtrlOrMetaPressed(event.rawEvent) || which == Keys.HOME || which == Keys.END)
+        ) {
             this.editor.select(null);
         }
     }
