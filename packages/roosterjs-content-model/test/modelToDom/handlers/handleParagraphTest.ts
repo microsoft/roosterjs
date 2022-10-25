@@ -150,7 +150,7 @@ describe('handleParagraph', () => {
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: {},
+                        format: { bold: true },
                         text: 'test',
                     },
                 ],
@@ -160,7 +160,33 @@ describe('handleParagraph', () => {
         );
     });
 
-    it('handle headers with implicit block', () => {
+    it('handle headers that has non-bold text', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                headerLevel: 1,
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: { bold: true },
+                        text: 'test 1',
+                    },
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test 2',
+                    },
+                ],
+            },
+            '<h1><span>test 1</span><span style="font-weight: normal;">test 2</span></h1>',
+            2
+        );
+    });
+
+    it('handle headers with implicit block and other inline format', () => {
         handleSegment.and.callFake(originalHandleSegment);
 
         runTest(
@@ -172,12 +198,12 @@ describe('handleParagraph', () => {
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: {},
+                        format: { bold: true, italic: true },
                         text: 'test',
                     },
                 ],
             },
-            '<h1><span>test</span></h1>',
+            '<h1><span><i>test</i></span></h1>',
             1
         );
     });

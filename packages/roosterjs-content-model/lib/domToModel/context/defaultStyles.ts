@@ -33,7 +33,10 @@ export const defaultStyleMap: DefaultStyleMap = {
     figure: blockElement,
     footer: blockElement,
     form: blockElement,
-    h1: blockElement,
+    h1: {
+        display: 'block',
+        fontWeight: 'bold',
+    },
     h2: blockElement,
     h3: blockElement,
     h4: blockElement,

@@ -126,11 +126,12 @@ describe('knownElementProcessor', () => {
         });
     });
 
-    it('Header with text content', () => {
+    it('Header with text content and format', () => {
         const group = createContentModelDocument(document);
         const h1 = document.createElement('h1');
 
         h1.appendChild(document.createTextNode('test'));
+        h1.style.fontFamily = 'Test';
 
         knownElementProcessor(group, h1, context);
 
@@ -145,7 +146,44 @@ describe('knownElementProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {},
+                            format: { bold: true, fontFamily: 'Test' },
+                            text: 'test',
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+            ],
+        });
+    });
+
+    it('Header with non-bold text', () => {
+        const group = createContentModelDocument(document);
+        const h1 = document.createElement('h1');
+        const span = document.createElement('span');
+
+        span.style.fontWeight = 'normal';
+        span.appendChild(document.createTextNode('test'));
+
+        h1.appendChild(span);
+
+        knownElementProcessor(group, h1, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    headerLevel: 1,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: { bold: false },
                             text: 'test',
                         },
                     ],
