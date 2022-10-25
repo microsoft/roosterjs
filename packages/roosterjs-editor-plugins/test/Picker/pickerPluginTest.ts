@@ -1,14 +1,15 @@
 import * as TestHelper from '../TestHelper';
 import { ChangeSource, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { PickerPlugin } from '../../lib/Picker';
+
 const BACKSPACE_CHAR_CODE = 'Backspace';
 const ESC_CHAR_CODE = 'Escape';
 
 const dataProvider = {
     onInitalize: (
-        _insertNodeCallback: (nodeToInsert: HTMLElement) => void,
-        _setIsSuggestingCallback: (isSuggesting: boolean) => void,
-        _editor?: IEditor
+        insertNodeCallback: (nodeToInsert: HTMLElement) => void,
+        setIsSuggestingCallback: (isSuggesting: boolean) => void,
+        editor?: IEditor
     ) => {
         return;
     },
@@ -16,23 +17,23 @@ const dataProvider = {
         return;
     },
 
-    onIsSuggestingChanged: (_isSuggesting: boolean) => {
+    onIsSuggestingChanged: (isSuggesting: boolean) => {
         return;
     },
 
-    queryStringUpdated: (_queryString: string, _isExactMatch: boolean) => {
+    queryStringUpdated: (queryString: string, isExactMatch: boolean) => {
         return;
     },
 
-    onRemove: (_nodeRemoved: Node, isBackwards: boolean) => {
+    onRemove: (nodeRemoved: Node, isBackwards: boolean) => {
         return document.createTextNode('');
     },
 
-    onScroll: (_scrollContainer: HTMLElement) => {
+    onScroll: (scrollContainer: HTMLElement) => {
         return;
     },
 
-    onContentChanged: (_elementIds: string[]) => {
+    onContentChanged: (elementIds: string[]) => {
         return;
     },
 };
