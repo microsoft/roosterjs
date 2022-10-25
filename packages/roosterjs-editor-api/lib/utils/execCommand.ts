@@ -1,5 +1,8 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
+import selectWordFromCollapsedRange from './selectWordFromCollapsedRange';
 import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
+//import { ContentPosition } from 'roosterjs-editor-types/lib/enum/ContentPosition';
+//import findClosestElementAncestor from 'roosterjs-editor-dom/lib/utils/findClosestElementAncestor';
 import {
     DocumentCommand,
     IEditor,
@@ -28,15 +31,30 @@ export default function execCommand(
     let formatter = () => editor.getDocument().execCommand(command, false, null);
 
     let selection = editor.getSelectionRangeEx();
+
     if (selection && selection.areAllCollapsed) {
         editor.addUndoSnapshot();
         const formatState = editor.getPendableFormatState(false /* forceGetStateFromDom */);
         formatter();
+
         const formatName = getObjectKeys(PendableFormatCommandMap).filter(
             x => PendableFormatCommandMap[x] == command
         )[0] as PendableFormatNames;
 
+        formatUndoSnapshot(editor);
+
+        /*
+        const ciu = findClosestElementAncestor(
+            selection.ranges[0].commonAncestorContainer,
+            editor.getDocument().body,
+            'TEXT'
+        );
+        editor.select(ciu);
+        console.log(selection.ranges[0], ciu);
+        debugger;*/
+
         if (formatName) {
+            selectWordFromCollapsedRange(editor.getSelectionRange(), editor);
             formatState[formatName] = !formatState[formatName];
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
                 formatState: formatState,
