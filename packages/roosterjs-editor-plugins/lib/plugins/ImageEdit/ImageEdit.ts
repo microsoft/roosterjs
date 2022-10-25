@@ -194,8 +194,9 @@ export default class ImageEdit implements EditorPlugin {
             case PluginEventType.MouseDown:
                 const target = e.rawEvent.target;
                 this.setEditingImage(null);
+                // mouse down event should quit editing mode, but if the user click in a image it must start the image editing again
                 if (safeInstanceOf(target, 'HTMLImageElement')) {
-                    this.editor.select(target);
+                    this.setEditingImage(target, ImageEditOperation.ResizeAndRotate);
                 }
 
                 break;
