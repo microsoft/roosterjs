@@ -54,7 +54,7 @@ interface PasteOptionButtonProps {
     buttonName: PasteOptionButtonKeys;
     className: string;
     paste: (key: PasteOptionButtonKeys) => void;
-    strings: LocalizedStrings<PasteOptionStringKeys>;
+    strings?: LocalizedStrings<PasteOptionStringKeys>;
 }
 
 function PasteOptionButton(props: PasteOptionButtonProps) {
@@ -78,7 +78,7 @@ function PasteOptionButton(props: PasteOptionButtonProps) {
 }
 
 interface PasteOptionProps {
-    strings: LocalizedStrings<PasteOptionStringKeys>;
+    strings?: LocalizedStrings<PasteOptionStringKeys>;
     position: NodePosition;
     isRtl: boolean;
     paste: (key: PasteOptionButtonKeys) => void;
@@ -192,9 +192,9 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
 export default function showPasteOptionPane(
     uiUtilities: UIUtilities,
     position: NodePosition,
-    strings: LocalizedStrings<PasteOptionStringKeys>,
     onPaste: (key: PasteOptionButtonKeys) => void,
-    ref: React.RefObject<PasteOptionPane>
+    ref: React.RefObject<PasteOptionPane>,
+    strings?: LocalizedStrings<PasteOptionStringKeys>
 ) {
     let disposer: (() => void) | null = null;
     const onDismiss = () => {

@@ -72,23 +72,18 @@ export default class ExperimentalContentModelEditor extends Editor
         );
         const mergingCallback = option?.mergingCallback || mergeFragmentWithEntity;
 
-        switch (range?.type) {
-            case SelectionRangeTypes.Normal:
+        if (range) {
+            if (range.type == SelectionRangeTypes.Normal) {
+                // Need to get start and end from range position before merge because range can be changed during merging
                 const start = Position.getStart(range.ranges[0]);
                 const end = Position.getEnd(range.ranges[0]);
 
                 mergingCallback(fragment, this.contentDiv, entityPairs);
                 this.select(start, end);
-                break;
-
-            case SelectionRangeTypes.TableSelection:
+            } else {
                 mergingCallback(fragment, this.contentDiv, entityPairs);
-                this.select(range.table, range.coordinates);
-                break;
-
-            case undefined:
-                mergingCallback(fragment, this.contentDiv, entityPairs);
-                break;
+                this.select(range);
+            }
         }
     }
 }

@@ -1,4 +1,3 @@
-import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
@@ -6,17 +5,20 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
-import { TableCellFormatHandlers } from '../../../lib/formatHandlers/TableCellFormatHandler';
-import { TableFormatHandlers } from '../../../lib/formatHandlers/TableFormatHandlers';
+import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 
 describe('tableProcessor', () => {
     let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
 
     beforeEach(() => {
-        context = createDomToModelContext();
-        spyOn(containerProcessor, 'containerProcessor');
+        childProcessor = jasmine.createSpy();
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
     });
 
     function runTest(tableHTML: string, expectedModel: ContentModelBlock) {
@@ -113,7 +115,7 @@ describe('tableProcessor', () => {
             heights: [0],
         });
 
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
     });
 
     it('Process a 1*2 table with element content', () => {
@@ -129,7 +131,7 @@ describe('tableProcessor', () => {
             heights: [0],
         });
 
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(2);
+        expect(childProcessor).toHaveBeenCalledTimes(2);
     });
 
     it('Process a 1*2 table with element content in merged cell', () => {
@@ -144,7 +146,7 @@ describe('tableProcessor', () => {
             heights: [0],
         });
 
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
     });
 
     it('Process table with selection', () => {
@@ -179,7 +181,7 @@ describe('tableProcessor', () => {
             heights: [0, 0],
         });
 
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(4);
+        expect(childProcessor).toHaveBeenCalledTimes(4);
     });
 });
 
@@ -206,15 +208,15 @@ describe('tableProcessor with format', () => {
         spyOn(stackFormat, 'stackFormat').and.callThrough();
         spyOn(parseFormat, 'parseFormat').and.callFake((element, handlers, format, context) => {
             if (element == table) {
-                if (handlers == TableFormatHandlers) {
+                if (handlers == context.formatParsers.table) {
                     (<any>format).format1 = 'table';
-                } else if (handlers == SegmentFormatHandlers) {
+                } else if (handlers == context.formatParsers.segmentOnBlock) {
                     (<any>format).format2 = 'tableSegment';
                 }
             } else if (element == td) {
-                if (handlers == TableCellFormatHandlers) {
+                if (handlers == context.formatParsers.tableCell) {
                     (<any>format).format3 = 'td';
-                } else if (handlers == SegmentFormatHandlers) {
+                } else if (handlers == context.formatParsers.segmentOnBlock) {
                     (<any>format).format4 = 'tdSegment';
                 }
             }
@@ -329,19 +331,28 @@ describe('tableProcessor with format', () => {
 });
 
 describe('tableProcessor', () => {
-    beforeEach(() => {});
+    let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+
+    beforeEach(() => {
+        childProcessor = jasmine.createSpy();
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
+    });
 
     it('list context is stacked during table processing', () => {
         const listLevels = { value: 'test1' } as any;
         const listParent = { value: 'test2' } as any;
         const threadItemCounts = { value: 'test3' } as any;
 
-        const context = createDomToModelContext();
         context.listFormat.levels = listLevels;
         context.listFormat.listParent = listParent;
         context.listFormat.threadItemCounts = threadItemCounts;
 
-        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+        childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.levels).toEqual([]);
             expect(context.listFormat.listParent).toBeUndefined();
             expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
@@ -374,7 +385,7 @@ describe('tableProcessor', () => {
 
         tableProcessor(group, mockedTable, context);
 
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
         expect(context.listFormat.levels).toBe(listLevels);
         expect(context.listFormat.listParent).toBe(listParent);
         expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);

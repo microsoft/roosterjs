@@ -3,7 +3,6 @@ import { createModelToDomContext } from '../modelToDom/context/createModelToDomC
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
-import { handleBlockGroup } from '../modelToDom/handlers/handleBlockGroup';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
@@ -34,7 +33,7 @@ export default function contentModelToDom(
     const fragment = model.document.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
-    handleBlockGroup(model.document, fragment, model, modelToDomContext);
+    modelToDomContext.modelHandlers.blockGroup(model.document, fragment, model, modelToDomContext);
     optimize(fragment, 2 /*optimizeLevel*/);
 
     const range = extractSelectionRange(modelToDomContext);
@@ -48,7 +47,12 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
     const {
         regularSelection: { start, end },
         tableSelection,
+        imageSelection,
     } = context;
+
+    let startPosition: NodePosition | undefined;
+    let endPosition: NodePosition | undefined;
+
     if (tableSelection?.table) {
         return {
             type: SelectionRangeTypes.TableSelection,
@@ -60,23 +64,27 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
                 lastCell: tableSelection.lastCell,
             },
         };
+    } else if (imageSelection?.image) {
+        return {
+            type: SelectionRangeTypes.ImageSelection,
+            ranges: [createRange(imageSelection.image)],
+            areAllCollapsed: false,
+            image: imageSelection.image,
+        };
+    } else if (
+        (startPosition = start && calcPosition(start)) &&
+        (endPosition = end && calcPosition(end))
+    ) {
+        const range = createRange(startPosition, endPosition);
+
+        return {
+            type: SelectionRangeTypes.Normal,
+            ranges: [createRange(startPosition, endPosition)],
+            areAllCollapsed: range.collapsed,
+        };
+    } else {
+        return null;
     }
-
-    if (start && end) {
-        const startPosition = calcPosition(start);
-        const endPosition = calcPosition(end);
-        const range = startPosition && endPosition && createRange(startPosition, endPosition);
-
-        if (range) {
-            return {
-                type: SelectionRangeTypes.Normal,
-                ranges: [range],
-                areAllCollapsed: range.collapsed,
-            };
-        }
-    }
-
-    return null;
 }
 
 function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefined {

@@ -1,4 +1,4 @@
-import * as handleSegment from '../../../lib/modelToDom/handlers/handleSegment';
+import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
@@ -8,11 +8,16 @@ import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomCo
 describe('handleParagraph', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
+    let handleSegment: jasmine.Spy<ContentModelHandler<ContentModelSegment>>;
 
     beforeEach(() => {
-        spyOn(handleSegment, 'handleSegment');
         parent = document.createElement('div');
-        context = createModelToDomContext();
+        handleSegment = jasmine.createSpy('handleSegment');
+        context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                segment: handleSegment,
+            },
+        });
     });
 
     function runTest(
@@ -23,9 +28,7 @@ describe('handleParagraph', () => {
         handleParagraph(document, parent, paragraph, context);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
-        expect(handleSegment.handleSegment).toHaveBeenCalledTimes(
-            expectedCreateSegmentFromContentCalledTimes
-        );
+        expect(handleSegment).toHaveBeenCalledTimes(expectedCreateSegmentFromContentCalledTimes);
     }
 
     it('Handle empty explicit paragraph', () => {
@@ -69,7 +72,7 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(handleSegment.handleSegment).toHaveBeenCalledWith(
+        expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment,
@@ -94,12 +97,7 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(handleSegment.handleSegment).toHaveBeenCalledWith(
-            document,
-            parent,
-            segment,
-            context
-        );
+        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context);
     });
 
     it('Handle multiple segments', () => {
@@ -126,13 +124,13 @@ describe('handleParagraph', () => {
             2
         );
 
-        expect(handleSegment.handleSegment).toHaveBeenCalledWith(
+        expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment1,
             context
         );
-        expect(handleSegment.handleSegment).toHaveBeenCalledWith(
+        expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment2,

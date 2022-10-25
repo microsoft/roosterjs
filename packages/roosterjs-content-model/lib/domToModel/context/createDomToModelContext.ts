@@ -40,7 +40,10 @@ export function createDomToModelContext(
             ...(options?.defaultStyleOverride || {}),
         },
 
-        formatParsers: getFormatParsers(options?.formatParserOverride),
+        formatParsers: getFormatParsers(
+            options?.formatParserOverride,
+            options?.additionalFormatParsers
+        ),
     };
 
     if (editorContext?.isRightToLeft) {
@@ -76,6 +79,12 @@ export function createDomToModelContext(
                 };
             }
 
+            break;
+
+        case SelectionRangeTypes.ImageSelection:
+            context.imageSelection = {
+                image: range.image,
+            };
             break;
     }
 
