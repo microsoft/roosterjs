@@ -40,8 +40,15 @@ export function createDomToModelContext(
             ...(options?.defaultStyleOverride || {}),
         },
 
-        formatParsers: getFormatParsers(options?.formatParserOverride),
+        formatParsers: getFormatParsers(
+            options?.formatParserOverride,
+            options?.additionalFormatParsers
+        ),
     };
+
+    if (editorContext?.isRightToLeft) {
+        context.blockFormat.direction = 'rtl';
+    }
 
     if (options?.alwaysNormalizeTable) {
         context.alwaysNormalizeTable = true;
@@ -72,6 +79,12 @@ export function createDomToModelContext(
                 };
             }
 
+            break;
+
+        case SelectionRangeTypes.ImageSelection:
+            context.imageSelection = {
+                image: range.image,
+            };
             break;
     }
 

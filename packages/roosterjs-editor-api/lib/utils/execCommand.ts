@@ -64,19 +64,17 @@ export default function execCommand(
         formatUndoSnapshot(
             editor,
             () => {
-                let tempRange: Range;
+                const needToSwitchSelection = selection.type != SelectionRangeTypes.Normal;
+
                 selection.ranges.forEach(range => {
-                    if (selection.type == SelectionRangeTypes.TableSelection) {
+                    if (needToSwitchSelection) {
                         editor.select(range);
                     }
-
                     formatter();
-
-                    tempRange = range;
                 });
 
-                if (tempRange && selection.type == SelectionRangeTypes.TableSelection) {
-                    editor.select(selection.table, selection.coordinates);
+                if (needToSwitchSelection) {
+                    editor.select(selection);
                 }
             },
             apiName

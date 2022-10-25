@@ -48,7 +48,9 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
-            blockFormat: {},
+            blockFormat: {
+                direction: 'rtl',
+            },
             isInSelection: false,
             listFormat,
             ...contextOptions,
@@ -111,6 +113,29 @@ describe('createDomToModelContext', () => {
                 table: 'TABLE' as any,
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
+            },
+            listFormat,
+            ...contextOptions,
+        });
+    });
+
+    it('with image selection', () => {
+        const context = createDomToModelContext(undefined, {
+            selectionRange: {
+                type: SelectionRangeTypes.ImageSelection,
+                ranges: [],
+                areAllCollapsed: false,
+                image: 'IMAGE' as any,
+            },
+        });
+
+        expect(context).toEqual({
+            ...editorContext,
+            segmentFormat: {},
+            blockFormat: {},
+            isInSelection: false,
+            imageSelection: {
+                image: 'IMAGE' as any,
             },
             listFormat,
             ...contextOptions,

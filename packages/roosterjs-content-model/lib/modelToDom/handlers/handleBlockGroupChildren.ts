@@ -1,16 +1,16 @@
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { handleBlock } from './handleBlock';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
  * @internal
  */
-export function handleBlockGroupChildren(
+export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGroup> = (
     doc: Document,
     parent: Node,
     group: ContentModelBlockGroup,
     context: ModelToDomContext
-) {
+) => {
     const { listFormat } = context;
     const nodeStack = listFormat.nodeStack;
 
@@ -28,9 +28,9 @@ export function handleBlockGroupChildren(
                 listFormat.nodeStack = [];
             }
 
-            handleBlock(doc, parent, childBlock, context);
+            context.modelHandlers.block(doc, parent, childBlock, context);
         });
     } finally {
         listFormat.nodeStack = nodeStack;
     }
-}
+};
