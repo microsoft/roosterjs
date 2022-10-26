@@ -1,3 +1,4 @@
+import getDefaultSettings from '../../../lib/publicApi/getDefaultSettings';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
 import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
@@ -7,10 +8,12 @@ import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandl
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('createDomToModelContext', () => {
+    const defaultSettings = getDefaultSettings();
     const editorContext: EditorContext = {
         isDarkMode: false,
         zoomScale: 1,
         isRightToLeft: false,
+        defaultSettings,
         getDarkColor: undefined,
     };
     const listFormat: DomToModelListFormat = {
@@ -40,6 +43,7 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             zoomScale: 2,
             isRightToLeft: true,
+            defaultSettings,
             getDarkColor: () => '',
         };
 

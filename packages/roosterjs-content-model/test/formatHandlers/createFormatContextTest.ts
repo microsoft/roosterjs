@@ -1,3 +1,4 @@
+import getDefaultSettings from '../../lib/publicApi/getDefaultSettings';
 import { createDomToModelContext } from '../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../lib/domToModel/context/defaultProcessors';
 import { defaultStyleMap } from '../../lib/domToModel/context/defaultStyles';
@@ -15,6 +16,7 @@ describe('createFormatContextTest', () => {
         defaultStyles: defaultStyleMap,
         formatParsers: getFormatParsers(),
     };
+    const defaultSettings = getDefaultSettings();
 
     it('empty parameter', () => {
         const context = createDomToModelContext();
@@ -28,6 +30,7 @@ describe('createFormatContextTest', () => {
             blockFormat: {},
             segmentFormat: {},
             listFormat,
+            defaultSettings,
             ...contextOptions,
         });
     });
@@ -40,6 +43,7 @@ describe('createFormatContextTest', () => {
             zoomScale: 2,
             isRightToLeft: true,
             getDarkColor,
+            defaultSettings,
         });
 
         expect(context).toEqual({
@@ -53,6 +57,7 @@ describe('createFormatContextTest', () => {
             },
             segmentFormat: {},
             listFormat,
+            defaultSettings,
             ...contextOptions,
         });
     });
@@ -71,6 +76,7 @@ describe('createFormatContextTest', () => {
                 zoomScale: 2,
                 isRightToLeft: true,
                 getDarkColor,
+                defaultSettings,
             },
             {
                 selectionRange: {
@@ -99,6 +105,7 @@ describe('createFormatContextTest', () => {
             },
             segmentFormat: {},
             listFormat,
+            defaultSettings,
             ...contextOptions,
         });
     });
@@ -114,6 +121,7 @@ describe('createFormatContextTest', () => {
                 zoomScale: 2,
                 isRightToLeft: true,
                 getDarkColor,
+                defaultSettings,
             },
             {
                 selectionRange: {
@@ -157,6 +165,7 @@ describe('createFormatContextTest', () => {
             },
             segmentFormat: {},
             listFormat,
+            defaultSettings,
             ...contextOptions,
         });
     });
@@ -170,6 +179,7 @@ describe('createFormatContextTest', () => {
                 zoomScale: 2,
                 isRightToLeft: true,
                 getDarkColor,
+                defaultSettings,
             },
             {
                 selectionRange: {
@@ -191,6 +201,7 @@ describe('createFormatContextTest', () => {
             },
             segmentFormat: {},
             listFormat,
+            defaultSettings,
             ...contextOptions,
         });
     });
@@ -204,6 +215,7 @@ describe('createFormatContextTest', () => {
                 zoomScale: 2,
                 isRightToLeft: true,
                 getDarkColor,
+                defaultSettings,
             },
             {
                 selectionRange: {
@@ -227,6 +239,7 @@ describe('createFormatContextTest', () => {
             },
             segmentFormat: {},
             listFormat,
+            defaultSettings,
             ...contextOptions,
         });
     });
