@@ -10,9 +10,7 @@ const dataProvider = {
         insertNodeCallback: (nodeToInsert: HTMLElement) => void,
         setIsSuggestingCallback: (isSuggesting: boolean) => void,
         editor?: IEditor
-    ) => {
-        return;
-    },
+    ) => {},
     onDispose: () => {
         return;
     },
@@ -114,17 +112,17 @@ describe('PickerPlugin |', () => {
         };
     };
 
-    function runTestKeyDown(content: string, keyTyped: string[], shouldSuggest: boolean) {
+    function runTestKeyDown(content: string, keyTyped: string, shouldSuggest: boolean) {
         editor.setContent(content);
-        plugin.onPluginEvent(keyUp(keyTyped[0]));
-        plugin.onPluginEvent(keyDown(keyTyped[1]));
+        plugin.onPluginEvent(keyUp(')'));
+        plugin.onPluginEvent(keyDown(keyTyped));
         expect(spyOnIsSuggestingChanged).toHaveBeenCalled();
         expect(spyOnIsSuggestingChanged).toHaveBeenCalledWith(shouldSuggest);
     }
 
-    function runTestMouseUp(content: string, keyTyped: string) {
+    function runTestMouseUp(content: string) {
         editor.setContent(content);
-        plugin.onPluginEvent(keyUp(keyTyped));
+        plugin.onPluginEvent(keyUp(')'));
         plugin.onPluginEvent(mouseUp());
         expect(spyOnIsSuggestingChanged).toHaveBeenCalled();
         expect(spyOnIsSuggestingChanged).toHaveBeenCalledWith(false);
@@ -140,6 +138,7 @@ describe('PickerPlugin |', () => {
     function runTestKeyUp(content: string, keyTyped: string, shouldSuggest: boolean) {
         editor.setContent(content);
         plugin.onPluginEvent(keyUp(keyTyped));
+        plugin.onPluginEvent(keyUp(' '));
         expect(spyOnQueryStringUpdated).toHaveBeenCalled();
         expect(spyOnIsSuggestingChanged).toHaveBeenCalled();
         expect(spyOnIsSuggestingChanged).toHaveBeenCalledWith(shouldSuggest);
@@ -152,27 +151,23 @@ describe('PickerPlugin |', () => {
     }
 
     it('should show picker', () => {
-        runTestKeyUp('<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->', ')', true);
+        runTestKeyUp('<div>) </div><!--{"start":[0,0,2],"end":[0,0,2]}-->', ')', true);
     });
 
     it('should hide picker | ESC', () => {
-        runTestKeyDown(
-            '<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->',
-            [')', ESC_CHAR_CODE],
-            false
-        );
+        runTestKeyDown('<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->', ESC_CHAR_CODE, false);
     });
 
     it('should hide picker | backspace', () => {
         runTestKeyDown(
             '<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->',
-            [')', BACKSPACE_CHAR_CODE],
+            BACKSPACE_CHAR_CODE,
             false
         );
     });
 
     it('should hide picker | mouseEvent', () => {
-        runTestMouseUp('<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->', ')');
+        runTestMouseUp('<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->');
     });
 
     it('should execute scroll function', () => {
