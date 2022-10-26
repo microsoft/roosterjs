@@ -51,11 +51,12 @@ describe('ImageSelectionPlugin |', () => {
         div.parentNode.removeChild(div);
     });
 
-    it('should be triggered in mouse down left click', () => {
+    it('should be triggered in mouse up left click', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
-        simulateMouseEvent(target!, 0);
+        simulateMouseEvent('mousedown', target!, 0);
+        simulateMouseEvent('mouseup', target!, 0);
         editor.focus();
 
         const selection = editor.getSelectionRangeEx();
@@ -63,11 +64,12 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
-    it('should be triggered in mouse down right click', () => {
+    it('should be triggered in mouse up right click', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
         editorIsFeatureEnabled.and.returnValue(true);
-        simulateMouseEvent(target!, 2);
+        simulateMouseEvent('mousedown', target!, 2);
+        simulateMouseEvent('mouseup', target!, 2);
         editor.focus();
 
         const selection = editor.getSelectionRangeEx();
@@ -134,9 +136,9 @@ describe('ImageSelectionPlugin |', () => {
         };
     };
 
-    function simulateMouseEvent(target: HTMLElement, keyNumber: number) {
+    function simulateMouseEvent(mouseEvent: string, target: HTMLElement, keyNumber: number) {
         const rect = target.getBoundingClientRect();
-        var event = new MouseEvent('mousedown', {
+        var event = new MouseEvent(mouseEvent, {
             view: window,
             bubbles: true,
             cancelable: true,

@@ -56,7 +56,7 @@ export default class ImageSelection implements EditorPlugin {
                     }
                     break;
 
-                case PluginEventType.MouseDown:
+                case PluginEventType.MouseUp:
                     const target = event.rawEvent.target;
                     if (safeInstanceOf(target, 'HTMLImageElement')) {
                         if (event.rawEvent.button === mouseRightButton) {

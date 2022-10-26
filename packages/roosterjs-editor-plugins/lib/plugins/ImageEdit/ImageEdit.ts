@@ -19,6 +19,7 @@ import {
     getEntityFromElement,
     getEntitySelector,
     getObjectKeys,
+    //matchesSelector,
     safeInstanceOf,
     toArray,
     wrap,
@@ -187,18 +188,13 @@ export default class ImageEdit implements EditorPlugin {
                         e.selectionRangeEx.image,
                         ImageEditOperation.ResizeAndRotate
                     );
-                } else {
-                    this.setEditingImage(null);
                 }
                 break;
             case PluginEventType.MouseDown:
-                const target = e.rawEvent.target;
                 this.setEditingImage(null);
-                // mouse down event should quit editing mode, but if the user click in a image it must start the image editing again
-                if (safeInstanceOf(target, 'HTMLImageElement')) {
-                    this.setEditingImage(target, ImageEditOperation.ResizeAndRotate);
-                }
-
+                break;
+            case PluginEventType.KeyDown:
+                this.setEditingImage(null);
                 break;
             case PluginEventType.ContentChanged:
                 if (
