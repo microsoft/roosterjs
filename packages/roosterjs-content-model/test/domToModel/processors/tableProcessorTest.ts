@@ -275,6 +275,7 @@ describe('tableProcessor with format', () => {
 
     it('calculate table size with zoom scale', () => {
         const mockedTable = ({
+            tagName: 'table',
             rows: [
                 {
                     cells: [
@@ -360,6 +361,7 @@ describe('tableProcessor', () => {
 
         const group = createContentModelDocument(document);
         const mockedTable = ({
+            tagName: 'table',
             rows: [
                 {
                     cells: [

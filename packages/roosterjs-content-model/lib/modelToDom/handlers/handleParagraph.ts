@@ -13,14 +13,16 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
     context: ModelToDomContext
 ) => {
     let container: HTMLElement;
+    let tagName: string | undefined;
 
-    if (paragraph.isImplicit) {
-        container = parent as HTMLElement;
-    } else {
-        container = doc.createElement('div');
+    if (shouldCreateElement(paragraph)) {
+        tagName = typeof paragraph.headerLevel == 'number' ? 'h' + paragraph.headerLevel : 'div';
+        container = doc.createElement(tagName);
         parent.appendChild(container);
 
         applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+    } else {
+        container = parent as HTMLElement;
     }
 
     context.regularSelection.current = {
@@ -28,7 +30,27 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
         segment: null,
     };
 
-    paragraph.segments.forEach(segment => {
-        context.modelHandlers.segment(doc, container, segment, context);
-    });
+    const segmentFormatFromBlock = context.segmentFormatFromBlock;
+
+    try {
+        context.segmentFormatFromBlock = { ...segmentFormatFromBlock };
+
+        if (tagName && /h\d/.test(tagName)) {
+            // TODO: Need a unified way to handle all this kind of format that brought from block, but not just for headers
+            context.segmentFormatFromBlock.bold = true;
+        }
+
+        paragraph.segments.forEach(segment => {
+            context.modelHandlers.segment(doc, container, segment, context);
+        });
+    } finally {
+        context.segmentFormatFromBlock = segmentFormatFromBlock;
+    }
 };
+
+function shouldCreateElement(paragraph: ContentModelParagraph) {
+    return (
+        !paragraph.isImplicit ||
+        (typeof paragraph.headerLevel == 'number' && paragraph.headerLevel > 0)
+    );
+}

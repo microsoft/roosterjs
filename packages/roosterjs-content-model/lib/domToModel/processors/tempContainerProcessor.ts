@@ -33,6 +33,17 @@ const HandledStyleNames = [
     'font-style',
     'font-weight',
     'color',
+    'text-align',
+    'margin',
+    'margin-left',
+    'margin-right',
+    'margin-top',
+    'margin-bottom',
+    'padding',
+    'padding-left',
+    'padding-right',
+    'padding-top',
+    'padding-bottom',
 ];
 
 // Put empty array for now, later we will have some change to allow overwrite it
