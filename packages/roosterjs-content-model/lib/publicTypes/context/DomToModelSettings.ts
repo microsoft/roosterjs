@@ -13,7 +13,8 @@ export type DefaultStyleMap = {
     {
         [key in keyof HTMLElementTagNameMap]?: Readonly<Partial<CSSStyleDeclaration>>;
     } & {
-        // Workaround typescript 4.4.4 which does not have strike in its declaration file
+        // Workaround typescript 4.4.4 which does not have these elements in its declaration file
+        center?: Partial<CSSStyleDeclaration>;
         strike?: Partial<CSSStyleDeclaration>;
     };
 
