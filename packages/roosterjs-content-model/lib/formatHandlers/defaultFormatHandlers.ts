@@ -114,6 +114,26 @@ const defaultFormatKeysPerCategory: {
 /**
  * @internal
  */
+export function getDefaultFormatParsers(): Readonly<FormatParsers> {
+    return getObjectKeys(defaultFormatHandlerMap).reduce((result, key) => {
+        result[key] = defaultFormatHandlerMap[key].parse;
+        return result;
+    }, <FormatParsers>{});
+}
+
+/**
+ * @internal
+ */
+export function getDefaultFormatAppliers(): Readonly<FormatAppliers> {
+    return getObjectKeys(defaultFormatHandlerMap).reduce((result, key) => {
+        result[key] = defaultFormatHandlerMap[key].apply;
+        return result;
+    }, <FormatAppliers>{});
+}
+
+/**
+ * @internal
+ */
 export function getFormatParsers(
     override: Partial<FormatParsers> = {},
     additionalParsers: Partial<FormatParsersPerCategory> = {}

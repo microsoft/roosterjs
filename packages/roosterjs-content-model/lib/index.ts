@@ -4,6 +4,7 @@ export {
     default as mergeFragmentWithEntity,
     preprocessEntitiesFromContentModel,
 } from './publicApi/mergeFragmentWithEntity';
+export { default as getDefaultSettings } from './publicApi/getDefaultSettings';
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
 export { default as setTableCellShade } from './publicApi/table/setTableCellShade';
@@ -84,7 +85,7 @@ export {
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 
-export { EditorContext } from './publicTypes/context/EditorContext';
+export { EditorContext, ContentModelDefaultSettings } from './publicTypes/context/EditorContext';
 export {
     DomToModelListFormat,
     DomToModelFormatContext,

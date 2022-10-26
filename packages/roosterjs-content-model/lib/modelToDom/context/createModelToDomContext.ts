@@ -1,8 +1,17 @@
+import getDefaultSettings from '../../publicApi/getDefaultSettings';
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
+
+const defaultEditorContext: EditorContext = {
+    isDarkMode: false,
+    isRightToLeft: false,
+    zoomScale: 1,
+    getDarkColor: undefined,
+    defaultSettings: getDefaultSettings(),
+};
 
 /**
  * @internal
@@ -14,12 +23,7 @@ export function createModelToDomContext(
     options?: ModelToDomOption
 ): ModelToDomContext {
     return {
-        ...(editorContext || {
-            isDarkMode: false,
-            isRightToLeft: false,
-            zoomScale: 1,
-            getDarkColor: undefined,
-        }),
+        ...(editorContext || defaultEditorContext),
         regularSelection: {
             current: {
                 block: null,

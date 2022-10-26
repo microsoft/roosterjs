@@ -10,6 +10,7 @@ import {
     IExperimentalContentModelEditor,
     ModelToDomOption,
     mergeFragmentWithEntity,
+    getDefaultSettings,
 } from 'roosterjs-content-model';
 
 /**
@@ -40,6 +41,7 @@ export default class ExperimentalContentModelEditor extends Editor
             zoomScale: this.getZoomScale(),
             isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
             getDarkColor: this.getDarkColor,
+            defaultSettings: getDefaultSettings(),
         };
     }
 

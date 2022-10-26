@@ -1,3 +1,4 @@
+import getDefaultSettings from '../../publicApi/getDefaultSettings';
 import { defaultProcessorMap } from './defaultProcessors';
 import { defaultStyleMap } from './defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
@@ -5,6 +6,14 @@ import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEdi
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
+
+const defaultEditorContext: EditorContext = {
+    isDarkMode: false,
+    zoomScale: 1,
+    isRightToLeft: false,
+    getDarkColor: undefined,
+    defaultSettings: getDefaultSettings(),
+};
 
 /**
  * @internal
@@ -14,12 +23,7 @@ export function createDomToModelContext(
     options?: DomToModelOption
 ): DomToModelContext {
     const context: DomToModelContext = {
-        ...(editorContext || {
-            isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
-            getDarkColor: undefined,
-        }),
+        ...(editorContext || defaultEditorContext),
 
         blockFormat: {},
         segmentFormat: {},
