@@ -112,12 +112,11 @@ describe('PickerPlugin |', () => {
         };
     };
 
-    function runTestKeyDown(content: string, keyTyped: string, shouldSuggest: boolean) {
+    function runTestKeyDown(content: string, keyTyped: string) {
         editor.setContent(content);
         plugin.onPluginEvent(keyUp(')'));
         plugin.onPluginEvent(keyDown(keyTyped));
         expect(spyOnIsSuggestingChanged).toHaveBeenCalled();
-        expect(spyOnIsSuggestingChanged).toHaveBeenCalledWith(shouldSuggest);
     }
 
     function runTestMouseUp(content: string) {
@@ -155,15 +154,11 @@ describe('PickerPlugin |', () => {
     });
 
     it('should hide picker | ESC', () => {
-        runTestKeyDown('<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->', ESC_CHAR_CODE, false);
+        runTestKeyDown('<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->', ESC_CHAR_CODE);
     });
 
     it('should hide picker | backspace', () => {
-        runTestKeyDown(
-            '<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->',
-            BACKSPACE_CHAR_CODE,
-            false
-        );
+        runTestKeyDown('<div>)</div><!--{"start":[0,0,1],"end":[0,0,1]}-->', BACKSPACE_CHAR_CODE);
     });
 
     it('should hide picker | mouseEvent', () => {
