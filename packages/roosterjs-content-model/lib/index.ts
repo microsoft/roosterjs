@@ -42,6 +42,7 @@ export { ContentModelImage } from './publicTypes/segment/ContentModelImage';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
+export { ContentModelHR } from './publicTypes/block/ContentModelHR';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';

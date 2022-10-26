@@ -4,6 +4,11 @@ const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',
 };
 
+const headerElement: Partial<CSSStyleDeclaration> = {
+    display: 'block',
+    fontWeight: 'bold',
+};
+
 /**
  * @internal
  */
@@ -21,6 +26,11 @@ export const defaultStyleMap: DefaultStyleMap = {
         marginLeft: '40px',
         marginRight: '40px',
     },
+    br: blockElement,
+    center: {
+        display: 'block',
+        textAlign: 'center',
+    },
     dd: blockElement,
     div: blockElement,
     dl: blockElement,
@@ -33,15 +43,12 @@ export const defaultStyleMap: DefaultStyleMap = {
     figure: blockElement,
     footer: blockElement,
     form: blockElement,
-    h1: {
-        display: 'block',
-        fontWeight: 'bold',
-    },
-    h2: blockElement,
-    h3: blockElement,
-    h4: blockElement,
-    h5: blockElement,
-    h6: blockElement,
+    h1: headerElement,
+    h2: headerElement,
+    h3: headerElement,
+    h4: headerElement,
+    h5: headerElement,
+    h6: headerElement,
     header: blockElement,
     hr: blockElement,
     i: {
