@@ -12,11 +12,6 @@ import {
 
 const styles = require('./ContentModelParagraphView.scss');
 
-const ParagraphFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
-    BackgroundColorFormatRenderer,
-    ...DirectionFormatRenderers,
-];
-
 export function ContentModelParagraphView(props: { paragraph: ContentModelParagraph }) {
     const { paragraph } = props;
     const implicitCheckbox = React.useRef<HTMLInputElement>(null);
