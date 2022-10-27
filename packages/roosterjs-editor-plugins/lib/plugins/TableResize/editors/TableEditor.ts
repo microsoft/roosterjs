@@ -314,9 +314,7 @@ export default class TableEditor {
                 const rows = vTable.cells.length - 1;
                 let lastCellIndex: number = 0;
                 vTable.cells[rows].forEach((cell, index) => {
-                    if (cell.td) {
-                        lastCellIndex = index;
-                    }
+                    lastCellIndex = index;
                 });
 
                 const selection: TableSelection = {

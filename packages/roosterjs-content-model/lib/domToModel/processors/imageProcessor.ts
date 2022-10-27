@@ -4,7 +4,7 @@ import { ContentModelImageFormat } from '../../publicTypes/format/ContentModelIm
 import { createImage } from '../../modelApi/creators/createImage';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { isBlockElement } from 'roosterjs-editor-dom';
+import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -12,7 +12,7 @@ import { stackFormat } from '../utils/stackFormat';
  * @internal
  */
 export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, element, context) => {
-    const isBlock = isBlockElement(element);
+    const isBlock = isBlockElement(element, context);
 
     stackFormat(
         context,

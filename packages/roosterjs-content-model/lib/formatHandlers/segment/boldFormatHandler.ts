@@ -21,11 +21,13 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
             format.bold = false;
         }
     },
-    apply: (format, element) => {
-        if (format.bold) {
+    apply: (format, element, context) => {
+        if (format.bold && !context.segmentFormatFromBlock.bold) {
             const b = element.ownerDocument.createElement('b');
             moveChildNodes(b, element);
             element.appendChild(b);
+        } else if (!format.bold && context.segmentFormatFromBlock.bold) {
+            element.style.fontWeight = 'normal';
         }
     },
 };
