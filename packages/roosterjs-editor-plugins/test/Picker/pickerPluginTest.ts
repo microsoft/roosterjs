@@ -117,6 +117,7 @@ describe('PickerPlugin |', () => {
         plugin.onPluginEvent(keyUp(')'));
         plugin.onPluginEvent(keyDown(keyTyped));
         expect(spyOnIsSuggestingChanged).toHaveBeenCalled();
+        expect(spyOnIsSuggestingChanged).toHaveBeenCalledWith(false);
     }
 
     function runTestMouseUp(content: string) {
