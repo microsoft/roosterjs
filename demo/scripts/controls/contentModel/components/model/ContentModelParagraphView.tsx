@@ -3,22 +3,9 @@ import { BlockFormatView } from '../format/BlockFormatView';
 import { ContentModelParagraph, hasSelectionInBlock } from 'roosterjs-content-model';
 import { ContentModelSegmentView } from './ContentModelSegmentView';
 import { ContentModelView } from '../ContentModelView';
-import { DirectionFormatRenderers } from '../format/formatPart/DirectionFormatRenderers';
-import { FormatRenderer } from '../format/utils/FormatRenderer';
-import { FormatView } from '../format/FormatView';
 import { useProperty } from '../../hooks/useProperty';
-import {
-    ContentModelParagraph,
-    ContentModelBlockFormat,
-    hasSelectionInBlock,
-} from 'roosterjs-content-model';
 
 const styles = require('./ContentModelParagraphView.scss');
-
-const ParagraphFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
-    BackgroundColorFormatRenderer,
-    ...DirectionFormatRenderers,
-];
 
 export function ContentModelParagraphView(props: { paragraph: ContentModelParagraph }) {
     const { paragraph } = props;
