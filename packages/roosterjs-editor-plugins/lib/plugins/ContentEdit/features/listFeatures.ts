@@ -522,7 +522,7 @@ const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
                 const fvList = new VList(previousList);
                 fvList.mergeVList(new VList(targetBlock));
 
-                let span = document.createElement('span');
+                let span = editor.getDocument().createElement('span');
                 span.id = 'restoreRange';
                 rangeBeforeWriteBack.insertNode(span);
 
