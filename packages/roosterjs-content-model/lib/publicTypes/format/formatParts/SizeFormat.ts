@@ -3,12 +3,32 @@
  */
 export type SizeFormat = {
     /**
-     * Width in pixel
+     * Width of the element
      */
-    width?: number;
+    width?: string;
 
     /**
-     * Height in pixel
+     * Height of the element
      */
-    height?: number;
+    height?: string;
+
+    /**
+     * Maximum width of the element
+     */
+    maxWidth?: string;
+
+    /**
+     * Maximum height of the element
+     */
+    maxHeight?: string;
+
+    /**
+     * Minimum width of the element
+     */
+    minWidth?: string;
+
+    /**
+     * Minimum height of the element
+     */
+    minHeight?: string;
 };

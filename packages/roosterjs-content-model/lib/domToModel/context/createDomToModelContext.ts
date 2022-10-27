@@ -80,6 +80,12 @@ export function createDomToModelContext(
             }
 
             break;
+
+        case SelectionRangeTypes.ImageSelection:
+            context.imageSelection = {
+                image: range.image,
+            };
+            break;
     }
 
     return context;

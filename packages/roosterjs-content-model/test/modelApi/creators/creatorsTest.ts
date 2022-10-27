@@ -6,6 +6,8 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
+import { createHR } from '../../../lib/modelApi/creators/createHR';
+import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
@@ -348,6 +350,25 @@ describe('Creators', () => {
             type,
             isReadonly,
             wrapper,
+        });
+    });
+
+    it('createImage', () => {
+        const imageModel = createImage('test');
+
+        expect(imageModel).toEqual({
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+        });
+    });
+
+    it('createHR', () => {
+        const hr = createHR();
+
+        expect(hr).toEqual({
+            blockType: 'HR',
+            format: {},
         });
     });
 });

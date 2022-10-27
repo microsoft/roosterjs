@@ -1,7 +1,6 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
 import ImageEditInfo from '../types/ImageEditInfo';
-
-const IMAGE_EDIT_INFO_NAME = 'roosterEditInfo';
+import { getMetadata, removeMetadata, setMetadata } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -11,7 +10,7 @@ const IMAGE_EDIT_INFO_NAME = 'roosterEditInfo';
  */
 export function saveEditInfo(image: HTMLImageElement, editInfo: ImageEditInfo) {
     if (image) {
-        image.dataset[IMAGE_EDIT_INFO_NAME] = JSON.stringify(editInfo);
+        setMetadata(image, editInfo);
     }
 }
 
@@ -22,7 +21,7 @@ export function saveEditInfo(image: HTMLImageElement, editInfo: ImageEditInfo) {
  */
 export function deleteEditInfo(image: HTMLImageElement) {
     if (image) {
-        delete image.dataset[IMAGE_EDIT_INFO_NAME];
+        removeMetadata(image);
     }
 }
 
@@ -35,7 +34,7 @@ export function deleteEditInfo(image: HTMLImageElement) {
  * @param image The image to get edit info from
  */
 export function getEditInfoFromImage(image: HTMLImageElement): ImageEditInfo {
-    const obj = safeParseJSON(image?.dataset[IMAGE_EDIT_INFO_NAME]) as ImageEditInfo;
+    const obj = getMetadata<ImageEditInfo>(image);
     return checkEditInfoState(obj) == ImageEditInfoState.Invalid ? getInitialEditInfo(image) : obj;
 }
 
@@ -52,12 +51,4 @@ function getInitialEditInfo(image: HTMLImageElement): ImageEditInfo {
         bottomPercent: 0,
         angleRad: 0,
     };
-}
-
-function safeParseJSON(json: string): any {
-    try {
-        return JSON.parse(json);
-    } catch {
-        return null;
-    }
 }

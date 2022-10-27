@@ -6,22 +6,56 @@ import { SizeFormat } from '../../publicTypes/format/formatParts/SizeFormat';
  */
 export const sizeFormatHandler: FormatHandler<SizeFormat> = {
     parse: (format, element, context) => {
-        const size = element.getBoundingClientRect();
+        const width = element.style.width || tryParseSize(element, 'width');
+        const height = element.style.height || tryParseSize(element, 'height');
+        const maxWidth = element.style.maxWidth;
+        const maxHeight = element.style.maxHeight;
+        const minWidth = element.style.minWidth;
+        const minHeight = element.style.minHeight;
 
-        if (size?.width > 0) {
-            format.width = size.width / context.zoomScale;
+        if (width) {
+            format.width = width;
         }
-
-        if (size?.height > 0) {
-            format.height = size.height / context.zoomScale;
+        if (height) {
+            format.height = height;
+        }
+        if (maxWidth) {
+            format.maxWidth = maxWidth;
+        }
+        if (maxHeight) {
+            format.maxHeight = maxHeight;
+        }
+        if (minWidth) {
+            format.minWidth = minWidth;
+        }
+        if (minHeight) {
+            format.minHeight = minHeight;
         }
     },
     apply: (format, element) => {
-        if (format.width! > 0) {
-            element.style.width = format.width + 'px';
+        if (format.width) {
+            element.style.width = format.width;
         }
-        if (format.height! > 0) {
-            element.style.height = format.height + 'px';
+        if (format.height) {
+            element.style.height = format.height;
+        }
+        if (format.maxWidth) {
+            element.style.maxWidth = format.maxWidth;
+        }
+        if (format.maxHeight) {
+            element.style.maxHeight = format.maxHeight;
+        }
+        if (format.minWidth) {
+            element.style.minWidth = format.minWidth;
+        }
+        if (format.minHeight) {
+            element.style.minHeight = format.minHeight;
         }
     },
 };
+
+function tryParseSize(element: HTMLElement, attrName: 'width' | 'height'): string | undefined {
+    const value = parseInt(element.getAttribute(attrName) || '');
+
+    return Number.isNaN(value) ? undefined : value + 'px';
+}
