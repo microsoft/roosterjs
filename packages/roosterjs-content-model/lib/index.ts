@@ -39,6 +39,7 @@ export { ContentModelBr } from './publicTypes/segment/ContentModelBr';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
+export { ContentModelHR } from './publicTypes/block/ContentModelHR';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
@@ -71,8 +72,6 @@ export { PaddingFormat } from './publicTypes/format/formatParts/PaddingFormat';
 export { ListTypeFormat } from './publicTypes/format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './publicTypes/format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './publicTypes/format/formatParts/ListMetadataFormat';
-
-export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 
 export { EditorContext } from './publicTypes/context/EditorContext';
 export { DomToModelFormatContext } from './publicTypes/context/DomToModelFormatContext';
