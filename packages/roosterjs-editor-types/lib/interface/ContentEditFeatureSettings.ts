@@ -125,6 +125,12 @@ export interface ListFeatureSettings {
      * @default true
      */
     autoNumberingList: boolean;
+
+    /**
+     * MergeListOnBackspaceAfterList edit feature, provides the ability to merge list on backspace on block after a list.
+     * @default true
+     */
+    mergeListOnBackspaceAfterList: boolean;
 }
 
 /**

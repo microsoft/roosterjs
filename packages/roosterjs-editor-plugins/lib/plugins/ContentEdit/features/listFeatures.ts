@@ -1,5 +1,6 @@
 import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
+import StartEndBlockElement from 'roosterjs-editor-dom/lib/blockElements/StartEndBlockElement';
 import {
     blockFormat,
     commitListChains,
@@ -18,6 +19,8 @@ import {
     createVListFromRegion,
     isBlockElement,
     cacheGetEventData,
+    safeInstanceOf,
+    VList,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -30,6 +33,7 @@ import {
     RegionBase,
     ListType,
     ExperimentalFeatures,
+    PositionType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -387,6 +391,74 @@ function shouldTriggerList(
 }
 
 /**
+ * MergeListOnBackspaceAfterList edit feature, provides the ability to merge list on backspace on block after a list.
+ */
+const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.BACKSPACE],
+    shouldHandleEvent: (event, editor) => {
+        const target = editor.getElementAtCursor();
+        const range = editor.getSelectionRange();
+        if (range && range.collapsed && target) {
+            const cursorBlock = StartEndBlockElement.getBlockContext(target);
+            const previousBlock = cursorBlock?.previousElementSibling ?? null;
+
+            const tempBlock = cursorBlock?.nextElementSibling;
+            const nextBlock = isList(tempBlock) ? tempBlock : tempBlock?.firstChild;
+
+            if (isList(previousBlock) && isList(nextBlock)) {
+                const element = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
+                    event,
+                    'previousBlock',
+                    () => previousBlock
+                );
+                const nextElement = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
+                    event,
+                    'nextBlock',
+                    () => nextBlock
+                );
+
+                return !!element && !!nextElement;
+            }
+        }
+        return false;
+    },
+    handleEvent: (event, editor) => {
+        editor.runAsync(editor => {
+            const previousList = cacheGetEventData<HTMLOListElement | HTMLUListElement | null>(
+                event,
+                'previousBlock',
+                () => null
+            );
+            const targetBlock = cacheGetEventData<HTMLOListElement | HTMLUListElement | null>(
+                event,
+                'nextBlock',
+                () => null
+            );
+
+            const rangeBeforeWriteBack = editor.getSelectionRange();
+
+            if (previousList && targetBlock && rangeBeforeWriteBack) {
+                const fvList = new VList(previousList);
+                fvList.mergeVList(new VList(targetBlock));
+
+                let span = document.createElement('span');
+                span.id = 'restoreRange';
+                rangeBeforeWriteBack.insertNode(span);
+
+                fvList.writeBack();
+
+                span = editor.queryElements('#restoreRange')[0];
+
+                if (span.parentElement) {
+                    editor.select(new Position(span, PositionType.After));
+                    span.parentElement.removeChild(span);
+                }
+            }
+        });
+    },
+};
+
+/**
  * @internal
  */
 export const ListFeatures: Record<
@@ -403,4 +475,12 @@ export const ListFeatures: Record<
     maintainListChainWhenDelete: MaintainListChainWhenDelete,
     autoNumberingList: AutoNumberingList,
     autoBulletList: AutoBulletList,
+    mergeListOnBackspaceAfterList: MergeListOnBackspaceAfterList,
 };
+
+function isList(element: Node | null | undefined): element is HTMLOListElement | HTMLOListElement {
+    return (
+        !!element &&
+        (safeInstanceOf(element, 'HTMLOListElement') || safeInstanceOf(element, 'HTMLUListElement'))
+    );
+}
