@@ -1,5 +1,5 @@
-import { ContentPosition, IEditor, InlineElement } from 'roosterjs-editor-types/lib';
-import { isBlockElement, Position } from 'roosterjs-editor-dom';
+import { isBlockElement, Position, splitTextNode } from 'roosterjs-editor-dom';
+import { IEditor /*InlineElement */ } from 'roosterjs-editor-types/lib';
 
 const PUNCTUATION_REGEX = /[.,:!?()\[\]\\/]/gu;
 const SPACES_REGEX = /[\u00A0\u1680​\u180e\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
@@ -9,11 +9,12 @@ export default function selectWordFromCollapsedRange(range: Range, editor: IEdit
     if (range?.collapsed) {
         const pos = Position.getStart(range);
         const text = pos.node.textContent;
-        //console.log(pos)
+        //console.log()
         //debugger
+
         if (text && !isBlockElement(pos.node)) {
             let startOffset: number = range.startOffset;
-            //let endOffset: number = text.length;
+            let endOffset: number = range.startOffset;
 
             //Should not select the word when:
             // 1. The is first char of the string and it is a space.
@@ -26,36 +27,62 @@ export default function selectWordFromCollapsedRange(range: Range, editor: IEdit
                 return;
             }
 
-            const leftTraverser = editor.getBlockTraverser();
-            const rightTraverser = editor.getBlockTraverser();
+            let lNode: Node = pos.node;
+            let rNode: Node = splitTextNode(pos.node as Text, range.startOffset, false);
 
-            console.log(leftTraverser, rightTraverser);
-            debugger;
-
-            let inLine: InlineElement = rightTraverser.currentInlineElement;
             let offset: number | null = null;
-            let endOffset: number = 0;
             let word: string = '';
 
-            while (inLine && offset === null) {
-                word = inLine.getTextContent();
+            while (lNode && offset === null) {
+                word = lNode.textContent;
+                offset = findDelimiterLeft(word);
+
+                if (offset === null) {
+                    startOffset = 0;
+                    lNode.previousSibling ? (lNode = lNode.previousSibling) : (offset = undefined);
+                } else {
+                    startOffset = offset;
+                }
+            }
+
+            offset = null;
+
+            while (rNode && offset === null) {
+                word = rNode.textContent;
                 offset = findDelimiterRight(word);
 
-                console.log(word);
                 if (offset === null) {
-                    endOffset = word.length - 1;
-                    inLine = rightTraverser.getNextInlineElement();
+                    endOffset = word.length;
+                    rNode.nextSibling ? (rNode = rNode.nextSibling) : (offset = undefined);
                 } else {
                     endOffset = offset;
                 }
             }
 
-            inLine = leftTraverser.currentInlineElement;
-            offset = null;
-            startOffset = 0;
+            /*
+            while (true) {
+                let x = lNode.nextSibling;
+                console.log('#', x.textContent, '#', x.textContent == '');
+                lNode = lNode.nextSibling;
+                debugger;
+            }*/
+
+            //const leftTraverser = editor.getBlockTraverser();
+            //const rightTraverser = editor.getBlockTraverser();
+
+            //let lNode: Node = pos.node;
+            //let rNode: Node = pos.node;
+
+            /*
+            let offset: number | null = null;
+            let word: string = '';
+
             //Skip first
             leftTraverser.getPreviousInlineElement();
+            let inLine: InlineElement = leftTraverser.currentInlineElement;
+            startOffset = 0;
 
+            let leftOffset = 0;
             while (inLine && offset === null) {
                 word = inLine.getTextContent();
                 offset = findDelimiterLeft(word);
@@ -67,12 +94,50 @@ export default function selectWordFromCollapsedRange(range: Range, editor: IEdit
                     startOffset = offset;
                 }
             }
+            leftOffset = word.length;
 
-            console.log(startOffset, endOffset);
-            if (true) {
-                range.setStart(leftTraverser.currentInlineElement.getContainerNode(), startOffset);
-                range.setEnd(rightTraverser.currentInlineElement.getContainerNode(), endOffset);
+            if (leftTraverser.currentInlineElement) {
+                lNode = leftTraverser.currentInlineElement.getContainerNode();
             }
+
+            inLine = rightTraverser.currentInlineElement;
+            offset = null;
+
+            while (inLine && offset === null) {
+                word = inLine.getTextContent();
+                offset = findDelimiterRight(word);
+
+                if (offset === null) {
+                    endOffset = word.length;
+                    inLine = rightTraverser.getNextInlineElement();
+                } else {
+                    endOffset = offset;
+                }
+            }
+
+            if (rightTraverser.currentInlineElement) {
+                rNode = rightTraverser.currentInlineElement.getContainerNode();
+            }
+
+            */
+            console.log(startOffset, endOffset, 'L:', lNode, 'R:', rNode);
+            //debugger;
+
+            //const rSize = rNode.textContent.length;
+
+            range.setStart(lNode, startOffset);
+            range.setEnd(rNode, endOffset);
+
+            /*
+            if (lNode === rNode) {
+                endOffset += inLine ? leftOffset : 0;
+                range.setStart(lNode, startOffset);
+                range.setEnd(rNode, endOffset);
+            } else {
+                range.setStart(lNode, startOffset);
+                range.setEnd(rNode, endOffset);
+            }
+            */
         }
     }
 }

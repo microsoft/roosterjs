@@ -53,13 +53,36 @@ export default function execCommand(
         console.log(selection.ranges[0], ciu);
         debugger;*/
 
+        const originalRange: Range = editor.getSelectionRange();
+
         if (formatName) {
-            selectWordFromCollapsedRange(editor.getSelectionRange(), editor);
+            selectWordFromCollapsedRange(originalRange, editor);
             formatState[formatName] = !formatState[formatName];
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
                 formatState: formatState,
-            });
+            }); /*
+            formatUndoSnapshot(
+                editor,
+                () => {
+                    const needToSwitchSelection = selection.type != SelectionRangeTypes.Normal;
+
+                    selection.ranges.forEach(range => {
+                        if (needToSwitchSelection) {
+                            editor.select(range);
+                        }
+                        formatter();
+                    });
+
+                    if (needToSwitchSelection) {
+                        editor.select(selection);
+                    }
+                },
+                apiName
+            );
+            editor.select(originalRange);*/
         }
+        //console.log(originalRange);
+        //debugger;
     } else {
         formatUndoSnapshot(
             editor,
