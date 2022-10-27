@@ -124,6 +124,13 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      */
     public dispose() {
         this.editor = null;
+        this.isSuggesting = null;
+        this.blockSuggestions = null;
+        this.eventHandledOnKeyDown = null;
+        this.lastKnownRange = null;
+        this.isPendingInputEventHandling = null;
+        this.currentInputLength = null;
+        this.newInputLength = null;
         this.dataProvider.onDispose();
     }
 
