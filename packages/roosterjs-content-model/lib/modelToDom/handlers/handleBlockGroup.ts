@@ -1,4 +1,3 @@
-import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelGeneralBlock } from '../../publicTypes/block/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
@@ -23,12 +22,12 @@ export const handleBlockGroup: ContentModelHandler<ContentModelBlockGroup> = (
 
             context.modelHandlers.blockGroupChildren(doc, newParent, group, context);
 
-            if (isGeneralSegment(group) && isNodeOfType(newParent, NodeType.Element)) {
-                if (!group.element.firstChild) {
-                    context.regularSelection.current.segment = newParent;
-                }
-
-                applyFormat(newParent, context.formatAppliers.segment, group.format, context);
+            if (
+                isGeneralSegment(group) &&
+                isNodeOfType(newParent, NodeType.Element) &&
+                !group.element.firstChild
+            ) {
+                context.regularSelection.current.segment = newParent;
             }
 
             break;

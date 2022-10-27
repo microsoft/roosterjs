@@ -2,6 +2,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
+import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
@@ -236,6 +237,120 @@ describe('getSelectedParagraphs', () => {
             {
                 paragraph: para2,
                 path: [cell1, group],
+            },
+        ]);
+    });
+
+    it('Select from the end of paragraph', () => {
+        const group = createContentModelDocument(document);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('test');
+
+        text.isSelected = true;
+        para1.segments.push(marker);
+        para2.segments.push(text);
+        group.blocks.push(para1);
+        group.blocks.push(para2);
+
+        const result = getSelectedParagraphs(group);
+
+        expect(result).toEqual([
+            {
+                paragraph: para2,
+                path: [group],
+            },
+        ]);
+    });
+
+    it('Select to the start of paragraph', () => {
+        const group = createContentModelDocument(document);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('test');
+
+        text.isSelected = true;
+        para1.segments.push(text);
+        para2.segments.push(marker);
+        group.blocks.push(para1);
+        group.blocks.push(para2);
+
+        const result = getSelectedParagraphs(group);
+
+        expect(result).toEqual([
+            {
+                paragraph: para1,
+                path: [group],
+            },
+        ]);
+    });
+
+    it('Select from the end to the start of paragraph', () => {
+        const group = createContentModelDocument(document);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker();
+        const text = createText('test');
+
+        text.isSelected = true;
+        para1.segments.push(marker1);
+        para2.segments.push(text);
+        para3.segments.push(marker2);
+        group.blocks.push(para1);
+        group.blocks.push(para2);
+        group.blocks.push(para3);
+
+        const result = getSelectedParagraphs(group);
+
+        expect(result).toEqual([
+            {
+                paragraph: para2,
+                path: [group],
+            },
+        ]);
+    });
+
+    it('Select not from the end, and not to the start of paragraph', () => {
+        const group = createContentModelDocument(document);
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const text3 = createText('test3');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+        text3.isSelected = true;
+        para1.segments.push(marker1);
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        para3.segments.push(text3);
+        para3.segments.push(marker2);
+        group.blocks.push(para1);
+        group.blocks.push(para2);
+        group.blocks.push(para3);
+
+        const result = getSelectedParagraphs(group);
+
+        expect(result).toEqual([
+            {
+                paragraph: para1,
+                path: [group],
+            },
+            {
+                paragraph: para2,
+                path: [group],
+            },
+            {
+                paragraph: para3,
+                path: [group],
             },
         ]);
     });
