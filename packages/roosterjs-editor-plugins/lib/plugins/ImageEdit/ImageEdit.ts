@@ -19,7 +19,6 @@ import {
     getEntityFromElement,
     getEntitySelector,
     getObjectKeys,
-    //matchesSelector,
     safeInstanceOf,
     toArray,
     wrap,
