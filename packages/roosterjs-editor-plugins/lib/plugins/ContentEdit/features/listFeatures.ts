@@ -1,6 +1,5 @@
 import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
-import StartEndBlockElement from 'roosterjs-editor-dom/lib/blockElements/StartEndBlockElement';
 import {
     blockFormat,
     commitListChains,
@@ -398,7 +397,7 @@ const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: (event, editor) => {
         const target = editor.getElementAtCursor();
         if (target) {
-            const cursorBlock = StartEndBlockElement.getBlockContext(target);
+            const cursorBlock = editor.getBlockElementAtNode(target)?.getStartNode() as HTMLElement;
             const previousBlock = cursorBlock?.previousElementSibling ?? null;
 
             if (isList(previousBlock)) {
