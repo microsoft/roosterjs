@@ -12,11 +12,11 @@ import {
     ContentMetadata,
     SelectionRangeTypes,
     TrustedHTMLHandler,
+    ImageContentMetadata,
     NormalContentMetadata,
     TableContentMetadata,
     Coordinates,
 } from 'roosterjs-editor-types';
-
 const NumberArrayDefinition = createArrayDefinition<number>(createNumberDefinition());
 
 const CoordinatesDefinition = createObjectDefinition<Coordinates>({
@@ -39,6 +39,12 @@ const TableContentMetadataDefinition = createObjectDefinition<TableContentMetada
     tableId: createStringDefinition(),
     firstCell: CoordinatesDefinition,
     lastCell: CoordinatesDefinition,
+});
+
+const ImageContentMetadataDefinition = createObjectDefinition<ImageContentMetadata>({
+    type: createNumberDefinition(false /*isOptional*/, SelectionRangeTypes.ImageSelection),
+    isDarkMode: IsDarkModeDefinition,
+    imageId: createStringDefinition(),
 });
 
 /**
@@ -89,7 +95,8 @@ export function setHtmlWithMetadata(
 
             if (
                 validate(obj, NormalContentMetadataDefinition) ||
-                validate(obj, TableContentMetadataDefinition)
+                validate(obj, TableContentMetadataDefinition) ||
+                validate(obj, ImageContentMetadataDefinition)
             ) {
                 rootNode.removeChild(potentialMetadataComment);
                 obj.type = typeof obj.type === 'undefined' ? SelectionRangeTypes.Normal : obj.type;

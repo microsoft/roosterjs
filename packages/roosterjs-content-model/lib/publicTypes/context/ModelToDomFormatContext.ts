@@ -1,4 +1,5 @@
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Represents a list stack item used by Content Model to DOM conversion
@@ -33,4 +34,9 @@ export interface ModelToDomFormatContext {
      * Context for list handling
      */
     listFormat: ModelToDomListContext;
+
+    /**
+     * Context for format carried over from block
+     */
+    segmentFormatFromBlock: ContentModelSegmentFormat;
 }

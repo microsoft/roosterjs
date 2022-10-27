@@ -80,8 +80,7 @@ function buildCss(
 
     let firstSelected: HTMLTableCellElement | null = null;
     let lastSelected: HTMLTableCellElement | null = null;
-    let css = '';
-    let isFirst = true;
+    const selectors: string[] = [];
 
     const vTable = new VTable(table);
 
@@ -89,7 +88,7 @@ function buildCss(
     const tableChildren = toArray(table.childNodes).filter(
         node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
     );
-    // Set the start and end of each of the table childs, so we can build the selector according the element between the table and the row.
+    // Set the start and end of each of the table children, so we can build the selector according the element between the table and the row.
     let cont = 0;
     const indexes = tableChildren.map(node => {
         const result = {
@@ -123,12 +122,6 @@ function buildCss(
                 tdCount++;
 
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
-                    if (isFirst) {
-                        isFirst = false;
-                    } else if (!css.endsWith(',')) {
-                        css += ',';
-                    }
-
                     removeImportant(cell);
 
                     const selector = generateCssFromCell(
@@ -139,9 +132,10 @@ function buildCss(
                         tag,
                         tdCount
                     );
-                    css += selector;
+
+                    selectors.push(selector);
                     firstSelected = firstSelected || table.querySelector(selector);
-                    lastSelected = table.querySelector(selector)!;
+                    lastSelected = table.querySelector(selector);
                 }
             }
         }
@@ -154,7 +148,9 @@ function buildCss(
         }
     });
 
-    css += '{background-color: rgba(198,198,198,0.7) !important;}';
+    const css = `${selectors.join(
+        ','
+    )} {background-color: rgba(198,198,198,0.7) !important; caret-color: transparent}`;
 
     return { css, ranges };
 }
