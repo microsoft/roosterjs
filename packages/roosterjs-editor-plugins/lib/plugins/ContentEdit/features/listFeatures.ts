@@ -40,6 +40,9 @@ import {
     BulletListType,
 } from 'roosterjs-editor-types';
 
+const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
+const NEXT_BLOCK_CACHE_KEY = 'nextBlock';
+
 interface ListStyleMetadata {
     orderedStyleType?: NumberingListType;
     unorderedStyleType?: BulletListType;
@@ -486,12 +489,12 @@ const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
                     ) {
                         const element = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
                             event,
-                            'previousBlock',
+                            PREVIOUS_BLOCK_CACHE_KEY,
                             () => previousBlock
                         );
                         const nextElement = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
                             event,
-                            'nextBlock',
+                            NEXT_BLOCK_CACHE_KEY,
                             () => nextBlock
                         );
 
@@ -507,12 +510,12 @@ const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
         editor.runAsync(editor => {
             const previousList = cacheGetEventData<HTMLOListElement | HTMLUListElement | null>(
                 event,
-                'previousBlock',
+                PREVIOUS_BLOCK_CACHE_KEY,
                 () => null
             );
             const targetBlock = cacheGetEventData<HTMLOListElement | HTMLUListElement | null>(
                 event,
-                'nextBlock',
+                NEXT_BLOCK_CACHE_KEY,
                 () => null
             );
 
