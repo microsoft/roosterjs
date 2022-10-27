@@ -6,8 +6,6 @@ import {
     PendableFormatNames,
     Position,
 } from 'roosterjs-editor-dom';
-//import { ContentPosition } from 'roosterjs-editor-types/lib/enum/ContentPosition';
-//import findClosestElementAncestor from 'roosterjs-editor-dom/lib/utils/findClosestElementAncestor';
 import {
     DocumentCommand,
     IEditor,
