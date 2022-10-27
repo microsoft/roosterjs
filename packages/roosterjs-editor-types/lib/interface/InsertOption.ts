@@ -21,6 +21,13 @@ export interface InsertOptionBase {
      * No-op for ContentPosition.Begin, End, and Outside
      */
     replaceSelection?: boolean;
+
+    /**
+     * Boolean flag for inserting the content onto root node of current region.
+     * If current position is not at root of region, break parent node until insert can happen at root of region.
+     * This option only takes effect when insertOnNewLine is true, otherwise it will be ignored.
+     */
+    insertToRegionRoot?: boolean;
 }
 
 /**

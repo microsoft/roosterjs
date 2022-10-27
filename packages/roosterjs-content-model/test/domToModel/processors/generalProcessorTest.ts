@@ -1,4 +1,3 @@
-import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
 import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
@@ -6,14 +5,20 @@ import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/Con
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 
 describe('generalProcessor', () => {
     let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
 
     beforeEach(() => {
-        spyOn(containerProcessor, 'containerProcessor');
-        context = createDomToModelContext();
+        childProcessor = jasmine.createSpy();
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
     });
 
     it('Process a DIV element', () => {
@@ -24,6 +29,7 @@ describe('generalProcessor', () => {
             blockGroupType: 'General',
             element: div,
             blocks: [],
+            format: {},
         };
 
         spyOn(createGeneralBlock, 'createGeneralBlock').and.returnValue(block);
@@ -36,8 +42,8 @@ describe('generalProcessor', () => {
         });
         expect(createGeneralBlock.createGeneralBlock).toHaveBeenCalledTimes(1);
         expect(createGeneralBlock.createGeneralBlock).toHaveBeenCalledWith(div);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(block, div, context);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledWith(block, div, context);
     });
 
     it('Process a SPAN element', () => {
@@ -63,14 +69,15 @@ describe('generalProcessor', () => {
                     blockType: 'Paragraph',
                     isImplicit: true,
                     segments: [segment],
+                    format: {},
                 },
             ],
             document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span, context);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledWith(segment, span, context);
     });
 
     it('Process a SPAN element with format', () => {
@@ -96,6 +103,7 @@ describe('generalProcessor', () => {
                             element: span,
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,

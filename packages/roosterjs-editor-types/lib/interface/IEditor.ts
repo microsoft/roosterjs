@@ -316,6 +316,12 @@ export default interface IEditor {
     select(table: HTMLTableElement, coordinates: TableSelection): boolean;
 
     /**
+     * Select content SelectionRangeEx
+     * @param rangeEx SelectionRangeEx object to specify what to select
+     */
+    select(rangeEx: SelectionRangeEx): boolean;
+
+    /**
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     getFocusedPosition(): NodePosition | null;
@@ -512,7 +518,7 @@ export default interface IEditor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    setEditorDomAttribute(name: string, value: string): void;
+    setEditorDomAttribute(name: string, value: string | null): void;
 
     /**
      * Get DOM attribute of editor content DIV, null if there is no such attribute.
@@ -644,6 +650,3 @@ export default interface IEditor {
     getVisibleViewport(): Rect | null;
     //#endregion
 }
-
-// Temporarily put these interfaces here to workaround circular dependency issue
-// Need to revisit these interfaces later.

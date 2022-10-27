@@ -13,10 +13,10 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  * Maintain list numbers of list chain when content is modified by cut/paste/drag&drop
  */
 export default class CutPasteListChain implements EditorPlugin {
-    private chains: VListChain[];
-    private expectedChangeSource: ChangeSource | CompatibleChangeSource;
-    private editor: IEditor;
-    private disposer: () => void;
+    private chains: VListChain[] | null = null;
+    private expectedChangeSource: ChangeSource | CompatibleChangeSource | null = null;
+    private editor: IEditor | null = null;
+    private disposer: (() => void) | null = null;
 
     /**
      * Get a friendly name of this plugin
@@ -60,7 +60,12 @@ export default class CutPasteListChain implements EditorPlugin {
                 break;
 
             case PluginEventType.ContentChanged:
-                if (this.chains?.length > 0 && this.expectedChangeSource == event.source) {
+                if (
+                    this.chains &&
+                    this.chains.length > 0 &&
+                    this.expectedChangeSource == event.source &&
+                    this.editor
+                ) {
                     commitListChains(this.editor, this.chains);
                     this.chains = null;
                     this.expectedChangeSource = null;
@@ -74,7 +79,10 @@ export default class CutPasteListChain implements EditorPlugin {
     };
 
     private cacheListChains(source: ChangeSource) {
-        this.chains = VListChain.createListChains(this.editor.getSelectedRegions());
-        this.expectedChangeSource = source;
+        const selectedRegions = this.editor?.getSelectedRegions();
+        if (selectedRegions) {
+            this.chains = VListChain.createListChains(selectedRegions);
+            this.expectedChangeSource = source;
+        }
     }
 }

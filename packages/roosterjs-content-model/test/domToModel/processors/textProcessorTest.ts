@@ -12,7 +12,9 @@ describe('textProcessor', () => {
 
     it('Empty group', () => {
         const doc = createContentModelDocument(document);
-        textProcessor(doc, 'test', context);
+        const text = document.createTextNode('test');
+
+        textProcessor(doc, text, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -27,6 +29,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -35,12 +38,14 @@ describe('textProcessor', () => {
 
     it('Group with empty paragraph', () => {
         const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test');
         doc.blocks.push({
             blockType: 'Paragraph',
             segments: [],
+            format: {},
         });
 
-        textProcessor(doc, 'test', context);
+        textProcessor(doc, text, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -54,6 +59,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -62,6 +68,8 @@ describe('textProcessor', () => {
 
     it('Group with paragraph with text segment', () => {
         const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test1');
+
         doc.blocks.push({
             blockType: 'Paragraph',
             segments: [
@@ -71,9 +79,10 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
-        textProcessor(doc, 'test1', context);
+        textProcessor(doc, text, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -87,6 +96,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -95,6 +105,8 @@ describe('textProcessor', () => {
 
     it('Group with paragraph with different type of segment', () => {
         const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test');
+
         doc.blocks.push({
             blockType: 'Paragraph',
             segments: [
@@ -107,9 +119,10 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
-        textProcessor(doc, 'test', context);
+        textProcessor(doc, text, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -131,6 +144,7 @@ describe('textProcessor', () => {
                             format: {},
                         },
                     ],
+                    format: {},
                 },
             ],
             document: document,
@@ -139,6 +153,8 @@ describe('textProcessor', () => {
 
     it('Handle text with selection 1', () => {
         const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test2');
+
         doc.blocks.push({
             blockType: 'Paragraph',
             segments: [
@@ -148,11 +164,12 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
         context.isInSelection = true;
 
-        textProcessor(doc, 'test2', context);
+        textProcessor(doc, text, context);
 
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
@@ -169,11 +186,14 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
     });
 
     it('Handle text with selection 2', () => {
         const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test2');
+
         doc.blocks.push({
             blockType: 'Paragraph',
             segments: [
@@ -184,9 +204,10 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
-        textProcessor(doc, 'test2', context);
+        textProcessor(doc, text, context);
 
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
@@ -203,11 +224,14 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
     });
 
     it('Handle text with selection 3', () => {
         const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test2');
+
         doc.blocks.push({
             blockType: 'Paragraph',
             segments: [
@@ -218,11 +242,12 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
 
         context.isInSelection = true;
 
-        textProcessor(doc, 'test2', context);
+        textProcessor(doc, text, context);
 
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
@@ -234,15 +259,17 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
+            format: {},
         });
     });
 
     it('Handle text with format', () => {
         const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test');
 
         context.segmentFormat = { a: 'b' } as any;
 
-        textProcessor(doc, 'test', context);
+        textProcessor(doc, text, context);
 
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
@@ -254,6 +281,7 @@ describe('textProcessor', () => {
                 },
             ],
             isImplicit: true,
+            format: {},
         });
     });
 });

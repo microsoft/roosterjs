@@ -8,6 +8,7 @@ describe('addBlock', () => {
         const block: ContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
+            format: {},
         };
 
         addBlock(doc, block);

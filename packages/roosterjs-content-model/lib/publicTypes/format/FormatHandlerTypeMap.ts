@@ -2,21 +2,23 @@ import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
+import { DirectionFormat } from './formatParts/DirectionFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
+import { ImageMetadataFormat } from './formatParts/ImageMetadataFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
 import { PaddingFormat } from './formatParts/PaddingFormat';
+import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
-import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -46,6 +48,11 @@ export interface FormatHandlerTypeMap {
     borderBox: BorderBoxFormat;
 
     /**
+     * Format for DirectionFormat
+     */
+    direction: DirectionFormat;
+
+    /**
      * Format for FontFamilyFormat
      */
     fontFamily: FontFamilyFormat;
@@ -59,6 +66,11 @@ export interface FormatHandlerTypeMap {
      * Format for IdFormat
      */
     id: IdFormat;
+
+    /**
+     * Format for ImageMetadataFormat
+     */
+    imageMetadata: ImageMetadataFormat;
 
     /**
      * Format for ItalicFormat
@@ -101,6 +113,11 @@ export interface FormatHandlerTypeMap {
     padding: PaddingFormat;
 
     /**
+     * Format for SizeFormat
+     */
+    size: SizeFormat;
+
+    /**
      * Format for StrikeFormat
      */
     strike: StrikeFormat;
@@ -124,11 +141,6 @@ export interface FormatHandlerTypeMap {
      * Format for SpacingFormat
      */
     tableSpacing: SpacingFormat;
-
-    /**
-     * Format for TextAlignFormat
-     */
-    textAlign: TextAlignFormat;
 
     /**
      * Format for TextColorFormat

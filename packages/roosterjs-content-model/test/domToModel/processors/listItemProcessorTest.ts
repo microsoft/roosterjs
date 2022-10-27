@@ -9,7 +9,7 @@ describe('listItemProcessor', () => {
     beforeEach(() => {
         context = createDomToModelContext(undefined, {
             processorOverride: {
-                LI: listItemProcessor,
+                li: listItemProcessor,
             },
         });
     });
@@ -29,6 +29,7 @@ describe('listItemProcessor', () => {
                     blockGroupType: 'General',
                     element: li,
                     blocks: [],
+                    format: {},
                 },
             ],
         });
@@ -55,6 +56,7 @@ describe('listItemProcessor', () => {
                     blockGroupType: 'General',
                     element: li,
                     blocks: [],
+                    format: {},
                 },
             ],
         });
@@ -88,6 +90,7 @@ describe('listItemProcessor', () => {
                         isSelected: true,
                         format: {},
                     },
+                    format: {},
                 },
             ],
         });
@@ -125,6 +128,7 @@ describe('listItemProcessor', () => {
                             fontSize: '10px',
                         },
                     },
+                    format: {},
                 },
             ],
         });
@@ -159,6 +163,7 @@ describe('listItemProcessor', () => {
                                     format: {},
                                 },
                             ],
+                            format: {},
                         },
                     ],
                     levels: [
@@ -171,6 +176,7 @@ describe('listItemProcessor', () => {
                         isSelected: true,
                         format: {},
                     },
+                    format: {},
                 },
             ],
         });
@@ -183,7 +189,7 @@ describe('listItemProcessor without format handlers', () => {
     beforeEach(() => {
         context = createDomToModelContext(undefined, {
             processorOverride: {
-                LI: listItemProcessor,
+                li: listItemProcessor,
             },
             formatParserOverride: {
                 listItemThread: null,
@@ -207,6 +213,7 @@ describe('listItemProcessor without format handlers', () => {
                     blockGroupType: 'General',
                     element: li,
                     blocks: [],
+                    format: {},
                 },
             ],
         });
@@ -233,6 +240,7 @@ describe('listItemProcessor without format handlers', () => {
                     blockGroupType: 'General',
                     element: li,
                     blocks: [],
+                    format: {},
                 },
             ],
         });
@@ -266,6 +274,7 @@ describe('listItemProcessor without format handlers', () => {
                         isSelected: true,
                         format: {},
                     },
+                    format: {},
                 },
             ],
         });
@@ -303,6 +312,7 @@ describe('listItemProcessor without format handlers', () => {
                             fontSize: '10px',
                         },
                     },
+                    format: {},
                 },
             ],
         });
@@ -337,6 +347,7 @@ describe('listItemProcessor without format handlers', () => {
                                     format: {},
                                 },
                             ],
+                            format: {},
                         },
                     ],
                     levels: [
@@ -349,6 +360,7 @@ describe('listItemProcessor without format handlers', () => {
                         isSelected: true,
                         format: {},
                     },
+                    format: {},
                 },
             ],
         });

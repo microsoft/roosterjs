@@ -18,6 +18,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
     private styleInline = React.createRef<HTMLInputElement>();
     private styleBlock = React.createRef<HTMLInputElement>();
     private isReadonly = React.createRef<HTMLInputElement>();
+    private insertAtRoot = React.createRef<HTMLInputElement>();
 
     constructor(props: ApiPaneProps) {
         super(props);
@@ -55,6 +56,10 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     Readonly: <input type="checkbox" ref={this.isReadonly} />
                 </div>
                 <div>
+                    Force insert at root of region:{' '}
+                    <input type="checkbox" ref={this.insertAtRoot} />
+                </div>
+                <div>
                     <button onClick={this.insertEntity}>Insert Entity</button>
                 </div>
                 <hr />
@@ -77,9 +82,22 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
         node.dataset.hydratedHtml = this.hydratedHtml.current.value.trim();
         const isBlock = this.styleBlock.current.checked;
         const isReadonly = this.isReadonly.current.checked;
+        const insertAtRoot = this.insertAtRoot.current.checked;
 
         if (node) {
-            insertEntity(this.props.getEditor(), entityType, node, isBlock, isReadonly);
+            const editor = this.props.getEditor();
+
+            editor.addUndoSnapshot(() => {
+                insertEntity(
+                    editor,
+                    entityType,
+                    node,
+                    isBlock,
+                    isReadonly,
+                    undefined /*position*/,
+                    insertAtRoot
+                );
+            });
         }
     };
 

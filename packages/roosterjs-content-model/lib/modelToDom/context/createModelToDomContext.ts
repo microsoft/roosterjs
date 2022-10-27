@@ -1,3 +1,4 @@
+import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -29,7 +30,15 @@ export function createModelToDomContext(
             threadItemCounts: [],
             nodeStack: [],
         },
-        formatAppliers: getFormatAppliers(options?.formatApplierOverride),
+        segmentFormatFromBlock: {},
+        formatAppliers: getFormatAppliers(
+            options?.formatApplierOverride,
+            options?.additionalFormatAppliers
+        ),
+        modelHandlers: {
+            ...defaultContentModelHandlers,
+            ...(options?.modelHandlerOverride || {}),
+        },
         entityPairs: [],
     };
 }

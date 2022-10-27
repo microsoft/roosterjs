@@ -5,7 +5,7 @@ const IMG_SRC =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAALUlEQVQ4EWNgYGD4T2U8lAz8TyZACzKEl8k0Dz0OhpKBaGGB7hVi+QgvD0oDATe/bqDDw39VAAAAAElFTkSuQmCC';
 const WIDTH = 20;
 const HEIGHT = 10;
-const IMAGE_EDIT_EDITINFO_NAME = 'roosterEditInfo';
+const IMAGE_EDIT_EDITINFO_NAME = 'editingInfo';
 
 describe('getEditInfoFromImage', () => {
     it('getEditInfoFromImage() returns the edit info of the empty image', () => {

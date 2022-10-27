@@ -56,7 +56,10 @@ export default function toggleListType(
                           )?.collapseToSingleElement(),
                           startNumber
                       )
-                    : createVListFromRegion(region, includeSiblingLists);
+                    : createVListFromRegion(
+                          region,
+                          startNumber === 1 ? false : includeSiblingLists
+                      );
 
             if (vList) {
                 vList.changeListType(start, end, listType);

@@ -1,18 +1,22 @@
-import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
+import { childProcessor as originalChildProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
 import { listProcessor } from '../../../lib/domToModel/processors/listProcessor';
 
 describe('listProcessor', () => {
     let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
 
     beforeEach(() => {
+        childProcessor = jasmine.createSpy();
         context = createDomToModelContext(undefined, {
             processorOverride: {
-                UL: listProcessor,
-                OL: listProcessor,
+                ul: listProcessor,
+                ol: listProcessor,
+                child: childProcessor,
             },
         });
     });
@@ -21,7 +25,7 @@ describe('listProcessor', () => {
         const group = createContentModelDocument(document);
         const ul = document.createElement('ul');
 
-        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+        childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([{ listType: 'UL' }]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
@@ -36,7 +40,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -46,7 +50,7 @@ describe('listProcessor', () => {
         const group = createContentModelDocument(document);
         const ol = document.createElement('ol');
 
-        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+        childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([{ listType: 'OL' }]);
             expect(context.listFormat.threadItemCounts).toEqual([0]);
@@ -61,7 +65,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([0]);
         expect(context.segmentFormat).toEqual({});
@@ -75,7 +79,7 @@ describe('listProcessor', () => {
         ol.style.fontFamily = 'a';
         ol.style.fontSize = '10px';
 
-        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+        childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([{ listType: 'OL' }]);
             expect(context.listFormat.threadItemCounts).toEqual([0]);
@@ -94,7 +98,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([0]);
         expect(context.segmentFormat).toEqual({});
@@ -107,7 +111,7 @@ describe('listProcessor', () => {
 
         ul.appendChild(innerUl);
 
-        spyOn(containerProcessor, 'containerProcessor').and.callThrough();
+        childProcessor.and.callFake(originalChildProcessor);
         listProcessor(group, ul, context);
 
         expect(group).toEqual({
@@ -116,14 +120,14 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
 
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(2);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(group, ul, context);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(group, innerUl, context);
+        expect(childProcessor).toHaveBeenCalledTimes(2);
+        expect(childProcessor).toHaveBeenCalledWith(group, ul, context);
+        expect(childProcessor).toHaveBeenCalledWith(group, innerUl, context);
     });
 
     it('Nested UL elements, check context', () => {
@@ -145,6 +149,8 @@ describe('listProcessor', () => {
             callback();
         });
 
+        childProcessor.and.callFake(originalChildProcessor);
+
         listProcessor(group, ul, context);
 
         expect(group).toEqual({
@@ -153,7 +159,7 @@ describe('listProcessor', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
 
@@ -165,13 +171,16 @@ describe('listProcessor', () => {
 });
 
 describe('listProcessor without format handlers', () => {
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
     let context: DomToModelContext;
 
     beforeEach(() => {
+        childProcessor = jasmine.createSpy();
         context = createDomToModelContext(undefined, {
             processorOverride: {
-                UL: listProcessor,
-                OL: listProcessor,
+                ul: listProcessor,
+                ol: listProcessor,
+                child: childProcessor,
             },
             formatParserOverride: {
                 listType: null,
@@ -185,7 +194,7 @@ describe('listProcessor without format handlers', () => {
         const group = createContentModelDocument(document);
         const ul = document.createElement('ul');
 
-        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+        childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([{}]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
@@ -200,7 +209,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -210,7 +219,7 @@ describe('listProcessor without format handlers', () => {
         const group = createContentModelDocument(document);
         const ol = document.createElement('ol');
 
-        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+        childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([{}]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
@@ -225,7 +234,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -239,7 +248,7 @@ describe('listProcessor without format handlers', () => {
         ol.style.fontFamily = 'a';
         ol.style.fontSize = '10px';
 
-        spyOn(containerProcessor, 'containerProcessor').and.callFake((group, parent, context) => {
+        childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
             expect(context.listFormat.levels).toEqual([{}]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
@@ -258,7 +267,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
@@ -271,7 +280,7 @@ describe('listProcessor without format handlers', () => {
 
         ul.appendChild(innerUl);
 
-        spyOn(containerProcessor, 'containerProcessor').and.callThrough();
+        childProcessor.and.callFake(originalChildProcessor);
         listProcessor(group, ul, context);
 
         expect(group).toEqual({
@@ -280,14 +289,14 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.levels).toEqual([]);
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
 
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(2);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(group, ul, context);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(group, innerUl, context);
+        expect(childProcessor).toHaveBeenCalledTimes(2);
+        expect(childProcessor).toHaveBeenCalledWith(group, ul, context);
+        expect(childProcessor).toHaveBeenCalledWith(group, innerUl, context);
     });
 
     it('Nested UL elements, check context', () => {
@@ -309,6 +318,8 @@ describe('listProcessor without format handlers', () => {
             callback();
         });
 
+        childProcessor.and.callFake(originalChildProcessor);
+
         listProcessor(group, ul, context);
 
         expect(group).toEqual({
@@ -317,7 +328,7 @@ describe('listProcessor without format handlers', () => {
             blocks: [],
         });
 
-        expect(context.listFormat.listParent).toBe(group);
+        expect(context.listFormat.listParent).toBeUndefined();
         expect(context.listFormat.threadItemCounts).toEqual([]);
         expect(context.segmentFormat).toEqual({});
 
