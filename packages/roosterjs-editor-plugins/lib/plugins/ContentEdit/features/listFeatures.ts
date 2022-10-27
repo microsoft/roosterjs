@@ -480,7 +480,10 @@ const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
                     const tempBlock = cursorBlock?.nextElementSibling;
                     const nextBlock = isList(tempBlock) ? tempBlock : tempBlock?.firstChild;
 
-                    if (isList(nextBlock)) {
+                    if (
+                        isList(nextBlock) &&
+                        getTagOfNode(previousBlock) == getTagOfNode(nextBlock)
+                    ) {
                         const element = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
                             event,
                             'previousBlock',

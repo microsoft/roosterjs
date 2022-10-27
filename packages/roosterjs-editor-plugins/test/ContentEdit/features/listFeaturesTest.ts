@@ -731,6 +731,13 @@ describe('listFeatures | mergeListOnBackspaceAfterList', () => {
         );
     });
 
+    it('Should not handle event, lists have different TagName', () => {
+        runTestShouldHandleEvent(
+            `<div><ul><li><span>123</span></li></ul><div id=${ITEM_1}><br></div><ol start="2"><li><span>213</span></li></ol><div><br></div></div>`,
+            false
+        );
+    });
+
     it('should not handle event', () => {
         runTestShouldHandleEvent(`<span id="${ITEM_1}">1</span>`, false);
     });
