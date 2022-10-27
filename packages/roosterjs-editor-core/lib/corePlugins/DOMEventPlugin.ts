@@ -209,7 +209,9 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     }
 
     private onKeyboardEvent = (event: KeyboardEvent) => {
-        if (isCharacterValue(event)) {
+        if (isCharacterValue(event) || (event.which >= Keys.PAGEUP && event.which <= Keys.DOWN)) {
+            // Stop propagation for Character keys and Up/Down/Left/Right/Home/End/PageUp/PageDown
+            // since editor already handles these keys and no need to propagate to parents
             event.stopPropagation();
         }
     };
