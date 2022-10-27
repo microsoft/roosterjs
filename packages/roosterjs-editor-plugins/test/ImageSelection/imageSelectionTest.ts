@@ -106,6 +106,7 @@ describe('ImageSelectionPlugin |', () => {
         const range = document.createRange();
         range.selectNode(target!);
         imageSelection.onPluginEvent(keyDown(Escape));
+        imageSelection.onPluginEvent(keyUp(Escape));
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.Normal);
         expect(selection.areAllCollapsed).toBe(true);
@@ -120,6 +121,7 @@ describe('ImageSelectionPlugin |', () => {
         const range = document.createRange();
         range.selectNode(target!);
         imageSelection.onPluginEvent(keyDown(Space));
+        imageSelection.onPluginEvent(keyUp(Space));
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.Normal);
         expect(selection.areAllCollapsed).toBe(false);
@@ -128,6 +130,17 @@ describe('ImageSelectionPlugin |', () => {
     const keyDown = (key: string): PluginEvent => {
         return {
             eventType: PluginEventType.KeyDown,
+            rawEvent: <KeyboardEvent>{
+                key: key,
+                preventDefault: () => {},
+                stopPropagation: () => {},
+            },
+        };
+    };
+
+    const keyUp = (key: string): PluginEvent => {
+        return {
+            eventType: PluginEventType.KeyUp,
             rawEvent: <KeyboardEvent>{
                 key: key,
                 preventDefault: () => {},

@@ -117,6 +117,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
                     if (image) {
                         newRange = createRange(image);
+                        if (isCut) {
+                            this.deleteImage(this.editor, selection.image.id);
+                        }
                     }
                 } else {
                     newRange =
@@ -278,6 +281,13 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         if (wholeTableSelected || isWholeColumnSelected) {
             table.style.removeProperty('width');
             table.style.removeProperty('height');
+        }
+    }
+
+    private deleteImage(editor: IEditor, imageId: string) {
+        const image = editor.getDocument().querySelector('#' + imageId);
+        if (image) {
+            editor.deleteNode(image);
         }
     }
 }
