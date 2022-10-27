@@ -6,6 +6,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
+import { createHR } from '../../../lib/modelApi/creators/createHR';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -359,6 +360,15 @@ describe('Creators', () => {
             segmentType: 'Image',
             format: {},
             src: 'test',
+        });
+    });
+
+    it('createHR', () => {
+        const hr = createHR();
+
+        expect(hr).toEqual({
+            blockType: 'HR',
+            format: {},
         });
     });
 });
