@@ -6,6 +6,7 @@ import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSetting
 import { entityProcessor } from '../processors/entityProcessor';
 import { fontProcessor } from '../processors/fontProcessor';
 import { generalProcessor } from '../processors/generalProcessor';
+import { hrProcessor } from '../processors/hrProcessor';
 import { imageProcessor } from '../processors/imageProcessor';
 import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
@@ -28,6 +29,13 @@ export const defaultProcessorMap: ElementProcessorMap = {
     font: fontProcessor,
     i: knownElementProcessor,
     img: imageProcessor,
+    h1: tempContainerProcessor,
+    h2: tempContainerProcessor,
+    h3: tempContainerProcessor,
+    h4: tempContainerProcessor,
+    h5: tempContainerProcessor,
+    h6: tempContainerProcessor,
+    hr: hrProcessor,
     li: listItemProcessor,
     ol: listProcessor,
     s: knownElementProcessor,

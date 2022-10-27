@@ -1,6 +1,7 @@
 import RibbonButton from '../../type/RibbonButton';
 import { clearFormat as clearFormatApi } from 'roosterjs-editor-api';
 import { ClearFormatButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import { ClearFormatMode } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -11,6 +12,6 @@ export const clearFormat: RibbonButton<ClearFormatButtonStringKey> = {
     unlocalizedText: 'Clear format',
     iconName: 'ClearFormatting',
     onClick: editor => {
-        clearFormatApi(editor);
+        clearFormatApi(editor, ClearFormatMode.AutoDetect);
     },
 };
