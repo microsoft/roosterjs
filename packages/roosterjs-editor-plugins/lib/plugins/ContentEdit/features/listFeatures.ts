@@ -397,29 +397,38 @@ const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         const target = editor.getElementAtCursor();
-        const range = editor.getSelectionRange();
-        if (range && range.collapsed && target) {
+        if (target) {
             const cursorBlock = StartEndBlockElement.getBlockContext(target);
             const previousBlock = cursorBlock?.previousElementSibling ?? null;
 
-            const tempBlock = cursorBlock?.nextElementSibling;
-            const nextBlock = isList(tempBlock) ? tempBlock : tempBlock?.firstChild;
+            if (isList(previousBlock)) {
+                const range = editor.getSelectionRange();
+                const searcher = editor.getContentSearcherOfCursor(event);
+                const textBeforeCursor = searcher?.getSubStringBefore(4);
+                const nearestInline = searcher?.getNearestNonTextInlineElement();
 
-            if (isList(previousBlock) && isList(nextBlock)) {
-                const element = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
-                    event,
-                    'previousBlock',
-                    () => previousBlock
-                );
-                const nextElement = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
-                    event,
-                    'nextBlock',
-                    () => nextBlock
-                );
+                if (range && range.collapsed && textBeforeCursor === '' && !nearestInline) {
+                    const tempBlock = cursorBlock?.nextElementSibling;
+                    const nextBlock = isList(tempBlock) ? tempBlock : tempBlock?.firstChild;
 
-                return !!element && !!nextElement;
+                    if (isList(nextBlock)) {
+                        const element = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
+                            event,
+                            'previousBlock',
+                            () => previousBlock
+                        );
+                        const nextElement = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
+                            event,
+                            'nextBlock',
+                            () => nextBlock
+                        );
+
+                        return !!element && !!nextElement;
+                    }
+                }
             }
         }
+
         return false;
     },
     handleEvent: (event, editor) => {
