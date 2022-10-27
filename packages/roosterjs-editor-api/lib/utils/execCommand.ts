@@ -1,12 +1,19 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
 import selectWordFromCollapsedRange from './selectWordFromCollapsedRange';
-import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
+import {
+    getObjectKeys,
+    PendableFormatCommandMap,
+    PendableFormatNames,
+    Position,
+} from 'roosterjs-editor-dom';
 //import { ContentPosition } from 'roosterjs-editor-types/lib/enum/ContentPosition';
 //import findClosestElementAncestor from 'roosterjs-editor-dom/lib/utils/findClosestElementAncestor';
 import {
     DocumentCommand,
     IEditor,
+    NodePosition,
     PluginEventType,
+    SelectionRangeEx,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import type { CompatibleDocumentCommand } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -43,64 +50,45 @@ export default function execCommand(
 
         formatUndoSnapshot(editor);
 
-        /*
-        const ciu = findClosestElementAncestor(
-            selection.ranges[0].commonAncestorContainer,
-            editor.getDocument().body,
-            'TEXT'
-        );
-        editor.select(ciu);
-        console.log(selection.ranges[0], ciu);
-        debugger;*/
-
         const originalRange: Range = editor.getSelectionRange();
+        const originalPosition: NodePosition = Position.getStart(originalRange);
 
         if (formatName) {
-            selectWordFromCollapsedRange(originalRange, editor);
+            selectWordFromCollapsedRange(originalRange);
             formatState[formatName] = !formatState[formatName];
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
                 formatState: formatState,
-            }); /*
-            formatUndoSnapshot(
-                editor,
-                () => {
-                    const needToSwitchSelection = selection.type != SelectionRangeTypes.Normal;
-
-                    selection.ranges.forEach(range => {
-                        if (needToSwitchSelection) {
-                            editor.select(range);
-                        }
-                        formatter();
-                    });
-
-                    if (needToSwitchSelection) {
-                        editor.select(selection);
-                    }
-                },
-                apiName
-            );
-            editor.select(originalRange);*/
+            });
+            addFormatToUndo(editor, selection, formatter, apiName);
+            editor.select(originalPosition);
         }
-        //console.log(originalRange);
-        //debugger;
     } else {
-        formatUndoSnapshot(
-            editor,
-            () => {
-                const needToSwitchSelection = selection.type != SelectionRangeTypes.Normal;
-
-                selection.ranges.forEach(range => {
-                    if (needToSwitchSelection) {
-                        editor.select(range);
-                    }
-                    formatter();
-                });
-
-                if (needToSwitchSelection) {
-                    editor.select(selection);
-                }
-            },
-            apiName
-        );
+        addFormatToUndo(editor, selection, formatter, apiName);
     }
+}
+
+function addFormatToUndo(
+    editor: IEditor,
+    selection: SelectionRangeEx,
+    formatter: () => boolean,
+    apiName?: string
+) {
+    formatUndoSnapshot(
+        editor,
+        () => {
+            const needToSwitchSelection = selection.type != SelectionRangeTypes.Normal;
+
+            selection.ranges.forEach(range => {
+                if (needToSwitchSelection) {
+                    editor.select(range);
+                }
+                formatter();
+            });
+
+            if (needToSwitchSelection) {
+                editor.select(selection);
+            }
+        },
+        apiName
+    );
 }

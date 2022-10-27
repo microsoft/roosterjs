@@ -1,46 +1,32 @@
 import selectWordFromCollapsedRange from '../../lib/utils/selectWordFromCollapsedRange';
-import { Editor } from 'roosterjs-editor-core';
-import { IEditor } from 'roosterjs-editor-types';
 
 describe('selectWordFromCollapsedRange', () => {
     let div: HTMLDivElement;
     let span: HTMLSpanElement;
-    let editor: IEditor;
 
     beforeEach(() => {
         div = document.createElement('div');
         div.append((span = document.createElement('span')));
-        div.id = 'id';
-        editor = new Editor(div as HTMLDivElement, {
-            plugins: [],
-            defaultFormat: {
-                textColor: 'black',
-                fontFamily: 'arial',
-                fontSize: '12pt',
-            },
-            experimentalFeatures: [],
-        });
         document.body.append(div);
     });
 
     afterEach(() => {
         div.parentElement?.removeChild(div);
-        editor.dispose();
     });
 
     it('Select Word', () => {
         //'|Word'
-        runTest('Word', () => getRange(0), 0, 0, false);
+        runTest('Word', () => getRange(0), 0, 4, false);
     });
 
     it('Select Word 2', () => {
         //'Wo|rd'
-        runTest('Word', () => getRange(2), 0, 0, false);
+        runTest('Word', () => getRange(2), 0, 4, false);
     });
 
     it('Select word, at the end of a word', () => {
         //' Word| '
-        runTest(' Word ', () => getRange(5), 1, 0, false);
+        runTest(' Word ', () => getRange(5), 1, 5, false);
     });
 
     it('Do not select word, range is not collapsed', () => {
@@ -55,7 +41,7 @@ describe('selectWordFromCollapsedRange', () => {
 
     it('Do not select word, space at end of string 2', () => {
         //' Word |'
-        runTest(' Word ', () => getRange(6), 6, 0, true);
+        runTest(' Word ', () => getRange(6), 6, 6, true);
     });
 
     it('Do not select word, cursor between spaces', () => {
@@ -72,18 +58,9 @@ describe('selectWordFromCollapsedRange', () => {
     ) {
         span.textContent = text;
 
-        editor.focus();
         const range = getRangeInput();
-        selectWordFromCollapsedRange(range, editor);
+        selectWordFromCollapsedRange(range);
 
-        console.log(
-            range.startOffset,
-            startOffset,
-            range.endOffset,
-            endOffset,
-            range.collapsed,
-            isCollapsed
-        );
         expect(range.startOffset).toBe(startOffset);
         expect(range.endOffset).toBe(endOffset);
         expect(range.collapsed).toBe(isCollapsed);
