@@ -736,7 +736,6 @@ describe('listFeatures | mergeListOnBackspaceAfterList', () => {
     });
 
     it('should handle editor async', () => {
-        debugger;
         runTestHandleEvent(
             `<div><ol><li><span>123</span></li></ol><div id=${ITEM_1}><br></div><ol start="2"><li><span>213</span></li></ol><div><br></div></div>`
         );
