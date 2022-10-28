@@ -92,13 +92,7 @@ describe('handleBlockGroup', () => {
             group,
             context
         );
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
-        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
-            clonedChild,
-            context.formatAppliers.segment,
-            group.format,
-            context
-        );
+        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
     });
 
     it('General segment: element with child', () => {
@@ -125,13 +119,7 @@ describe('handleBlockGroup', () => {
             group,
             context
         );
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
-        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
-            clonedChild,
-            context.formatAppliers.segment,
-            group.format,
-            context
-        );
+        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
     });
 
     it('Quote', () => {

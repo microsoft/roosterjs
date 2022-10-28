@@ -106,12 +106,7 @@ describe('handleBlock', () => {
         expect(parent.innerHTML).toBe('<span></span>');
         expect(parent.firstChild).not.toBe(element);
         expect(context.regularSelection.current.segment).toBe(parent.firstChild);
-        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
-            parent.firstChild as HTMLElement,
-            context.formatAppliers.segment,
-            block.format,
-            context
-        );
+        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
     });
 
     it('Entity block', () => {
