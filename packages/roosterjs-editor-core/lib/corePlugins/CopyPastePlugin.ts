@@ -285,9 +285,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     }
 
     private deleteImage(editor: IEditor, imageId: string) {
-        const image = editor.getDocument().querySelector('#' + imageId);
-        if (image) {
-            editor.deleteNode(image);
-        }
+        editor.queryElements('#' + imageId, node => {
+            editor.deleteNode(node);
+        });
     }
 }
