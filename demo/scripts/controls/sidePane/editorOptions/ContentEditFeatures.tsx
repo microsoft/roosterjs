@@ -47,6 +47,7 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
         'When press space after *, -, --, ->, -->, >, =>  in an empty line, toggle bullet',
     autoNumberingList:
         'When press space after an number, a letter or roman number followed by ), ., -, or between parenthesis in an empty line, toggle numbering',
+    mergeListOnBackspaceAfterList: 'When backspacing between lists, merge the lists',
 };
 
 export interface ContentEditFeaturessProps {
