@@ -15,7 +15,7 @@ describe('setBulletListMarkers', () => {
     });
 
     it('square', () => {
-        runTest(BulletListType.Square, 'square');
+        runTest(BulletListType.Square, '"∎ "');
     });
 
     it('dash', () => {
@@ -23,11 +23,11 @@ describe('setBulletListMarkers', () => {
     });
 
     it('long arrow', () => {
-        runTest(BulletListType.LongArrow, '"→ "');
+        runTest(BulletListType.LongArrow, '"➔ "');
     });
 
     it('double long arrow', () => {
-        runTest(BulletListType.DoubleLongArrow, '"→ "');
+        runTest(BulletListType.DoubleLongArrow, '"➔ "');
     });
 
     it('short arrow', () => {

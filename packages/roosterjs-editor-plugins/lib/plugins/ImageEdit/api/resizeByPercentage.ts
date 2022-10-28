@@ -23,7 +23,7 @@ export default function resizeByPercentage(
     const editInfo = getEditInfoFromImage(image);
 
     if (!isResizedTo(image, percentage)) {
-        loadImage(image, editInfo.src, () => {
+        loadImage(image, image.src, () => {
             if (!editor.isDisposed() && editor.contains(image)) {
                 const lastSrc = image.getAttribute('src');
                 const { width, height } = getTargetSizeByPercentage(editInfo, percentage);
