@@ -476,11 +476,7 @@ export default class Editor implements IEditor {
                 table: arg1,
                 coordinates: arg2,
             };
-        } else if (
-            this.isFeatureEnabled(ExperimentalFeatures.ImageSelection) &&
-            safeInstanceOf(arg1, 'HTMLImageElement') &&
-            typeof arg2 == 'undefined'
-        ) {
+        } else if (safeInstanceOf(arg1, 'HTMLImageElement') && typeof arg2 == 'undefined') {
             rangeEx = {
                 type: SelectionRangeTypes.ImageSelection,
                 ranges: [],

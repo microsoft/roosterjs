@@ -2,7 +2,6 @@ import { createRange, safeInstanceOf } from 'roosterjs-editor-dom';
 
 import {
     EditorPlugin,
-    ExperimentalFeatures,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -47,7 +46,7 @@ export default class ImageSelection implements EditorPlugin {
     }
 
     onPluginEvent(event: PluginEvent) {
-        if (this.editor && this.editor.isFeatureEnabled(ExperimentalFeatures.ImageSelection)) {
+        if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.EnteredShadowEdit:
                 case PluginEventType.LeavingShadowEdit:
@@ -57,7 +56,7 @@ export default class ImageSelection implements EditorPlugin {
                     }
                     break;
 
-                case PluginEventType.MouseDown:
+                case PluginEventType.MouseUp:
                     const target = event.rawEvent.target;
                     if (safeInstanceOf(target, 'HTMLImageElement')) {
                         if (event.rawEvent.button === mouseRightButton) {
@@ -68,7 +67,7 @@ export default class ImageSelection implements EditorPlugin {
                         }
                     }
                     break;
-                case PluginEventType.KeyDown:
+                case PluginEventType.KeyUp:
                     const key = event.rawEvent.key;
                     const keyDownSelection = this.editor.getSelectionRangeEx();
                     if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
