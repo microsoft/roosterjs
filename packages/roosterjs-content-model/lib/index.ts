@@ -66,7 +66,7 @@ export { FontSizeFormat } from './publicTypes/format/formatParts/FontSizeFormat'
 export { FontFamilyFormat } from './publicTypes/format/formatParts/FontFamilyFormat';
 export { BoldFormat } from './publicTypes/format/formatParts/BoldFormat';
 export { ItalicFormat } from './publicTypes/format/formatParts/ItalicFormat';
-export { UnderlineFormat } from './publicTypes/format/formatParts/UnderlineFormat';
+export { UnderlineAndLinkFormat } from './publicTypes/format/formatParts/UnderlineAndLinkFormat';
 export { StrikeFormat } from './publicTypes/format/formatParts/StrikeFormat';
 export { SuperOrSubScriptFormat } from './publicTypes/format/formatParts/SuperOrSubScriptFormat';
 export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetadataFormat';

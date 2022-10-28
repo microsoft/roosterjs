@@ -10,7 +10,7 @@ import {
     BoldFormatRenderer,
     ItalicFormatRenderer,
     StrikeFormatRenderer,
-    UnderlineFormatRenderer,
+    UnderlineAndLinkFormatRenderers,
     SuperOrSubScriptFormatRenderer,
 } from './formatPart/BasicFormatRenderers';
 
@@ -21,7 +21,7 @@ const SegmentFormatRenders: FormatRenderer<ContentModelSegmentFormat>[] = [
     FontFamilyFormatRenderer,
     BoldFormatRenderer,
     ItalicFormatRenderer,
-    UnderlineFormatRenderer,
+    ...UnderlineAndLinkFormatRenderers,
     StrikeFormatRenderer,
     SuperOrSubScriptFormatRenderer,
 ];

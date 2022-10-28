@@ -6,7 +6,7 @@ import { ItalicFormat } from './formatParts/ItalicFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
-import { UnderlineFormat } from './formatParts/UnderlineFormat';
+import { UnderlineAndLinkFormat } from './formatParts/UnderlineAndLinkFormat';
 
 /**
  * The format object for a segment in Content Model
@@ -17,6 +17,6 @@ export type ContentModelSegmentFormat = TextColorFormat &
     FontFamilyFormat &
     BoldFormat &
     ItalicFormat &
-    UnderlineFormat &
+    UnderlineAndLinkFormat &
     StrikeFormat &
     SuperOrSubScriptFormat;

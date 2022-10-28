@@ -23,6 +23,8 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
         img.title = imageModel.title;
     }
 
+    parent.appendChild(img);
+
     applyFormat(img, context.formatAppliers.segment, imageModel.format, context);
     applyFormat(img, context.formatAppliers.image, imageModel.format, context);
 
@@ -33,6 +35,4 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
             image: img,
         };
     }
-
-    parent.appendChild(img);
 };

@@ -21,6 +21,7 @@ const tempContainerProcessor = createTempContainerProcessor();
  * @internal
  */
 export const defaultProcessorMap: ElementProcessorMap = {
+    a: knownElementProcessor,
     b: knownElementProcessor,
     blockquote: quoteProcessor,
     br: brProcessor,

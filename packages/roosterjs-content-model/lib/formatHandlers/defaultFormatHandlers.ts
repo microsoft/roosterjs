@@ -26,7 +26,7 @@ import { tableCellMetadataFormatHandler } from './table/tableCellMetadataFormatH
 import { tableMetadataFormatHandler } from './table/tableMetadataFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
-import { underlineFormatHandler } from './segment/underlineFormatHandler';
+import { underlineAndLinkFormatHandler } from './segment/underlineAndLinkFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import {
     FormatApplier,
@@ -68,7 +68,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     tableMetadata: tableMetadataFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
     textColor: textColorFormatHandler,
-    underline: underlineFormatHandler,
+    underline: underlineAndLinkFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
 };
 
@@ -83,11 +83,11 @@ const defaultFormatKeysPerCategory: {
         'strike',
         'fontFamily',
         'fontSize',
-        'underline',
         'italic',
         'bold',
         'textColor',
         'backgroundColor',
+        'underline',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
     tableCell: [

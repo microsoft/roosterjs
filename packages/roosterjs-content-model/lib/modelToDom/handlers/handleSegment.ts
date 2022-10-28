@@ -29,8 +29,9 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
 
             element = doc.createElement('span');
             element.appendChild(txt);
-            regularSelection.current.segment = txt;
+            parent.appendChild(element);
 
+            regularSelection.current.segment = txt;
             applyFormat(element, context.formatAppliers.segment, segment.format, context);
 
             break;
@@ -39,8 +40,9 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
             const br = doc.createElement('br');
             element = doc.createElement('span');
             element.appendChild(br);
-            regularSelection.current.segment = br;
+            parent.appendChild(element);
 
+            regularSelection.current.segment = br;
             applyFormat(element, context.formatAppliers.segment, segment.format, context);
             break;
 
@@ -55,10 +57,6 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
         case 'Entity':
             context.modelHandlers.entity(doc, parent, segment, context);
             break;
-    }
-
-    if (element) {
-        parent.appendChild(element);
     }
 
     // If end position is not set, or it is not finalized, and current segment is still in selection, set end position

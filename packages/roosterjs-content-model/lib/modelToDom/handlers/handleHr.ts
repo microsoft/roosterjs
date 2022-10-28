@@ -13,8 +13,7 @@ export const handleHR: ContentModelHandler<ContentModelHR> = (
     context: ModelToDomContext
 ) => {
     const hrElement = doc.createElement('hr');
+    parent.appendChild(hrElement);
 
     applyFormat(hrElement, context.formatAppliers.block, hr.format, context);
-
-    parent.appendChild(hrElement);
 };

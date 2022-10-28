@@ -13,6 +13,9 @@ const headerElement: Partial<CSSStyleDeclaration> = {
  * @internal
  */
 export const defaultStyleMap: DefaultStyleMap = {
+    a: {
+        textDecoration: 'underline',
+    },
     address: blockElement,
     article: blockElement,
     aside: blockElement,

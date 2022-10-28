@@ -20,7 +20,7 @@ import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
-import { UnderlineFormat } from './formatParts/UnderlineFormat';
+import { UnderlineAndLinkFormat } from './formatParts/UnderlineAndLinkFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 
 /**
@@ -150,7 +150,7 @@ export interface FormatHandlerTypeMap {
     /**
      * Format for UnderlineFormat
      */
-    underline: UnderlineFormat;
+    underline: UnderlineAndLinkFormat;
 
     /**
      * Format for VerticalAlignFormat
