@@ -19,7 +19,6 @@ import {
     getEntityFromElement,
     getEntitySelector,
     getObjectKeys,
-    matchesSelector,
     safeInstanceOf,
     toArray,
     wrap,
@@ -29,8 +28,8 @@ import {
     doubleCheckResize,
     getSideResizeHTML,
     getCornerResizeHTML,
-    getResizeBordersHTML,
     OnShowResizeHandle,
+    getResizeBordersHTML,
 } from './imageEditors/Resizer';
 import {
     ExperimentalFeatures,
@@ -42,18 +41,13 @@ import {
     PluginEvent,
     PluginEventType,
     EntityOperation,
-    Entity,
-    Keys,
-    PositionType,
     CreateElementData,
     KnownCreateElementDataIndex,
     ModeIndependentColor,
+    SelectionRangeTypes,
+    Entity,
 } from 'roosterjs-editor-types';
 import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
-
-const SHIFT_KEYCODE = 16;
-const CTRL_KEYCODE = 17;
-const ALT_KEYCODE = 18;
 
 const DIRECTIONS = 8;
 const DirectionRad = (Math.PI * 2) / DIRECTIONS;
@@ -184,45 +178,28 @@ export default class ImageEdit implements EditorPlugin {
      */
     onPluginEvent(e: PluginEvent) {
         switch (e.eventType) {
+            case PluginEventType.SelectionChanged:
+                if (
+                    e.selectionRangeEx &&
+                    e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection
+                ) {
+                    this.setEditingImage(
+                        e.selectionRangeEx.image,
+                        ImageEditOperation.ResizeAndRotate
+                    );
+                }
+                break;
             case PluginEventType.MouseDown:
                 this.setEditingImage(null);
                 break;
-
-            case PluginEventType.MouseUp:
-                const target = e.rawEvent.target;
-                if (
-                    e.isClicking &&
-                    e.rawEvent.button == 0 &&
-                    safeInstanceOf(target, 'HTMLImageElement') &&
-                    target.isContentEditable &&
-                    matchesSelector(target, this.options.imageSelector)
-                ) {
-                    this.setEditingImage(target, ImageEditOperation.ResizeAndRotate);
-                }
-
-                break;
-
             case PluginEventType.KeyDown:
-                const key = e.rawEvent.which;
-                if (key == Keys.DELETE || key == Keys.BACKSPACE) {
-                    // Set current editing image to null and select the image if any, and do not prevent default of the event
-                    // so that browser will delete the selected image for us
-                    this.setEditingImage(null, true /*selectImage*/);
-                } else if (key == Keys.ESCAPE && this.image) {
-                    // Press ESC should cancel current editing operation, resume back to original edit info
-                    this.editInfo = getEditInfoFromImage(this.image);
-                    this.setEditingImage(null);
-                    e.rawEvent.preventDefault();
-                } else if (key != SHIFT_KEYCODE && key != CTRL_KEYCODE && key != ALT_KEYCODE) {
-                    // For other key, just unselect current image and select it. If this is an input key, the image will be replaced
-                    this.setEditingImage(null, true /*selectImage*/);
-                }
+                this.setEditingImage(null);
                 break;
-
             case PluginEventType.ContentChanged:
                 if (
-                    e.source != ChangeSource.InsertEntity ||
-                    (<Entity>e.data).type != IMAGE_EDIT_WRAPPER_ENTITY_TYPE
+                    (e.source !== ChangeSource.Format && e.source !== ChangeSource.InsertEntity) ||
+                    (e.source === ChangeSource.InsertEntity &&
+                        (<Entity>e.data)?.type != IMAGE_EDIT_WRAPPER_ENTITY_TYPE)
                 ) {
                     // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
                     this.editor.queryElements(
@@ -232,7 +209,6 @@ export default class ImageEdit implements EditorPlugin {
                 }
 
                 break;
-
             case PluginEventType.EntityOperation:
                 if (e.entity.type == IMAGE_EDIT_WRAPPER_ENTITY_TYPE) {
                     if (e.operation == EntityOperation.ReplaceTemporaryContent) {
@@ -288,7 +264,7 @@ export default class ImageEdit implements EditorPlugin {
             typeof operationOrSelect === 'number' ? operationOrSelect : ImageEditOperation.None;
         const selectImage = typeof operationOrSelect === 'number' ? false : !!operationOrSelect;
 
-        if (this.image) {
+        if (!image && this.image) {
             // When there is image in editing, clean up any cached objects and elements
             this.clearDndHelpers();
 
@@ -306,7 +282,6 @@ export default class ImageEdit implements EditorPlugin {
             if (selectImage) {
                 this.editor.select(this.image);
             }
-
             this.image = null;
             this.editInfo = null;
             this.lastSrc = null;
@@ -328,7 +303,7 @@ export default class ImageEdit implements EditorPlugin {
                 this.allowedOperations;
 
             // Create and update editing wrapper and elements
-            const wrapper = this.createWrapper(operation);
+            this.createWrapper(operation);
             this.updateWrapper();
 
             // Init drag and drop
@@ -339,8 +314,7 @@ export default class ImageEdit implements EditorPlugin {
                 ...this.createDndHelpers(ImageEditElementClass.CropContainer, Cropper),
             ];
 
-            // Put cursor next to the image
-            this.editor.select(wrapper, PositionType.After);
+            this.editor.select(this.image);
         }
     }
 
@@ -348,7 +322,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null);
+        this.setEditingImage(null, true);
     };
 
     /**
@@ -367,12 +341,11 @@ export default class ImageEdit implements EditorPlugin {
         wrapper.style.position = 'relative';
         wrapper.style.maxWidth = '100%';
         // keep the same vertical align
-        const originalVerticalAlign = this.image.ownerDocument.defaultView
-            .getComputedStyle(this.image)
-            .getPropertyValue('vertical-align');
+        const originalVerticalAlign = this.getStylePropertyValue(this.image, 'vertical-align');
         if (originalVerticalAlign) {
             wrapper.style.verticalAlign = originalVerticalAlign;
         }
+
         wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         // Cache current src so that we can compare it after edit see if src is changed
@@ -416,6 +389,12 @@ export default class ImageEdit implements EditorPlugin {
             }
         });
         return wrapper;
+    }
+
+    private getStylePropertyValue(element: HTMLElement, property: string): string {
+        return element.ownerDocument.defaultView
+            .getComputedStyle(this.image)
+            .getPropertyValue(property);
     }
 
     /**
