@@ -309,13 +309,7 @@
 <a name='L250'></a><a href='#L250'>250</a>
 <a name='L251'></a><a href='#L251'>251</a>
 <a name='L252'></a><a href='#L252'>252</a>
-<a name='L253'></a><a href='#L253'>253</a>
-<a name='L254'></a><a href='#L254'>254</a>
-<a name='L255'></a><a href='#L255'>255</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L253'></a><a href='#L253'>253</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -455,6 +449,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -492,6 +487,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -578,11 +574,7 @@ import { ImageEditElementClass } from '../types/ImageEditElementClass';
  * will be picked up by ImageEdit code
  */
 export interface OnShowResizeHandle {
-    (
-        elementData: CreateElementData,
-        x: DNDDirectionX,
-        y: DnDDirectionY
-    ): void
+    (elementData: CreateElementData, x: DNDDirectionX, y: DnDDirectionY): void;
 }
 &nbsp;
 const enum HandleTypes {
@@ -622,17 +614,17 @@ export const Resizer: DragAndDropHandler&lt;DragAndDropContext, ResizeInfo&gt; =
                 // first sure newHeight is right，calculate newWidth
 <span class="cstat-no" title="statement not covered" >                newWidth = newHeight * ratio;</span>
 <span class="cstat-no" title="statement not covered" >                if (newWidth &lt; options.minWidth) {</span>
-<span class="cstat-no" title="statement not covered" >                  newWidth = options.minWidth;</span>
-<span class="cstat-no" title="statement not covered" >                  newHeight = newWidth / ratio;</span>
+<span class="cstat-no" title="statement not covered" >                    newWidth = options.minWidth;</span>
+<span class="cstat-no" title="statement not covered" >                    newHeight = newWidth / ratio;</span>
                 }
-              } else {
+            } else {
                 // first sure newWidth is right，calculate newHeight
                 newHeight = newWidth / ratio;
                 <span class="missing-if-branch" title="if path not taken" >I</span>if (newHeight &lt; options.minHeight) {
-<span class="cstat-no" title="statement not covered" >                  newHeight = options.minHeight;</span>
-<span class="cstat-no" title="statement not covered" >                  newWidth = newHeight * ratio;</span>
+<span class="cstat-no" title="statement not covered" >                    newHeight = options.minHeight;</span>
+<span class="cstat-no" title="statement not covered" >                    newWidth = newHeight * ratio;</span>
                 }
-              }
+            }
         }
 &nbsp;
         editInfo.widthPx = newWidth;
@@ -709,18 +701,19 @@ export function <span class="fstat-no" title="function not covered" >getCornerRe
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    Xs.forEach(<span class="fstat-no" title="function not covered" >x </span>=&gt;</span>
 <span class="cstat-no" title="statement not covered" >        Ys.forEach(<span class="fstat-no" title="function not covered" >y </span>=&gt; {</span>
-            let elementData = <span class="cstat-no" title="statement not covered" >(x == '') == (y == '')</span>
-            ? getResizeHandleHTML(
-                  x,
-                  y,
-                  resizeBorderColor,
-                  handlesExperimentalFeatures
-                      ? HandleTypes.CircularHandlesCorner
-                      : HandleTypes.SquareHandles
-              )
-            : null;
+            let elementData =
+<span class="cstat-no" title="statement not covered" >                (x == '') == (y == '')</span>
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles
+                      )
+                    : null;
 <span class="cstat-no" title="statement not covered" >            if (onShowResizeHandle) {</span>
-<span class="cstat-no" title="statement not covered" >                onShowResizeHandle(elementData, x, y)</span>
+<span class="cstat-no" title="statement not covered" >                onShowResizeHandle(elementData, x, y);</span>
             }
 <span class="cstat-no" title="statement not covered" >            result.push(elementData);</span>
         })
@@ -746,16 +739,17 @@ export function <span class="fstat-no" title="function not covered" >getSideResi
     const result: CreateElementData[] = <span class="cstat-no" title="statement not covered" >[];</span>
 <span class="cstat-no" title="statement not covered" >    Xs.forEach(<span class="fstat-no" title="function not covered" >x </span>=&gt;</span>
 <span class="cstat-no" title="statement not covered" >        Ys.forEach(<span class="fstat-no" title="function not covered" >y </span>=&gt; {</span>
-            let elementData = <span class="cstat-no" title="statement not covered" >(x == '') != (y == '')</span>
-            ? getResizeHandleHTML(
-                  x,
-                  y,
-                  resizeBorderColor,
-                  handlesExperimentalFeatures
-                      ? HandleTypes.CircularHandlesCorner
-                      : HandleTypes.SquareHandles
-              )
-            : null;
+            let elementData =
+<span class="cstat-no" title="statement not covered" >                (x == '') != (y == '')</span>
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles
+                      )
+                    : null;
 <span class="cstat-no" title="statement not covered" >            if (onShowResizeHandle) {</span>
 <span class="cstat-no" title="statement not covered" >                onShowResizeHandle(elementData, x, y);</span>
             }
@@ -826,7 +820,7 @@ const setHandleStyle: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Oct 28 2022 13:32:38 GMT+0000 (Coordinated Universal Time)
+                at Fri Oct 28 2022 14:06:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

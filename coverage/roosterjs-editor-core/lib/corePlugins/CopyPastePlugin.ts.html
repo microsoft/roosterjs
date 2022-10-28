@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.91% </span>
+                <span class="strong">66.94% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>82/119</span>
+                <span class='fraction'>83/124</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40.86% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>38/93</span>
+                <span class='fraction'>38/95</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">69.23% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>18/24</span>
+                <span class='fraction'>18/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68.38% </span>
+                <span class="strong">66.39% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>80/117</span>
+                <span class='fraction'>81/122</span>
             </div>
         
             
@@ -340,7 +340,16 @@
 <a name='L281'></a><a href='#L281'>281</a>
 <a name='L282'></a><a href='#L282'>282</a>
 <a name='L283'></a><a href='#L283'>283</a>
-<a name='L284'></a><a href='#L284'>284</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -459,6 +468,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -618,6 +630,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -742,6 +760,9 @@ export default class CopyPastePlugin implements PluginWithState&lt;CopyPastePlug
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                    if (image) {</span>
 <span class="cstat-no" title="statement not covered" >                        newRange = createRange(image);</span>
+<span class="cstat-no" title="statement not covered" >                        if (isCut) {</span>
+<span class="cstat-no" title="statement not covered" >                            this.deleteImage(this.editor, selection.image.id);</span>
+                        }
                     }
                 } else {
                     newRange =
@@ -905,6 +926,12 @@ export default class CopyPastePlugin implements PluginWithState&lt;CopyPastePlug
 <span class="cstat-no" title="statement not covered" >            table.style.removeProperty('height');</span>
         }
     }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    private d</span>eleteImage(editor: IEditor, imageId: string) {
+<span class="cstat-no" title="statement not covered" >        editor.queryElements('#' + imageId, <span class="fstat-no" title="function not covered" >node </span>=&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            editor.deleteNode(node);</span>
+        });
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -913,7 +940,7 @@ export default class CopyPastePlugin implements PluginWithState&lt;CopyPastePlug
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Oct 28 2022 13:32:38 GMT+0000 (Coordinated Universal Time)
+                at Fri Oct 28 2022 14:06:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
