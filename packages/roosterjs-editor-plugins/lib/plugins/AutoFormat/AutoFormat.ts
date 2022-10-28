@@ -36,6 +36,7 @@ export default class AutoFormat implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.lastKeyTyped = null;
     }
 
     /**
@@ -57,7 +58,7 @@ export default class AutoFormat implements EditorPlugin {
         if (event.eventType === PluginEventType.KeyDown) {
             const keyTyped = event.rawEvent.key;
 
-            if (keyTyped.length > 1) {
+            if (keyTyped && keyTyped.length > 1) {
                 this.lastKeyTyped = '';
             }
 
@@ -98,7 +99,7 @@ export default class AutoFormat implements EditorPlugin {
                 );
 
                 //After the substitution the last key typed needs to be cleaned
-                this.lastKeyTyped = '';
+                this.lastKeyTyped = null;
             } else {
                 this.lastKeyTyped = keyTyped;
             }
