@@ -648,3 +648,103 @@ describe('listFeatures | MaintainListChain', () => {
         );
     });
 });
+
+describe('listFeatures | mergeListOnBackspaceAfterList', () => {
+    let editor: IEditor;
+    const TEST_ID = 'listFeatureTests';
+    const ITEM_1 = 'ITEM_1';
+    const getKeyboardEvent = (shiftKey: boolean) =>
+        new KeyboardEvent('keydown', {
+            shiftKey,
+            altKey: false,
+            ctrlKey: false,
+        });
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID);
+
+        editor.runAsync = callback => {
+            callback(editor);
+            return () => {};
+        };
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement?.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    function runTestShouldHandleEvent(content: string, shouldHandle: boolean) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1);
+        if (item) {
+            const range = document.createRange();
+            range.setStart(item, 0);
+            editor.select(range);
+        }
+
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+
+        const triggered = ListFeatures.mergeListOnBackspaceAfterList.shouldHandleEvent(
+            keyboardEvent,
+            editor,
+            false
+        )
+            ? true
+            : false;
+        expect(triggered).toBe(shouldHandle);
+    }
+
+    function runTestHandleEvent(content: string) {
+        editor.setContent(content);
+        editor.focus();
+        const item = editor.getDocument().getElementById(ITEM_1);
+        if (item) {
+            const range = document.createRange();
+            range.setStart(item, 0);
+            range.collapse();
+            editor.select(range);
+        }
+        const keyboardEvent: PluginKeyboardEvent = {
+            eventType: PluginEventType.KeyDown,
+            rawEvent: getKeyboardEvent(false),
+        };
+
+        ListFeatures.mergeListOnBackspaceAfterList.shouldHandleEvent(keyboardEvent, editor, false);
+        item?.parentElement?.removeChild(item);
+        ListFeatures.mergeListOnBackspaceAfterList.handleEvent(keyboardEvent, editor);
+
+        expect(editor.queryElements('ol,ul').length).toEqual(1);
+    }
+
+    it('should handle event', () => {
+        runTestShouldHandleEvent(
+            `<div><ol><li><span>123</span></li></ol><div id=${ITEM_1}><br></div><ol start="2"><li><span>213</span></li></ol><div><br></div></div>`,
+            true
+        );
+    });
+
+    it('Should not handle event, lists have different TagName', () => {
+        runTestShouldHandleEvent(
+            `<div><ul><li><span>123</span></li></ul><div id=${ITEM_1}><br></div><ol start="2"><li><span>213</span></li></ol><div><br></div></div>`,
+            false
+        );
+    });
+
+    it('should not handle event', () => {
+        runTestShouldHandleEvent(`<span id="${ITEM_1}">1</span>`, false);
+    });
+
+    it('should handle editor async', () => {
+        runTestHandleEvent(
+            `<div><ol><li><span>123</span></li></ol><div id=${ITEM_1}><br></div><ol start="2"><li><span>213</span></li></ol><div><br></div></div>`
+        );
+    });
+});
