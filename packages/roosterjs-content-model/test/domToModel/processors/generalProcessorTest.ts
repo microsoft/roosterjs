@@ -75,7 +75,7 @@ describe('generalProcessor', () => {
             document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
-        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {}, {});
         expect(childProcessor).toHaveBeenCalledTimes(1);
         expect(childProcessor).toHaveBeenCalledWith(segment, span, context);
     });

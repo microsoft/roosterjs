@@ -23,8 +23,22 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
         img.title = imageModel.title;
     }
 
-    applyFormat(img, context.formatAppliers.segment, imageModel.format, context);
+    let segmentElement: HTMLElement;
+
+    if (imageModel.link) {
+        segmentElement = doc.createElement('a');
+
+        parent.appendChild(segmentElement);
+        segmentElement.appendChild(img);
+
+        applyFormat(segmentElement, context.formatAppliers.hyperLink, imageModel.link, context);
+    } else {
+        segmentElement = img;
+        parent.appendChild(img);
+    }
+
     applyFormat(img, context.formatAppliers.image, imageModel.format, context);
+    applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
 
     context.regularSelection.current.segment = img;
 
@@ -33,6 +47,4 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
             image: img,
         };
     }
-
-    parent.appendChild(img);
 };

@@ -1,3 +1,4 @@
+import { ContentModelLinkFormat } from '../../publicTypes/format/ContentModelLinkFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
 
@@ -5,11 +6,18 @@ import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentMo
  * @internal
  */
 export function createSelectionMarker(
-    format?: ContentModelSegmentFormat
+    format?: ContentModelSegmentFormat,
+    link?: ContentModelLinkFormat
 ): ContentModelSelectionMarker {
-    return {
+    const result: ContentModelSelectionMarker = {
         segmentType: 'SelectionMarker',
         isSelected: true,
         format: format ? { ...format } : {},
     };
+
+    if (link?.href) {
+        result.link = { ...link };
+    }
+
+    return result;
 }

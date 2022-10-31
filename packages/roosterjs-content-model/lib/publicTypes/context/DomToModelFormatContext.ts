@@ -1,5 +1,6 @@
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
+import { ContentModelLinkFormat } from '../format/ContentModelLinkFormat';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
@@ -41,6 +42,11 @@ export interface DomToModelFormatContext {
      * Context of list that is currently processing
      */
     listFormat: DomToModelListFormat;
+
+    /**
+     * Context of hyper link info
+     */
+    hyperLinkFormat: ContentModelLinkFormat;
 
     /**
      * When process table, whether we should always normalize it.

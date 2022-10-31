@@ -10,14 +10,26 @@ import { stackFormat } from '../utils/stackFormat';
  * @internal
  */
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    if (isBlockElement(element, context)) {
-        stackFormat(
-            context,
-            {
-                segment: 'shallowClone',
-                paragraph: 'shallowClone',
-            },
-            () => {
+    const isBlock = isBlockElement(element, context);
+
+    stackFormat(
+        context,
+        {
+            segment: 'shallowClone',
+            paragraph: 'shallowClone',
+            hyperLink: 'shallowClone',
+        },
+        () => {
+            if (element.tagName == 'A') {
+                parseFormat(
+                    element,
+                    context.formatParsers.hyperLink,
+                    context.hyperLinkFormat,
+                    context
+                );
+            }
+
+            if (isBlock) {
                 parseFormat(element, context.formatParsers.block, context.blockFormat, context);
                 parseFormat(
                     element,
@@ -26,24 +38,23 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                     context
                 );
 
-                const block = createParagraph(false /*isImplicit*/, context.blockFormat);
+                const paragraph = createParagraph(false /*isImplicit*/, context.blockFormat);
 
                 if (safeInstanceOf(element, 'HTMLHeadingElement')) {
-                    block.headerLevel = getHeaderLevel(element);
+                    paragraph.headerLevel = getHeaderLevel(element);
                 }
 
-                addBlock(group, block);
-
-                context.elementProcessors.child(group, element, context);
+                addBlock(group, paragraph);
+            } else {
+                parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             }
-        );
 
-        addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
-    } else {
-        stackFormat(context, { segment: 'shallowClone' }, () => {
-            parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             context.elementProcessors.child(group, element, context);
-        });
+        }
+    );
+
+    if (isBlock) {
+        addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
     }
 };
 

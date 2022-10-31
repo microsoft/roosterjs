@@ -9,6 +9,7 @@ import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import { hyperLinkFormatHandler } from './segment/hyperLinkFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { imageMetadataFormatHandler } from './image/imageMetadataFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
@@ -54,6 +55,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     id: idFormatHandler,
     imageMetadata: imageMetadataFormatHandler,
     italic: italicFormatHandler,
+    link: hyperLinkFormatHandler,
     listItemMetadata: listItemMetadataFormatHandler,
     listItemThread: listItemThreadFormatHandler,
     listLevelMetadata: listLevelMetadataFormatHandler,
@@ -109,6 +111,7 @@ const defaultFormatKeysPerCategory: {
         'backgroundColor',
     ],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'imageMetadata'],
+    hyperLink: ['link'],
 };
 
 /**

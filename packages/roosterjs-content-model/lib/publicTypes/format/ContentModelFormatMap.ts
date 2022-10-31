@@ -1,5 +1,6 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
+import { ContentModelLinkFormat } from './ContentModelLinkFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
@@ -50,4 +51,9 @@ export interface ContentModelFormatMap {
      * Format type for image
      */
     image: ContentModelImageFormat;
+
+    /**
+     * Format type for link
+     */
+    hyperLink: ContentModelLinkFormat;
 }

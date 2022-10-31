@@ -51,6 +51,7 @@ export { ContentModelBlockFormat } from './publicTypes/format/ContentModelBlockF
 export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegmentFormat';
 export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentModelListItemLevelFormat';
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
+export { ContentModelLinkFormat } from './publicTypes/format/ContentModelLinkFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
@@ -73,6 +74,7 @@ export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetad
 export { ContentModelFormatBase } from './publicTypes/format/ContentModelFormatBase';
 export { MarginFormat } from './publicTypes/format/formatParts/MarginFormat';
 export { PaddingFormat } from './publicTypes/format/formatParts/PaddingFormat';
+export { LinkFormat } from './publicTypes/format/formatParts/LinkFormat';
 export { ListTypeFormat } from './publicTypes/format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './publicTypes/format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './publicTypes/format/formatParts/ListMetadataFormat';

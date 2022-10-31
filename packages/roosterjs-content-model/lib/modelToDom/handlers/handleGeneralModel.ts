@@ -16,17 +16,32 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
     context: ModelToDomContext
 ) => {
     const newParent = group.element.cloneNode();
-    parent.appendChild(newParent);
-
-    context.modelHandlers.blockGroupChildren(doc, newParent, group, context);
 
     if (isGeneralSegment(group) && isNodeOfType(newParent, NodeType.Element)) {
         if (!group.element.firstChild) {
             context.regularSelection.current.segment = newParent;
         }
 
-        applyFormat(newParent, context.formatAppliers.segment, group.format, context);
+        let segmentElement: HTMLElement;
+
+        if (group.link) {
+            segmentElement = doc.createElement('a');
+
+            parent.appendChild(segmentElement);
+            segmentElement.appendChild(newParent);
+
+            applyFormat(segmentElement, context.formatAppliers.hyperLink, group.link, context);
+        } else {
+            segmentElement = newParent;
+            parent.appendChild(newParent);
+        }
+
+        applyFormat(segmentElement, context.formatAppliers.segment, group.format, context);
+    } else {
+        parent.appendChild(newParent);
     }
+
+    context.modelHandlers.blockGroupChildren(doc, newParent, group, context);
 };
 
 function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {

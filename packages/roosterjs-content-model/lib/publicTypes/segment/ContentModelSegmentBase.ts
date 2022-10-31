@@ -1,3 +1,4 @@
+import { ContentModelLinkFormat } from '../format/ContentModelLinkFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelSegmentType } from '../enum/SegmentType';
 import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
@@ -18,4 +19,9 @@ export interface ContentModelSegmentBase<
      * Whether this segment is selected
      */
     isSelected?: boolean;
+
+    /**
+     * Hyperlink info
+     */
+    link?: ContentModelLinkFormat;
 }

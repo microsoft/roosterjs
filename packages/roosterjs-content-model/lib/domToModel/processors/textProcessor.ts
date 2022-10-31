@@ -1,7 +1,7 @@
 import { addSegment } from '../../modelApi/common/addSegment';
+import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
@@ -22,7 +22,7 @@ export const textProcessor: ElementProcessor<Text> = (
         addTextSegment(group, txt.substring(0, txtStartOffset), context);
         context.isInSelection = true;
 
-        addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
+        addSelectionMarker(group, context);
 
         txt = txt.substring(txtStartOffset);
         txtEndOffset -= txtStartOffset;
@@ -32,7 +32,7 @@ export const textProcessor: ElementProcessor<Text> = (
         addTextSegment(group, txt.substring(0, txtEndOffset), context);
 
         if (!context.regularSelection!.isSelectionCollapsed) {
-            addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
+            addSelectionMarker(group, context);
         }
 
         context.isInSelection = false;
@@ -57,7 +57,7 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
         ) {
             lastSegment.text += text;
         } else {
-            const textModel = createText(text, context.segmentFormat);
+            const textModel = createText(text, context.segmentFormat, context.hyperLinkFormat);
 
             if (context.isInSelection) {
                 textModel.isSelected = true;

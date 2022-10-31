@@ -27,7 +27,7 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
             parseFormat(element, context.formatParsers.image, imageFormat, context);
             parseFormat(element, context.formatParsers.block, context.blockFormat, context);
 
-            const image = createImage(element.src, imageFormat);
+            const image = createImage(element.src, imageFormat, context.hyperLinkFormat);
             const alt = element.alt;
             const title = element.title;
 

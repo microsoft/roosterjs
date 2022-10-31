@@ -31,6 +31,7 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             isInSelection: false,
             listFormat,
+            hyperLinkFormat: {},
             ...contextOptions,
         });
     });
@@ -53,6 +54,7 @@ describe('createDomToModelContext', () => {
             },
             isInSelection: false,
             listFormat,
+            hyperLinkFormat: {},
             ...contextOptions,
         });
     });
@@ -86,6 +88,7 @@ describe('createDomToModelContext', () => {
                 isSelectionCollapsed: false,
             },
             listFormat,
+            hyperLinkFormat: {},
             ...contextOptions,
         });
     });
@@ -115,6 +118,7 @@ describe('createDomToModelContext', () => {
                 lastCell: { x: 3, y: 4 },
             },
             listFormat,
+            hyperLinkFormat: {},
             ...contextOptions,
         });
     });
@@ -133,6 +137,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
+            hyperLinkFormat: {},
             isInSelection: false,
             imageSelection: {
                 image: 'IMAGE' as any,
