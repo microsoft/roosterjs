@@ -1,8 +1,10 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
+import { ContentModelBr } from '../segment/ContentModelBr';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
+import { ContentModelGeneralBlock } from '../block/group/ContentModelGeneralBlock';
 import { ContentModelHandler } from './ContentModelHandler';
 import { ContentModelHR } from '../block/ContentModelHR';
 import { ContentModelImage } from '../segment/ContentModelImage';
@@ -11,6 +13,7 @@ import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelQuote } from '../block/group/ContentModelQuote';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ContentModelTable } from '../block/ContentModelTable';
+import { ContentModelText } from '../segment/ContentModelText';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
 import { ModelToDomContext } from './ModelToDomContext';
 
@@ -60,9 +63,19 @@ export interface ContentModelHandlerTypeMap {
     blockGroupChildren: ContentModelBlockGroup;
 
     /**
+     * Content Model type for ContentModelBr
+     */
+    br: ContentModelBr;
+
+    /**
      * Content Model type for child models of ContentModelEntity
      */
     entity: ContentModelEntity;
+
+    /**
+     * Content Model type for ContentModelGeneralBlock
+     */
+    general: ContentModelGeneralBlock;
 
     /**
      * Content Model type for ContentModelHR
@@ -103,6 +116,11 @@ export interface ContentModelHandlerTypeMap {
      * Content Model type for ContentModelTable
      */
     table: ContentModelTable;
+
+    /**
+     * Content Model type for ContentModelText
+     */
+    text: ContentModelText;
 }
 
 /**
