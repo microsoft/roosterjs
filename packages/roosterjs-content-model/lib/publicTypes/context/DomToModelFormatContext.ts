@@ -1,8 +1,8 @@
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
-import { ContentModelLinkFormat } from '../format/ContentModelLinkFormat';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 
 /**
  * Represents the context object used when do DOM to Content Model conversion and processing a List
@@ -46,7 +46,7 @@ export interface DomToModelFormatContext {
     /**
      * Context of hyper link info
      */
-    hyperLinkFormat: ContentModelLinkFormat;
+    linkFormat: LinkFormat;
 
     /**
      * When process table, whether we should always normalize it.

@@ -1,6 +1,6 @@
 import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
-import { ContentModelLinkFormat } from '../../publicTypes/format/ContentModelLinkFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
 export function createGeneralSegment(
     element: HTMLElement,
     format?: ContentModelSegmentFormat,
-    link?: ContentModelLinkFormat
+    link?: LinkFormat
 ): ContentModelGeneralSegment {
     const result: ContentModelGeneralSegment = {
         blockType: 'BlockGroup',

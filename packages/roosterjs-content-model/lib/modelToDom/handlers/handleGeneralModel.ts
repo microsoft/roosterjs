@@ -30,7 +30,7 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
             parent.appendChild(segmentElement);
             segmentElement.appendChild(newParent);
 
-            applyFormat(segmentElement, context.formatAppliers.hyperLink, group.link, context);
+            applyFormat(segmentElement, context.formatAppliers.link, group.link, context);
         } else {
             segmentElement = newParent;
             parent.appendChild(newParent);

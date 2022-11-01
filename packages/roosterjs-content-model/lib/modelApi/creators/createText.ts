@@ -1,6 +1,6 @@
-import { ContentModelLinkFormat } from '../../publicTypes/format/ContentModelLinkFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
+import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 export function createText(
     text: string,
     format?: ContentModelSegmentFormat,
-    link?: ContentModelLinkFormat
+    link?: LinkFormat
 ): ContentModelText {
     const result: ContentModelText = {
         segmentType: 'Text',

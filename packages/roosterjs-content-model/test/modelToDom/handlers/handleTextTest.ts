@@ -24,7 +24,7 @@ describe('handleSegment', () => {
         expect(parent.innerHTML).toBe('<span>test</span>');
     });
 
-    it('Text segment', () => {
+    it('Text segment with format', () => {
         const text: ContentModelText = {
             segmentType: 'Text',
             text: 'test',
@@ -34,5 +34,18 @@ describe('handleSegment', () => {
         handleText(document, parent, text, context);
 
         expect(parent.innerHTML).toBe('<span style="color: red;">test</span>');
+    });
+
+    it('Text segment with link', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: { underline: true },
+            link: { href: '/test' },
+        };
+
+        handleText(document, parent, text, context);
+
+        expect(parent.innerHTML).toBe('<a href="/test">test</a>');
     });
 });

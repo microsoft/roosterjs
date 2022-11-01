@@ -53,11 +53,12 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
             lastSegment &&
             lastSegment.segmentType == 'Text' &&
             !!lastSegment.isSelected == !!context.isInSelection &&
-            areSameFormats(lastSegment.format, context.segmentFormat)
+            areSameFormats(lastSegment.format, context.segmentFormat) &&
+            areSameFormats(lastSegment.link || {}, context.linkFormat)
         ) {
             lastSegment.text += text;
         } else {
-            const textModel = createText(text, context.segmentFormat, context.hyperLinkFormat);
+            const textModel = createText(text, context.segmentFormat, context.linkFormat);
 
             if (context.isInSelection) {
                 textModel.isSelected = true;

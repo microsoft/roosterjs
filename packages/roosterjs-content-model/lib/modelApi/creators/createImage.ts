@@ -1,6 +1,6 @@
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ContentModelImageFormat } from '../../publicTypes/format/ContentModelImageFormat';
-import { ContentModelLinkFormat } from '../../publicTypes/format/ContentModelLinkFormat';
+import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ import { ContentModelLinkFormat } from '../../publicTypes/format/ContentModelLin
 export function createImage(
     src: string,
     format?: ContentModelImageFormat,
-    link?: ContentModelLinkFormat
+    link?: LinkFormat
 ): ContentModelImage {
     const result: ContentModelImage = {
         segmentType: 'Image',

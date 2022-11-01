@@ -5,7 +5,7 @@ import { safeInstanceOf } from 'roosterjs-editor-dom';
 /**
  * @internal
  */
-export const hyperLinkFormatHandler: FormatHandler<LinkFormat> = {
+export const linkFormatHandler: FormatHandler<LinkFormat> = {
     parse: (format, element) => {
         if (safeInstanceOf(element, 'HTMLAnchorElement')) {
             const href = element.getAttribute('href'); // Use getAttribute to get original HREF but not the resolved absolute url

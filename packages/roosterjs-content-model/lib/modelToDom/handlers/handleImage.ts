@@ -31,7 +31,7 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
         parent.appendChild(segmentElement);
         segmentElement.appendChild(img);
 
-        applyFormat(segmentElement, context.formatAppliers.hyperLink, imageModel.link, context);
+        applyFormat(segmentElement, context.formatAppliers.link, imageModel.link, context);
     } else {
         segmentElement = img;
         parent.appendChild(img);

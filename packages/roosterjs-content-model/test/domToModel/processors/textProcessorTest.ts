@@ -284,4 +284,116 @@ describe('textProcessor', () => {
             format: {},
         });
     });
+
+    it('Handle text with link format', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test');
+
+        context.linkFormat = { href: '/test' };
+
+        textProcessor(doc, text, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {},
+                    link: { href: '/test' },
+                },
+            ],
+            isImplicit: true,
+            format: {},
+        });
+    });
+
+    it('Handle text with selection and link format 1', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test2');
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+
+        context.isInSelection = true;
+        context.linkFormat = { href: '/test' };
+
+        textProcessor(doc, text, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    isSelected: true,
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                    link: { href: '/test' },
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('Handle text with selection and link format 2', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test');
+
+        context.linkFormat = { href: '/test' };
+        context.regularSelection = {
+            startContainer: text,
+            startOffset: 2,
+            endContainer: text,
+            endOffset: 2,
+            isSelectionCollapsed: true,
+        };
+
+        textProcessor(doc, text, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'te',
+                    format: {},
+                    link: {
+                        href: '/test',
+                    },
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                    link: {
+                        href: '/test',
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'st',
+                    format: {},
+                    link: { href: '/test' },
+                },
+            ],
+            format: {},
+        });
+    });
 });

@@ -51,7 +51,6 @@ export { ContentModelBlockFormat } from './publicTypes/format/ContentModelBlockF
 export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegmentFormat';
 export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentModelListItemLevelFormat';
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
-export { ContentModelLinkFormat } from './publicTypes/format/ContentModelLinkFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';

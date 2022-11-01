@@ -1,7 +1,7 @@
-import { ContentModelLinkFormat } from '../format/ContentModelLinkFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelSegmentType } from '../enum/SegmentType';
 import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 
 /**
  * Base type of Content Model Segment
@@ -23,5 +23,5 @@ export interface ContentModelSegmentBase<
     /**
      * Hyperlink info
      */
-    link?: ContentModelLinkFormat;
+    link?: LinkFormat;
 }

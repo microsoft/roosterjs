@@ -17,16 +17,11 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         {
             segment: 'shallowClone',
             paragraph: 'shallowClone',
-            hyperLink: 'shallowClone',
+            link: 'shallowClone',
         },
         () => {
             if (element.tagName == 'A') {
-                parseFormat(
-                    element,
-                    context.formatParsers.hyperLink,
-                    context.hyperLinkFormat,
-                    context
-                );
+                parseFormat(element, context.formatParsers.link, context.linkFormat, context);
             }
 
             if (isBlock) {

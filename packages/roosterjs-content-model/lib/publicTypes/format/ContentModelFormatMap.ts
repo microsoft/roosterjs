@@ -1,10 +1,10 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
-import { ContentModelLinkFormat } from './ContentModelLinkFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
 import { ContentModelTableFormat } from './ContentModelTableFormat';
+import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 
 /**
  * A map from Content Model format name to its combined format type
@@ -55,5 +55,5 @@ export interface ContentModelFormatMap {
     /**
      * Format type for link
      */
-    hyperLink: ContentModelLinkFormat;
+    link: LinkFormat;
 }
