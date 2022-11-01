@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -101,7 +101,21 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,25 +139,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">180x</span>
-<span class="cline-any cline-yes">180x</span>
+<span class="cline-any cline-yes">279x</span>
+<span class="cline-any cline-yes">279x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">90x</span>
-<span class="cline-any cline-yes">90x</span>
-<span class="cline-any cline-yes">90x</span>
+<span class="cline-any cline-yes">93x</span>
+<span class="cline-any cline-yes">93x</span>
+<span class="cline-any cline-yes">93x</span>
+<span class="cline-any cline-yes">93x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">90x</span>
+<span class="cline-any cline-yes">93x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">90x</span>
-<span class="cline-any cline-yes">90x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">93x</span>
+<span class="cline-any cline-yes">93x</span>
+<span class="cline-any cline-yes">93x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">180x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">186x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
@@ -151,7 +167,12 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 /**
  * @internal
  */
-export type ShallowObjectStackType = 'shallowClone' | 'empty';
+export type ObjectStackType = 'empty';
+&nbsp;
+/**
+ * @internal
+ */
+export type ShallowObjectStackType = 'shallowClone' | ObjectStackType;
 &nbsp;
 /**
  * @internal
@@ -159,6 +180,7 @@ export type ShallowObjectStackType = 'shallowClone' | 'empty';
 export interface StackFormatOptions {
     segment?: ShallowObjectStackType;
     paragraph?: ShallowObjectStackType;
+    link?: ObjectStackType;
 }
 &nbsp;
 /**
@@ -169,17 +191,19 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () =&gt; void
 ) {
-    const { segmentFormat, blockFormat } = context;
-    const { segment, paragraph } = options;
+    const { segmentFormat, blockFormat, linkFormat } = context;
+    const { segment, paragraph, link } = options;
 &nbsp;
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
+        context.linkFormat = link == 'empty' ? {} : linkFormat;
 &nbsp;
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
         context.blockFormat = blockFormat;
+        context.linkFormat = linkFormat;
     }
 }
 &nbsp;
@@ -196,7 +220,7 @@ function stackFormatInternal&lt;T extends ContentModelFormatBase&gt;(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Oct 31 2022 23:06:25 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 01 2022 22:00:22 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
