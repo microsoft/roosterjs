@@ -8,9 +8,10 @@ import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
-import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
+import { getRotateHTML, Rotator } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { insertEntity } from 'roosterjs-editor-api';
+
 import {
     arrayPush,
     Browser,
@@ -111,9 +112,10 @@ export default class ImageEdit implements EditorPlugin {
     // Current editing image
     private image: HTMLImageElement;
 
-    //Cloned image
+    // Image cloned from the current editing image
     private clonedImage: HTMLImageElement;
 
+    // Current editing image id
     private imageId: string;
 
     // Current edit info of the image. All changes user made will be stored in this object.
@@ -231,6 +233,10 @@ export default class ImageEdit implements EditorPlugin {
                     deleteEditInfo(img as HTMLImageElement);
                 });
                 break;
+
+            case PluginEventType.Scroll:
+                this.setEditingImage(null);
+                break;
         }
     }
 
@@ -286,10 +292,12 @@ export default class ImageEdit implements EditorPlugin {
             if (selectImage) {
                 this.editor.select(this.image);
             }
+
             this.image = null;
-            this.imageId = '';
+            this.imageId = null;
             this.editInfo = null;
             this.lastSrc = null;
+            this.clonedImage = null;
         }
 
         if (!this.image && image?.isContentEditable) {
@@ -335,12 +343,13 @@ export default class ImageEdit implements EditorPlugin {
      * Create editing wrapper for the image
      */
     private createWrapper(operation: ImageEditOperation | CompatibleImageEditOperation) {
-        // Wrap the image with an entity so that we can easily retrieve it later
+        //Clone the image and insert the clone in a entity
         const clone = this.image.cloneNode();
         const wrappedImage = wrap(clone, KnownCreateElementDataIndex.ImageEditWrapper);
 
         this.clonedImage = wrappedImage.firstElementChild as HTMLImageElement;
 
+        // Wrap the cloned image with an entity so that we can easily retrieve it later
         const { wrapper } = insertEntity(
             this.editor,
             IMAGE_EDIT_WRAPPER_ENTITY_TYPE,
@@ -365,6 +374,7 @@ export default class ImageEdit implements EditorPlugin {
 
         // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
         this.image.style.visibility = 'hidden';
+        this.image.src = this.editInfo.src;
         this.clonedImage.src = this.editInfo.src;
         this.clonedImage.style.position = 'absolute';
         this.clonedImage.style.maxWidth = null;
@@ -421,7 +431,6 @@ export default class ImageEdit implements EditorPlugin {
 
     /**
      * Get image wrapper from image
-     * @param image The image to get wrapper from
      */
     private getImageWrapper(): HTMLElement {
         return document.getElementById(this.imageId);
@@ -429,7 +438,6 @@ export default class ImageEdit implements EditorPlugin {
 
     /**
      * Remove the temp wrapper of the image
-     * @param wrapper The wrapper object to remove. If not specified, remove all existing wrappers.
      */
     private removeWrapper = () => {
         const wrapperImage = this.getImageWrapper();
@@ -448,8 +456,6 @@ export default class ImageEdit implements EditorPlugin {
             // Prepare: get related editing elements
             const cropContainers = getEditElements(wrapper, ImageEditElementClass.CropContainer);
             const cropOverlays = getEditElements(wrapper, ImageEditElementClass.CropOverlay);
-            const rotateCenter = getEditElements(wrapper, ImageEditElementClass.RotateCenter)[0];
-            const rotateHandle = getEditElements(wrapper, ImageEditElementClass.RotateHandle)[0];
             const resizeHandles = getEditElements(wrapper, ImageEditElementClass.ResizeHandle);
             const cropHandles = getEditElements(wrapper, ImageEditElementClass.CropHandle);
 
@@ -527,14 +533,6 @@ export default class ImageEdit implements EditorPlugin {
 
                     this.updateWrapper();
                 }
-
-                updateRotateHandlePosition(
-                    this.editInfo,
-                    this.editor.getRelativeDistanceToEditor(wrapper, true /*addScroll*/),
-                    marginVertical,
-                    rotateCenter,
-                    rotateHandle
-                );
 
                 updateHandleCursor(resizeHandles, angleRad);
             }
