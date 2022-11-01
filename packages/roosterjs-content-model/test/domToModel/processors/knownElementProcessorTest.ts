@@ -33,6 +33,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -79,6 +80,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -156,6 +158,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -193,6 +196,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });

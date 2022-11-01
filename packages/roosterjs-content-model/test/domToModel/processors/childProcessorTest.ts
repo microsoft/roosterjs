@@ -101,6 +101,7 @@ describe('childProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
             document: document,

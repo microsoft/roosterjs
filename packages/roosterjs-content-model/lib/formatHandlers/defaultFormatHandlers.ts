@@ -4,6 +4,7 @@ import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { ContentModelFormatMap } from '../publicTypes/format/ContentModelFormatMap';
 import { directionFormatHandler } from './block/directionFormatHandler';
+import { displayFormatHandler } from './block/displayFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
@@ -12,6 +13,7 @@ import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
 import { imageMetadataFormatHandler } from './image/imageMetadataFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
@@ -50,11 +52,13 @@ const defaultFormatHandlerMap: FormatHandlers = {
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
     direction: directionFormatHandler,
+    display: displayFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
     imageMetadata: imageMetadataFormatHandler,
     italic: italicFormatHandler,
+    lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
     listItemMetadata: listItemMetadataFormatHandler,
     listItemThread: listItemThreadFormatHandler,
@@ -77,7 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
 const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
-    block: ['backgroundColor', 'direction', 'margin', 'padding'],
+    block: ['backgroundColor', 'direction', 'margin', 'padding', 'lineHeight'],
     listItem: ['listItemThread', 'listItemMetadata'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
     segment: [
@@ -109,6 +113,7 @@ const defaultFormatKeysPerCategory: {
         'tableSpacing',
         'margin',
         'backgroundColor',
+        'display',
     ],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'imageMetadata'],
     link: ['link'],
