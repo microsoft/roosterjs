@@ -108,4 +108,31 @@ describe('handleBlockGroup', () => {
         );
         expect(applyFormat.applyFormat).toHaveBeenCalled();
     });
+
+    it('General segment: element with link', () => {
+        const clonedChild = document.createElement('span');
+        const childMock = ({
+            cloneNode: () => clonedChild,
+            firstChild: true,
+        } as any) as HTMLElement;
+        const group = createGeneralSegment(childMock, { underline: true }, { href: '/test' });
+
+        spyOn(applyFormat, 'applyFormat').and.callThrough();
+
+        handleGeneralModel(document, parent, group, context);
+
+        expect(parent.outerHTML).toBe('<div><a href="/test"><span></span></a></div>');
+        expect(context.regularSelection.current.segment).toBeNull();
+        expect(typeof parent.firstChild).toBe('object');
+        expect(parent.firstChild).toBe(clonedChild.parentElement);
+        expect(context.listFormat.nodeStack).toEqual([]);
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+            document,
+            clonedChild,
+            group,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalled();
+    });
 });

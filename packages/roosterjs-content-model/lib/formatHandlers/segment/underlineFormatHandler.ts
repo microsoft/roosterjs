@@ -11,13 +11,19 @@ export const underlineFormatHandler: FormatHandler<UnderlineFormat> = {
 
         if (textDecoration?.indexOf('underline')! >= 0) {
             format.underline = true;
+        } else if (element.tagName == 'A' && textDecoration == 'none') {
+            format.underline = false;
         }
     },
     apply: (format, element) => {
-        if (format.underline) {
+        const isLink = element.tagName == 'A';
+
+        if (format.underline && !isLink) {
             const u = element.ownerDocument.createElement('u');
             moveChildNodes(u, element);
             element.appendChild(u);
+        } else if (!format.underline && isLink) {
+            element.style.textDecoration = 'none';
         }
     },
 };

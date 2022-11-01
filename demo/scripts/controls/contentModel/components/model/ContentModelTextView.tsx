@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ContentModelText } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
+import { LinkFormatView } from '../format/LinkFormatView';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { useProperty } from '../../hooks/useProperty';
 
@@ -22,7 +23,12 @@ export function ContentModelTextView(props: { text: ContentModelText }) {
     }, [text, value]);
 
     const getFormat = React.useCallback(() => {
-        return <SegmentFormatView format={text.format} />;
+        return (
+            <>
+                <SegmentFormatView format={text.format} />
+                {text.link && <LinkFormatView format={text.link} />}
+            </>
+        );
     }, [text.format]);
 
     return (
