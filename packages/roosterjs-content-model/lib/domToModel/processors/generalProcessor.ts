@@ -29,6 +29,8 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
         segment.isSelected = true;
     }
 
+    addSegment(group, segment);
+
     stackFormat(
         context,
         {
@@ -36,7 +38,6 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
                 'empty' /*clearFormat, General segment will include all properties and styles when generate back to HTML, so no need to carry over existing segment format*/,
         },
         () => {
-            addSegment(group, segment);
             context.elementProcessors.child(segment, element, context);
         }
     );

@@ -1,6 +1,10 @@
-import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
+import { ContentModelBr } from '../../../lib/publicTypes/segment/ContentModelBr';
+import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
+import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
+import { ContentModelText } from '../../../lib/publicTypes/segment/ContentModelText';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
@@ -8,51 +12,53 @@ import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomCo
 describe('handleSegment', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleBlock: jasmine.Spy<ContentModelHandler<ContentModelBlock>>;
+    let handleBr: jasmine.Spy<ContentModelHandler<ContentModelBr>>;
+    let handleText: jasmine.Spy<ContentModelHandler<ContentModelText>>;
+    let handleGeneralModel: jasmine.Spy<ContentModelHandler<ContentModelGeneralBlock>>;
+    let handleEntity: jasmine.Spy<ContentModelHandler<ContentModelEntity>>;
+    let handleImage: jasmine.Spy<ContentModelHandler<ContentModelImage>>;
 
     beforeEach(() => {
-        handleBlock = jasmine.createSpy('handleBlock');
+        parent = document.createElement('div');
+        handleBr = jasmine.createSpy('handleBr');
+        handleText = jasmine.createSpy('handleText');
+        handleGeneralModel = jasmine.createSpy('handleGeneralModel');
+        handleEntity = jasmine.createSpy('handleEntity');
+        handleImage = jasmine.createSpy('handleImage');
+
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
-                block: handleBlock,
+                br: handleBr,
+                text: handleText,
+                general: handleGeneralModel,
+                entity: handleEntity,
+                image: handleImage,
             },
         });
     });
 
-    function runTest(
-        segment: ContentModelSegment,
-        expectedInnerHTML: string,
-        expectedCreateBlockFromContentModelCalledTimes: number
-    ) {
-        parent = document.createElement('div');
-
-        handleSegment(document, parent, segment, context);
-
-        expect(parent.innerHTML).toBe(expectedInnerHTML);
-        expect(handleBlock).toHaveBeenCalledTimes(expectedCreateBlockFromContentModelCalledTimes);
-    }
-
     it('Text segment', () => {
-        runTest(
-            {
-                segmentType: 'Text',
-                text: 'test',
-                format: {},
-            },
-            '<span>test</span>',
-            0
-        );
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+
+        handleSegment(document, parent, text, context);
+
+        expect(handleText).toHaveBeenCalledWith(document, parent, text, context);
+        expect(parent.innerHTML).toBe('');
     });
 
     it('Br segment', () => {
-        runTest(
-            {
-                segmentType: 'Br',
-                format: {},
-            },
-            '<span><br></span>',
-            0
-        );
+        const br: ContentModelBr = {
+            segmentType: 'Br',
+            format: {},
+        };
+        handleSegment(document, parent, br, context);
+
+        expect(parent.innerHTML).toBe('');
+        expect(handleBr).toHaveBeenCalledWith(document, parent, br, context);
     });
 
     it('general segment', () => {
@@ -64,8 +70,10 @@ describe('handleSegment', () => {
             element: null!,
             format: {},
         };
-        runTest(segment, '', 1);
-        expect(handleBlock).toHaveBeenCalledWith(document, parent, segment, context);
+
+        handleSegment(document, parent, segment, context);
+        expect(parent.innerHTML).toBe('');
+        expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, segment, context);
     });
 
     it('entity segment', () => {
@@ -79,17 +87,21 @@ describe('handleSegment', () => {
             wrapper: div,
             isReadonly: true,
         };
-        runTest(segment, '<!--Entity:entity_1-->', 0);
 
-        expect(context.entityPairs).toEqual([
-            {
-                entityWrapper: div,
-                placeholder: document.createComment('Entity:entity_1'),
-            },
-        ]);
+        handleSegment(document, parent, segment, context);
+        expect(parent.innerHTML).toBe('');
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context);
+    });
 
-        expect(div.outerHTML).toBe(
-            '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
-        );
+    it('image segment', () => {
+        const segment: ContentModelSegment = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+        };
+
+        handleSegment(document, parent, segment, context);
+        expect(parent.innerHTML).toBe('');
+        expect(handleImage).toHaveBeenCalledWith(document, parent, segment, context);
     });
 });
