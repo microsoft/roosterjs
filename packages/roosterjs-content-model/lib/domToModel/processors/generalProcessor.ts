@@ -24,7 +24,7 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
 };
 
 const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const segment = createGeneralSegment(element, context.segmentFormat, context.linkFormat);
+    const segment = createGeneralSegment(element, context.segmentFormat, context.linkFormat.format);
 
     if (context.isInSelection && !element.firstChild) {
         segment.isSelected = true;

@@ -9,7 +9,7 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 export function addSelectionMarker(group: ContentModelBlockGroup, context: DomToModelContext) {
     addSegment(
         group,
-        createSelectionMarker(context.segmentFormat, context.linkFormat),
+        createSelectionMarker(context.segmentFormat, context.linkFormat.format),
         context.blockFormat
     );
 }

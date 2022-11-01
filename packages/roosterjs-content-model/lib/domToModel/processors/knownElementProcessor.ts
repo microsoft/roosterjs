@@ -11,17 +11,24 @@ import { stackFormat } from '../utils/stackFormat';
  */
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const isBlock = isBlockElement(element, context);
+    const isLink = element.tagName == 'A';
 
     stackFormat(
         context,
         {
             segment: 'shallowClone',
             paragraph: 'shallowClone',
-            link: 'shallowClone',
+            link: isLink ? 'empty' : undefined,
         },
         () => {
-            if (element.tagName == 'A') {
-                parseFormat(element, context.formatParsers.link, context.linkFormat, context);
+            if (isLink) {
+                context.linkFormat.format = {};
+                parseFormat(
+                    element,
+                    context.formatParsers.link,
+                    context.linkFormat.format,
+                    context
+                );
             }
 
             if (isBlock) {

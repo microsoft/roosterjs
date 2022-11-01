@@ -4,7 +4,12 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 /**
  * @internal
  */
-export type ShallowObjectStackType = 'shallowClone' | 'empty';
+export type ObjectStackType = 'empty';
+
+/**
+ * @internal
+ */
+export type ShallowObjectStackType = 'shallowClone' | ObjectStackType;
 
 /**
  * @internal
@@ -12,7 +17,7 @@ export type ShallowObjectStackType = 'shallowClone' | 'empty';
 export interface StackFormatOptions {
     segment?: ShallowObjectStackType;
     paragraph?: ShallowObjectStackType;
-    link?: ShallowObjectStackType;
+    link?: ObjectStackType;
 }
 
 /**
@@ -29,7 +34,7 @@ export function stackFormat(
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
-        context.linkFormat = stackFormatInternal(linkFormat, link);
+        context.linkFormat = link == 'empty' ? {} : linkFormat;
 
         callback();
     } finally {

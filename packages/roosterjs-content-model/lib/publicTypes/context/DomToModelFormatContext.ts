@@ -25,6 +25,18 @@ export interface DomToModelListFormat {
 }
 
 /**
+ * Represents the context object used when do DOM to Content Model conversion and processing a link
+ */
+export interface DomToModelLinkFormat {
+    /**
+     * Current link format
+     */
+    format?: LinkFormat;
+
+    // TODO: Add more properties here for hyper link
+}
+
+/**
  * Represents format info used by DOM to Content Model conversion
  */
 export interface DomToModelFormatContext {
@@ -46,7 +58,7 @@ export interface DomToModelFormatContext {
     /**
      * Context of hyper link info
      */
-    linkFormat: LinkFormat;
+    linkFormat: DomToModelLinkFormat;
 
     /**
      * When process table, whether we should always normalize it.

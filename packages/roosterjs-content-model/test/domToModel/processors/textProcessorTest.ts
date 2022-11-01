@@ -289,7 +289,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
-        context.linkFormat = { href: '/test' };
+        context.linkFormat = { format: { href: '/test' } };
 
         textProcessor(doc, text, context);
 
@@ -326,7 +326,7 @@ describe('textProcessor', () => {
         });
 
         context.isInSelection = true;
-        context.linkFormat = { href: '/test' };
+        context.linkFormat = { format: { href: '/test' } };
 
         textProcessor(doc, text, context);
 
@@ -355,7 +355,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
-        context.linkFormat = { href: '/test' };
+        context.linkFormat = { format: { href: '/test' } };
         context.regularSelection = {
             startContainer: text,
             startOffset: 2,

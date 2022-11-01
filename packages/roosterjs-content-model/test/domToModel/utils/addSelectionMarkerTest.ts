@@ -94,7 +94,7 @@ describe('addSelectionMarker', () => {
         const context = createDomToModelContext();
 
         context.linkFormat = {
-            href: '/test',
+            format: { href: '/test' },
         };
 
         addSelectionMarker(doc, context);

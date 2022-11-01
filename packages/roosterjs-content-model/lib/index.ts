@@ -89,6 +89,7 @@ export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMa
 export { EditorContext } from './publicTypes/context/EditorContext';
 export {
     DomToModelListFormat,
+    DomToModelLinkFormat,
     DomToModelFormatContext,
 } from './publicTypes/context/DomToModelFormatContext';
 export {

@@ -170,7 +170,7 @@ describe('imageProcessor', () => {
         const img = document.createElement('img');
 
         context.linkFormat = {
-            href: '/test',
+            format: { href: '/test' },
         };
         img.src = 'http://test.com/testSrc';
 
