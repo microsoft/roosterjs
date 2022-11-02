@@ -1,7 +1,6 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { hasSpacesOnly } from '../../domUtils/hasSpacesOnly';
 
 /**
  * @internal
@@ -50,7 +49,7 @@ export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
 export function isSegmentEmpty(segment: ContentModelSegment): boolean {
     switch (segment.segmentType) {
         case 'Text':
-            return !segment.text || hasSpacesOnly(segment.text);
+            return !segment.text;
 
         case 'Image':
             return !segment.src;

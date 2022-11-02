@@ -259,7 +259,7 @@ describe('isEmpty', () => {
             text: ' \t \r \n ',
         });
 
-        expect(result).toBeTrue();
+        expect(result).toBeFalse();
     });
 
     it('Text has content', () => {

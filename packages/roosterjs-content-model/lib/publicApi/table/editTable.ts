@@ -92,7 +92,11 @@ export default function editTable(
         }
 
         normalizeTable(tableModel);
-        applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+
+        // TODO: Need a better way to check if model has metadata
+        if (tableModel.format.topBorderColor) {
+            applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+        }
 
         editor.addUndoSnapshot(
             () => {

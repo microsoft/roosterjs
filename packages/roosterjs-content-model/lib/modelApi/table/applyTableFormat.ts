@@ -135,10 +135,12 @@ function formatBorders(cells: ContentModelTableCell[][], format: TableMetadataFo
             ];
 
             transparentBorderMatrix.forEach((alwaysUseTransparent, i) => {
+                const borderColor = (!alwaysUseTransparent && formatColor[i]) || '';
+
                 cell.format[BorderKeys[i]] = combineBorderValue({
-                    style: 'solid',
+                    style: getBorderStyleFromColor(borderColor),
                     width: '1px',
-                    color: (!alwaysUseTransparent && formatColor[i]) || 'transparent',
+                    color: borderColor,
                 });
             });
         });
@@ -175,12 +177,12 @@ function setFirstColumnFormat(
                 cell.isHeader = true;
 
                 if (rowIndex !== 0 && !cell.format.bgColorOverride) {
-                    setBorderColor(cell.format, 'borderTop', 'transparent');
+                    setBorderColor(cell.format, 'borderTop');
                     setBackgroundColor(cell.format, null /*color*/);
                 }
 
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
-                    setBorderColor(cell.format, 'borderBottom', 'transparent');
+                    setBorderColor(cell.format, 'borderBottom');
                 }
             } else {
                 cell.isHeader = false;
@@ -205,7 +207,8 @@ function setHeaderRowFormat(cells: ContentModelTableCell[][], format: TableMetad
 
 function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: string) {
     const border = extractBorderValues(format[key]);
-    border.color = value || 'transparent';
+    border.color = value || '';
+    border.style = getBorderStyleFromColor(border.color);
     format[key] = combineBorderValue(border);
 }
 
@@ -217,4 +220,8 @@ function setBackgroundColor(format: ContentModelTableCellFormat, color: string |
     } else {
         delete format.backgroundColor;
     }
+}
+
+function getBorderStyleFromColor(color?: string): string {
+    return !color || color == 'transparent' ? 'none' : 'solid';
 }

@@ -440,13 +440,7 @@ describe('textProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {},
-                            text: '\u00a0',
-                        },
-                    ],
+                    segments: [],
                 },
             ],
             document: document,

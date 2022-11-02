@@ -45,12 +45,6 @@ export const textProcessor: ElementProcessor<Text> = (
 
 function addTextSegment(group: ContentModelBlockGroup, text: string, context: DomToModelContext) {
     if (text) {
-        // When there is only CR/Space in the text, we may not need it. Even we need, it will only be rendered as a space.
-        // So replace it as a space here
-        if (hasSpacesOnly(text)) {
-            text = ' ';
-        }
-
         const lastBlock = group.blocks[group.blocks.length - 1];
         const paragraph = lastBlock?.blockType == 'Paragraph' ? lastBlock : null;
         const lastSegment = paragraph?.segments[paragraph.segments.length - 1];
@@ -62,8 +56,7 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
             areSameFormats(lastSegment.link || {}, context.linkFormat.format || {})
         ) {
             lastSegment.text += text;
-        } else if (text != ' ' || (paragraph && !paragraph.isImplicit)) {
-            text = text == ' ' ? '\u00A0' /*&nbsp;*/ : text;
+        } else if (!hasSpacesOnly(text) || paragraph?.segments.length! > 0) {
             const textModel = createText(text, context.segmentFormat, context.linkFormat.format);
 
             if (context.isInSelection) {

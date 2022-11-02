@@ -114,6 +114,7 @@ const defaultFormatKeysPerCategory: {
         'margin',
         'backgroundColor',
         'display',
+        'direction',
     ],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'imageMetadata'],
     link: ['link'],
