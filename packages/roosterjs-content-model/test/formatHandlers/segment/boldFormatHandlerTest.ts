@@ -127,4 +127,33 @@ describe('boldFormatHandler.apply', () => {
 
         expect(div.outerHTML).toEqual('<div><b>test</b></div>');
     });
+
+    it('Turn off bold when there is bold from block', () => {
+        div.innerHTML = 'test';
+        context.segmentFormatFromBlock.fontWeight = 'bold';
+
+        boldFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div style="font-weight: normal;">test</div>');
+    });
+
+    it('Change bold when there is bold from block', () => {
+        div.innerHTML = 'test';
+        context.segmentFormatFromBlock.fontWeight = 'bold';
+        format.fontWeight = '600';
+
+        boldFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div style="font-weight: 600;">test</div>');
+    });
+
+    it('No change when bold from block and same with current format', () => {
+        div.innerHTML = 'test';
+        context.segmentFormatFromBlock.fontWeight = 'bold';
+        format.fontWeight = 'bold';
+
+        boldFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div>test</div>');
+    });
 });
