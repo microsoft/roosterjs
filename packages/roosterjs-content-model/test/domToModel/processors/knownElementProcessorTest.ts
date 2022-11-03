@@ -1,6 +1,7 @@
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { DefaultLinkColorPlaceholder } from '../../../lib/domToModel/context/defaultStyles';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
@@ -195,5 +196,39 @@ describe('knownElementProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Simple Anchor element', () => {
+        const group = createContentModelDocument(document);
+        const a = document.createElement('a');
+
+        a.href = '/test';
+        a.textContent = 'test';
+
+        knownElementProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                underline: true,
+                                textColor: DefaultLinkColorPlaceholder,
+                            },
+                            link: { href: '/test' },
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.linkFormat).toEqual({});
     });
 });

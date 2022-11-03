@@ -1,3 +1,4 @@
+import { DefaultLinkColorPlaceholder } from '../../domToModel/context/defaultStyles';
 import { FormatHandler } from '../FormatHandler';
 import { getColor, setColor } from '../utils/color';
 import { TextColorFormat } from '../../publicTypes/format/formatParts/TextColorFormat';
@@ -15,7 +16,9 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
         }
     },
     apply: (format, element, context) => {
-        if (format.textColor) {
+        const isLink = element.tagName == 'A';
+
+        if (format.textColor && (!isLink || format.textColor != DefaultLinkColorPlaceholder)) {
             setColor(
                 element,
                 format.textColor,

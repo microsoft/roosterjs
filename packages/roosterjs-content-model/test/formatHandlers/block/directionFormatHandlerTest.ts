@@ -22,7 +22,8 @@ describe('directionFormatHandler.parse', () => {
         directionCssValue: string | null,
         directionAttrVAlue: string | null,
         expectedAlignValue: 'start' | 'center' | 'end' | undefined,
-        expectedDirectionValue: 'ltr' | 'rtl' | undefined
+        expectedDirectionValue: 'ltr' | 'rtl' | undefined,
+        expectedIsAlignFromAttr: boolean | undefined
     ) {
         if (textAlignCssValue) {
             div.style.textAlign = textAlignCssValue;
@@ -44,6 +45,7 @@ describe('directionFormatHandler.parse', () => {
 
         expect(format.textAlign).toBe(expectedAlignValue);
         expect(format.direction).toBe(expectedDirectionValue);
+        expect(format.isTextAlignFromAttr).toBe(expectedIsAlignFromAttr);
     }
 
     it('No alignment, no direction', () => {
@@ -52,45 +54,45 @@ describe('directionFormatHandler.parse', () => {
     });
 
     it('Direction in CSS', () => {
-        runTest(null, null, 'rtl', null, undefined, 'rtl');
+        runTest(null, null, 'rtl', null, undefined, 'rtl', undefined);
     });
 
     it('Direction in attribute', () => {
-        runTest(null, null, null, 'rtl', undefined, 'rtl');
+        runTest(null, null, null, 'rtl', undefined, 'rtl', undefined);
     });
 
     it('Direction in both', () => {
-        runTest(null, null, 'ltr', 'rtl', undefined, 'ltr');
+        runTest(null, null, 'ltr', 'rtl', undefined, 'ltr', undefined);
     });
 
     it('Align in CSS', () => {
-        runTest('left', null, null, null, 'start', undefined);
+        runTest('left', null, null, null, 'start', undefined, undefined);
     });
 
     it('Align in attribute', () => {
-        runTest(null, 'left', null, null, 'start', undefined);
+        runTest(null, 'left', null, null, 'start', undefined, true);
     });
 
     it('Align in both CSS and attribute', () => {
-        runTest('left', 'right', null, null, 'start', undefined);
+        runTest('left', 'right', null, null, 'start', undefined, undefined);
     });
 
     it('LTR', () => {
-        runTest('left', null, null, null, 'start', undefined);
-        runTest('center', null, null, null, 'center', undefined);
-        runTest('right', null, null, null, 'end', undefined);
-        runTest('start', null, null, null, 'start', undefined);
-        runTest('end', null, null, null, 'end', undefined);
+        runTest('left', null, null, null, 'start', undefined, undefined);
+        runTest('center', null, null, null, 'center', undefined, undefined);
+        runTest('right', null, null, null, 'end', undefined, undefined);
+        runTest('start', null, null, null, 'start', undefined, undefined);
+        runTest('end', null, null, null, 'end', undefined, undefined);
     });
 
     it('RTL', () => {
         context.isRightToLeft = true;
 
-        runTest('left', null, 'rtl', null, 'end', 'rtl');
-        runTest('center', null, 'rtl', null, 'center', 'rtl');
-        runTest('right', null, 'rtl', null, 'start', 'rtl');
-        runTest('start', null, 'rtl', null, 'start', 'rtl');
-        runTest('end', null, 'rtl', null, 'end', 'rtl');
+        runTest('left', null, 'rtl', null, 'end', 'rtl', undefined);
+        runTest('center', null, 'rtl', null, 'center', 'rtl', undefined);
+        runTest('right', null, 'rtl', null, 'start', 'rtl', undefined);
+        runTest('start', null, 'rtl', null, 'start', 'rtl', undefined);
+        runTest('end', null, 'rtl', null, 'end', 'rtl', undefined);
     });
 });
 
@@ -148,5 +150,12 @@ describe('directionFormatHandler.apply', () => {
         format.textAlign = 'center';
         directionFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="text-align: center;"></div>');
+    });
+
+    it('Align right in attr', () => {
+        format.textAlign = 'end';
+        format.isTextAlignFromAttr = true;
+        directionFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div align="right"></div>');
     });
 });

@@ -46,6 +46,10 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
                 format.textAlign = align;
                 break;
         }
+
+        if (align && !element.style.textAlign) {
+            format.isTextAlignFromAttr = true;
+        }
     },
     apply: (format, element) => {
         if (format.direction) {
@@ -53,8 +57,13 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         }
 
         if (format.textAlign) {
-            element.style.textAlign =
-                ResultMap[format.textAlign][format.direction == 'rtl' ? 'rtl' : 'ltr'];
+            const value = ResultMap[format.textAlign][format.direction == 'rtl' ? 'rtl' : 'ltr'];
+
+            if (format.isTextAlignFromAttr) {
+                element.setAttribute('align', value);
+            } else {
+                element.style.textAlign = value;
+            }
         }
     },
 };

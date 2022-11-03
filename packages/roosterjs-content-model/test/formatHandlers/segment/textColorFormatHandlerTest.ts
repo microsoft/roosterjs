@@ -1,5 +1,6 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DefaultLinkColorPlaceholder } from '../../../lib/domToModel/context/defaultStyles';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { TextColorFormat } from '../../../lib/publicTypes/format/formatParts/TextColorFormat';
@@ -91,6 +92,24 @@ describe('textColorFormatHandler.parse', () => {
 
         expect(format.textColor).toBe('red');
     });
+
+    it('Color from hyperlink', () => {
+        textColorFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+
+        expect(format).toEqual({
+            textColor: DefaultLinkColorPlaceholder,
+        });
+    });
+
+    it('Color from hyperlink with override', () => {
+        div.style.color = 'red';
+
+        textColorFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+
+        expect(format).toEqual({
+            textColor: 'red',
+        });
+    });
 });
 
 describe('textColorFormatHandler.apply', () => {
@@ -127,5 +146,32 @@ describe('textColorFormatHandler.apply', () => {
         textColorFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toBe('<div data-ogsc="red" style="color: green;"></div>');
+    });
+
+    it('HyperLink without color', () => {
+        const a = document.createElement('a');
+
+        textColorFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toBe('<a></a>');
+    });
+
+    it('HyperLink with default color', () => {
+        const a = document.createElement('a');
+
+        format.textColor = DefaultLinkColorPlaceholder;
+        textColorFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toBe('<a></a>');
+    });
+
+    it('HyperLink with color override', () => {
+        const a = document.createElement('a');
+
+        format.textColor = 'red';
+
+        textColorFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toBe('<a style="color: red;"></a>');
     });
 });
