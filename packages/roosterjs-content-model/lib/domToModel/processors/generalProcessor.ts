@@ -14,6 +14,7 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
         {
             segment: 'empty',
             paragraph: 'empty',
+            link: 'empty',
         },
         () => {
             addBlock(group, block);
@@ -23,11 +24,13 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
 };
 
 const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const segment = createGeneralSegment(element, context.segmentFormat);
+    const segment = createGeneralSegment(element, context.segmentFormat, context.linkFormat.format);
 
     if (context.isInSelection && !element.firstChild) {
         segment.isSelected = true;
     }
+
+    addSegment(group, segment);
 
     stackFormat(
         context,
@@ -36,7 +39,6 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
                 'empty' /*clearFormat, General segment will include all properties and styles when generate back to HTML, so no need to carry over existing segment format*/,
         },
         () => {
-            addSegment(group, segment);
             context.elementProcessors.child(segment, element, context);
         }
     );

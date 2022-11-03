@@ -164,4 +164,38 @@ describe('imageProcessor', () => {
             ],
         });
     });
+
+    it('Image with link format', () => {
+        const doc = createContentModelDocument(document);
+        const img = document.createElement('img');
+
+        context.linkFormat = {
+            format: { href: '/test' },
+        };
+        img.src = 'http://test.com/testSrc';
+
+        imageProcessor(doc, img, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            format: {},
+                            src: 'http://test.com/testSrc',
+                            link: {
+                                href: '/test',
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

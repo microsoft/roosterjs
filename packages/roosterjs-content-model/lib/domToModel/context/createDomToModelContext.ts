@@ -29,6 +29,7 @@ export function createDomToModelContext(
             levels: [],
             threadItemCounts: [],
         },
+        linkFormat: {},
 
         elementProcessors: {
             ...defaultProcessorMap,

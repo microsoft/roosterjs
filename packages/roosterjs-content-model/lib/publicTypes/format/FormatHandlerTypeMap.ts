@@ -8,6 +8,7 @@ import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ImageMetadataFormat } from './formatParts/ImageMetadataFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
+import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
@@ -76,6 +77,11 @@ export interface FormatHandlerTypeMap {
      * Format for ItalicFormat
      */
     italic: ItalicFormat;
+
+    /**
+     * Format for LinkFormat
+     */
+    link: LinkFormat;
 
     /**
      * Format for ListMetadataFormat (used by list item)

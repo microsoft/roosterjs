@@ -18,7 +18,32 @@ export function getSelectedParagraphs(group: ContentModelBlockGroup): SelectedPa
 
     getSelectedParagraphsInternal([group], result);
 
+    // Remove tail paragraph if first selection marker is the only selection
+    if (result.length > 1 && isOnlySelectionMarkerSelected(result, false /*checkFirstParagraph*/)) {
+        result.pop();
+    }
+
+    // Remove head paragraph if first selection marker is the only selection
+    if (result.length > 1 && isOnlySelectionMarkerSelected(result, true /*checkFirstParagraph*/)) {
+        result.shift();
+    }
+
     return result;
+}
+
+function isOnlySelectionMarkerSelected(
+    paragraphs: SelectedParagraphWithPath[],
+    checkFirstParagraph: boolean
+): boolean {
+    const paragraph = paragraphs[checkFirstParagraph ? 0 : paragraphs.length - 1].paragraph;
+    const selectedSegments = paragraph.segments.filter(s => s.isSelected);
+
+    return (
+        selectedSegments.length == 1 &&
+        selectedSegments[0].segmentType == 'SelectionMarker' &&
+        selectedSegments[0] ==
+            paragraph.segments[checkFirstParagraph ? paragraph.segments.length - 1 : 0]
+    );
 }
 
 function getSelectedParagraphsInternal(

@@ -68,4 +68,15 @@ describe('handleSegment', () => {
 
         runTest(segment, '<img src="http://test.com/test" alt="a" title="b">', 0);
     });
+
+    it('image segment with link', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true },
+            link: { href: '/test' },
+        };
+
+        runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
+    });
 });

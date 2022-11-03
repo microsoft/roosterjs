@@ -73,6 +73,7 @@ export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetad
 export { ContentModelFormatBase } from './publicTypes/format/ContentModelFormatBase';
 export { MarginFormat } from './publicTypes/format/formatParts/MarginFormat';
 export { PaddingFormat } from './publicTypes/format/formatParts/PaddingFormat';
+export { LinkFormat } from './publicTypes/format/formatParts/LinkFormat';
 export { ListTypeFormat } from './publicTypes/format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './publicTypes/format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './publicTypes/format/formatParts/ListMetadataFormat';
@@ -88,6 +89,7 @@ export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMa
 export { EditorContext } from './publicTypes/context/EditorContext';
 export {
     DomToModelListFormat,
+    DomToModelLinkFormat,
     DomToModelFormatContext,
 } from './publicTypes/context/DomToModelFormatContext';
 export {
