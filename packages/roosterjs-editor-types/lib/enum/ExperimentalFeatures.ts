@@ -98,6 +98,7 @@ export const enum ExperimentalFeatures {
     PendingStyleBasedFormat = 'PendingStyleBasedFormat',
 
     /**
+     * @deprecated this feature is always disabled
      * Normalize list to make sure it can be displayed correctly in other client
      * e.g. We will move list items with "display: block" into previous list item and change tag to be DIV
      */
