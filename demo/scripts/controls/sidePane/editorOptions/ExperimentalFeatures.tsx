@@ -28,6 +28,8 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Image Selection: the selected image data will be stored by editor core',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
+    [ExperimentalFeatures.DefaultFormatInSpan]:
+        'When apply default format when initialize or user type, apply the format on a SPAN element.',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<

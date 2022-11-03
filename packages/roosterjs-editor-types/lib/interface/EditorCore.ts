@@ -123,11 +123,14 @@ export type CreatePasteFragment = (
  * @param core The EditorCore object.
  * @param position The position that user is about to type to
  * @param keyboardEvent Optional keyboard event object
+ * @param applyFormatToSpan Optional When set to true, default format (if any) will be applied to
+ * a SPAN element inside the block element instead of the block element itself.
  */
 export type EnsureTypeInContainer = (
     core: EditorCore,
     position: NodePosition,
-    keyboardEvent?: KeyboardEvent
+    keyboardEvent?: KeyboardEvent,
+    applyFormatToSpan?: boolean
 ) => void;
 
 /**
@@ -327,6 +330,8 @@ export interface CoreApiMap {
      * @param core The EditorCore object.
      * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
+     * @param applyFormatToSpan Optional When set to true, default format (if any) will be applied to
+     * a SPAN element inside the block element instead of the block element itself.
      */
     ensureTypeInContainer: EnsureTypeInContainer;
 

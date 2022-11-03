@@ -114,4 +114,10 @@ export const enum ExperimentalFeatures {
      * is the one closest to the item.
      */
     ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
+
+    /**
+     * When apply default format when initialize or user type, apply the format on a SPAN element rather than
+     * the block element (In most case, the DIV element) so keep the block element clean.
+     */
+    DefaultFormatInSpan = 'DefaultFormatInSpan',
 }
