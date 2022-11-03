@@ -90,6 +90,7 @@ export const enum ExperimentalFeatures {
     AutoHyphen = 'AutoHyphen',
 
     /**
+     * @deprecated this feature is always disabled
      * Use pending format strategy to do style based format, e.g. Font size, Color.
      * With this feature enabled, we don't need to insert temp ZeroWidthSpace character to hold pending format
      * when selection is collapsed. Instead, we will hold the pending format in memory and only apply it when type something
