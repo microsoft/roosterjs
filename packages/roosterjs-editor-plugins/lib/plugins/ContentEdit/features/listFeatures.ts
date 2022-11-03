@@ -340,7 +340,9 @@ const getPreviousListType = (editor: IEditor, textRange: Range, listType: ListTy
     const type = listType === ListType.Ordered ? 'orderedStyleType' : 'unorderedStyleType';
     const previousNode = getPreviousList(editor, textRange);
 
-    return previousNode && getTagOfNode(previousNode) === 'LI'
+    return previousNode &&
+        getTagOfNode(previousNode) === 'LI' &&
+        getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata)
         ? getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata)[type]
         : null;
 };
