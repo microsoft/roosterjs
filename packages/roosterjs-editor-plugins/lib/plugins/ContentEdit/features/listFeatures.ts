@@ -21,6 +21,7 @@ import {
     createObjectDefinition,
     createNumberDefinition,
     getMetadata,
+    findClosestElementAncestor,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -304,7 +305,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                         ? 1
                         : parseInt(textBeforeCursor);
 
-                    const isLi = getPreviousList(editor, textRange);
+                    const isLi = getPreviousListItem(editor, textRange);
                     const listStyle = getAutoNumberingListStyle(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
@@ -322,7 +323,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
     },
 };
 
-const getPreviousList = (editor: IEditor, textRange: Range) => {
+const getPreviousListItem = (editor: IEditor, textRange: Range) => {
     const previousNode = editor
         .getBodyTraverser(textRange?.startContainer)
         .getPreviousBlockElement()
@@ -332,11 +333,16 @@ const getPreviousList = (editor: IEditor, textRange: Range) => {
 
 const getPreviousListType = (editor: IEditor, textRange: Range, listType: ListType) => {
     const type = listType === ListType.Ordered ? 'orderedStyleType' : 'unorderedStyleType';
-    const previousNode = getPreviousList(editor, textRange);
-
-    return previousNode && getTagOfNode(previousNode) === 'LI'
-        ? getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata)[type]
+    const listItem = getPreviousListItem(editor, textRange);
+    const list = listItem
+        ? findClosestElementAncestor(
+              listItem,
+              undefined /** root*/,
+              listType === ListType.Ordered ? 'ol' : 'ul'
+          )
         : null;
+    const metadata = list ? getMetadata(list, ListStyleDefinitionMetadata) : null;
+    return metadata ? metadata[type] : null;
 };
 
 const isFirstItemOfAList = (item: string) => {
