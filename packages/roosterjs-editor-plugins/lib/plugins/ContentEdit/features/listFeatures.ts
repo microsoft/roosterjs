@@ -339,12 +339,9 @@ const getPreviousList = (editor: IEditor, textRange: Range) => {
 const getPreviousListType = (editor: IEditor, textRange: Range, listType: ListType) => {
     const type = listType === ListType.Ordered ? 'orderedStyleType' : 'unorderedStyleType';
     const previousNode = getPreviousList(editor, textRange);
+    const metadata = getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata);
 
-    return previousNode &&
-        getTagOfNode(previousNode) === 'LI' &&
-        getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata)
-        ? getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata)[type]
-        : null;
+    return previousNode && getTagOfNode(previousNode) === 'LI' && metadata ? metadata[type] : null;
 };
 
 const isFirstItemOfAList = (item: string) => {
