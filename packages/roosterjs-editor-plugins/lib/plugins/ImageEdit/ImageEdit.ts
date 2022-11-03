@@ -129,6 +129,11 @@ export default class ImageEdit implements EditorPlugin {
     private wasResized: boolean;
 
     /**
+     * Editor zoom scale
+     */
+    private zoomScale: number;
+
+    /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
      * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
@@ -172,6 +177,7 @@ export default class ImageEdit implements EditorPlugin {
         this.disposer();
         this.disposer = null;
         this.editor = null;
+        this.zoomScale = null;
     }
 
     /**
@@ -213,6 +219,10 @@ export default class ImageEdit implements EditorPlugin {
 
             case PluginEventType.Scroll:
                 this.setEditingImage(null);
+                break;
+            case PluginEventType.ZoomChanged:
+                this.zoomScale = e.newZoomScale;
+
                 break;
         }
     }
@@ -422,9 +432,8 @@ export default class ImageEdit implements EditorPlugin {
         const doc = this.editor.getDocument();
         if (this.wrapper && doc.body?.contains(this.wrapper)) {
             doc.body?.removeChild(this.wrapper);
-            this.image.style.removeProperty('visibility');
+            this.showImage(this.image);
         }
-        this.showImage(this.image);
         this.wrapper = null;
     };
 
@@ -473,7 +482,10 @@ export default class ImageEdit implements EditorPlugin {
             this.wrapper.style.width = getPx(visibleWidth);
             this.wrapper.style.height = getPx(visibleHeight);
             this.wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
-            this.wrapper.style.transform = `rotate(${angleRad}rad)`;
+            this.wrapper.style.transform = this.zoomScale
+                ? `rotate(${angleRad}rad) scale(${this.zoomScale})`
+                : `rotate(${angleRad}rad)`;
+            this.wrapper.style.transformOrigin = 'top left';
 
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
