@@ -24,7 +24,6 @@ import {
     createNumberDefinition,
     getMetadata,
     findClosestElementAncestor,
-    getComputedStyle,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -335,6 +334,11 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
                 if (textRange) {
+                    const number = isFirstItemOfAList(textBeforeCursor)
+                        ? 1
+                        : parseInt(textBeforeCursor);
+
+                    const isLi = getPreviousListItem(editor, textRange);
                     const listStyle = getAutoNumberingListStyle(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
@@ -353,7 +357,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 const getPreviousListItem = (editor: IEditor, textRange: Range) => {
-    const blockElement = editor
+    const previousNode = editor
         .getBodyTraverser(textRange?.startContainer)
         .getPreviousBlockElement();
     const previousNode = blockElement?.getEndNode();
