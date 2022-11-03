@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.62% </span>
+                <span class="strong">62% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>122/198</span>
+                <span class='fraction'>124/200</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.15% </span>
+                <span class="strong">54.55% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>107/194</span>
+                <span class='fraction'>108/198</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.24% </span>
+                <span class="strong">62.63% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>122/196</span>
+                <span class='fraction'>124/198</span>
             </div>
         
             
@@ -627,7 +627,13 @@
 <a name='L568'></a><a href='#L568'>568</a>
 <a name='L569'></a><a href='#L569'>569</a>
 <a name='L570'></a><a href='#L570'>570</a>
-<a name='L571'></a><a href='#L571'>571</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L571'></a><a href='#L571'>571</a>
+<a name='L572'></a><a href='#L572'>572</a>
+<a name='L573'></a><a href='#L573'>573</a>
+<a name='L574'></a><a href='#L574'>574</a>
+<a name='L575'></a><a href='#L575'>575</a>
+<a name='L576'></a><a href='#L576'>576</a>
+<a name='L577'></a><a href='#L577'>577</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -638,6 +644,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -968,10 +975,15 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-yes">38x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1222,6 +1234,7 @@ import {
     createObjectDefinition,
     createNumberDefinition,
     getMetadata,
+    findClosestElementAncestor,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -1509,7 +1522,7 @@ const AutoNumberingList: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
                         ? 1
                         : parseInt(textBeforeCursor);
 &nbsp;
-                    const isLi = <span class="cstat-no" title="statement not covered" >getPreviousList(editor, textRange);</span>
+                    const isLi = <span class="cstat-no" title="statement not covered" >getPreviousListItem(editor, textRange);</span>
                     const listStyle = <span class="cstat-no" title="statement not covered" >getAutoNumberingListStyle(textBeforeCursor);</span>
 <span class="cstat-no" title="statement not covered" >                    prepareAutoBullet(editor, textRange);</span>
 <span class="cstat-no" title="statement not covered" >                    toggleNumbering(</span>
@@ -1527,7 +1540,7 @@ const AutoNumberingList: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
     },
 };
 &nbsp;
-const getPreviousList = (editor: IEditor, textRange: Range) =&gt; {
+const getPreviousListItem = (editor: IEditor, textRange: Range) =&gt; {
     const previousNode = editor
         .getBodyTraverser(<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >textRange?.s</span>tartContainer)</span>
         .getPreviousBlockElement()<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" ></span></span>
@@ -1537,11 +1550,16 @@ const getPreviousList = (editor: IEditor, textRange: Range) =&gt; {
 &nbsp;
 const getPreviousListType = (editor: IEditor, textRange: Range, listType: ListType) =&gt; {
     const type = listType === ListType.Ordered ? 'orderedStyleType' : 'unorderedStyleType';
-    const previousNode = getPreviousList(editor, textRange);
-&nbsp;
-    return previousNode &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >getTagOfNode(previousNode) === 'LI'</span>
-        ? <span class="branch-0 cbranch-no" title="branch not covered" >getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata)[type]</span>
+    const listItem = getPreviousListItem(editor, textRange);
+    const list = listItem
+        ? <span class="branch-0 cbranch-no" title="branch not covered" >findClosestElementAncestor(</span>
+              listItem,
+              undefined /** root*/,
+              listType === ListType.Ordered ? 'ol' : 'ul'
+          )
         : null;
+    const metadata = list ? <span class="branch-0 cbranch-no" title="branch not covered" >getMetadata(list, ListStyleDefinitionMetadata) </span>: null;
+    return metadata ? <span class="branch-0 cbranch-no" title="branch not covered" >metadata[type] </span>: null;
 };
 &nbsp;
 const isFirstItemOfAList = (item: string) =&gt; {
@@ -1774,7 +1792,7 @@ function isList(element: Node | null | undefined): element is HTMLOListElement |
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Nov 01 2022 22:00:22 GMT+0000 (Coordinated Universal Time)
+                at Thu Nov 03 2022 21:15:26 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
