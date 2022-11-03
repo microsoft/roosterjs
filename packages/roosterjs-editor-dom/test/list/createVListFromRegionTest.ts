@@ -57,7 +57,7 @@ describe('createVListFromRegion from selection, no sibling list', () => {
         runTest(`<div id="${FocusNode}"></div>`, [
             {
                 listTypes: [ListType.None],
-                outerHTML: '<li><br></li>',
+                outerHTML: '<li><span><br></span></li>',
             },
         ]);
     });
