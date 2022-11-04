@@ -3,11 +3,13 @@ import { BoldFormat } from './formatParts/BoldFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
 import { DirectionFormat } from './formatParts/DirectionFormat';
+import { DisplayFormat } from './formatParts/DisplayFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ImageMetadataFormat } from './formatParts/ImageMetadataFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
+import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
@@ -54,6 +56,11 @@ export interface FormatHandlerTypeMap {
     direction: DirectionFormat;
 
     /**
+     * Format for DisplayFormat
+     */
+    display: DisplayFormat;
+
+    /**
      * Format for FontFamilyFormat
      */
     fontFamily: FontFamilyFormat;
@@ -77,6 +84,11 @@ export interface FormatHandlerTypeMap {
      * Format for ItalicFormat
      */
     italic: ItalicFormat;
+
+    /**
+     * Format for LineHeightFormat
+     */
+    lineHeight: LineHeightFormat;
 
     /**
      * Format for LinkFormat

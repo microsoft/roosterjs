@@ -33,6 +33,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -79,6 +80,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -147,7 +149,7 @@ describe('knownElementProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { bold: true, fontFamily: 'Test' },
+                            format: { fontWeight: 'bold', fontFamily: 'Test' },
                             text: 'test',
                         },
                     ],
@@ -156,6 +158,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -184,7 +187,7 @@ describe('knownElementProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { bold: false },
+                            format: { fontWeight: 'normal' },
                             text: 'test',
                         },
                     ],
@@ -193,6 +196,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });

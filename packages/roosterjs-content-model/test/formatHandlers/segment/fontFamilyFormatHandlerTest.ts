@@ -41,6 +41,14 @@ describe('fontFamilyFormatHandler.parse', () => {
 
         expect(format.fontFamily).toBe('test1');
     });
+
+    it('inherit', () => {
+        format.fontFamily = 'Arial';
+        div.style.fontFamily = 'inherit';
+        fontFamilyFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontFamily).toBe('Arial');
+    });
 });
 
 describe('fontFamilyFormatHandler.apply', () => {
