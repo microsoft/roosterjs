@@ -1,34 +1,33 @@
-import addSelectionStyle from '../../../lib/coreApi/utils/addSelectionStyle';
-import createEditorCore from '../createMockEditorCore';
-import { EditorCore } from 'roosterjs-editor-types';
+import setGlobalCssStyles from '../../lib/style/setGlobalCssStyles';
 
-describe('addSelectionStyle', () => {
+describe('setGlobalCssStyles', () => {
     let div: HTMLDivElement;
-    let core: EditorCore | null;
+    let span: HTMLSpanElement;
     beforeEach(() => {
         div = document.createElement('div');
+        div.id = 'editorTest';
+        span = document.createElement('span');
+        span.id = 'test';
+        div.appendChild(span);
         document.body.appendChild(div);
-        core = createEditorCore(div!, {});
     });
 
     afterEach(() => {
         document.body.removeChild(div);
         div = null;
-        core = null;
     });
 
     it('should add an style ', () => {
-        core.contentDiv.id = 'contentTest';
         const css =
             '#' +
-            'contentTest' +
+            'editorTest' +
             ' #' +
             'test' +
             ' { margin: -2px; border: 2px solid' +
             '#DB626C' +
             ' !important; }';
-        addSelectionStyle(core, css, 'test');
-        const styleTag = document.getElementById('testcontentTest');
+        setGlobalCssStyles(document, css, div.id + span.id);
+        const styleTag = document.getElementById('editorTesttest');
         expect(styleTag?.tagName).toBe('STYLE');
     });
 });

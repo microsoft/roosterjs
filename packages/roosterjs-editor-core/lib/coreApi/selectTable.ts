@@ -1,10 +1,10 @@
-import addSelectionStyle from './utils/addSelectionStyle';
 import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
     getTagOfNode,
     Position,
     removeImportantStyleRule,
+    setGlobalCssStyles,
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -158,7 +158,7 @@ function buildCss(
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
-    addSelectionStyle(core, css, STYLE_ID);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
     return ranges;
 }
 
