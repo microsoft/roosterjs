@@ -34,6 +34,7 @@ export { ContentModelGeneralBlock } from './publicTypes/block/group/ContentModel
 export { ContentModelBlockGroup } from './publicTypes/block/group/ContentModelBlockGroup';
 export { ContentModelBlock } from './publicTypes/block/ContentModelBlock';
 export { ContentModelParagraph } from './publicTypes/block/ContentModelParagraph';
+export { ContentModelHeader } from './publicTypes/block/ContentModelHeader';
 export { ContentModelSegmentBase } from './publicTypes/segment/ContentModelSegmentBase';
 export { ContentModelSelectionMarker } from './publicTypes/segment/ContentModelSelectionMarker';
 export { ContentModelText } from './publicTypes/segment/ContentModelText';
@@ -129,6 +130,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
+    DefaultImplicitSegmentFormatMap,
 } from './publicTypes/context/ModelToDomSettings';
 export {
     ModelToDomEntityContext,

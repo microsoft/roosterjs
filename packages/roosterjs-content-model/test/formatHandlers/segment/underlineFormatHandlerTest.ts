@@ -132,11 +132,24 @@ describe('underlineFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual('<div><u>test</u></div>');
     });
 
-    it('Hyperlink', () => {
+    it('Hyperlink without context', () => {
         const a = document.createElement('a');
 
         a.textContent = 'test';
         format.underline = true;
+
+        underlineFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toEqual('<a><u>test</u></a>');
+    });
+
+    it('Hyperlink with context', () => {
+        const a = document.createElement('a');
+
+        a.textContent = 'test';
+        format.underline = true;
+
+        context.implicitSegmentFormat.underline = true;
 
         underlineFormatHandler.apply(format, a, context);
 
@@ -147,6 +160,8 @@ describe('underlineFormatHandler.apply', () => {
         const a = document.createElement('a');
 
         a.textContent = 'test';
+
+        context.implicitSegmentFormat.underline = true;
 
         underlineFormatHandler.apply(format, a, context);
 

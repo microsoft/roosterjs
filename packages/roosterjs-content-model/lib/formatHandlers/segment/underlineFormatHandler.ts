@@ -15,15 +15,17 @@ export const underlineFormatHandler: FormatHandler<UnderlineFormat> = {
             format.underline = false;
         }
     },
-    apply: (format, element) => {
-        const isLink = element.tagName == 'A';
+    apply: (format, element, context) => {
+        const blockUnderline = context.implicitSegmentFormat.underline;
 
-        if (format.underline && !isLink) {
-            const u = element.ownerDocument.createElement('u');
-            moveChildNodes(u, element);
-            element.appendChild(u);
-        } else if (!format.underline && isLink) {
-            element.style.textDecoration = 'none';
+        if (!!blockUnderline != !!format.underline) {
+            if (format.underline) {
+                const u = element.ownerDocument.createElement('u');
+                moveChildNodes(u, element);
+                element.appendChild(u);
+            } else {
+                element.style.textDecoration = 'none';
+            }
         }
     },
 };

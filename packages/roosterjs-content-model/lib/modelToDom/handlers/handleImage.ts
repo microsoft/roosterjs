@@ -23,22 +23,32 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
         img.title = imageModel.title;
     }
 
+    const implicitSegmentFormat = context.implicitSegmentFormat;
     let segmentElement: HTMLElement;
 
-    if (imageModel.link) {
-        segmentElement = doc.createElement('a');
+    try {
+        if (imageModel.link) {
+            segmentElement = doc.createElement('a');
 
-        parent.appendChild(segmentElement);
-        segmentElement.appendChild(img);
+            parent.appendChild(segmentElement);
+            segmentElement.appendChild(img);
 
-        applyFormat(segmentElement, context.formatAppliers.link, imageModel.link, context);
-    } else {
-        segmentElement = img;
-        parent.appendChild(img);
+            context.implicitSegmentFormat = {
+                ...implicitSegmentFormat,
+                ...(context.defaultImplicitSegmentFormatMap.a || {}),
+            };
+
+            applyFormat(segmentElement, context.formatAppliers.link, imageModel.link, context);
+        } else {
+            segmentElement = img;
+            parent.appendChild(img);
+        }
+
+        applyFormat(img, context.formatAppliers.image, imageModel.format, context);
+        applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
+    } finally {
+        context.implicitSegmentFormat = implicitSegmentFormat;
     }
-
-    applyFormat(img, context.formatAppliers.image, imageModel.format, context);
-    applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
 
     context.regularSelection.current.segment = img;
 
