@@ -36,6 +36,10 @@ export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateE
         tag: 'div',
         style: 'width:100%;height:100%;position:relative;overflow:hidden',
     },
+    [KnownCreateElementDataIndex.ImageEditContainer]: {
+        tag: 'span',
+        style: 'max-width:100%;position:fixed',
+    },
     [KnownCreateElementDataIndex.TableHorizontalResizer]: {
         tag: 'div',
         style: 'position: fixed; cursor: row-resize; user-select: none',

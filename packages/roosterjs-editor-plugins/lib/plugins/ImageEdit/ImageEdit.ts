@@ -17,7 +17,9 @@ import {
     createElement,
     getComputedStyle,
     getObjectKeys,
+    removeGlobalCssStyle,
     safeInstanceOf,
+    setGlobalCssStyles,
     toArray,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -86,11 +88,6 @@ const DARK_MODE_BGCOLOR = '#333';
  * The biggest area of image with 4 handles
  */
 const MAX_SMALL_SIZE_IMAGE = 10000;
-
-/**
- * The constant of the image class
- */
-const STYLE_IMAGE = 'STYLE_IMAGE';
 
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
@@ -168,7 +165,6 @@ export default class ImageEdit implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
-        this.removeVisibilityCssTag();
         this.clearDndHelpers();
         this.disposer();
         this.disposer = null;
@@ -190,7 +186,6 @@ export default class ImageEdit implements EditorPlugin {
                         e.selectionRangeEx.image,
                         ImageEditOperation.ResizeAndRotate
                     );
-                    this.addVisibilityCssTag();
                 }
                 break;
             case PluginEventType.MouseDown:
@@ -220,7 +215,7 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     /**
-     * Check if the given image edit operation is allowed by this pluign
+     * Check if the given image edit operation is allowed by this plugin
      * @param operation The image edit operation to check
      * @returns True means it is allowed, otherwise false
      */
@@ -305,6 +300,7 @@ export default class ImageEdit implements EditorPlugin {
             ];
 
             this.editor.select(this.image);
+            this.toggleImageVisibility(this.image, false /** showImage */);
         }
     }
 
@@ -322,10 +318,8 @@ export default class ImageEdit implements EditorPlugin {
         //Clone the image and insert the clone in a entity
         this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
         const wrappedImage = wrap(this.clonedImage, KnownCreateElementDataIndex.ImageEditWrapper);
-        this.wrapper = this.editor.getDocument().createElement('span');
-        this.wrapper.appendChild(wrappedImage);
-        this.wrapper.style.maxWidth = '100%';
-        this.wrapper.style.position = 'fixed';
+        this.wrapper = wrap(wrappedImage, KnownCreateElementDataIndex.ImageEditContainer);
+
         // keep the same vertical align
         const originalVerticalAlign = this.getStylePropertyValue(this.image, 'vertical-align');
         if (originalVerticalAlign) {
@@ -338,7 +332,6 @@ export default class ImageEdit implements EditorPlugin {
         this.lastSrc = this.image.getAttribute('src');
 
         // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
-        this.image.className = STYLE_IMAGE;
         this.image.src = this.editInfo.src;
         this.clonedImage.src = this.editInfo.src;
         this.clonedImage.style.position = 'absolute';
@@ -379,23 +372,15 @@ export default class ImageEdit implements EditorPlugin {
         this.insertImageWrapper(this.image, this.wrapper);
     }
 
-    private removeVisibilityCssTag() {
+    private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
+        const editorId = this.editor.getEditorDomAttribute('id');
         const doc = this.editor.getDocument();
-        const styleTag = doc.getElementById(STYLE_IMAGE) as HTMLStyleElement;
-        if (styleTag) {
-            doc.head.removeChild(styleTag);
-        }
-    }
-
-    private addVisibilityCssTag() {
-        const doc = this.editor.getDocument();
-        let styleTag = doc.getElementById(STYLE_IMAGE) as HTMLStyleElement;
-        if (!styleTag) {
-            const cssRule = `.${STYLE_IMAGE} {visibility: hidden}`;
-            styleTag = doc.createElement('style');
-            styleTag.id = STYLE_IMAGE;
-            doc.head.appendChild(styleTag);
-            styleTag.sheet?.insertRule(cssRule);
+        const editingId = 'editingId' + editorId;
+        if (showImage) {
+            removeGlobalCssStyle(doc, editingId);
+        } else {
+            const cssRule = `#${editorId} #${image.id} {visibility: hidden}`;
+            setGlobalCssStyles(doc, cssRule, editingId);
         }
     }
 
@@ -420,8 +405,8 @@ export default class ImageEdit implements EditorPlugin {
         const doc = this.editor.getDocument();
         if (this.wrapper && doc.body?.contains(this.wrapper)) {
             doc.body?.removeChild(this.wrapper);
+            this.toggleImageVisibility(this.image, true /** showImage */);
         }
-        this.image.className = '';
         this.wrapper = null;
     };
 
@@ -430,15 +415,13 @@ export default class ImageEdit implements EditorPlugin {
      * @param context
      */
     private updateWrapper = (context?: DragAndDropContext) => {
-        if (this.wrapper) {
+        const wrapper = this.wrapper;
+        if (wrapper) {
             // Prepare: get related editing elements
-            const cropContainers = getEditElements(
-                this.wrapper,
-                ImageEditElementClass.CropContainer
-            );
-            const cropOverlays = getEditElements(this.wrapper, ImageEditElementClass.CropOverlay);
-            const resizeHandles = getEditElements(this.wrapper, ImageEditElementClass.ResizeHandle);
-            const cropHandles = getEditElements(this.wrapper, ImageEditElementClass.CropHandle);
+            const cropContainers = getEditElements(wrapper, ImageEditElementClass.CropContainer);
+            const cropOverlays = getEditElements(wrapper, ImageEditElementClass.CropOverlay);
+            const resizeHandles = getEditElements(wrapper, ImageEditElementClass.ResizeHandle);
+            const cropHandles = getEditElements(wrapper, ImageEditElementClass.CropHandle);
 
             // Cropping and resizing will show different UI, so check if it is cropping here first
             const isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
@@ -467,14 +450,14 @@ export default class ImageEdit implements EditorPlugin {
             const cropBottomPx = originalHeight * bottomPercent;
 
             // Update size and margin of the wrapper
-            this.wrapper.style.width = getPx(visibleWidth);
-            this.wrapper.style.height = getPx(visibleHeight);
-            this.wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
-            this.wrapper.style.transform = `rotate(${angleRad}rad)`;
+            wrapper.style.width = getPx(visibleWidth);
+            wrapper.style.height = getPx(visibleHeight);
+            wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
+            wrapper.style.transform = `rotate(${angleRad}rad)`;
 
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
-            this.wrapper.style.textAlign = isRtl(this.wrapper.parentNode) ? 'right' : 'left';
+            wrapper.style.textAlign = isRtl(wrapper.parentNode) ? 'right' : 'left';
 
             // Update size of the image
             this.clonedImage.style.width = getPx(originalWidth);
@@ -502,8 +485,8 @@ export default class ImageEdit implements EditorPlugin {
 
                 // Double check resize
                 if (context?.elementClass == ImageEditElementClass.ResizeHandle) {
-                    const clientWidth = this.wrapper.clientWidth;
-                    const clientHeight = this.wrapper.clientHeight;
+                    const clientWidth = wrapper.clientWidth;
+                    const clientHeight = wrapper.clientHeight;
                     this.wasResized = true;
                     doubleCheckResize(
                         this.editInfo,
@@ -535,8 +518,9 @@ export default class ImageEdit implements EditorPlugin {
             options: this.options,
             elementClass,
         };
-        return this.wrapper
-            ? getEditElements(this.wrapper, elementClass).map(
+        const wrapper = this.wrapper;
+        return wrapper
+            ? getEditElements(wrapper, elementClass).map(
                   element =>
                       new DragAndDropHelper<DragAndDropContext, any>(
                           element,
