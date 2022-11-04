@@ -1,4 +1,5 @@
 import { getColor, setColor } from '../../../lib/formatHandlers/utils/color';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { ModeIndependentColor } from 'roosterjs-editor-types';
 
 describe('getColor', () => {
@@ -108,7 +109,7 @@ describe('setColor', () => {
         runTest('', '', '<div></div>', '<div></div>');
     });
 
-    it('has color', () => {
+    itChromeOnly('has color', () => {
         runTest(
             'red',
             'blue',
@@ -117,7 +118,7 @@ describe('setColor', () => {
         );
     });
 
-    it('Mode independent color', () => {
+    itChromeOnly('Mode independent color', () => {
         runTest(
             {
                 lightModeColor: '#aaa',
