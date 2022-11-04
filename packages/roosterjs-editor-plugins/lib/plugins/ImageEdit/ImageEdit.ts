@@ -173,6 +173,7 @@ export default class ImageEdit implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
+        this.removeVisibilityCssTag();
         this.clearDndHelpers();
         this.disposer();
         this.disposer = null;
@@ -182,7 +183,7 @@ export default class ImageEdit implements EditorPlugin {
 
     /**
      * Handle events triggered from editor
-     * @param event PluginEvent object
+     * @param e PluginEvent object
      */
     onPluginEvent(e: PluginEvent) {
         switch (e.eventType) {
@@ -195,6 +196,7 @@ export default class ImageEdit implements EditorPlugin {
                         e.selectionRangeEx.image,
                         ImageEditOperation.ResizeAndRotate
                     );
+                    this.addVisibilityCssTag();
                 }
                 break;
             case PluginEventType.MouseDown:
@@ -346,7 +348,7 @@ export default class ImageEdit implements EditorPlugin {
         this.lastSrc = this.image.getAttribute('src');
 
         // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
-        this.hideImage(this.image);
+        this.image.className = STYLE_IMAGE;
         this.image.src = this.editInfo.src;
         this.clonedImage.src = this.editInfo.src;
         this.clonedImage.style.position = 'absolute';
@@ -387,28 +389,24 @@ export default class ImageEdit implements EditorPlugin {
         this.insertImageWrapper(this.image, this.wrapper);
     }
 
-    private showImage(image: HTMLImageElement) {
-        const styleTagId = STYLE_IMAGE + image.id;
+    private removeVisibilityCssTag() {
         const doc = this.editor.getDocument();
-        const styleTag = doc.getElementById(styleTagId) as HTMLStyleElement;
+        const styleTag = doc.getElementById(STYLE_IMAGE) as HTMLStyleElement;
         if (styleTag) {
             doc.head.removeChild(styleTag);
         }
-        image.className = '';
     }
 
-    private hideImage(image: HTMLImageElement) {
-        const styleTagId = STYLE_IMAGE + image.id;
-        image.className = styleTagId;
+    private addVisibilityCssTag() {
         const doc = this.editor.getDocument();
-        const cssRule = ` .${styleTagId} {visibility: hidden}`;
-        let styleTag = doc.getElementById(styleTagId) as HTMLStyleElement;
+        let styleTag = doc.getElementById(STYLE_IMAGE) as HTMLStyleElement;
         if (!styleTag) {
+            const cssRule = `.${STYLE_IMAGE} {visibility: hidden}`;
             styleTag = doc.createElement('style');
-            styleTag.id = styleTagId;
+            styleTag.id = STYLE_IMAGE;
             doc.head.appendChild(styleTag);
+            styleTag.sheet?.insertRule(cssRule);
         }
-        styleTag.sheet?.insertRule(cssRule);
     }
 
     private insertImageWrapper(image: HTMLImageElement, wrapper: HTMLSpanElement) {
@@ -432,8 +430,8 @@ export default class ImageEdit implements EditorPlugin {
         const doc = this.editor.getDocument();
         if (this.wrapper && doc.body?.contains(this.wrapper)) {
             doc.body?.removeChild(this.wrapper);
-            this.showImage(this.image);
         }
+        this.image.className = '';
         this.wrapper = null;
     };
 
