@@ -32,7 +32,6 @@ import {
     getResizeBordersHTML,
 } from './imageEditors/Resizer';
 import {
-    ExperimentalFeatures,
     ImageEditOperation,
     ImageEditOptions,
     ChangeSource,
@@ -356,10 +355,6 @@ export default class ImageEdit implements EditorPlugin {
         this.image.style.position = 'absolute';
         this.image.style.maxWidth = null;
 
-        const isExperimentalHandlesEnabled = this.editor.isFeatureEnabled(
-            ExperimentalFeatures.AdaptiveHandlesResizer
-        );
-
         // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
         const options: ImageHtmlOptions = {
             borderColor: getColorString(this.options.borderColor, this.editor.isDarkMode()),
@@ -367,8 +362,8 @@ export default class ImageEdit implements EditorPlugin {
             rotateHandleBackColor: this.editor.isDarkMode()
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
-            isSmallImage: isASmallImage(this.editInfo, isExperimentalHandlesEnabled),
-            handlesExperimentalFeatures: isExperimentalHandlesEnabled,
+            isSmallImage: isASmallImage(this.editInfo),
+            handlesExperimentalFeatures: true,
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
@@ -654,9 +649,9 @@ function isFixedNumberValue(value: string | number) {
     return !isNaN(numberValue);
 }
 
-function isASmallImage(editInfo: ImageEditInfo, isFeatureEnabled?: boolean) {
+function isASmallImage(editInfo: ImageEditInfo) {
     const { widthPx, heightPx } = editInfo;
-    return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE && isFeatureEnabled;
+    return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE;
 }
 
 function getColorString(color: string | ModeIndependentColor, isDarkMode: boolean): string {

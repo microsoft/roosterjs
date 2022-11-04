@@ -11,8 +11,6 @@ export interface ExperimentalFeaturesProps {
 const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.ConvertSingleImageBody]:
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
-    [ExperimentalFeatures.TableAlignment]:
-        'Align table elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
     [ExperimentalFeatures.AdaptiveHandlesResizer]:
         ' Provide a circular resize handles that adaptive the number od handles to the size of the image',
