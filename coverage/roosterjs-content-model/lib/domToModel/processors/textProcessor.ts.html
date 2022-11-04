@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/33</span>
+                <span class='fraction'>36/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.55% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>28/29</span>
+                <span class='fraction'>44/44</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/30</span>
+                <span class='fraction'>33/33</span>
             </div>
         
             
@@ -126,8 +126,7 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -135,6 +134,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,10 +144,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,7 +157,7 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
@@ -168,25 +168,23 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">43x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">34x</span>
@@ -205,6 +203,7 @@ import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
+import { hasSpacesOnly } from '../../domUtils/hasSpacesOnly';
 &nbsp;
 /**
  * @internal
@@ -214,7 +213,7 @@ export const textProcessor: ElementProcessor&lt;Text&gt; = (
     textNode: Text,
     context: DomToModelContext
 ) =&gt; {
-    let txt = textNode.nodeValue || <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
+    let txt = textNode.nodeValue || '';
     let [txtStartOffset, txtEndOffset] = getRegularSelectionOffsets(context, textNode);
 &nbsp;
     if (txtStartOffset &gt;= 0) {
@@ -243,20 +242,18 @@ export const textProcessor: ElementProcessor&lt;Text&gt; = (
 &nbsp;
 function addTextSegment(group: ContentModelBlockGroup, text: string, context: DomToModelContext) {
     if (text) {
-        const paragraph = group.blocks[group.blocks.length - 1];
-        const lastSegment =
-            paragraph?.blockType == 'Paragraph' &amp;&amp;
-            paragraph.segments[paragraph.segments.length - 1];
+        const lastBlock = group.blocks[group.blocks.length - 1];
+        const paragraph = lastBlock?.blockType == 'Paragraph' ? lastBlock : null;
+        const lastSegment = paragraph?.segments[paragraph.segments.length - 1];
 &nbsp;
         if (
-            lastSegment &amp;&amp;
-            lastSegment.segmentType == 'Text' &amp;&amp;
+            lastSegment?.segmentType == 'Text' &amp;&amp;
             !!lastSegment.isSelected == !!context.isInSelection &amp;&amp;
             areSameFormats(lastSegment.format, context.segmentFormat) &amp;&amp;
             areSameFormats(lastSegment.link || {}, context.linkFormat.format || {})
         ) {
             lastSegment.text += text;
-        } else {
+        } else if (!hasSpacesOnly(text) || paragraph?.segments.length! &gt; 0) {
             const textModel = createText(text, context.segmentFormat, context.linkFormat.format);
 &nbsp;
             if (context.isInSelection) {
@@ -274,7 +271,7 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Nov 04 2022 16:43:17 GMT+0000 (Coordinated Universal Time)
+                at Fri Nov 04 2022 23:08:39 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

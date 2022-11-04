@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -89,8 +89,7 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -100,26 +99,25 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">132x</span>
-<span class="cline-any cline-yes">132x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">132x</span>
-<span class="cline-any cline-yes">27x</span>
-<span class="cline-any cline-yes">105x</span>
+<span class="cline-any cline-yes">52x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">23x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -132,27 +130,26 @@ import { moveChildNodes } from 'roosterjs-editor-dom';
  */
 export const boldFormatHandler: FormatHandler&lt;BoldFormat&gt; = {
     parse: (format, element, context, defaultStyle) =&gt; {
-        const fontWeight = element.style.fontWeight || defaultStyle.fontWeight || '';
-        const fontWeightInt = parseInt(fontWeight);
+        const fontWeight = element.style.fontWeight || defaultStyle.fontWeight;
 &nbsp;
-        if (fontWeight == 'bold' || fontWeight == 'bolder' || fontWeightInt &gt;= 600) {
-            format.bold = true;
-        } else if (
-            fontWeight == 'normal' ||
-            fontWeight == 'lighter' ||
-            fontWeight == 'initial' ||
-            fontWeightInt &lt; 600
-        ) {
-            format.bold = false;
+        if (fontWeight) {
+            format.fontWeight = fontWeight;
         }
     },
     apply: (format, element, context) =&gt; {
-        if (format.bold &amp;&amp; !context.segmentFormatFromBlock.bold) {
-            const b = element.ownerDocument.createElement('b');
-            moveChildNodes(b, element);
-            element.appendChild(b);
-        } else if (!format.bold &amp;&amp; context.segmentFormatFromBlock.bold) {
-            element.style.fontWeight = 'normal';
+        const blockFontWeight = context.segmentFormatFromBlock.fontWeight;
+&nbsp;
+        if (
+            (blockFontWeight &amp;&amp; blockFontWeight != format.fontWeight) ||
+            (!blockFontWeight &amp;&amp; format.fontWeight &amp;&amp; format.fontWeight != 'normal')
+        ) {
+            if (format.fontWeight == 'bold') {
+                const b = element.ownerDocument.createElement('b');
+                moveChildNodes(b, element);
+                element.appendChild(b);
+            } else {
+                element.style.fontWeight = format.fontWeight || 'normal';
+            }
         }
     },
 };
@@ -163,7 +160,7 @@ export const boldFormatHandler: FormatHandler&lt;BoldFormat&gt; = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Nov 04 2022 16:43:17 GMT+0000 (Coordinated Universal Time)
+                at Fri Nov 04 2022 23:08:39 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
