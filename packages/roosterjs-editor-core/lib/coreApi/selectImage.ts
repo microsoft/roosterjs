@@ -1,6 +1,11 @@
-import addSelectionStyle from './utils/addSelectionStyle';
 import addUniqueId from './utils/addUniqueId';
-import { createRange, Position, removeImportantStyleRule } from 'roosterjs-editor-dom';
+import {
+    createRange,
+    Position,
+    removeGlobalCssStyle,
+    removeImportantStyleRule,
+    setGlobalCssStyles,
+} from 'roosterjs-editor-dom';
 import {
     EditorCore,
     ImageSelectionRange,
@@ -49,7 +54,7 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
 const select = (core: EditorCore, image: HTMLImageElement) => {
     removeImportantStyleRule(image, ['border', 'margin']);
     const borderCSS = buildBorderCSS(core, image.id);
-    addSelectionStyle(core, borderCSS, STYLE_ID);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, borderCSS, STYLE_ID + core.contentDiv.id);
 };
 
 const buildBorderCSS = (core: EditorCore, imageId: string): string => {
@@ -61,8 +66,5 @@ const buildBorderCSS = (core: EditorCore, imageId: string): string => {
 
 const unselect = (core: EditorCore) => {
     const doc = core.contentDiv.ownerDocument;
-    let styleTag = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
-    if (styleTag) {
-        doc.head.removeChild(styleTag);
-    }
+    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
 };
