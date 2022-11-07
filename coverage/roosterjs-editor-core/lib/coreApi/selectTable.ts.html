@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>89/89</span>
+                <span class='fraction'>86/86</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84% </span>
+                <span class="strong">81.54% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>63/75</span>
+                <span class='fraction'>53/65</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>82/82</span>
+                <span class='fraction'>79/79</span>
             </div>
         
             
@@ -277,13 +277,10 @@
 <a name='L218'></a><a href='#L218'>218</a>
 <a name='L219'></a><a href='#L219'>219</a>
 <a name='L220'></a><a href='#L220'>220</a>
-<a name='L221'></a><a href='#L221'>221</a>
-<a name='L222'></a><a href='#L222'>222</a>
-<a name='L223'></a><a href='#L223'>223</a>
-<a name='L224'></a><a href='#L224'>224</a>
-<a name='L225'></a><a href='#L225'>225</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L221'></a><a href='#L221'>221</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -318,9 +315,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">669x</span>
+<span class="cline-any cline-yes">558x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">669x</span>
+<span class="cline-any cline-yes">558x</span>
 <span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -347,7 +344,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">601x</span>
+<span class="cline-any cline-yes">490x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -445,14 +442,9 @@
 <span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">669x</span>
-<span class="cline-any cline-yes">669x</span>
-<span class="cline-any cline-yes">669x</span>
-<span class="cline-any cline-yes">240x</span>
-<span class="cline-any cline-yes">65x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">558x</span>
+<span class="cline-any cline-yes">558x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -485,7 +477,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">669x</span>
+<span class="cline-any cline-yes">558x</span>
 <span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-yes">68x</span>
@@ -494,7 +486,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">601x</span>
+<span class="cline-any cline-yes">490x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -505,13 +497,14 @@
 <span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import addSelectionStyle from './utils/addSelectionStyle';
-import addUniqueId from './utils/addUniqueId';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
     getTagOfNode,
     Position,
+    removeGlobalCssStyle,
     removeImportantStyleRule,
+    setGlobalCssStyles,
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -665,19 +658,14 @@ function buildCss(
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
-    addSelectionStyle(core, css, STYLE_ID);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
     return ranges;
 }
 &nbsp;
-function unselect(core: EditorCore) {
-    const div = core.contentDiv;
-    let styleElement = div.ownerDocument.getElementById(STYLE_ID + div.id) as HTMLStyleElement;
-    if (styleElement?.sheet?.cssRules) {
-        while (styleElement.sheet.cssRules.length &gt; 0) {
-            styleElement.sheet.deleteRule(0);
-        }
-    }
-}
+const unselect = (core: EditorCore) =&gt; {
+    const doc = core.contentDiv.ownerDocument;
+    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
+};
 &nbsp;
 function generateCssFromCell(
     contentDivSelector: string,
@@ -736,7 +724,7 @@ function isMergedCell(table: HTMLTableElement, coordinates: TableSelection): boo
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Nov 04 2022 23:08:39 GMT+0000 (Coordinated Universal Time)
+                at Mon Nov 07 2022 22:39:17 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

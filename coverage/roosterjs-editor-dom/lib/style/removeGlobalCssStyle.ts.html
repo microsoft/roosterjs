@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-dom/lib/utils/isBlockElement.ts</title>
+    <title>Code coverage report for roosterjs-editor-dom/lib/style/removeGlobalCssStyle.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-dom/lib/utils</a> isBlockElement.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-dom/lib/style</a> removeGlobalCssStyle.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -69,53 +69,29 @@
 <a name='L10'></a><a href='#L10'>10</a>
 <a name='L11'></a><a href='#L11'>11</a>
 <a name='L12'></a><a href='#L12'>12</a>
-<a name='L13'></a><a href='#L13'>13</a>
-<a name='L14'></a><a href='#L14'>14</a>
-<a name='L15'></a><a href='#L15'>15</a>
-<a name='L16'></a><a href='#L16'>16</a>
-<a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L13'></a><a href='#L13'>13</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3662x</span>
-<span class="cline-any cline-yes">3662x</span>
+<span class="cline-any cline-yes">1121x</span>
+<span class="cline-any cline-yes">1121x</span>
+<span class="cline-any cline-yes">74x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getTagOfNode from './getTagOfNode';
-&nbsp;
-const BLOCK_ELEMENT_TAGS = 'ADDRESS,ARTICLE,ASIDE,BLOCKQUOTE,CANVAS,DD,DIV,DL,DT,FIELDSET,FIGCAPTION,FIGURE,FOOTER,FORM,H1,H2,H3,H4,H5,H6,HEADER,HR,LI,MAIN,NAV,NOSCRIPT,OL,OUTPUT,P,PRE,SECTION,TABLE,TD,TH,TFOOT,UL,VIDEO'.split(
-    ','
-);
-const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table-cell'];
-&nbsp;
-/**
- * Checks if the node is a block like element. Block like element are usually those P, DIV, LI, TD etc.
- * @param node The node to check
- * @returns True if the node is a block element, otherwise false
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * Remove a css rule style from a style sheet
+ * @param doc The document object
+ * @param styleId the ID of the style tag
  */
-export default function isBlockElement(node: Node): node is HTMLElement {
-    let tag = getTagOfNode(node);
-    return !!(
-        tag &amp;&amp;
-        (BLOCK_DISPLAY_STYLES.indexOf((&lt;HTMLElement&gt;node).style.display) &gt;= 0 ||
-            BLOCK_ELEMENT_TAGS.indexOf(tag) &gt;= 0)
-    );
+&nbsp;
+export default function removeGlobalCssStyle(doc: Document, styleId: string) {
+    const styleTag = doc.getElementById(styleId) as HTMLStyleElement;
+    if (styleTag) {
+        styleTag.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>emoveChild(styleTag);
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
