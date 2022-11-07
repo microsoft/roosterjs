@@ -128,10 +128,7 @@ export function doubleCheckResize(
  * Get HTML for resize handles at the corners
  */
 export function getCornerResizeHTML(
-    {
-        borderColor: resizeBorderColor,
-        handlesExperimentalFeatures: handlesExperimentalFeatures,
-    }: ImageHtmlOptions,
+    { borderColor: resizeBorderColor }: ImageHtmlOptions,
     onShowResizeHandle?: OnShowResizeHandle
 ): CreateElementData[] {
     const result: CreateElementData[] = [];
@@ -144,9 +141,7 @@ export function getCornerResizeHTML(
                           x,
                           y,
                           resizeBorderColor,
-                          handlesExperimentalFeatures
-                              ? HandleTypes.CircularHandlesCorner
-                              : HandleTypes.SquareHandles
+                          HandleTypes.CircularHandlesCorner
                       )
                     : null;
             if (onShowResizeHandle) {
@@ -163,11 +158,7 @@ export function getCornerResizeHTML(
  * Get HTML for resize handles on the sides
  */
 export function getSideResizeHTML(
-    {
-        borderColor: resizeBorderColor,
-        isSmallImage: isSmallImage,
-        handlesExperimentalFeatures: handlesExperimentalFeatures,
-    }: ImageHtmlOptions,
+    { borderColor: resizeBorderColor, isSmallImage: isSmallImage }: ImageHtmlOptions,
     onShowResizeHandle?: OnShowResizeHandle
 ): CreateElementData[] {
     if (isSmallImage) {
@@ -182,9 +173,7 @@ export function getSideResizeHTML(
                           x,
                           y,
                           resizeBorderColor,
-                          handlesExperimentalFeatures
-                              ? HandleTypes.CircularHandlesCorner
-                              : HandleTypes.SquareHandles
+                          HandleTypes.CircularHandlesCorner
                       )
                     : null;
             if (onShowResizeHandle) {

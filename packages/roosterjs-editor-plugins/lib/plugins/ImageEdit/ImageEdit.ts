@@ -363,7 +363,6 @@ export default class ImageEdit implements EditorPlugin {
                 ? DARK_MODE_BGCOLOR
                 : LIGHT_MODE_BGCOLOR,
             isSmallImage: isASmallImage(this.editInfo),
-            handlesExperimentalFeatures: true,
         };
         const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
