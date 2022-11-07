@@ -6,6 +6,7 @@ import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
+import { hasSpacesOnly } from '../../domUtils/hasSpacesOnly';
 
 /**
  * @internal
@@ -44,20 +45,18 @@ export const textProcessor: ElementProcessor<Text> = (
 
 function addTextSegment(group: ContentModelBlockGroup, text: string, context: DomToModelContext) {
     if (text) {
-        const paragraph = group.blocks[group.blocks.length - 1];
-        const lastSegment =
-            paragraph?.blockType == 'Paragraph' &&
-            paragraph.segments[paragraph.segments.length - 1];
+        const lastBlock = group.blocks[group.blocks.length - 1];
+        const paragraph = lastBlock?.blockType == 'Paragraph' ? lastBlock : null;
+        const lastSegment = paragraph?.segments[paragraph.segments.length - 1];
 
         if (
-            lastSegment &&
-            lastSegment.segmentType == 'Text' &&
+            lastSegment?.segmentType == 'Text' &&
             !!lastSegment.isSelected == !!context.isInSelection &&
             areSameFormats(lastSegment.format, context.segmentFormat) &&
             areSameFormats(lastSegment.link || {}, context.linkFormat.format || {})
         ) {
             lastSegment.text += text;
-        } else {
+        } else if (!hasSpacesOnly(text) || paragraph?.segments.length! > 0) {
             const textModel = createText(text, context.segmentFormat, context.linkFormat.format);
 
             if (context.isInSelection) {

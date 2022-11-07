@@ -5,6 +5,7 @@ import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRen
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
 import { ContentModelView } from '../ContentModelView';
+import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
@@ -28,6 +29,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     ...BorderFormatRenderers,
     BorderBoxFormatRenderer,
     ...TableMetadataFormatRenders,
+    DisplayFormatRenderer,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {
