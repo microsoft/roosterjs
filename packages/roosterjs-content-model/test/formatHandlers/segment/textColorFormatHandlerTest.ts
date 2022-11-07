@@ -110,6 +110,14 @@ describe('textColorFormatHandler.parse', () => {
             textColor: 'red',
         });
     });
+
+    it('inherit', () => {
+        format.textColor = 'red';
+        div.style.fontFamily = 'inherit';
+        textColorFormatHandler.parse(format, div, context, {});
+
+        expect(format.textColor).toBe('red');
+    });
 });
 
 describe('textColorFormatHandler.apply', () => {

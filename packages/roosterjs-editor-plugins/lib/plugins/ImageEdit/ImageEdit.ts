@@ -21,7 +21,6 @@ import {
     safeInstanceOf,
     setGlobalCssStyles,
     toArray,
-    wrap,
 } from 'roosterjs-editor-dom';
 import {
     Resizer,
@@ -269,7 +268,14 @@ export default class ImageEdit implements EditorPlugin {
             this.clearDndHelpers();
 
             // Apply the changes, and add undo snapshot if necessary
-            applyChange(this.editor, this.image, this.editInfo, this.lastSrc, this.wasResized);
+            applyChange(
+                this.editor,
+                this.image,
+                this.editInfo,
+                this.lastSrc,
+                this.wasResized,
+                this.clonedImage
+            );
 
             // Remove editing wrapper
             this.removeWrapper();
@@ -331,8 +337,11 @@ export default class ImageEdit implements EditorPlugin {
     private createWrapper(operation: ImageEditOperation | CompatibleImageEditOperation) {
         //Clone the image and insert the clone in a entity
         this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
-        const wrappedImage = wrap(this.clonedImage, KnownCreateElementDataIndex.ImageEditWrapper);
-        this.wrapper = wrap(wrappedImage, KnownCreateElementDataIndex.ImageEditContainer);
+        this.wrapper = createElement(
+            KnownCreateElementDataIndex.ImageEditWrapper,
+            this.image.ownerDocument
+        ) as HTMLSpanElement;
+        this.wrapper.firstChild.appendChild(this.clonedImage);
 
         // keep the same vertical align
         const originalVerticalAlign = this.getStylePropertyValue(this.image, 'vertical-align');
@@ -346,7 +355,6 @@ export default class ImageEdit implements EditorPlugin {
         this.lastSrc = this.image.getAttribute('src');
 
         // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
-        this.image.src = this.editInfo.src;
         this.clonedImage.src = this.editInfo.src;
         this.clonedImage.style.position = 'absolute';
         this.clonedImage.style.maxWidth = null;

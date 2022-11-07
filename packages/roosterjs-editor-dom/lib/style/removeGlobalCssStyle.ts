@@ -7,6 +7,6 @@
 export default function removeGlobalCssStyle(doc: Document, styleId: string) {
     const styleTag = doc.getElementById(styleId) as HTMLStyleElement;
     if (styleTag) {
-        doc.head.removeChild(styleTag);
+        styleTag.parentNode?.removeChild(styleTag);
     }
 }

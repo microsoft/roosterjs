@@ -37,7 +37,7 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
 
         if (tagName && /h\d/.test(tagName)) {
             // TODO: Need a unified way to handle all this kind of format that brought from block, but not just for headers
-            context.segmentFormatFromBlock.bold = true;
+            context.segmentFormatFromBlock.fontWeight = 'bold';
         }
 
         paragraph.segments.forEach(segment => {

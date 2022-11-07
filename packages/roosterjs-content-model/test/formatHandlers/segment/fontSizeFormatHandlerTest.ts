@@ -49,6 +49,14 @@ describe('fontSizeFormatHandler.parse', () => {
 
         expect(format.fontSize).toBeUndefined();
     });
+
+    it('inherit', () => {
+        format.fontSize = '20px';
+        div.style.fontFamily = 'inherit';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('20px');
+    });
 });
 
 describe('fontSizeFormatHandler.apply', () => {

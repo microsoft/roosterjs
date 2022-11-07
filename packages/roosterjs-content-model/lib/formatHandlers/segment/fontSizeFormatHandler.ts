@@ -12,7 +12,7 @@ export const fontSizeFormatHandler: FormatHandler<FontSizeFormat> = {
 
         // when font size is 'smaller' and the style is for superscript/subscript,
         // the font size will be handled by superOrSubScript handler
-        if (fontSize && !isSuperOrSubScript(fontSize, verticalAlign)) {
+        if (fontSize && !isSuperOrSubScript(fontSize, verticalAlign) && fontSize != 'inherit') {
             format.fontSize = fontSize;
         }
     },

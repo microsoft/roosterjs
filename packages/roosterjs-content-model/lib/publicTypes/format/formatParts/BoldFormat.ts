@@ -3,7 +3,7 @@
  */
 export type BoldFormat = {
     /**
-     * Whether it is in bold
+     * Font weight of the element
      */
-    bold?: boolean;
+    fontWeight?: string;
 };

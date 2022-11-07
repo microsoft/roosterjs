@@ -2,6 +2,7 @@ import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
     Position,
+    removeGlobalCssStyle,
     removeImportantStyleRule,
     setGlobalCssStyles,
 } from 'roosterjs-editor-dom';
@@ -65,8 +66,5 @@ const buildBorderCSS = (core: EditorCore, imageId: string): string => {
 
 const unselect = (core: EditorCore) => {
     const doc = core.contentDiv.ownerDocument;
-    let styleTag = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
-    if (styleTag) {
-        doc.head.removeChild(styleTag);
-    }
+    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
 };

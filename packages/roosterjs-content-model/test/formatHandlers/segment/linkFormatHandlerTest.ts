@@ -45,6 +45,7 @@ describe('linkFormatHandler.parse', () => {
         a.className = 'class';
         a.rel = 'rel';
         a.target = 'target';
+        a.name = 'name';
 
         linkFormatHandler.parse(format, a, context, context.defaultStyles.a!);
 
@@ -55,6 +56,7 @@ describe('linkFormatHandler.parse', () => {
             href: '/test',
             relationship: 'rel',
             target: 'target',
+            name: 'name',
         });
     });
 });
@@ -95,6 +97,7 @@ describe('linkFormatHandler.apply', () => {
         format.anchorTitle = 'title';
         format.relationship = 'rel';
         format.target = 'target';
+        format.name = 'name';
 
         const a = document.createElement('a');
         a.innerHTML = 'test';
@@ -102,7 +105,7 @@ describe('linkFormatHandler.apply', () => {
         linkFormatHandler.apply(format, a, context);
 
         expect(a.outerHTML).toEqual(
-            '<a href="/test" target="target" id="id" class="class" title="title" rel="rel">test</a>'
+            '<a href="/test" name="name" target="target" id="id" class="class" title="title" rel="rel">test</a>'
         );
     });
 });

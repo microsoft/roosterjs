@@ -3,6 +3,11 @@
  */
 export type LinkFormat = {
     /**
+     * Name of this link
+     */
+    name?: string;
+
+    /**
      * Href of the hyper link
      */
     href?: string;
