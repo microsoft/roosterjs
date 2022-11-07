@@ -157,7 +157,9 @@ export function getFormatAppliers(
                     ? defaultFormatHandlerMap[formatKey].apply
                     : override[formatKey]
             )
-            .concat(additionalAppliers[key] || []) as FormatApplier<any>[];
+            .concat((additionalAppliers[key] || []) as FormatApplier<any>[]) as FormatApplier<
+            any
+        >[];
 
         result[key] = value;
 
