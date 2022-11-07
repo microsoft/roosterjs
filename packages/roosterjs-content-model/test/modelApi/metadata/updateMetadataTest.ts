@@ -1,7 +1,7 @@
 import * as validate from 'roosterjs-editor-dom/lib/metadata/validate';
 import { ContentModelWithDataset } from '../../../lib/publicTypes/format/ContentModelWithDataset';
 import { Definition } from 'roosterjs-editor-types';
-import { updateMetadata } from '../../../lib/modelApi/metadata/updateMetadata';
+import { hasMetadata, updateMetadata } from '../../../lib/modelApi/metadata/updateMetadata';
 
 describe('updateMetadata', () => {
     it('no metadata', () => {
@@ -134,5 +134,41 @@ describe('updateMetadata', () => {
                 editingInfo: '{"a":"b"}',
             },
         });
+    });
+});
+
+describe('hasMetadata', () => {
+    it('no metadata', () => {
+        const model: ContentModelWithDataset<void> = {
+            dataset: {},
+        };
+
+        const result = hasMetadata(model);
+
+        expect(result).toBeFalse();
+    });
+
+    it('empty metadata', () => {
+        const model: ContentModelWithDataset<void> = {
+            dataset: {
+                editingInfo: '',
+            },
+        };
+
+        const result = hasMetadata(model);
+
+        expect(result).toBeFalse();
+    });
+
+    it('valid metadata', () => {
+        const model: ContentModelWithDataset<void> = {
+            dataset: {
+                editingInfo: '{"a":"b"}',
+            },
+        };
+
+        const result = hasMetadata(model);
+
+        expect(result).toBeTrue();
     });
 });

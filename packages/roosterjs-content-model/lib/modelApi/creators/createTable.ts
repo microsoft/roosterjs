@@ -17,5 +17,6 @@ export function createTable(rowCount: number): ContentModelTable {
         format: {},
         widths: [],
         heights: [],
+        dataset: {},
     };
 }

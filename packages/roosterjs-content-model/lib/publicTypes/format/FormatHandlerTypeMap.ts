@@ -20,7 +20,6 @@ import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
-import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -143,11 +142,6 @@ export interface FormatHandlerTypeMap {
      * Format for SuperOrSubScriptFormat
      */
     superOrSubScript: SuperOrSubScriptFormat;
-
-    /**
-     * Format for TableMetadataFormat
-     */
-    tableMetadata: TableMetadataFormat;
 
     /**
      * Format for SpacingFormat

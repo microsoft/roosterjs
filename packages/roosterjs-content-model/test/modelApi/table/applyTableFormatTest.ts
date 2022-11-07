@@ -44,6 +44,7 @@ describe('applyTableFormat', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
     }
 

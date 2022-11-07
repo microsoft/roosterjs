@@ -19,6 +19,7 @@ describe('normalizeTable', () => {
             },
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -62,6 +63,7 @@ describe('normalizeTable', () => {
             },
             widths: [120],
             heights: [22],
+            dataset: {},
         });
     });
 
@@ -126,6 +128,7 @@ describe('normalizeTable', () => {
             },
             widths: [120],
             heights: [22, 22],
+            dataset: {},
         });
     });
 
@@ -223,6 +226,7 @@ describe('normalizeTable', () => {
             },
             widths: [240, 120],
             heights: [22],
+            dataset: {},
         });
     });
 
@@ -270,6 +274,7 @@ describe('normalizeTable', () => {
             },
             widths: [240],
             heights: [22],
+            dataset: {},
         });
     });
 
@@ -353,6 +358,7 @@ describe('normalizeTable', () => {
             },
             widths: [120, 120],
             heights: [22, 22],
+            dataset: {},
         });
     });
 
@@ -462,6 +468,7 @@ describe('normalizeTable', () => {
             },
             widths: [120, 120],
             heights: [44],
+            dataset: {},
         });
     });
 
@@ -561,6 +568,7 @@ describe('normalizeTable', () => {
             },
             widths: [240],
             heights: [44],
+            dataset: {},
         });
     });
 });

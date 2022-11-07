@@ -31,3 +31,10 @@ export function updateMetadata<T>(
         model.dataset[EditingInfoDatasetName] = JSON.stringify(obj);
     }
 }
+
+/**
+ * @internal Check if the given model has metadata
+ */
+export function hasMetadata<T>(model: ContentModelWithDataset<T>): boolean {
+    return !!model.dataset[EditingInfoDatasetName];
+}

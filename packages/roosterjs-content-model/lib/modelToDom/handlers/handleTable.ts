@@ -21,6 +21,7 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
     const tableNode = doc.createElement('table');
     parent.appendChild(tableNode);
     applyFormat(tableNode, context.formatAppliers.table, table.format, context);
+    applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);

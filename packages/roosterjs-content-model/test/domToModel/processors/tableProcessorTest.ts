@@ -51,6 +51,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -69,6 +70,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0, 0],
             heights: [0, 0],
+            dataset: {},
         });
     });
 
@@ -86,6 +88,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0, 0],
             heights: [0, 0],
+            dataset: {},
         });
     });
 
@@ -101,6 +104,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0, 0],
             heights: [0, 0],
+            dataset: {},
         });
     });
 
@@ -114,6 +118,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(1);
@@ -130,6 +135,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0, 0],
             heights: [0],
+            dataset: {},
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(2);
@@ -145,6 +151,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0, 0],
             heights: [0],
+            dataset: {},
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(1);
@@ -180,6 +187,7 @@ describe('tableProcessor', () => {
             format: {},
             widths: [0, 0],
             heights: [0, 0],
+            dataset: {},
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(4);
@@ -226,7 +234,7 @@ describe('tableProcessor with format', () => {
         tableProcessor(doc, table, context);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(5);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(6);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -270,6 +278,7 @@ describe('tableProcessor with format', () => {
                     format: {
                         format1: 'table',
                     } as any,
+                    dataset: {},
                 },
             ],
         });
@@ -328,6 +337,7 @@ describe('tableProcessor with format', () => {
                             },
                         ],
                     ],
+                    dataset: {},
                 },
             ],
         });
@@ -366,6 +376,10 @@ describe('tableProcessor with format', () => {
 
         tableProcessor(doc, mockedTable, context);
 
+        expect(datasetParser).toHaveBeenCalledWith({}, mockedTable, context, {
+            display: 'table',
+            boxSizing: 'border-box',
+        });
         expect(datasetParser).toHaveBeenCalledWith({}, mockedTable.rows[0].cells[0], context, {
             display: 'table-cell',
         });

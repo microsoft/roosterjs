@@ -46,6 +46,7 @@ describe('hasSelectionInBlock', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -71,6 +72,7 @@ describe('hasSelectionInBlock', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -105,6 +107,7 @@ describe('hasSelectionInBlock', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -142,6 +145,7 @@ describe('hasSelectionInBlock', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
