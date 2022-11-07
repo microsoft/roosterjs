@@ -12,17 +12,19 @@ import { IEditor, PluginEventType } from 'roosterjs-editor-types';
  * @param image The image to apply the change
  * @param editInfo Edit info that contains the changed information of the image
  * @param previousSrc Last src value of the image before the change was made
+ * @param editingImage (optional) Image in editing state
  */
 export default function applyChange(
     editor: IEditor,
     image: HTMLImageElement,
     editInfo: ImageEditInfo,
     previousSrc: string,
-    wasResized: boolean
+    wasResized: boolean,
+    editingImage?: HTMLImageElement
 ) {
     let newSrc = '';
 
-    const initEditInfo = getEditInfoFromImage(image);
+    const initEditInfo = getEditInfoFromImage(editingImage ?? image);
     const state = checkEditInfoState(editInfo, initEditInfo);
 
     switch (state) {
@@ -37,7 +39,7 @@ export default function applyChange(
             break;
         case ImageEditInfoState.FullyChanged:
             // For other cases (cropped, rotated, ...) we need to create a new image to reflect the change
-            newSrc = generateDataURL(image, editInfo);
+            newSrc = generateDataURL(editingImage ?? image, editInfo);
             break;
     }
 
