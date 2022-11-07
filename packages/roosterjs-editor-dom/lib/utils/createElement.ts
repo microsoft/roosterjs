@@ -33,8 +33,14 @@ export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateE
         style: 'position: fixed; width: 0; height: 0',
     },
     [KnownCreateElementDataIndex.ImageEditWrapper]: {
-        tag: 'div',
-        style: 'width:100%;height:100%;position:relative;overflow:hidden',
+        tag: 'span',
+        style: 'max-width:100%;position:fixed',
+        children: [
+            {
+                tag: 'div',
+                style: 'width:100%;height:100%;position:relative;overflow:hidden',
+            },
+        ],
     },
     [KnownCreateElementDataIndex.TableHorizontalResizer]: {
         tag: 'div',
