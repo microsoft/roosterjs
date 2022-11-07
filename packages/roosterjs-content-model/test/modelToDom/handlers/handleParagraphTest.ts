@@ -150,7 +150,7 @@ describe('handleParagraph', () => {
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: { bold: true },
+                        format: { fontWeight: 'bold' },
                         text: 'test',
                     },
                 ],
@@ -171,7 +171,7 @@ describe('handleParagraph', () => {
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: { bold: true },
+                        format: { fontWeight: 'bold' },
                         text: 'test 1',
                     },
                     {
@@ -198,7 +198,7 @@ describe('handleParagraph', () => {
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: { bold: true, italic: true },
+                        format: { fontWeight: 'bold', italic: true },
                         text: 'test',
                     },
                 ],

@@ -1,5 +1,9 @@
+import { addBlock } from '../../../lib/modelApi/common/addBlock';
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 
@@ -394,6 +398,79 @@ describe('textProcessor', () => {
                 },
             ],
             format: {},
+        });
+    });
+
+    it('Empty text', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('');
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            document: document,
+        });
+    });
+
+    it('Space only text without existing paragraph', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            document: document,
+        });
+    });
+
+    it('Space only text with existing paragraph', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        addBlock(doc, createParagraph());
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+            ],
+            document: document,
+        });
+    });
+
+    it('Space only text with existing implicit paragraph with existing segment', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        addSegment(doc, createText('test'));
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test ',
+                        },
+                    ],
+                },
+            ],
+            document: document,
         });
     });
 });

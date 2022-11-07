@@ -56,7 +56,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
     );
 
     if (isBlock) {
-        addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
+        addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
     }
 };
 

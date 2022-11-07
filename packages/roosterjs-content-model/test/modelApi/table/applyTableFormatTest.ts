@@ -4,8 +4,6 @@ import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/Cont
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableMetadataFormat';
 
-const T = 'transparent';
-
 describe('applyTableFormat', () => {
     function createCell(): ContentModelTableCell {
         return {
@@ -51,7 +49,7 @@ describe('applyTableFormat', () => {
     function runTest(
         format: TableMetadataFormat | undefined,
         exportedBackgroundColors: string[][],
-        expectedBorderColors: string[][][]
+        expectedBorders: string[][][]
     ) {
         const table = createTable(3, 4);
 
@@ -67,18 +65,18 @@ describe('applyTableFormat', () => {
                 const { borderTop, borderRight, borderLeft, borderBottom } = table.cells[row][
                     col
                 ].format;
-                const colors = expectedBorderColors[row][col];
+                const borders = expectedBorders[row][col];
 
-                expect(borderTop).toBe('1px solid ' + colors[0]);
-                expect(borderRight).toBe('1px solid ' + colors[1]);
-                expect(borderBottom).toBe('1px solid ' + colors[2]);
-                expect(borderLeft).toBe('1px solid ' + colors[3]);
+                expect(borderTop).toBe(borders[0]);
+                expect(borderRight).toBe(borders[1]);
+                expect(borderBottom).toBe(borders[2]);
+                expect(borderLeft).toBe(borders[3]);
             }
         }
     }
 
     it('Empty format', () => {
-        const B = '#ABABAB';
+        const B = '1px solid #ABABAB';
         const U = (undefined as any) as string;
         runTest(
             undefined,
@@ -111,15 +109,19 @@ describe('applyTableFormat', () => {
     });
 
     it('FIRST_COLUMN_HEADER_EXTERNAL', () => {
-        const B = '#ABABAB';
+        const BorderColor = '#ABABAB';
+        const B = '1px solid ' + BorderColor;
+        const TC = 'transparent';
+        const T = '1px none';
+
         runTest(
             {
-                topBorderColor: B,
-                bottomBorderColor: B,
-                verticalBorderColor: B,
+                topBorderColor: BorderColor,
+                bottomBorderColor: BorderColor,
+                verticalBorderColor: BorderColor,
                 hasBandedRows: false,
-                bgColorEven: T,
-                bgColorOdd: T,
+                bgColorEven: TC,
+                bgColorOdd: TC,
                 hasBandedColumns: false,
                 hasHeaderRow: false,
                 headerRowColor: null,
@@ -127,9 +129,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.FIRST_COLUMN_HEADER_EXTERNAL,
             },
             [
-                [T, T, T, T],
-                [T, T, T, T],
-                [T, T, T, T],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
             ],
             [
                 [
@@ -155,15 +157,19 @@ describe('applyTableFormat', () => {
     });
 
     it('NO_HEADER_BORDERS', () => {
-        const B = '#ABABAB';
+        const BorderColor = '#ABABAB';
+        const B = '1px solid ' + BorderColor;
+        const TC = 'transparent';
+        const T = '1px none';
+
         runTest(
             {
-                topBorderColor: B,
-                bottomBorderColor: B,
-                verticalBorderColor: B,
+                topBorderColor: BorderColor,
+                bottomBorderColor: BorderColor,
+                verticalBorderColor: BorderColor,
                 hasBandedRows: false,
-                bgColorEven: T,
-                bgColorOdd: T,
+                bgColorEven: TC,
+                bgColorOdd: TC,
                 hasBandedColumns: false,
                 hasHeaderRow: false,
                 headerRowColor: null,
@@ -171,9 +177,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.NO_HEADER_BORDERS,
             },
             [
-                [T, T, T, T],
-                [T, T, T, T],
-                [T, T, T, T],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
             ],
             [
                 [
@@ -199,16 +205,20 @@ describe('applyTableFormat', () => {
     });
 
     it('NO_SIDE_BORDERS', () => {
-        const B = '#ABABAB';
-        const B2 = '#ABABAB20';
+        const BC = '#ABABAB';
+        const BC2 = '#ABABAB20';
+        const B = '1px solid ' + BC;
+        const TC = 'transparent';
+        const T = '1px none';
+
         runTest(
             {
-                topBorderColor: B,
-                bottomBorderColor: B,
-                verticalBorderColor: B,
+                topBorderColor: BC,
+                bottomBorderColor: BC,
+                verticalBorderColor: BC,
                 hasBandedRows: true,
-                bgColorEven: T,
-                bgColorOdd: B2,
+                bgColorEven: TC,
+                bgColorOdd: BC2,
                 hasBandedColumns: false,
                 hasHeaderRow: false,
                 headerRowColor: null,
@@ -216,9 +226,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.NO_SIDE_BORDERS,
             },
             [
-                [T, T, T, T],
-                [B2, B2, B2, B2],
-                [T, T, T, T],
+                [TC, TC, TC, TC],
+                [BC2, BC2, BC2, BC2],
+                [TC, TC, TC, TC],
             ],
             [
                 [
@@ -244,15 +254,19 @@ describe('applyTableFormat', () => {
     });
 
     it('ESPECIAL_TYPE_1', () => {
-        const B = '#ABABAB';
+        const BorderColor = '#ABABAB';
+        const B = '1px solid ' + BorderColor;
+        const TC = 'transparent';
+        const T = '1px none';
+
         runTest(
             {
-                topBorderColor: B,
-                bottomBorderColor: B,
-                verticalBorderColor: B,
+                topBorderColor: BorderColor,
+                bottomBorderColor: BorderColor,
+                verticalBorderColor: BorderColor,
                 hasBandedRows: false,
-                bgColorEven: T,
-                bgColorOdd: T,
+                bgColorEven: TC,
+                bgColorOdd: TC,
                 hasBandedColumns: false,
                 hasHeaderRow: false,
                 headerRowColor: null,
@@ -260,9 +274,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.ESPECIAL_TYPE_1,
             },
             [
-                [T, T, T, T],
-                [T, T, T, T],
-                [T, T, T, T],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
             ],
             [
                 [
@@ -288,15 +302,19 @@ describe('applyTableFormat', () => {
     });
 
     it('ESPECIAL_TYPE_2', () => {
-        const B = '#ABABAB';
+        const BorderColor = '#ABABAB';
+        const B = '1px solid ' + BorderColor;
+        const TC = 'transparent';
+        const T = '1px none';
+
         runTest(
             {
-                topBorderColor: B,
-                bottomBorderColor: B,
-                verticalBorderColor: B,
+                topBorderColor: BorderColor,
+                bottomBorderColor: BorderColor,
+                verticalBorderColor: BorderColor,
                 hasBandedRows: false,
-                bgColorEven: T,
-                bgColorOdd: T,
+                bgColorEven: TC,
+                bgColorOdd: TC,
                 hasBandedColumns: false,
                 hasHeaderRow: false,
                 headerRowColor: null,
@@ -304,9 +322,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.ESPECIAL_TYPE_2,
             },
             [
-                [T, T, T, T],
-                [T, T, T, T],
-                [T, T, T, T],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
             ],
             [
                 [
@@ -332,15 +350,19 @@ describe('applyTableFormat', () => {
     });
 
     it('ESPECIAL_TYPE_3', () => {
-        const B = '#ABABAB';
+        const BorderColor = '#ABABAB';
+        const B = '1px solid ' + BorderColor;
+        const TC = 'transparent';
+        const T = '1px none';
+
         runTest(
             {
-                topBorderColor: B,
-                bottomBorderColor: B,
-                verticalBorderColor: B,
+                topBorderColor: BorderColor,
+                bottomBorderColor: BorderColor,
+                verticalBorderColor: BorderColor,
                 hasBandedRows: false,
-                bgColorEven: T,
-                bgColorOdd: T,
+                bgColorEven: TC,
+                bgColorOdd: TC,
                 hasBandedColumns: false,
                 hasHeaderRow: false,
                 headerRowColor: null,
@@ -348,9 +370,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.ESPECIAL_TYPE_3,
             },
             [
-                [T, T, T, T],
-                [T, T, T, T],
-                [T, T, T, T],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
             ],
             [
                 [
@@ -376,15 +398,18 @@ describe('applyTableFormat', () => {
     });
 
     it('CLEAR', () => {
-        const B = '#ABABAB';
+        const BorderColor = '#ABABAB';
+        const TC = 'transparent';
+        const T = '1px none';
+
         runTest(
             {
-                topBorderColor: B,
-                bottomBorderColor: B,
-                verticalBorderColor: B,
+                topBorderColor: BorderColor,
+                bottomBorderColor: BorderColor,
+                verticalBorderColor: BorderColor,
                 hasBandedRows: false,
-                bgColorEven: T,
-                bgColorOdd: T,
+                bgColorEven: TC,
+                bgColorOdd: TC,
                 hasBandedColumns: false,
                 hasHeaderRow: false,
                 headerRowColor: null,
@@ -392,9 +417,9 @@ describe('applyTableFormat', () => {
                 tableBorderFormat: TableBorderFormat.CLEAR,
             },
             [
-                [T, T, T, T],
-                [T, T, T, T],
-                [T, T, T, T],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
+                [TC, TC, TC, TC],
             ],
             [
                 [

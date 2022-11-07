@@ -34,7 +34,7 @@ describe('addSelectionMarker', () => {
         const context = createDomToModelContext();
 
         context.segmentFormat = {
-            bold: true,
+            fontWeight: 'bold',
         };
 
         addSelectionMarker(doc, context);
@@ -51,7 +51,7 @@ describe('addSelectionMarker', () => {
                         {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: { bold: true },
+                            format: { fontWeight: 'bold' },
                         },
                     ],
                 },
