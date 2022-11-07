@@ -61,9 +61,4 @@ export const enum KnownCreateElementDataIndex {
      * @deprecated
      */
     TableSelector = 11,
-
-    /**
-     * Container element for image edit
-     */
-    ImageEditContainer = 12,
 }
