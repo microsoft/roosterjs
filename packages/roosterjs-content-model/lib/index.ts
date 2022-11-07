@@ -52,6 +52,7 @@ export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegm
 export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentModelListItemLevelFormat';
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
+export { ContentModelWithDataset } from './publicTypes/format/ContentModelWithDataset';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';
@@ -85,6 +86,7 @@ export {
     ImageMetadataFormat,
     ImageRotateMetadataFormat,
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
+export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 

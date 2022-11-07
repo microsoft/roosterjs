@@ -2,12 +2,12 @@ import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
+import { DatasetFormat } from './formatParts/DatasetFormat';
 import { DirectionFormat } from './formatParts/DirectionFormat';
 import { DisplayFormat } from './formatParts/DisplayFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
-import { ImageMetadataFormat } from './formatParts/ImageMetadataFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
 import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
@@ -51,6 +51,11 @@ export interface FormatHandlerTypeMap {
     borderBox: BorderBoxFormat;
 
     /**
+     * Format for DatasetFormat
+     */
+    dataset: DatasetFormat;
+
+    /**
      * Format for DirectionFormat
      */
     direction: DirectionFormat;
@@ -74,11 +79,6 @@ export interface FormatHandlerTypeMap {
      * Format for IdFormat
      */
     id: IdFormat;
-
-    /**
-     * Format for ImageMetadataFormat
-     */
-    imageMetadata: ImageMetadataFormat;
 
     /**
      * Format for ItalicFormat

@@ -3,6 +3,7 @@ import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { ContentModelFormatMap } from '../publicTypes/format/ContentModelFormatMap';
+import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { displayFormatHandler } from './block/displayFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
@@ -11,7 +12,6 @@ import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
-import { imageMetadataFormatHandler } from './image/imageMetadataFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
@@ -51,12 +51,12 @@ const defaultFormatHandlerMap: FormatHandlers = {
     bold: boldFormatHandler,
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
+    dataset: datasetFormatHandler,
     direction: directionFormatHandler,
     display: displayFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
-    imageMetadata: imageMetadataFormatHandler,
     italic: italicFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
@@ -116,8 +116,9 @@ const defaultFormatKeysPerCategory: {
         'display',
         'direction',
     ],
-    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'imageMetadata'],
+    image: ['id', 'size', 'margin', 'padding', 'borderBox'],
     link: ['link'],
+    dataset: ['dataset'],
 };
 
 /**

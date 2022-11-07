@@ -360,6 +360,7 @@ describe('Creators', () => {
             segmentType: 'Image',
             format: {},
             src: 'test',
+            dataset: {},
         });
     });
 
@@ -425,6 +426,7 @@ describe('Creators', () => {
             format: {},
             src: 'img',
             link: { href: '/test' },
+            dataset: {},
         });
 
         model.link!.href = '/test2';

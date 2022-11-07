@@ -31,6 +31,8 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
             const alt = element.alt;
             const title = element.title;
 
+            parseFormat(element, context.formatParsers.dataset, image.dataset, context);
+
             if (alt) {
                 image.alt = alt;
             }
