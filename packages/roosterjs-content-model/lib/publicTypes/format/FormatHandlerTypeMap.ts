@@ -20,7 +20,6 @@ import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
-import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
@@ -144,11 +143,6 @@ export interface FormatHandlerTypeMap {
      * Format for SuperOrSubScriptFormat
      */
     superOrSubScript: SuperOrSubScriptFormat;
-
-    /**
-     * Format for TableCellMetadataFormat
-     */
-    tableCellMetadata: TableCellMetadataFormat;
 
     /**
      * Format for TableMetadataFormat

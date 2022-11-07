@@ -19,6 +19,7 @@ describe('createTableStructure', () => {
                         spanAbove: false,
                         spanLeft: false,
                         isHeader: false,
+                        dataset: {},
                     },
                 ],
             ],

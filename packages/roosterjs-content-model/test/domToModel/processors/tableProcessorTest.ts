@@ -44,6 +44,7 @@ describe('tableProcessor', () => {
                         isHeader: false,
                         blocks: [],
                         format: {},
+                        dataset: {},
                     },
                 ],
             ],
@@ -225,7 +226,7 @@ describe('tableProcessor with format', () => {
         tableProcessor(doc, table, context);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(5);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -260,6 +261,7 @@ describe('tableProcessor with format', () => {
                                 format: {
                                     format3: 'td',
                                 } as any,
+                                dataset: {},
                             },
                         ],
                     ],
@@ -322,11 +324,50 @@ describe('tableProcessor with format', () => {
                                 spanAbove: false,
                                 spanLeft: false,
                                 isHeader: false,
+                                dataset: {},
                             },
                         ],
                     ],
                 },
             ],
+        });
+    });
+
+    it('parse dataset', () => {
+        const mockedTable = ({
+            tagName: 'table',
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        const doc = createContentModelDocument(document);
+        const datasetParser = jasmine.createSpy('datasetParser');
+
+        context.formatParsers.dataset = [datasetParser];
+
+        tableProcessor(doc, mockedTable, context);
+
+        expect(datasetParser).toHaveBeenCalledWith({}, mockedTable.rows[0].cells[0], context, {
+            display: 'table-cell',
         });
     });
 });

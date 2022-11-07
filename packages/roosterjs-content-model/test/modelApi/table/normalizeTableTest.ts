@@ -52,6 +52,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                 ],
             ],
@@ -98,6 +99,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                 ],
                 [
@@ -114,6 +116,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                 ],
             ],
@@ -189,6 +192,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -209,6 +213,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                 ],
             ],
@@ -255,6 +260,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                 ],
             ],
@@ -308,6 +314,7 @@ describe('normalizeTable', () => {
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [block1, block2],
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -316,6 +323,7 @@ describe('normalizeTable', () => {
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [],
+                        dataset: {},
                     },
                 ],
                 [
@@ -326,6 +334,7 @@ describe('normalizeTable', () => {
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [block3],
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -334,6 +343,7 @@ describe('normalizeTable', () => {
                         isHeader: false,
                         format: { useBorderBox: true },
                         blocks: [block4],
+                        dataset: {},
                     },
                 ],
             ],
@@ -410,6 +420,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -441,6 +452,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        dataset: {},
                     },
                 ],
             ],
@@ -493,6 +505,7 @@ describe('normalizeTable', () => {
                         spanAbove: false,
                         isHeader: false,
                         format: { useBorderBox: true },
+                        dataset: {},
                         blocks: [
                             {
                                 blockType: 'Paragraph',

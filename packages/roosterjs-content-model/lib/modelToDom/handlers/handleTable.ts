@@ -56,6 +56,7 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
                 const td = doc.createElement(cell.isHeader ? 'th' : 'td');
                 tr.appendChild(td);
                 applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
+                applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
 
                 let rowSpan = 1;
                 let colSpan = 1;
