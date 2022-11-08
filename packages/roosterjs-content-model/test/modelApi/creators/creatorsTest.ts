@@ -142,6 +142,7 @@ describe('Creators', () => {
             format: {},
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 

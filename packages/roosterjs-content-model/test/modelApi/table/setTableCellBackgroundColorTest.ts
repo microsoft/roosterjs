@@ -9,6 +9,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -19,6 +20,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -40,6 +42,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -61,6 +64,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -100,6 +104,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -147,6 +152,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -188,6 +194,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -233,6 +240,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -261,6 +269,7 @@ describe('setTableCellBackgroundColor', () => {
                                 ],
                                 widths: [0],
                                 heights: [0],
+                                dataset: {},
                             },
                         ],
                         spanAbove: false,
@@ -274,6 +283,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(table, 'red');
@@ -302,6 +312,7 @@ describe('setTableCellBackgroundColor', () => {
                                 ],
                                 widths: [0],
                                 heights: [0],
+                                dataset: {},
                             },
                         ],
                         spanAbove: false,
@@ -317,6 +328,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 });

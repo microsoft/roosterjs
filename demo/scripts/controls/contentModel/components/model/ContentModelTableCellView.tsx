@@ -100,7 +100,7 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
                 updater={updateTableCellMetadata}
             />
         );
-    }, []);
+    }, [cell]);
 
     const getFormat = React.useCallback(() => {
         return <FormatView format={cell.format} renderers={TableCellFormatRenderers} />;

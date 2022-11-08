@@ -50,6 +50,7 @@ describe('isEmpty', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeTrue();
@@ -62,6 +63,7 @@ describe('isEmpty', () => {
             cells: [[], [], []],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeTrue();
@@ -85,6 +87,7 @@ describe('isEmpty', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeFalse();

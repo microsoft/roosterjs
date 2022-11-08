@@ -25,7 +25,6 @@ import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
-import { tableMetadataFormatHandler } from './table/tableMetadataFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
@@ -69,7 +68,6 @@ const defaultFormatHandlerMap: FormatHandlers = {
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
-    tableMetadata: tableMetadataFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
     textColor: textColorFormatHandler,
     underline: underlineFormatHandler,
@@ -99,7 +97,6 @@ const defaultFormatKeysPerCategory: {
         'id',
         'border',
         'borderBox',
-        'tableMetadata',
         'tableSpacing',
         'margin',
         'backgroundColor',

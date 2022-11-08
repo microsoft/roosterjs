@@ -27,6 +27,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             ''
         );
@@ -40,6 +41,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             ''
         );
@@ -53,6 +55,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
         );
@@ -70,6 +73,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -84,6 +88,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -101,6 +106,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -118,6 +124,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -134,6 +141,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
         );
@@ -170,6 +178,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody>' +
                 '<tr><td rowspan="2"></td><td colspan="2"></td></tr>' +
@@ -187,6 +196,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
@@ -206,6 +216,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             context
         );
@@ -213,6 +224,7 @@ describe('handleTable', () => {
         expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
 
         const table = div.firstChild as HTMLTableElement;
+        expect(datasetApplier).toHaveBeenCalledWith({}, table, context);
         expect(datasetApplier).toHaveBeenCalledWith({}, table.rows[0].cells[0], context);
     });
 });

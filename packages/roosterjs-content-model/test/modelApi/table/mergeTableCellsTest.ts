@@ -14,6 +14,7 @@ describe('mergeTableCells', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -40,6 +41,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -71,6 +73,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -104,6 +107,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, false]);
@@ -137,6 +141,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -170,6 +175,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, true]);
@@ -203,6 +209,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, false]);
@@ -236,6 +243,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -269,6 +277,7 @@ describe('mergeTableCells', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, true]);

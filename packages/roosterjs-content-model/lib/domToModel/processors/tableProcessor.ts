@@ -37,6 +37,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             context.segmentFormat,
             context
         );
+        parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
         addBlock(group, table);
 
         const columnPositions: number[] = [0];

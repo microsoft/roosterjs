@@ -14,6 +14,7 @@ describe('splitTableCellHorizontally', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -40,6 +41,7 @@ describe('splitTableCellHorizontally', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -73,6 +75,7 @@ describe('splitTableCellHorizontally', () => {
             ],
             widths: [50, 50, 100],
             heights: [200, 200],
+            dataset: {},
         });
     });
 
@@ -109,6 +112,7 @@ describe('splitTableCellHorizontally', () => {
             ],
             widths: [50, 50, 50, 50],
             heights: [200, 200],
+            dataset: {},
         });
     });
 
@@ -140,6 +144,7 @@ describe('splitTableCellHorizontally', () => {
             ],
             widths: [50, 50, 100],
             heights: [200, 200],
+            dataset: {},
         });
     });
 
@@ -173,6 +178,7 @@ describe('splitTableCellHorizontally', () => {
             ],
             widths: [50, 50, 50, 50],
             heights: [200, 200],
+            dataset: {},
         });
     });
 
@@ -206,6 +212,7 @@ describe('splitTableCellHorizontally', () => {
             ],
             widths: [50, 50, 30, 30],
             heights: [200, 200],
+            dataset: {},
         });
     });
 });
