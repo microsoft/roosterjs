@@ -245,4 +245,41 @@ describe('imageProcessor', () => {
             ],
         });
     });
+
+    it('Image with dataset', () => {
+        const doc = createContentModelDocument(document);
+        const img = document.createElement('img');
+        const datasetParser = jasmine.createSpy('datasetParser').and.callFake(format => {
+            format.a = 'b';
+        });
+
+        img.src = 'http://test.com/testSrc';
+
+        context.formatParsers.dataset = [datasetParser];
+
+        imageProcessor(doc, img, context);
+
+        expect(datasetParser).toHaveBeenCalledWith({ a: 'b' }, img, context, {});
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'http://test.com/testSrc',
+                            format: {},
+                            dataset: {
+                                a: 'b',
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

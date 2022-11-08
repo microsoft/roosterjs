@@ -142,3 +142,37 @@ function DatasetItemView(props: { dataset: DatasetFormat; name: string }) {
         </div>
     );
 }
+
+function DatasetView(props: { dataset: DatasetFormat; getMetadata?: (() => JSX.Element) | null }) {
+    const { dataset, getMetadata } = props;
+
+    return (
+        <>
+            {getObjectKeys(dataset).map(name =>
+                !getMetadata || name != MetadataKey ? (
+                    <DatasetItemView dataset={dataset} name={name} />
+                ) : null
+            )}
+            <div>Metadata:</div>
+            {getMetadata?.()}
+        </>
+    );
+}
+
+function DatasetItemView(props: { dataset: DatasetFormat; name: string }) {
+    const { dataset, name } = props;
+    const [value, setValue] = useProperty(dataset[name]);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const onChange = React.useCallback(() => {
+        const newValue = inputRef.current.value;
+        dataset[name] = newValue;
+        setValue(newValue);
+    }, [value, setValue]);
+
+    return (
+        <div>
+            {name}
+            <input type="text" ref={inputRef} value={value} onChange={onChange} />
+        </div>
+    );
+}
