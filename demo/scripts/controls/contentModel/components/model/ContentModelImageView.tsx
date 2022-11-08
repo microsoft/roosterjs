@@ -5,10 +5,13 @@ import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { ImageMetadataFormatRenderers } from '../format/formatPart/ImageMetadataFormatRenderers';
+import { LinkFormatView } from '../format/LinkFormatView';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
+import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
+import { updateImageMetadata } from 'roosterjs-content-model/lib/modelApi/metadata/updateImageMetadata';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelImageView.scss');
@@ -16,7 +19,6 @@ const styles = require('./ContentModelImageView.scss');
 const ImageFormatRenderers: FormatRenderer<ContentModelImageFormat>[] = [
     IdFormatRenderer,
     ...SizeFormatRenderers,
-    ...ImageMetadataFormatRenderers,
     MarginFormatRenderer,
     PaddingFormatRenderer,
 ];
@@ -36,6 +38,7 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
             <>
                 <SegmentFormatView format={image.format} />
                 <FormatView format={image.format} renderers={ImageFormatRenderers} />
+                {image.link && <LinkFormatView format={image.link} />}
             </>
         );
     }, [image.format]);
@@ -58,6 +61,16 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
         );
     }, [src, imageSelected]);
 
+    const getMetadata = React.useCallback(() => {
+        return (
+            <MetadataView
+                model={image}
+                renderers={ImageMetadataFormatRenderers}
+                updater={updateImageMetadata}
+            />
+        );
+    }, [image]);
+
     const onSrcChange = React.useCallback(() => {
         const newValue = srcTextArea.current.value;
         image.src = newValue;
@@ -79,6 +92,7 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
             jsonSource={image}
             getFormat={getFormat}
             getContent={getContent}
+            getMetadata={getMetadata}
         />
     );
 }

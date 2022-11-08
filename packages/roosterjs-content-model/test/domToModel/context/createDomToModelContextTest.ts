@@ -1,7 +1,7 @@
 import getDefaultSettings from '../../../lib/publicApi/getDefaultSettings';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
-import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
+import { defaultStyleMap } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { DomToModelListFormat } from '../../../lib/publicTypes/context/DomToModelFormatContext';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
 import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
@@ -34,6 +34,7 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             isInSelection: false,
             listFormat,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -57,6 +58,7 @@ describe('createDomToModelContext', () => {
             },
             isInSelection: false,
             listFormat,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -90,6 +92,7 @@ describe('createDomToModelContext', () => {
                 isSelectionCollapsed: false,
             },
             listFormat,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -119,6 +122,7 @@ describe('createDomToModelContext', () => {
                 lastCell: { x: 3, y: 4 },
             },
             listFormat,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -137,6 +141,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
+            linkFormat: {},
             isInSelection: false,
             imageSelection: {
                 image: 'IMAGE' as any,

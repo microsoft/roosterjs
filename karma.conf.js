@@ -13,9 +13,8 @@ module.exports = function (config) {
     ];
     const launcher = [];
 
-    if (runFirefox) {
-        plugins.push('karma-firefox-launcher');
-        launcher.push('Firefox');
+    if (runCoverage) {
+        plugins.push('karma-coverage-istanbul-reporter');
     }
 
     if (runChrome) {
@@ -23,8 +22,9 @@ module.exports = function (config) {
         launcher.push('Chrome');
     }
 
-    if (runCoverage) {
-        plugins.push('karma-coverage-istanbul-reporter');
+    if (runFirefox) {
+        plugins.push('karma-firefox-launcher');
+        launcher.push('Firefox');
     }
 
     const rules = runCoverage

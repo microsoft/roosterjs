@@ -75,7 +75,7 @@ describe('generalProcessor', () => {
             document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
-        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {}, undefined);
         expect(childProcessor).toHaveBeenCalledTimes(1);
         expect(childProcessor).toHaveBeenCalledWith(segment, span, context);
     });
@@ -99,6 +99,39 @@ describe('generalProcessor', () => {
                             blockGroupType: 'General',
                             segmentType: 'General',
                             format: { a: 'b' } as any,
+                            blocks: [],
+                            element: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            document: document,
+        });
+    });
+
+    it('Process a SPAN element with link format', () => {
+        const doc = createContentModelDocument(document);
+        const span = document.createElement('span');
+        context.linkFormat = {
+            format: { href: '/test' },
+        };
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            link: { href: '/test' },
                             blocks: [],
                             element: span,
                         },

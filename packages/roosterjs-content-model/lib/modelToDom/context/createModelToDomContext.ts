@@ -1,5 +1,6 @@
 import getDefaultSettings from '../../publicApi/getDefaultSettings';
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
+import { defaultImplicitSegmentFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -34,7 +35,7 @@ export function createModelToDomContext(
             threadItemCounts: [],
             nodeStack: [],
         },
-        segmentFormatFromBlock: {},
+        implicitSegmentFormat: {},
         formatAppliers: getFormatAppliers(
             options?.formatApplierOverride,
             options?.additionalFormatAppliers
@@ -42,6 +43,10 @@ export function createModelToDomContext(
         modelHandlers: {
             ...defaultContentModelHandlers,
             ...(options?.modelHandlerOverride || {}),
+        },
+        defaultImplicitSegmentFormatMap: {
+            ...defaultImplicitSegmentFormatMap,
+            ...(options?.defaultImplicitSegmentFormatOverride || {}),
         },
         entityPairs: [],
     };

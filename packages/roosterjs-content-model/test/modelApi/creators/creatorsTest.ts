@@ -142,6 +142,7 @@ describe('Creators', () => {
             format: {},
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -154,6 +155,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -166,6 +168,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -178,6 +181,7 @@ describe('Creators', () => {
             spanAbove: true,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -190,6 +194,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: {},
+            dataset: {},
         });
     });
 
@@ -206,6 +211,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: { textAlign: 'start' },
+            dataset: {},
         });
 
         // Change original format object should not impact the created table cell
@@ -218,6 +224,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: { textAlign: 'start' },
+            dataset: {},
         });
     });
 
@@ -360,6 +367,7 @@ describe('Creators', () => {
             segmentType: 'Image',
             format: {},
             src: 'test',
+            dataset: {},
         });
     });
 
@@ -369,6 +377,105 @@ describe('Creators', () => {
         expect(hr).toEqual({
             blockType: 'HR',
             format: {},
+        });
+    });
+
+    it('createGeneralSegment with link format', () => {
+        const span = document.createElement('span');
+        const link = { href: '/test' };
+        const model = createGeneralSegment(span, undefined, link);
+
+        expect(model).toEqual({
+            segmentType: 'General',
+            blockGroupType: 'General',
+            blockType: 'BlockGroup',
+            format: {},
+            element: span,
+            blocks: [],
+            link: { href: '/test' },
+        });
+
+        model.link!.href = '/test2';
+
+        expect(link).toEqual({
+            href: '/test',
+        });
+    });
+
+    it('createGeneralSegment with link format', () => {
+        const span = document.createElement('span');
+        const link = { href: '/test' };
+        const model = createGeneralSegment(span, undefined, link);
+
+        expect(model).toEqual({
+            segmentType: 'General',
+            blockGroupType: 'General',
+            blockType: 'BlockGroup',
+            format: {},
+            element: span,
+            blocks: [],
+            link: { href: '/test' },
+        });
+
+        model.link!.href = '/test2';
+
+        expect(link).toEqual({
+            href: '/test',
+        });
+    });
+
+    it('createImage with link format', () => {
+        const link = { href: '/test' };
+        const model = createImage('img', undefined, link);
+
+        expect(model).toEqual({
+            segmentType: 'Image',
+            format: {},
+            src: 'img',
+            link: { href: '/test' },
+            dataset: {},
+        });
+
+        model.link!.href = '/test2';
+
+        expect(link).toEqual({
+            href: '/test',
+        });
+    });
+
+    it('createSelectionMarker with link format', () => {
+        const link = { href: '/test' };
+        const model = createSelectionMarker(undefined, link);
+
+        expect(model).toEqual({
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+            link: { href: '/test' },
+        });
+
+        model.link!.href = '/test2';
+
+        expect(link).toEqual({
+            href: '/test',
+        });
+    });
+
+    it('createText with link format', () => {
+        const link = { href: '/test' };
+        const model = createText('text', undefined, link);
+
+        expect(model).toEqual({
+            segmentType: 'Text',
+            format: {},
+            text: 'text',
+            link: { href: '/test' },
+        });
+
+        model.link!.href = '/test2';
+
+        expect(link).toEqual({
+            href: '/test',
         });
     });
 });

@@ -11,11 +11,7 @@ import { ImageEditElementClass } from '../types/ImageEditElementClass';
  * will be picked up by ImageEdit code
  */
 export interface OnShowResizeHandle {
-    (
-        elementData: CreateElementData,
-        x: DNDDirectionX,
-        y: DnDDirectionY
-    ): void
+    (elementData: CreateElementData, x: DNDDirectionX, y: DnDDirectionY): void;
 }
 
 const enum HandleTypes {
@@ -55,17 +51,17 @@ export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
                 // first sure newHeight is right，calculate newWidth
                 newWidth = newHeight * ratio;
                 if (newWidth < options.minWidth) {
-                  newWidth = options.minWidth;
-                  newHeight = newWidth / ratio;
+                    newWidth = options.minWidth;
+                    newHeight = newWidth / ratio;
                 }
-              } else {
+            } else {
                 // first sure newWidth is right，calculate newHeight
                 newHeight = newWidth / ratio;
                 if (newHeight < options.minHeight) {
-                  newHeight = options.minHeight;
-                  newWidth = newHeight * ratio;
+                    newHeight = options.minHeight;
+                    newWidth = newHeight * ratio;
                 }
-              }
+            }
         }
 
         editInfo.widthPx = newWidth;
@@ -142,18 +138,19 @@ export function getCornerResizeHTML(
 
     Xs.forEach(x =>
         Ys.forEach(y => {
-            let elementData = (x == '') == (y == '')
-            ? getResizeHandleHTML(
-                  x,
-                  y,
-                  resizeBorderColor,
-                  handlesExperimentalFeatures
-                      ? HandleTypes.CircularHandlesCorner
-                      : HandleTypes.SquareHandles
-              )
-            : null;
+            let elementData =
+                (x == '') == (y == '')
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles
+                      )
+                    : null;
             if (onShowResizeHandle) {
-                onShowResizeHandle(elementData, x, y)
+                onShowResizeHandle(elementData, x, y);
             }
             result.push(elementData);
         })
@@ -179,16 +176,17 @@ export function getSideResizeHTML(
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y => {
-            let elementData = (x == '') != (y == '')
-            ? getResizeHandleHTML(
-                  x,
-                  y,
-                  resizeBorderColor,
-                  handlesExperimentalFeatures
-                      ? HandleTypes.CircularHandlesCorner
-                      : HandleTypes.SquareHandles
-              )
-            : null;
+            let elementData =
+                (x == '') != (y == '')
+                    ? getResizeHandleHTML(
+                          x,
+                          y,
+                          resizeBorderColor,
+                          handlesExperimentalFeatures
+                              ? HandleTypes.CircularHandlesCorner
+                              : HandleTypes.SquareHandles
+                      )
+                    : null;
             if (onShowResizeHandle) {
                 onShowResizeHandle(elementData, x, y);
             }

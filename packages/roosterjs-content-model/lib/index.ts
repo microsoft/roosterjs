@@ -35,6 +35,7 @@ export { ContentModelGeneralBlock } from './publicTypes/block/group/ContentModel
 export { ContentModelBlockGroup } from './publicTypes/block/group/ContentModelBlockGroup';
 export { ContentModelBlock } from './publicTypes/block/ContentModelBlock';
 export { ContentModelParagraph } from './publicTypes/block/ContentModelParagraph';
+export { ContentModelHeader } from './publicTypes/block/ContentModelHeader';
 export { ContentModelSegmentBase } from './publicTypes/segment/ContentModelSegmentBase';
 export { ContentModelSelectionMarker } from './publicTypes/segment/ContentModelSelectionMarker';
 export { ContentModelText } from './publicTypes/segment/ContentModelText';
@@ -53,6 +54,7 @@ export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegm
 export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentModelListItemLevelFormat';
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
+export { ContentModelWithDataset } from './publicTypes/format/ContentModelWithDataset';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';
@@ -74,6 +76,9 @@ export { TableMetadataFormat } from './publicTypes/format/formatParts/TableMetad
 export { ContentModelFormatBase } from './publicTypes/format/ContentModelFormatBase';
 export { MarginFormat } from './publicTypes/format/formatParts/MarginFormat';
 export { PaddingFormat } from './publicTypes/format/formatParts/PaddingFormat';
+export { DisplayFormat } from './publicTypes/format/formatParts/DisplayFormat';
+export { LineHeightFormat } from './publicTypes/format/formatParts/LineHeightFormat';
+export { LinkFormat } from './publicTypes/format/formatParts/LinkFormat';
 export { ListTypeFormat } from './publicTypes/format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './publicTypes/format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './publicTypes/format/formatParts/ListMetadataFormat';
@@ -83,12 +88,14 @@ export {
     ImageMetadataFormat,
     ImageRotateMetadataFormat,
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
+export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 
 export { EditorContext, ContentModelDefaultSettings } from './publicTypes/context/EditorContext';
 export {
     DomToModelListFormat,
+    DomToModelLinkFormat,
     DomToModelFormatContext,
 } from './publicTypes/context/DomToModelFormatContext';
 export {
@@ -126,6 +133,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
+    DefaultImplicitSegmentFormatMap,
 } from './publicTypes/context/ModelToDomSettings';
 export {
     ModelToDomEntityContext,

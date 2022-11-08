@@ -3,15 +3,18 @@ import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { ContentModelFormatMap } from '../publicTypes/format/ContentModelFormatMap';
+import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
+import { displayFormatHandler } from './block/displayFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
-import { imageMetadataFormatHandler } from './image/imageMetadataFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
+import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
@@ -22,8 +25,6 @@ import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
-import { tableCellMetadataFormatHandler } from './table/tableCellMetadataFormatHandler';
-import { tableMetadataFormatHandler } from './table/tableMetadataFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
@@ -48,12 +49,15 @@ const defaultFormatHandlerMap: FormatHandlers = {
     bold: boldFormatHandler,
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
+    dataset: datasetFormatHandler,
     direction: directionFormatHandler,
+    display: displayFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
-    imageMetadata: imageMetadataFormatHandler,
     italic: italicFormatHandler,
+    lineHeight: lineHeightFormatHandler,
+    link: linkFormatHandler,
     listItemMetadata: listItemMetadataFormatHandler,
     listItemThread: listItemThreadFormatHandler,
     listLevelMetadata: listLevelMetadataFormatHandler,
@@ -64,8 +68,6 @@ const defaultFormatHandlerMap: FormatHandlers = {
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
-    tableCellMetadata: tableCellMetadataFormatHandler,
-    tableMetadata: tableMetadataFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
     textColor: textColorFormatHandler,
     underline: underlineFormatHandler,
@@ -75,7 +77,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
 const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
-    block: ['backgroundColor', 'direction', 'margin', 'padding'],
+    block: ['backgroundColor', 'direction', 'margin', 'padding', 'lineHeight'],
     listItem: ['listItemThread', 'listItemMetadata'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
     segment: [
@@ -90,25 +92,20 @@ const defaultFormatKeysPerCategory: {
         'backgroundColor',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
-    tableCell: [
-        'border',
-        'borderBox',
-        'backgroundColor',
-        'padding',
-        'direction',
-        'verticalAlign',
-        'tableCellMetadata',
-    ],
+    tableCell: ['border', 'borderBox', 'backgroundColor', 'padding', 'direction', 'verticalAlign'],
     table: [
         'id',
         'border',
         'borderBox',
-        'tableMetadata',
         'tableSpacing',
         'margin',
         'backgroundColor',
+        'display',
+        'direction',
     ],
-    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'imageMetadata'],
+    image: ['id', 'size', 'margin', 'padding', 'borderBox'],
+    link: ['link'],
+    dataset: ['dataset'],
 };
 
 /**
@@ -167,7 +164,9 @@ export function getFormatAppliers(
                     ? defaultFormatHandlerMap[formatKey].apply
                     : override[formatKey]
             )
-            .concat(additionalAppliers[key] || []) as FormatApplier<any>[];
+            .concat((additionalAppliers[key] || []) as FormatApplier<any>[]) as FormatApplier<
+            any
+        >[];
 
         result[key] = value;
 

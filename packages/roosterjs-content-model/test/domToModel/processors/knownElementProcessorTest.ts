@@ -2,6 +2,7 @@ import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
 describe('knownElementProcessor', () => {
@@ -32,6 +33,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -78,6 +80,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -142,11 +145,14 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    headerLevel: 1,
+                    header: {
+                        headerLevel: 1,
+                        format: { fontWeight: 'bold', fontSize: '2em', fontFamily: 'Test' },
+                    },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { bold: true, fontFamily: 'Test' },
+                            format: { fontWeight: 'bold', fontFamily: 'Test', fontSize: '2em' },
                             text: 'test',
                         },
                     ],
@@ -155,6 +161,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -179,11 +186,14 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    headerLevel: 1,
+                    header: {
+                        headerLevel: 1,
+                        format: { fontWeight: 'bold', fontSize: '2em' },
+                    },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { bold: false },
+                            format: { fontWeight: 'normal', fontSize: '2em' },
                             text: 'test',
                         },
                     ],
@@ -192,8 +202,43 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
+    });
+
+    it('Simple Anchor element', () => {
+        const group = createContentModelDocument(document);
+        const a = document.createElement('a');
+
+        a.href = '/test';
+        a.textContent = 'test';
+
+        knownElementProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                underline: true,
+                                textColor: HyperLinkColorPlaceholder,
+                            },
+                            link: { href: '/test' },
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.linkFormat).toEqual({});
     });
 });

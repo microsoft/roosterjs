@@ -1,11 +1,12 @@
 import { addSegment } from '../../modelApi/common/addSegment';
+import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
 import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
+import { hasSpacesOnly } from '../../domUtils/hasSpacesOnly';
 
 /**
  * @internal
@@ -22,7 +23,7 @@ export const textProcessor: ElementProcessor<Text> = (
         addTextSegment(group, txt.substring(0, txtStartOffset), context);
         context.isInSelection = true;
 
-        addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
+        addSelectionMarker(group, context);
 
         txt = txt.substring(txtStartOffset);
         txtEndOffset -= txtStartOffset;
@@ -32,7 +33,7 @@ export const textProcessor: ElementProcessor<Text> = (
         addTextSegment(group, txt.substring(0, txtEndOffset), context);
 
         if (!context.regularSelection!.isSelectionCollapsed) {
-            addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
+            addSelectionMarker(group, context);
         }
 
         context.isInSelection = false;
@@ -44,20 +45,19 @@ export const textProcessor: ElementProcessor<Text> = (
 
 function addTextSegment(group: ContentModelBlockGroup, text: string, context: DomToModelContext) {
     if (text) {
-        const paragraph = group.blocks[group.blocks.length - 1];
-        const lastSegment =
-            paragraph?.blockType == 'Paragraph' &&
-            paragraph.segments[paragraph.segments.length - 1];
+        const lastBlock = group.blocks[group.blocks.length - 1];
+        const paragraph = lastBlock?.blockType == 'Paragraph' ? lastBlock : null;
+        const lastSegment = paragraph?.segments[paragraph.segments.length - 1];
 
         if (
-            lastSegment &&
-            lastSegment.segmentType == 'Text' &&
+            lastSegment?.segmentType == 'Text' &&
             !!lastSegment.isSelected == !!context.isInSelection &&
-            areSameFormats(lastSegment.format, context.segmentFormat)
+            areSameFormats(lastSegment.format, context.segmentFormat) &&
+            areSameFormats(lastSegment.link || {}, context.linkFormat.format || {})
         ) {
             lastSegment.text += text;
-        } else {
-            const textModel = createText(text, context.segmentFormat);
+        } else if (!hasSpacesOnly(text) || paragraph?.segments.length! > 0) {
+            const textModel = createText(text, context.segmentFormat, context.linkFormat.format);
 
             if (context.isInSelection) {
                 textModel.isSelected = true;

@@ -73,6 +73,21 @@ describe('underlineFormatHandler.parse', () => {
             expect(format.underline).toBeUndefined();
         });
     });
+
+    it('Hyperlink', () => {
+        underlineFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+
+        expect(format).toEqual({
+            underline: true,
+        });
+    });
+
+    it('Hyperlink without underline', () => {
+        div.style.textDecoration = 'none';
+        underlineFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+
+        expect(format).toEqual({});
+    });
 });
 
 describe('underlineFormatHandler.apply', () => {
@@ -115,5 +130,41 @@ describe('underlineFormatHandler.apply', () => {
         underlineFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div><u>test</u></div>');
+    });
+
+    it('Hyperlink without context', () => {
+        const a = document.createElement('a');
+
+        a.textContent = 'test';
+        format.underline = true;
+
+        underlineFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toEqual('<a><u>test</u></a>');
+    });
+
+    it('Hyperlink with context', () => {
+        const a = document.createElement('a');
+
+        a.textContent = 'test';
+        format.underline = true;
+
+        context.implicitSegmentFormat.underline = true;
+
+        underlineFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toEqual('<a>test</a>');
+    });
+
+    it('Hyperlink without underline', () => {
+        const a = document.createElement('a');
+
+        a.textContent = 'test';
+
+        context.implicitSegmentFormat.underline = true;
+
+        underlineFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toEqual('<a style="text-decoration: none;">test</a>');
     });
 });

@@ -1,7 +1,7 @@
 import getDefaultSettings from '../../lib/publicApi/getDefaultSettings';
 import { createDomToModelContext } from '../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../lib/domToModel/context/defaultProcessors';
-import { defaultStyleMap } from '../../lib/domToModel/context/defaultStyles';
+import { defaultStyleMap } from '../../lib/formatHandlers/utils/defaultStyles';
 import { DomToModelListFormat } from '../../lib/publicTypes/context/DomToModelFormatContext';
 import { getFormatParsers } from '../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
@@ -31,6 +31,7 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -58,6 +59,7 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -106,6 +108,7 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -166,6 +169,7 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -202,6 +206,7 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
+            linkFormat: {},
             ...contextOptions,
         });
     });
@@ -238,6 +243,7 @@ describe('createFormatContextTest', () => {
                 direction: 'rtl',
             },
             segmentFormat: {},
+            linkFormat: {},
             listFormat,
             defaultSettings,
             ...contextOptions,

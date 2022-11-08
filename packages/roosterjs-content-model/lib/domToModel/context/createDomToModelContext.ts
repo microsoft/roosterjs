@@ -1,6 +1,6 @@
 import getDefaultSettings from '../../publicApi/getDefaultSettings';
 import { defaultProcessorMap } from './defaultProcessors';
-import { defaultStyleMap } from './defaultStyles';
+import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
@@ -33,6 +33,7 @@ export function createDomToModelContext(
             levels: [],
             threadItemCounts: [],
         },
+        linkFormat: {},
 
         elementProcessors: {
             ...defaultProcessorMap,

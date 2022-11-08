@@ -5,6 +5,7 @@ import { ChangeSource, TableOperation } from 'roosterjs-editor-types';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
+import { hasMetadata } from '../../modelApi/metadata/updateMetadata';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
@@ -92,7 +93,10 @@ export default function editTable(
         }
 
         normalizeTable(tableModel);
-        applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+
+        if (hasMetadata(tableModel)) {
+            applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+        }
 
         editor.addUndoSnapshot(
             () => {
