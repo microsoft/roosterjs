@@ -699,9 +699,12 @@ describe('handleList handles metadata', () => {
         ]);
 
         handleList(document, parent, listItem, context);
-        expect(parent.innerHTML).toBe(
-            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha;"></ol>'
-        );
+
+        const possibleResults = [
+            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha;"></ol>', // Chrome
+            '<ol style="list-style-type: upper-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
+        ];
+        expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(0);
     });
 
     it('OL with metadata with simple value', () => {
@@ -714,9 +717,12 @@ describe('handleList handles metadata', () => {
         ]);
 
         handleList(document, parent, listItem, context);
-        expect(parent.innerHTML).toBe(
-            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: lower-alpha;"></ol>'
-        );
+
+        const possibleResults = [
+            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: lower-alpha;"></ol>', // Chrome
+            '<ol style="list-style-type: lower-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
+        ];
+        expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(0);
     });
 
     it('UL with metadata with simple value', () => {
@@ -729,8 +735,11 @@ describe('handleList handles metadata', () => {
         ]);
 
         handleList(document, parent, listItem, context);
-        expect(parent.innerHTML).toBe(
-            '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: circle;"></ul>'
-        );
+
+        const possibleResults = [
+            '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: circle;"></ul>', // Chrome
+            '<ul style="list-style-type: circle;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}"></ul>', // Firefox
+        ];
+        expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(0);
     });
 });
