@@ -384,6 +384,44 @@ describe('tableProcessor with format', () => {
             display: 'table-cell',
         });
     });
+
+    it('parse dataset', () => {
+        const mockedTable = ({
+            tagName: 'table',
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        const doc = createContentModelDocument(document);
+        const datasetParser = jasmine.createSpy('datasetParser');
+
+        context.formatParsers.dataset = [datasetParser];
+
+        tableProcessor(doc, mockedTable, context);
+
+        expect(datasetParser).toHaveBeenCalledWith({}, mockedTable.rows[0].cells[0], context, {
+            display: 'table-cell',
+        });
+    });
 });
 
 describe('tableProcessor', () => {
