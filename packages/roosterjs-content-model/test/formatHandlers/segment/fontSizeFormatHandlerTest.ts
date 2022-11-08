@@ -83,4 +83,30 @@ describe('fontSizeFormatHandler.apply', () => {
 
         expect(div.outerHTML).toEqual('<div style="font-size: 100px;"></div>');
     });
+
+    it('Has implicit font size from context', () => {
+        context.implicitSegmentFormat.fontSize = '20px';
+
+        fontSizeFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div></div>');
+    });
+
+    it('Has implicit font size from context and same with current format', () => {
+        context.implicitSegmentFormat.fontSize = '20px';
+        format.fontSize = '20px';
+
+        fontSizeFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div></div>');
+    });
+
+    it('Has implicit font size from context but overridden by current format', () => {
+        context.implicitSegmentFormat.fontSize = '20px';
+        format.fontSize = '40px';
+
+        fontSizeFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div style="font-size: 40px;"></div>');
+    });
 });

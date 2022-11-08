@@ -1,8 +1,8 @@
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DefaultLinkColorPlaceholder } from '../../../lib/domToModel/context/defaultStyles';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
 describe('knownElementProcessor', () => {
@@ -145,11 +145,14 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    headerLevel: 1,
+                    header: {
+                        headerLevel: 1,
+                        format: { fontWeight: 'bold', fontSize: '2em', fontFamily: 'Test' },
+                    },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { fontWeight: 'bold', fontFamily: 'Test' },
+                            format: { fontWeight: 'bold', fontFamily: 'Test', fontSize: '2em' },
                             text: 'test',
                         },
                     ],
@@ -183,11 +186,14 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    headerLevel: 1,
+                    header: {
+                        headerLevel: 1,
+                        format: { fontWeight: 'bold', fontSize: '2em' },
+                    },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { fontWeight: 'normal' },
+                            format: { fontWeight: 'normal', fontSize: '2em' },
                             text: 'test',
                         },
                     ],
@@ -224,7 +230,7 @@ describe('knownElementProcessor', () => {
                             segmentType: 'Text',
                             format: {
                                 underline: true,
-                                textColor: DefaultLinkColorPlaceholder,
+                                textColor: HyperLinkColorPlaceholder,
                             },
                             link: { href: '/test' },
                             text: 'test',
