@@ -1,7 +1,7 @@
 import * as Color from 'color';
 import { createColorFormatRenderer } from '../utils/createColorFormatRender';
-import { DefaultLinkColorPlaceholder } from 'roosterjs-content-model/lib/domToModel/context/defaultStyles';
 import { FormatRenderer } from '../utils/FormatRenderer';
+import { HyperLinkColorPlaceholder } from 'roosterjs-content-model/lib/formatHandlers/utils/defaultStyles';
 import { TextColorFormat } from 'roosterjs-content-model';
 
 export const TextColorFormatRenderer: FormatRenderer<TextColorFormat> = createColorFormatRenderer<
@@ -9,8 +9,8 @@ export const TextColorFormatRenderer: FormatRenderer<TextColorFormat> = createCo
 >(
     'Text color',
     format =>
-        format.textColor == DefaultLinkColorPlaceholder
-            ? DefaultLinkColorPlaceholder
+        format.textColor == HyperLinkColorPlaceholder
+            ? format.textColor
             : format.textColor
             ? Color(format.textColor).hex()
             : '',
