@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>31/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.86% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/14</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>26/26</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -126,8 +126,28 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -161,17 +181,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
@@ -191,12 +218,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addBlock } from '../../modelApi/common/addBlock';
+import { ContentModelHeader } from '../../publicTypes/block/ContentModelHeader';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
@@ -230,20 +268,27 @@ export const knownElementProcessor: ElementProcessor&lt;HTMLElement&gt; = (group
 &nbsp;
             if (isBlock) {
                 parseFormat(element, context.formatParsers.block, context.blockFormat, context);
-                parseFormat(
-                    element,
-                    context.formatParsers.segmentOnBlock,
-                    context.segmentFormat,
-                    context
-                );
 &nbsp;
                 const paragraph = createParagraph(false /*isImplicit*/, context.blockFormat);
 &nbsp;
                 if (safeInstanceOf(element, 'HTMLHeadingElement')) {
-                    paragraph.headerLevel = getHeaderLevel(element);
+                    // For headers, inline format won't go into its child nodes, so we parse its format here and clear the format of context
+                    paragraph.header = headerProcessor(element, context);
+&nbsp;
+                    Object.assign(context.segmentFormat, paragraph.header.format);
+                } else {
+                    parseFormat(
+                        element,
+                        context.formatParsers.segmentOnBlock,
+                        context.segmentFormat,
+                        context
+                    );
                 }
 &nbsp;
                 addBlock(group, paragraph);
+&nbsp;
+                // Block format will not be inherited by child blocks, so clear it.
+                context.blockFormat = {};
             } else {
                 parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             }
@@ -257,12 +302,21 @@ export const knownElementProcessor: ElementProcessor&lt;HTMLElement&gt; = (group
     }
 };
 &nbsp;
-function getHeaderLevel(element: HTMLHeadingElement): number | undefined {
+function headerProcessor(
+    element: HTMLHeadingElement,
+    context: DomToModelContext
+): ContentModelHeader {
     // Parse the header level from tag name
     // e.g. "H1" will return 1
     const headerLevel = parseInt(element.tagName.substring(1));
+    const result: ContentModelHeader = {
+        format: {},
+        headerLevel,
+    };
 &nbsp;
-    return headerLevel &gt;= 1 &amp;&amp; headerLevel &lt;= 6 ? headerLevel : <span class="branch-1 cbranch-no" title="branch not covered" >undefined;</span>
+    parseFormat(element, context.formatParsers.segmentOnBlock, result.format, context);
+&nbsp;
+    return result;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -271,7 +325,7 @@ function getHeaderLevel(element: HTMLHeadingElement): number | undefined {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 07 2022 22:39:17 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 08 2022 01:40:36 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

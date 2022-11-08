@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>25/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>24/24</span>
             </div>
         
             
@@ -107,7 +107,17 @@
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -132,13 +142,20 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -148,6 +165,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -182,22 +202,32 @@ export const handleImage: ContentModelHandler&lt;ContentModelImage&gt; = (
         img.title = imageModel.title;
     }
 &nbsp;
+    const implicitSegmentFormat = context.implicitSegmentFormat;
     let segmentElement: HTMLElement;
 &nbsp;
-    if (imageModel.link) {
-        segmentElement = doc.createElement('a');
+    try {
+        if (imageModel.link) {
+            segmentElement = doc.createElement('a');
 &nbsp;
-        parent.appendChild(segmentElement);
-        segmentElement.appendChild(img);
+            parent.appendChild(segmentElement);
+            segmentElement.appendChild(img);
 &nbsp;
-        applyFormat(segmentElement, context.formatAppliers.link, imageModel.link, context);
-    } else {
-        segmentElement = img;
-        parent.appendChild(img);
+            context.implicitSegmentFormat = {
+                ...implicitSegmentFormat,
+                ...(context.defaultImplicitSegmentFormatMap.a || <span class="branch-1 cbranch-no" title="branch not covered" >{})</span>,
+            };
+&nbsp;
+            applyFormat(segmentElement, context.formatAppliers.link, imageModel.link, context);
+        } else {
+            segmentElement = img;
+            parent.appendChild(img);
+        }
+&nbsp;
+        applyFormat(img, context.formatAppliers.image, imageModel.format, context);
+        applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
+    } finally {
+        context.implicitSegmentFormat = implicitSegmentFormat;
     }
-&nbsp;
-    applyFormat(img, context.formatAppliers.image, imageModel.format, context);
-    applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
 &nbsp;
     context.regularSelection.current.segment = img;
 &nbsp;
@@ -214,7 +244,7 @@ export const handleImage: ContentModelHandler&lt;ContentModelImage&gt; = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 07 2022 22:39:17 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 08 2022 01:40:36 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
