@@ -113,7 +113,7 @@ const defaultFormatKeysPerCategory: {
  */
 export function getDefaultFormatParsers(): Readonly<FormatParsers> {
     return getObjectKeys(defaultFormatHandlerMap).reduce((result, key) => {
-        result[key] = defaultFormatHandlerMap[key].parse;
+        result[key] = defaultFormatHandlerMap[key].parse as FormatParser<any>;
         return result;
     }, <FormatParsers>{});
 }
@@ -123,7 +123,7 @@ export function getDefaultFormatParsers(): Readonly<FormatParsers> {
  */
 export function getDefaultFormatAppliers(): Readonly<FormatAppliers> {
     return getObjectKeys(defaultFormatHandlerMap).reduce((result, key) => {
-        result[key] = defaultFormatHandlerMap[key].apply;
+        result[key] = defaultFormatHandlerMap[key].apply as FormatApplier<any>;
         return result;
     }, <FormatAppliers>{});
 }
