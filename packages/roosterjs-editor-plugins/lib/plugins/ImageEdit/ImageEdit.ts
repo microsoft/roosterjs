@@ -127,11 +127,6 @@ export default class ImageEdit implements EditorPlugin {
     /**
      * Editor zoom scale
      */
-    private zoomScale: number;
-
-    /**
-     * Editor zoom scale
-     */
     private zoomWrapper: HTMLElement;
 
     /**
@@ -178,7 +173,6 @@ export default class ImageEdit implements EditorPlugin {
         this.disposer();
         this.disposer = null;
         this.editor = null;
-        this.zoomScale = null;
     }
 
     /**
@@ -220,9 +214,6 @@ export default class ImageEdit implements EditorPlugin {
 
             case PluginEventType.Scroll:
                 this.setEditingImage(null);
-                break;
-            case PluginEventType.ZoomChanged:
-                this.zoomScale = e.newZoomScale;
                 break;
         }
     }
@@ -391,7 +382,7 @@ export default class ImageEdit implements EditorPlugin {
             }
         });
 
-        this.insertImageWrapper(this.image, this.wrapper, this.zoomScale);
+        this.insertImageWrapper(this.image, this.wrapper, this.editor.getZoomScale());
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
