@@ -15,11 +15,17 @@ export const italicFormatHandler: FormatHandler<ItalicFormat> = {
             format.italic = false;
         }
     },
-    apply: (format, element) => {
-        if (format.italic) {
-            const i = element.ownerDocument.createElement('i');
-            moveChildNodes(i, element);
-            element.appendChild(i);
+    apply: (format, element, context) => {
+        const implicitItalic = context.implicitSegmentFormat.italic;
+
+        if (!!implicitItalic != !!format.italic) {
+            if (format.italic) {
+                const i = element.ownerDocument.createElement('i');
+                moveChildNodes(i, element);
+                element.appendChild(i);
+            } else {
+                element.style.fontStyle = 'normal';
+            }
         }
     },
 };

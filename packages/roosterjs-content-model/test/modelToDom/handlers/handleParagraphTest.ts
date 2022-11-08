@@ -146,7 +146,10 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                headerLevel: 1,
+                header: {
+                    headerLevel: 1,
+                    format: { fontWeight: 'bold', fontSize: '2em' },
+                },
                 segments: [
                     {
                         segmentType: 'Text',
@@ -160,6 +163,54 @@ describe('handleParagraph', () => {
         );
     });
 
+    it('handle headers with default format override', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                header: {
+                    headerLevel: 1,
+                    format: { fontWeight: 'bold', fontSize: '20px' },
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: { fontWeight: 'bold' },
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1 style="font-size: 20px;"><span>test</span></h1>',
+            1
+        );
+    });
+
+    it('handle headers without default format', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                header: {
+                    headerLevel: 1,
+                    format: {},
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: { fontWeight: 'bold' },
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1 style="font-weight: normal;"><span>test</span></h1>',
+            1
+        );
+    });
+
     it('handle headers that has non-bold text', () => {
         handleSegment.and.callFake(originalHandleSegment);
 
@@ -167,7 +218,12 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                headerLevel: 1,
+                header: {
+                    headerLevel: 1,
+                    format: {
+                        fontWeight: 'bold',
+                    },
+                },
                 segments: [
                     {
                         segmentType: 'Text',
@@ -194,7 +250,10 @@ describe('handleParagraph', () => {
                 blockType: 'Paragraph',
                 isImplicit: true,
                 format: {},
-                headerLevel: 1,
+                header: {
+                    headerLevel: 1,
+                    format: { fontWeight: 'bold' },
+                },
                 segments: [
                     {
                         segmentType: 'Text',
