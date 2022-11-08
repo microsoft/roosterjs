@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model/lib/formatHandlers/table/tableMetadataFormatHandler.ts</title>
+    <title>Code coverage report for roosterjs-content-model/lib/modelApi/metadata/updateTableMetadata.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/formatHandlers/table</a> tableMetadataFormatHandler.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/modelApi/metadata</a> updateTableMetadata.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -111,15 +111,10 @@
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,25 +156,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
+import { updateMetadata } from './updateMetadata';
 import {
     createBooleanDefinition,
     createNumberDefinition,
@@ -220,23 +209,16 @@ const TableFormatDefinition = createObjectDefinition&lt;Required&lt;TableMetadat
 &nbsp;
 /**
  * @internal
+ * Update table metadata with a callback
+ * @param table The table Content Model
+ * @param callback The callback function used for updating metadata
  */
-export const tableMetadataFormatHandler = createMetadataFormatHandler&lt;TableMetadataFormat&gt;(
-    TableFormatDefinition,
-    format =&gt; ({
-        topBorderColor: format.topBorderColor,
-        bottomBorderColor: format.bottomBorderColor,
-        verticalBorderColor: format.verticalBorderColor,
-        hasHeaderRow: format.hasHeaderRow,
-        headerRowColor: format.headerRowColor,
-        hasFirstColumn: format.hasFirstColumn,
-        hasBandedColumns: format.hasBandedColumns,
-        hasBandedRows: format.hasBandedRows,
-        bgColorEven: format.bgColorEven,
-        bgColorOdd: format.bgColorOdd,
-        tableBorderFormat: format.tableBorderFormat,
-    })
-);
+export function updateTableMetadata(
+    table: ContentModelTable,
+    callback: (format: TableMetadataFormat | null) =&gt; TableMetadataFormat | null
+) {
+    updateMetadata(table, callback, TableFormatDefinition);
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -244,7 +226,7 @@ export const tableMetadataFormatHandler = createMetadataFormatHandler&lt;TableMe
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Nov 08 2022 20:08:40 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 08 2022 21:35:30 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
