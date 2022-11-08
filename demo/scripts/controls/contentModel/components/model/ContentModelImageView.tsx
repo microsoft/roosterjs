@@ -71,16 +71,6 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
         );
     }, [image]);
 
-    const getMetadata = React.useCallback(() => {
-        return (
-            <MetadataView
-                model={image}
-                renderers={ImageMetadataFormatRenderers}
-                updater={updateImageMetadata}
-            />
-        );
-    }, [image]);
-
     const onSrcChange = React.useCallback(() => {
         const newValue = srcTextArea.current.value;
         image.src = newValue;
