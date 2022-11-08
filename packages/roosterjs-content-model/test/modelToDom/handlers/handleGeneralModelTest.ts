@@ -1,8 +1,8 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
-import { ContentModelBlockGroup } from '../../../lib/publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../../lib/publicTypes/block/group/ContentModelListItem';
-import { ContentModelQuote } from '../../../lib/publicTypes/block/group/ContentModelQuote';
+import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
+import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';

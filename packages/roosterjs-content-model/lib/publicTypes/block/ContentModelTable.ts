@@ -1,5 +1,5 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelTableCell } from './group/ContentModelTableCell';
+import { ContentModelTableCell } from '../group/ContentModelTableCell';
 import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
 import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import { TableMetadataFormat } from '../format/formatParts/TableMetadataFormat';

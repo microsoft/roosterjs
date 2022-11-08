@@ -2,7 +2,7 @@ import { BorderFormat } from '../../publicTypes/format/formatParts/BorderFormat'
 import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';

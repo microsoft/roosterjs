@@ -1,6 +1,6 @@
 import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
 import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';

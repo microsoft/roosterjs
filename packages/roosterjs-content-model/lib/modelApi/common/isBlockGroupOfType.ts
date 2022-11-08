@@ -1,4 +1,4 @@
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { TypeOfBlockGroup } from './getOperationalBlocks';
 
 /**

@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelGeneralBlock } from '../../publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';

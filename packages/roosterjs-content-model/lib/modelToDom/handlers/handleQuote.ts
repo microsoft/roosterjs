@@ -1,5 +1,5 @@
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelQuote } from '../../publicTypes/block/group/ContentModelQuote';
+import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 

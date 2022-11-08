@@ -1,4 +1,4 @@
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createSelectionMarker } from './createSelectionMarker';
