@@ -79,6 +79,7 @@ describe('isEmpty', () => {
                         spanAbove: false,
                         spanLeft: false,
                         blocks: [],
+                        dataset: {},
                     },
                 ],
             ],
@@ -237,6 +238,7 @@ describe('isEmpty', () => {
             spanAbove: false,
             spanLeft: false,
             blocks: [],
+            dataset: {},
         });
 
         expect(result).toBeFalse();

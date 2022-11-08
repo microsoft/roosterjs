@@ -21,5 +21,6 @@ export function createTableCell(
         spanLeft,
         spanAbove,
         isHeader: !!isHeader,
+        dataset: {},
     };
 }

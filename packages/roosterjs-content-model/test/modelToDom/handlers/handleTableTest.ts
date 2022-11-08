@@ -191,4 +191,28 @@ describe('handleTable', () => {
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
     });
+
+    it('Regular 1 * 1 table, handle dataset', () => {
+        const datasetApplier = jasmine.createSpy('datasetApplier');
+        context.formatAppliers.dataset = [datasetApplier];
+
+        const div = document.createElement('div');
+        handleTable(
+            document,
+            div,
+            {
+                blockType: 'Table',
+                cells: [[createTableCell(1, 1, false)]],
+                format: {},
+                widths: [],
+                heights: [],
+            },
+            context
+        );
+
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+
+        const table = div.firstChild as HTMLTableElement;
+        expect(datasetApplier).toHaveBeenCalledWith({}, table.rows[0].cells[0], context);
+    });
 });
