@@ -1,4 +1,4 @@
-import { ContentModelTable } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelTable';
+import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 import { updateMetadata } from './updateMetadata';
