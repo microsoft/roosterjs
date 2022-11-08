@@ -112,6 +112,8 @@ export { default as isCtrlOrMetaPressed } from './event/isCtrlOrMetaPressed';
 export { default as getStyles } from './style/getStyles';
 export { default as setStyles } from './style/setStyles';
 export { default as removeImportantStyleRule } from './style/removeImportantStyleRule';
+export { default as setGlobalCssStyles } from './style/setGlobalCssStyles';
+export { default as removeGlobalCssStyle } from './style/removeGlobalCssStyle';
 
 export { default as adjustInsertPosition } from './edit/adjustInsertPosition';
 export { default as deleteSelectedContent } from './edit/deleteSelectedContent';
