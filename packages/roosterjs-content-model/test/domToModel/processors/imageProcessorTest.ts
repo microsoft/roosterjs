@@ -174,8 +174,9 @@ describe('imageProcessor', () => {
         const doc = createContentModelDocument(document);
         const img = document.createElement('img');
 
-        context.linkFormat = {
+        context.link = {
             format: { href: '/test' },
+            dataset: {},
         };
         img.src = 'http://test.com/testSrc';
 
@@ -195,7 +196,10 @@ describe('imageProcessor', () => {
                             format: {},
                             src: 'http://test.com/testSrc',
                             link: {
-                                href: '/test',
+                                format: {
+                                    href: '/test',
+                                },
+                                dataset: {},
                             },
                             dataset: {},
                         },

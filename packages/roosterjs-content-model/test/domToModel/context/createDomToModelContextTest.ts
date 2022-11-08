@@ -31,7 +31,10 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             isInSelection: false,
             listFormat,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -54,7 +57,10 @@ describe('createDomToModelContext', () => {
             },
             isInSelection: false,
             listFormat,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -88,7 +94,10 @@ describe('createDomToModelContext', () => {
                 isSelectionCollapsed: false,
             },
             listFormat,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -118,7 +127,10 @@ describe('createDomToModelContext', () => {
                 lastCell: { x: 3, y: 4 },
             },
             listFormat,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -137,7 +149,10 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             isInSelection: false,
             imageSelection: {
                 image: 'IMAGE' as any,
