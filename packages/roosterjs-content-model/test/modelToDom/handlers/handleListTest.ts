@@ -1,3 +1,4 @@
+import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
@@ -351,6 +352,7 @@ describe('handleList without format handlers', () => {
                 listType: null,
                 listLevelMetadata: null,
                 listLevelThread: null,
+                dataset: null,
             },
         });
         parent = document.createElement('div');
@@ -675,5 +677,60 @@ describe('handleList without format handlers', () => {
                 },
             ],
         });
+    });
+});
+
+describe('handleList handles metadata', () => {
+    let context: ModelToDomContext;
+    let parent: HTMLDivElement;
+
+    beforeEach(() => {
+        context = createModelToDomContext();
+        parent = document.createElement('div');
+    });
+
+    it('OL with metadata', () => {
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                orderedStyleType: NumberingListType.UpperAlpha,
+                unorderedStyleType: BulletListType.Circle,
+            },
+        ]);
+
+        handleList(document, parent, listItem, context);
+        expect(parent.innerHTML).toBe(
+            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha;"></ol>'
+        );
+    });
+
+    it('OL with metadata with simple value', () => {
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                orderedStyleType: NumberingListType.LowerAlpha,
+                unorderedStyleType: BulletListType.Circle,
+            },
+        ]);
+
+        handleList(document, parent, listItem, context);
+        expect(parent.innerHTML).toBe(
+            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: lower-alpha;"></ol>'
+        );
+    });
+
+    it('UL with metadata with simple value', () => {
+        const listItem = createListItem([
+            {
+                listType: 'UL',
+                orderedStyleType: NumberingListType.LowerAlpha,
+                unorderedStyleType: BulletListType.Circle,
+            },
+        ]);
+
+        handleList(document, parent, listItem, context);
+        expect(parent.innerHTML).toBe(
+            '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: circle;"></ul>'
+        );
     });
 });
