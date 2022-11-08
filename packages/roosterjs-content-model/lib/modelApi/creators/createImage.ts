@@ -14,6 +14,7 @@ export function createImage(
         segmentType: 'Image',
         src: src,
         format: format ? { ...format } : {},
+        dataset: {},
     };
 
     if (link?.href) {

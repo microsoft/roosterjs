@@ -46,6 +46,7 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
 
         applyFormat(img, context.formatAppliers.image, imageModel.format, context);
         applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
+        applyFormat(img, context.formatAppliers.dataset, imageModel.dataset, context);
     } finally {
         context.implicitSegmentFormat = implicitSegmentFormat;
     }
