@@ -95,7 +95,7 @@ describe('changeFontSize', () => {
     }
 
     it('empty editor', () => {
-        runTest('', ``, ``);
+        runTest('', '', '');
     });
 
     it('Single text node', () => {
