@@ -125,6 +125,11 @@ export default class ImageEdit implements EditorPlugin {
     private wasResized: boolean;
 
     /**
+     * Editor zoom scale
+     */
+    private zoomWrapper: HTMLElement;
+
+    /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
      * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
@@ -377,7 +382,7 @@ export default class ImageEdit implements EditorPlugin {
             }
         });
 
-        this.insertImageWrapper(this.image, this.wrapper);
+        this.insertImageWrapper(this.image, this.wrapper, this.editor.getZoomScale());
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
@@ -392,13 +397,27 @@ export default class ImageEdit implements EditorPlugin {
         }
     }
 
-    private insertImageWrapper(image: HTMLImageElement, wrapper: HTMLSpanElement) {
+    private createZoomWrapper(wrapper: HTMLSpanElement, scale: number) {
+        const zoomWrapper = this.editor.getDocument().createElement('div');
+        zoomWrapper.style.transform = `scale(${scale || 1})`;
+        zoomWrapper.style.transformOrigin = 'top left';
+        zoomWrapper.style.position = 'fixed';
+        zoomWrapper.appendChild(wrapper);
+        return zoomWrapper;
+    }
+
+    private copyImageSize(image: HTMLImageElement, element: HTMLElement) {
         const { top, left, right, bottom } = image.getBoundingClientRect();
-        wrapper.style.top = `${top}px`;
-        wrapper.style.bottom = `${bottom}px`;
-        wrapper.style.right = `${right}px`;
-        wrapper.style.left = `${left}px`;
-        this.editor.getDocument().body.appendChild(wrapper);
+        element.style.top = `${top}px`;
+        element.style.bottom = `${bottom}px`;
+        element.style.right = `${right}px`;
+        element.style.left = `${left}px`;
+        return element;
+    }
+
+    private insertImageWrapper(image: HTMLImageElement, wrapper: HTMLSpanElement, scale: number) {
+        this.zoomWrapper = this.copyImageSize(image, this.createZoomWrapper(wrapper, scale));
+        this.editor.getDocument().body.appendChild(this.zoomWrapper);
     }
 
     private getStylePropertyValue(element: HTMLElement, property: string): string {
@@ -406,16 +425,18 @@ export default class ImageEdit implements EditorPlugin {
             .getComputedStyle(this.image)
             .getPropertyValue(property);
     }
+
     /**
      * Remove the temp wrapper of the image
      */
     private removeWrapper = () => {
         const doc = this.editor.getDocument();
-        if (this.wrapper && doc.body?.contains(this.wrapper)) {
-            doc.body?.removeChild(this.wrapper);
+        if (this.zoomWrapper && doc.body?.contains(this.zoomWrapper)) {
+            doc.body?.removeChild(this.zoomWrapper);
             this.toggleImageVisibility(this.image, true /** showImage */);
         }
         this.wrapper = null;
+        this.zoomWrapper = null;
     };
 
     /**
@@ -462,6 +483,8 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.height = getPx(visibleHeight);
             wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
             wrapper.style.transform = `rotate(${angleRad}rad)`;
+            this.zoomWrapper.style.width = getPx(visibleWidth);
+            this.zoomWrapper.style.height = getPx(visibleHeight);
 
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
