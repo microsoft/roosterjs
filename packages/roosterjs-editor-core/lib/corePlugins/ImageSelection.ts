@@ -14,13 +14,10 @@ const mouseRightButton = 2;
 const mouseLeftButton = 0;
 
 /**
- * Requires @see ExperimentalFeatures.ImageSelection to be enabled.
  * Detect image selection and help highlight the image
  */
 export default class ImageSelection implements EditorPlugin {
     private editor: IEditor | null = null;
-
-    constructor() {}
 
     /**
      * Get a friendly name of  this plugin
@@ -41,7 +38,7 @@ export default class ImageSelection implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
-        this.editor.select(null);
+        this.editor?.select(null);
         this.editor = null;
     }
 
@@ -73,7 +70,7 @@ export default class ImageSelection implements EditorPlugin {
                     if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
                         if (key === Escape) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
-                            this.editor.getSelectionRange().collapse();
+                            this.editor.getSelectionRange()?.collapse();
                             event.rawEvent.stopPropagation();
                         } else {
                             this.editor.select(keyDownSelection.ranges[0]);
