@@ -1,6 +1,6 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import setListStartNumber from '../../../lib/publicApi/list/setListStartNumber';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 
 describe('setListStartNumber', () => {
     function runTest(

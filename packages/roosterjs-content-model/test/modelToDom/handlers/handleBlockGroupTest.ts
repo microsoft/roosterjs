@@ -1,8 +1,8 @@
-import { ContentModelBlockGroup } from '../../../lib/publicTypes/block/group/ContentModelBlockGroup';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../../lib/publicTypes/block/group/ContentModelListItem';
-import { ContentModelQuote } from '../../../lib/publicTypes/block/group/ContentModelQuote';
+import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
+import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';

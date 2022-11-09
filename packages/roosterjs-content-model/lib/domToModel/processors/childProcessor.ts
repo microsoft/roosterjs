@@ -1,5 +1,5 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';

@@ -1,4 +1,4 @@
-import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
 import { DomToModelOption } from '../publicTypes/IExperimentalContentModelEditor';

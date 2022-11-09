@@ -1,4 +1,4 @@
-import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { DomToModelContext } from './DomToModelContext';
 
 /**

@@ -1,4 +1,4 @@
-import { ContentModelQuote } from '../../publicTypes/block/group/ContentModelQuote';
+import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 
 /**
  * @internal

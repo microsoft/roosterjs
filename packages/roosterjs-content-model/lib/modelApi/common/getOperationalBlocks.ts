@@ -1,5 +1,5 @@
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { ContentModelBlockGroupBase } from '../../publicTypes/block/group/ContentModelBlockGroupBase';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockGroupBase } from '../../publicTypes/group/ContentModelBlockGroupBase';
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
 import { SelectedParagraphWithPath } from '../selection/getSelectedParagraphs';
 

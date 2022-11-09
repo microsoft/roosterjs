@@ -1,5 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelHeader } from '../../publicTypes/block/ContentModelHeader';
+import { ContentModelHeader } from '../../publicTypes/decorator/ContentModelHeader';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';

@@ -1,6 +1,6 @@
 import { addBlock } from '../../../lib/modelApi/common/addBlock';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';

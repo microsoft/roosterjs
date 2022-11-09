@@ -2,7 +2,7 @@ import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';

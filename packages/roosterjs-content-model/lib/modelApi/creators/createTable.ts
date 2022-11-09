@@ -1,5 +1,5 @@
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 
 /**
  * @internal

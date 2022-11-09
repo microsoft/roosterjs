@@ -1,4 +1,4 @@
-import { ContentModelDocument } from './block/group/ContentModelDocument';
+import { ContentModelDocument } from './group/ContentModelDocument';
 import { EditorContext } from './context/EditorContext';
 import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';

@@ -1,5 +1,5 @@
 import hasSelectionInBlock from '../../publicApi/selection/hasSelectionInBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 
 /**

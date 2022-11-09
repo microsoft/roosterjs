@@ -1,4 +1,4 @@
-import { ContentModelBlockBase } from '../ContentModelBlockBase';
+import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 
 /**
