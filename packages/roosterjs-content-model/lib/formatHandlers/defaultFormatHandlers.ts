@@ -139,12 +139,13 @@ export function getFormatParsers(
 ): FormatParsersPerCategory {
     return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
         const value = defaultFormatKeysPerCategory[key]
-            .map(formatKey =>
-                override[formatKey] === undefined
-                    ? defaultFormatParsers[formatKey]
-                    : override[formatKey]
+            .map(
+                formatKey =>
+                    (override[formatKey] === undefined
+                        ? defaultFormatParsers[formatKey]
+                        : override[formatKey]) as FormatParser<any>
             )
-            .concat(additionalParsers[key] || []) as FormatParser<any>[];
+            .concat((additionalParsers[key] as FormatParser<any>[]) || []);
 
         result[key] = value;
 
@@ -161,14 +162,13 @@ export function getFormatAppliers(
 ): FormatAppliersPerCategory {
     return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
         const value = defaultFormatKeysPerCategory[key]
-            .map(formatKey =>
-                override[formatKey] === undefined
-                    ? defaultFormatAppliers[formatKey]
-                    : override[formatKey]
+            .map(
+                formatKey =>
+                    (override[formatKey] === undefined
+                        ? defaultFormatAppliers[formatKey]
+                        : override[formatKey]) as FormatApplier<any>
             )
-            .concat((additionalAppliers[key] || []) as FormatApplier<any>[]) as FormatApplier<
-            any
-        >[];
+            .concat((additionalAppliers[key] as FormatApplier<any>[]) || []);
 
         result[key] = value;
 
