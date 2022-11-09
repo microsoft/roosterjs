@@ -1,7 +1,7 @@
-import { Editor } from 'roosterjs-editor-core';
-import { IEditor } from 'roosterjs-editor-types';
-import { ImageSelection } from '../../lib/ImageSelection';
+import Editor from '../../lib/editor/Editor';
+import ImageSelection from '../../lib/corePlugins/ImageSelection';
 import {
+    IEditor,
     EditorOptions,
     SelectionRangeTypes,
     PluginEvent,

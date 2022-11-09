@@ -22,7 +22,6 @@ export interface BuildInPluginList {
     tableEditMenu: boolean;
     contextMenu: boolean;
     autoFormat: boolean;
-    imageSelection: boolean;
 }
 
 export default interface BuildInPluginState {
