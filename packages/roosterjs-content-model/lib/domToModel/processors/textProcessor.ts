@@ -1,3 +1,4 @@
+import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
@@ -53,16 +54,17 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
             lastSegment?.segmentType == 'Text' &&
             !!lastSegment.isSelected == !!context.isInSelection &&
             areSameFormats(lastSegment.format, context.segmentFormat) &&
-            areSameFormats(lastSegment.link || {}, context.linkFormat.format || {})
+            areSameFormats(lastSegment.link || {}, context.link.format || {})
         ) {
             lastSegment.text += text;
         } else if (!hasSpacesOnly(text) || paragraph?.segments.length! > 0) {
-            const textModel = createText(text, context.segmentFormat, context.linkFormat.format);
+            const textModel = createText(text, context.segmentFormat);
 
             if (context.isInSelection) {
                 textModel.isSelected = true;
             }
 
+            addLink(textModel, context.link);
             addSegment(group, textModel, context.blockFormat);
         }
     }

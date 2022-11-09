@@ -41,7 +41,7 @@ describe('handleSegment', () => {
             segmentType: 'Text',
             text: 'test',
             format: { underline: true },
-            link: { href: '/test' },
+            link: { format: { href: '/test' }, dataset: {} },
         };
 
         handleText(document, parent, text, context);
