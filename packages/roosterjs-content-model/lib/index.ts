@@ -146,5 +146,3 @@ export {
     DomToModelOption,
     ModelToDomOption,
 } from './publicTypes/IExperimentalContentModelEditor';
-
-export { createTempContainerProcessor } from './domToModel/processors/tempContainerProcessor';
