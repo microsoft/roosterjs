@@ -154,4 +154,16 @@ export interface ModelToDomSettings {
      * Map of default implicit format for segment
      */
     defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap;
+
+    /**
+     * Default Content Model to DOM handlers before overriding.
+     * This provides a way to call original handler from an overridden handler function
+     */
+    defaultModelHandlers: Readonly<ContentModelHandlerMap>;
+
+    /**
+     * Default format parsers before overriding.
+     * This provides a way to call original format applier from an overridden applier function
+     */
+    defaultFormatAppliers: Readonly<FormatAppliers>;
 }
