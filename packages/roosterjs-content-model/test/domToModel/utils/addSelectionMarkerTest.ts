@@ -93,8 +93,9 @@ describe('addSelectionMarker', () => {
         const doc = createContentModelDocument(document);
         const context = createDomToModelContext();
 
-        context.linkFormat = {
+        context.link = {
             format: { href: '/test' },
+            dataset: {},
         };
 
         addSelectionMarker(doc, context);
@@ -112,7 +113,7 @@ describe('addSelectionMarker', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {},
-                            link: { href: '/test' },
+                            link: { format: { href: '/test' }, dataset: {} },
                         },
                     ],
                 },

@@ -28,19 +28,25 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () => void
 ) {
-    const { segmentFormat, blockFormat, linkFormat } = context;
+    const { segmentFormat, blockFormat, link: linkFormat } = context;
     const { segment, paragraph, link } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
-        context.linkFormat = link == 'empty' ? {} : linkFormat;
+        context.link =
+            link == 'empty'
+                ? {
+                      format: {},
+                      dataset: {},
+                  }
+                : linkFormat;
 
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
         context.blockFormat = blockFormat;
-        context.linkFormat = linkFormat;
+        context.link = linkFormat;
     }
 }
 

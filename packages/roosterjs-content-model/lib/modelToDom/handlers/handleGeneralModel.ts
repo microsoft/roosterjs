@@ -37,7 +37,18 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
                     ...(context.defaultImplicitSegmentFormatMap.a || {}),
                 };
 
-                applyFormat(segmentElement, context.formatAppliers.link, group.link, context);
+                applyFormat(
+                    segmentElement,
+                    context.formatAppliers.link,
+                    group.link.format,
+                    context
+                );
+                applyFormat(
+                    segmentElement,
+                    context.formatAppliers.dataset,
+                    group.link.dataset,
+                    context
+                );
             } else {
                 segmentElement = newParent;
                 parent.appendChild(newParent);

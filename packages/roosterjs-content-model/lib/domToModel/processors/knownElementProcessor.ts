@@ -24,13 +24,8 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         },
         () => {
             if (isLink) {
-                context.linkFormat.format = {};
-                parseFormat(
-                    element,
-                    context.formatParsers.link,
-                    context.linkFormat.format,
-                    context
-                );
+                parseFormat(element, context.formatParsers.link, context.link.format, context);
+                parseFormat(element, context.formatParsers.dataset, context.link.dataset, context);
             }
 
             if (isBlock) {
