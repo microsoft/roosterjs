@@ -13,6 +13,7 @@ describe('applyTableFormat', () => {
             spanAbove: false,
             spanLeft: false,
             format: {},
+            dataset: {},
         };
     }
 
@@ -43,6 +44,7 @@ describe('applyTableFormat', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
     }
 
@@ -442,5 +444,39 @@ describe('applyTableFormat', () => {
                 ],
             ]
         );
+    });
+
+    it('Has bgColorOverride', () => {
+        const table = createTable(1, 1);
+        table.cells[0][0].format.backgroundColor = 'red';
+
+        applyTableFormat(table, {
+            bgColorEven: 'green',
+        });
+
+        expect(table.cells[0][0].format.backgroundColor).toBe('green');
+        expect(table.cells[0][0].dataset.editingInfo).toBeUndefined();
+
+        table.cells[0][0].dataset.editingInfo = '{"bgColorOverride":true}';
+
+        applyTableFormat(table, {
+            bgColorEven: 'blue',
+        });
+
+        expect(table.cells[0][0].format.backgroundColor).toBe('blue');
+        expect(table.cells[0][0].dataset.editingInfo).toBe('{}');
+
+        table.cells[0][0].dataset.editingInfo = '{"bgColorOverride":true}';
+
+        applyTableFormat(
+            table,
+            {
+                bgColorEven: 'yellow',
+            },
+            true
+        );
+
+        expect(table.cells[0][0].format.backgroundColor).toBe('blue');
+        expect(table.cells[0][0].dataset.editingInfo).toBe('{"bgColorOverride":true}');
     });
 });

@@ -22,21 +22,42 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
             context.regularSelection.current.segment = newParent;
         }
 
+        const implicitSegmentFormat = context.implicitSegmentFormat;
         let segmentElement: HTMLElement;
 
-        if (group.link) {
-            segmentElement = doc.createElement('a');
+        try {
+            if (group.link) {
+                segmentElement = doc.createElement('a');
 
-            parent.appendChild(segmentElement);
-            segmentElement.appendChild(newParent);
+                parent.appendChild(segmentElement);
+                segmentElement.appendChild(newParent);
 
-            applyFormat(segmentElement, context.formatAppliers.link, group.link, context);
-        } else {
-            segmentElement = newParent;
-            parent.appendChild(newParent);
+                context.implicitSegmentFormat = {
+                    ...implicitSegmentFormat,
+                    ...(context.defaultImplicitSegmentFormatMap.a || {}),
+                };
+
+                applyFormat(
+                    segmentElement,
+                    context.formatAppliers.link,
+                    group.link.format,
+                    context
+                );
+                applyFormat(
+                    segmentElement,
+                    context.formatAppliers.dataset,
+                    group.link.dataset,
+                    context
+                );
+            } else {
+                segmentElement = newParent;
+                parent.appendChild(newParent);
+            }
+
+            applyFormat(segmentElement, context.formatAppliers.segment, group.format, context);
+        } finally {
+            context.implicitSegmentFormat = implicitSegmentFormat;
         }
-
-        applyFormat(segmentElement, context.formatAppliers.segment, group.format, context);
     } else {
         parent.appendChild(newParent);
     }

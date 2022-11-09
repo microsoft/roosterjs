@@ -1,4 +1,5 @@
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
+import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { childProcessor as originalChildProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -336,5 +337,151 @@ describe('listProcessor without format handlers', () => {
         expect(popSpy).toHaveBeenCalledTimes(2);
 
         expect(pushSpy).toHaveBeenCalledWith({});
+    });
+});
+
+describe('listProcessor process metadata', () => {
+    let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+
+    beforeEach(() => {
+        childProcessor = jasmine.createSpy();
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
+    });
+
+    it('OL without list style type and metadata', () => {
+        const ol = document.createElement('ol');
+        const group = createContentModelDocument(document);
+
+        childProcessor.and.callFake((group, element, context) => {
+            expect(context.listFormat.levels).toEqual([
+                {
+                    listType: 'OL',
+                },
+            ]);
+        });
+
+        listProcessor(group, ol, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('OL with valid metadata', () => {
+        const ol = document.createElement('ol');
+        const group = createContentModelDocument(document);
+
+        ol.dataset.editingInfo = JSON.stringify({
+            orderedStyleType: 1,
+            unorderedStyleType: 2,
+        });
+
+        childProcessor.and.callFake((group, element, context) => {
+            expect(context.listFormat.levels).toEqual([
+                {
+                    listType: 'OL',
+                    orderedStyleType: 1,
+                    unorderedStyleType: 2,
+                },
+            ]);
+        });
+
+        listProcessor(group, ol, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('OL with invalid metadata', () => {
+        const ol = document.createElement('ol');
+        const group = createContentModelDocument(document);
+
+        ol.dataset.editingInfo = JSON.stringify({
+            orderedStyleType: true,
+            unorderedStyleType: 100,
+        });
+
+        childProcessor.and.callFake((group, element, context) => {
+            expect(context.listFormat.levels).toEqual([
+                {
+                    listType: 'OL',
+                },
+            ]);
+        });
+
+        listProcessor(group, ol, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('OL with metadata that has value at the edge of range', () => {
+        const ol = document.createElement('ol');
+        const group = createContentModelDocument(document);
+
+        ol.dataset.editingInfo = JSON.stringify({
+            orderedStyleType: NumberingListType.Max,
+            unorderedStyleType: BulletListType.Max,
+        });
+
+        childProcessor.and.callFake((group, element, context) => {
+            expect(context.listFormat.levels).toEqual([
+                {
+                    listType: 'OL',
+                    orderedStyleType: NumberingListType.Max,
+                    unorderedStyleType: BulletListType.Max,
+                },
+            ]);
+        });
+
+        listProcessor(group, ol, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('OL with metadata that has value at the out of range', () => {
+        const ol = document.createElement('ol');
+        const group = createContentModelDocument(document);
+
+        ol.dataset.editingInfo = JSON.stringify({
+            orderedStyleType: NumberingListType.Max + 1,
+            unorderedStyleType: BulletListType.Max + 1,
+        });
+
+        childProcessor.and.callFake((group, element, context) => {
+            expect(context.listFormat.levels).toEqual([
+                {
+                    listType: 'OL',
+                },
+            ]);
+        });
+
+        listProcessor(group, ol, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('OL with conflict metadata and list type', () => {
+        const ol = document.createElement('ol');
+        const group = createContentModelDocument(document);
+
+        ol.style.listStyleType = 'decimal';
+        ol.dataset.editingInfo = JSON.stringify({
+            orderedStyleType: NumberingListType.Max,
+        });
+
+        childProcessor.and.callFake((group, element, context) => {
+            expect(context.listFormat.levels).toEqual([
+                {
+                    listType: 'OL',
+                    orderedStyleType: NumberingListType.Max,
+                },
+            ]);
+        });
+
+        listProcessor(group, ol, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
     });
 });

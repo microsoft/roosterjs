@@ -4,6 +4,7 @@ import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
+    DefaultImplicitSegmentFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
@@ -86,6 +87,11 @@ export interface ModelToDomOption {
      * Overrides default model handlers
      */
     modelHandlerOverride?: Partial<ContentModelHandlerMap>;
+
+    /**
+     * Overrides default element styles
+     */
+    defaultImplicitSegmentFormatOverride?: DefaultImplicitSegmentFormatMap;
 }
 
 /**

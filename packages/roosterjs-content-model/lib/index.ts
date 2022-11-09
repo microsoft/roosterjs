@@ -34,6 +34,7 @@ export { ContentModelGeneralBlock } from './publicTypes/block/group/ContentModel
 export { ContentModelBlockGroup } from './publicTypes/block/group/ContentModelBlockGroup';
 export { ContentModelBlock } from './publicTypes/block/ContentModelBlock';
 export { ContentModelParagraph } from './publicTypes/block/ContentModelParagraph';
+export { ContentModelHeader } from './publicTypes/block/ContentModelHeader';
 export { ContentModelSegmentBase } from './publicTypes/segment/ContentModelSegmentBase';
 export { ContentModelSelectionMarker } from './publicTypes/segment/ContentModelSelectionMarker';
 export { ContentModelText } from './publicTypes/segment/ContentModelText';
@@ -43,6 +44,7 @@ export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGe
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
 export { ContentModelHR } from './publicTypes/block/ContentModelHR';
+export { ContentModelLink } from './publicTypes/decorator/ContentModelLink';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
@@ -52,6 +54,7 @@ export { ContentModelSegmentFormat } from './publicTypes/format/ContentModelSegm
 export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentModelListItemLevelFormat';
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
+export { ContentModelWithDataset } from './publicTypes/format/ContentModelWithDataset';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';
@@ -85,13 +88,13 @@ export {
     ImageMetadataFormat,
     ImageRotateMetadataFormat,
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
+export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 
 export { EditorContext } from './publicTypes/context/EditorContext';
 export {
     DomToModelListFormat,
-    DomToModelLinkFormat,
     DomToModelFormatContext,
 } from './publicTypes/context/DomToModelFormatContext';
 export {
@@ -129,6 +132,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
+    DefaultImplicitSegmentFormatMap,
 } from './publicTypes/context/ModelToDomSettings';
 export {
     ModelToDomEntityContext,

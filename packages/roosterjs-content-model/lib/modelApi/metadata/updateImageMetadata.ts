@@ -1,5 +1,7 @@
-import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
+import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ImageMetadataFormat } from '../../publicTypes/format/formatParts/ImageMetadataFormat';
+import { updateMetadata } from './updateMetadata';
+
 import {
     createNumberDefinition,
     createObjectDefinition,
@@ -23,19 +25,13 @@ const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetad
 
 /**
  * @internal
+ * Update image metadata with a callback
+ * @param image The image Content Model
+ * @param callback The callback function used for updating metadata
  */
-export const imageMetadataFormatHandler = createMetadataFormatHandler<ImageMetadataFormat>(
-    ImageMetadataFormatDefinition,
-    format => ({
-        widthPx: format.widthPx,
-        heightPx: format.heightPx,
-        leftPercent: format.leftPercent,
-        rightPercent: format.rightPercent,
-        topPercent: format.topPercent,
-        bottomPercent: format.bottomPercent,
-        angleRad: format.angleRad,
-        src: format.src,
-        naturalHeight: format.naturalHeight,
-        naturalWidth: format.naturalWidth,
-    })
-);
+export function updateImageMetadata(
+    image: ContentModelImage,
+    callback: (format: ImageMetadataFormat | null) => ImageMetadataFormat | null
+) {
+    updateMetadata(image, callback, ImageMetadataFormatDefinition);
+}

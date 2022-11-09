@@ -98,6 +98,7 @@ describe('handleSegment', () => {
             segmentType: 'Image',
             src: 'test',
             format: {},
+            dataset: {},
         };
 
         handleSegment(document, parent, segment, context);

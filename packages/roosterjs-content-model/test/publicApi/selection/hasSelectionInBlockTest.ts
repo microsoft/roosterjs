@@ -46,6 +46,7 @@ describe('hasSelectionInBlock', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -65,11 +66,13 @@ describe('hasSelectionInBlock', () => {
                         format: {},
                         spanAbove: false,
                         spanLeft: false,
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -89,6 +92,7 @@ describe('hasSelectionInBlock', () => {
                         format: {},
                         spanAbove: false,
                         spanLeft: false,
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -97,11 +101,13 @@ describe('hasSelectionInBlock', () => {
                         spanAbove: false,
                         spanLeft: false,
                         isSelected: true,
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -133,11 +139,13 @@ describe('hasSelectionInBlock', () => {
                         format: {},
                         spanAbove: false,
                         spanLeft: false,
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -164,6 +172,7 @@ describe('hasSelectionInBlock', () => {
                     format: {},
                 },
             ],
+            dataset: {},
         };
 
         const result = hasSelectionInBlockGroup(block);
