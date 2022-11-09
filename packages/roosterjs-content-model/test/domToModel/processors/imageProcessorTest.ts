@@ -29,6 +29,7 @@ describe('imageProcessor', () => {
                             segmentType: 'Image',
                             format: {},
                             src: '',
+                            dataset: {},
                         },
                     ],
                 },
@@ -59,6 +60,7 @@ describe('imageProcessor', () => {
                             format: {},
                             src: 'http://test.com/testSrc',
                             alt: 'testAlt',
+                            dataset: {},
                         },
                     ],
                 },
@@ -88,6 +90,7 @@ describe('imageProcessor', () => {
                             format: {},
                             src: '',
                             isSelected: true,
+                            dataset: {},
                         },
                     ],
                 },
@@ -118,6 +121,7 @@ describe('imageProcessor', () => {
                             src: '',
                             isSelected: true,
                             isSelectedAsImageSelection: true,
+                            dataset: {},
                         },
                     ],
                 },
@@ -152,6 +156,7 @@ describe('imageProcessor', () => {
                             src: '',
                             isSelected: true,
                             isSelectedAsImageSelection: true,
+                            dataset: {},
                         },
                     ],
                 },
@@ -169,8 +174,9 @@ describe('imageProcessor', () => {
         const doc = createContentModelDocument(document);
         const img = document.createElement('img');
 
-        context.linkFormat = {
+        context.link = {
             format: { href: '/test' },
+            dataset: {},
         };
         img.src = 'http://test.com/testSrc';
 
@@ -190,7 +196,85 @@ describe('imageProcessor', () => {
                             format: {},
                             src: 'http://test.com/testSrc',
                             link: {
-                                href: '/test',
+                                format: {
+                                    href: '/test',
+                                },
+                                dataset: {},
+                            },
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Image with dataset', () => {
+        const doc = createContentModelDocument(document);
+        const img = document.createElement('img');
+        const datasetParser = jasmine.createSpy('datasetParser').and.callFake(format => {
+            format.a = 'b';
+        });
+
+        img.src = 'http://test.com/testSrc';
+
+        context.formatParsers.dataset = [datasetParser];
+
+        imageProcessor(doc, img, context);
+
+        expect(datasetParser).toHaveBeenCalledWith({ a: 'b' }, img, context, {});
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'http://test.com/testSrc',
+                            format: {},
+                            dataset: {
+                                a: 'b',
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Image with dataset', () => {
+        const doc = createContentModelDocument(document);
+        const img = document.createElement('img');
+        const datasetParser = jasmine.createSpy('datasetParser').and.callFake(format => {
+            format.a = 'b';
+        });
+
+        img.src = 'http://test.com/testSrc';
+
+        context.formatParsers.dataset = [datasetParser];
+
+        imageProcessor(doc, img, context);
+
+        expect(datasetParser).toHaveBeenCalledWith({ a: 'b' }, img, context, {});
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'http://test.com/testSrc',
+                            format: {},
+                            dataset: {
+                                a: 'b',
                             },
                         },
                     ],

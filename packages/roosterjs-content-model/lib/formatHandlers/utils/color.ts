@@ -50,7 +50,7 @@ export function setColor(
             : getDarkColor?.(color) || color
         : originalColor;
 
-    if (isDarkMode) {
+    if (isDarkMode && originalColor) {
         element.dataset[
             isBackground
                 ? DarkModeDatasetNames.OriginalStyleBackgroundColor

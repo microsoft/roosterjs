@@ -50,6 +50,7 @@ describe('isEmpty', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeTrue();
@@ -62,6 +63,7 @@ describe('isEmpty', () => {
             cells: [[], [], []],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeTrue();
@@ -79,11 +81,13 @@ describe('isEmpty', () => {
                         spanAbove: false,
                         spanLeft: false,
                         blocks: [],
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeFalse();
@@ -237,6 +241,7 @@ describe('isEmpty', () => {
             spanAbove: false,
             spanLeft: false,
             blocks: [],
+            dataset: {},
         });
 
         expect(result).toBeFalse();

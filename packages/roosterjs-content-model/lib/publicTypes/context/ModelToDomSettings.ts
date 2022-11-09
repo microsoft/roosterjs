@@ -12,10 +12,16 @@ import { ContentModelListItem } from '../block/group/ContentModelListItem';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelQuote } from '../block/group/ContentModelQuote';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../block/ContentModelTable';
 import { ContentModelText } from '../segment/ContentModelText';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
 import { ModelToDomContext } from './ModelToDomContext';
+
+/**
+ * Default implicit format map from tag name (lower case) to segment fromat
+ */
+export type DefaultImplicitSegmentFormatMap = Record<string, Readonly<ContentModelSegmentFormat>>;
 
 /**
  * Apply format to the given HTML element
@@ -143,4 +149,9 @@ export interface ModelToDomSettings {
      * Map of format appliers
      */
     formatAppliers: FormatAppliersPerCategory;
+
+    /**
+     * Map of default implicit format for segment
+     */
+    defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap;
 }

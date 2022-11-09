@@ -1,14 +1,7 @@
 import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
-import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
 import { FormatHandler } from '../FormatHandler';
+import { getObjectKeys, getTagOfNode, safeInstanceOf } from 'roosterjs-editor-dom';
 import { ListMetadataFormat } from '../../publicTypes/format/formatParts/ListMetadataFormat';
-import {
-    createNumberDefinition,
-    createObjectDefinition,
-    getObjectKeys,
-    getTagOfNode,
-    safeInstanceOf,
-} from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -50,32 +43,6 @@ export const UnorderedMap: Record<BulletListType, string> = {
     [BulletListType.UnfilledArrow]: '"➪ "',
     [BulletListType.Hyphen]: '"— "',
 };
-const ListStyleDefinitionMetadata = createObjectDefinition<ListMetadataFormat>(
-    {
-        orderedStyleType: createNumberDefinition(
-            true /** isOptional */,
-            undefined /** value **/,
-            NumberingListType.Min,
-            NumberingListType.Max
-        ),
-        unorderedStyleType: createNumberDefinition(
-            true /** isOptional */,
-            undefined /** value **/,
-            BulletListType.Min,
-            BulletListType.Max
-        ),
-    },
-    true /** isOptional */,
-    true /** allowNull */
-);
-
-const listMetadataFormatHandlerInternal = createMetadataFormatHandler<ListMetadataFormat>(
-    ListStyleDefinitionMetadata,
-    format => ({
-        orderedStyleType: format.orderedStyleType,
-        unorderedStyleType: format.unorderedStyleType,
-    })
-);
 
 const OLTypeToStyleMap: Record<string, string> = {
     '1': 'decimal',
@@ -89,13 +56,11 @@ const OLTypeToStyleMap: Record<string, string> = {
  * @internal
  */
 export const listLevelMetadataFormatHandler: FormatHandler<ListMetadataFormat> = {
-    parse: (format, element, context, defaultStyle) => {
+    parse: (format, element) => {
         const listStyle =
             element.style.listStyleType ||
             (safeInstanceOf(element, 'HTMLOListElement') && OLTypeToStyleMap[element.type]);
         const tag = getTagOfNode(element);
-
-        listMetadataFormatHandlerInternal.parse(format, element, context, defaultStyle);
 
         if (listStyle) {
             if (tag == 'OL' && format.orderedStyleType === undefined) {
@@ -109,11 +74,8 @@ export const listLevelMetadataFormatHandler: FormatHandler<ListMetadataFormat> =
             }
         }
     },
-    apply: (format, element, context) => {
+    apply: (format, element) => {
         const tag = getTagOfNode(element);
-
-        listMetadataFormatHandlerInternal.apply(format, element, context);
-
         const listType =
             tag == 'OL'
                 ? OrderedMap[format.orderedStyleType!]

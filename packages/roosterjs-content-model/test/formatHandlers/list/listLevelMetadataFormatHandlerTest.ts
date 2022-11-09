@@ -28,78 +28,6 @@ describe('listLevelMetadataFormatHandler.parse', () => {
         });
     });
 
-    it('OL with valid metadata', () => {
-        const ol = document.createElement('ol');
-
-        ol.dataset.editingInfo = JSON.stringify({
-            orderedStyleType: 1,
-            unorderedStyleType: 2,
-        });
-
-        listLevelMetadataFormatHandler.parse(format, ol, context, {});
-
-        expect(format.orderedStyleType).toBe(1);
-        expect(format.unorderedStyleType).toBe(2);
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [],
-            levels: [],
-        });
-    });
-
-    it('OL with invalid metadata', () => {
-        const ol = document.createElement('ol');
-
-        ol.dataset.editingInfo = JSON.stringify({
-            orderedStyleType: true,
-            unorderedStyleType: 100,
-        });
-
-        listLevelMetadataFormatHandler.parse(format, ol, context, {});
-
-        expect(format.orderedStyleType).toBeUndefined();
-        expect(format.unorderedStyleType).toBeUndefined();
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [],
-            levels: [],
-        });
-    });
-
-    it('OL with metadata that has value at the edge of range', () => {
-        const ol = document.createElement('ol');
-
-        ol.dataset.editingInfo = JSON.stringify({
-            orderedStyleType: NumberingListType.Max,
-            unorderedStyleType: BulletListType.Max,
-        });
-
-        listLevelMetadataFormatHandler.parse(format, ol, context, {});
-
-        expect(format.orderedStyleType).toBe(NumberingListType.Max);
-        expect(format.unorderedStyleType).toBe(BulletListType.Max);
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [],
-            levels: [],
-        });
-    });
-
-    it('OL with metadata that has value at the out of range', () => {
-        const ol = document.createElement('ol');
-
-        ol.dataset.editingInfo = JSON.stringify({
-            orderedStyleType: NumberingListType.Max + 1,
-            unorderedStyleType: BulletListType.Max + 1,
-        });
-
-        listLevelMetadataFormatHandler.parse(format, ol, context, {});
-
-        expect(format.orderedStyleType).toBeUndefined();
-        expect(format.unorderedStyleType).toBeUndefined();
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [],
-            levels: [],
-        });
-    });
-
     it('OL with unrecognized list style type', () => {
         const ol = document.createElement('ol');
 
@@ -161,24 +89,6 @@ describe('listLevelMetadataFormatHandler.parse', () => {
         });
     });
 
-    it('OL with conflict metadata and list type', () => {
-        const ol = document.createElement('ol');
-
-        ol.style.listStyleType = 'decimal';
-        ol.dataset.editingInfo = JSON.stringify({
-            orderedStyleType: NumberingListType.Max,
-        });
-
-        listLevelMetadataFormatHandler.parse(format, ol, context, {});
-
-        expect(format.orderedStyleType).toBe(NumberingListType.Max);
-        expect(format.unorderedStyleType).toBeUndefined();
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [],
-            levels: [],
-        });
-    });
-
     it('UL with valid list style type', () => {
         const ul = document.createElement('ul');
 
@@ -211,42 +121,23 @@ describe('listLevelMetadataFormatHandler.parse', () => {
         expect(ol.outerHTML).toBe('<ol></ol>');
     });
 
-    it('OL with metadata', () => {
+    it('OL with list style', () => {
         const ol = document.createElement('ol');
 
         format.orderedStyleType = NumberingListType.UpperAlpha;
-        format.unorderedStyleType = BulletListType.Circle;
 
         listLevelMetadataFormatHandler.apply(format, ol, context);
 
-        expect(ol.outerHTML).toBe(
-            '<ol data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha;"></ol>'
-        );
+        expect(ol.outerHTML).toBe('<ol style="list-style-type: upper-alpha;"></ol>');
     });
 
-    it('OL with metadata with simple value', () => {
+    it('OL with complex list style', () => {
         const ol = document.createElement('ol');
 
-        format.orderedStyleType = NumberingListType.LowerAlpha;
-        format.unorderedStyleType = BulletListType.Circle;
+        format.orderedStyleType = NumberingListType.UpperAlphaDash;
 
         listLevelMetadataFormatHandler.apply(format, ol, context);
 
-        expect(ol.outerHTML).toBe(
-            '<ol data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: lower-alpha;"></ol>'
-        );
-    });
-
-    it('UL with metadata with simple value', () => {
-        const ul = document.createElement('ul');
-
-        format.orderedStyleType = NumberingListType.LowerAlpha;
-        format.unorderedStyleType = BulletListType.Circle;
-
-        listLevelMetadataFormatHandler.apply(format, ul, context);
-
-        expect(ul.outerHTML).toBe(
-            '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: circle;"></ul>'
-        );
+        expect(ol.outerHTML).toBe('<ol></ol>');
     });
 });

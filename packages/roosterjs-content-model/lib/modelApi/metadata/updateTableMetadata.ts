@@ -1,6 +1,7 @@
-import { createMetadataFormatHandler } from '../utils/createMetadataFormatHandler';
+import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
+import { updateMetadata } from './updateMetadata';
 import {
     createBooleanDefinition,
     createNumberDefinition,
@@ -41,20 +42,13 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
 
 /**
  * @internal
+ * Update table metadata with a callback
+ * @param table The table Content Model
+ * @param callback The callback function used for updating metadata
  */
-export const tableMetadataFormatHandler = createMetadataFormatHandler<TableMetadataFormat>(
-    TableFormatDefinition,
-    format => ({
-        topBorderColor: format.topBorderColor,
-        bottomBorderColor: format.bottomBorderColor,
-        verticalBorderColor: format.verticalBorderColor,
-        hasHeaderRow: format.hasHeaderRow,
-        headerRowColor: format.headerRowColor,
-        hasFirstColumn: format.hasFirstColumn,
-        hasBandedColumns: format.hasBandedColumns,
-        hasBandedRows: format.hasBandedRows,
-        bgColorEven: format.bgColorEven,
-        bgColorOdd: format.bgColorOdd,
-        tableBorderFormat: format.tableBorderFormat,
-    })
-);
+export function updateTableMetadata(
+    table: ContentModelTable,
+    callback: (format: TableMetadataFormat | null) => TableMetadataFormat | null
+) {
+    updateMetadata(table, callback, TableFormatDefinition);
+}
