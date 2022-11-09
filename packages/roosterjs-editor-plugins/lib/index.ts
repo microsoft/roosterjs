@@ -11,4 +11,3 @@ export * from './TableResize';
 export * from './Watermark';
 export * from './TableCellSelection';
 export * from './AutoFormat';
-export * from './ImageSelection';

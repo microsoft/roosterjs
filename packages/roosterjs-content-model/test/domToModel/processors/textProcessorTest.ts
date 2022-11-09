@@ -1,5 +1,9 @@
+import { addBlock } from '../../../lib/modelApi/common/addBlock';
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 
@@ -289,7 +293,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
-        context.linkFormat = { format: { href: '/test' } };
+        context.link = { format: { href: '/test' }, dataset: {} };
 
         textProcessor(doc, text, context);
 
@@ -300,7 +304,7 @@ describe('textProcessor', () => {
                     segmentType: 'Text',
                     text: 'test',
                     format: {},
-                    link: { href: '/test' },
+                    link: { format: { href: '/test' }, dataset: {} },
                 },
             ],
             isImplicit: true,
@@ -326,7 +330,7 @@ describe('textProcessor', () => {
         });
 
         context.isInSelection = true;
-        context.linkFormat = { format: { href: '/test' } };
+        context.link = { format: { href: '/test' }, dataset: {} };
 
         textProcessor(doc, text, context);
 
@@ -344,7 +348,7 @@ describe('textProcessor', () => {
                     text: 'test2',
                     isSelected: true,
                     format: {},
-                    link: { href: '/test' },
+                    link: { format: { href: '/test' }, dataset: {} },
                 },
             ],
             format: {},
@@ -355,7 +359,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
-        context.linkFormat = { format: { href: '/test' } };
+        context.link = { format: { href: '/test' }, dataset: {} };
         context.regularSelection = {
             startContainer: text,
             startOffset: 2,
@@ -375,7 +379,10 @@ describe('textProcessor', () => {
                     text: 'te',
                     format: {},
                     link: {
-                        href: '/test',
+                        format: {
+                            href: '/test',
+                        },
+                        dataset: {},
                     },
                 },
                 {
@@ -383,17 +390,93 @@ describe('textProcessor', () => {
                     isSelected: true,
                     format: {},
                     link: {
-                        href: '/test',
+                        format: {
+                            href: '/test',
+                        },
+                        dataset: {},
                     },
                 },
                 {
                     segmentType: 'Text',
                     text: 'st',
                     format: {},
-                    link: { href: '/test' },
+                    link: { format: { href: '/test' }, dataset: {} },
                 },
             ],
             format: {},
+        });
+    });
+
+    it('Empty text', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('');
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            document: document,
+        });
+    });
+
+    it('Space only text without existing paragraph', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            document: document,
+        });
+    });
+
+    it('Space only text with existing paragraph', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        addBlock(doc, createParagraph());
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+            ],
+            document: document,
+        });
+    });
+
+    it('Space only text with existing implicit paragraph with existing segment', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        addSegment(doc, createText('test'));
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test ',
+                        },
+                    ],
+                },
+            ],
+            document: document,
         });
     });
 });

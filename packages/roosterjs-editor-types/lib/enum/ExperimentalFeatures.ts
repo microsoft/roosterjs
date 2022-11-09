@@ -59,6 +59,7 @@ export const enum ExperimentalFeatures {
     ConvertSingleImageBody = 'ConvertSingleImageBody',
 
     /**
+     * @deprecated This feature is always enabled
      * Align table elements to left, center and right using setAlignment API
      */
     TableAlignment = 'TableAlignment',
@@ -69,6 +70,7 @@ export const enum ExperimentalFeatures {
     TabKeyTextFeatures = 'TabKeyTextFeatures',
 
     /**
+     * @deprecated this feature is always enabled
      * Provide a circular resize handles that adaptive the number od handles to the size of the image
      */
     AdaptiveHandlesResizer = 'AdaptiveHandlesResizer',
@@ -117,4 +119,10 @@ export const enum ExperimentalFeatures {
      * is the one closest to the item.
      */
     ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
+
+    /**
+     * When apply default format when initialize or user type, apply the format on a SPAN element rather than
+     * the block element (In most case, the DIV element) so keep the block element clean.
+     */
+    DefaultFormatInSpan = 'DefaultFormatInSpan',
 }

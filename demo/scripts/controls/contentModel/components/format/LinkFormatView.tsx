@@ -6,6 +6,11 @@ import { LinkFormat } from 'roosterjs-content-model';
 
 const LinkFormatRenderers: FormatRenderer<LinkFormat>[] = [
     createTextFormatRenderer<LinkFormat>(
+        'Name',
+        format => format.name,
+        (format, value) => (format.name = value)
+    ),
+    createTextFormatRenderer<LinkFormat>(
         'Href',
         format => format.href,
         (format, value) => (format.href = value)

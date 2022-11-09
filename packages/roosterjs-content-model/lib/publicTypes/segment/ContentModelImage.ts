@@ -1,11 +1,14 @@
 import { ContentModelImageFormat } from '../format/ContentModelImageFormat';
 import { ContentModelSegmentBase } from './ContentModelSegmentBase';
+import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import { ImageMetadataFormat } from '../format/formatParts/ImageMetadataFormat';
 
 /**
  * Content Model of IMG
  */
 export interface ContentModelImage
-    extends ContentModelSegmentBase<'Image', ContentModelImageFormat> {
+    extends ContentModelSegmentBase<'Image', ContentModelImageFormat>,
+        ContentModelWithDataset<ImageMetadataFormat> {
     /**
      * Image source of this IMG element
      */

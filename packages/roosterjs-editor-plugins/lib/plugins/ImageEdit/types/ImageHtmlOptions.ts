@@ -26,6 +26,7 @@ export default interface ImageHtmlOptions {
     isSmallImage: boolean;
 
     /**
+     * @deprecated this handles are always enabled
      * Enable resize handles experimental feature
      */
     handlesExperimentalFeatures?: boolean;

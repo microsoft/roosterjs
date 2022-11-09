@@ -4,6 +4,7 @@ import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelForm
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
 import { ContentModelTableFormat } from './ContentModelTableFormat';
+import { DatasetFormat } from './formatParts/DatasetFormat';
 import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 
 /**
@@ -56,4 +57,9 @@ export interface ContentModelFormatMap {
      * Format type for link
      */
     link: LinkFormat;
+
+    /**
+     * Format type for dataset
+     */
+    dataset: DatasetFormat;
 }

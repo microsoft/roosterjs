@@ -1,8 +1,8 @@
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DefaultLinkColorPlaceholder } from '../../../lib/domToModel/context/defaultStyles';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
 describe('knownElementProcessor', () => {
@@ -33,6 +33,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -79,6 +80,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -143,11 +145,14 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    headerLevel: 1,
+                    header: {
+                        headerLevel: 1,
+                        format: { fontWeight: 'bold', fontSize: '2em', fontFamily: 'Test' },
+                    },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { bold: true, fontFamily: 'Test' },
+                            format: { fontWeight: 'bold', fontFamily: 'Test', fontSize: '2em' },
                             text: 'test',
                         },
                     ],
@@ -156,6 +161,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -180,11 +186,14 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    headerLevel: 1,
+                    header: {
+                        headerLevel: 1,
+                        format: { fontWeight: 'bold', fontSize: '2em' },
+                    },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { bold: false },
+                            format: { fontWeight: 'normal', fontSize: '2em' },
                             text: 'test',
                         },
                     ],
@@ -193,6 +202,7 @@ describe('knownElementProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
         });
@@ -220,15 +230,57 @@ describe('knownElementProcessor', () => {
                             segmentType: 'Text',
                             format: {
                                 underline: true,
-                                textColor: DefaultLinkColorPlaceholder,
+                                textColor: HyperLinkColorPlaceholder,
                             },
-                            link: { href: '/test' },
+                            link: { format: { href: '/test' }, dataset: {} },
                             text: 'test',
                         },
                     ],
                 },
             ],
         });
-        expect(context.linkFormat).toEqual({});
+        expect(context.link).toEqual({ format: {}, dataset: {} });
+    });
+
+    it('Anchor element with dataset', () => {
+        const group = createContentModelDocument(document);
+        const a = document.createElement('a');
+
+        a.href = '/test';
+        a.textContent = 'test';
+        a.dataset.a = 'b';
+        a.dataset.c = 'd';
+
+        knownElementProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                underline: true,
+                                textColor: HyperLinkColorPlaceholder,
+                            },
+                            link: {
+                                format: { href: '/test' },
+                                dataset: {
+                                    a: 'b',
+                                    c: 'd',
+                                },
+                            },
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({ format: {}, dataset: {} });
     });
 });

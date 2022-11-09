@@ -1,4 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
+import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createGeneralBlock } from '../../modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../modelApi/creators/createGeneralSegment';
@@ -24,12 +25,13 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
 };
 
 const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    const segment = createGeneralSegment(element, context.segmentFormat, context.linkFormat.format);
+    const segment = createGeneralSegment(element, context.segmentFormat);
 
     if (context.isInSelection && !element.firstChild) {
         segment.isSelected = true;
     }
 
+    addLink(segment, context.link);
     addSegment(group, segment);
 
     stackFormat(

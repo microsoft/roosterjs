@@ -1,7 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { DefaultLinkColorPlaceholder } from '../../../lib/domToModel/context/defaultStyles';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { TextColorFormat } from '../../../lib/publicTypes/format/formatParts/TextColorFormat';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
@@ -97,7 +97,7 @@ describe('textColorFormatHandler.parse', () => {
         textColorFormatHandler.parse(format, div, context, context.defaultStyles.a!);
 
         expect(format).toEqual({
-            textColor: DefaultLinkColorPlaceholder,
+            textColor: HyperLinkColorPlaceholder,
         });
     });
 
@@ -109,6 +109,14 @@ describe('textColorFormatHandler.parse', () => {
         expect(format).toEqual({
             textColor: 'red',
         });
+    });
+
+    it('inherit', () => {
+        format.textColor = 'red';
+        div.style.fontFamily = 'inherit';
+        textColorFormatHandler.parse(format, div, context, {});
+
+        expect(format.textColor).toBe('red');
     });
 });
 
@@ -159,7 +167,6 @@ describe('textColorFormatHandler.apply', () => {
     it('HyperLink with default color', () => {
         const a = document.createElement('a');
 
-        format.textColor = DefaultLinkColorPlaceholder;
         textColorFormatHandler.apply(format, a, context);
 
         expect(a.outerHTML).toBe('<a></a>');

@@ -6,12 +6,23 @@ const styles = require('./ButtonGroup.scss');
 export function ButtonGroup(props: {
     hasFormat: boolean;
     hasContent: boolean;
-    bodyState: 'children' | 'format' | 'json' | 'collapsed';
+    hasDataset: boolean;
+    bodyState: 'children' | 'format' | 'json' | 'collapsed' | 'dataset';
     toggleVisual: () => void;
     toggleFormat: () => void;
     toggleJson: () => void;
+    toggleMetadata: () => void;
 }) {
-    const { hasContent, hasFormat, bodyState, toggleFormat, toggleJson, toggleVisual } = props;
+    const {
+        hasContent,
+        hasFormat,
+        hasDataset,
+        bodyState,
+        toggleFormat,
+        toggleJson,
+        toggleVisual,
+        toggleMetadata,
+    } = props;
 
     return (
         <div>
@@ -33,6 +44,16 @@ export function ButtonGroup(props: {
                         [styles.buttonChecked]: bodyState == 'format',
                     })}>
                     🖹
+                </button>
+            ) : null}
+            {hasDataset ? (
+                <button
+                    onClick={toggleMetadata}
+                    title="Dataset"
+                    className={css(styles.button, {
+                        [styles.buttonChecked]: bodyState == 'dataset',
+                    })}>
+                    🏴
                 </button>
             ) : null}
             <button

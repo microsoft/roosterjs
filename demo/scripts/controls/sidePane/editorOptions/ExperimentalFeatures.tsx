@@ -11,17 +11,15 @@ export interface ExperimentalFeaturesProps {
 const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.ConvertSingleImageBody]:
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
-    [ExperimentalFeatures.TableAlignment]:
-        'Align table elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
-    [ExperimentalFeatures.AdaptiveHandlesResizer]:
-        ' Provide a circular resize handles that adaptive the number od handles to the size of the image',
     [ExperimentalFeatures.ListItemAlignment]:
         'Align list elements elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.AutoFormatList]:
         'Trigger formatting by a especial characters. Ex: (A), 1. i).',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
+    [ExperimentalFeatures.DefaultFormatInSpan]:
+        'When apply default format when initialize or user type, apply the format on a SPAN element.',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<

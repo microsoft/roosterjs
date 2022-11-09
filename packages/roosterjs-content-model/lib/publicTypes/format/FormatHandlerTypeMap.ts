@@ -2,12 +2,14 @@ import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
+import { DatasetFormat } from './formatParts/DatasetFormat';
 import { DirectionFormat } from './formatParts/DirectionFormat';
+import { DisplayFormat } from './formatParts/DisplayFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
-import { ImageMetadataFormat } from './formatParts/ImageMetadataFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
+import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
@@ -18,8 +20,6 @@ import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
-import { TableCellMetadataFormat } from 'roosterjs-editor-types';
-import { TableMetadataFormat } from './formatParts/TableMetadataFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -49,9 +49,19 @@ export interface FormatHandlerTypeMap {
     borderBox: BorderBoxFormat;
 
     /**
+     * Format for DatasetFormat
+     */
+    dataset: DatasetFormat;
+
+    /**
      * Format for DirectionFormat
      */
     direction: DirectionFormat;
+
+    /**
+     * Format for DisplayFormat
+     */
+    display: DisplayFormat;
 
     /**
      * Format for FontFamilyFormat
@@ -69,14 +79,14 @@ export interface FormatHandlerTypeMap {
     id: IdFormat;
 
     /**
-     * Format for ImageMetadataFormat
-     */
-    imageMetadata: ImageMetadataFormat;
-
-    /**
      * Format for ItalicFormat
      */
     italic: ItalicFormat;
+
+    /**
+     * Format for LineHeightFormat
+     */
+    lineHeight: LineHeightFormat;
 
     /**
      * Format for LinkFormat
@@ -132,16 +142,6 @@ export interface FormatHandlerTypeMap {
      * Format for SuperOrSubScriptFormat
      */
     superOrSubScript: SuperOrSubScriptFormat;
-
-    /**
-     * Format for TableCellMetadataFormat
-     */
-    tableCellMetadata: TableCellMetadataFormat;
-
-    /**
-     * Format for TableMetadataFormat
-     */
-    tableMetadata: TableMetadataFormat;
 
     /**
      * Format for SpacingFormat

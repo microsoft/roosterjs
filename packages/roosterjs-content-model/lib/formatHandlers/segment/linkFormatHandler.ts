@@ -8,12 +8,17 @@ import { safeInstanceOf } from 'roosterjs-editor-dom';
 export const linkFormatHandler: FormatHandler<LinkFormat> = {
     parse: (format, element) => {
         if (safeInstanceOf(element, 'HTMLAnchorElement')) {
+            const name = element.name;
             const href = element.getAttribute('href'); // Use getAttribute to get original HREF but not the resolved absolute url
             const target = element.target;
             const rel = element.rel;
             const id = element.id;
             const className = element.className;
             const title = element.title;
+
+            if (name) {
+                format.name = name;
+            }
 
             if (href) {
                 format.href = href;
@@ -43,6 +48,10 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
     apply: (format, element) => {
         if (safeInstanceOf(element, 'HTMLAnchorElement') && format.href) {
             element.href = format.href;
+
+            if (format.name) {
+                element.name = format.name;
+            }
 
             if (format.target) {
                 element.target = format.target;

@@ -38,7 +38,9 @@ export default function applyInlineStyle(
         } else {
             editor.triggerPluginEvent(PluginEventType.PendingFormatStateChanged, {
                 formatState: {},
-                formatCallback: safeCallback,
+                // Here we use callback instead of safeCallback because we know it's contentEditable.
+                // In addition, for elements that are not added to the DOM tree, isContentEditable always returns false on Safari.
+                formatCallback: callback,
             });
             editor.triggerContentChangedEvent(ChangeSource.Format);
         }

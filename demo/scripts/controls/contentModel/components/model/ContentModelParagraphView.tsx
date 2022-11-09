@@ -3,6 +3,7 @@ import { BlockFormatView } from '../format/BlockFormatView';
 import { ContentModelParagraph, hasSelectionInBlock } from 'roosterjs-content-model';
 import { ContentModelSegmentView } from './ContentModelSegmentView';
 import { ContentModelView } from '../ContentModelView';
+import { SegmentFormatView } from '../format/SegmentFormatView';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelParagraphView.scss');
@@ -12,7 +13,7 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
     const implicitCheckbox = React.useRef<HTMLInputElement>(null);
     const headerLevelDropDown = React.useRef<HTMLSelectElement>(null);
     const [value, setValue] = useProperty(!!paragraph.isImplicit);
-    const [headerLevel, setHeaderLevel] = useProperty((paragraph.headerLevel || '') + '');
+    const [headerLevel, setHeaderLevel] = useProperty((paragraph.header?.headerLevel || '') + '');
 
     const onChange = React.useCallback(() => {
         const newValue = implicitCheckbox.current.checked;
@@ -22,7 +23,10 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
 
     const onHeaderLevelChange = React.useCallback(() => {
         const newValue = headerLevelDropDown.current.value;
-        paragraph.headerLevel = newValue == '' ? undefined : parseInt(newValue);
+
+        if (paragraph.header) {
+            paragraph.header.headerLevel = parseInt(newValue);
+        }
         setHeaderLevel(newValue);
     }, [paragraph, setHeaderLevel]);
 
@@ -38,21 +42,23 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
                     />
                     Implicit
                 </div>
-                <div>
-                    Header level:
-                    <select
-                        value={headerLevel}
-                        ref={headerLevelDropDown}
-                        onChange={onHeaderLevelChange}>
-                        <option value=""></option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                    </select>
-                </div>
+                {paragraph.header ? (
+                    <div>
+                        Header level:
+                        <select
+                            value={headerLevel}
+                            ref={headerLevelDropDown}
+                            onChange={onHeaderLevelChange}>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                        <SegmentFormatView format={paragraph.header.format} />
+                    </div>
+                ) : null}
                 {paragraph.segments.map((segment, index) => (
                     <ContentModelSegmentView segment={segment} key={index} />
                 ))}
