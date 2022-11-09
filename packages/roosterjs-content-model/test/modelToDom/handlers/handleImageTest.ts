@@ -77,7 +77,7 @@ describe('handleSegment', () => {
             segmentType: 'Image',
             src: 'http://test.com/test',
             format: { underline: true },
-            link: { href: '/test' },
+            link: { format: { href: '/test' }, dataset: {} },
             dataset: {},
         };
 
@@ -89,7 +89,7 @@ describe('handleSegment', () => {
             segmentType: 'Image',
             src: 'http://test.com/test',
             format: { underline: true },
-            link: { href: '/test' },
+            link: { format: { href: '/test' }, dataset: {} },
             dataset: {
                 a: 'b',
             },

@@ -38,7 +38,18 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
                 ...(context.defaultImplicitSegmentFormatMap.a || {}),
             };
 
-            applyFormat(segmentElement, context.formatAppliers.link, imageModel.link, context);
+            applyFormat(
+                segmentElement,
+                context.formatAppliers.link,
+                imageModel.link.format,
+                context
+            );
+            applyFormat(
+                segmentElement,
+                context.formatAppliers.dataset,
+                imageModel.link.dataset,
+                context
+            );
         } else {
             segmentElement = img;
             parent.appendChild(img);

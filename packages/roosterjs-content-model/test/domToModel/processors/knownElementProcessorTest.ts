@@ -232,13 +232,55 @@ describe('knownElementProcessor', () => {
                                 underline: true,
                                 textColor: HyperLinkColorPlaceholder,
                             },
-                            link: { href: '/test' },
+                            link: { format: { href: '/test' }, dataset: {} },
                             text: 'test',
                         },
                     ],
                 },
             ],
         });
-        expect(context.linkFormat).toEqual({});
+        expect(context.link).toEqual({ format: {}, dataset: {} });
+    });
+
+    it('Anchor element with dataset', () => {
+        const group = createContentModelDocument(document);
+        const a = document.createElement('a');
+
+        a.href = '/test';
+        a.textContent = 'test';
+        a.dataset.a = 'b';
+        a.dataset.c = 'd';
+
+        knownElementProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            document: document,
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                underline: true,
+                                textColor: HyperLinkColorPlaceholder,
+                            },
+                            link: {
+                                format: { href: '/test' },
+                                dataset: {
+                                    a: 'b',
+                                    c: 'd',
+                                },
+                            },
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.link).toEqual({ format: {}, dataset: {} });
     });
 });

@@ -32,7 +32,8 @@ export const handleText: ContentModelHandler<ContentModelText> = (
         applyFormat(element, context.formatAppliers.segment, segment.format, context);
 
         if (segment.link) {
-            applyFormat(element, context.formatAppliers.link, segment.link, context);
+            applyFormat(element, context.formatAppliers.link, segment.link.format, context);
+            applyFormat(element, context.formatAppliers.dataset, segment.link.dataset, context);
         }
     } finally {
         context.implicitSegmentFormat = implicitSegmentFormat;

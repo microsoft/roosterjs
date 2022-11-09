@@ -45,6 +45,7 @@ export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGe
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
 export { ContentModelHR } from './publicTypes/block/ContentModelHR';
+export { ContentModelLink } from './publicTypes/decorator/ContentModelLink';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './publicTypes/format/ContentModelTableFormat';
@@ -95,7 +96,6 @@ export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMa
 export { EditorContext, ContentModelDefaultSettings } from './publicTypes/context/EditorContext';
 export {
     DomToModelListFormat,
-    DomToModelLinkFormat,
     DomToModelFormatContext,
 } from './publicTypes/context/DomToModelFormatContext';
 export {

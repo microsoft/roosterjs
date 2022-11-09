@@ -115,8 +115,12 @@ function DatasetView(props: { dataset: DatasetFormat; getMetadata?: (() => JSX.E
                     <DatasetItemView dataset={dataset} name={name} />
                 ) : null
             )}
-            <div>Metadata:</div>
-            {getMetadata?.()}
+            {getMetadata ? (
+                <>
+                    <div>Metadata:</div>
+                    {getMetadata()}
+                </>
+            ) : null}
         </>
     );
 }

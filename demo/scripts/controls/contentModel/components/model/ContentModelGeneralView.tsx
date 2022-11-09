@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BlockGroupContentView } from './BlockGroupContentView';
+import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
-import { LinkFormatView } from '../format/LinkFormatView';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import {
     ContentModelGeneralBlock,
@@ -14,17 +14,18 @@ const styles = require('./ContentModelGeneralView.scss');
 export function ContentModelGeneralView(props: { model: ContentModelGeneralBlock }) {
     const { model } = props;
     const segment = isGeneralSegment(model) ? model : undefined;
+    const link = segment?.link;
     const getContent = React.useCallback(() => {
-        return <BlockGroupContentView group={model} />;
-    }, [model]);
-
-    const getFormat = React.useCallback(() => {
         return (
             <>
-                <SegmentFormatView format={model.format} />
-                {segment?.link && <LinkFormatView format={segment.link} />}
+                {link ? <ContentModelLinkView link={link} /> : null}
+                <BlockGroupContentView group={model} />
             </>
         );
+    }, [model, link]);
+
+    const getFormat = React.useCallback(() => {
+        return <SegmentFormatView format={model.format} />;
     }, [segment?.format]);
 
     return (

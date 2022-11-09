@@ -31,7 +31,10 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -59,7 +62,10 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -108,7 +114,10 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -169,7 +178,10 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -206,7 +218,10 @@ describe('createFormatContextTest', () => {
             segmentFormat: {},
             listFormat,
             defaultSettings,
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -243,7 +258,10 @@ describe('createFormatContextTest', () => {
                 direction: 'rtl',
             },
             segmentFormat: {},
-            linkFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
             listFormat,
             defaultSettings,
             ...contextOptions,

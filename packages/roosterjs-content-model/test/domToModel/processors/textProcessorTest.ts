@@ -293,7 +293,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
-        context.linkFormat = { format: { href: '/test' } };
+        context.link = { format: { href: '/test' }, dataset: {} };
 
         textProcessor(doc, text, context);
 
@@ -304,7 +304,7 @@ describe('textProcessor', () => {
                     segmentType: 'Text',
                     text: 'test',
                     format: {},
-                    link: { href: '/test' },
+                    link: { format: { href: '/test' }, dataset: {} },
                 },
             ],
             isImplicit: true,
@@ -330,7 +330,7 @@ describe('textProcessor', () => {
         });
 
         context.isInSelection = true;
-        context.linkFormat = { format: { href: '/test' } };
+        context.link = { format: { href: '/test' }, dataset: {} };
 
         textProcessor(doc, text, context);
 
@@ -348,7 +348,7 @@ describe('textProcessor', () => {
                     text: 'test2',
                     isSelected: true,
                     format: {},
-                    link: { href: '/test' },
+                    link: { format: { href: '/test' }, dataset: {} },
                 },
             ],
             format: {},
@@ -359,7 +359,7 @@ describe('textProcessor', () => {
         const doc = createContentModelDocument(document);
         const text = document.createTextNode('test');
 
-        context.linkFormat = { format: { href: '/test' } };
+        context.link = { format: { href: '/test' }, dataset: {} };
         context.regularSelection = {
             startContainer: text,
             startOffset: 2,
@@ -379,7 +379,10 @@ describe('textProcessor', () => {
                     text: 'te',
                     format: {},
                     link: {
-                        href: '/test',
+                        format: {
+                            href: '/test',
+                        },
+                        dataset: {},
                     },
                 },
                 {
@@ -387,14 +390,17 @@ describe('textProcessor', () => {
                     isSelected: true,
                     format: {},
                     link: {
-                        href: '/test',
+                        format: {
+                            href: '/test',
+                        },
+                        dataset: {},
                     },
                 },
                 {
                     segmentType: 'Text',
                     text: 'st',
                     format: {},
-                    link: { href: '/test' },
+                    link: { format: { href: '/test' }, dataset: {} },
                 },
             ],
             format: {},

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model';
+import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { ImageMetadataFormatRenderers } from '../format/formatPart/ImageMetadataFormatRenderers';
-import { LinkFormatView } from '../format/LinkFormatView';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
@@ -38,7 +38,6 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
             <>
                 <SegmentFormatView format={image.format} />
                 <FormatView format={image.format} renderers={ImageFormatRenderers} />
-                {image.link && <LinkFormatView format={image.link} />}
             </>
         );
     }, [image.format]);
@@ -57,9 +56,10 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
                     />
                     Image selection
                 </div>
+                {image.link ? <ContentModelLinkView link={image.link} /> : null}
             </>
         );
-    }, [src, imageSelected]);
+    }, [src, imageSelected, image.link]);
 
     const getMetadata = React.useCallback(() => {
         return (
