@@ -1,19 +1,33 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
-import * as handleParagraph from '../../../lib/modelToDom/handlers/handleParagraph';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
+import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
+import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
+import { ContentModelHR } from '../../../lib/publicTypes/block/ContentModelHR';
+import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
+    let handleEntity: jasmine.Spy<ContentModelHandler<ContentModelEntity>>;
+    let handleParagraph: jasmine.Spy<ContentModelHandler<ContentModelParagraph>>;
+    let handleHR: jasmine.Spy<ContentModelHandler<ContentModelHR>>;
 
     beforeEach(() => {
-        context = createModelToDomContext();
-        spyOn(handleParagraph, 'handleParagraph');
+        handleEntity = jasmine.createSpy('handleEntity');
+        handleParagraph = jasmine.createSpy('handleParagraph');
+        handleHR = jasmine.createSpy('handleHR');
+
+        context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                entity: handleEntity,
+                paragraph: handleParagraph,
+                hr: handleHR,
+            },
+        });
     });
 
     function runTest(block: ContentModelBlock, expectedInnerHTML: string) {
@@ -28,17 +42,13 @@ describe('handleBlock', () => {
         const paragraph: ContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
+            format: {},
         };
 
         runTest(paragraph, '');
 
-        expect(handleParagraph.handleParagraph).toHaveBeenCalledTimes(1);
-        expect(handleParagraph.handleParagraph).toHaveBeenCalledWith(
-            document,
-            parent,
-            paragraph,
-            context
-        );
+        expect(handleParagraph).toHaveBeenCalledTimes(1);
+        expect(handleParagraph).toHaveBeenCalledWith(document, parent, paragraph, context);
     });
 
     it('General block without child', () => {
@@ -48,11 +58,12 @@ describe('handleBlock', () => {
             blockGroupType: 'General',
             blocks: [],
             element: element,
+            format: {},
         };
 
         runTest(block, '<span></span>');
 
-        expect(handleParagraph.handleParagraph).toHaveBeenCalledTimes(0);
+        expect(handleParagraph).toHaveBeenCalledTimes(0);
     });
 
     it('General block with 1 child', () => {
@@ -60,23 +71,20 @@ describe('handleBlock', () => {
         const paragraph: ContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
+            format: {},
         };
         const block: ContentModelBlock = {
             blockType: 'BlockGroup',
             blockGroupType: 'General',
             blocks: [paragraph],
             element: element,
+            format: {},
         };
 
         runTest(block, '<span></span>');
 
-        expect(handleParagraph.handleParagraph).toHaveBeenCalledTimes(1);
-        expect(handleParagraph.handleParagraph).toHaveBeenCalledWith(
-            document,
-            element,
-            paragraph,
-            context
-        );
+        expect(handleParagraph).toHaveBeenCalledTimes(1);
+        expect(handleParagraph).toHaveBeenCalledWith(document, element, paragraph, context);
     });
 
     it('General block and segment', () => {
@@ -98,11 +106,38 @@ describe('handleBlock', () => {
         expect(parent.innerHTML).toBe('<span></span>');
         expect(parent.firstChild).not.toBe(element);
         expect(context.regularSelection.current.segment).toBe(parent.firstChild);
-        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
-            parent.firstChild as HTMLElement,
-            SegmentFormatHandlers,
-            block.format,
-            context
-        );
+        expect(applyFormat.applyFormat).toHaveBeenCalled();
+    });
+
+    it('Entity block', () => {
+        const element = document.createElement('div');
+        const block: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            wrapper: element,
+            type: 'entity',
+            id: 'entity_1',
+            isReadonly: true,
+        };
+
+        parent = document.createElement('div');
+
+        handleBlock(document, parent, block, context);
+
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context);
+    });
+
+    it('HR block', () => {
+        const block: ContentModelHR = {
+            blockType: 'HR',
+            format: {},
+        };
+
+        parent = document.createElement('div');
+
+        handleBlock(document, parent, block, context);
+
+        expect(handleHR).toHaveBeenCalledWith(document, parent, block, context);
     });
 });

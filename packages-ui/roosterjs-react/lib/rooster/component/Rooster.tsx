@@ -13,13 +13,13 @@ import { useTheme } from '@fluentui/react/lib/Theme';
  */
 export default function Rooster(props: RoosterProps) {
     const editorDiv = React.useRef<HTMLDivElement>(null);
-    const editor = React.useRef<IEditor>(null);
+    const editor = React.useRef<IEditor | null>(null);
     const theme = useTheme();
 
     const { focusOnInit, editorCreator, zoomScale, inDarkMode, plugins } = props;
 
     React.useEffect(() => {
-        if (plugins) {
+        if (plugins && editorDiv.current) {
             const uiUtilities = createUIUtilities(editorDiv.current, theme);
 
             plugins.forEach(plugin => {
@@ -31,10 +31,12 @@ export default function Rooster(props: RoosterProps) {
     }, [theme, editorCreator]);
 
     React.useEffect(() => {
-        editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);
+        if (editorDiv.current) {
+            editor.current = (editorCreator || defaultEditorCreator)(editorDiv.current, props);
+        }
 
         if (focusOnInit) {
-            editor.current.focus();
+            editor.current?.focus();
         }
 
         return () => {
@@ -46,11 +48,13 @@ export default function Rooster(props: RoosterProps) {
     }, [editorCreator]);
 
     React.useEffect(() => {
-        editor.current.setDarkModeState(!!inDarkMode);
+        editor.current?.setDarkModeState(!!inDarkMode);
     }, [inDarkMode]);
 
     React.useEffect(() => {
-        editor.current.setZoomScale(zoomScale);
+        if (zoomScale) {
+            editor.current?.setZoomScale(zoomScale);
+        }
     }, [zoomScale]);
 
     const divProps = getNativeProps<React.HTMLAttributes<HTMLDivElement>>(props, divProperties);

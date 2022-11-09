@@ -146,7 +146,7 @@ function cacheGetNeighborEntityElement(
         () => {
             const range = editor.getSelectionRange();
 
-            if (collapseOnly && !range.collapsed) {
+            if (!range || (collapseOnly && !range.collapsed)) {
                 return null;
             }
 

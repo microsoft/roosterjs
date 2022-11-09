@@ -11,7 +11,7 @@ export function searchEmojis(search: string, strings: Record<string, string>): E
     const partialMatch: Emoji[] = [];
     const partialSearch = ' ' + (search[0] == ':' ? search.substr(1) : search);
     forEachEmoji(emoji => {
-        const keywords = strings[emoji.keywords] || '';
+        const keywords = (emoji.keywords && strings[emoji.keywords]) || '';
         const searchableKeywords = emoji.keywords ? ' ' + keywords.toLowerCase() + ' ' : '';
         const index = searchableKeywords.indexOf(partialSearch);
         if (index >= 0) {
@@ -26,8 +26,8 @@ export function searchEmojis(search: string, strings: Record<string, string>): E
     return fullMatch.concat(partialMatch);
 }
 
-function matchShortcut(search: string): Emoji {
-    let result: Emoji;
+function matchShortcut(search: string): Emoji | null {
+    let result: Emoji | null = null;
     search = ' ' + search + ' ';
     forEachEmoji((emoji: Emoji) => {
         if (emoji.shortcut && (' ' + emoji.shortcut + ' ').indexOf(search) >= 0) {

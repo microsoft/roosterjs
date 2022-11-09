@@ -1,17 +1,16 @@
 import { defaultProcessorMap } from './defaultProcessors';
-import { defaultStyleMap } from './defaultStyles';
+import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
-import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
 export function createDomToModelContext(
     editorContext?: EditorContext,
-    range?: SelectionRangeEx,
     options?: DomToModelOption
 ): DomToModelContext {
     const context: DomToModelContext = {
@@ -22,8 +21,18 @@ export function createDomToModelContext(
             getDarkColor: undefined,
         }),
 
+        blockFormat: {},
         segmentFormat: {},
         isInSelection: false,
+
+        listFormat: {
+            levels: [],
+            threadItemCounts: [],
+        },
+        link: {
+            format: {},
+            dataset: {},
+        },
 
         elementProcessors: {
             ...defaultProcessorMap,
@@ -35,8 +44,21 @@ export function createDomToModelContext(
             ...(options?.defaultStyleOverride || {}),
         },
 
-        formatParsers: getFormatParsers(options?.formatParserOverride),
+        formatParsers: getFormatParsers(
+            options?.formatParserOverride,
+            options?.additionalFormatParsers
+        ),
     };
+
+    if (editorContext?.isRightToLeft) {
+        context.blockFormat.direction = 'rtl';
+    }
+
+    if (options?.alwaysNormalizeTable) {
+        context.alwaysNormalizeTable = true;
+    }
+
+    const range = options?.selectionRange;
 
     switch (range?.type) {
         case SelectionRangeTypes.Normal:
@@ -61,6 +83,12 @@ export function createDomToModelContext(
                 };
             }
 
+            break;
+
+        case SelectionRangeTypes.ImageSelection:
+            context.imageSelection = {
+                image: range.image,
+            };
             break;
     }
 

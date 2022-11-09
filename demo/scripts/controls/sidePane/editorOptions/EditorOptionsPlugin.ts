@@ -29,10 +29,9 @@ const initialState: BuildInPluginState = {
     forcePreserveRatio: false,
     experimentalFeatures: [
         ExperimentalFeatures.ConvertSingleImageBody,
-        ExperimentalFeatures.TableAlignment,
-        ExperimentalFeatures.AdaptiveHandlesResizer,
         ExperimentalFeatures.ListItemAlignment,
         ExperimentalFeatures.PendingStyleBasedFormat,
+        ExperimentalFeatures.DefaultFormatInSpan,
     ],
     isRtl: false,
 };

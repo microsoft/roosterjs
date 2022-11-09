@@ -1,28 +1,31 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { handleBlockGroup } from './handleBlockGroup';
-import { handleParagraph } from './handleParagraph';
-import { handleTable } from './handleTable';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
  * @internal
  */
-export function handleBlock(
+export const handleBlock: ContentModelHandler<ContentModelBlock> = (
     doc: Document,
     parent: Node,
     block: ContentModelBlock,
     context: ModelToDomContext
-) {
+) => {
     switch (block.blockType) {
         case 'Table':
-            handleTable(doc, parent, block, context);
+            context.modelHandlers.table(doc, parent, block, context);
             break;
-
         case 'BlockGroup':
-            handleBlockGroup(doc, parent, block, context);
+            context.modelHandlers.blockGroup(doc, parent, block, context);
             break;
         case 'Paragraph':
-            handleParagraph(doc, parent, block, context);
+            context.modelHandlers.paragraph(doc, parent, block, context);
+            break;
+        case 'Entity':
+            context.modelHandlers.entity(doc, parent, block, context);
+            break;
+        case 'HR':
+            context.modelHandlers.hr(doc, parent, block, context);
             break;
     }
-}
+};

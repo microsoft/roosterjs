@@ -34,11 +34,12 @@ describe('LifecyclePlugin', () => {
                 underline: undefined,
             },
             isDarkMode: false,
-            onExternalContentTransform: undefined,
+            onExternalContentTransform: null,
             experimentalFeatures: [],
             shadowEditSelectionPath: null,
             shadowEditFragment: null,
             shadowEditTableSelectionPath: null,
+            shadowEditImageSelectionPath: null,
             getDarkColor,
         });
 
@@ -87,11 +88,12 @@ describe('LifecyclePlugin', () => {
                 underline: undefined,
             },
             isDarkMode: false,
-            onExternalContentTransform: undefined,
+            onExternalContentTransform: null,
             experimentalFeatures: [],
             shadowEditFragment: null,
             shadowEditSelectionPath: null,
             shadowEditTableSelectionPath: null,
+            shadowEditImageSelectionPath: null,
             getDarkColor,
         });
 

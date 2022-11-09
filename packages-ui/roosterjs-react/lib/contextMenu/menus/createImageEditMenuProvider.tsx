@@ -13,7 +13,7 @@ import {
     resizeByPercentage,
 } from 'roosterjs-editor-plugins';
 
-const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
+const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageAltText',
     unlocalizedText: 'Add alternate text',
     onClick: (_, editor, node, strings, uiUtilities) => {
@@ -43,7 +43,7 @@ const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
     },
 };
 
-const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey> = {
+const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageResize',
     unlocalizedText: 'Size',
     subItems: {
@@ -87,12 +87,12 @@ const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> 
     unlocalizedText: 'Crop image',
     shouldShow: (_, node, imageEdit) => {
         return (
-            imageEdit.isOperationAllowed(ImageEditOperation.Crop) &&
+            !!imageEdit?.isOperationAllowed(ImageEditOperation.Crop) &&
             canRegenerateImage(node as HTMLImageElement)
         );
     },
     onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
-        imageEdit.setEditingImage(node as HTMLImageElement, ImageEditOperation.Crop);
+        imageEdit?.setEditingImage(node as HTMLImageElement, ImageEditOperation.Crop);
     },
 };
 
@@ -103,7 +103,7 @@ const ImageRemoveMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
         if (editor.contains(node)) {
             editor.addUndoSnapshot(() => {
                 editor.deleteNode(node);
-                imageEdit.setEditingImage(null /*editingImage*/);
+                imageEdit?.setEditingImage(null /*editingImage*/);
             }, 'DeleteImage');
         }
     },
@@ -121,7 +121,7 @@ export default function createImageEditMenuProvider(
     imageEditPlugin: ImageEdit,
     strings?: LocalizedStrings<ImageEditMenuItemStringKey>
 ): EditorPlugin {
-    return createContextMenuProvider(
+    return createContextMenuProvider<ImageEditMenuItemStringKey, ImageEdit>(
         'imageEdit',
         [ImageAltTextMenuItem, ImageResizeMenuItem, ImageCropMenuItem, ImageRemoveMenuItem],
         strings,

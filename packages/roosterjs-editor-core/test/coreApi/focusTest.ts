@@ -23,6 +23,7 @@ describe('focus', () => {
             stopPrintableKeyboardEventPropagation: false,
             contextMenuProviders: [],
             tableSelectionRange: null,
+            imageSelectionRange: null,
         };
 
         focus(core);

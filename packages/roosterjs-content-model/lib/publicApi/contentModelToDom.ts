@@ -2,7 +2,7 @@ import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDoc
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { handleBlockGroup } from '../modelToDom/handlers/handleBlockGroup';
+import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
@@ -20,32 +20,39 @@ import {
  * @param model The content model document to generate DOM tree from
  * @param editorContext Content for Content Model editor
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
- * @returns A Document Fragment that contains the DOM tree generated from the given model,
- * and a SelectionRangeEx object that contains selection info from the model if any, or null
+ * @returns A tuple of the following 3 objects:
+ * 1. Document Fragment that contains the DOM tree generated from the given model
+ * 2. A SelectionRangeEx object that contains selection info from the model if any, or null
+ * 3. An array entity DOM wrapper and its placeholder node pair for reusable root level entities.
  */
 export default function contentModelToDom(
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null] {
+): [DocumentFragment, SelectionRangeEx | null, EntityPlaceholderPair[]] {
     const fragment = model.document.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
-    handleBlockGroup(model.document, fragment, model, modelToDomContext);
+    modelToDomContext.modelHandlers.blockGroup(model.document, fragment, model, modelToDomContext);
     optimize(fragment, 2 /*optimizeLevel*/);
 
     const range = extractSelectionRange(modelToDomContext);
 
     fragment.normalize();
 
-    return [fragment, range];
+    return [fragment, range, modelToDomContext.entityPairs];
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {
     const {
         regularSelection: { start, end },
         tableSelection,
+        imageSelection,
     } = context;
+
+    let startPosition: NodePosition | undefined;
+    let endPosition: NodePosition | undefined;
+
     if (tableSelection?.table) {
         return {
             type: SelectionRangeTypes.TableSelection,
@@ -57,23 +64,27 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
                 lastCell: tableSelection.lastCell,
             },
         };
+    } else if (imageSelection?.image) {
+        return {
+            type: SelectionRangeTypes.ImageSelection,
+            ranges: [createRange(imageSelection.image)],
+            areAllCollapsed: false,
+            image: imageSelection.image,
+        };
+    } else if (
+        (startPosition = start && calcPosition(start)) &&
+        (endPosition = end && calcPosition(end))
+    ) {
+        const range = createRange(startPosition, endPosition);
+
+        return {
+            type: SelectionRangeTypes.Normal,
+            ranges: [createRange(startPosition, endPosition)],
+            areAllCollapsed: range.collapsed,
+        };
+    } else {
+        return null;
     }
-
-    if (start && end) {
-        const startPosition = calcPosition(start);
-        const endPosition = calcPosition(end);
-        const range = startPosition && endPosition && createRange(startPosition, endPosition);
-
-        if (range) {
-            return {
-                type: SelectionRangeTypes.Normal,
-                ranges: [range],
-                areAllCollapsed: range.collapsed,
-            };
-        }
-    }
-
-    return null;
 }
 
 function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefined {

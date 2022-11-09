@@ -13,6 +13,7 @@ describe('deleteTableColumn', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -29,6 +30,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1, cell2]],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -47,6 +49,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell2]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell2.blocks.some(hasSelectionInBlock)).toBeTrue();
@@ -68,6 +71,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1, cell3]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
@@ -90,6 +94,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1, cell2]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
@@ -113,6 +118,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell1.blocks.some(hasSelectionInBlock)).toBeFalse();
@@ -135,6 +141,7 @@ describe('deleteTableColumn', () => {
             cells: [[]],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -155,6 +162,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1, cell3, cell4]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -183,6 +191,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1, cell3, cell4]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -211,6 +220,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1, cell3, cell4]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -239,6 +249,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell1, cell2, cell4]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell1.spanLeft).toBeFalse();
@@ -268,6 +279,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell2], [cell4]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell2.blocks.some(hasSelectionInBlock)).toBeTrue();
@@ -292,6 +304,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell2], [cell4]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell2.spanAbove).toBeFalse();
@@ -319,6 +332,7 @@ describe('deleteTableColumn', () => {
             cells: [[cell2], [cell4]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell2.spanAbove).toBeFalse();
@@ -356,6 +370,7 @@ describe('deleteTableColumn', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cell2.spanLeft).toBeFalse();

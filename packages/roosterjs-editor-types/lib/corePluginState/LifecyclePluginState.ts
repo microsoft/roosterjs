@@ -16,7 +16,7 @@ export default interface LifecyclePluginState {
     /**
      * Default format of this editor
      */
-    defaultFormat: DefaultFormat;
+    defaultFormat: DefaultFormat | null;
 
     /**
      * Whether editor is in dark mode
@@ -26,12 +26,12 @@ export default interface LifecyclePluginState {
     /**
      * Calculate dark mode color from light mode color
      */
-    getDarkColor: (lightColor: string | null) => string;
+    getDarkColor: (lightColor: string) => string;
 
     /**
      * External content transform function to help do color transform for existing content
      */
-    onExternalContentTransform: (htmlIn: HTMLElement) => void;
+    onExternalContentTransform: ((htmlIn: HTMLElement) => void) | null;
 
     /**
      * Enabled experimental features
@@ -52,4 +52,9 @@ export default interface LifecyclePluginState {
      * Cached table selection path for original content
      */
     shadowEditTableSelectionPath: SelectionPath[] | null;
+
+    /**
+     * Cached image selection path for original content
+     */
+    shadowEditImageSelectionPath: SelectionPath[] | null;
 }

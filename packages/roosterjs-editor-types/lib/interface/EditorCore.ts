@@ -9,18 +9,17 @@ import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { GetContentMode } from '../enum/GetContentMode';
+import { ImageSelectionRange, SelectionRangeEx } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
-import { SelectionRangeEx } from './SelectionRangeEx';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TableSelectionRange } from './SelectionRangeEx';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
 import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
-
 /**
  * Represents the core data structure of an editor
  */
@@ -68,6 +67,11 @@ export default interface EditorCore extends PluginState {
      * Retrieves the Visible Viewport of the editor.
      */
     getVisibleViewport: () => Rect | null;
+
+    /**
+     * Color of the border of a selectedImage. Default color: '#DB626C'
+     */
+    imageSelectionBorderColor?: string;
 }
 
 /**
@@ -119,11 +123,14 @@ export type CreatePasteFragment = (
  * @param core The EditorCore object.
  * @param position The position that user is about to type to
  * @param keyboardEvent Optional keyboard event object
+ * @param applyFormatToSpan Optional When set to true, default format (if any) will be applied to
+ * a SPAN element inside the block element instead of the block element itself.
  */
 export type EnsureTypeInContainer = (
     core: EditorCore,
     position: NodePosition,
-    keyboardEvent?: KeyboardEvent
+    keyboardEvent?: KeyboardEvent,
+    applyFormatToSpan?: boolean
 ) => void;
 
 /**
@@ -273,6 +280,17 @@ export type SelectTable = (
 ) => TableSelectionRange | null;
 
 /**
+ * Select a table and save data of the selected range
+ * @param core The EditorCore object
+ * @param image image to select
+ * @returns true if successful
+ */
+export type SelectImage = (
+    core: EditorCore,
+    image: HTMLImageElement | null
+) => ImageSelectionRange | null;
+
+/**
  * The interface for the map of core API.
  * Editor can call call API from this map under EditorCore object
  */
@@ -312,6 +330,8 @@ export interface CoreApiMap {
      * @param core The EditorCore object.
      * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
+     * @param applyFormatToSpan Optional When set to true, default format (if any) will be applied to
+     * a SPAN element inside the block element instead of the block element itself.
      */
     ensureTypeInContainer: EnsureTypeInContainer;
 
@@ -437,4 +457,13 @@ export interface CoreApiMap {
      * @returns true if successful
      */
     selectTable: SelectTable;
+
+    /**
+     * Select a image and save data of the selected range
+     * @param core The EditorCore object
+     * @param image image to select
+     * @param imageId the id of the image element
+     * @returns true if successful
+     */
+    selectImage: SelectImage;
 }

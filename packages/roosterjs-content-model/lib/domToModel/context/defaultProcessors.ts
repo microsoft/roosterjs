@@ -1,26 +1,55 @@
 import { brProcessor } from '../processors/brProcessor';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { childProcessor } from '../processors/childProcessor';
+import { elementProcessor } from '../processors/elementProcessor';
+import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
+import { entityProcessor } from '../processors/entityProcessor';
 import { fontProcessor } from '../processors/fontProcessor';
+import { generalProcessor } from '../processors/generalProcessor';
+import { hrProcessor } from '../processors/hrProcessor';
+import { imageProcessor } from '../processors/imageProcessor';
 import { knownElementProcessor } from '../processors/knownElementProcessor';
+import { listItemProcessor } from '../processors/listItemProcessor';
+import { listProcessor } from '../processors/listProcessor';
+import { quoteProcessor } from '../processors/quoteProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
-import { tempContainerProcessor } from '../processors/tempContainerProcessor';
+import { textProcessor } from '../processors/textProcessor';
 
 /**
  * @internal
  */
-export const defaultProcessorMap: Record<string, ElementProcessor> = {
-    B: knownElementProcessor,
-    BR: brProcessor,
-    DIV: tempContainerProcessor,
-    EM: knownElementProcessor,
-    FONT: fontProcessor,
-    I: knownElementProcessor,
-    S: knownElementProcessor,
-    SPAN: tempContainerProcessor,
-    STRIKE: knownElementProcessor,
-    STRONG: knownElementProcessor,
-    SUB: knownElementProcessor,
-    SUP: knownElementProcessor,
-    TABLE: tableProcessor,
-    U: knownElementProcessor,
+export const defaultProcessorMap: ElementProcessorMap = {
+    a: knownElementProcessor,
+    b: knownElementProcessor,
+    blockquote: quoteProcessor,
+    br: brProcessor,
+    div: knownElementProcessor,
+    em: knownElementProcessor,
+    font: fontProcessor,
+    i: knownElementProcessor,
+    img: imageProcessor,
+    h1: knownElementProcessor,
+    h2: knownElementProcessor,
+    h3: knownElementProcessor,
+    h4: knownElementProcessor,
+    h5: knownElementProcessor,
+    h6: knownElementProcessor,
+    hr: hrProcessor,
+    li: listItemProcessor,
+    ol: listProcessor,
+    p: knownElementProcessor,
+    s: knownElementProcessor,
+    span: knownElementProcessor,
+    strike: knownElementProcessor,
+    strong: knownElementProcessor,
+    sub: knownElementProcessor,
+    sup: knownElementProcessor,
+    table: tableProcessor,
+    u: knownElementProcessor,
+    ul: listProcessor,
+
+    '*': generalProcessor,
+    '#text': textProcessor,
+    element: elementProcessor,
+    entity: entityProcessor,
+    child: childProcessor,
 };

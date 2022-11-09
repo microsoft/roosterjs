@@ -5,6 +5,7 @@ import { createSelectionMarker } from '../../modelApi/creators/createSelectionMa
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
+import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**
@@ -36,7 +37,12 @@ export default function insertTable(
 
     editor.addUndoSnapshot(
         () => {
-            editor.setContentModel(doc, fragment => editor.insertNode(fragment));
+            editor.setContentModel(doc, {
+                mergingCallback: (fragment, _, entityPairs) => {
+                    preprocessEntitiesFromContentModel(entityPairs);
+                    editor.insertNode(fragment);
+                },
+            });
         },
         ChangeSource.Format,
         false /*canUndoByBackspace*/,

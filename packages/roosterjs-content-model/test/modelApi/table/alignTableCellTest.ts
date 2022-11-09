@@ -44,6 +44,7 @@ describe('alignTableCell', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 

@@ -15,4 +15,14 @@ export type ContentModelBlockType =
     /**
      * Represent a general paragraph (DIV, P, ...)
      */
-    | 'Paragraph';
+    | 'Paragraph'
+
+    /**
+     * Represent a block entity
+     */
+    | 'Entity'
+
+    /**
+     * Represents a HR element
+     */
+    | 'HR';

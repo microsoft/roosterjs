@@ -59,6 +59,7 @@ export const enum ExperimentalFeatures {
     ConvertSingleImageBody = 'ConvertSingleImageBody',
 
     /**
+     * @deprecated This feature is always enabled
      * Align table elements to left, center and right using setAlignment API
      */
     TableAlignment = 'TableAlignment',
@@ -69,6 +70,7 @@ export const enum ExperimentalFeatures {
     TabKeyTextFeatures = 'TabKeyTextFeatures',
 
     /**
+     * @deprecated this feature is always enabled
      * Provide a circular resize handles that adaptive the number od handles to the size of the image
      */
     AdaptiveHandlesResizer = 'AdaptiveHandlesResizer',
@@ -101,4 +103,24 @@ export const enum ExperimentalFeatures {
      * e.g. We will move list items with "display: block" into previous list item and change tag to be DIV
      */
     NormalizeList = 'NormalizeList',
+
+    /**
+     * @deprecated this feature is always enabled
+     * When a html image is selected, the selected image data will be stored by editor core.
+     */
+    ImageSelection = 'ImageSelection',
+
+    /**
+     * With this feature enabled, when writing back a list item we will re-use all
+     * ancestor list elements, even if they don't match the types currently in the
+     * listTypes array for that item. The only list that we will ensure is correct
+     * is the one closest to the item.
+     */
+    ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
+
+    /**
+     * When apply default format when initialize or user type, apply the format on a SPAN element rather than
+     * the block element (In most case, the DIV element) so keep the block element clean.
+     */
+    DefaultFormatInSpan = 'DefaultFormatInSpan',
 }

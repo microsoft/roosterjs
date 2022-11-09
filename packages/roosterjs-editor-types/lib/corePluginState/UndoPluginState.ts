@@ -29,5 +29,5 @@ export default interface UndoPluginState {
     /**
      * Position after last auto complete. Undo autoComplete only works if the current position matches this one
      */
-    autoCompletePosition: NodePosition;
+    autoCompletePosition: NodePosition | null;
 }

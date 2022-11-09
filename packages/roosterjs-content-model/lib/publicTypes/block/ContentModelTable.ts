@@ -1,14 +1,15 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
 import { ContentModelTableCell } from './group/ContentModelTableCell';
 import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import { TableMetadataFormat } from '../format/formatParts/TableMetadataFormat';
 
 /**
  * Content Model of Table
  */
 export interface ContentModelTable
-    extends ContentModelBlockBase<'Table'>,
-        ContentModelWithFormat<ContentModelTableFormat> {
+    extends ContentModelBlockBase<'Table', ContentModelTableFormat>,
+        ContentModelWithDataset<TableMetadataFormat> {
     /**
      * Widths of each column
      */
@@ -18,6 +19,7 @@ export interface ContentModelTable
      * Heights of each row
      */
     heights: number[];
+
     /**
      * Cells of this table
      */

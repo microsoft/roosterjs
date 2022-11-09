@@ -1,13 +1,10 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { containerProcessor } from './containerProcessor';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { parseFormat } from '../utils/parseFormat';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 import { stackFormat } from '../utils/stackFormat';
-import { TableCellFormatHandlers } from '../../formatHandlers/TableCellFormatHandler';
-import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
 
 /**
  * @internal
@@ -23,15 +20,24 @@ import { TableFormatHandlers } from '../../formatHandlers/TableFormatHandlers';
  * 5. When write back to DOM, we create TD/TH elements for those non-spanned cells, and mark its colSpan/rowSpan value according
  * its neighbour cell's spanLeft/spanAbove attribute
  */
-export const tableProcessor: ElementProcessor = (group, element, context) => {
-    const tableElement = element as HTMLTableElement;
+export const tableProcessor: ElementProcessor<HTMLTableElement> = (
+    group,
+    tableElement,
+    context
+) => {
     const table = createTable(tableElement.rows.length);
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
     stackFormat(context, { segment: 'shallowClone' }, () => {
-        parseFormat(tableElement, TableFormatHandlers, table.format, context);
-        parseFormat(tableElement, SegmentFormatHandlers, context.segmentFormat, context);
+        parseFormat(tableElement, context.formatParsers.table, table.format, context);
+        parseFormat(
+            tableElement,
+            context.formatParsers.segmentOnBlock,
+            context.segmentFormat,
+            context
+        );
+        parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
         addBlock(group, table);
 
         const columnPositions: number[] = [0];
@@ -81,15 +87,36 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
                         if (hasTd) {
                             stackFormat(context, { segment: 'shallowClone' }, () => {
-                                parseFormat(td, TableCellFormatHandlers, cell.format, context);
                                 parseFormat(
                                     td,
-                                    SegmentFormatHandlers,
+                                    context.formatParsers.tableCell,
+                                    cell.format,
+                                    context
+                                );
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.segmentOnBlock,
                                     context.segmentFormat,
                                     context
                                 );
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.dataset,
+                                    cell.dataset,
+                                    context
+                                );
 
-                                containerProcessor(cell, td, context);
+                                const { listParent, levels } = context.listFormat;
+
+                                context.listFormat.listParent = undefined;
+                                context.listFormat.levels = [];
+
+                                try {
+                                    context.elementProcessors.child(cell, td, context);
+                                } finally {
+                                    context.listFormat.listParent = listParent;
+                                    context.listFormat.levels = levels;
+                                }
                             });
                         }
                     }
@@ -99,6 +126,10 @@ export const tableProcessor: ElementProcessor = (group, element, context) => {
 
         table.widths = calcSizes(columnPositions);
         table.heights = calcSizes(rowPositions);
+
+        if (context.alwaysNormalizeTable) {
+            normalizeTable(table);
+        }
     });
 };
 

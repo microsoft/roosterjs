@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
 import { getLocalizedString, LocalizedStrings, UIUtilities } from '../../common/index';
-import { getPositionRect } from 'roosterjs-editor-dom';
+import { getObjectKeys, getPositionRect } from 'roosterjs-editor-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
@@ -54,7 +54,7 @@ interface PasteOptionButtonProps {
     buttonName: PasteOptionButtonKeys;
     className: string;
     paste: (key: PasteOptionButtonKeys) => void;
-    strings: LocalizedStrings<PasteOptionStringKeys>;
+    strings?: LocalizedStrings<PasteOptionStringKeys>;
 }
 
 function PasteOptionButton(props: PasteOptionButtonProps) {
@@ -78,7 +78,7 @@ function PasteOptionButton(props: PasteOptionButtonProps) {
 }
 
 interface PasteOptionProps {
-    strings: LocalizedStrings<PasteOptionStringKeys>;
+    strings?: LocalizedStrings<PasteOptionStringKeys>;
     position: NodePosition;
     isRtl: boolean;
     paste: (key: PasteOptionButtonKeys) => void;
@@ -118,7 +118,7 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
 
     const buttonPane = React.useRef<HTMLDivElement>(null);
     const onDismiss = React.useCallback(
-        (evt: UIEvent) => {
+        (evt?: Event | React.MouseEvent | React.KeyboardEvent) => {
             const target =
                 evt instanceof FocusEvent && evt.relatedTarget instanceof Node
                     ? evt.relatedTarget
@@ -161,7 +161,7 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
                 </div>
                 {selectedKey && (
                     <div className={classNames.buttonsContainer}>
-                        {Object.keys(Buttons).map((key: PasteOptionButtonKeys) => (
+                        {getObjectKeys(Buttons).map(key => (
                             <PasteOptionButton
                                 key={key}
                                 strings={strings}
@@ -192,9 +192,9 @@ const PasteOptionComponent = React.forwardRef(function PasteOptionFunc(
 export default function showPasteOptionPane(
     uiUtilities: UIUtilities,
     position: NodePosition,
-    strings: LocalizedStrings<PasteOptionStringKeys>,
     onPaste: (key: PasteOptionButtonKeys) => void,
-    ref: React.RefObject<PasteOptionPane>
+    ref: React.RefObject<PasteOptionPane>,
+    strings?: LocalizedStrings<PasteOptionStringKeys>
 ) {
     let disposer: (() => void) | null = null;
     const onDismiss = () => {

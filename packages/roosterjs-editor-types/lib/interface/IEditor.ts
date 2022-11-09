@@ -91,7 +91,7 @@ export default interface IEditor {
      * @param node The node to check
      * @returns True if the given node is in editor content, otherwise false
      */
-    contains(node: Node): boolean;
+    contains(node: Node | null): boolean;
 
     /**
      * Check if the range falls in the editor content
@@ -261,7 +261,7 @@ export default interface IEditor {
      * @param position The position to select
      * @returns True if content is selected, otherwise false
      */
-    select(position: NodePosition): boolean;
+    select(position: NodePosition | null): boolean;
 
     /**
      * Select content by a start and end position
@@ -314,6 +314,12 @@ export default interface IEditor {
      * @param coordinates first and last cell of the range
      */
     select(table: HTMLTableElement, coordinates: TableSelection): boolean;
+
+    /**
+     * Select content SelectionRangeEx
+     * @param rangeEx SelectionRangeEx object to specify what to select
+     */
+    select(rangeEx: SelectionRangeEx): boolean;
 
     /**
      * Get current focused position. Return null if editor doesn't have focus at this time.
@@ -512,7 +518,7 @@ export default interface IEditor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    setEditorDomAttribute(name: string, value: string): void;
+    setEditorDomAttribute(name: string, value: string | null): void;
 
     /**
      * Get DOM attribute of editor content DIV, null if there is no such attribute.
@@ -536,6 +542,12 @@ export default interface IEditor {
      * @param feature The feature to add
      */
     addContentEditFeature(feature: GenericContentEditFeature<PluginEvent>): void;
+
+    /**
+     * Remove a Content Edit feature.
+     * @param feature The feature to remove
+     */
+    removeContentEditFeature(feature: GenericContentEditFeature<PluginEvent>): void;
 
     /**
      * Get style based format state from current selection, including font name/size and colors
@@ -638,6 +650,3 @@ export default interface IEditor {
     getVisibleViewport(): Rect | null;
     //#endregion
 }
-
-// Temporarily put these interfaces here to workaround circular dependency issue
-// Need to revisit these interfaces later.

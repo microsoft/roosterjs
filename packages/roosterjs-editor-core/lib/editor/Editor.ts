@@ -33,6 +33,7 @@ import {
     RegionType,
     SelectionPath,
     SelectionRangeEx,
+    SelectionRangeTypes,
     SizeTransformer,
     StyleBasedFormatState,
     TableSelection,
@@ -128,6 +129,7 @@ export default class Editor implements IEditor {
                             : [scrollContainer, contentDiv]
                     );
                 }),
+            imageSelectionBorderColor: options.imageSelectionBorderColor,
         };
 
         // 3. Initialize plugins
@@ -231,7 +233,10 @@ export default class Editor implements IEditor {
         return getBlockElementAtNode(this.getCore().contentDiv, node);
     }
 
-    public contains(arg: Node | Range): boolean {
+    public contains(arg: Node | Range | null): boolean {
+        if (!arg) {
+            return false;
+        }
         return contains(this.getCore().contentDiv, <Node>arg);
     }
 
@@ -452,35 +457,105 @@ export default class Editor implements IEditor {
     }
 
     public select(
-        arg1: Range | NodePosition | Node | SelectionPath | HTMLTableElement | null,
+        arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
         arg2?: NodePosition | number | PositionType | TableSelection,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
         const core = this.getCore();
-        if (arg1 && 'rows' in arg1) {
-            const selection = core.api.selectTable(core, arg1, <TableSelection>arg2);
-            core.domEvent.tableSelectionRange = selection;
 
-            return !!selection;
+        let rangeEx: SelectionRangeEx | null = null;
+
+        if (isSelectionRangeEx(arg1)) {
+            rangeEx = arg1;
+        } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelection(arg2)) {
+            rangeEx = {
+                type: SelectionRangeTypes.TableSelection,
+                ranges: [],
+                areAllCollapsed: false,
+                table: arg1,
+                coordinates: arg2,
+            };
+        } else if (safeInstanceOf(arg1, 'HTMLImageElement') && typeof arg2 == 'undefined') {
+            rangeEx = {
+                type: SelectionRangeTypes.ImageSelection,
+                ranges: [],
+                areAllCollapsed: false,
+                image: arg1,
+            };
         } else {
-            core.api.selectTable(core, null);
-            core.domEvent.tableSelectionRange = null;
+            let range = !arg1
+                ? null
+                : safeInstanceOf(arg1, 'Range')
+                ? arg1
+                : isSelectionPath(arg1)
+                ? createRange(core.contentDiv, arg1.start, arg1.end)
+                : isNodePosition(arg1) || safeInstanceOf(arg1, 'Node')
+                ? createRange(
+                      <Node>arg1,
+                      <number | PositionType>arg2,
+                      <Node>arg3,
+                      <number | PositionType>arg4
+                  )
+                : null;
+
+            rangeEx = range
+                ? {
+                      type: SelectionRangeTypes.Normal,
+                      ranges: [range],
+                      areAllCollapsed: range.collapsed,
+                  }
+                : null;
         }
 
-        let range = !arg1
-            ? null
-            : safeInstanceOf(arg1, 'Range')
-            ? arg1
-            : 'start' in arg1 && Array.isArray(arg1.end)
-            ? createRange(core.contentDiv, arg1.start, arg1.end)
-            : createRange(
-                  <Node>arg1,
-                  <number | PositionType>arg2,
-                  <Node>arg3,
-                  <number | PositionType>arg4
-              );
-        return !!range && this.contains(range) && core.api.selectRange(core, range);
+        if (rangeEx) {
+            switch (rangeEx.type) {
+                case SelectionRangeTypes.TableSelection:
+                    if (this.contains(rangeEx.table)) {
+                        core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+                        core.domEvent.tableSelectionRange = core.api.selectTable(
+                            core,
+                            rangeEx.table,
+                            rangeEx.coordinates
+                        );
+                        rangeEx = core.domEvent.tableSelectionRange;
+                    }
+                    break;
+                case SelectionRangeTypes.ImageSelection:
+                    if (this.contains(rangeEx.image)) {
+                        core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+                        core.domEvent.imageSelectionRange = core.api.selectImage(
+                            core,
+                            rangeEx.image
+                        );
+                        rangeEx = core.domEvent.imageSelectionRange;
+                    }
+                    break;
+                case SelectionRangeTypes.Normal:
+                    core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+                    core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+
+                    if (this.contains(rangeEx.ranges[0])) {
+                        core.api.selectRange(core, rangeEx.ranges[0]);
+                    } else {
+                        rangeEx = null;
+                    }
+                    break;
+            }
+
+            this.triggerPluginEvent(
+                PluginEventType.SelectionChanged,
+                {
+                    selectionRangeEx: rangeEx,
+                },
+                true /** broadcast **/
+            );
+        } else {
+            core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+            core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+        }
+
+        return !!rangeEx;
     }
 
     /**
@@ -719,7 +794,7 @@ export default class Editor implements IEditor {
      * @returns Default format object of this editor
      */
     public getDefaultFormat(): DefaultFormat {
-        return this.getCore().lifecycle.defaultFormat;
+        return this.getCore().lifecycle.defaultFormat ?? {};
     }
 
     /**
@@ -794,7 +869,7 @@ export default class Editor implements IEditor {
      * @param name Name of the attribute
      * @param value Value of the attribute
      */
-    public setEditorDomAttribute(name: string, value: string) {
+    public setEditorDomAttribute(name: string, value: string | null) {
         if (value === null) {
             this.getCore().contentDiv.removeAttribute(name);
         } else {
@@ -851,6 +926,24 @@ export default class Editor implements IEditor {
             let array = core.edit.features[key] || [];
             array.push(feature);
             core.edit.features[key] = array;
+        });
+    }
+
+    /**
+     * Remove a Content Edit feature.
+     * @param feature The feature to remove
+     */
+    public removeContentEditFeature(feature: GenericContentEditFeature<PluginEvent>) {
+        const core = this.getCore();
+        feature?.keys.forEach(key => {
+            const featureSet = core.edit.features[key];
+            const index = featureSet?.indexOf(feature) ?? -1;
+            if (index >= 0) {
+                core.edit.features[key].splice(index, 1);
+                if (core.edit.features[key].length < 1) {
+                    delete core.edit.features[key];
+                }
+            }
         });
     }
 
@@ -1048,4 +1141,42 @@ export default class Editor implements IEditor {
     }
 
     //#endregion
+}
+
+function isSelectionRangeEx(obj: any): obj is SelectionRangeEx {
+    const rangeEx = obj as SelectionRangeEx;
+    return (
+        rangeEx &&
+        typeof rangeEx == 'object' &&
+        typeof rangeEx.type == 'number' &&
+        Array.isArray(rangeEx.ranges)
+    );
+}
+
+function isTableSelection(obj: any): obj is TableSelection {
+    const selection = obj as TableSelection;
+
+    return (
+        selection &&
+        typeof selection == 'object' &&
+        typeof selection.firstCell == 'object' &&
+        typeof selection.lastCell == 'object'
+    );
+}
+
+function isSelectionPath(obj: any): obj is SelectionPath {
+    const path = obj as SelectionPath;
+
+    return path && typeof path == 'object' && Array.isArray(path.start) && Array.isArray(path.end);
+}
+
+function isNodePosition(obj: any): obj is NodePosition {
+    const pos = obj as NodePosition;
+
+    return (
+        pos &&
+        typeof pos == 'object' &&
+        typeof pos.node == 'object' &&
+        typeof pos.offset == 'number'
+    );
 }

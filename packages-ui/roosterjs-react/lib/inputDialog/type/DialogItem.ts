@@ -3,7 +3,7 @@
  */
 export default interface DialogItem<Strings extends string> {
     labelKey: Strings | null;
-    unlocalizedLabel: string;
+    unlocalizedLabel: string | null;
     initValue: string;
     autoFocus?: boolean;
 }

@@ -13,8 +13,8 @@ const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
  * Automatically transform -- into hyphen, if typed between two words.
  */
 export default class AutoFormat implements EditorPlugin {
-    private editor: IEditor;
-    private lastKeyTyped: string;
+    private editor: IEditor | null = null;
+    private lastKeyTyped: string | null = null;
 
     /**
      * Get a friendly name of this plugin
@@ -36,6 +36,7 @@ export default class AutoFormat implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+        this.lastKeyTyped = null;
     }
 
     /**
@@ -43,6 +44,9 @@ export default class AutoFormat implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
+        if (!this.editor) {
+            return;
+        }
         if (
             event.eventType === PluginEventType.ContentChanged ||
             event.eventType === PluginEventType.MouseDown ||
@@ -54,7 +58,7 @@ export default class AutoFormat implements EditorPlugin {
         if (event.eventType === PluginEventType.KeyDown) {
             const keyTyped = event.rawEvent.key;
 
-            if (keyTyped.length > 1) {
+            if (keyTyped && keyTyped.length > 1) {
                 this.lastKeyTyped = '';
             }
 
@@ -65,26 +69,29 @@ export default class AutoFormat implements EditorPlugin {
                 keyTyped !== '-'
             ) {
                 const searcher = this.editor.getContentSearcherOfCursor(event);
-                const textBeforeCursor = searcher.getSubStringBefore(3);
-                const dashes = searcher.getSubStringBefore(2);
-                const isPrecededByADash = textBeforeCursor[0] === '-';
-                const isPrecededByASpace = textBeforeCursor[0] === ' ';
+                const textBeforeCursor = searcher?.getSubStringBefore(3);
+                const dashes = searcher?.getSubStringBefore(2);
+                const isPrecededByADash = textBeforeCursor?.[0] === '-';
+                const isPrecededByASpace = textBeforeCursor?.[0] === ' ';
                 if (
                     isPrecededByADash ||
                     isPrecededByASpace ||
-                    specialCharacters.test(textBeforeCursor[0]) ||
+                    (typeof textBeforeCursor === 'string' &&
+                        specialCharacters.test(textBeforeCursor[0])) ||
                     dashes !== '--'
                 ) {
                     return;
                 }
 
-                const textRange = searcher.getRangeFromText(dashes, true /* exactMatch */);
+                const textRange = searcher?.getRangeFromText(dashes, true /* exactMatch */);
                 const nodeHyphen = document.createTextNode('—');
                 this.editor.addUndoSnapshot(
                     () => {
-                        textRange.deleteContents();
-                        textRange.insertNode(nodeHyphen);
-                        this.editor.select(nodeHyphen, PositionType.End);
+                        if (textRange) {
+                            textRange.deleteContents();
+                            textRange.insertNode(nodeHyphen);
+                            this.editor!.select(nodeHyphen, PositionType.End);
+                        }
                     },
                     ChangeSource.Format /*changeSource*/,
                     true /*canUndoByBackspace*/,
@@ -92,7 +99,7 @@ export default class AutoFormat implements EditorPlugin {
                 );
 
                 //After the substitution the last key typed needs to be cleaned
-                this.lastKeyTyped = '';
+                this.lastKeyTyped = null;
             } else {
                 this.lastKeyTyped = keyTyped;
             }

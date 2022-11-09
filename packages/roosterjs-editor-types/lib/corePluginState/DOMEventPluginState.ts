@@ -1,5 +1,5 @@
 import ContextMenuProvider from '../interface/ContextMenuProvider';
-import { TableSelectionRange } from '../interface/SelectionRangeEx';
+import { ImageSelectionRange, TableSelectionRange } from '../interface/SelectionRangeEx';
 
 /**
  * The state object for DOMEventPlugin
@@ -34,4 +34,9 @@ export default interface DOMEventPluginState {
      * Context menu providers, that can provide context menu items
      */
     contextMenuProviders: ContextMenuProvider<any>[];
+
+    /**
+     * Image selection range
+     */
+    imageSelectionRange: ImageSelectionRange | null;
 }

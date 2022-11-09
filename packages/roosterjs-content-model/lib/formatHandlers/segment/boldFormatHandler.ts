@@ -7,25 +7,26 @@ import { moveChildNodes } from 'roosterjs-editor-dom';
  */
 export const boldFormatHandler: FormatHandler<BoldFormat> = {
     parse: (format, element, context, defaultStyle) => {
-        const fontWeight = element.style.fontWeight || defaultStyle.fontWeight || '';
-        const fontWeightInt = parseInt(fontWeight);
+        const fontWeight = element.style.fontWeight || defaultStyle.fontWeight;
 
-        if (fontWeight == 'bold' || fontWeight == 'bolder' || fontWeightInt >= 600) {
-            format.bold = true;
-        } else if (
-            fontWeight == 'normal' ||
-            fontWeight == 'lighter' ||
-            fontWeight == 'initial' ||
-            fontWeightInt < 600
-        ) {
-            format.bold = false;
+        if (fontWeight) {
+            format.fontWeight = fontWeight;
         }
     },
-    apply: (format, element) => {
-        if (format.bold) {
-            const b = element.ownerDocument.createElement('b');
-            moveChildNodes(b, element);
-            element.appendChild(b);
+    apply: (format, element, context) => {
+        const blockFontWeight = context.implicitSegmentFormat.fontWeight;
+
+        if (
+            (blockFontWeight && blockFontWeight != format.fontWeight) ||
+            (!blockFontWeight && format.fontWeight && format.fontWeight != 'normal')
+        ) {
+            if (format.fontWeight == 'bold') {
+                const b = element.ownerDocument.createElement('b');
+                moveChildNodes(b, element);
+                element.appendChild(b);
+            } else {
+                element.style.fontWeight = format.fontWeight || 'normal';
+            }
         }
     },
 };

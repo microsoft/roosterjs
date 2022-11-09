@@ -41,6 +41,14 @@ describe('fontFamilyFormatHandler.parse', () => {
 
         expect(format.fontFamily).toBe('test1');
     });
+
+    it('inherit', () => {
+        format.fontFamily = 'Arial';
+        div.style.fontFamily = 'inherit';
+        fontFamilyFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontFamily).toBe('Arial');
+    });
 });
 
 describe('fontFamilyFormatHandler.apply', () => {
@@ -66,5 +74,31 @@ describe('fontFamilyFormatHandler.apply', () => {
         fontFamilyFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div style="font-family: test;"></div>');
+    });
+
+    it('Has implicit font family from context', () => {
+        context.implicitSegmentFormat.fontFamily = 'test';
+
+        fontFamilyFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div></div>');
+    });
+
+    it('Has implicit font family from context and same with current format', () => {
+        context.implicitSegmentFormat.fontFamily = 'test';
+        format.fontFamily = 'test';
+
+        fontFamilyFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div></div>');
+    });
+
+    it('Has implicit font family from context but overridden by current format', () => {
+        context.implicitSegmentFormat.fontFamily = 'test';
+        format.fontFamily = 'test2';
+
+        fontFamilyFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toEqual('<div style="font-family: test2;"></div>');
     });
 });

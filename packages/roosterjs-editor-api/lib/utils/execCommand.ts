@@ -1,11 +1,11 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
-import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
 import {
     DocumentCommand,
     IEditor,
     PluginEventType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
 import type { CompatibleDocumentCommand } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -46,19 +46,17 @@ export default function execCommand(
         formatUndoSnapshot(
             editor,
             () => {
-                let tempRange: Range;
+                const needToSwitchSelection = selection.type != SelectionRangeTypes.Normal;
+
                 selection.ranges.forEach(range => {
-                    if (selection.type == SelectionRangeTypes.TableSelection) {
+                    if (needToSwitchSelection) {
                         editor.select(range);
                     }
-
                     formatter();
-
-                    tempRange = range;
                 });
 
-                if (tempRange && selection.type == SelectionRangeTypes.TableSelection) {
-                    editor.select(selection.table, selection.coordinates);
+                if (needToSwitchSelection) {
+                    editor.select(selection);
                 }
             },
             apiName

@@ -42,8 +42,6 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                     this.clipboardData = clipboardData;
                     this.showPasteOptionPane();
                 }
-            } else {
-                this.pasteOptionRef.current?.dismiss();
             }
         }
     }
@@ -53,7 +51,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
     }
 
     private handlePasteOptionPaneEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyDown) {
+        if (event.eventType == PluginEventType.KeyDown && this.pasteOptionRef.current) {
             const selectedKey = this.pasteOptionRef.current.getSelectedKey();
 
             if (!selectedKey) {
@@ -99,7 +97,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
                     case Keys.RIGHT:
                         const buttonCount = ButtonKeys.length;
                         const diff =
-                            (keyboardEvent.which == Keys.RIGHT) == this.uiUtilities.isRightToLeft()
+                            (keyboardEvent.which == Keys.RIGHT) == this.uiUtilities?.isRightToLeft()
                                 ? -1
                                 : 1;
                         this.pasteOptionRef.current.setSelectedKey(
@@ -125,7 +123,7 @@ class PasteOptionPlugin implements ReactEditorPlugin {
     }
 
     private onPaste = (key: PasteOptionButtonKeys) => {
-        if (this.clipboardData) {
+        if (this.clipboardData && this.editor) {
             this.editor.focus();
 
             switch (key) {
@@ -153,15 +151,17 @@ class PasteOptionPlugin implements ReactEditorPlugin {
     private showPasteOptionPane() {
         this.pasteOptionRef.current?.dismiss();
 
-        const focusedPosition = this.editor.getFocusedPosition();
+        const focusedPosition = this.editor?.getFocusedPosition();
 
-        showPasteOptionPane(
-            this.uiUtilities,
-            focusedPosition,
-            this.strings,
-            this.onPaste,
-            this.pasteOptionRef
-        );
+        if (focusedPosition && this.uiUtilities) {
+            showPasteOptionPane(
+                this.uiUtilities,
+                focusedPosition,
+                this.onPaste,
+                this.pasteOptionRef,
+                this.strings
+            );
+        }
     }
 }
 

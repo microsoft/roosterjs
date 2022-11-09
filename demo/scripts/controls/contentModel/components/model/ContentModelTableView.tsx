@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { applyTableFormat } from 'roosterjs-content-model/lib/modelApi/table/applyTableFormat';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
+import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
 import { ContentModelView } from '../ContentModelView';
+import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
+import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
+import { updateTableMetadata } from 'roosterjs-content-model/lib/modelApi/metadata/updateTableMetadata';
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelTable,
@@ -25,7 +29,8 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     BackgroundColorFormatRenderer,
     MarginFormatRenderer,
     ...BorderFormatRenderers,
-    ...TableMetadataFormatRenders,
+    BorderBoxFormatRenderer,
+    DisplayFormatRenderer,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {
@@ -61,15 +66,23 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
     }, [table]);
 
     const getFormat = React.useCallback(() => {
+        return <FormatView format={table.format} renderers={TableFormatRenderers} />;
+    }, [table.format]);
+
+    const getMetadata = React.useCallback(() => {
         return (
             <>
+                <MetadataView
+                    model={table}
+                    renderers={TableMetadataFormatRenders}
+                    updater={updateTableMetadata}
+                />
                 <div>
                     <button onClick={onApplyTableFormat}>Apply table format</button>
                 </div>
-                <FormatView format={table.format} renderers={TableFormatRenderers} />
             </>
         );
-    }, [table.format]);
+    }, [table]);
 
     return (
         <ContentModelView
@@ -81,6 +94,7 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
             jsonSource={table}
             getContent={getContent}
             getFormat={getFormat}
+            getMetadata={getMetadata}
         />
     );
 }

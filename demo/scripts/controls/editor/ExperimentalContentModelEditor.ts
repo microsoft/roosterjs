@@ -1,5 +1,5 @@
-import { ContentPosition, EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Editor } from 'roosterjs-editor-core';
+import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { getComputedStyles, Position } from 'roosterjs-editor-dom';
 import {
     EditorContext,
@@ -9,6 +9,7 @@ import {
     DomToModelOption,
     IExperimentalContentModelEditor,
     ModelToDomOption,
+    mergeFragmentWithEntity,
 } from 'roosterjs-content-model';
 
 /**
@@ -49,13 +50,12 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
     createContentModel(startNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument {
-        return domToContentModel(
-            startNode || this.contentDiv,
-            this.createEditorContext(),
-            !!startNode,
-            this.getSelectionRangeEx(),
-            option
-        );
+        return domToContentModel(startNode || this.contentDiv, this.createEditorContext(), {
+            includeRoot: !!startNode,
+            selectionRange: this.getSelectionRangeEx(),
+            alwaysNormalizeTable: true,
+            ...(option || {}),
+        });
     }
 
     /**
@@ -64,38 +64,26 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
-    setContentModel(
-        model: ContentModelDocument,
-        mergingCallback: (fragment: DocumentFragment) => void = this.defaultMergingCallback,
-        option?: ModelToDomOption
-    ) {
-        const [fragment, range] = contentModelToDom(model, this.createEditorContext(), option);
+    setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
+        const [fragment, range, entityPairs] = contentModelToDom(
+            model,
+            this.createEditorContext(),
+            option
+        );
+        const mergingCallback = option?.mergingCallback || mergeFragmentWithEntity;
 
-        switch (range?.type) {
-            case SelectionRangeTypes.Normal:
+        if (range) {
+            if (range.type == SelectionRangeTypes.Normal) {
+                // Need to get start and end from range position before merge because range can be changed during merging
                 const start = Position.getStart(range.ranges[0]);
                 const end = Position.getEnd(range.ranges[0]);
 
-                mergingCallback(fragment);
+                mergingCallback(fragment, this.contentDiv, entityPairs);
                 this.select(start, end);
-                break;
-
-            case SelectionRangeTypes.TableSelection:
-                mergingCallback(fragment);
-                this.select(range.table, range.coordinates);
-                break;
-
-            case undefined:
-                mergingCallback(fragment);
-                break;
+            } else {
+                mergingCallback(fragment, this.contentDiv, entityPairs);
+                this.select(range);
+            }
         }
     }
-
-    private defaultMergingCallback = (fragment: DocumentFragment) => {
-        while (this.contentDiv.firstChild) {
-            this.contentDiv.removeChild(this.contentDiv.firstChild);
-        }
-
-        this.insertNode(fragment, { position: ContentPosition.Begin });
-    };
 }
