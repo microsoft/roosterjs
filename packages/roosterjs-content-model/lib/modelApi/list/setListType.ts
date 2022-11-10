@@ -49,6 +49,10 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                 item.paragraph.segments[0]?.format
             );
 
+            // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
+            // TODO: Do we need to keep the CSS styles applied to original DIV?
+            item.paragraph.isImplicit = true;
+
             newListItem.blocks.push(item.paragraph);
 
             group.blocks.splice(index, 1, newListItem);
