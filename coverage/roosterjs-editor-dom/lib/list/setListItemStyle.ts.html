@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/34</span>
+                <span class='fraction'>36/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.86% </span>
+                <span class="strong">86.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>29/35</span>
+                <span class='fraction'>39/45</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/34</span>
+                <span class='fraction'>36/36</span>
             </div>
         
             
@@ -132,7 +132,13 @@
 <a name='L73'></a><a href='#L73'>73</a>
 <a name='L74'></a><a href='#L74'>74</a>
 <a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -151,7 +157,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">147x</span>
 <span class="cline-any cline-yes">435x</span>
-<span class="cline-any cline-yes">450x</span>
+<span class="cline-any cline-yes">141x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">435x</span>
@@ -184,22 +190,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
-<span class="cline-any cline-yes">153x</span>
-<span class="cline-any cline-yes">153x</span>
-<span class="cline-any cline-yes">82x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">147x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">147x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">147x</span>
+<span class="cline-any cline-yes">81x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156x</span>
-<span class="cline-any cline-yes">156x</span>
+<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">156x</span>
@@ -248,19 +260,25 @@ function getInlineChildElementsStyle(element: HTMLElement, styles: string[]) {
     while (contentTraverser.currentInlineElement != currentInlineElement) {
         currentInlineElement = contentTraverser.currentInlineElement;
         let currentNode = currentInlineElement<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etContainerNode() || <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
-        const currentStyle: Record&lt;string | number, string&gt; = {};
+        let currentStyle: Record&lt;string, string&gt; | null = null;
 &nbsp;
         currentNode = currentNode ? findClosestElementAncestor(currentNode) : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
 &nbsp;
-        // we should consider of when it is the single childnode of element, the parentNode's style should add
+        // we should consider of when it is the single child node of element, the parentNode's style should add
         // such as the "i", "b", "span" node in &lt;li&gt;&lt;span&gt;&lt;b&gt;&lt;i&gt;aa&lt;/i&gt;&lt;/b&gt;&lt;/span&gt;&lt;/li&gt;
         while (
             currentNode &amp;&amp;
             currentNode !== element &amp;&amp;
-            safeInstanceOf(currentNode, 'HTMLElement')
+            safeInstanceOf(currentNode, 'HTMLElement') &amp;&amp;
+            (result.length == 0 || (currentNode.textContent<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>rim().length || 0) &gt; 0)
         ) {
             styles.forEach(styleName =&gt; {
                 const styleValue = (currentNode as HTMLElement).style.getPropertyValue(styleName);
+&nbsp;
+                if (!currentStyle) {
+                    currentStyle = {};
+                }
+&nbsp;
                 if (styleValue &amp;&amp; !currentStyle[styleName]) {
                     currentStyle[styleName] = styleValue;
                 }
@@ -273,7 +291,7 @@ function getInlineChildElementsStyle(element: HTMLElement, styles: string[]) {
             }
         }
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (currentStyle) {
+        if (currentStyle) {
             result.push(currentStyle);
         }
 &nbsp;
@@ -289,7 +307,7 @@ function getInlineChildElementsStyle(element: HTMLElement, styles: string[]) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Nov 10 2022 06:51:24 GMT+0000 (Coordinated Universal Time)
+                at Thu Nov 10 2022 20:55:02 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
