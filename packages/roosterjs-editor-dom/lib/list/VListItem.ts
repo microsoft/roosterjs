@@ -7,6 +7,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import setBulletListMarkers from './setBulletListMarkers';
 import setListItemStyle from './setListItemStyle';
 import setNumberingListMarkers from './setNumberingListMarkers';
+import setStyles from '../style/setStyles';
 import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
@@ -366,10 +367,21 @@ export default class VListItem {
 
         // 5. If this is not a list item now, need to unwrap the LI node and do proper handling
         if (this.listTypes.length <= 1) {
+            // If original <LI> node has styles for font and color, we need to apply it to new parent
+            const isLi = getTagOfNode(this.node) == 'LI';
+            const stylesToApply = isLi
+                ? {
+                      'font-family': this.node.style.fontFamily,
+                      'font-size': this.node.style.fontSize,
+                      color: this.node.style.color,
+                  }
+                : undefined;
+
             wrapIfNotBlockNode(
-                getTagOfNode(this.node) == 'LI' ? getChildrenAndUnwrap(this.node) : [this.node],
+                isLi ? getChildrenAndUnwrap(this.node) : [this.node],
                 true /*checkFirst*/,
-                true /*checkLast*/
+                true /*checkLast*/,
+                stylesToApply
             );
         }
     }
@@ -459,13 +471,24 @@ function createListElement(
     return result;
 }
 
-function wrapIfNotBlockNode(nodes: Node[], checkFirst: boolean, checkLast: boolean): Node[] {
+function wrapIfNotBlockNode(
+    nodes: Node[],
+    checkFirst: boolean,
+    checkLast: boolean,
+    styles?: Record<string, string>
+): Node[] {
     if (
         nodes.length > 0 &&
         (!checkFirst || !isBlockElement(nodes[0])) &&
         (!checkLast || !isBlockElement(nodes[nodes.length]))
     ) {
-        nodes = [wrap(nodes)];
+        const parent = wrap(nodes);
+
+        if (styles) {
+            setStyles(parent, styles);
+        }
+
+        nodes = [parent];
     }
 
     return nodes;

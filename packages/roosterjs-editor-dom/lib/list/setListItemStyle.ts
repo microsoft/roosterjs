@@ -48,7 +48,8 @@ function getInlineChildElementsStyle(element: HTMLElement, styles: string[]) {
         while (
             currentNode &&
             currentNode !== element &&
-            safeInstanceOf(currentNode, 'HTMLElement')
+            safeInstanceOf(currentNode, 'HTMLElement') &&
+            (currentNode.textContent?.trim().length || 0) > 0
         ) {
             styles.forEach(styleName => {
                 const styleValue = (currentNode as HTMLElement).style.getPropertyValue(styleName);
