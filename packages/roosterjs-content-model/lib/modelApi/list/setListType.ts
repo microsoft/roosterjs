@@ -28,6 +28,12 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
                 item.levels.push(level);
+            } else if (
+                item.blocks.length == 1 &&
+                item.blocks[0].blockType == 'Paragraph' &&
+                item.blocks[0].isImplicit
+            ) {
+                item.blocks[0].isImplicit = false;
             }
         } else {
             const group = item.path[0];
@@ -48,6 +54,10 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                 ],
                 item.paragraph.segments[0]?.format
             );
+
+            // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
+            // TODO: Do we need to keep the CSS styles applied to original DIV?
+            item.paragraph.isImplicit = true;
 
             newListItem.blocks.push(item.paragraph);
 

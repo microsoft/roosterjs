@@ -47,7 +47,7 @@ export const listItemMetadataFormatHandler: FormatHandler<ListMetadataFormat> = 
                     : UnorderedMap[format.unorderedStyleType!] ??
                       DefaultUnorderedListStyles[depth % DefaultUnorderedListStyles.length];
 
-            if (style && style != 'decimal' && style != 'disc') {
+            if (style && (depth > 0 || (style != 'decimal' && style != 'disc'))) {
                 element.style.listStyleType = style;
             }
         }
