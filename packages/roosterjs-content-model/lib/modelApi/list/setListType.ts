@@ -28,6 +28,12 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
                 item.levels.push(level);
+            } else if (
+                item.blocks.length == 1 &&
+                item.blocks[0].blockType == 'Paragraph' &&
+                item.blocks[0].isImplicit
+            ) {
+                item.blocks[0].isImplicit = false;
             }
         } else {
             const group = item.path[0];
