@@ -1,5 +1,6 @@
 import contains from '../utils/contains';
 import getListTypeFromNode from './getListTypeFromNode';
+import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
@@ -377,12 +378,27 @@ export default class VListItem {
                   }
                 : undefined;
 
-            wrapIfNotBlockNode(
-                isLi ? getChildrenAndUnwrap(this.node) : [this.node],
-                true /*checkFirst*/,
-                true /*checkLast*/,
-                stylesToApply
-            );
+            const childNodes = isLi ? getChildrenAndUnwrap(this.node) : [this.node];
+
+            if (stylesToApply) {
+                for (let i = 0; i < childNodes.length; i++) {
+                    if (safeInstanceOf(childNodes[i], 'Text')) {
+                        childNodes[i] = wrap(childNodes[i], 'span');
+                    }
+
+                    const node = childNodes[i];
+
+                    if (safeInstanceOf(node, 'HTMLElement')) {
+                        const styles = {
+                            ...stylesToApply,
+                            ...getStyles(node),
+                        };
+                        setStyles(node, styles);
+                    }
+                }
+            }
+
+            wrapIfNotBlockNode(childNodes, true /*checkFirst*/, true /*checkLast*/);
         }
     }
 
@@ -471,24 +487,13 @@ function createListElement(
     return result;
 }
 
-function wrapIfNotBlockNode(
-    nodes: Node[],
-    checkFirst: boolean,
-    checkLast: boolean,
-    styles?: Record<string, string>
-): Node[] {
+function wrapIfNotBlockNode(nodes: Node[], checkFirst: boolean, checkLast: boolean): Node[] {
     if (
         nodes.length > 0 &&
         (!checkFirst || !isBlockElement(nodes[0])) &&
         (!checkLast || !isBlockElement(nodes[nodes.length]))
     ) {
-        const parent = wrap(nodes);
-
-        if (styles) {
-            setStyles(parent, styles);
-        }
-
-        nodes = [parent];
+        nodes = [wrap(nodes)];
     }
 
     return nodes;
