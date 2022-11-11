@@ -23,14 +23,17 @@ describe('toggleBlockQuote', () => {
         expect(result).toBe(expected);
     }
 
-    it('Empty input, feature off', () => {
-        runTest('<!--{"start":[0],"end":[0]}-->', '<blockquote><div><br></div></blockquote>');
+    it('Empty input', () => {
+        runTest(
+            '<!--{"start":[0],"end":[0]}-->',
+            '<blockquote><div><span><br></span></div></blockquote>'
+        );
     });
 
     TestHelper.itFirefoxOnly('Empty DIV, feature off', () => {
         runTest(
             '<div></div><!--{"start":[0],"end":[0]}-->',
-            '<blockquote><div><br></div></blockquote>'
+            '<blockquote><div><span><br></span></div></blockquote>'
         );
     });
 

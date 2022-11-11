@@ -29,25 +29,43 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
         img.title = imageModel.title;
     }
 
-    applyFormat(img, context.formatAppliers.image, imageModel.format, context);
-    applyFormat(img, context.formatAppliers.dataset, imageModel.dataset, context);
+    const implicitSegmentFormat = context.implicitSegmentFormat;
+    let segmentElement: HTMLElement;
 
-    applyFormat(element, context.formatAppliers.segment, imageModel.format, context);
+    try {
+        if (imageModel.link) {
+            segmentElement = doc.createElement('a');
 
-    const { width, height } = imageModel.format;
-    const widthNum = width ? parseValueWithUnit(width) : 0;
-    const heightNum = height ? parseValueWithUnit(height) : 0;
+            parent.appendChild(segmentElement);
+            segmentElement.appendChild(img);
 
-    if (widthNum > 0) {
-        img.width = widthNum;
-    }
+            context.implicitSegmentFormat = {
+                ...implicitSegmentFormat,
+                ...(context.defaultImplicitSegmentFormatMap.a || {}),
+            };
 
-    if (heightNum > 0) {
-        img.height = heightNum;
-    }
+            applyFormat(
+                segmentElement,
+                context.formatAppliers.link,
+                imageModel.link.format,
+                context
+            );
+            applyFormat(
+                segmentElement,
+                context.formatAppliers.dataset,
+                imageModel.link.dataset,
+                context
+            );
+        } else {
+            segmentElement = img;
+            parent.appendChild(img);
+        }
 
-    if (imageModel.link) {
-        context.modelHandlers.link(doc, img, imageModel.link, context);
+        applyFormat(img, context.formatAppliers.image, imageModel.format, context);
+        applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
+        applyFormat(img, context.formatAppliers.dataset, imageModel.dataset, context);
+    } finally {
+        context.implicitSegmentFormat = implicitSegmentFormat;
     }
 
     context.regularSelection.current.segment = img;

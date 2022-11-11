@@ -13,16 +13,29 @@ export const handleText: ContentModelHandler<ContentModelText> = (
     context: ModelToDomContext
 ) => {
     const txt = doc.createTextNode(segment.text);
-    const element = doc.createElement('span');
+    const implicitSegmentFormat = context.implicitSegmentFormat;
+    const element = doc.createElement(segment.link ? 'a' : 'span');
 
-    parent.appendChild(element);
     element.appendChild(txt);
+    parent.appendChild(element);
 
     context.regularSelection.current.segment = txt;
 
-    applyFormat(element, context.formatAppliers.segment, segment.format, context);
-
     if (segment.link) {
-        context.modelHandlers.link(doc, txt, segment.link, context);
+        context.implicitSegmentFormat = {
+            ...implicitSegmentFormat,
+            ...(context.defaultImplicitSegmentFormatMap.a || {}),
+        };
+    }
+
+    try {
+        applyFormat(element, context.formatAppliers.segment, segment.format, context);
+
+        if (segment.link) {
+            applyFormat(element, context.formatAppliers.link, segment.link.format, context);
+            applyFormat(element, context.formatAppliers.dataset, segment.link.dataset, context);
+        }
+    } finally {
+        context.implicitSegmentFormat = implicitSegmentFormat;
     }
 };

@@ -130,7 +130,7 @@ describe('boldFormatHandler.apply', () => {
 
     it('Turn off bold when there is bold from block', () => {
         div.innerHTML = 'test';
-        context.implicitFormat.fontWeight = 'bold';
+        context.implicitSegmentFormat.fontWeight = 'bold';
 
         boldFormatHandler.apply(format, div, context);
 
@@ -139,7 +139,7 @@ describe('boldFormatHandler.apply', () => {
 
     it('Change bold when there is bold from block', () => {
         div.innerHTML = 'test';
-        context.implicitFormat.fontWeight = 'bold';
+        context.implicitSegmentFormat.fontWeight = 'bold';
         format.fontWeight = '600';
 
         boldFormatHandler.apply(format, div, context);
@@ -149,7 +149,7 @@ describe('boldFormatHandler.apply', () => {
 
     it('No change when bold from block and same with current format', () => {
         div.innerHTML = 'test';
-        context.implicitFormat.fontWeight = 'bold';
+        context.implicitSegmentFormat.fontWeight = 'bold';
         format.fontWeight = 'bold';
 
         boldFormatHandler.apply(format, div, context);

@@ -19,5 +19,10 @@ export interface ContentModelSegmentBase<
     /**
      * Hyperlink info
      */
+    isSelected?: boolean;
+
+    /**
+     * Hyperlink info
+     */
     link?: ContentModelLink;
 }

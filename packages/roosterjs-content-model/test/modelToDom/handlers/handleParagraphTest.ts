@@ -193,8 +193,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                decorator: {
-                    tagName: 'h1',
+                header: {
+                    headerLevel: 1,
                     format: { fontWeight: 'bold', fontSize: '2em' },
                 },
                 segments: [
@@ -217,8 +217,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                decorator: {
-                    tagName: 'h1',
+                header: {
+                    headerLevel: 1,
                     format: { fontWeight: 'bold', fontSize: '20px' },
                 },
                 segments: [
@@ -241,8 +241,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                decorator: {
-                    tagName: 'h1',
+                header: {
+                    headerLevel: 1,
                     format: {},
                 },
                 segments: [
@@ -265,8 +265,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                decorator: {
-                    tagName: 'h1',
+                header: {
+                    headerLevel: 1,
                     format: {
                         fontWeight: 'bold',
                     },
@@ -297,8 +297,8 @@ describe('handleParagraph', () => {
                 blockType: 'Paragraph',
                 isImplicit: true,
                 format: {},
-                decorator: {
-                    tagName: 'h1',
+                header: {
+                    headerLevel: 1,
                     format: { fontWeight: 'bold' },
                 },
                 segments: [

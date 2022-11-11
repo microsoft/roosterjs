@@ -468,6 +468,7 @@ describe('normalizeTable', () => {
             },
             widths: [120, 120],
             heights: [44],
+            dataset: {},
         });
     });
 
@@ -567,6 +568,7 @@ describe('normalizeTable', () => {
             },
             widths: [240],
             heights: [44],
+            dataset: {},
         });
     });
 });

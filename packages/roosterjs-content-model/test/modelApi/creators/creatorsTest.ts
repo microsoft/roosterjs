@@ -398,4 +398,24 @@ describe('Creators', () => {
             wrapper,
         });
     });
+
+    it('createImage', () => {
+        const imageModel = createImage('test');
+
+        expect(imageModel).toEqual({
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+            dataset: {},
+        });
+    });
+
+    it('createHR', () => {
+        const hr = createHR();
+
+        expect(hr).toEqual({
+            blockType: 'HR',
+            format: {},
+        });
+    });
 });

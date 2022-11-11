@@ -108,6 +108,7 @@ export const enum ExperimentalFeatures {
     NormalizeList = 'NormalizeList',
 
     /**
+     * @deprecated this feature is always enabled
      * When a html image is selected, the selected image data will be stored by editor core.
      */
     ImageSelection = 'ImageSelection',
@@ -119,4 +120,10 @@ export const enum ExperimentalFeatures {
      * is the one closest to the item.
      */
     ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
+
+    /**
+     * When apply default format when initialize or user type, apply the format on a SPAN element rather than
+     * the block element (In most case, the DIV element) so keep the block element clean.
+     */
+    DefaultFormatInSpan = 'DefaultFormatInSpan',
 }

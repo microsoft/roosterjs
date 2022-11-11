@@ -166,7 +166,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with link format', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const img = document.createElement('img');
 
         context.link = {
@@ -179,6 +179,7 @@ describe('imageProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
+            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -204,7 +205,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with dataset', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const img = document.createElement('img');
         const datasetParser = jasmine.createSpy('datasetParser').and.callFake(format => {
             format.a = 'b';
@@ -219,6 +220,7 @@ describe('imageProcessor', () => {
         expect(datasetParser).toHaveBeenCalledWith({ a: 'b' }, img, context, {});
         expect(doc).toEqual({
             blockGroupType: 'Document',
+            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -240,7 +242,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with dataset', () => {
-        const doc = createContentModelDocument();
+        const doc = createContentModelDocument(document);
         const img = document.createElement('img');
         const datasetParser = jasmine.createSpy('datasetParser').and.callFake(format => {
             format.a = 'b';
@@ -255,6 +257,7 @@ describe('imageProcessor', () => {
         expect(datasetParser).toHaveBeenCalledWith({ a: 'b' }, img, context, {});
         expect(doc).toEqual({
             blockGroupType: 'Document',
+            document,
             blocks: [
                 {
                     blockType: 'Paragraph',

@@ -1,5 +1,5 @@
 import { addBlock } from '../common/addBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createTable } from '../creators/createTable';
 import { createTableCell } from '../creators/createTableCell';

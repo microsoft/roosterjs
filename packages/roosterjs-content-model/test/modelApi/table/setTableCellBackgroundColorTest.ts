@@ -2,21 +2,24 @@ import { createTableCell } from '../../../lib/modelApi/creators/createTableCell'
 import { setTableCellBackgroundColor } from '../../../lib/modelApi/table/setTableCellBackgroundColor';
 
 describe('setTableCellBackgroundColor', () => {
-    it('Set to null', () => {
-        const cell = createTableCell(1, 1, false, {
-            backgroundColor: 'red',
-        });
+    it('Empty table', () => {
+        const table: ContentModelTable = {
+            blockType: 'Table',
+            cells: [],
+            format: {},
+            widths: [0],
+            heights: [0],
+            dataset: {},
+        };
 
         setTableCellBackgroundColor(cell, null);
 
         expect(cell).toEqual({
             blockGroupType: 'TableCell',
             format: {},
-            isHeader: false,
-            spanAbove: false,
-            spanLeft: false,
+            widths: [0],
+            heights: [0],
             dataset: {},
-            blocks: [],
         });
     });
 
@@ -31,12 +34,14 @@ describe('setTableCellBackgroundColor', () => {
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
+                        dataset: {},
                     },
                 ],
             ],
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(cell, '#ffffff');
@@ -51,12 +56,14 @@ describe('setTableCellBackgroundColor', () => {
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
+                        dataset: {},
                     },
                 ],
             ],
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -71,6 +78,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -79,6 +87,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {},
                         isSelected: true,
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -87,12 +96,14 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {},
                         isSelected: true,
+                        dataset: {},
                     },
                 ],
             ],
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(cell, '#ffffff', true);
@@ -107,6 +118,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -115,7 +127,9 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {
                             backgroundColor: 'red',
-                            bgColorOverride: true,
+                        },
+                        dataset: {
+                            editingInfo: '{"bgColorOverride":true}',
                         },
                         isSelected: true,
                     },
@@ -126,7 +140,9 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {
                             backgroundColor: 'red',
-                            bgColorOverride: true,
+                        },
+                        dataset: {
+                            editingInfo: '{"bgColorOverride":true}',
                         },
                         isSelected: true,
                     },
@@ -135,6 +151,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -149,6 +166,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -168,12 +186,14 @@ describe('setTableCellBackgroundColor', () => {
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
+                        dataset: {},
                     },
                 ],
             ],
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(cell, '#000000');
@@ -188,6 +208,7 @@ describe('setTableCellBackgroundColor', () => {
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -208,7 +229,9 @@ describe('setTableCellBackgroundColor', () => {
                         spanLeft: false,
                         format: {
                             backgroundColor: 'red',
-                            bgColorOverride: true,
+                        },
+                        dataset: {
+                            editingInfo: '{"bgColorOverride":true}',
                         },
                     },
                 ],
@@ -216,6 +239,7 @@ describe('setTableCellBackgroundColor', () => {
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 
@@ -238,23 +262,27 @@ describe('setTableCellBackgroundColor', () => {
                                             spanLeft: false,
                                             format: {},
                                             blocks: [],
+                                            dataset: {},
                                         },
                                     ],
                                 ],
                                 widths: [0],
                                 heights: [0],
+                                dataset: {},
                             },
                         ],
                         spanAbove: false,
                         spanLeft: false,
                         format: {},
                         isSelected: true,
+                        dataset: {},
                     },
                 ],
             ],
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         };
 
         setTableCellBackgroundColor(cell, 'rgb(0,0,0)');
@@ -277,23 +305,29 @@ describe('setTableCellBackgroundColor', () => {
                                             spanLeft: false,
                                             format: {},
                                             blocks: [],
+                                            dataset: {},
                                         },
                                     ],
                                 ],
                                 widths: [0],
                                 heights: [0],
+                                dataset: {},
                             },
                         ],
                         spanAbove: false,
                         spanLeft: false,
-                        format: { backgroundColor: 'red', bgColorOverride: true },
+                        format: { backgroundColor: 'red' },
                         isSelected: true,
+                        dataset: {
+                            editingInfo: '{"bgColorOverride":true}',
+                        },
                     },
                 ],
             ],
             format: {},
             widths: [0],
             heights: [0],
+            dataset: {},
         });
     });
 });

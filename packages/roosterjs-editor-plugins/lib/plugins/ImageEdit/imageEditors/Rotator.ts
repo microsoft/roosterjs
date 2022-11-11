@@ -1,9 +1,9 @@
 import DragAndDropContext from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
-import ImageEditInfo, { RotateInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData, Rect } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
+import { RotateInfo } from '../types/ImageEditInfo';
 
 const ROTATE_SIZE = 32;
 const ROTATE_GAP = 15;
@@ -38,36 +38,6 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
         }
     },
 };
-
-/**
- * @internal
- * Move rotate handle. When image is very close to the border of editor, rotate handle may not be visible.
- * Fix it by reduce the distance from image to rotate handle
- */
-export function updateRotateHandlePosition(
-    editInfo: ImageEditInfo,
-    editorRect: Rect,
-    marginVertical: number,
-    rotateCenter: HTMLElement,
-    rotateHandle: HTMLElement
-) {
-    const rotateHandleRect = rotateHandle.getBoundingClientRect();
-    if (rotateHandleRect) {
-        const top = rotateHandleRect.top - editorRect?.top;
-        const { angleRad, heightPx } = editInfo;
-        const cosAngle = Math.cos(angleRad);
-        const adjustedDistance =
-            cosAngle <= 0
-                ? Number.MAX_SAFE_INTEGER
-                : (top + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
-
-        const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
-        const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-        rotateCenter.style.top = -rotateGap + 'px';
-        rotateCenter.style.height = rotateGap + 'px';
-        rotateHandle.style.top = -rotateTop + 'px';
-    }
-}
 
 /**
  * @internal

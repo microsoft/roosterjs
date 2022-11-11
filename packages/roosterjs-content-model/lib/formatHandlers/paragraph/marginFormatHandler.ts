@@ -20,9 +20,9 @@ const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
  * @internal
  */
 export const marginFormatHandler: FormatHandler<MarginFormat> = {
-    parse: (format, element) => {
+    parse: (format, element, context, defaultStyle) => {
         MarginKeys.forEach(key => {
-            const value = element.style[key];
+            const value = element.style[key] || defaultStyle[key];
 
             if (value) {
                 format[key] = value;

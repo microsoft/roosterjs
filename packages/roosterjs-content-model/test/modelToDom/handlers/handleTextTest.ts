@@ -1,4 +1,3 @@
-import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelText } from '../../../lib/publicTypes/segment/ContentModelText';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleText } from '../../../lib/modelToDom/handlers/handleText';
@@ -41,29 +40,12 @@ describe('handleSegment', () => {
         const text: ContentModelText = {
             segmentType: 'Text',
             text: 'test',
-            format: {},
-            link: { format: { href: '/test', underline: true }, dataset: {} },
+            format: { underline: true },
+            link: { format: { href: '/test' }, dataset: {} },
         };
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
-    });
-
-    it('call stackFormat', () => {
-        const text: ContentModelText = {
-            segmentType: 'Text',
-            text: 'test',
-            format: {},
-            link: { format: { href: '/test', underline: true }, dataset: {} },
-        };
-
-        spyOn(stackFormat, 'stackFormat').and.callThrough();
-
-        handleText(document, parent, text, context);
-
-        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
-        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
-        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
+        expect(parent.innerHTML).toBe('<a href="/test">test</a>');
     });
 });

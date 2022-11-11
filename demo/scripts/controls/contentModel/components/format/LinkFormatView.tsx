@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { ContentModelHyperLinkFormat, LinkFormat } from 'roosterjs-content-model';
 import { createTextFormatRenderer } from './utils/createTextFormatRenderer';
 import { FormatRenderer } from './utils/FormatRenderer';
 import { FormatView } from './FormatView';
-import { TextColorFormatRenderer } from './formatPart/TextColorFormatRenderer';
-import { UnderlineFormatRenderer } from './formatPart/BasicFormatRenderers';
+import { LinkFormat } from 'roosterjs-content-model';
 
-const LinkFormatRenderers: FormatRenderer<ContentModelHyperLinkFormat>[] = [
+const LinkFormatRenderers: FormatRenderer<LinkFormat>[] = [
     createTextFormatRenderer<LinkFormat>(
         'Name',
         format => format.name,
@@ -42,8 +40,6 @@ const LinkFormatRenderers: FormatRenderer<ContentModelHyperLinkFormat>[] = [
         format => format.relationship,
         (format, value) => (format.relationship = value)
     ),
-    TextColorFormatRenderer,
-    UnderlineFormatRenderer,
 ];
 
 export function LinkFormatView(props: { format: LinkFormat }) {

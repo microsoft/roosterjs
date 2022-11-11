@@ -1,5 +1,5 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 
 /**
@@ -34,7 +34,10 @@ export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
 export function isSegmentEmpty(segment: ContentModelSegment): boolean {
     switch (segment.segmentType) {
         case 'Text':
-            return !segment.text || /^[\r\n]*$/.test(segment.text);
+            return !segment.text;
+
+        case 'Image':
+            return !segment.src;
 
         default:
             return false;

@@ -1,4 +1,3 @@
-import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -23,33 +22,16 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
 
     switch (segment.segmentType) {
         case 'Text':
-            const txt = doc.createTextNode(segment.text);
-
-            element = doc.createElement('span');
-            element.appendChild(txt);
-            regularSelection.current.segment = txt;
-
-            applyFormat(element, context.formatAppliers.segment, segment.format, context);
-
+            context.modelHandlers.text(doc, parent, segment, context);
             break;
 
         case 'Br':
-            const br = doc.createElement('br');
-            element = doc.createElement('span');
-            element.appendChild(br);
-            regularSelection.current.segment = br;
-
-            applyFormat(element, context.formatAppliers.segment, segment.format, context);
+            context.modelHandlers.br(doc, parent, segment, context);
             break;
 
         case 'General':
-            context.modelHandlers.block(doc, parent, segment, context);
+            context.modelHandlers.general(doc, parent, segment, context);
             break;
-
-        case 'Entity':
-            context.modelHandlers.entity(doc, parent, segment, context);
-            break;
-    }
 
         case 'Entity':
             context.modelHandlers.entity(doc, parent, segment, context);

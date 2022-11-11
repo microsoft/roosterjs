@@ -5,7 +5,12 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 /**
  * @internal
  */
-export type ShallowObjectStackType = 'shallowClone' | 'empty';
+export type ObjectStackType = 'empty';
+
+/**
+ * @internal
+ */
+export type ShallowObjectStackType = 'shallowClone' | ObjectStackType;
 
 /**
  * @internal
@@ -13,6 +18,7 @@ export type ShallowObjectStackType = 'shallowClone' | 'empty';
 export interface StackFormatOptions {
     segment?: ShallowObjectStackType;
     paragraph?: ShallowObjectStackType;
+    link?: ObjectStackType;
 }
 
 // Some styles, such as background color, won't be inherited by block element if it was originally
@@ -41,17 +47,25 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () => void
 ) {
-    const { segmentFormat, blockFormat } = context;
-    const { segment, paragraph } = options;
+    const { segmentFormat, blockFormat, link: linkFormat } = context;
+    const { segment, paragraph, link } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
+        context.link =
+            link == 'empty'
+                ? {
+                      format: {},
+                      dataset: {},
+                  }
+                : linkFormat;
 
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
         context.blockFormat = blockFormat;
+        context.link = linkFormat;
     }
 }
 

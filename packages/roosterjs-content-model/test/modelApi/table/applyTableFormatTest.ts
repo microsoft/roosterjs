@@ -67,12 +67,12 @@ describe('applyTableFormat', () => {
                 const { borderTop, borderRight, borderLeft, borderBottom } = table.cells[row][
                     col
                 ].format;
-                const colors = expectedBorderColors[row][col];
+                const borders = expectedBorders[row][col];
 
-                expect(borderTop).toBe('1px solid ' + colors[0]);
-                expect(borderRight).toBe('1px solid ' + colors[1]);
-                expect(borderBottom).toBe('1px solid ' + colors[2]);
-                expect(borderLeft).toBe('1px solid ' + colors[3]);
+                expect(borderTop).toBe(borders[0]);
+                expect(borderRight).toBe(borders[1]);
+                expect(borderBottom).toBe(borders[2]);
+                expect(borderLeft).toBe(borders[3]);
             }
         }
     }

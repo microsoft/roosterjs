@@ -1,5 +1,4 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
-import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
@@ -116,12 +115,11 @@ describe('handleBlockGroup', () => {
             cloneNode: () => clonedChild,
             firstChild: true,
         } as any) as HTMLElement;
-        const group = createGeneralSegment(childMock);
+        const group = createGeneralSegment(childMock, { underline: true });
 
         group.link = {
             format: {
                 href: '/test',
-                underline: true,
             },
             dataset: {},
         };
@@ -143,28 +141,5 @@ describe('handleBlockGroup', () => {
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalled();
-    });
-
-    it('call stackFormat', () => {
-        const clonedChild = document.createElement('span');
-        const childMock = ({
-            cloneNode: () => clonedChild,
-            firstChild: true,
-        } as any) as HTMLElement;
-        const group = createGeneralSegment(childMock, { underline: true });
-
-        group.link = {
-            format: {
-                href: '/test',
-            },
-            dataset: {},
-        };
-
-        spyOn(stackFormat, 'stackFormat').and.callThrough();
-
-        handleGeneralModel(document, parent, group, context);
-
-        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
-        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
 });

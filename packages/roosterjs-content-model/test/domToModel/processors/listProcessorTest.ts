@@ -1,4 +1,5 @@
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
+import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { childProcessor as originalChildProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -354,7 +355,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL without list style type and metadata', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
 
         childProcessor.and.callFake((group, element, context) => {
             expect(context.listFormat.levels).toEqual([
@@ -371,7 +372,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with valid metadata', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: 1,
@@ -395,7 +396,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with invalid metadata', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: true,
@@ -417,7 +418,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with metadata that has value at the edge of range', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: NumberingListType.Max,
@@ -441,7 +442,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with metadata that has value at the out of range', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: NumberingListType.Max + 1,
@@ -463,7 +464,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with conflict metadata and list type', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument();
+        const group = createContentModelDocument(document);
 
         ol.style.listStyleType = 'decimal';
         ol.dataset.editingInfo = JSON.stringify({

@@ -1,6 +1,6 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { defaultContentModelHandlers } from '../../../lib/modelToDom/context/defaultContentModelHandlers';
-import { defaultImplicitFormatMap } from '../../../lib/formatHandlers/utils/defaultStyles';
+import { defaultImplicitSegmentFormatMap } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import {
@@ -11,6 +11,8 @@ import {
 describe('createModelToDomContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
+        zoomScale: 1,
+        isRightToLeft: false,
         getDarkColor: undefined,
     };
     const defaultResult: ModelToDomContext = {
@@ -25,11 +27,11 @@ describe('createModelToDomContext', () => {
             threadItemCounts: [],
             nodeStack: [],
         },
-        implicitFormat: {},
+        implicitSegmentFormat: {},
         formatAppliers: getFormatAppliers(),
         modelHandlers: defaultContentModelHandlers,
-        defaultImplicitFormatMap: defaultImplicitFormatMap,
-        entities: {},
+        defaultImplicitSegmentFormatMap: defaultImplicitSegmentFormatMap,
+        entityPairs: [],
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
     };
@@ -42,6 +44,8 @@ describe('createModelToDomContext', () => {
     it('with content model context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
             getDarkColor: () => '',
         };
 
@@ -54,11 +58,13 @@ describe('createModelToDomContext', () => {
     });
 
     it('with overrides', () => {
+        const mockedMergingCallback = 'mergingCallback' as any;
         const mockedBoldApplier = 'bold' as any;
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
         const mockedAStyle = 'a' as any;
         const context = createModelToDomContext(undefined, {
+            mergingCallback: mockedMergingCallback,
             formatApplierOverride: {
                 bold: mockedBoldApplier,
             },
@@ -68,7 +74,7 @@ describe('createModelToDomContext', () => {
             modelHandlerOverride: {
                 br: mockedBrHandler,
             },
-            defaultImplicitFormatOverride: {
+            defaultImplicitSegmentFormatOverride: {
                 a: mockedAStyle,
             },
         });
@@ -83,14 +89,14 @@ describe('createModelToDomContext', () => {
             threadItemCounts: [],
             nodeStack: [],
         });
-        expect(context.implicitFormat).toEqual({});
+        expect(context.implicitSegmentFormat).toEqual({});
         expect(context.formatAppliers.block).toEqual([
             ...getFormatAppliers().block,
             mockedBlockApplier,
         ]);
         expect(context.modelHandlers.br).toBe(mockedBrHandler);
-        expect(context.defaultImplicitFormatMap.a).toEqual(mockedAStyle);
-        expect(context.entities).toEqual({});
+        expect(context.defaultImplicitSegmentFormatMap.a).toEqual(mockedAStyle);
+        expect(context.entityPairs).toEqual([]);
         expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
         expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);
     });

@@ -1,38 +1,27 @@
-import { DefaultImplicitFormatMap } from '../../publicTypes/context/ModelToDomSettings';
+import { DefaultImplicitSegmentFormatMap } from '../../publicTypes/context/ModelToDomSettings';
 import { DefaultStyleMap } from '../../publicTypes/context/DomToModelSettings';
 
 const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',
 };
 
+export const HyperLinkColorPlaceholder = '__hyperLinkColor';
+
 /**
  * @internal
  */
 export const defaultStyleMap: DefaultStyleMap = {
+    a: {
+        textDecoration: 'underline',
+        color: HyperLinkColorPlaceholder,
+    },
     address: blockElement,
     article: blockElement,
     aside: blockElement,
     b: {
         fontWeight: 'bold',
     },
-    blockquote: {
-        display: 'block',
-        marginTop: '1em',
-        marginBottom: '1em',
-        marginLeft: '40px',
-        marginRight: '40px',
-    },
-    br: blockElement,
-    center: {
-        display: 'block',
-        textAlign: 'center',
-    },
-    code: { fontFamily: 'monospace' },
-    dd: blockElement,
-    div: blockElement,
-    dl: blockElement,
-    dt: blockElement,
-    em: {
+    EM: {
         fontStyle: 'italic',
     },
     fieldset: blockElement,
@@ -95,46 +84,29 @@ export const defaultStyleMap: DefaultStyleMap = {
     s: {
         textDecoration: 'line-through',
     },
-    section: blockElement,
-    strike: {
+    STRIKE: {
         textDecoration: 'line-through',
     },
-    strong: {
+    STRONG: {
         fontWeight: 'bold',
     },
-    sub: {
+    SUB: {
         verticalAlign: 'sub',
         fontSize: 'smaller',
     },
-    sup: {
+    SUP: {
         verticalAlign: 'super',
         fontSize: 'smaller',
     },
-    table: {
-        display: 'table',
-        boxSizing: 'border-box',
-    },
-    td: {
-        display: 'table-cell',
-    },
-    th: {
-        display: 'table-cell',
-    },
-    u: {
+    U: {
         textDecoration: 'underline',
     },
-    ul: blockElement,
 };
 
-export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
+export const defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap = {
     a: {
         underline: true,
-    },
-    blockquote: {
-        marginTop: '1em',
-        marginBottom: '1em',
-        marginLeft: '40px',
-        marginRight: '40px',
+        textColor: HyperLinkColorPlaceholder,
     },
     h1: {
         fontWeight: 'bold',
@@ -150,7 +122,6 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     },
     h4: {
         fontWeight: 'bold',
-        fontSize: '1em', // Set this default value here to overwrite existing font size when change header level
     },
     h5: {
         fontWeight: 'bold',
@@ -159,9 +130,5 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     h6: {
         fontWeight: 'bold',
         fontSize: '0.67em',
-    },
-    p: {
-        marginTop: '1em',
-        marginBottom: '1em',
     },
 };

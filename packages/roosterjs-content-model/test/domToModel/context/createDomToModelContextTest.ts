@@ -1,8 +1,8 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
-import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
+import { defaultStyleMap } from '../../../lib/formatHandlers/utils/defaultStyles';
+import { DomToModelListFormat } from '../../../lib/publicTypes/context/DomToModelFormatContext';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
-import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     defaultFormatParsers,
@@ -18,6 +18,8 @@ describe('createDomToModelContext', () => {
         elementProcessors: defaultProcessorMap,
         defaultStyles: defaultStyleMap,
         formatParsers: getFormatParsers(),
+        defaultElementProcessors: defaultProcessorMap,
+        defaultFormatParsers: defaultFormatParsers,
     };
     it('no param', () => {
         const context = createDomToModelContext();
@@ -27,6 +29,11 @@ describe('createDomToModelContext', () => {
             segmentFormat: {},
             blockFormat: {},
             isInSelection: false,
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -46,6 +53,11 @@ describe('createDomToModelContext', () => {
                 direction: 'rtl',
             },
             isInSelection: false,
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -80,6 +92,11 @@ describe('createDomToModelContext', () => {
                 endOffset: 1,
                 isSelectionCollapsed: false,
             },
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -109,6 +126,11 @@ describe('createDomToModelContext', () => {
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
             },
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -128,7 +150,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             link: {
                 format: {},
                 dataset: {},
@@ -201,6 +222,84 @@ describe('createDomToModelContext', () => {
             isInSelection: false,
             blockFormat: {},
             zoomScaleFormat: {},
+            segmentFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
+            listFormat,
+            ...contextOptions,
+        });
+    });
+
+    it('with base parameters and wrong selection 1', () => {
+        const getDarkColor = () => '';
+
+        const context = createDomToModelContext(
+            {
+                isDarkMode: true,
+                zoomScale: 2,
+                isRightToLeft: true,
+                getDarkColor,
+            },
+            {
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [],
+                    areAllCollapsed: true,
+                },
+            }
+        );
+
+        expect(context).toEqual({
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
+            isInSelection: false,
+            blockFormat: {
+                direction: 'rtl',
+            },
+            segmentFormat: {},
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
+            ...contextOptions,
+        });
+    });
+
+    it('with base parameters and wrong selection 2', () => {
+        const getDarkColor = () => '';
+
+        const context = createDomToModelContext(
+            {
+                isDarkMode: true,
+                zoomScale: 2,
+                isRightToLeft: true,
+                getDarkColor,
+            },
+            {
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: null!,
+                    coordinates: null!,
+                },
+            }
+        );
+
+        expect(context).toEqual({
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
+            isInSelection: false,
+            blockFormat: {
+                direction: 'rtl',
+            },
             segmentFormat: {},
             link: {
                 format: {},

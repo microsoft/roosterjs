@@ -1,7 +1,7 @@
-import { ContentModelBlockBase } from '../ContentModelBlockBase';
-import { ContentModelBlockFormat } from '../../format/ContentModelBlockFormat';
+import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
+import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelSegmentFormat } from '../../format/ContentModelSegmentFormat';
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Content Model for general Block element

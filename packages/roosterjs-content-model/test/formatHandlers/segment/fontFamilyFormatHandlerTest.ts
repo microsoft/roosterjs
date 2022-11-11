@@ -77,7 +77,7 @@ describe('fontFamilyFormatHandler.apply', () => {
     });
 
     it('Has implicit font family from context', () => {
-        context.implicitFormat.fontFamily = 'test';
+        context.implicitSegmentFormat.fontFamily = 'test';
 
         fontFamilyFormatHandler.apply(format, div, context);
 
@@ -85,7 +85,7 @@ describe('fontFamilyFormatHandler.apply', () => {
     });
 
     it('Has implicit font family from context and same with current format', () => {
-        context.implicitFormat.fontFamily = 'test';
+        context.implicitSegmentFormat.fontFamily = 'test';
         format.fontFamily = 'test';
 
         fontFamilyFormatHandler.apply(format, div, context);
@@ -94,7 +94,7 @@ describe('fontFamilyFormatHandler.apply', () => {
     });
 
     it('Has implicit font family from context but overridden by current format', () => {
-        context.implicitFormat.fontFamily = 'test';
+        context.implicitSegmentFormat.fontFamily = 'test';
         format.fontFamily = 'test2';
 
         fontFamilyFormatHandler.apply(format, div, context);

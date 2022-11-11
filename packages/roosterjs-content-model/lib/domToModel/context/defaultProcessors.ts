@@ -1,6 +1,5 @@
 import { brProcessor } from '../processors/brProcessor';
 import { childProcessor } from '../processors/childProcessor';
-import { createTempContainerProcessor } from '../processors/tempContainerProcessor';
 import { elementProcessor } from '../processors/elementProcessor';
 import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
 import { entityProcessor } from '../processors/entityProcessor';
@@ -10,23 +9,31 @@ import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 
-const tempContainerProcessor = createTempContainerProcessor();
-
 /**
  * @internal
  */
 export const defaultProcessorMap: ElementProcessorMap = {
+    a: knownElementProcessor,
     b: knownElementProcessor,
     blockquote: quoteProcessor,
     br: brProcessor,
-    div: tempContainerProcessor,
+    div: knownElementProcessor,
     em: knownElementProcessor,
     font: fontProcessor,
     i: knownElementProcessor,
+    img: imageProcessor,
+    h1: knownElementProcessor,
+    h2: knownElementProcessor,
+    h3: knownElementProcessor,
+    h4: knownElementProcessor,
+    h5: knownElementProcessor,
+    h6: knownElementProcessor,
+    hr: hrProcessor,
     li: listItemProcessor,
     ol: listProcessor,
+    p: knownElementProcessor,
     s: knownElementProcessor,
-    span: tempContainerProcessor,
+    span: knownElementProcessor,
     strike: knownElementProcessor,
     strong: knownElementProcessor,
     sub: knownElementProcessor,

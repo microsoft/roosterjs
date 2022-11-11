@@ -15,23 +15,54 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
     group: ContentModelGeneralBlock,
     context: ModelToDomContext
 ) => {
-    const element = group.element.cloneNode();
+    const newParent = group.element.cloneNode();
 
-    parent.appendChild(element);
-
-    if (isGeneralSegment(group) && isNodeOfType(element, NodeType.Element)) {
+    if (isGeneralSegment(group) && isNodeOfType(newParent, NodeType.Element)) {
         if (!group.element.firstChild) {
-            context.regularSelection.current.segment = element;
+            context.regularSelection.current.segment = newParent;
         }
 
-        applyFormat(element, context.formatAppliers.segment, group.format, context);
+        const implicitSegmentFormat = context.implicitSegmentFormat;
+        let segmentElement: HTMLElement;
 
-        if (group.link) {
-            context.modelHandlers.link(doc, element, group.link, context);
+        try {
+            if (group.link) {
+                segmentElement = doc.createElement('a');
+
+                parent.appendChild(segmentElement);
+                segmentElement.appendChild(newParent);
+
+                context.implicitSegmentFormat = {
+                    ...implicitSegmentFormat,
+                    ...(context.defaultImplicitSegmentFormatMap.a || {}),
+                };
+
+                applyFormat(
+                    segmentElement,
+                    context.formatAppliers.link,
+                    group.link.format,
+                    context
+                );
+                applyFormat(
+                    segmentElement,
+                    context.formatAppliers.dataset,
+                    group.link.dataset,
+                    context
+                );
+            } else {
+                segmentElement = newParent;
+                parent.appendChild(newParent);
+            }
+
+            applyFormat(segmentElement, context.formatAppliers.segment, group.format, context);
+        } finally {
+            context.implicitSegmentFormat = implicitSegmentFormat;
         }
+    } else {
+        parent.appendChild(newParent);
     }
 
-    context.modelHandlers.blockGroupChildren(doc, element, group, context);
+    context.modelHandlers.blockGroupChildren(doc, newParent, group, context);
 };
 
 function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {

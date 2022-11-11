@@ -48,7 +48,7 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
                 break;
         }
 
-        if (alignFromAttr && !element.style.textAlign) {
+        if (align && !element.style.textAlign) {
             format.isTextAlignFromAttr = true;
         }
     },

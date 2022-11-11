@@ -397,14 +397,6 @@ export default class VListItem {
                             ...getStyles(node),
                         };
                         setStyles(node, styles);
-
-                        attrsToInherit.forEach(attr => {
-                            const attrValue = this.node.getAttribute(attr);
-
-                            if (attrValue) {
-                                node.setAttribute(attr, attrValue);
-                            }
-                        });
                     }
                 }
             }

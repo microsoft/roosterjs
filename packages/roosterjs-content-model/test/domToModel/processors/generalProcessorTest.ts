@@ -106,4 +106,38 @@ describe('generalProcessor', () => {
             ],
         });
     });
+
+    it('Process a SPAN element with link format', () => {
+        const doc = createContentModelDocument(document);
+        const span = document.createElement('span');
+        context.link = {
+            format: { href: '/test' },
+            dataset: {},
+        };
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            link: { format: { href: '/test' }, dataset: {} },
+                            blocks: [],
+                            element: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            document: document,
+        });
+    });
 });

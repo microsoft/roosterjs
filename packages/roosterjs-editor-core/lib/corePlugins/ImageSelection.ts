@@ -1,23 +1,18 @@
-import { createRange, safeInstanceOf } from 'roosterjs-editor-dom';
-
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
     PluginEvent,
     PluginEventType,
-    PositionType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-
-const Escape = 'Escape';
-const mouseRightButton = 2;
-const mouseLeftButton = 0;
 
 /**
  * Detect image selection and help highlight the image
  */
 export default class ImageSelection implements EditorPlugin {
     private editor: IEditor | null = null;
+    private imageId: string | null = null;
 
     /**
      * Get a friendly name of  this plugin
@@ -40,13 +35,13 @@ export default class ImageSelection implements EditorPlugin {
     dispose() {
         this.editor?.select(null);
         this.editor = null;
+        this.imageId = null;
     }
 
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
                 case PluginEventType.EnteredShadowEdit:
-                case PluginEventType.LeavingShadowEdit:
                     const selection = this.editor.getSelectionRangeEx();
                     if (selection.type == SelectionRangeTypes.ImageSelection) {
                         this.editor.select(selection.image);
@@ -62,17 +57,6 @@ export default class ImageSelection implements EditorPlugin {
                         } else if (event.rawEvent.button === mouseLeftButton) {
                             this.editor.select(target);
                         }
-                    }
-                    break;
-                case PluginEventType.MouseDown:
-                    const mouseTarget = event.rawEvent.target;
-                    const mouseSelection = this.editor.getSelectionRangeEx();
-                    if (
-                        mouseSelection &&
-                        mouseSelection.type === SelectionRangeTypes.ImageSelection &&
-                        mouseSelection.image !== mouseTarget
-                    ) {
-                        this.editor.select(null);
                     }
                     break;
                 case PluginEventType.KeyUp:

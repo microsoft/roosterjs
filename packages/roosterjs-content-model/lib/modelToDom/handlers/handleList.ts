@@ -1,8 +1,10 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
+import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
+import { updateListMetadata } from '../../modelApi/metadata/updateListMetadata';
 
 /**
  * @internal
@@ -49,6 +51,26 @@ export const handleList: ContentModelHandler<ContentModelListItem> = (
         lastParent.appendChild(newList);
         applyFormat(newList, context.formatAppliers.listLevel, level, context);
 
+        handleMetadata(level, newList, context);
+
         nodeStack.push({ node: newList, ...level });
     }
 };
+
+function handleMetadata(
+    level: ContentModelListItemLevelFormat,
+    newList: HTMLElement,
+    context: ModelToDomContext
+) {
+    const dataset: DatasetFormat = {};
+
+    updateListMetadata({ dataset }, () =>
+        typeof level.orderedStyleType === 'number' || typeof level.unorderedStyleType === 'number'
+            ? {
+                  orderedStyleType: level.orderedStyleType,
+                  unorderedStyleType: level.unorderedStyleType,
+              }
+            : null
+    );
+    applyFormat(newList, context.formatAppliers.dataset, dataset, context);
+}

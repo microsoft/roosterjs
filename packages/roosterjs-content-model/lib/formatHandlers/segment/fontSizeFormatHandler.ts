@@ -17,7 +17,7 @@ export const fontSizeFormatHandler: FormatHandler<FontSizeFormat> = {
         }
     },
     apply: (format, element, context) => {
-        if (format.fontSize && format.fontSize != context.implicitFormat.fontSize) {
+        if (format.fontSize && format.fontSize != context.implicitSegmentFormat.fontSize) {
             element.style.fontSize = format.fontSize;
         }
     },

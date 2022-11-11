@@ -48,11 +48,7 @@ describe('ensureTypeInContainer', () => {
     }
 
     it('empty', () => {
-        runTest('', undefined, undefined, true, '<div><span><br></span></div>');
-    });
-
-    it('empty, no format span', () => {
-        runTest('', undefined, undefined, false, '<div><br></div>');
+        runTest('', undefined, undefined, false, '<div><span><br></span></div>');
     });
 
     it('pure text', () => {
@@ -70,20 +66,8 @@ describe('ensureTypeInContainer', () => {
                 fontSize: '10pt',
             },
             undefined,
-            true,
-            '<div><span style="font-size: 10pt;"><br></span></div>'
-        );
-    });
-
-    it('empty editor with format, no format span', () => {
-        runTest(
-            '',
-            {
-                fontSize: '10pt',
-            },
-            undefined,
             false,
-            '<div style="font-size: 10pt;"><br></div>'
+            '<div><span style="font-size: 10pt;"><br></span></div>'
         );
     });
 
@@ -139,13 +123,7 @@ describe('ensureTypeInContainer', () => {
             } as any) as KeyboardEvent,
             true,
             '<div><span style="font-size: 10pt;">a</span></div>',
-            () =>
-                new Position(<NodePosition>(<any>{
-                    element: div.firstChild?.firstChild,
-                    isAtEnd: false,
-                    offset: 0,
-                    node: div.firstChild?.firstChild?.firstChild,
-                }))
+            () => new Position(div.firstChild?.firstChild, PositionType.Begin)
         );
     });
 
@@ -193,7 +171,7 @@ describe('ensureTypeInContainer', () => {
             } as any) as KeyboardEvent,
             true,
             '<table><tbody><tr><td id="td"><span style="font-size: 10pt;"><br></span></td></tr></tbody></table>',
-            () => new Position(div.querySelector('#td')!, PositionType.Begin)
+            () => new Position(div.querySelector('#td')!.firstChild, PositionType.Begin)
         );
     });
 });

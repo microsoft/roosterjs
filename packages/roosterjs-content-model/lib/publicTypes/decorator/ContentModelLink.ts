@@ -1,6 +1,6 @@
-import { ContentModelHyperLinkFormat } from '../format/ContentModelHyperLinkFormat';
 import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import { LinkFormat } from '../format/formatParts/LinkFormat';
 
 /**
  * Represent link info of Content Model.
@@ -8,5 +8,5 @@ import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
  * since link is also a kind of segment, with some extra information
  */
 export interface ContentModelLink
-    extends ContentModelWithFormat<ContentModelHyperLinkFormat>,
+    extends ContentModelWithFormat<LinkFormat>,
         ContentModelWithDataset<null> {}

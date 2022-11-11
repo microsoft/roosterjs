@@ -74,9 +74,17 @@ describe('underlineFormatHandler.parse', () => {
         });
     });
 
+    it('Hyperlink', () => {
+        underlineFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+
+        expect(format).toEqual({
+            underline: true,
+        });
+    });
+
     it('Hyperlink without underline', () => {
         div.style.textDecoration = 'none';
-        underlineFormatHandler.parse(format, div, context, {});
+        underlineFormatHandler.parse(format, div, context, context.defaultStyles.a!);
 
         expect(format).toEqual({});
     });
@@ -141,7 +149,7 @@ describe('underlineFormatHandler.apply', () => {
         a.textContent = 'test';
         format.underline = true;
 
-        context.implicitFormat.underline = true;
+        context.implicitSegmentFormat.underline = true;
 
         underlineFormatHandler.apply(format, a, context);
 
@@ -153,7 +161,7 @@ describe('underlineFormatHandler.apply', () => {
 
         a.textContent = 'test';
 
-        context.implicitFormat.underline = true;
+        context.implicitSegmentFormat.underline = true;
 
         underlineFormatHandler.apply(format, a, context);
 

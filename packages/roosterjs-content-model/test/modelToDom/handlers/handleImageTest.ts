@@ -136,4 +136,30 @@ describe('handleSegment', () => {
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
+
+    it('image segment with link', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true },
+            link: { format: { href: '/test' }, dataset: {} },
+            dataset: {},
+        };
+
+        runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
+    });
+
+    it('image segment with dataset', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true },
+            link: { format: { href: '/test' }, dataset: {} },
+            dataset: {
+                a: 'b',
+            },
+        };
+
+        runTest(segment, '<a href="/test"><img src="http://test.com/test" data-a="b"></a>', 0);
+    });
 });

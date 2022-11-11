@@ -1,4 +1,4 @@
-import { ContentModelBlockGroup } from '../../../lib/publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';

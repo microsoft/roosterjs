@@ -13,7 +13,7 @@ export const fontFamilyFormatHandler: FormatHandler<FontFamilyFormat> = {
         }
     },
     apply: (format, element, context) => {
-        if (format.fontFamily && format.fontFamily != context.implicitFormat.fontFamily) {
+        if (format.fontFamily && format.fontFamily != context.implicitSegmentFormat.fontFamily) {
             element.style.fontFamily = format.fontFamily;
         }
     },

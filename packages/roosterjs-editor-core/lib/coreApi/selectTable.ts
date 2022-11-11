@@ -1,4 +1,3 @@
-import addSelectionStyle from './utils/addSelectionStyle';
 import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
@@ -162,19 +161,14 @@ function buildCss(
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
-    addSelectionStyle(core, css, STYLE_ID);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
     return ranges;
 }
 
-function unselect(core: EditorCore) {
-    const div = core.contentDiv;
-    let styleElement = div.ownerDocument.getElementById(STYLE_ID + div.id) as HTMLStyleElement;
-    if (styleElement?.sheet?.cssRules) {
-        while (styleElement.sheet.cssRules.length > 0) {
-            styleElement.sheet.deleteRule(0);
-        }
-    }
-}
+const unselect = (core: EditorCore) => {
+    const doc = core.contentDiv.ownerDocument;
+    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
+};
 
 function generateCssFromCell(
     contentDivSelector: string,

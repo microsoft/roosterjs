@@ -1,5 +1,5 @@
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
-import { createModelToDomContext } from './context/createModelToDomContext';
+import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
