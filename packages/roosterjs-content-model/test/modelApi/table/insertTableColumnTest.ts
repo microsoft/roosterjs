@@ -13,6 +13,7 @@ describe('insertTableColumn', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -22,6 +23,7 @@ describe('insertTableColumn', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -37,6 +39,7 @@ describe('insertTableColumn', () => {
             cells: [[cell1]],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -46,6 +49,7 @@ describe('insertTableColumn', () => {
             cells: [[cell1]],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -67,6 +71,7 @@ describe('insertTableColumn', () => {
             cells: [[cell2, cell1]],
             widths: [100, 100],
             heights: [200],
+            dataset: {},
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -76,6 +81,7 @@ describe('insertTableColumn', () => {
             cells: [[cell2, cell1, cell2]],
             widths: [100, 100, 100],
             heights: [200],
+            dataset: {},
         });
     });
 
@@ -102,6 +108,7 @@ describe('insertTableColumn', () => {
             cells: [[cell3, cell3, cell1, cell2]],
             widths: [100, 100, 100, 200],
             heights: [300],
+            dataset: {},
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -111,6 +118,7 @@ describe('insertTableColumn', () => {
             cells: [[cell3, cell3, cell1, cell2, cell4, cell4]],
             widths: [100, 100, 100, 200, 200, 200],
             heights: [300],
+            dataset: {},
         });
     });
 
@@ -142,6 +150,7 @@ describe('insertTableColumn', () => {
             ],
             widths: [100, 100],
             heights: [200, 300],
+            dataset: {},
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -154,6 +163,7 @@ describe('insertTableColumn', () => {
             ],
             widths: [100, 100, 100],
             heights: [200, 300],
+            dataset: {},
         });
     });
 
@@ -196,6 +206,7 @@ describe('insertTableColumn', () => {
             ],
             widths: [100, 200, 200, 200, 300, 400],
             heights: [500, 600, 700],
+            dataset: {},
         });
 
         insertTableColumn(table, TableOperation.InsertRight);
@@ -209,6 +220,7 @@ describe('insertTableColumn', () => {
             ],
             widths: [100, 200, 200, 200, 300, 300, 300, 400],
             heights: [500, 600, 700],
+            dataset: {},
         });
     });
 });

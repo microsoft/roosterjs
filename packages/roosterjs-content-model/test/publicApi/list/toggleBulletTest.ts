@@ -1,6 +1,6 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleBullet from '../../../lib/publicApi/list/toggleBullet';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('toggleBullet', () => {

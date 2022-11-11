@@ -1,5 +1,5 @@
 import { childProcessor } from '../../../lib/domToModel/processors/childProcessor';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -101,6 +101,7 @@ describe('childProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
             document: document,

@@ -1,6 +1,6 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleNumbering from '../../../lib/publicApi/list/toggleNumbering';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('toggleNumbering', () => {

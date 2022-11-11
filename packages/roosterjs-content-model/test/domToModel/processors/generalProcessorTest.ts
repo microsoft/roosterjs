@@ -1,6 +1,6 @@
 import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
 import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -99,6 +99,40 @@ describe('generalProcessor', () => {
                             blockGroupType: 'General',
                             segmentType: 'General',
                             format: { a: 'b' } as any,
+                            blocks: [],
+                            element: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            document: document,
+        });
+    });
+
+    it('Process a SPAN element with link format', () => {
+        const doc = createContentModelDocument(document);
+        const span = document.createElement('span');
+        context.link = {
+            format: { href: '/test' },
+            dataset: {},
+        };
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            link: { format: { href: '/test' }, dataset: {} },
                             blocks: [],
                             element: span,
                         },

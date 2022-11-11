@@ -426,7 +426,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<ul><li>item1</li></ul><div>item2</div><ol><li>item3</li></ol>'
+            '<ul><li>item1</li></ul><div><span>item2</span></div><ol><li>item3</li></ol>'
         );
     });
 
@@ -498,7 +498,7 @@ describe('VList.writeBack', () => {
                     listTypes: [ListType.Ordered],
                 },
             ],
-            '<div>text</div><ol start="3"><li>item3</li><li>item4</li></ol><div>text</div><ol start="5"><li>item5</li></ol>',
+            '<div><span>text</span></div><ol start="3"><li>item3</li><li>item4</li></ol><div><span>text</span></div><ol start="5"><li>item5</li></ol>',
             ol
         );
     });

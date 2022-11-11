@@ -1,4 +1,4 @@
-import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';

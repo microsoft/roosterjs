@@ -27,6 +27,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             ''
         );
@@ -40,6 +41,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             ''
         );
@@ -53,6 +55,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
         );
@@ -70,6 +73,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -84,6 +88,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -101,6 +106,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
@@ -118,6 +124,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
         );
@@ -134,6 +141,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
         );
@@ -170,6 +178,7 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody>' +
                 '<tr><td rowspan="2"></td><td colspan="2"></td></tr>' +
@@ -187,8 +196,35 @@ describe('handleTable', () => {
                 format: {},
                 widths: [],
                 heights: [],
+                dataset: {},
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
+    });
+
+    it('Regular 1 * 1 table, handle dataset', () => {
+        const datasetApplier = jasmine.createSpy('datasetApplier');
+        context.formatAppliers.dataset = [datasetApplier];
+
+        const div = document.createElement('div');
+        handleTable(
+            document,
+            div,
+            {
+                blockType: 'Table',
+                cells: [[createTableCell(1, 1, false)]],
+                format: {},
+                widths: [],
+                heights: [],
+                dataset: {},
+            },
+            context
+        );
+
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+
+        const table = div.firstChild as HTMLTableElement;
+        expect(datasetApplier).toHaveBeenCalledWith({}, table, context);
+        expect(datasetApplier).toHaveBeenCalledWith({}, table.rows[0].cells[0], context);
     });
 });

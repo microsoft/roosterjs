@@ -1,8 +1,8 @@
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
-import { ContentModelQuote } from '../../publicTypes/block/group/ContentModelQuote';
+import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { createQuote } from '../creators/createQuote';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
 import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';

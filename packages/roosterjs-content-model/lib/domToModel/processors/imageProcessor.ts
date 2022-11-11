@@ -1,4 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
+import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelImageFormat } from '../../publicTypes/format/ContentModelImageFormat';
 import { createImage } from '../../modelApi/creators/createImage';
@@ -30,6 +31,9 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
             const image = createImage(element.src, imageFormat);
             const alt = element.alt;
             const title = element.title;
+
+            parseFormat(element, context.formatParsers.dataset, image.dataset, context);
+            addLink(image, context.link);
 
             if (alt) {
                 image.alt = alt;

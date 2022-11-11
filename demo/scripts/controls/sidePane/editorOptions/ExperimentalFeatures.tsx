@@ -11,11 +11,7 @@ export interface ExperimentalFeaturesProps {
 const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.ConvertSingleImageBody]:
         'Paste Html instead of image when Html have one Img Children (Animated Image Paste)',
-    [ExperimentalFeatures.TableAlignment]:
-        'Align table elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
-    [ExperimentalFeatures.AdaptiveHandlesResizer]:
-        ' Provide a circular resize handles that adaptive the number od handles to the size of the image',
     [ExperimentalFeatures.ListItemAlignment]:
         'Align list elements elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.AutoFormatList]:
@@ -24,8 +20,6 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Use pending style format to do formatting when selection is collapsed',
     [ExperimentalFeatures.NormalizeList]:
         'Normalize list to make sure it can be displayed correctly in other client',
-    [ExperimentalFeatures.ImageSelection]:
-        'Image Selection: the selected image data will be stored by editor core',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DefaultFormatInSpan]:

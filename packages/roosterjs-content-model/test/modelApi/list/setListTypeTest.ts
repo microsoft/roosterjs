@@ -62,6 +62,19 @@ describe('indent', () => {
             document: document,
         });
         expect(result).toBeTrue();
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            isImplicit: true,
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {},
+                    isSelected: true,
+                },
+            ],
+        });
     });
 
     it('Group with single list item selection in a different type', () => {
@@ -124,6 +137,51 @@ describe('indent', () => {
             document: document,
         });
         expect(result).toBeTrue();
+    });
+
+    it('Group with single list item selection in same type with implicit paragraph', () => {
+        const group = createContentModelDocument(document);
+        const para = createParagraph();
+        const text = createText('test');
+        const listItem = createListItem([{ listType: 'OL' }]);
+
+        para.isImplicit = true;
+        para.segments.push(text);
+        listItem.blocks.push(para);
+        group.blocks.push(listItem);
+
+        text.isSelected = true;
+
+        const result = setListType(group, 'OL');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockGroupType: 'ListItem',
+                    blockType: 'BlockGroup',
+                    levels: [],
+                    blocks: [para],
+                    formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    format: {},
+                },
+            ],
+            document: document,
+        });
+        expect(result).toBeTrue();
+        expect(para).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            isImplicit: false,
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: {},
+                    isSelected: true,
+                    text: 'test',
+                },
+            ],
+        });
     });
 
     it('Group with mixed selection', () => {
