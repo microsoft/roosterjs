@@ -8,7 +8,7 @@ import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
-import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
+import { getRotateHTML, Rotator } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import {
     arrayPush,
@@ -17,6 +17,7 @@ import {
     getComputedStyle,
     getObjectKeys,
     safeInstanceOf,
+    setGlobalCssStyles,
     toArray,
     unwrap,
     wrap,
@@ -108,6 +109,12 @@ export default class ImageEdit implements EditorPlugin {
     // The image wrapper
     private wrapper: HTMLSpanElement | null = null;
 
+    // Image cloned from the current editing image
+    private clonedImage: HTMLImageElement;
+
+    // The image wrapper
+    private wrapper: HTMLSpanElement;
+
     // Current edit info of the image. All changes user made will be stored in this object.
     // We use this object to update the editing UI, and finally we will use this object to generate
     // the new image if necessary
@@ -133,6 +140,11 @@ export default class ImageEdit implements EditorPlugin {
      * The span element that wraps the image and opens shadow dom
      */
     private isCropping: boolean = false;
+
+    /**
+     * Editor zoom scale
+     */
+    private zoomWrapper: HTMLElement;
 
     /**
      * Create a new instance of ImageEdit
@@ -236,6 +248,10 @@ export default class ImageEdit implements EditorPlugin {
                 break;
             case PluginEventType.BeforeDispose:
                 this.removeWrapper();
+                break;
+
+            case PluginEventType.Scroll:
+                this.setEditingImage(null);
                 break;
         }
     }

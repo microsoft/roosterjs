@@ -76,6 +76,11 @@ export type ContentModelHandlerMap = {
     br: ContentModelHandler<ContentModelBr>;
 
     /**
+     * Content Model type for ContentModelBr
+     */
+    br: ContentModelBr;
+
+    /**
      * Content Model type for child models of ContentModelEntity
      */
     entity: ContentModelBlockHandler<ContentModelEntity>;
@@ -84,6 +89,11 @@ export type ContentModelHandlerMap = {
      * Content Model type for ContentModelGeneralBlock
      */
     general: ContentModelBlockHandler<ContentModelGeneralBlock>;
+
+    /**
+     * Content Model type for ContentModelGeneralBlock
+     */
+    general: ContentModelGeneralBlock;
 
     /**
      * Content Model type for ContentModelHR

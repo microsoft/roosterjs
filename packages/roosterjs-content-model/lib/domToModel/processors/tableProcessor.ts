@@ -143,6 +143,12 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                     context.segmentFormat,
                                     context
                                 );
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.dataset,
+                                    cell.dataset,
+                                    context
+                                );
 
                                 const cellFormat: ContentModelTableCellFormat = {
                                     ...context.blockFormat,

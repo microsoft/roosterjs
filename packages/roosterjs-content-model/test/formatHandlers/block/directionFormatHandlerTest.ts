@@ -33,6 +33,7 @@ describe('directionFormatHandler.parse', () => {
         directionFormatHandler.parse(format, element, context, {});
 
         expect(format.direction).toBe(expectedDirectionValue);
+        expect(format.isTextAlignFromAttr).toBe(expectedIsAlignFromAttr);
     }
 
     it('No alignment, no direction', () => {
@@ -78,5 +79,12 @@ describe('directionFormatHandler.apply', () => {
         format.direction = 'ltr';
         directionFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="direction: ltr;"></div>');
+    });
+
+    it('Align right in attr', () => {
+        format.textAlign = 'end';
+        format.isTextAlignFromAttr = true;
+        directionFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div align="right"></div>');
     });
 });

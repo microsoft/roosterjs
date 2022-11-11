@@ -120,17 +120,22 @@ describe('handleSegment', () => {
             wrapper: div,
             isReadonly: true,
         };
-        runTest(segment, '<!--Entity:entity_1-->', 0);
 
-        expect(context.entityPairs).toEqual([
-            {
-                entityWrapper: div,
-                placeholder: document.createComment('Entity:entity_1'),
-            },
-        ]);
+        handleSegment(document, parent, segment, context);
+        expect(parent.innerHTML).toBe('');
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context);
+    });
 
-        expect(div.outerHTML).toBe(
-            '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
-        );
+    it('image segment', () => {
+        const segment: ContentModelSegment = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+
+        handleSegment(document, parent, segment, context);
+        expect(parent.innerHTML).toBe('');
+        expect(handleImage).toHaveBeenCalledWith(document, parent, segment, context);
     });
 });

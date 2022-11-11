@@ -546,6 +546,7 @@ describe('tableProcessor with format', () => {
                             getAttribute: () => '',
                         },
                     ],
+                    dataset: {},
                 },
             ],
             style: {},
@@ -554,6 +555,86 @@ describe('tableProcessor with format', () => {
         } as any) as HTMLTableElement;
 
         const doc = createContentModelDocument();
+        const datasetParser = jasmine.createSpy('datasetParser');
+
+        context.formatParsers.dataset = [datasetParser];
+
+        tableProcessor(doc, mockedTable, context);
+
+        expect(datasetParser).toHaveBeenCalledWith({}, mockedTable.rows[0].cells[0], context, {
+            display: 'table-cell',
+        });
+    });
+
+    it('parse dataset', () => {
+        const mockedTable = ({
+            tagName: 'table',
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        const doc = createContentModelDocument(document);
+        const datasetParser = jasmine.createSpy('datasetParser');
+
+        context.formatParsers.dataset = [datasetParser];
+
+        tableProcessor(doc, mockedTable, context);
+
+        expect(datasetParser).toHaveBeenCalledWith({}, mockedTable, context, {
+            display: 'table',
+            boxSizing: 'border-box',
+        });
+        expect(datasetParser).toHaveBeenCalledWith({}, mockedTable.rows[0].cells[0], context, {
+            display: 'table-cell',
+        });
+    });
+
+    it('parse dataset', () => {
+        const mockedTable = ({
+            tagName: 'table',
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {},
+                            dataset: {},
+                            getBoundingClientRect: () => ({
+                                width: 100,
+                                height: 200,
+                            }),
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        const doc = createContentModelDocument(document);
         const datasetParser = jasmine.createSpy('datasetParser');
 
         context.formatParsers.dataset = [datasetParser];

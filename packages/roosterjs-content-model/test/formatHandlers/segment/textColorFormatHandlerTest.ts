@@ -2,6 +2,7 @@ import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHand
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { TextColorFormat } from '../../../lib/publicTypes/format/formatParts/TextColorFormat';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
@@ -125,6 +126,32 @@ describe('textColorFormatHandler.apply', () => {
         ].indexOf(div.outerHTML);
 
         expect(result).toBeGreaterThanOrEqual(0, div.outerHTML);
+    });
+
+    it('HyperLink without color', () => {
+        const a = document.createElement('a');
+
+        textColorFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toBe('<a></a>');
+    });
+
+    it('HyperLink with default color', () => {
+        const a = document.createElement('a');
+
+        textColorFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toBe('<a></a>');
+    });
+
+    it('HyperLink with color override', () => {
+        const a = document.createElement('a');
+
+        format.textColor = 'red';
+
+        textColorFormatHandler.apply(format, a, context);
+
+        expect(a.outerHTML).toBe('<a style="color: red;"></a>');
     });
 
     it('HyperLink without color', () => {

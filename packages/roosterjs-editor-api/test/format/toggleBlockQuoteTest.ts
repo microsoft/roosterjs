@@ -30,7 +30,7 @@ describe('toggleBlockQuote', () => {
     TestHelper.itFirefoxOnly('Empty DIV, feature off', () => {
         runTest(
             '<div></div><!--{"start":[0],"end":[0]}-->',
-            '<blockquote><div><br></div></blockquote>'
+            '<blockquote><div><span><br></span></div></blockquote>'
         );
     });
 

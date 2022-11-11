@@ -198,23 +198,16 @@ const defaultFormatKeysPerCategory: {
         'backgroundColor',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
-    tableCell: [
-        'border',
-        'borderBox',
-        'backgroundColor',
-        'padding',
-        'direction',
-        'verticalAlign',
-        'tableCellMetadata',
-    ],
+    tableCell: ['border', 'borderBox', 'backgroundColor', 'padding', 'direction', 'verticalAlign'],
     table: [
         'id',
         'border',
         'borderBox',
-        'tableMetadata',
         'tableSpacing',
         'margin',
         'backgroundColor',
+        'display',
+        'direction',
     ],
 };
 

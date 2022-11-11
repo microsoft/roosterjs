@@ -5,7 +5,6 @@ import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentMod
 import { handleBlock } from './handleBlock';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { NodeType } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -18,19 +17,7 @@ export const handleBlockGroup: ContentModelHandler<ContentModelBlockGroup> = (
 ) => {
     switch (group.blockGroupType) {
         case 'General':
-            const newParent = group.element.cloneNode();
-            parent.appendChild(newParent);
-
-            context.modelHandlers.blockGroupChildren(doc, newParent, group, context);
-
-            if (isGeneralSegment(group) && isNodeOfType(newParent, NodeType.Element)) {
-                if (!group.element.firstChild) {
-                    context.regularSelection.current.segment = newParent;
-                }
-
-                applyFormat(newParent, context.formatAppliers.segment, group.format, context);
-            }
-
+            context.modelHandlers.general(doc, parent, group, context);
             break;
 
         default:

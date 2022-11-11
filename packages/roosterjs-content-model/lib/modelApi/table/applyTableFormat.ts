@@ -261,3 +261,7 @@ function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: s
 function getBorderStyleFromColor(color?: string): string {
     return !color || color == 'transparent' ? 'none' : 'solid';
 }
+
+function getBorderStyleFromColor(color?: string): string {
+    return !color || color == 'transparent' ? 'none' : 'solid';
+}
