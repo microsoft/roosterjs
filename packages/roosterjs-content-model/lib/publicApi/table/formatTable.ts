@@ -1,7 +1,7 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
+import { preprocessEntitiesFromContentModel } from 'roosterjs-editor-dom';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**

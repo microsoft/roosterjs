@@ -1,7 +1,7 @@
 import {
     default as mergeFragmentWithEntity,
     preprocessEntitiesFromContentModel,
-} from '../../lib/publicApi/mergeFragmentWithEntity';
+} from '../../lib/entity/mergeFragmentWithEntity';
 
 describe('preprocessEntitiesFromContentModel', () => {
     it('empty array', () => {

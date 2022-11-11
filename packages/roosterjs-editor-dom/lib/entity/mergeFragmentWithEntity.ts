@@ -1,5 +1,8 @@
-import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
-import { isNodeAfter, moveChildNodes } from 'roosterjs-editor-dom';
+import isNodeAfter from '../utils/isNodeAfter';
+import moveChildNodes from '../utils/moveChildNodes';
+import { Entity, EntityPlaceholderPair } from 'roosterjs-editor-types';
+
+const EntityPlaceHolderCommentPrefix = '_Entity:';
 
 /**
  * Default implementation of merging DOM tree generated from Content Model in to existing container
@@ -10,7 +13,7 @@ import { isNodeAfter, moveChildNodes } from 'roosterjs-editor-dom';
 export default function mergeFragmentWithEntity(
     source: DocumentFragment,
     target: HTMLElement,
-    entityPairs: EntityPlaceholderPair[]
+    entityPairs: EntityPlaceholderPair[] | null
 ) {
     const { reusableWrappers, placeholders } = preprocessEntitiesFromContentModel(
         entityPairs,
@@ -45,17 +48,27 @@ export default function mergeFragmentWithEntity(
 }
 
 /**
+ * Create a placeholder comment node for entity
+ * @param doc HTML Document
+ * @param entity The entity to create placeholder from
+ * @returns A placeholder comment node as
+ */
+export function createEntityPlaceholder(doc: Document, entity: Entity): Comment {
+    return doc.createComment(EntityPlaceHolderCommentPrefix + entity.id);
+}
+
+/**
  * @internal
  */
 export function preprocessEntitiesFromContentModel(
-    entityPairs: EntityPlaceholderPair[],
+    entityPairs: EntityPlaceholderPair[] | null,
     source?: DocumentFragment,
     target?: HTMLElement
 ): { reusableWrappers: Node[]; placeholders: Node[] } {
     const reusableWrappers: Node[] = [];
     const placeholders: Node[] = [];
 
-    entityPairs.forEach(pair => {
+    entityPairs?.forEach(pair => {
         const { entityWrapper, placeholder } = pair;
         const parent = placeholder.parentNode;
         const lastWrapper = reusableWrappers[reusableWrappers.length - 1];

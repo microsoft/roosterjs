@@ -5,7 +5,7 @@ import { createSelectionMarker } from '../../modelApi/creators/createSelectionMa
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
+import { preprocessEntitiesFromContentModel } from 'roosterjs-editor-dom';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**

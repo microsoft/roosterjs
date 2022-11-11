@@ -1,7 +1,6 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
 import { EditorContext } from './context/EditorContext';
-import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
-import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import { EntityPlaceholderPair, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
     DefaultImplicitSegmentFormatMap,

@@ -1,7 +1,7 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
+import { preprocessEntitiesFromContentModel } from 'roosterjs-editor-dom';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
 
 /**

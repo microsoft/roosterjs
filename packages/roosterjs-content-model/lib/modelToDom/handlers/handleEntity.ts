@@ -1,4 +1,4 @@
-import { commitEntity } from 'roosterjs-editor-dom';
+import { commitEntity, createEntityPlaceholder } from 'roosterjs-editor-dom';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -21,7 +21,7 @@ export const handleEntity: ContentModelHandler<ContentModelEntity> = (
     // If the entity DOM can be reused, the original DOM node will be preserved without any change
     // so that in case there is something that is sensitive to its DOM path (e.g. IFRAME), no need to cause it reloaded.
     // For entity that is not directly under root, later we will replace the comment with its original DOM node
-    const placeholder = doc.createComment('Entity:' + id);
+    const placeholder = createEntityPlaceholder(doc, entityModel);
 
     parent.appendChild(placeholder);
 

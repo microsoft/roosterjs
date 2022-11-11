@@ -1,6 +1,6 @@
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { getComputedStyles, Position } from 'roosterjs-editor-dom';
+import { getComputedStyles, mergeFragmentWithEntity, Position } from 'roosterjs-editor-dom';
 import {
     EditorContext,
     ContentModelDocument,
@@ -9,7 +9,6 @@ import {
     DomToModelOption,
     IExperimentalContentModelEditor,
     ModelToDomOption,
-    mergeFragmentWithEntity,
 } from 'roosterjs-content-model';
 
 /**

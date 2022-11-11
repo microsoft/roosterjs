@@ -2,13 +2,13 @@ import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument'
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
 import { ModelToDomOption } from '../publicTypes/IExperimentalContentModelEditor';
 import { optimize } from '../modelToDom/optimizers/optimize';
 import {
+    EntityPlaceholderPair,
     NodePosition,
     NodeType,
     SelectionRangeEx,
