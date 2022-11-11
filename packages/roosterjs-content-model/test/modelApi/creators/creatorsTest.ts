@@ -142,6 +142,7 @@ describe('Creators', () => {
             format: {},
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -154,6 +155,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -166,6 +168,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -178,6 +181,7 @@ describe('Creators', () => {
             spanAbove: true,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -190,6 +194,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: {},
+            dataset: {},
         });
     });
 
@@ -206,6 +211,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: { textAlign: 'start' },
+            dataset: {},
         });
 
         // Change original format object should not impact the created table cell
@@ -218,6 +224,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: { textAlign: 'start' },
+            dataset: {},
         });
     });
 
@@ -360,6 +367,7 @@ describe('Creators', () => {
             segmentType: 'Image',
             format: {},
             src: 'test',
+            dataset: {},
         });
     });
 

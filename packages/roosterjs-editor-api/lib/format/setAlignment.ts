@@ -35,7 +35,6 @@ export default function setAlignment(editor: IEditor, alignment: Alignment | Com
             const elementAtCursor = editor.getElementAtCursor();
 
             if (
-                editor.isFeatureEnabled(ExperimentalFeatures.TableAlignment) &&
                 isATable &&
                 isWholeTableSelected(new VTable(selection.table), selection.coordinates)
             ) {

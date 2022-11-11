@@ -1,6 +1,6 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import setListStyle from '../../../lib/publicApi/list/setListStyle';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { ListMetadataFormat } from '../../../lib/publicTypes/format/formatParts/ListMetadataFormat';
 
 describe('setListStyle', () => {

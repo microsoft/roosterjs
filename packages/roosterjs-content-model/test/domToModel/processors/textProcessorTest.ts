@@ -1,5 +1,9 @@
+import { addBlock } from '../../../lib/modelApi/common/addBlock';
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 
@@ -282,6 +286,197 @@ describe('textProcessor', () => {
             ],
             isImplicit: true,
             format: {},
+        });
+    });
+
+    it('Handle text with link format', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test');
+
+        context.link = { format: { href: '/test' }, dataset: {} };
+
+        textProcessor(doc, text, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {},
+                    link: { format: { href: '/test' }, dataset: {} },
+                },
+            ],
+            isImplicit: true,
+            format: {},
+        });
+    });
+
+    it('Handle text with selection and link format 1', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test2');
+
+        doc.blocks.push({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    isSelected: true,
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+
+        context.isInSelection = true;
+        context.link = { format: { href: '/test' }, dataset: {} };
+
+        textProcessor(doc, text, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test1',
+                    isSelected: true,
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
+                    isSelected: true,
+                    format: {},
+                    link: { format: { href: '/test' }, dataset: {} },
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('Handle text with selection and link format 2', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('test');
+
+        context.link = { format: { href: '/test' }, dataset: {} };
+        context.regularSelection = {
+            startContainer: text,
+            startOffset: 2,
+            endContainer: text,
+            endOffset: 2,
+            isSelectionCollapsed: true,
+        };
+
+        textProcessor(doc, text, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'te',
+                    format: {},
+                    link: {
+                        format: {
+                            href: '/test',
+                        },
+                        dataset: {},
+                    },
+                },
+                {
+                    segmentType: 'SelectionMarker',
+                    isSelected: true,
+                    format: {},
+                    link: {
+                        format: {
+                            href: '/test',
+                        },
+                        dataset: {},
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'st',
+                    format: {},
+                    link: { format: { href: '/test' }, dataset: {} },
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('Empty text', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode('');
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            document: document,
+        });
+    });
+
+    it('Space only text without existing paragraph', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            document: document,
+        });
+    });
+
+    it('Space only text with existing paragraph', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        addBlock(doc, createParagraph());
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+            ],
+            document: document,
+        });
+    });
+
+    it('Space only text with existing implicit paragraph with existing segment', () => {
+        const doc = createContentModelDocument(document);
+        const text = document.createTextNode(' ');
+
+        addSegment(doc, createText('test'));
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test ',
+                        },
+                    ],
+                },
+            ],
+            document: document,
         });
     });
 });

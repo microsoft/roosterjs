@@ -1,6 +1,5 @@
-import { addSegment } from '../../modelApi/common/addSegment';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
-import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
+import { addSelectionMarker } from '../utils/addSelectionMarker';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
@@ -42,12 +41,12 @@ function handleSelection(
     if (index == nodeStartOffset) {
         context.isInSelection = true;
 
-        addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
+        addSelectionMarker(group, context);
     }
 
     if (index == nodeEndOffset) {
         if (!context.regularSelection!.isSelectionCollapsed) {
-            addSegment(group, createSelectionMarker(context.segmentFormat), context.blockFormat);
+            addSelectionMarker(group, context);
         }
         context.isInSelection = false;
     }

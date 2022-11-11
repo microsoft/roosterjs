@@ -9,12 +9,10 @@ import {
     UnderlineFormat,
 } from 'roosterjs-content-model';
 
-export const BoldFormatRenderer: FormatRenderer<BoldFormat> = createCheckboxFormatRenderer<
-    BoldFormat
->(
+export const BoldFormatRenderer: FormatRenderer<BoldFormat> = createTextFormatRenderer<BoldFormat>(
     'Bold',
-    format => format.bold,
-    (format, value) => (format.bold = value)
+    format => format.fontWeight,
+    (format, value) => (format.fontWeight = value)
 );
 
 export const ItalicFormatRenderer: FormatRenderer<ItalicFormat> = createCheckboxFormatRenderer<

@@ -1,12 +1,16 @@
 import * as Color from 'color';
 
-const baseLValue = 21.247; // L-value of #333333
+const DefaultBaseLValue = 21.247; // L-value of #333333
 
 /**
  * Get dark mode color for a given color
  * @param color The color to calculate from
+ * @param baseLValue The Light value for base dark color in LAB format. @default the Light value for #333333
  */
-export default function getDarkColor(color: string): string {
+export default function getDarkColor(
+    color: string,
+    baseLValue: number = DefaultBaseLValue
+): string {
     try {
         const computedColor = Color(color || undefined);
         const colorLab = computedColor.lab().array();
