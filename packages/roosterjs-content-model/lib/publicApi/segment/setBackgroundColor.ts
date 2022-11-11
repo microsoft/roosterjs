@@ -1,4 +1,4 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
@@ -11,23 +11,9 @@ export default function setBackgroundColor(
     editor: IExperimentalContentModelEditor,
     backgroundColor: string
 ) {
-    const model = editor.createContentModel();
-
-    setSegmentStyle(model, segment => {
-        segment.format.backgroundColor = backgroundColor;
-    });
-
-    editor.addUndoSnapshot(
-        () => {
-            editor.focus();
-            if (model) {
-                editor.setContentModel(model);
-            }
-        },
-        ChangeSource.Format,
-        false /*canUndoByBackspace*/,
-        {
-            formatApiName: 'setBackgroundColor',
-        }
+    formatWithContentModel(editor, 'setBackgroundColor', model =>
+        setSegmentStyle(model, segment => {
+            segment.format.backgroundColor = backgroundColor;
+        })
     );
 }

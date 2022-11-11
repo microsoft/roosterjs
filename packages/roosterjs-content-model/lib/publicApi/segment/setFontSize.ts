@@ -1,4 +1,4 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
@@ -8,28 +8,14 @@ import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
  * @param fontSize The font size to set
  */
 export default function setFontSize(editor: IExperimentalContentModelEditor, fontSize: string) {
-    const model = editor.createContentModel();
-
-    setSegmentStyle(
-        model,
-        segment => {
-            segment.format.fontSize = fontSize;
-        },
-        undefined /* segmentHasStyleCallback*/,
-        true /*includingFormatHandler*/
-    );
-
-    editor.addUndoSnapshot(
-        () => {
-            editor.focus();
-            if (model) {
-                editor.setContentModel(model);
-            }
-        },
-        ChangeSource.Format,
-        false /*canUndoByBackspace*/,
-        {
-            formatApiName: 'setFontSize',
-        }
+    formatWithContentModel(editor, 'setFontSize', model =>
+        setSegmentStyle(
+            model,
+            segment => {
+                segment.format.fontSize = fontSize;
+            },
+            undefined /* segmentHasStyleCallback*/,
+            true /*includingFormatHandler*/
+        )
     );
 }

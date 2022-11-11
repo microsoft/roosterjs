@@ -1,4 +1,4 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
@@ -8,28 +8,14 @@ import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
  * @param fontName The font name to set
  */
 export default function setFontName(editor: IExperimentalContentModelEditor, fontName: string) {
-    const model = editor.createContentModel();
-
-    setSegmentStyle(
-        model,
-        segment => {
-            segment.format.fontFamily = fontName;
-        },
-        undefined /* segmentHasStyleCallback*/,
-        true /*includingFormatHandler*/
-    );
-
-    editor.addUndoSnapshot(
-        () => {
-            editor.focus();
-            if (model) {
-                editor.setContentModel(model);
-            }
-        },
-        ChangeSource.Format,
-        false /*canUndoByBackspace*/,
-        {
-            formatApiName: 'setFontName',
-        }
+    formatWithContentModel(editor, 'setFontName', model =>
+        setSegmentStyle(
+            model,
+            segment => {
+                segment.format.fontFamily = fontName;
+            },
+            undefined /* segmentHasStyleCallback*/,
+            true /*includingFormatHandler*/
+        )
     );
 }

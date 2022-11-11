@@ -1,4 +1,4 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
@@ -7,27 +7,13 @@ import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
  * @param editor The editor to operate on
  */
 export default function toggleUnderline(editor: IExperimentalContentModelEditor) {
-    const model = editor.createContentModel();
-
-    setSegmentStyle(
-        model,
-        (segment, isTurningOn) => {
-            segment.format.underline = !!isTurningOn;
-        },
-        segment => !!segment.format.underline
-    );
-
-    editor.addUndoSnapshot(
-        () => {
-            editor.focus();
-            if (model) {
-                editor.setContentModel(model);
-            }
-        },
-        ChangeSource.Format,
-        false /*canUndoByBackspace*/,
-        {
-            formatApiName: 'toggleUnderline',
-        }
+    formatWithContentModel(editor, 'toggleUnderline', model =>
+        setSegmentStyle(
+            model,
+            (segment, isTurningOn) => {
+                segment.format.underline = !!isTurningOn;
+            },
+            segment => !!segment.format.underline
+        )
     );
 }
