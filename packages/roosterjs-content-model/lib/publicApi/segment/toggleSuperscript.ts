@@ -1,4 +1,3 @@
-import { ChangeSource } from 'roosterjs-editor-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
