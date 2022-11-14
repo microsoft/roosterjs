@@ -8,7 +8,6 @@ import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
 import { ModelToDomOption } from '../publicTypes/IExperimentalContentModelEditor';
 import { optimize } from '../modelToDom/optimizers/optimize';
 import {
-    EntityPlaceholderPair,
     NodePosition,
     NodeType,
     SelectionRangeEx,
@@ -29,7 +28,7 @@ export default function contentModelToDom(
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null, EntityPlaceholderPair[]] {
+): [DocumentFragment, SelectionRangeEx | null, Record<string, HTMLElement>] {
     const fragment = model.document.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
@@ -40,7 +39,7 @@ export default function contentModelToDom(
 
     fragment.normalize();
 
-    return [fragment, range, modelToDomContext.entityPairs];
+    return [fragment, range, modelToDomContext.entities];
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {

@@ -1,6 +1,6 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
 import { EditorContext } from './context/EditorContext';
-import { EntityPlaceholderPair, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
     DefaultImplicitSegmentFormatMap,
@@ -64,13 +64,18 @@ export interface ModelToDomOption {
      * A callback to specify how to merge DOM tree generated from Content Model in to existing container
      * @param source Source document fragment that is generated from Content Model
      * @param target Target container, usually to be editor root container
-     * @param entityPairs An array of entity wrapper - placeholder pairs, used for reuse existing DOM structure for entity
+     * @param entities An array of entity wrapper - placeholder pairs, used for reuse existing DOM structure for entity
      */
     mergingCallback?: (
         source: DocumentFragment,
         target: HTMLElement,
-        entityPairs: EntityPlaceholderPair[]
+        entities: Record<string, HTMLElement>
     ) => void;
+
+    /**
+     * When set to true, directly put entity DOM nodes into the result DOM tree when doing Content Model to DOM conversion and do not use placeholder
+     */
+    doNotReuseEntityDom?: boolean;
 
     /**
      * Overrides default format appliers

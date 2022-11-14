@@ -119,4 +119,3 @@ export {
     ImageSelectionRange,
     SelectionRangeEx,
 } from './SelectionRangeEx';
-export { EntityPlaceholderPair } from './EntityPlaceholderPair';
