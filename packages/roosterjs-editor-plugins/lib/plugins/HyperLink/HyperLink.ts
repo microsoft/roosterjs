@@ -145,6 +145,7 @@ export default class HyperLink implements EditorPlugin {
                     isCtrlOrMetaPressed(event.rawEvent) &&
                     event.rawEvent.button === 0
                 ) {
+                    event.rawEvent.preventDefault();
                     try {
                         const target = this.target || '_blank';
                         const window = this.editor?.getDocument().defaultView;
