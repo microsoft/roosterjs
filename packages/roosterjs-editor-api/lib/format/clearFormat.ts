@@ -24,6 +24,7 @@ import {
     isBlockElement,
     isNodeInRegion,
     isVoidHtmlElement,
+    NodeInlineElement,
     PartialInlineElement,
     safeInstanceOf,
     setStyles,
@@ -141,6 +142,22 @@ function removeNotTableDefaultStyles(element: HTMLTableElement) {
 }
 
 /**
+ * Verifies recursively if a node and its parents have any siblings
+ * Ignoring the children of contentDiv
+ * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings
+ */
+function isNodeWholeBlock(node: Node, editor: IEditor) {
+    let currentNode = node;
+    while (currentNode && editor.contains(currentNode.parentNode)) {
+        if (currentNode.nextSibling || currentNode.previousSibling) {
+            return false;
+        }
+        currentNode = currentNode.parentNode;
+    }
+    return true;
+}
+
+/**
  * Clear the format of the selected text or list of blocks
  * If the current selection is compose of multiple block elements then remove the text and struture format for all the selected blocks
  * If the current selection is compose of a partial inline element then only the text format is removed from the current selection
@@ -151,7 +168,10 @@ function clearAutoDetectFormat(editor: IEditor) {
     if (!isMultiBlock) {
         const transverser = editor.getSelectionTraverser();
         const inlineElement = transverser.currentInlineElement;
-        const isPartial = inlineElement instanceof PartialInlineElement;
+        const isPartial =
+            inlineElement instanceof PartialInlineElement ||
+            (inlineElement instanceof NodeInlineElement &&
+                !isNodeWholeBlock(inlineElement.getContainerNode(), editor));
         if (isPartial) {
             clearFormat(editor);
             return;
