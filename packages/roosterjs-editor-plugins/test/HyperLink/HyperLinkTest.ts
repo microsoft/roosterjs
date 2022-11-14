@@ -67,6 +67,7 @@ describe('HyperLink plugin', () => {
                 srcElement: anchor,
                 ctrlKey: true,
                 button: 0,
+                preventDefault: () => {},
             } as unknown) as MouseEvent,
         });
         expect(openSpy).toHaveBeenCalledTimes(1);
