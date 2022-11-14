@@ -33,5 +33,8 @@ describe('handleEntity', () => {
                 placeholder: parent.firstChild as Comment,
             },
         ]);
+        expect(div.outerHTML).toBe(
+            '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
+        );
     });
 });

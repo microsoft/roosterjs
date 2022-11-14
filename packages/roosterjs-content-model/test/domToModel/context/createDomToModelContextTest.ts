@@ -1,10 +1,13 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
-import { defaultStyleMap } from '../../../lib/domToModel/context/defaultStyles';
+import { defaultStyleMap } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { DomToModelListFormat } from '../../../lib/publicTypes/context/DomToModelFormatContext';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
-import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    defaultFormatParsers,
+    getFormatParsers,
+} from '../../../lib/formatHandlers/defaultFormatHandlers';
 
 describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {
@@ -21,6 +24,8 @@ describe('createDomToModelContext', () => {
         elementProcessors: defaultProcessorMap,
         defaultStyles: defaultStyleMap,
         formatParsers: getFormatParsers(),
+        defaultElementProcessors: defaultProcessorMap,
+        defaultFormatParsers: defaultFormatParsers,
     };
     it('no param', () => {
         const context = createDomToModelContext();
@@ -31,6 +36,10 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             isInSelection: false,
             listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -48,9 +57,15 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
-            blockFormat: {},
+            blockFormat: {
+                direction: 'rtl',
+            },
             isInSelection: false,
             listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -84,6 +99,10 @@ describe('createDomToModelContext', () => {
                 isSelectionCollapsed: false,
             },
             listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
     });
@@ -113,7 +132,145 @@ describe('createDomToModelContext', () => {
                 lastCell: { x: 3, y: 4 },
             },
             listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
             ...contextOptions,
         });
+    });
+
+    it('with image selection', () => {
+        const context = createDomToModelContext(undefined, {
+            selectionRange: {
+                type: SelectionRangeTypes.ImageSelection,
+                ranges: [],
+                areAllCollapsed: false,
+                image: 'IMAGE' as any,
+            },
+        });
+
+        expect(context).toEqual({
+            ...editorContext,
+            segmentFormat: {},
+            blockFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
+            isInSelection: false,
+            imageSelection: {
+                image: 'IMAGE' as any,
+            },
+            listFormat,
+            ...contextOptions,
+        });
+    });
+
+    it('with base parameters and wrong selection 1', () => {
+        const getDarkColor = () => '';
+
+        const context = createDomToModelContext(
+            {
+                isDarkMode: true,
+                zoomScale: 2,
+                isRightToLeft: true,
+                getDarkColor,
+            },
+            {
+                selectionRange: {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [],
+                    areAllCollapsed: true,
+                },
+            }
+        );
+
+        expect(context).toEqual({
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
+            isInSelection: false,
+            blockFormat: {
+                direction: 'rtl',
+            },
+            segmentFormat: {},
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
+            ...contextOptions,
+        });
+    });
+
+    it('with base parameters and wrong selection 2', () => {
+        const getDarkColor = () => '';
+
+        const context = createDomToModelContext(
+            {
+                isDarkMode: true,
+                zoomScale: 2,
+                isRightToLeft: true,
+                getDarkColor,
+            },
+            {
+                selectionRange: {
+                    type: SelectionRangeTypes.TableSelection,
+                    ranges: [],
+                    areAllCollapsed: false,
+                    table: null!,
+                    coordinates: null!,
+                },
+            }
+        );
+
+        expect(context).toEqual({
+            isDarkMode: true,
+            zoomScale: 2,
+            isRightToLeft: true,
+            getDarkColor: getDarkColor,
+            isInSelection: false,
+            blockFormat: {
+                direction: 'rtl',
+            },
+            segmentFormat: {},
+            link: {
+                format: {},
+                dataset: {},
+            },
+            listFormat,
+            ...contextOptions,
+        });
+    });
+
+    it('with override', () => {
+        const mockedAProcessor = 'a' as any;
+        const mockedOlStyle = 'ol' as any;
+        const mockedBoldParser = 'bold' as any;
+        const mockedBlockParser = 'block' as any;
+        const context = createDomToModelContext(undefined, {
+            processorOverride: {
+                a: mockedAProcessor,
+            },
+            defaultStyleOverride: {
+                ol: mockedOlStyle,
+            },
+            formatParserOverride: {
+                bold: mockedBoldParser,
+            },
+            additionalFormatParsers: {
+                block: mockedBlockParser,
+            },
+        });
+
+        expect(context.elementProcessors.a).toBe(mockedAProcessor);
+        expect(context.defaultStyles.ol).toBe(mockedOlStyle);
+        expect(context.formatParsers.segment.indexOf(mockedBoldParser)).toBeGreaterThanOrEqual(0);
+        expect(context.formatParsers.block).toEqual([
+            ...getFormatParsers().block,
+            mockedBlockParser,
+        ]);
     });
 });

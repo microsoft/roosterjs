@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelText } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
 import { SegmentFormatView } from '../format/SegmentFormatView';
@@ -18,8 +19,13 @@ export function ContentModelTextView(props: { text: ContentModelText }) {
     }, [text, setValue]);
 
     const getContent = React.useCallback(() => {
-        return <textarea ref={textArea} onChange={onChange} value={value} />;
-    }, [text, value]);
+        return (
+            <>
+                <textarea ref={textArea} onChange={onChange} value={value} />
+                {text.link ? <ContentModelLinkView link={text.link} /> : null}
+            </>
+        );
+    }, [text, value, text.link]);
 
     const getFormat = React.useCallback(() => {
         return <SegmentFormatView format={text.format} />;

@@ -1,22 +1,19 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { getTagOfNode } from 'roosterjs-editor-dom';
-import { handleBlockGroupChildren } from './handleBlockGroupChildren';
-import { handleList } from './handleList';
-import { ListItemFormatHandlers } from '../../formatHandlers/ListItemFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
 /**
  * @internal
  */
-export function handleListItem(
+export const handleListItem: ContentModelHandler<ContentModelListItem> = (
     doc: Document,
     parent: Node,
     listItem: ContentModelListItem,
     context: ModelToDomContext
-) {
-    handleList(doc, parent, listItem, context);
+) => {
+    context.modelHandlers.list(doc, parent, listItem, context);
 
     const { nodeStack } = context.listFormat;
 
@@ -30,10 +27,10 @@ export function handleListItem(
         listParent.appendChild(li);
         listParent = li;
 
-        applyFormat(li, SegmentFormatHandlers, listItem.formatHolder.format, context);
+        applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
 
         if (level) {
-            applyFormat(li, ListItemFormatHandlers, level, context);
+            applyFormat(li, context.formatAppliers.listItem, level, context);
         }
     } else {
         // There is no level for this list item, that means it should be moved out of the list
@@ -45,5 +42,5 @@ export function handleListItem(
         });
     }
 
-    handleBlockGroupChildren(doc, listParent, listItem, context);
-}
+    context.modelHandlers.blockGroupChildren(doc, listParent, listItem, context);
+};

@@ -1,7 +1,8 @@
 import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionInBlock';
 import hasSelectionInBlockGroup from '../../../lib/publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/ContentModelTableCell';
+import { ContentModelHR } from '../../../lib/publicTypes/block/ContentModelHR';
+import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
 
 describe('hasSelectionInBlock', () => {
     it('Empty paragraph block', () => {
@@ -45,6 +46,7 @@ describe('hasSelectionInBlock', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -64,11 +66,13 @@ describe('hasSelectionInBlock', () => {
                         format: {},
                         spanAbove: false,
                         spanLeft: false,
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -88,6 +92,7 @@ describe('hasSelectionInBlock', () => {
                         format: {},
                         spanAbove: false,
                         spanLeft: false,
+                        dataset: {},
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -96,11 +101,13 @@ describe('hasSelectionInBlock', () => {
                         spanAbove: false,
                         spanLeft: false,
                         isSelected: true,
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -132,11 +139,13 @@ describe('hasSelectionInBlock', () => {
                         format: {},
                         spanAbove: false,
                         spanLeft: false,
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         };
 
         const result = hasSelectionInBlock(block);
@@ -163,6 +172,7 @@ describe('hasSelectionInBlock', () => {
                     format: {},
                 },
             ],
+            dataset: {},
         };
 
         const result = hasSelectionInBlockGroup(block);
@@ -203,6 +213,18 @@ describe('hasSelectionInBlock', () => {
                 },
             ],
             format: {},
+        };
+
+        const result = hasSelectionInBlock(block);
+
+        expect(result).toBeTrue();
+    });
+
+    it('HR has selection', () => {
+        const block: ContentModelHR = {
+            blockType: 'HR',
+            format: {},
+            isSelected: true,
         };
 
         const result = hasSelectionInBlock(block);

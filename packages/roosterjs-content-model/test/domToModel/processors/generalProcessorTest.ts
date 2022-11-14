@@ -1,19 +1,24 @@
-import * as containerProcessor from '../../../lib/domToModel/processors/containerProcessor';
 import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
 import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../../lib/publicTypes/context/ElementProcessor';
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 
 describe('generalProcessor', () => {
     let context: DomToModelContext;
+    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
 
     beforeEach(() => {
-        spyOn(containerProcessor, 'containerProcessor');
-        context = createDomToModelContext();
+        childProcessor = jasmine.createSpy();
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                child: childProcessor,
+            },
+        });
     });
 
     it('Process a DIV element', () => {
@@ -37,8 +42,8 @@ describe('generalProcessor', () => {
         });
         expect(createGeneralBlock.createGeneralBlock).toHaveBeenCalledTimes(1);
         expect(createGeneralBlock.createGeneralBlock).toHaveBeenCalledWith(div);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(block, div, context);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledWith(block, div, context);
     });
 
     it('Process a SPAN element', () => {
@@ -71,8 +76,8 @@ describe('generalProcessor', () => {
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledTimes(1);
-        expect(containerProcessor.containerProcessor).toHaveBeenCalledWith(segment, span, context);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledWith(segment, span, context);
     });
 
     it('Process a SPAN element with format', () => {
@@ -94,6 +99,40 @@ describe('generalProcessor', () => {
                             blockGroupType: 'General',
                             segmentType: 'General',
                             format: { a: 'b' } as any,
+                            blocks: [],
+                            element: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            document: document,
+        });
+    });
+
+    it('Process a SPAN element with link format', () => {
+        const doc = createContentModelDocument(document);
+        const span = document.createElement('span');
+        context.link = {
+            format: { href: '/test' },
+            dataset: {},
+        };
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            link: { format: { href: '/test' }, dataset: {} },
                             blocks: [],
                             element: span,
                         },

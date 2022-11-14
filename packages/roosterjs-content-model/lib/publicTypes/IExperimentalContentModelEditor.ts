@@ -1,10 +1,19 @@
-import { ContentModelDocument } from './block/group/ContentModelDocument';
-import { DefaultStyleMap, FormatParsers } from './context/DomToModelSettings';
+import { ContentModelDocument } from './group/ContentModelDocument';
 import { EditorContext } from './context/EditorContext';
-import { ElementProcessor } from './context/ElementProcessor';
 import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
-import { FormatAppliers } from './context/ModelToDomSettings';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import {
+    ContentModelHandlerMap,
+    DefaultImplicitSegmentFormatMap,
+    FormatAppliers,
+    FormatAppliersPerCategory,
+} from './context/ModelToDomSettings';
+import {
+    DefaultStyleMap,
+    ElementProcessorMap,
+    FormatParsers,
+    FormatParsersPerCategory,
+} from './context/DomToModelSettings';
 
 /**
  * Options for creating DomToModelContext
@@ -23,7 +32,7 @@ export interface DomToModelOption {
     /**
      * Overrides default element processors
      */
-    processorOverride?: Record<string, ElementProcessor>;
+    processorOverride?: Partial<ElementProcessorMap>;
 
     /**
      * Overrides default element styles
@@ -34,6 +43,11 @@ export interface DomToModelOption {
      * Overrides default format handlers
      */
     formatParserOverride?: Partial<FormatParsers>;
+
+    /**
+     * Provide additional format parsers for each format type
+     */
+    additionalFormatParsers?: Partial<FormatParsersPerCategory>;
 
     /**
      * When process table, whether we should always normalize it.
@@ -63,6 +77,21 @@ export interface ModelToDomOption {
      * Overrides default format appliers
      */
     formatApplierOverride?: Partial<FormatAppliers>;
+
+    /**
+     * Provide additional format appliers for each format type
+     */
+    additionalFormatAppliers?: Partial<FormatAppliersPerCategory>;
+
+    /**
+     * Overrides default model handlers
+     */
+    modelHandlerOverride?: Partial<ContentModelHandlerMap>;
+
+    /**
+     * Overrides default element styles
+     */
+    defaultImplicitSegmentFormatOverride?: DefaultImplicitSegmentFormatMap;
 }
 
 /**

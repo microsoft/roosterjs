@@ -1,17 +1,20 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
-import { ListLevelFormatHandlers } from '../../formatHandlers/ListLevelFormatHandlers';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
+import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { updateListMetadata } from '../../modelApi/metadata/updateListMetadata';
 
 /**
  * @internal
  */
-export function handleList(
+export const handleList: ContentModelHandler<ContentModelListItem> = (
     doc: Document,
     parent: Node,
     listItem: ContentModelListItem,
     context: ModelToDomContext
-) {
+) => {
     let layer = 0;
     const { nodeStack } = context.listFormat;
 
@@ -46,8 +49,28 @@ export function handleList(
         const lastParent = nodeStack[nodeStack.length - 1].node;
 
         lastParent.appendChild(newList);
-        applyFormat(newList, ListLevelFormatHandlers, level, context);
+        applyFormat(newList, context.formatAppliers.listLevel, level, context);
+
+        handleMetadata(level, newList, context);
 
         nodeStack.push({ node: newList, ...level });
     }
+};
+
+function handleMetadata(
+    level: ContentModelListItemLevelFormat,
+    newList: HTMLElement,
+    context: ModelToDomContext
+) {
+    const dataset: DatasetFormat = {};
+
+    updateListMetadata({ dataset }, () =>
+        typeof level.orderedStyleType === 'number' || typeof level.unorderedStyleType === 'number'
+            ? {
+                  orderedStyleType: level.orderedStyleType,
+                  unorderedStyleType: level.unorderedStyleType,
+              }
+            : null
+    );
+    applyFormat(newList, context.formatAppliers.dataset, dataset, context);
 }

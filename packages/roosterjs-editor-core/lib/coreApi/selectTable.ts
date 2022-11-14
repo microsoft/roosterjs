@@ -1,10 +1,11 @@
-import addSelectionStyle from './utils/addSelectionStyle';
 import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
     getTagOfNode,
     Position,
+    removeGlobalCssStyle,
     removeImportantStyleRule,
+    setGlobalCssStyles,
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
@@ -80,8 +81,7 @@ function buildCss(
 
     let firstSelected: HTMLTableCellElement | null = null;
     let lastSelected: HTMLTableCellElement | null = null;
-    let css = '';
-    let isFirst = true;
+    const selectors: string[] = [];
 
     const vTable = new VTable(table);
 
@@ -89,7 +89,7 @@ function buildCss(
     const tableChildren = toArray(table.childNodes).filter(
         node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
     );
-    // Set the start and end of each of the table childs, so we can build the selector according the element between the table and the row.
+    // Set the start and end of each of the table children, so we can build the selector according the element between the table and the row.
     let cont = 0;
     const indexes = tableChildren.map(node => {
         const result = {
@@ -123,12 +123,6 @@ function buildCss(
                 tdCount++;
 
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
-                    if (isFirst) {
-                        isFirst = false;
-                    } else if (!css.endsWith(',')) {
-                        css += ',';
-                    }
-
                     removeImportant(cell);
 
                     const selector = generateCssFromCell(
@@ -139,9 +133,10 @@ function buildCss(
                         tag,
                         tdCount
                     );
-                    css += selector;
+
+                    selectors.push(selector);
                     firstSelected = firstSelected || table.querySelector(selector);
-                    lastSelected = table.querySelector(selector)!;
+                    lastSelected = table.querySelector(selector);
                 }
             }
         }
@@ -154,7 +149,9 @@ function buildCss(
         }
     });
 
-    css += '{background-color: rgba(198,198,198,0.7) !important;}';
+    const css = `${selectors.join(
+        ','
+    )} {background-color: rgba(198,198,198,0.7) !important; caret-color: transparent}`;
 
     return { css, ranges };
 }
@@ -162,19 +159,14 @@ function buildCss(
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
     const contentDivSelector = '#' + core.contentDiv.id;
     let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
-    addSelectionStyle(core, css, STYLE_ID);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
     return ranges;
 }
 
-function unselect(core: EditorCore) {
-    const div = core.contentDiv;
-    let styleElement = div.ownerDocument.getElementById(STYLE_ID + div.id) as HTMLStyleElement;
-    if (styleElement?.sheet?.cssRules) {
-        while (styleElement.sheet.cssRules.length > 0) {
-            styleElement.sheet.deleteRule(0);
-        }
-    }
-}
+const unselect = (core: EditorCore) => {
+    const doc = core.contentDiv.ownerDocument;
+    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
+};
 
 function generateCssFromCell(
     contentDivSelector: string,

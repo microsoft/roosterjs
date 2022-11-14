@@ -15,6 +15,7 @@ describe('mergeTableRow', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         mergeTableRow(table, TableOperation.MergeBelow);
@@ -25,6 +26,7 @@ describe('mergeTableRow', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -51,6 +53,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -67,6 +70,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -107,6 +111,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([
@@ -143,6 +148,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([
@@ -201,6 +207,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([
@@ -242,6 +249,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([
@@ -300,6 +308,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([
@@ -341,6 +350,7 @@ describe('mergeTableRow', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([

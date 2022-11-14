@@ -8,12 +8,12 @@ export const fontFamilyFormatHandler: FormatHandler<FontFamilyFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const fontFamily = element.style.fontFamily || defaultStyle.fontFamily;
 
-        if (fontFamily) {
+        if (fontFamily && fontFamily != 'inherit') {
             format.fontFamily = fontFamily;
         }
     },
-    apply: (format, element) => {
-        if (format.fontFamily) {
+    apply: (format, element, context) => {
+        if (format.fontFamily && format.fontFamily != context.implicitSegmentFormat.fontFamily) {
             element.style.fontFamily = format.fontFamily;
         }
     },

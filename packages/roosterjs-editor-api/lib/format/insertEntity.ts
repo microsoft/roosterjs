@@ -1,8 +1,10 @@
+import commitListChains from '../utils/commitListChains';
 import {
     commitEntity,
     getEntityFromElement,
     getEntitySelector,
     Position,
+    VListChain,
     wrap,
 } from 'roosterjs-editor-dom';
 import {
@@ -21,8 +23,10 @@ import {
  * @param contentNode Root element of the entity
  * @param isBlock Whether the entity will be shown as a block
  * @param isReadonly Whether the entity will be a readonly entity
- * @param position (Optional) The position to insert into. If not specified, current position will be used.
+ * @param position @optional The position to insert into. If not specified, current position will be used.
  * If isBlock is true, entity will be insert below this position
+ * @param insertToRegionRoot @optional When pass true, insert the entity at the root level of current region.
+ * Parent nodes will be split if need
  */
 export default function insertEntity(
     editor: IEditor,
@@ -30,7 +34,8 @@ export default function insertEntity(
     contentNode: Node,
     isBlock: boolean,
     isReadonly: boolean,
-    position?: NodePosition | ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd
+    position?: NodePosition | ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd,
+    insertToRegionRoot?: boolean
 ): Entity {
     const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
 
@@ -73,12 +78,20 @@ export default function insertEntity(
             contentPosition = ContentPosition.SelectionStart;
         }
 
+        const regions = insertToRegionRoot && editor.getSelectedRegions();
+        const chains = regions && VListChain.createListChains(regions);
+
         editor.insertNode(wrapper, {
             updateCursor: false,
             insertOnNewLine: isBlock,
             replaceSelection: true,
             position: contentPosition,
+            insertToRegionRoot: insertToRegionRoot,
         });
+
+        if (chains) {
+            commitListChains(editor, chains);
+        }
 
         if (contentPosition == ContentPosition.SelectionStart) {
             if (currentRange) {

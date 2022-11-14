@@ -1,40 +1,49 @@
-import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
-import * as handleBlockGroupChildren from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
-import * as handleListItem from '../../../lib/modelToDom/handlers/handleListItem';
-import * as handleQuote from '../../../lib/modelToDom/handlers/handleQuote';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
+import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
+import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
+import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
-import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { handleBlockGroup } from '../../../lib/modelToDom/handlers/handleBlockGroup';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../../lib/formatHandlers/SegmentFormatHandlers';
 
 describe('handleBlockGroup', () => {
     let context: ModelToDomContext;
     let parent: HTMLDivElement;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleListItem: jasmine.Spy<ContentModelHandler<ContentModelListItem>>;
+    let handleQuote: jasmine.Spy<ContentModelHandler<ContentModelQuote>>;
+    let handleGeneralModel: jasmine.Spy<ContentModelHandler<ContentModelGeneralBlock>>;
 
     beforeEach(() => {
-        context = createModelToDomContext();
+        handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
+        handleListItem = jasmine.createSpy('handleListItem');
+        handleQuote = jasmine.createSpy('handleQuote');
+        handleGeneralModel = jasmine.createSpy('handleGeneralModel');
+
+        context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                blockGroupChildren: handleBlockGroupChildren,
+                listItem: handleListItem,
+                quote: handleQuote,
+                general: handleGeneralModel,
+            },
+        });
         parent = document.createElement('div');
     });
 
     it('Document', () => {
         const group = createContentModelDocument(document);
-        spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
 
         handleBlockGroup(document, parent, group, context);
 
         expect(parent.outerHTML).toBe('<div></div>');
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
-            document,
-            parent,
-            group,
-            context
-        );
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, parent, group, context);
     });
 
     it('General block', () => {
@@ -44,116 +53,30 @@ describe('handleBlockGroup', () => {
         } as any) as HTMLElement;
         const group = createGeneralBlock(childMock);
 
-        spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
-        spyOn(applyFormat, 'applyFormat');
-
         handleBlockGroup(document, parent, group, context);
 
-        expect(parent.outerHTML).toBe('<div><span></span></div>');
-        expect(typeof parent.firstChild).toBe('object');
-        expect(parent.firstChild).toBe(clonedChild);
-        expect(context.listFormat.nodeStack).toEqual([]);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
-            document,
-            clonedChild,
-            group,
-            context
-        );
-        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
-    });
-
-    it('General segment: empty element', () => {
-        const clonedChild = document.createElement('span');
-        const childMock = ({
-            cloneNode: () => clonedChild,
-        } as any) as HTMLElement;
-        const group = createGeneralSegment(childMock);
-
-        spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
-        spyOn(applyFormat, 'applyFormat');
-
-        handleBlockGroup(document, parent, group, context);
-
-        expect(parent.outerHTML).toBe('<div><span></span></div>');
-        expect(context.regularSelection.current.segment).toBe(clonedChild);
-        expect(typeof parent.firstChild).toBe('object');
-        expect(parent.firstChild).toBe(clonedChild);
-        expect(context.listFormat.nodeStack).toEqual([]);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
-            document,
-            clonedChild,
-            group,
-            context
-        );
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
-        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
-            clonedChild,
-            SegmentFormatHandlers,
-            group.format,
-            context
-        );
-    });
-
-    it('General segment: element with child', () => {
-        const clonedChild = document.createElement('span');
-        const childMock = ({
-            cloneNode: () => clonedChild,
-            firstChild: true,
-        } as any) as HTMLElement;
-        const group = createGeneralSegment(childMock);
-
-        spyOn(handleBlockGroupChildren, 'handleBlockGroupChildren');
-        spyOn(applyFormat, 'applyFormat');
-
-        handleBlockGroup(document, parent, group, context);
-
-        expect(parent.outerHTML).toBe('<div><span></span></div>');
-        expect(context.regularSelection.current.segment).toBeNull();
-        expect(typeof parent.firstChild).toBe('object');
-        expect(parent.firstChild).toBe(clonedChild);
-        expect(context.listFormat.nodeStack).toEqual([]);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren.handleBlockGroupChildren).toHaveBeenCalledWith(
-            document,
-            clonedChild,
-            group,
-            context
-        );
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(1);
-        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
-            clonedChild,
-            SegmentFormatHandlers,
-            group.format,
-            context
-        );
+        expect(parent.outerHTML).toBe('<div></div>');
+        expect(handleGeneralModel).toHaveBeenCalledTimes(1);
+        expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, group, context);
     });
 
     it('Quote', () => {
         const group = createQuote();
-        spyOn(handleQuote, 'handleQuote');
 
         handleBlockGroup(document, parent, group, context);
 
         expect(parent.outerHTML).toBe('<div></div>');
-        expect(handleQuote.handleQuote).toHaveBeenCalledTimes(1);
-        expect(handleQuote.handleQuote).toHaveBeenCalledWith(document, parent, group, context);
+        expect(handleQuote).toHaveBeenCalledTimes(1);
+        expect(handleQuote).toHaveBeenCalledWith(document, parent, group, context);
     });
 
     it('ListItem', () => {
         const group = createListItem([]);
-        spyOn(handleListItem, 'handleListItem');
 
         handleBlockGroup(document, parent, group, context);
 
         expect(parent.outerHTML).toBe('<div></div>');
-        expect(handleListItem.handleListItem).toHaveBeenCalledTimes(1);
-        expect(handleListItem.handleListItem).toHaveBeenCalledWith(
-            document,
-            parent,
-            group,
-            context
-        );
+        expect(handleListItem).toHaveBeenCalledTimes(1);
+        expect(handleListItem).toHaveBeenCalledWith(document, parent, group, context);
     });
 });

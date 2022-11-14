@@ -1,19 +1,16 @@
-import { applyFormat } from '../utils/applyFormat';
+import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { handleBlock } from './handleBlock';
-import { handleEntity } from './handleEntity';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { SegmentFormatHandlers } from '../../formatHandlers/SegmentFormatHandlers';
 
 /**
  * @internal
  */
-export function handleSegment(
+export const handleSegment: ContentModelHandler<ContentModelSegment> = (
     doc: Document,
     parent: Node,
     segment: ContentModelSegment,
     context: ModelToDomContext
-) {
+) => {
     const regularSelection = context.regularSelection;
 
     // If start position is not set yet, and current segment is in selection, set start position
@@ -23,36 +20,26 @@ export function handleSegment(
         };
     }
 
-    let element: HTMLElement | null = null;
-
     switch (segment.segmentType) {
         case 'Text':
-            const txt = doc.createTextNode(segment.text);
-
-            element = doc.createElement('span');
-            element.appendChild(txt);
-            regularSelection.current.segment = txt;
-
-            applyFormat(element, SegmentFormatHandlers, segment.format, context);
-
+            context.modelHandlers.text(doc, parent, segment, context);
             break;
 
         case 'Br':
-            element = doc.createElement('br');
-            regularSelection.current.segment = element;
+            context.modelHandlers.br(doc, parent, segment, context);
+            break;
+
+        case 'Image':
+            context.modelHandlers.image(doc, parent, segment, context);
             break;
 
         case 'General':
-            handleBlock(doc, parent, segment, context);
+            context.modelHandlers.general(doc, parent, segment, context);
             break;
 
         case 'Entity':
-            handleEntity(doc, parent, segment, context);
+            context.modelHandlers.entity(doc, parent, segment, context);
             break;
-    }
-
-    if (element) {
-        parent.appendChild(element);
     }
 
     // If end position is not set, or it is not finalized, and current segment is still in selection, set end position
@@ -62,4 +49,4 @@ export function handleSegment(
             ...regularSelection.current,
         };
     }
-}
+};

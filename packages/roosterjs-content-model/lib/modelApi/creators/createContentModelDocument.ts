@@ -1,4 +1,4 @@
-import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 
 /**
  * @internal

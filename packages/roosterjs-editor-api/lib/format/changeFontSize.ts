@@ -29,7 +29,7 @@ export default function changeFontSize(
             let pt = parseFloat(getComputedStyle(element, 'font-size') || element.style.fontSize);
             element.style.fontSize = getNewFontSize(pt, changeBase, fontSizes) + 'pt';
             let lineHeight = getComputedStyle(element, 'line-height');
-            if (lineHeight != 'normal') {
+            if (lineHeight && lineHeight != 'normal') {
                 element.style.lineHeight = 'normal';
             }
         },

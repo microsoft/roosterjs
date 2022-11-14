@@ -1,5 +1,5 @@
-import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
 import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';

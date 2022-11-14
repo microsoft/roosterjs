@@ -1,5 +1,5 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 
 /**
@@ -16,6 +16,9 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
         case 'BlockGroup':
             return isBlockGroupEmpty(block);
 
+        case 'Entity':
+            return false;
+
         default:
             return false;
     }
@@ -25,7 +28,19 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
  * @internal
  */
 export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
-    return group.blocks.every(isBlockEmpty);
+    switch (group.blockGroupType) {
+        case 'Quote':
+            return group.blocks.every(isBlockEmpty);
+
+        case 'Document':
+        case 'General':
+        case 'ListItem':
+        case 'TableCell':
+            return false;
+
+        default:
+            return true;
+    }
 }
 
 /**
@@ -34,7 +49,10 @@ export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
 export function isSegmentEmpty(segment: ContentModelSegment): boolean {
     switch (segment.segmentType) {
         case 'Text':
-            return !segment.text || /^[\r\n]*$/.test(segment.text);
+            return !segment.text;
+
+        case 'Image':
+            return !segment.src;
 
         default:
             return false;

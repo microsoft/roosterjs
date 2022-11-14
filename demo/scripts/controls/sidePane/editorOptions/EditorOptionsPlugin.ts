@@ -21,7 +21,6 @@ const initialState: BuildInPluginState = {
         tableEditMenu: true,
         contextMenu: true,
         autoFormat: true,
-        imageSelection: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
@@ -30,10 +29,9 @@ const initialState: BuildInPluginState = {
     forcePreserveRatio: false,
     experimentalFeatures: [
         ExperimentalFeatures.ConvertSingleImageBody,
-        ExperimentalFeatures.TableAlignment,
-        ExperimentalFeatures.AdaptiveHandlesResizer,
         ExperimentalFeatures.ListItemAlignment,
         ExperimentalFeatures.PendingStyleBasedFormat,
+        ExperimentalFeatures.DefaultFormatInSpan,
     ],
     isRtl: false,
 };

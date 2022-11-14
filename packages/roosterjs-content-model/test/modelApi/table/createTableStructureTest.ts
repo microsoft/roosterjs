@@ -19,12 +19,14 @@ describe('createTableStructure', () => {
                         spanAbove: false,
                         spanLeft: false,
                         isHeader: false,
+                        dataset: {},
                     },
                 ],
             ],
             format: {},
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 

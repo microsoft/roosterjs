@@ -95,7 +95,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     html,
                     this.editor.getTrustedHTMLHandler()
                 );
-                let newRange: Range | null;
+                let newRange: Range | null = null;
 
                 if (
                     selection.type === SelectionRangeTypes.TableSelection &&
@@ -111,6 +111,15 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                             selection.table,
                             selection.coordinates
                         );
+                    }
+                } else if (selection.type === SelectionRangeTypes.ImageSelection) {
+                    const image = tempDiv.querySelector('#' + selection.image.id);
+
+                    if (image) {
+                        newRange = createRange(image);
+                        if (isCut) {
+                            this.deleteImage(this.editor, selection.image.id);
+                        }
                     }
                 } else {
                     newRange =
@@ -210,9 +219,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             const selection = <SelectionRangeEx>range;
             switch (selection.type) {
                 case SelectionRangeTypes.TableSelection:
-                    if (this.editor && selection.table && selection.coordinates) {
-                        this.editor.select(selection.table, selection.coordinates);
-                    }
+                case SelectionRangeTypes.ImageSelection:
+                    this.editor?.select(selection);
                     break;
                 case SelectionRangeTypes.Normal:
                     const range = selection.ranges?.[0];
@@ -274,5 +282,11 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             table.style.removeProperty('width');
             table.style.removeProperty('height');
         }
+    }
+
+    private deleteImage(editor: IEditor, imageId: string) {
+        editor.queryElements('#' + imageId, node => {
+            editor.deleteNode(node);
+        });
     }
 }

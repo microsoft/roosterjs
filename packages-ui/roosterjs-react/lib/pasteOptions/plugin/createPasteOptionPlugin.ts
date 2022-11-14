@@ -153,13 +153,13 @@ class PasteOptionPlugin implements ReactEditorPlugin {
 
         const focusedPosition = this.editor?.getFocusedPosition();
 
-        if (focusedPosition && this.uiUtilities && this.strings) {
+        if (focusedPosition && this.uiUtilities) {
             showPasteOptionPane(
                 this.uiUtilities,
                 focusedPosition,
-                this.strings,
                 this.onPaste,
-                this.pasteOptionRef
+                this.pasteOptionRef,
+                this.strings
             );
         }
     }

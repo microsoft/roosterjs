@@ -20,4 +20,9 @@ export type ContentModelBlockType =
     /**
      * Represent a block entity
      */
-    | 'Entity';
+    | 'Entity'
+
+    /**
+     * Represents a HR element
+     */
+    | 'HR';

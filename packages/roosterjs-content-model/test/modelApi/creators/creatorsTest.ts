@@ -6,6 +6,8 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
+import { createHR } from '../../../lib/modelApi/creators/createHR';
+import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
@@ -140,6 +142,7 @@ describe('Creators', () => {
             format: {},
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -152,6 +155,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -164,6 +168,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -176,6 +181,7 @@ describe('Creators', () => {
             spanAbove: true,
             isHeader: false,
             format: {},
+            dataset: {},
         });
     });
 
@@ -188,6 +194,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: {},
+            dataset: {},
         });
     });
 
@@ -204,6 +211,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: { textAlign: 'start' },
+            dataset: {},
         });
 
         // Change original format object should not impact the created table cell
@@ -216,6 +224,7 @@ describe('Creators', () => {
             spanAbove: false,
             isHeader: true,
             format: { textAlign: 'start' },
+            dataset: {},
         });
     });
 
@@ -348,6 +357,26 @@ describe('Creators', () => {
             type,
             isReadonly,
             wrapper,
+        });
+    });
+
+    it('createImage', () => {
+        const imageModel = createImage('test');
+
+        expect(imageModel).toEqual({
+            segmentType: 'Image',
+            format: {},
+            src: 'test',
+            dataset: {},
+        });
+    });
+
+    it('createHR', () => {
+        const hr = createHR();
+
+        expect(hr).toEqual({
+            blockType: 'HR',
+            format: {},
         });
     });
 });

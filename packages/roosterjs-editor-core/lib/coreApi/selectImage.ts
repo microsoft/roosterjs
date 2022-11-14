@@ -1,6 +1,11 @@
-import addSelectionStyle from './utils/addSelectionStyle';
 import addUniqueId from './utils/addUniqueId';
-import { createRange, Position, removeImportantStyleRule } from 'roosterjs-editor-dom';
+import {
+    createRange,
+    Position,
+    removeGlobalCssStyle,
+    removeImportantStyleRule,
+    setGlobalCssStyles,
+} from 'roosterjs-editor-dom';
 import {
     EditorCore,
     ImageSelectionRange,
@@ -12,6 +17,8 @@ import {
 const IMAGE_ID = 'imageSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
 const STYLE_ID = 'imageStyle';
+const DEFAULT_SELECTION_BORDER_COLOR = '#DB626C';
+
 /**
  * @internal
  * Select a image and save data of the selected range
@@ -20,6 +27,9 @@ const STYLE_ID = 'imageStyle';
  */
 export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageElement | null) => {
     unselect(core);
+
+    let selection: ImageSelectionRange | null = null;
+
     if (image) {
         const range = createRange(image);
 
@@ -30,45 +40,31 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
 
         select(core, image);
 
-        const selection: ImageSelectionRange = {
+        selection = {
             type: SelectionRangeTypes.ImageSelection,
             ranges: [range],
             image: image,
             areAllCollapsed: range.collapsed,
         };
-
-        core.domEvent.imageSelectionRange = selection;
-
-        return selection;
     }
 
-    core.domEvent.imageSelectionRange = null;
-    return null;
+    return selection;
 };
 
 const select = (core: EditorCore, image: HTMLImageElement) => {
     removeImportantStyleRule(image, ['border', 'margin']);
     const borderCSS = buildBorderCSS(core, image.id);
-    addSelectionStyle(core, borderCSS, STYLE_ID);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, borderCSS, STYLE_ID + core.contentDiv.id);
 };
 
 const buildBorderCSS = (core: EditorCore, imageId: string): string => {
-    const borderColor = core.imageSelectionBorderColor || '#DB626C';
-    return (
-        '#' +
-        core.contentDiv.id +
-        ' #' +
-        imageId +
-        ' { margin: -2px !important; border: 2px solid' +
-        borderColor +
-        ' !important; }'
-    );
+    const divId = core.contentDiv.id;
+    const color = core.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;
+
+    return `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
 };
 
 const unselect = (core: EditorCore) => {
     const doc = core.contentDiv.ownerDocument;
-    let styleTag = doc.getElementById(STYLE_ID + core.contentDiv.id) as HTMLStyleElement;
-    if (styleTag) {
-        doc.head.removeChild(styleTag);
-    }
+    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
 };

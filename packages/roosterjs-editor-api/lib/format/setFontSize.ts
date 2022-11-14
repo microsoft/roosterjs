@@ -17,7 +17,7 @@ export default function setFontSize(editor: IEditor, fontSize: string) {
         (element, isInnerNode) => {
             element.style.fontSize = isInnerNode ? '' : fontSize;
             let lineHeight = getComputedStyle(element, 'line-height');
-            if (lineHeight != 'normal') {
+            if (lineHeight && lineHeight != 'normal') {
                 element.style.lineHeight = 'normal';
             }
         },

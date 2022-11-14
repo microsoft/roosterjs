@@ -1,9 +1,9 @@
+import { defaultFormatParsers, getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { defaultProcessorMap } from './defaultProcessors';
-import { defaultStyleMap } from './defaultStyles';
+import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
-import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
@@ -29,6 +29,10 @@ export function createDomToModelContext(
             levels: [],
             threadItemCounts: [],
         },
+        link: {
+            format: {},
+            dataset: {},
+        },
 
         elementProcessors: {
             ...defaultProcessorMap,
@@ -40,8 +44,18 @@ export function createDomToModelContext(
             ...(options?.defaultStyleOverride || {}),
         },
 
-        formatParsers: getFormatParsers(options?.formatParserOverride),
+        formatParsers: getFormatParsers(
+            options?.formatParserOverride,
+            options?.additionalFormatParsers
+        ),
+
+        defaultElementProcessors: defaultProcessorMap,
+        defaultFormatParsers: defaultFormatParsers,
     };
+
+    if (editorContext?.isRightToLeft) {
+        context.blockFormat.direction = 'rtl';
+    }
 
     if (options?.alwaysNormalizeTable) {
         context.alwaysNormalizeTable = true;
@@ -72,6 +86,12 @@ export function createDomToModelContext(
                 };
             }
 
+            break;
+
+        case SelectionRangeTypes.ImageSelection:
+            context.imageSelection = {
+                image: range.image,
+            };
             break;
     }
 

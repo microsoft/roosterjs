@@ -1,5 +1,5 @@
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
