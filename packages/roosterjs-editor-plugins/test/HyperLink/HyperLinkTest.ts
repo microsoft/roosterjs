@@ -11,12 +11,15 @@ describe('HyperLink plugin', () => {
     let plugin: HyperLink;
     let anchor: HTMLAnchorElement;
     let div: HTMLDivElement;
+    let eventHandlers: Record<string, Function>;
 
     beforeEach(() => {
         anchor = document.createElement('a');
         anchor.href = HREF;
         plugin = new HyperLink();
         editor = initEditor(editorId, [plugin]);
+        spyOn(editor, 'addDomEventHandler').and.callFake(x => void (eventHandlers = <any>x));
+        plugin.initialize(editor);
         const editorDiv = (<any>editor).core.contentDiv;
         if (!editorDiv) {
             throw 'Unable to find editor div';
@@ -27,21 +30,31 @@ describe('HyperLink plugin', () => {
     afterEach(() => {
         editor.dispose();
         div.remove();
+        eventHandlers = {};
     });
 
     it('Removes title attribute if nothing is being hovered', () => {
-        div.dispatchEvent(new MouseEvent('mouseover'));
+        div.appendChild(anchor);
+
+        eventHandlers.mouseover({
+            type: 'mouseover',
+            target: anchor,
+        });
+
+        eventHandlers.mouseout({
+            type: 'mouseout',
+            target: anchor,
+        });
 
         expect(div.getAttribute('title')).toEqual(null);
     });
 
     it('Displays the link as default for links', () => {
         div.appendChild(anchor);
-        anchor.dispatchEvent(
-            new MouseEvent('mouseover', {
-                bubbles: true,
-            })
-        );
+        eventHandlers.mouseover({
+            type: 'mouseover',
+            target: anchor,
+        });
         expect(div.getAttribute('title')).toEqual(HREF);
     });
 
