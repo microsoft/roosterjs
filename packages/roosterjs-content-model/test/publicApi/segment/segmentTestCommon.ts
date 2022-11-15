@@ -2,6 +2,7 @@ import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentMode
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 export function segmentTestCommon(
+    apiName: string,
     executionCallback: (editor: IExperimentalContentModelEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
@@ -11,7 +12,7 @@ export function segmentTestCommon(
         .createSpy()
         .and.callFake((callback: () => void, source: string, canUndoByBackspace, param: any) => {
             expect(source).toBe('Format');
-            expect(param.formatApiName).toBe('setFontName');
+            expect(param.formatApiName).toBe(apiName);
             callback();
         });
     const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
