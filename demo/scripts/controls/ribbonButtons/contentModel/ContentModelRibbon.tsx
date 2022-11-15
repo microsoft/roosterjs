@@ -2,12 +2,10 @@ import * as React from 'react';
 import { backgroundColorButton } from './backgroundColorButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
-import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
 import { formatTableButton } from './formatTableButton';
-import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertTableButton } from './insertTableButton';
 import { italicButton } from './italicButton';
@@ -38,8 +36,6 @@ const buttons = [
     underlineButton,
     fontButton,
     fontSizeButton,
-    increaseFontSizeButton,
-    decreaseFontSizeButton,
     textColorButton,
     backgroundColorButton,
     bulletedListButton,

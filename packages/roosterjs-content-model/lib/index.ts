@@ -20,7 +20,6 @@ export { default as setBackgroundColor } from './publicApi/segment/setBackground
 export { default as setFontName } from './publicApi/segment/setFontName';
 export { default as setFontSize } from './publicApi/segment/setFontSize';
 export { default as setTextColor } from './publicApi/segment/setTextColor';
-export { default as changeFontSize } from './publicApi/segment/changeFontSize';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
