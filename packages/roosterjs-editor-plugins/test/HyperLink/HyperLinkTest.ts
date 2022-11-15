@@ -1,5 +1,4 @@
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
-import { Browser } from 'roosterjs-editor-dom';
 import { HyperLink } from '../../lib/HyperLink';
 import { initEditor } from '../TestHelper';
 
@@ -68,13 +67,11 @@ describe('HyperLink plugin', () => {
                 srcElement: anchor,
                 ctrlKey: true,
                 button: 0,
+                preventDefault: () => {},
             } as unknown) as MouseEvent,
         });
-        if (Browser.isFirefox) {
-            expect(openSpy).not.toHaveBeenCalled();
-        } else {
-            expect(openSpy).toHaveBeenCalledWith(HREF, '_blank');
-        }
+        expect(openSpy).toHaveBeenCalledTimes(1);
+        expect(openSpy).toHaveBeenCalledWith(HREF, '_blank');
     });
 
     it('Does not open the link if its only clicked', () => {
