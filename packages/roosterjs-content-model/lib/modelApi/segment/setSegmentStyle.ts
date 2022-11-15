@@ -23,5 +23,5 @@ export function setSegmentStyle(
 
     segments.forEach(segment => toggleStyleCallback(segment, !isTuringOff));
 
-    return segments.length > 1 || (segments[0] && segments[0].segmentType != 'SelectionMarker');
+    return segments.length > 1 || (!!segments[0] && segments[0].segmentType != 'SelectionMarker');
 }
