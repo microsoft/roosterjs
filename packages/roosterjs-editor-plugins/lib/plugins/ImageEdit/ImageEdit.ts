@@ -183,7 +183,6 @@ export default class ImageEdit implements EditorPlugin {
         switch (e.eventType) {
             case PluginEventType.SelectionChanged:
                 if (
-                    // this.options.onSelectState !== ImageEditOperation.None &&
                     e.selectionRangeEx &&
                     e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection
                 ) {
