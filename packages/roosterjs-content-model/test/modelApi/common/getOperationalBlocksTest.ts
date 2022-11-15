@@ -20,6 +20,7 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para,
                     path: [group],
+                    segments: [],
                 },
             ],
             ['ListItem']
@@ -29,6 +30,7 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para,
                 path: [group],
+                segments: [],
             },
         ]);
     });
@@ -44,10 +46,12 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [group],
+                    segments: [],
                 },
             ],
             ['ListItem']
@@ -58,6 +62,7 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para2,
                 path: [group],
+                segments: [],
             },
         ]);
     });
@@ -74,14 +79,17 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para3,
                     path: [group],
+                    segments: [],
                 },
             ],
             ['ListItem']
@@ -92,6 +100,7 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para3,
                 path: [group],
+                segments: [],
             },
         ]);
     });
@@ -109,10 +118,12 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem1, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [quote, listItem2, group],
+                    segments: [],
                 },
             ],
             ['ListItem'],
@@ -124,6 +135,7 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para2,
                 path: [quote, listItem2, group],
+                segments: [],
             },
         ]);
     });
@@ -140,10 +152,12 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [quote, group],
+                    segments: [],
                 },
             ],
             ['ListItem', 'Quote']
