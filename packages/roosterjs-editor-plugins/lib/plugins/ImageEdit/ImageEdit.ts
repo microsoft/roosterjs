@@ -63,6 +63,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     disableCrop: false,
     disableRotate: false,
     disableSideResize: false,
+    onSelectState: ImageEditOperation.ResizeAndRotate,
 };
 
 /**
@@ -182,13 +183,11 @@ export default class ImageEdit implements EditorPlugin {
         switch (e.eventType) {
             case PluginEventType.SelectionChanged:
                 if (
+                    // this.options.onSelectState !== ImageEditOperation.None &&
                     e.selectionRangeEx &&
                     e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection
                 ) {
-                    this.setEditingImage(
-                        e.selectionRangeEx.image,
-                        ImageEditOperation.ResizeAndRotate
-                    );
+                    this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
                 }
                 break;
             case PluginEventType.MouseDown:
