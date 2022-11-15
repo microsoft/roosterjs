@@ -1,6 +1,6 @@
 import toggleUnderline from '../../../lib/publicApi/segment/toggleUnderline';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from './segmentTestCommon';
 
 describe('toggleUnderline', () => {
     function runTest(
@@ -8,29 +8,7 @@ describe('toggleUnderline', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy()
-            .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
-                    expect(param.formatApiName).toBe('toggleUnderline');
-                    callback();
-                }
-            );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-        const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
-            focus: jasmine.createSpy(),
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-
-        toggleUnderline(editor);
-
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+        segmentTestCommon('toggleUnderline', toggleUnderline, model, result, calledTimes);
     }
 
     it('empty content', () => {
@@ -128,7 +106,7 @@ describe('toggleUnderline', () => {
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: {},
+                                format: { underline: true },
                                 isSelected: true,
                             },
                         ],

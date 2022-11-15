@@ -8,7 +8,13 @@ describe('setFontName', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        segmentTestCommon(editor => setFontName(editor, 'Arial'), model, result, calledTimes);
+        segmentTestCommon(
+            'setFontName',
+            editor => setFontName(editor, 'Arial'),
+            model,
+            result,
+            calledTimes
+        );
     }
 
     it('empty content', () => {

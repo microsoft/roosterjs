@@ -1,6 +1,6 @@
 import toggleBold from '../../../lib/publicApi/segment/toggleBold';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from './segmentTestCommon';
 
 describe('toggleBold', () => {
     function runTest(
@@ -8,29 +8,7 @@ describe('toggleBold', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy()
-            .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
-                    expect(param.formatApiName).toBe('toggleBold');
-                    callback();
-                }
-            );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-        const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
-            focus: jasmine.createSpy(),
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-
-        toggleBold(editor);
-
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+        segmentTestCommon('toggleBold', toggleBold, model, result, calledTimes);
     }
 
     it('empty content', () => {
@@ -128,7 +106,7 @@ describe('toggleBold', () => {
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: {},
+                                format: { fontWeight: 'bold' },
                                 isSelected: true,
                             },
                         ],

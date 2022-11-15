@@ -1,6 +1,6 @@
 import toggleSubscript from '../../../lib/publicApi/segment/toggleSubscript';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from './segmentTestCommon';
 
 describe('toggleSubscript', () => {
     function runTest(
@@ -8,29 +8,7 @@ describe('toggleSubscript', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy()
-            .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
-                    expect(param.formatApiName).toBe('toggleSubscript');
-                    callback();
-                }
-            );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-        const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
-            focus: jasmine.createSpy(),
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-
-        toggleSubscript(editor);
-
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+        segmentTestCommon('toggleSubscript', toggleSubscript, model, result, calledTimes);
     }
 
     it('empty content', () => {
@@ -128,7 +106,7 @@ describe('toggleSubscript', () => {
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: {},
+                                format: { superOrSubScriptSequence: 'sub' },
                                 isSelected: true,
                             },
                         ],

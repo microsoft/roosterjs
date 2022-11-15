@@ -1,6 +1,6 @@
 import toggleSuperscript from '../../../lib/publicApi/segment/toggleSuperscript';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from './segmentTestCommon';
 
 describe('toggleSuperscript', () => {
     function runTest(
@@ -8,29 +8,7 @@ describe('toggleSuperscript', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy()
-            .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
-                    expect(param.formatApiName).toBe('toggleSuperscript');
-                    callback();
-                }
-            );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-        const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
-            focus: jasmine.createSpy(),
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-
-        toggleSuperscript(editor);
-
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+        segmentTestCommon('toggleSuperscript', toggleSuperscript, model, result, calledTimes);
     }
 
     it('empty content', () => {
@@ -128,7 +106,7 @@ describe('toggleSuperscript', () => {
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: {},
+                                format: { superOrSubScriptSequence: 'super' },
                                 isSelected: true,
                             },
                         ],

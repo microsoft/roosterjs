@@ -1,6 +1,6 @@
 import setFontSize from '../../../lib/publicApi/segment/setFontSize';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from './segmentTestCommon';
 
 describe('setFontSize', () => {
     function runTest(
@@ -8,29 +8,13 @@ describe('setFontSize', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy()
-            .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
-                    expect(param.formatApiName).toBe('setFontSize');
-                    callback();
-                }
-            );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-        const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
-            focus: jasmine.createSpy(),
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-
-        setFontSize(editor, '10pt');
-
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+        segmentTestCommon(
+            'setFontSize',
+            editor => setFontSize(editor, '10pt'),
+            model,
+            result,
+            calledTimes
+        );
     }
 
     it('empty content', () => {
@@ -128,7 +112,7 @@ describe('setFontSize', () => {
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: {},
+                                format: { fontSize: '10pt' },
                                 isSelected: true,
                             },
                         ],
