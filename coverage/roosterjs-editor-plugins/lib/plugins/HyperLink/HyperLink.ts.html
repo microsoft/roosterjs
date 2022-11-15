@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.54% </span>
+                <span class="strong">63.86% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>48/82</span>
+                <span class='fraction'>53/83</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.71% </span>
+                <span class="strong">54.74% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>41/96</span>
+                <span class='fraction'>52/95</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.23% </span>
+                <span class="strong">63.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>46/79</span>
+                <span class='fraction'>51/80</span>
             </div>
         
             
@@ -435,11 +435,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -452,8 +452,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -465,15 +465,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -488,6 +479,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -519,7 +519,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Browser, isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
 import {
     DOMEventHandler,
     EditorPlugin,
@@ -661,16 +661,16 @@ export default class HyperLink implements EditorPlugin {
                 }
 &nbsp;
                 let href: string | null;
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (
-                    !Browser.isFirefox &amp;&amp;
-                    (<span class="branch-1 cbranch-no" title="branch not covered" >href = this.tryGetHref(anchor))</span> &amp;&amp;
-<span class="branch-2 cbranch-no" title="branch not covered" >                    isCtrlOrMetaPressed(event.rawEvent) </span>&amp;&amp;
-<span class="branch-3 cbranch-no" title="branch not covered" >                    event.rawEvent.button === 0</span>
+                if (
+                    (href = this.tryGetHref(anchor)) &amp;&amp;
+                    isCtrlOrMetaPressed(event.rawEvent) &amp;&amp;
+                    event.rawEvent.button === 0
                 ) {
-<span class="cstat-no" title="statement not covered" >                    try {</span>
-                        const target = <span class="cstat-no" title="statement not covered" >this.target || '_blank';</span>
-                        const window = <span class="cstat-no" title="statement not covered" >this.editor?.getDocument().defaultView;</span>
-<span class="cstat-no" title="statement not covered" >                        window?.open(href, target);</span>
+                    event.rawEvent.preventDefault();
+                    try {
+                        const target = this.target || '_blank';
+                        const window = this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etDocument().defaultView;
+                        window<span class="branch-0 cbranch-no" title="branch not covered" >?.o</span>pen(href, target);
                     } catch {}
                 }
             }
@@ -757,7 +757,7 @@ export default class HyperLink implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Nov 14 2022 17:47:32 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 15 2022 15:33:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
