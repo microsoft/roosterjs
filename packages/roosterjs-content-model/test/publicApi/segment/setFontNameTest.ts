@@ -1,6 +1,6 @@
 import setFontName from '../../../lib/publicApi/segment/setFontName';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from './segmentTestCommon';
 
 describe('setFontName', () => {
     function runTest(
@@ -8,29 +8,7 @@ describe('setFontName', () => {
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        const addUndoSnapshot = jasmine
-            .createSpy()
-            .and.callFake(
-                (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
-                    expect(param.formatApiName).toBe('setFontName');
-                    callback();
-                }
-            );
-        const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
-            expect(model).toEqual(result);
-        });
-        const editor = ({
-            createContentModel: () => model,
-            addUndoSnapshot,
-            focus: jasmine.createSpy(),
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-
-        setFontName(editor, 'Arial');
-
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
-        expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
+        segmentTestCommon(editor => setFontName(editor, 'Arial'), model, result, calledTimes);
     }
 
     it('empty content', () => {
@@ -128,7 +106,9 @@ describe('setFontName', () => {
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: {},
+                                format: {
+                                    fontFamily: 'Arial',
+                                },
                                 isSelected: true,
                             },
                         ],
