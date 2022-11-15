@@ -143,14 +143,14 @@ function removeNotTableDefaultStyles(element: HTMLTableElement) {
 
 /**
  * Verifies recursively if a node and its parents have any siblings
- * Ignoring the children of contentDiv
+ * Ignoring the children of contentDiv and returning true if any parent is LI
  * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings
  */
 function isNodeWholeBlock(node: Node, editor: IEditor) {
     let currentNode = node;
     while (currentNode && editor.contains(currentNode.parentNode)) {
         if (currentNode.nextSibling || currentNode.previousSibling) {
-            return false;
+            return safeInstanceOf(currentNode, 'HTMLLIElement');
         }
         currentNode = currentNode.parentNode;
     }
