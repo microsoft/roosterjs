@@ -34,6 +34,7 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import type { CompatibleClearFormatMode } from 'roosterjs-editor-types/lib/compatibleTypes';
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
@@ -229,6 +230,15 @@ function clearInlineFormat(editor: IEditor) {
     }, ChangeSource.Format);
 }
 
+function setDefaultFontWeight(editor: IEditor, fontWeight: string = '400') {
+    applyListItemStyleWrap(
+        editor,
+        'font-weight',
+        element => (element.style.fontWeight = fontWeight),
+        'setDefaultFontWeight'
+    );
+}
+
 function setDefaultFormat(editor: IEditor) {
     const defaultFormat = editor.getDefaultFormat();
     const isDefaultFormatEmpty = getObjectKeys(defaultFormat).length === 0;
@@ -281,6 +291,8 @@ function setDefaultFormat(editor: IEditor) {
         }
         if (defaultFormat.bold) {
             toggleBold(editor);
+        } else {
+            setDefaultFontWeight(editor);
         }
         if (defaultFormat.italic) {
             toggleItalic(editor);
