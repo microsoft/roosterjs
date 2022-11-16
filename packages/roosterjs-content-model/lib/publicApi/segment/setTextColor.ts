@@ -1,6 +1,5 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
 /**
  * Set text color
@@ -8,14 +7,13 @@ import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
  * @param textColor The text color to set
  */
 export default function setTextColor(editor: IExperimentalContentModelEditor, textColor: string) {
-    formatWithContentModel(editor, 'setTextColor', model =>
-        setSegmentStyle(
-            model,
-            segment => {
-                segment.format.textColor = textColor;
-            },
-            undefined /* segmentHasStyleCallback*/,
-            true /*includingFormatHandler*/
-        )
+    formatSegmentWithContentModel(
+        editor,
+        'setTextColor',
+        segment => {
+            segment.format.textColor = textColor;
+        },
+        undefined /* segmentHasStyleCallback*/,
+        true /*includingFormatHandler*/
     );
 }

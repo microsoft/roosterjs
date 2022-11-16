@@ -1,6 +1,5 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
 /**
  * Set background color
@@ -11,9 +10,7 @@ export default function setBackgroundColor(
     editor: IExperimentalContentModelEditor,
     backgroundColor: string
 ) {
-    formatWithContentModel(editor, 'setBackgroundColor', model =>
-        setSegmentStyle(model, segment => {
-            segment.format.backgroundColor = backgroundColor;
-        })
-    );
+    formatSegmentWithContentModel(editor, 'setBackgroundColor', segment => {
+        segment.format.backgroundColor = backgroundColor;
+    });
 }

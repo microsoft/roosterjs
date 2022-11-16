@@ -1,6 +1,5 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
 /**
  * Set font size
@@ -8,14 +7,13 @@ import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
  * @param fontSize The font size to set
  */
 export default function setFontSize(editor: IExperimentalContentModelEditor, fontSize: string) {
-    formatWithContentModel(editor, 'setFontSize', model =>
-        setSegmentStyle(
-            model,
-            segment => {
-                segment.format.fontSize = fontSize;
-            },
-            undefined /* segmentHasStyleCallback*/,
-            true /*includingFormatHandler*/
-        )
+    formatSegmentWithContentModel(
+        editor,
+        'setFontSize',
+        segment => {
+            segment.format.fontSize = fontSize;
+        },
+        undefined /* segmentHasStyleCallback*/,
+        true /*includingFormatHandler*/
     );
 }
