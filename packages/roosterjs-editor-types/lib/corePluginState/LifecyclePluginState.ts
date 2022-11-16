@@ -44,6 +44,11 @@ export default interface LifecyclePluginState {
     shadowEditFragment: DocumentFragment | null;
 
     /**
+     * Cached entity pairs for original content
+     */
+    shadowEditEntities: Record<string, HTMLElement> | null;
+
+    /**
      * Cached selection path for original content
      */
     shadowEditSelectionPath: SelectionPath | null;
