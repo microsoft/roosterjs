@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>8/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
@@ -89,8 +89,7 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -109,21 +108,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { commitEntity } from 'roosterjs-editor-dom';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { commitEntity, createEntityPlaceholder } from 'roosterjs-editor-dom';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -142,19 +140,18 @@ export const handleEntity: ContentModelHandler&lt;ContentModelEntity&gt; = (
     // Commit the entity attributes in case there is any change
     commitEntity(wrapper, type, isReadonly, id);
 &nbsp;
-    // Create a comment as placeholder and insert into DOM tree.
-    // If the entity DOM can be reused, the original DOM node will be preserved without any change
-    // so that in case there is something that is sensitive to its DOM path (e.g. IFRAME), no need to cause it reloaded.
-    // For entity that is not directly under root, later we will replace the comment with its original DOM node
-    const placeholder = doc.createComment('Entity:' + id);
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (context.doNotReuseEntityDom) {
+<span class="cstat-no" title="statement not covered" >        parent.appendChild(wrapper);</span>
+    } else {
+        // Create a comment as placeholder and insert into DOM tree.
+        // If the entity DOM can be reused, the original DOM node will be preserved without any change
+        // so that in case there is something that is sensitive to its DOM path (e.g. IFRAME), no need to cause it reloaded.
+        // For entity that is not directly under root, later we will replace the comment with its original DOM node
+        parent.appendChild(createEntityPlaceholder(entityModel));
 &nbsp;
-    parent.appendChild(placeholder);
-&nbsp;
-    // Save the entity DOM wrapper node and its placeholder into context so that later we know how to handle it
-    context.entityPairs.push({
-        entityWrapper: wrapper,
-        placeholder: placeholder,
-    });
+        // Save the entity DOM wrapper node and its placeholder into context so that later we know how to handle it
+        context.entities[id] = wrapper;
+    }
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -163,7 +160,7 @@ export const handleEntity: ContentModelHandler&lt;ContentModelEntity&gt; = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Nov 16 2022 00:08:38 GMT+0000 (Coordinated Universal Time)
+                at Wed Nov 16 2022 05:06:23 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
