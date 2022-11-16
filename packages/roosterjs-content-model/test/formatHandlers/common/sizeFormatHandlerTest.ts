@@ -58,6 +58,17 @@ describe('sizeFormatHandler.parse', () => {
         expect(format).toEqual({ width: '10px', height: '20px' });
     });
 
+    it('Element with width and height in attribute in percentage', () => {
+        const element = document.createElement('div');
+
+        element.setAttribute('width', '30%');
+        element.setAttribute('height', '40%');
+
+        sizeFormatHandler.parse(format, element, context, {});
+
+        expect(format).toEqual({ width: '30%', height: '40%' });
+    });
+
     it('Element with min/max size', () => {
         const element = document.createElement('div');
 
