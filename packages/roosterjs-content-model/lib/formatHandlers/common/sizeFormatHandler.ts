@@ -1,6 +1,8 @@
 import { FormatHandler } from '../FormatHandler';
 import { SizeFormat } from '../../publicTypes/format/formatParts/SizeFormat';
 
+const PercentageRegex = /[\d\.]+%/;
+
 /**
  * @internal
  */
@@ -55,7 +57,12 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
 };
 
 function tryParseSize(element: HTMLElement, attrName: 'width' | 'height'): string | undefined {
-    const value = parseInt(element.getAttribute(attrName) || '');
+    const attrValue = element.getAttribute(attrName);
+    const value = parseInt(attrValue || '');
 
-    return Number.isNaN(value) ? undefined : value + 'px';
+    return attrValue && PercentageRegex.test(attrValue)
+        ? attrValue
+        : Number.isNaN(value)
+        ? undefined
+        : value + 'px';
 }

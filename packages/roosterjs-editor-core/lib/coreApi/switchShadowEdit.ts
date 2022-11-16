@@ -1,4 +1,9 @@
-import { createRange, getSelectionPath, moveChildNodes } from 'roosterjs-editor-dom';
+import {
+    createRange,
+    getSelectionPath,
+    moveContentWithEntityPlaceholders,
+    restoreContentWithEntityPlaceholder,
+} from 'roosterjs-editor-dom';
 import {
     EditorCore,
     PluginEventType,
@@ -13,6 +18,7 @@ import {
 export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boolean): void => {
     const { lifecycle, contentDiv } = core;
     let {
+        shadowEditEntities,
         shadowEditFragment,
         shadowEditSelectionPath,
         shadowEditTableSelectionPath,
@@ -43,14 +49,14 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 SelectionRangeTypes.TableSelection,
                 selection
             );
-            shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
             shadowEditImageSelectionPath = getShadowEditSelectionPath(
                 SelectionRangeTypes.ImageSelection,
                 selection
             );
 
-            moveChildNodes(shadowEditFragment, contentDiv);
-            shadowEditFragment.normalize();
+            shadowEditEntities = {};
+            shadowEditFragment = moveContentWithEntityPlaceholders(contentDiv, shadowEditEntities);
+
             core.api.triggerEvent(
                 core,
                 {
@@ -65,15 +71,21 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
             lifecycle.shadowEditSelectionPath = shadowEditSelectionPath;
             lifecycle.shadowEditTableSelectionPath = shadowEditTableSelectionPath;
             lifecycle.shadowEditImageSelectionPath = shadowEditImageSelectionPath;
+            lifecycle.shadowEditEntities = shadowEditEntities;
         }
 
-        moveChildNodes(contentDiv);
         if (lifecycle.shadowEditFragment) {
-            contentDiv.appendChild(lifecycle.shadowEditFragment.cloneNode(true /*deep*/));
+            restoreContentWithEntityPlaceholder(
+                lifecycle.shadowEditFragment,
+                contentDiv,
+                lifecycle.shadowEditEntities,
+                true /*insertClonedNode*/
+            );
         }
     } else {
         lifecycle.shadowEditFragment = null;
         lifecycle.shadowEditSelectionPath = null;
+        lifecycle.shadowEditEntities = null;
 
         if (wasInShadowEdit) {
             core.api.triggerEvent(
@@ -84,9 +96,12 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 false /*broadcast*/
             );
 
-            moveChildNodes(contentDiv);
             if (shadowEditFragment) {
-                contentDiv.appendChild(shadowEditFragment);
+                restoreContentWithEntityPlaceholder(
+                    shadowEditFragment,
+                    contentDiv,
+                    shadowEditEntities
+                );
             }
             core.api.focus(core);
 

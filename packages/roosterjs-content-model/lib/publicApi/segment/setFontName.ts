@@ -1,6 +1,5 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
 
 /**
  * Set font name
@@ -8,14 +7,13 @@ import { setSegmentStyle } from '../../modelApi/segment/setSegmentStyle';
  * @param fontName The font name to set
  */
 export default function setFontName(editor: IExperimentalContentModelEditor, fontName: string) {
-    formatWithContentModel(editor, 'setFontName', model =>
-        setSegmentStyle(
-            model,
-            segment => {
-                segment.format.fontFamily = fontName;
-            },
-            undefined /* segmentHasStyleCallback*/,
-            true /*includingFormatHandler*/
-        )
+    formatSegmentWithContentModel(
+        editor,
+        'setFontName',
+        segment => {
+            segment.format.fontFamily = fontName;
+        },
+        undefined /* segmentHasStyleCallback*/,
+        true /*includingFormatHandler*/
     );
 }
