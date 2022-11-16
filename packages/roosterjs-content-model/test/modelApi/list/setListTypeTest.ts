@@ -7,20 +7,19 @@ import { setListType } from '../../../lib/modelApi/list/setListType';
 
 describe('indent', () => {
     it('Empty group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         const result = setListType(group, 'OL');
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(result).toBeFalse();
     });
 
     it('Group without selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
 
         group.blocks.push(para);
@@ -30,13 +29,12 @@ describe('indent', () => {
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [para],
-            document: document,
         });
         expect(result).toBeFalse();
     });
 
     it('Group with single paragraph selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
 
@@ -59,7 +57,6 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
         expect(para).toEqual({
@@ -78,7 +75,7 @@ describe('indent', () => {
     });
 
     it('Group with single list item selection in a different type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
         const listItem = createListItem([{ listType: 'UL' }]);
@@ -103,13 +100,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with single list item selection in same type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
         const listItem = createListItem([{ listType: 'OL' }]);
@@ -134,13 +130,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with single list item selection in same type with implicit paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
         const listItem = createListItem([{ listType: 'OL' }]);
@@ -166,7 +161,6 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
         expect(para).toEqual({
@@ -185,7 +179,7 @@ describe('indent', () => {
     });
 
     it('Group with mixed selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -251,7 +245,6 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });

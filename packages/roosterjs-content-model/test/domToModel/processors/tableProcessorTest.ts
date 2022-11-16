@@ -22,7 +22,7 @@ describe('tableProcessor', () => {
     });
 
     function runTest(tableHTML: string, expectedModel: ContentModelBlock) {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
 
         const div = document.createElement('div');
         div.innerHTML = tableHTML;
@@ -160,7 +160,7 @@ describe('tableProcessor', () => {
     it('Process table with selection', () => {
         const tableHTML = '<table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>';
         const tdModel = createTableCell(1, 1, false);
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const div = document.createElement('div');
 
         div.innerHTML = tableHTML;
@@ -202,7 +202,7 @@ describe('tableProcessor with format', () => {
     });
 
     it('Process table and check segment format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const table = document.createElement('table');
         const tr = document.createElement('tr');
         const td = document.createElement('td');
@@ -238,7 +238,7 @@ describe('tableProcessor with format', () => {
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Table',
@@ -310,14 +310,14 @@ describe('tableProcessor with format', () => {
             getAttribute: () => '',
         } as any) as HTMLTableElement;
 
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         context.zoomScale = 2;
 
         tableProcessor(doc, mockedTable, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Table',
@@ -369,7 +369,7 @@ describe('tableProcessor with format', () => {
             getAttribute: () => '',
         } as any) as HTMLTableElement;
 
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
         context.formatParsers.dataset = [datasetParser];
@@ -411,7 +411,7 @@ describe('tableProcessor with format', () => {
             getAttribute: () => '',
         } as any) as HTMLTableElement;
 
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
         context.formatParsers.dataset = [datasetParser];
@@ -452,7 +452,7 @@ describe('tableProcessor', () => {
             expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
         });
 
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const mockedTable = ({
             tagName: 'table',
             rows: [

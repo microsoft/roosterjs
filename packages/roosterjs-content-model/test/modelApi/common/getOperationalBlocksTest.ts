@@ -12,7 +12,7 @@ describe('getOperationalBlocks', () => {
     });
 
     it('selected paragraph without expect group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
 
         const result = getOperationalBlocks(
@@ -34,7 +34,7 @@ describe('getOperationalBlocks', () => {
     });
 
     it('selected paragraph with expect group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const listItem = createListItem([]);
@@ -63,7 +63,7 @@ describe('getOperationalBlocks', () => {
     });
 
     it('selected multiple paragraphs in same expect group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -97,7 +97,7 @@ describe('getOperationalBlocks', () => {
     });
 
     it('selected paragraph with stop type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const listItem1 = createListItem([]);
@@ -129,7 +129,7 @@ describe('getOperationalBlocks', () => {
     });
 
     it('selected paragraph with multiple group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const listItem = createListItem([]);
