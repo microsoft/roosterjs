@@ -1,5 +1,6 @@
 import ModeIndependentColor from './ModeIndependentColor';
-import { ImageEditOperation } from '../enum';
+import { ImageEditOperation } from '../enum/ImageEditOperation';
+import type { CompatibleImageEditOperation } from '../compatibleEnum/ImageEditOperation';
 
 /**
  * Options for ImageEdit plugin
@@ -69,5 +70,5 @@ export default interface ImageEditOptions {
      * Which operations will be executed when image is selected
      * @default ImageEditOperation.ResizeAndRotate
      */
-    onSelectState?: ImageEditOperation;
+    onSelectState?: ImageEditOperation | CompatibleImageEditOperation;
 }
