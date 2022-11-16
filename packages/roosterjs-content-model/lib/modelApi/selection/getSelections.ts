@@ -61,7 +61,7 @@ export function getSelections(
 ): ContentModelSelection[] {
     const result: ContentModelSelection[] = [];
 
-    getSelectedParagraphsInternal([group], result, options);
+    getSelectionsInternal([group], result, options);
 
     if (!options || !options.includeUnmeaningfulSelectedParagraph) {
         // Remove tail paragraph if first selection marker is the only selection
@@ -104,7 +104,7 @@ function isOnlySelectionMarkerSelected(
     }
 }
 
-function getSelectedParagraphsInternal(
+function getSelectionsInternal(
     path: ContentModelBlockGroup[],
     result: ContentModelSelection[],
     options?: GetSelectionOptions,
@@ -188,6 +188,6 @@ function getSelectedParagraphFromBlockGroup(
     treatAllAsSelect?: boolean
 ) {
     path.unshift(group);
-    getSelectedParagraphsInternal(path, result, options, treatAllAsSelect);
+    getSelectionsInternal(path, result, options, treatAllAsSelect);
     path.shift();
 }

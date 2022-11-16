@@ -1,32 +1,65 @@
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { setSegmentStyle } from '../../../lib/modelApi/segment/setSegmentStyle';
+import { formatSegmentWithContentModel } from '../../../lib/publicApi/utils/formatSegmentWithContentModel';
+import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
-describe('setSegmentStyle', () => {
+describe('formatSegmentWithContentModel', () => {
+    let editor: IExperimentalContentModelEditor;
+    let addUndoSnapshot: jasmine.Spy;
+    let setContentModel: jasmine.Spy;
+    let focus: jasmine.Spy;
+    let model: ContentModelDocument;
+
+    const apiName = 'mockedApi';
+
+    beforeEach(() => {
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
+        setContentModel = jasmine.createSpy('setContentModel');
+        focus = jasmine.createSpy('focus');
+
+        editor = ({
+            focus,
+            addUndoSnapshot,
+            createContentModel: () => model,
+            setContentModel,
+        } as any) as IExperimentalContentModelEditor;
+    });
+
     it('empty doc', () => {
-        const group = createContentModelDocument(document);
-        const result = setSegmentStyle(group, segment => (segment.format.fontFamily = 'test'));
-        expect(group).toEqual({
+        model = createContentModelDocument(document);
+
+        formatSegmentWithContentModel(
+            editor,
+            apiName,
+            segment => (segment.format.fontFamily = 'test')
+        );
+
+        expect(model).toEqual({
             blockGroupType: 'Document',
             document,
             blocks: [],
         });
-        expect(result).toBeFalse();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 
     it('doc with selection', () => {
-        const group = createContentModelDocument(document);
+        model = createContentModelDocument(document);
         const para = createParagraph();
         const text = createText('test');
 
         text.isSelected = true;
 
         para.segments.push(text);
-        group.blocks.push(para);
+        model.blocks.push(para);
 
-        const result = setSegmentStyle(group, segment => (segment.format.fontFamily = 'test'));
-        expect(group).toEqual({
+        formatSegmentWithContentModel(
+            editor,
+            apiName,
+            segment => (segment.format.fontFamily = 'test')
+        );
+        expect(model).toEqual({
             blockGroupType: 'Document',
             document,
             blocks: [
@@ -46,26 +79,32 @@ describe('setSegmentStyle', () => {
                 },
             ],
         });
-        expect(result).toBeTrue();
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
     });
 
     it('doc with selection, all segments are already in expected state', () => {
-        const group = createContentModelDocument(document);
+        model = createContentModelDocument(document);
         const para = createParagraph();
         const text = createText('test');
 
         text.isSelected = true;
 
         para.segments.push(text);
-        group.blocks.push(para);
+        model.blocks.push(para);
 
         const segmentHasStyleCallback = jasmine.createSpy().and.returnValue(true);
         const toggleStyleCallback = jasmine
             .createSpy()
             .and.callFake(segment => (segment.format.fontFamily = 'test'));
-        const result = setSegmentStyle(group, toggleStyleCallback, segmentHasStyleCallback);
 
-        expect(group).toEqual({
+        formatSegmentWithContentModel(
+            editor,
+            apiName,
+            toggleStyleCallback,
+            segmentHasStyleCallback
+        );
+
+        expect(model).toEqual({
             blockGroupType: 'Document',
             document,
             blocks: [
@@ -85,7 +124,7 @@ describe('setSegmentStyle', () => {
                 },
             ],
         });
-        expect(result).toBeTrue();
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text, 0, [text]);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(1);
@@ -93,7 +132,7 @@ describe('setSegmentStyle', () => {
     });
 
     it('doc with selection, some segments are in expected state', () => {
-        const group = createContentModelDocument(document);
+        model = createContentModelDocument(document);
         const para = createParagraph();
         const text1 = createText('test1');
         const text2 = createText('test2');
@@ -105,7 +144,7 @@ describe('setSegmentStyle', () => {
         para.segments.push(text1);
         para.segments.push(text2);
         para.segments.push(text3);
-        group.blocks.push(para);
+        model.blocks.push(para);
 
         const segmentHasStyleCallback = jasmine
             .createSpy()
@@ -113,9 +152,15 @@ describe('setSegmentStyle', () => {
         const toggleStyleCallback = jasmine
             .createSpy()
             .and.callFake(segment => (segment.format.fontFamily = 'test'));
-        const result = setSegmentStyle(group, toggleStyleCallback, segmentHasStyleCallback);
 
-        expect(group).toEqual({
+        formatSegmentWithContentModel(
+            editor,
+            apiName,
+            toggleStyleCallback,
+            segmentHasStyleCallback
+        );
+
+        expect(model).toEqual({
             blockGroupType: 'Document',
             document,
             blocks: [
@@ -148,7 +193,7 @@ describe('setSegmentStyle', () => {
                 },
             ],
         });
-        expect(result).toBeTrue();
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(2);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text1, 0, [text1, text3]);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text3, 1, [text1, text3]);
