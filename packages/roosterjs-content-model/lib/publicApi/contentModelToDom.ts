@@ -2,7 +2,6 @@ import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument'
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
@@ -29,7 +28,7 @@ export default function contentModelToDom(
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null, EntityPlaceholderPair[]] {
+): [DocumentFragment, SelectionRangeEx | null, Record<string, HTMLElement>] {
     const fragment = model.document.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
@@ -40,7 +39,7 @@ export default function contentModelToDom(
 
     fragment.normalize();
 
-    return [fragment, range, modelToDomContext.entityPairs];
+    return [fragment, range, modelToDomContext.entities];
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {
