@@ -102,6 +102,11 @@ export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitize
 export { default as commitEntity } from './entity/commitEntity';
 export { default as getEntityFromElement } from './entity/getEntityFromElement';
 export { default as getEntitySelector } from './entity/getEntitySelector';
+export {
+    createEntityPlaceholder,
+    moveContentWithEntityPlaceholders,
+    restoreContentWithEntityPlaceholder,
+} from './entity/entityPlaceholderUtils';
 
 export { default as cacheGetEventData } from './event/cacheGetEventData';
 export { default as clearEventDataCache } from './event/clearEventDataCache';
