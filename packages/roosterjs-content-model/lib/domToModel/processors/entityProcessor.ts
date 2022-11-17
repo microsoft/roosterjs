@@ -12,7 +12,7 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
     const entity = getEntityFromElement(element);
 
     if (entity) {
-        const entityModel = createEntity(entity, context.segmentFormat, context.blockFormat);
+        const entityModel = createEntity(entity, context.segmentFormat);
         const isBlockEntity = isBlockElement(element, context);
 
         if (isBlockEntity) {
