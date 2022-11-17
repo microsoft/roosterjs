@@ -39,7 +39,7 @@ describe('clearFormat()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div id="text" style=""><span style="font-family: arial; font-size: 12pt; color: black;">text</span></div>'
+            '<div id="text" style=""><span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;">text</span></div>'
         );
     });
 
@@ -63,7 +63,7 @@ describe('clearFormat()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div id="text"><span style="font-family: arial; font-size: 12pt; color: black;">This is a </span><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">link</span></a><span style="font-family: arial; font-size: 12pt; color: black;">.</span></div>'
+            '<div id="text"><span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;">This is a </span><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt; font-weight: 400;">link</span></a><span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;">.</span></div>'
         );
     });
 
@@ -79,7 +79,7 @@ describe('clearFormat()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div id="text"><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">link</span></a></div>'
+            '<div id="text"><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt; font-weight: 400;">link</span></a></div>'
         );
     });
 
@@ -97,7 +97,7 @@ describe('clearFormat()', () => {
 
             // Assert
             expect(editor.getContent()).toBe(
-                '<div id="text" style=""><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">hello</span></a><span style="font-family: arial; font-size: 12pt; color: black;"> World!</span></div>'
+                '<div id="text" style=""><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt; font-weight: 400;">hello</span></a><span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;"> World!</span></div>'
             );
         }
     );
@@ -116,7 +116,7 @@ describe('clearFormat()', () => {
 
             // Assert
             expect(editor.getContent()).toBe(
-                '<span style="font-family: arial; font-size: 12pt; color: black;">This is a test text with </span><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt;">Hyperlink.</span></a>'
+                '<span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;">This is a test text with </span><a href="http://microsoft.com"><span style="font-family: arial; font-size: 12pt; font-weight: 400;">Hyperlink.</span></a>'
             );
         }
     );
@@ -231,7 +231,7 @@ describe('clearAutodetectFormat tests', () => {
     TestHelper.itFirefoxOnly('removes text format when selecting a cell of a table', () => {
         editor.setContent(TABLE_TEST);
         const expectedFormat =
-            '<div style="width:95.75pt;padding:0in 5.4pt 0in 5.4pt"> </div><div>asdfadf<o:p>&nbsp;</o:p></div><div style="width:95.75pt;padding:0in 5.4pt 0in 5.4pt"> </div>';
+            ' <p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;margin-bottom:0in">asdfadf<span style="color:red"><o:p>&nbsp;</o:p></span></p> ';
 
         let table: HTMLTableElement = doc.getElementById('testTable') as HTMLTableElement;
         let cell = table.rows[0].cells[2];
@@ -280,7 +280,7 @@ describe('clearAutodetectFormat Partial Tests', () => {
         const originalText =
             '<h1 id="testHeader" style="margin-right:0in;margin-left:0in;font-size:24pt;font-family:&quot;Times New Roman&quot;, serif"><span style="font-size: 24pt; font-family: Arial, sans-serif;">Header middle text 1</span></h1>';
         const expectedFormat =
-            '<span style="font-size: 24pt; font-family: Arial, sans-serif;">Header </span><span style="font-family: arial; font-size: 12pt; color: black;">middle</span><span style="font-size: 24pt; font-family: Arial, sans-serif;"> text 1</span>';
+            '<span style="font-size: 24pt; font-family: Arial, sans-serif;">Header </span><span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;">middle</span><span style="font-size: 24pt; font-family: Arial, sans-serif;"> text 1</span>';
         editor.setContent(originalText);
 
         let header = doc.getElementById('testHeader');
@@ -300,7 +300,7 @@ describe('clearAutodetectFormat Partial Tests', () => {
         const originalContent =
             '<p style="margin:0in 0in 8pt;line-height:107%;font-size:11pt;font-family:Calibri, sans-serif"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif;color:black"></span></p><div><p style="background-color:rgb(255, 255, 255);margin:0in 0in 8pt;line-height:15.6933px;font-size:11pt;font-family:Calibri, sans-serif"><span style="font-size:13.5pt;font-family:Arial, sans-serif;color:black"></span></p></div><div></div><ul type="disc" style="margin-bottom:0in"> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">item 1</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">Item 2</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">Sdasd</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">asdasd</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li></ul><div></div><div><p style="background-color:rgb(255, 255, 255);margin:0in 0in 8pt;line-height:15.6933px;font-size:11pt;font-family:Calibri, sans-serif"><o:p></o:p></p></div>';
         const expectedFormat =
-            '<p style="margin:0in 0in 8pt;line-height:107%;font-size:11pt;font-family:Calibri, sans-serif"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif;color:black"></span></p><div><p style="background-color:rgb(255, 255, 255);margin:0in 0in 8pt;line-height:15.6933px;font-size:11pt;font-family:Calibri, sans-serif"><span style="font-size:13.5pt;font-family:Arial, sans-serif;color:black"></span></p></div><div></div><ul style="margin-bottom:0in" type="disc"> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">item 1</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-family: arial; font-size: 12pt; color: black;">Item</span><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif"> 2</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">Sdasd</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">asdasd</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li></ul><div></div><div><p style="background-color:rgb(255, 255, 255);margin:0in 0in 8pt;line-height:15.6933px;font-size:11pt;font-family:Calibri, sans-serif"><o:p></o:p></p></div>';
+            '<p style="margin:0in 0in 8pt;line-height:107%;font-size:11pt;font-family:Calibri, sans-serif"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif;color:black"></span></p><div><p style="background-color:rgb(255, 255, 255);margin:0in 0in 8pt;line-height:15.6933px;font-size:11pt;font-family:Calibri, sans-serif"><span style="font-size:13.5pt;font-family:Arial, sans-serif;color:black"></span></p></div><div></div><ul style="margin-bottom:0in" type="disc"> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">item 1</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-family: arial; font-size: 12pt; color: black; font-weight: 400;">Item</span><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif"> 2</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">Sdasd</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li> <li style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;color:black;mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;mso-list:l0 level1 lfo1;tab-stops:list .5in"><span style="font-size:13.5pt;font-family:&quot;Arial&quot;,sans-serif">asdasd</span><span style="font-size:13.5pt"><o:p>&nbsp;</o:p></span></li></ul><div></div><div><p style="background-color:rgb(255, 255, 255);margin:0in 0in 8pt;line-height:15.6933px;font-size:11pt;font-family:Calibri, sans-serif"><o:p></o:p></p></div>';
         editor.setContent(originalContent);
 
         const ul = doc.getElementsByTagName('ul')[0];
@@ -451,7 +451,7 @@ describe('clearAutodetectFormat tests with defaultFormat | ', () => {
             },
             () => {
                 const expectedFormat =
-                    '<div style="width:95.75pt;padding:0in 5.4pt 0in 5.4pt"> </div><div><b><span style="font-family: arial; font-size: 12pt; color: black;">asdfadf</span></b><o:p>&nbsp;</o:p></div><div style="width:95.75pt;padding:0in 5.4pt 0in 5.4pt"> </div>';
+                    ' <p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;margin-bottom:0in"><b><span style="font-family: arial; font-size: 12pt; color: black;">asdfadf</span></b><span style="color:red"><o:p>&nbsp;</o:p></span></p> ';
                 let table: HTMLTableElement = doc.getElementById('testTable') as HTMLTableElement;
                 let cell = table.rows[0].cells[2];
                 table = doc.getElementsByTagName('table')[0] as HTMLTableElement;

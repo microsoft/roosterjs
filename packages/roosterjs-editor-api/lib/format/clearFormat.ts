@@ -25,6 +25,7 @@ import {
     isNodeInRegion,
     isVoidHtmlElement,
     PartialInlineElement,
+    NodeInlineElement,
     safeInstanceOf,
     setStyles,
     splitBalancedNodeRange,
@@ -33,6 +34,7 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import type { CompatibleClearFormatMode } from 'roosterjs-editor-types/lib/compatibleTypes';
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
@@ -141,6 +143,22 @@ function removeNotTableDefaultStyles(element: HTMLTableElement) {
 }
 
 /**
+ * Verifies recursively if a node and its parents have any siblings
+ * Ignoring the children of contentDiv and returning true if any parent is LI
+ * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings
+ */
+function isNodeWholeBlock(node: Node, editor: IEditor) {
+    let currentNode = node;
+    while (currentNode && editor.contains(currentNode.parentNode)) {
+        if (currentNode.nextSibling || currentNode.previousSibling) {
+            return safeInstanceOf(currentNode, 'HTMLLIElement');
+        }
+        currentNode = currentNode.parentNode;
+    }
+    return true;
+}
+
+/**
  * Clear the format of the selected text or list of blocks
  * If the current selection is compose of multiple block elements then remove the text and struture format for all the selected blocks
  * If the current selection is compose of a partial inline element then only the text format is removed from the current selection
@@ -151,7 +169,10 @@ function clearAutoDetectFormat(editor: IEditor) {
     if (!isMultiBlock) {
         const transverser = editor.getSelectionTraverser();
         const inlineElement = transverser.currentInlineElement;
-        const isPartial = inlineElement instanceof PartialInlineElement;
+        const isPartial =
+            inlineElement instanceof PartialInlineElement ||
+            (inlineElement instanceof NodeInlineElement &&
+                !isNodeWholeBlock(inlineElement.getContainerNode(), editor));
         if (isPartial) {
             clearFormat(editor);
             return;
@@ -209,6 +230,15 @@ function clearInlineFormat(editor: IEditor) {
     }, ChangeSource.Format);
 }
 
+function setDefaultFontWeight(editor: IEditor, fontWeight: string = '400') {
+    applyListItemStyleWrap(
+        editor,
+        'font-weight',
+        element => (element.style.fontWeight = fontWeight),
+        'setDefaultFontWeight'
+    );
+}
+
 function setDefaultFormat(editor: IEditor) {
     const defaultFormat = editor.getDefaultFormat();
     const isDefaultFormatEmpty = getObjectKeys(defaultFormat).length === 0;
@@ -261,6 +291,8 @@ function setDefaultFormat(editor: IEditor) {
         }
         if (defaultFormat.bold) {
             toggleBold(editor);
+        } else {
+            setDefaultFontWeight(editor);
         }
         if (defaultFormat.italic) {
             toggleItalic(editor);
