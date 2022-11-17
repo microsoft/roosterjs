@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { BlockFormatView } from '../format/BlockFormatView';
 import { ContentModelEntity } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
+import { SegmentFormatView } from '../format/SegmentFormatView';
 import { useProperty } from '../../hooks/useProperty';
 
 const styles = require('./ContentModelEntityView.scss');
@@ -55,6 +57,15 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
         );
     }, [type, isReadonly, id]);
 
+    const getFormat = React.useCallback(() => {
+        return (
+            <>
+                <SegmentFormatView format={entity.format} />
+                <BlockFormatView format={entity.format} />
+            </>
+        );
+    }, [entity.format]);
+
     return (
         <ContentModelView
             title="Entity"
@@ -62,6 +73,7 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
             className={styles.modelEntity}
             jsonSource={entity}
             getContent={getContent}
+            getFormat={getFormat}
         />
     );
 }
