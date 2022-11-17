@@ -1,8 +1,9 @@
-import { arrayPush, safeInstanceOf, toArray } from 'roosterjs-editor-dom';
+import { arrayPush, toArray } from 'roosterjs-editor-dom';
 import {
     ColorTransformDirection,
     DarkModeDatasetNames,
     EditorCore,
+    NodeType,
     TransformColor,
 } from 'roosterjs-editor-types';
 import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -151,14 +152,17 @@ function getValueOrDefault(value: string | undefined, defaultValue: string | nul
 function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
     const result: HTMLElement[] = [];
 
-    if (safeInstanceOf(rootNode, 'HTMLElement')) {
+    if (rootNode?.nodeType == NodeType.Element) {
+        const element = rootNode as HTMLElement;
+
         if (includeSelf) {
-            result.push(rootNode);
+            result.push(element);
         }
-        const allChildren = rootNode.getElementsByTagName('*');
+        const allChildren = element.getElementsByTagName('*');
         arrayPush(result, toArray(allChildren));
-    } else if (safeInstanceOf(rootNode, 'DocumentFragment')) {
-        const allChildren = rootNode.querySelectorAll('*');
+    } else if (rootNode.nodeType == NodeType.Document) {
+        const fragment = rootNode as DocumentFragment;
+        const allChildren = fragment.querySelectorAll('*');
         arrayPush(result, toArray(allChildren));
     }
 
