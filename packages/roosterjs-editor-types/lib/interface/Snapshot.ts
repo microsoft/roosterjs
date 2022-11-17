@@ -13,4 +13,9 @@ export default interface Snapshot {
      * Metadata of the editor content state
      */
     metadata: ContentMetadata | null;
+
+    /**
+     * Entity map, from entity id to its DOM wrapper element, to allow reusing existing DOM element when undo/redo
+     */
+    entities?: Record<string, HTMLElement>;
 }

@@ -1,4 +1,8 @@
-import { getSelectionPath, Position } from 'roosterjs-editor-dom';
+import {
+    getSelectionPath,
+    moveContentWithEntityPlaceholders,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     AddUndoSnapshot,
     ChangeSource,
@@ -83,10 +87,20 @@ function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) 
         const rangeEx = core.api.getSelectionRangeEx(core);
         const isDarkMode = core.lifecycle.isDarkMode;
         const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
+        const entities: Record<string, HTMLElement> = {};
+        const fragment = moveContentWithEntityPlaceholders(
+            core.contentDiv,
+            entities,
+            true /*clone*/
+        );
+        const div = core.contentDiv.ownerDocument.createElement('div');
+
+        div.appendChild(fragment);
 
         core.undo.snapshotsService.addSnapshot(
             {
-                html: core.contentDiv.innerHTML,
+                html: div.innerHTML,
+                entities,
                 metadata,
             },
             canUndoByBackspace

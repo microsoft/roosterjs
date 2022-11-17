@@ -31,7 +31,8 @@ export function createEntityPlaceholder(entity: Entity): HTMLElement {
  */
 export function moveContentWithEntityPlaceholders(
     root: HTMLDivElement,
-    entities: Record<string, HTMLElement>
+    entities: Record<string, HTMLElement>,
+    clone?: boolean
 ) {
     const entitySelector = getEntitySelector();
     const fragment = root.ownerDocument.createDocumentFragment();
@@ -54,7 +55,13 @@ export function moveContentWithEntityPlaceholders(
                         wrapper.parentNode?.replaceChild(placeholder, wrapper);
                     }
                 });
+
+                if (clone) {
+                    nodeToAppend = child.cloneNode(true /*deep*/);
+                }
             }
+        } else if (clone) {
+            nodeToAppend = child.cloneNode(true /*deep*/);
         }
 
         fragment.appendChild(nodeToAppend);
@@ -73,7 +80,7 @@ export function moveContentWithEntityPlaceholders(
  * @param insertClonedNode When pass true, merge with a cloned copy of the nodes from source fragment rather than the nodes themselves @default false
  */
 export function restoreContentWithEntityPlaceholder(
-    source: DocumentFragment,
+    source: ParentNode,
     target: HTMLElement,
     entities: Record<string, HTMLElement> | null,
     insertClonedNode?: boolean
