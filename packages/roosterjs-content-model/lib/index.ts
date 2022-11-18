@@ -13,6 +13,9 @@ export { default as hasSelectionInBlock } from './publicApi/selection/hasSelecti
 export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
 export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export { default as setIndentation } from './publicApi/block/setIndentation';
+export { default as setAlignment } from './publicApi/block/setAlignment';
+export { default as setDirection } from './publicApi/block/setDirection';
+export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 
