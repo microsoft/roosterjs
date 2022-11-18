@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { commitEntity, createEntityPlaceholder, getObjectKeys } from 'roosterjs-editor-dom';
+import { commitEntity, getObjectKeys } from 'roosterjs-editor-dom';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
