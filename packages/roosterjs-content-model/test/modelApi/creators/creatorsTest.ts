@@ -399,6 +399,27 @@ describe('Creators', () => {
         });
     });
 
+    it('createEntity with format', () => {
+        const id = 'entity_1';
+        const type = 'entity';
+        const isReadonly = true;
+        const wrapper = document.createElement('div');
+        const entity: Entity = { id, type, isReadonly, wrapper };
+        const entityModel = createEntity(entity, {
+            fontSize: '10pt',
+        });
+
+        expect(entityModel).toEqual({
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: { fontSize: '10pt' },
+            id,
+            type,
+            isReadonly,
+            wrapper,
+        });
+    });
+
     it('createImage', () => {
         const imageModel = createImage('test');
 

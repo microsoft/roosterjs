@@ -11,8 +11,8 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
     const entity = getEntityFromElement(element);
 
     if (entity) {
-        const entityModel = createEntity(entity);
-        const isBlockEntity = isBlockElement(element);
+        const entityModel = createEntity(entity, context.segmentFormat);
+        const isBlockEntity = isBlockElement(element, context);
 
         if (isBlockEntity) {
             addBlock(group, entityModel);
