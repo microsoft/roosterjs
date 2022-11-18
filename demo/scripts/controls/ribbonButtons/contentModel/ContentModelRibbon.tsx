@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { bulletedListButton } from './bulletedListButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
+import { fontButton } from './fontButton';
 import { formatTableButton } from './formatTableButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertTableButton } from './insertTableButton';
@@ -21,6 +22,7 @@ import {
 } from './tableEditButtons';
 
 const buttons = [
+    fontButton,
     bulletedListButton,
     numberedListButton,
     decreaseIndentButton,
