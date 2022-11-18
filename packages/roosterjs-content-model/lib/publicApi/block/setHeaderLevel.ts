@@ -1,6 +1,6 @@
 import { defaultImplicitSegmentFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithcontentModel';
-import { getObjectKeys } from 'roosterjs-editor-dom/lib';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 type HeaderLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
