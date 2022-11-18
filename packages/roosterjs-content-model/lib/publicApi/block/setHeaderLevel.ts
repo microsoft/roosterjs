@@ -1,5 +1,5 @@
 import { defaultImplicitSegmentFormatMap } from '../../formatHandlers/utils/defaultStyles';
-import { formatParagraphWithContentModel } from '../utils/formatParagraphWithcontentModel';
+import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
@@ -14,7 +14,7 @@ export default function setHeaderLevel(
     editor: IExperimentalContentModelEditor,
     headerLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
 ) {
-    formatParagraphWithContentModel(editor, 'setAlignment', para => {
+    formatParagraphWithContentModel(editor, 'setHeaderLevel', para => {
         const tag = (headerLevel > 0
             ? 'h' + headerLevel
             : para.header && para.header.headerLevel > 0

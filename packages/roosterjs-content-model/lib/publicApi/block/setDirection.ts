@@ -1,4 +1,4 @@
-import { formatParagraphWithContentModel } from '../utils/formatParagraphWithcontentModel';
+import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
