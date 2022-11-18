@@ -30,11 +30,11 @@ export function formatSegmentWithContentModel(
 
             selections.forEach(selection => arrayPush(segments, selection.segments));
 
-            const isTuringOff = segmentHasStyleCallback
+            const isTurningOff = segmentHasStyleCallback
                 ? segments.every(segmentHasStyleCallback)
                 : false;
 
-            segments.forEach(segment => toggleStyleCallback(segment, !isTuringOff));
+            segments.forEach(segment => toggleStyleCallback(segment, !isTurningOff));
 
             return (
                 segments.length > 1 ||
