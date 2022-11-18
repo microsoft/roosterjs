@@ -300,7 +300,7 @@ describe('getSelections', () => {
     });
 
     it('Select from the end of paragraph and allow unmeaningful paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const marker = createSelectionMarker();
@@ -329,7 +329,7 @@ describe('getSelections', () => {
     });
 
     it('Select to the start of paragraph and allow unmeaningful paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const marker = createSelectionMarker();
@@ -430,7 +430,7 @@ describe('getSelections', () => {
     });
 
     it('Selection includes format holder from a list item', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para = createParagraph();
         const text = createText('test1');
@@ -457,7 +457,7 @@ describe('getSelections', () => {
     });
 
     it('Selection does not include format holder from a list item since not all segments are selected', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para = createParagraph();
         const text1 = createText('test1');
@@ -481,7 +481,7 @@ describe('getSelections', () => {
     });
 
     it('Get Selection from model that contains general node', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para = createParagraph(true /*implicit*/);
         const text1 = createText('test1');
