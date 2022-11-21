@@ -29,7 +29,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    stackFormat(context, { segment: 'shallowClone' }, () => {
+    stackFormat(context, { segment: 'shallowClone', paragraph: 'empty' }, () => {
         parseFormat(tableElement, context.formatParsers.table, table.format, context);
         parseFormat(
             tableElement,
