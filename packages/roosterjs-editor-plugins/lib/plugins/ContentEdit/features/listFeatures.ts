@@ -330,10 +330,11 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 const getPreviousListItem = (editor: IEditor, textRange: Range) => {
-    const previousNode = editor
+    const blockElement = editor
         .getBodyTraverser(textRange?.startContainer)
-        .getPreviousBlockElement()
-        ?.collapseToSingleElement();
+        .getPreviousBlockElement();
+    console.log(blockElement);
+    const previousNode = blockElement?.getEndNode();
     return getTagOfNode(previousNode) === 'LI' ? previousNode : undefined;
 };
 
