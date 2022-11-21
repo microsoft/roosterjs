@@ -32,6 +32,9 @@ const unorderedListStyles = ['disc', 'circle', 'square'];
 const MARGIN_BASE = '0in 0in 0in 0.5in';
 const NEGATIVE_MARGIN = '-.25in';
 
+const stylesToInherit = ['font-size', 'font-family', 'color'];
+const attrsToInherit = ['data-ogsc', 'data-ogsb', 'data-ogac', 'data-ogab'];
+
 /**
  * @internal
  * The definition for the number of BulletListType or NumberingListType
@@ -362,8 +365,8 @@ export default class VListItem {
 
         // 4. Inherit styles of the child element to the li, so we are able to apply the styles to the ::marker
         if (this.listTypes.length > 1) {
-            const stylesToInherit = ['font-size', 'font-family', 'color'];
-            setListItemStyle(this.node, stylesToInherit);
+            setListItemStyle(this.node, stylesToInherit, true /*isCssStyle*/);
+            setListItemStyle(this.node, attrsToInherit, false /*isCssStyle*/);
         }
 
         // 5. If this is not a list item now, need to unwrap the LI node and do proper handling
@@ -394,6 +397,14 @@ export default class VListItem {
                             ...getStyles(node),
                         };
                         setStyles(node, styles);
+
+                        attrsToInherit.forEach(attr => {
+                            const attrValue = this.node.getAttribute(attr);
+
+                            if (attrValue) {
+                                node.setAttribute(attr, attrValue);
+                            }
+                        });
                     }
                 }
             }

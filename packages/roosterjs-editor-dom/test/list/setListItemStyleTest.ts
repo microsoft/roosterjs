@@ -18,7 +18,7 @@ describe('setListItemStyle', () => {
                     textContent: 'test',
                 },
             ],
-            'font-size:72pt;color:blue'
+            'font-size: 72pt; color: blue;'
         );
     });
 
@@ -36,7 +36,7 @@ describe('setListItemStyle', () => {
                     textContent: 'test',
                 },
             ],
-            'font-size:72pt;color:blue'
+            'font-size: 72pt; color: blue;'
         );
     });
 
@@ -59,7 +59,7 @@ describe('setListItemStyle', () => {
                     textContent: 'test',
                 },
             ],
-            'font-size:72pt;font-family:Tahoma;color:blue'
+            'font-size: 72pt; font-family: Tahoma; color: blue;'
         );
     });
 
@@ -77,7 +77,7 @@ describe('setListItemStyle', () => {
                     textContent: 'test',
                 },
             ],
-            'font-size:72pt'
+            'font-size: 72pt;'
         );
     });
 
@@ -100,7 +100,7 @@ describe('setListItemStyle', () => {
                     textContent: 'test',
                 },
             ],
-            'font-size:72pt'
+            'font-size: 72pt;'
         );
     });
 
@@ -169,7 +169,7 @@ describe('setListItemStyle', () => {
                     textContent: 'test',
                 },
             ],
-            'font-size:72pt;font-family:Tahoma;color:blue'
+            'font-size: 72pt; font-family: Tahoma; color: blue;'
         );
     });
 
@@ -225,11 +225,11 @@ describe('setListItemStyle', () => {
         listItemElement.appendChild(divElement);
 
         // Act
-        setListItemStyle(listItemElement, stylesToInherit);
+        setListItemStyle(listItemElement, stylesToInherit, true /*isCssStyle*/);
 
         // Assert
         expect(listItemElement.getAttribute('style')).toBe(
-            'font-size:72pt;font-family:Tahoma;color:blue'
+            'font-size: 72pt; font-family: Tahoma; color: blue;'
         );
     });
 
@@ -269,11 +269,11 @@ describe('setListItemStyle', () => {
         listItemElement.appendChild(spanElement);
 
         // Act
-        setListItemStyle(listItemElement, stylesToInherit);
+        setListItemStyle(listItemElement, stylesToInherit, true /*isCssStyle*/);
 
         // Assert
         expect(listItemElement.getAttribute('style')).toBe(
-            'font-size:72pt;font-family:Tahoma;color:blue'
+            'font-size: 72pt; font-family: Tahoma; color: blue;'
         );
     });
 
@@ -293,11 +293,11 @@ describe('setListItemStyle', () => {
         listItemElement.appendChild(spanElement);
 
         // Act;
-        setListItemStyle(listItemElement, stylesToInherit);
+        setListItemStyle(listItemElement, stylesToInherit, true /*isCssStyle*/);
 
         // Assert;
         expect(listItemElement.getAttribute('style')).toBe(
-            'font-size:72pt;font-family:Tahoma;color:blue'
+            'font-size: 72pt; font-family: Tahoma; color: blue;'
         );
     });
 
@@ -318,11 +318,11 @@ describe('setListItemStyle', () => {
         listItemElement.appendChild(divElement);
 
         // Act;
-        setListItemStyle(listItemElement, stylesToInherit);
+        setListItemStyle(listItemElement, stylesToInherit, true /*isCssStyle*/);
 
         // Assert;
         expect(listItemElement.getAttribute('style')).toBe(
-            'font-size:72pt;font-family:Tahoma;color:blue'
+            'font-size: 72pt; font-family: Tahoma; color: blue;'
         );
     });
 
@@ -335,7 +335,7 @@ describe('setListItemStyle', () => {
         });
 
         // Act
-        setListItemStyle(listItemElement, stylesToInherit);
+        setListItemStyle(listItemElement, stylesToInherit, true /*isCssStyle*/);
 
         // Assert
         expect(listItemElement.getAttribute('style')).toBe(result);
