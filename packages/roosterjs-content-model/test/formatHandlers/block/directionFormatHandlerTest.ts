@@ -3,6 +3,7 @@ import { createModelToDomContext } from '../../../lib/modelToDom/context/createM
 import { DirectionFormat } from '../../../lib/publicTypes/format/formatParts/DirectionFormat';
 import { directionFormatHandler } from '../../../lib/formatHandlers/block/directionFormatHandler';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { getDefaultStyle } from '../../../lib/domToModel/utils/getDefaultStyle';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('directionFormatHandler.parse', () => {
@@ -93,6 +94,17 @@ describe('directionFormatHandler.parse', () => {
         runTest('right', null, 'rtl', null, 'start', 'rtl', undefined);
         runTest('start', null, 'rtl', null, 'start', 'rtl', undefined);
         runTest('end', null, 'rtl', null, 'end', 'rtl', undefined);
+    });
+
+    it('Center tag', () => {
+        const center = document.createElement('center');
+        const defaultStyle = getDefaultStyle(center, context);
+
+        directionFormatHandler.parse(format, center, context, defaultStyle);
+
+        expect(format).toEqual({
+            textAlign: 'center',
+        });
     });
 });
 
