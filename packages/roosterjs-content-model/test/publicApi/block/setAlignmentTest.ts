@@ -21,12 +21,10 @@ describe('setAlignment', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             0
@@ -37,7 +35,6 @@ describe('setAlignment', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -54,7 +51,6 @@ describe('setAlignment', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -77,7 +73,6 @@ describe('setAlignment', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -99,7 +94,6 @@ describe('setAlignment', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -129,7 +123,6 @@ describe('setAlignment', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -147,7 +140,6 @@ describe('setAlignment', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -173,7 +165,6 @@ describe('setAlignment', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -193,7 +184,6 @@ describe('setAlignment', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -220,7 +210,6 @@ describe('setAlignment', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -261,7 +250,6 @@ describe('setAlignment', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -312,7 +300,6 @@ describe('setAlignment', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -362,7 +349,6 @@ describe('setAlignment', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',

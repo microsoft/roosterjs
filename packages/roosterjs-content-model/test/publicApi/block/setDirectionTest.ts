@@ -21,12 +21,10 @@ describe('setDirection', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             0
@@ -37,7 +35,6 @@ describe('setDirection', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -54,7 +51,6 @@ describe('setDirection', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -77,7 +73,6 @@ describe('setDirection', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -99,7 +94,6 @@ describe('setDirection', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -129,7 +123,6 @@ describe('setDirection', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -147,7 +140,6 @@ describe('setDirection', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -173,7 +165,6 @@ describe('setDirection', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -193,7 +184,6 @@ describe('setDirection', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -219,7 +209,6 @@ describe('setDirection', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -260,7 +249,6 @@ describe('setDirection', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -311,7 +299,6 @@ describe('setDirection', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -361,7 +348,6 @@ describe('setDirection', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',

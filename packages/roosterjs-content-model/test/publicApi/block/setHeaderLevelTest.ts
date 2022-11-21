@@ -21,12 +21,10 @@ describe('setHeaderLevel to 1', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             0
@@ -37,7 +35,6 @@ describe('setHeaderLevel to 1', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -54,7 +51,6 @@ describe('setHeaderLevel to 1', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -77,7 +73,6 @@ describe('setHeaderLevel to 1', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -99,7 +94,6 @@ describe('setHeaderLevel to 1', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -134,7 +128,6 @@ describe('setHeaderLevel to 1', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -152,7 +145,6 @@ describe('setHeaderLevel to 1', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -186,7 +178,6 @@ describe('setHeaderLevel to 1', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -214,7 +205,6 @@ describe('setHeaderLevel to 1', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -264,12 +254,10 @@ describe('setHeaderLevel to 0', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             0
@@ -280,7 +268,6 @@ describe('setHeaderLevel to 0', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -297,7 +284,6 @@ describe('setHeaderLevel to 0', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -320,7 +306,6 @@ describe('setHeaderLevel to 0', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -342,7 +327,6 @@ describe('setHeaderLevel to 0', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -370,7 +354,6 @@ describe('setHeaderLevel to 0', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -398,7 +381,6 @@ describe('setHeaderLevel to 0', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
