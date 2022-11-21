@@ -23,7 +23,7 @@ describe('listProcessor', () => {
     });
 
     it('Single UL element', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ul = document.createElement('ul');
 
         childProcessor.and.callFake((group, parent, context) => {
@@ -37,7 +37,7 @@ describe('listProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -48,7 +48,7 @@ describe('listProcessor', () => {
     });
 
     it('Single OL element', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ol = document.createElement('ol');
 
         childProcessor.and.callFake((group, parent, context) => {
@@ -62,7 +62,7 @@ describe('listProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -73,7 +73,7 @@ describe('listProcessor', () => {
     });
 
     it('OL element with segment format', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ol = document.createElement('ol');
 
         ol.style.color = 'red';
@@ -95,7 +95,7 @@ describe('listProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -106,7 +106,7 @@ describe('listProcessor', () => {
     });
 
     it('Nested UL elements', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ul = document.createElement('ul');
         const innerUl = document.createElement('ul');
 
@@ -117,7 +117,7 @@ describe('listProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -132,7 +132,7 @@ describe('listProcessor', () => {
     });
 
     it('Nested UL elements, check context', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ul = document.createElement('ul');
         const innerUl = document.createElement('ul');
 
@@ -156,7 +156,7 @@ describe('listProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -192,7 +192,7 @@ describe('listProcessor without format handlers', () => {
     });
 
     it('Single UL element', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ul = document.createElement('ul');
 
         childProcessor.and.callFake((group, parent, context) => {
@@ -206,7 +206,7 @@ describe('listProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -217,7 +217,7 @@ describe('listProcessor without format handlers', () => {
     });
 
     it('Single OL element', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ol = document.createElement('ol');
 
         childProcessor.and.callFake((group, parent, context) => {
@@ -231,7 +231,7 @@ describe('listProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -242,7 +242,7 @@ describe('listProcessor without format handlers', () => {
     });
 
     it('OL element with segment format', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ol = document.createElement('ol');
 
         ol.style.color = 'red';
@@ -264,7 +264,7 @@ describe('listProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -275,7 +275,7 @@ describe('listProcessor without format handlers', () => {
     });
 
     it('Nested UL elements', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ul = document.createElement('ul');
         const innerUl = document.createElement('ul');
 
@@ -286,7 +286,7 @@ describe('listProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -301,7 +301,7 @@ describe('listProcessor without format handlers', () => {
     });
 
     it('Nested UL elements, check context', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const ul = document.createElement('ul');
         const innerUl = document.createElement('ul');
 
@@ -325,7 +325,7 @@ describe('listProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -355,7 +355,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL without list style type and metadata', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         childProcessor.and.callFake((group, element, context) => {
             expect(context.listFormat.levels).toEqual([
@@ -372,7 +372,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with valid metadata', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: 1,
@@ -396,7 +396,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with invalid metadata', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: true,
@@ -418,7 +418,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with metadata that has value at the edge of range', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: NumberingListType.Max,
@@ -442,7 +442,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with metadata that has value at the out of range', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         ol.dataset.editingInfo = JSON.stringify({
             orderedStyleType: NumberingListType.Max + 1,
@@ -464,7 +464,7 @@ describe('listProcessor process metadata', () => {
 
     it('OL with conflict metadata and list type', () => {
         const ol = document.createElement('ol');
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         ol.style.listStyleType = 'decimal';
         ol.dataset.editingInfo = JSON.stringify({

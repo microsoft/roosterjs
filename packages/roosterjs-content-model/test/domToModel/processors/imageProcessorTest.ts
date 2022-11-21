@@ -11,14 +11,13 @@ describe('imageProcessor', () => {
     });
 
     it('Empty image', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
 
         imageProcessor(doc, img, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -38,7 +37,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with src and alt', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
 
         img.src = 'http://test.com/testSrc';
@@ -48,7 +47,6 @@ describe('imageProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -69,7 +67,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with regular selection', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
 
         context.isInSelection = true;
@@ -78,7 +76,6 @@ describe('imageProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -99,7 +96,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with image selection', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
 
         context.imageSelection = { image: img };
@@ -108,7 +105,6 @@ describe('imageProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -130,7 +126,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with id and display:block', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
 
         img.id = 'id1';
@@ -142,7 +138,6 @@ describe('imageProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -171,7 +166,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with link format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
 
         context.link = {
@@ -184,7 +179,6 @@ describe('imageProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -210,7 +204,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with dataset', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
         const datasetParser = jasmine.createSpy('datasetParser').and.callFake(format => {
             format.a = 'b';
@@ -225,7 +219,6 @@ describe('imageProcessor', () => {
         expect(datasetParser).toHaveBeenCalledWith({ a: 'b' }, img, context, {});
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -247,7 +240,7 @@ describe('imageProcessor', () => {
     });
 
     it('Image with dataset', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const img = document.createElement('img');
         const datasetParser = jasmine.createSpy('datasetParser').and.callFake(format => {
             format.a = 'b';
@@ -262,7 +255,6 @@ describe('imageProcessor', () => {
         expect(datasetParser).toHaveBeenCalledWith({ a: 'b' }, img, context, {});
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',

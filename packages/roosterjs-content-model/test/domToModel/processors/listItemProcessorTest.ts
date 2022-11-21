@@ -15,14 +15,14 @@ describe('listItemProcessor', () => {
     });
 
     it('LI without valid context', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         listItemProcessor(group, li, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -36,7 +36,7 @@ describe('listItemProcessor', () => {
     });
 
     it('LI with display:block', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         li.style.display = 'block';
@@ -49,7 +49,7 @@ describe('listItemProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -63,7 +63,7 @@ describe('listItemProcessor', () => {
     });
 
     it('LI with valid condition', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         context.listFormat.levels = [{ listType: 'UL' }];
@@ -74,7 +74,7 @@ describe('listItemProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -97,7 +97,7 @@ describe('listItemProcessor', () => {
     });
 
     it('LI with segment format', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         li.style.fontSize = '10px';
@@ -110,7 +110,7 @@ describe('listItemProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -135,7 +135,7 @@ describe('listItemProcessor', () => {
     });
 
     it('LI with child elements', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
         li.appendChild(document.createTextNode('test'));
 
@@ -147,7 +147,7 @@ describe('listItemProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -199,14 +199,14 @@ describe('listItemProcessor without format handlers', () => {
     });
 
     it('LI without valid context', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         listItemProcessor(group, li, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -220,7 +220,7 @@ describe('listItemProcessor without format handlers', () => {
     });
 
     it('LI with display:block', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         li.style.display = 'block';
@@ -233,7 +233,7 @@ describe('listItemProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -247,7 +247,7 @@ describe('listItemProcessor without format handlers', () => {
     });
 
     it('LI with valid condition', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         context.listFormat.levels = [{ listType: 'UL' }];
@@ -258,7 +258,7 @@ describe('listItemProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -281,7 +281,7 @@ describe('listItemProcessor without format handlers', () => {
     });
 
     it('LI with segment format', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
 
         li.style.fontSize = '10px';
@@ -294,7 +294,7 @@ describe('listItemProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -319,7 +319,7 @@ describe('listItemProcessor without format handlers', () => {
     });
 
     it('LI with child elements', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const li = document.createElement('li');
         li.appendChild(document.createTextNode('test'));
 
@@ -331,7 +331,7 @@ describe('listItemProcessor without format handlers', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',

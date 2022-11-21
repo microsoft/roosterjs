@@ -22,7 +22,7 @@ export default function insertTable(
     rows: number,
     format?: TableMetadataFormat
 ) {
-    const doc = createContentModelDocument(editor.getDocument());
+    const doc = createContentModelDocument();
     const table = createTableStructure(doc, columns, rows);
 
     normalizeTable(table);

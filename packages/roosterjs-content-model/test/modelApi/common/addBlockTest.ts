@@ -4,7 +4,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 
 describe('addBlock', () => {
     it('add simple block', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const block: ContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
@@ -16,7 +16,6 @@ describe('addBlock', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [block],
-            document: document,
         });
     });
 });

@@ -266,4 +266,27 @@ describe('handleParagraph', () => {
             1
         );
     });
+
+    it('handle implicit paragraph with segments and format', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                isImplicit: true,
+                format: {
+                    textAlign: 'center',
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
+                    },
+                ],
+            },
+            '<div style="text-align: center;"><span>test</span></div>',
+            1
+        );
+    });
 });
