@@ -153,6 +153,7 @@ export const defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap = 
     },
     h4: {
         fontWeight: 'bold',
+        fontSize: '1em', // Set this default value here to overwrite existing font size when change header level
     },
     h5: {
         fontWeight: 'bold',
