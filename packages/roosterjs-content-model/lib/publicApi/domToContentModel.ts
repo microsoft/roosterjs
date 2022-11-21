@@ -17,7 +17,7 @@ export default function domToContentModel(
     editorContext: EditorContext,
     option: DomToModelOption
 ): ContentModelDocument {
-    const model = createContentModelDocument(root.ownerDocument!);
+    const model = createContentModelDocument();
     const domToModelContext = createDomToModelContext(editorContext, option);
     const { element, child } = domToModelContext.elementProcessors;
     const processor = option.includeRoot ? element : child;

@@ -23,6 +23,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     b: knownElementProcessor,
     blockquote: quoteProcessor,
     br: brProcessor,
+    center: knownElementProcessor,
     code: codeProcessor,
     div: knownElementProcessor,
     em: knownElementProcessor,

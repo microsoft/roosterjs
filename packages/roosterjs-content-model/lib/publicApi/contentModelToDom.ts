@@ -16,6 +16,7 @@ import {
 
 /**
  * Create DOM tree fragment from Content Model document
+ * @param doc Document object of the target DOM tree
  * @param model The content model document to generate DOM tree from
  * @param editorContext Content for Content Model editor
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
@@ -25,14 +26,15 @@ import {
  * 3. An array entity DOM wrapper and its placeholder node pair for reusable root level entities.
  */
 export default function contentModelToDom(
+    doc: Document,
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
 ): [DocumentFragment, SelectionRangeEx | null, Record<string, HTMLElement>] {
-    const fragment = model.document.createDocumentFragment();
+    const fragment = doc.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
-    modelToDomContext.modelHandlers.blockGroup(model.document, fragment, model, modelToDomContext);
+    modelToDomContext.modelHandlers.blockGroup(doc, fragment, model, modelToDomContext);
     optimize(fragment, 2 /*optimizeLevel*/);
 
     const range = extractSelectionRange(modelToDomContext);

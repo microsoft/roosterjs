@@ -11,7 +11,7 @@ import { getSelections } from '../../../lib/modelApi/selection/getSelections';
 
 describe('getSelections', () => {
     it('empty group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         const result = getSelections(group);
 
@@ -19,7 +19,7 @@ describe('getSelections', () => {
     });
 
     it('Group without selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('text1');
@@ -36,7 +36,7 @@ describe('getSelections', () => {
     });
 
     it('Group with single selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('text1');
@@ -61,7 +61,7 @@ describe('getSelections', () => {
     });
 
     it('Group with multiple selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('text1');
@@ -92,7 +92,7 @@ describe('getSelections', () => {
     });
 
     it('Group with selection inside list', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -121,7 +121,7 @@ describe('getSelections', () => {
     });
 
     it('Group with selection inside quote', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const quote = createQuote();
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -150,7 +150,7 @@ describe('getSelections', () => {
     });
 
     it('Group with selection inside table', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const table = createTable(1);
         const cell = createTableCell();
         const para1 = createParagraph();
@@ -181,7 +181,7 @@ describe('getSelections', () => {
     });
 
     it('Group with selection inside table, list and quote', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const table = createTable(1);
         const cell = createTableCell();
         const quote = createQuote();
@@ -215,7 +215,7 @@ describe('getSelections', () => {
     });
 
     it('Group with table selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const table = createTable(1);
         const cell1 = createTableCell();
         const cell2 = createTableCell();
@@ -252,7 +252,7 @@ describe('getSelections', () => {
     });
 
     it('Select from the end of paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const marker = createSelectionMarker();
@@ -276,7 +276,7 @@ describe('getSelections', () => {
     });
 
     it('Select to the start of paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const marker = createSelectionMarker();
@@ -300,7 +300,7 @@ describe('getSelections', () => {
     });
 
     it('Select from the end of paragraph and allow unmeaningful paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const marker = createSelectionMarker();
@@ -329,7 +329,7 @@ describe('getSelections', () => {
     });
 
     it('Select to the start of paragraph and allow unmeaningful paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const marker = createSelectionMarker();
@@ -358,7 +358,7 @@ describe('getSelections', () => {
     });
 
     it('Select from the end to the start of paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -386,7 +386,7 @@ describe('getSelections', () => {
     });
 
     it('Select not from the end, and not to the start of paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -430,7 +430,7 @@ describe('getSelections', () => {
     });
 
     it('Selection includes format holder from a list item', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para = createParagraph();
         const text = createText('test1');
@@ -457,7 +457,7 @@ describe('getSelections', () => {
     });
 
     it('Selection does not include format holder from a list item since not all segments are selected', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem = createListItem([]);
         const para = createParagraph();
         const text1 = createText('test1');
@@ -481,7 +481,7 @@ describe('getSelections', () => {
     });
 
     it('Get Selection from model that contains general node', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
         const para = createParagraph(true /*implicit*/);
         const text1 = createText('test1');
