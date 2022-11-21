@@ -5,14 +5,14 @@ import { ContentModelListItemLevelFormat } from '../../publicTypes/format/Conten
 import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { createQuote } from '../creators/createQuote';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
-import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';
+import { getSelections } from '../selection/getSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 
 /**
  * @internal
  */
 export function indent(model: ContentModelDocument) {
-    const paragraphs = getSelectedParagraphs(model);
+    const paragraphs = getSelections(model);
     const paragraphOrListItem = getOperationalBlocks<ContentModelListItem>(paragraphs, [
         'ListItem',
     ]);
@@ -34,7 +34,7 @@ export function indent(model: ContentModelDocument) {
 
             commitQuote(quoteInfo);
             quoteInfo = undefined;
-        } else {
+        } else if (item.paragraph) {
             if (
                 !quoteInfo ||
                 quoteInfo.parentGroup != item.path[0] ||

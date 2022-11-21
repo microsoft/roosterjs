@@ -6,6 +6,7 @@ export { default as setTableCellShade } from './publicApi/table/setTableCellShad
 export { default as editTable } from './publicApi/table/editTable';
 export { default as toggleBullet } from './publicApi/list/toggleBullet';
 export { default as toggleNumbering } from './publicApi/list/toggleNumbering';
+export { default as setFontName } from './publicApi/segment/setFontName';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
@@ -13,7 +14,7 @@ export { default as hasSelectionInSegment } from './publicApi/selection/hasSelec
 export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export { default as setIndentation } from './publicApi/block/setIndentation';
 
-export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
+export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
