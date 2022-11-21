@@ -11,7 +11,7 @@ describe('brProcessor', () => {
     });
 
     it('Regular Br', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const br = document.createElement('br');
 
         brProcessor(doc, br, context);
@@ -31,12 +31,11 @@ describe('brProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Br with format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const br = document.createElement('br');
 
         context.segmentFormat = { a: 'b' } as any;
@@ -58,7 +57,6 @@ describe('brProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 });

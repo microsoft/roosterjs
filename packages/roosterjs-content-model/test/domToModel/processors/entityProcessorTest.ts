@@ -12,20 +12,20 @@ describe('entityProcessor', () => {
     });
 
     it('Not an entity', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const div = document.createElement('div');
 
         entityProcessor(group, div, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
     });
 
     it('Block element entity', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const div = document.createElement('div');
 
         commitEntity(div, 'entity', true, 'entity_1');
@@ -34,7 +34,7 @@ describe('entityProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Entity',
@@ -50,7 +50,7 @@ describe('entityProcessor', () => {
     });
 
     it('Inline element entity', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const span = document.createElement('span');
 
         commitEntity(span, 'entity', true, 'entity_1');
@@ -59,7 +59,7 @@ describe('entityProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',

@@ -1,6 +1,6 @@
 import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
 import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -22,7 +22,7 @@ describe('generalProcessor', () => {
     });
 
     it('Process a DIV element', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const div = document.createElement('div');
         const block: ContentModelGeneralBlock = {
             blockType: 'BlockGroup',
@@ -38,7 +38,6 @@ describe('generalProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [block],
-            document: document,
         });
         expect(createGeneralBlock.createGeneralBlock).toHaveBeenCalledTimes(1);
         expect(createGeneralBlock.createGeneralBlock).toHaveBeenCalledWith(div);
@@ -47,7 +46,7 @@ describe('generalProcessor', () => {
     });
 
     it('Process a SPAN element', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const span = document.createElement('span');
         const segment: ContentModelGeneralSegment = {
             segmentType: 'General',
@@ -72,7 +71,6 @@ describe('generalProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
         expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
@@ -81,7 +79,7 @@ describe('generalProcessor', () => {
     });
 
     it('Process a SPAN element with format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const span = document.createElement('span');
         context.segmentFormat = { a: 'b' } as any;
 
@@ -106,12 +104,11 @@ describe('generalProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Process a SPAN element with link format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const span = document.createElement('span');
         context.link = {
             format: { href: '/test' },
@@ -140,7 +137,6 @@ describe('generalProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 });

@@ -1,5 +1,5 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelHeader } from './ContentModelHeader';
+import { ContentModelHeader } from '../decorator/ContentModelHeader';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 
 /**

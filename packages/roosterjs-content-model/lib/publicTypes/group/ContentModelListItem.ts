@@ -1,7 +1,7 @@
-import { ContentModelBlockBase } from '../ContentModelBlockBase';
+import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelListItemLevelFormat } from '../../format/ContentModelListItemLevelFormat';
-import { ContentModelSelectionMarker } from '../../segment/ContentModelSelectionMarker';
+import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 
 /**
  * Content Model of List Item

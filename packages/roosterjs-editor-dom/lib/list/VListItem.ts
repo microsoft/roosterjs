@@ -1,5 +1,6 @@
 import contains from '../utils/contains';
 import getListTypeFromNode from './getListTypeFromNode';
+import getStyles from '../style/getStyles';
 import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import moveChildNodes from '../utils/moveChildNodes';
@@ -7,6 +8,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import setBulletListMarkers from './setBulletListMarkers';
 import setListItemStyle from './setListItemStyle';
 import setNumberingListMarkers from './setNumberingListMarkers';
+import setStyles from '../style/setStyles';
 import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
@@ -366,11 +368,37 @@ export default class VListItem {
 
         // 5. If this is not a list item now, need to unwrap the LI node and do proper handling
         if (this.listTypes.length <= 1) {
-            wrapIfNotBlockNode(
-                getTagOfNode(this.node) == 'LI' ? getChildrenAndUnwrap(this.node) : [this.node],
-                true /*checkFirst*/,
-                true /*checkLast*/
-            );
+            // If original <LI> node has styles for font and color, we need to apply it to new parent
+            const isLi = getTagOfNode(this.node) == 'LI';
+            const stylesToApply = isLi
+                ? {
+                      'font-family': this.node.style.fontFamily,
+                      'font-size': this.node.style.fontSize,
+                      color: this.node.style.color,
+                  }
+                : undefined;
+
+            const childNodes = isLi ? getChildrenAndUnwrap(this.node) : [this.node];
+
+            if (stylesToApply) {
+                for (let i = 0; i < childNodes.length; i++) {
+                    if (safeInstanceOf(childNodes[i], 'Text')) {
+                        childNodes[i] = wrap(childNodes[i], 'span');
+                    }
+
+                    const node = childNodes[i];
+
+                    if (safeInstanceOf(node, 'HTMLElement')) {
+                        const styles = {
+                            ...stylesToApply,
+                            ...getStyles(node),
+                        };
+                        setStyles(node, styles);
+                    }
+                }
+            }
+
+            wrapIfNotBlockNode(childNodes, true /*checkFirst*/, true /*checkLast*/);
         }
     }
 

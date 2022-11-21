@@ -39,19 +39,25 @@ function getInlineChildElementsStyle(element: HTMLElement, styles: string[]) {
     while (contentTraverser.currentInlineElement != currentInlineElement) {
         currentInlineElement = contentTraverser.currentInlineElement;
         let currentNode = currentInlineElement?.getContainerNode() || null;
-        const currentStyle: Record<string | number, string> = {};
+        let currentStyle: Record<string, string> | null = null;
 
         currentNode = currentNode ? findClosestElementAncestor(currentNode) : null;
 
-        // we should consider of when it is the single childnode of element, the parentNode's style should add
+        // we should consider of when it is the single child node of element, the parentNode's style should add
         // such as the "i", "b", "span" node in <li><span><b><i>aa</i></b></span></li>
         while (
             currentNode &&
             currentNode !== element &&
-            safeInstanceOf(currentNode, 'HTMLElement')
+            safeInstanceOf(currentNode, 'HTMLElement') &&
+            (result.length == 0 || (currentNode.textContent?.trim().length || 0) > 0)
         ) {
             styles.forEach(styleName => {
                 const styleValue = (currentNode as HTMLElement).style.getPropertyValue(styleName);
+
+                if (!currentStyle) {
+                    currentStyle = {};
+                }
+
                 if (styleValue && !currentStyle[styleName]) {
                     currentStyle[styleName] = styleValue;
                 }

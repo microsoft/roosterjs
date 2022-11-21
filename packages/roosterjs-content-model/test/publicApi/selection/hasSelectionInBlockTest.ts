@@ -2,7 +2,7 @@ import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionIn
 import hasSelectionInBlockGroup from '../../../lib/publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelHR } from '../../../lib/publicTypes/block/ContentModelHR';
-import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
 
 describe('hasSelectionInBlock', () => {
     it('Empty paragraph block', () => {

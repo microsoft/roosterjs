@@ -1,14 +1,14 @@
-import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
-import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';
+import { getSelections } from '../selection/getSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 
 /**
  * @internal
  */
 export function getFirstFocusedListItem(model: ContentModelDocument): ContentModelListItem | null {
-    const paragraphs = getSelectedParagraphs(model);
+    const paragraphs = getSelections(model);
     const currentListItem = getOperationalBlocks<ContentModelListItem>(paragraphs, ['ListItem'])[0];
 
     return currentListItem && isBlockGroupOfType(currentListItem, 'ListItem')

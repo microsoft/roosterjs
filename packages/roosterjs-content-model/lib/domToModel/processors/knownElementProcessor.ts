@@ -1,5 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelHeader } from '../../publicTypes/block/ContentModelHeader';
+import { ContentModelHeader } from '../../publicTypes/decorator/ContentModelHeader';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
@@ -48,9 +48,6 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 }
 
                 addBlock(group, paragraph);
-
-                // Block format will not be inherited by child blocks, so clear it.
-                context.blockFormat = {};
             } else {
                 parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             }

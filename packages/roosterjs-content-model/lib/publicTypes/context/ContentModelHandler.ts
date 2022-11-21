@@ -1,5 +1,5 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ModelToDomContext } from './ModelToDomContext';
 

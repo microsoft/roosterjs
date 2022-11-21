@@ -1,7 +1,7 @@
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelTableCellFormat } from '../../format/ContentModelTableCellFormat';
-import { ContentModelWithDataset } from '../../format/ContentModelWithDataset';
-import { ContentModelWithFormat } from '../../format/ContentModelWithFormat';
+import { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
+import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 
 /**
