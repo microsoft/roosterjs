@@ -23,6 +23,11 @@ export type ContentModelBlockGroupType =
     | 'TableCell'
 
     /**
+     * Represents a code element
+     */
+    | 'Code'
+
+    /**
      * Represents a general HTML element that doesn't have a special type
      */
     | 'General';

@@ -24,6 +24,10 @@ export const handleBlockGroup: ContentModelHandler<ContentModelBlockGroup> = (
             context.modelHandlers.listItem(doc, parent, group, context);
             break;
 
+        case 'Code':
+            context.modelHandlers.code(doc, parent, group, context);
+            break;
+
         default:
             context.modelHandlers.blockGroupChildren(doc, parent, group, context);
             break;

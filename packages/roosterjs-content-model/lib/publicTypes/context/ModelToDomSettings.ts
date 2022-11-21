@@ -1,6 +1,7 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelBr } from '../segment/ContentModelBr';
+import { ContentModelCode } from '../group/ContentModelCode';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
@@ -72,6 +73,11 @@ export interface ContentModelHandlerTypeMap {
      * Content Model type for ContentModelBr
      */
     br: ContentModelBr;
+
+    /**
+     * Content Model type for ContentModelCode
+     */
+    code: ContentModelCode;
 
     /**
      * Content Model type for child models of ContentModelEntity

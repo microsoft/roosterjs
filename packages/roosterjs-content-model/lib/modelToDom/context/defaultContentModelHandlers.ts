@@ -3,6 +3,7 @@ import { handleBlock } from '../handlers/handleBlock';
 import { handleBlockGroup } from '../handlers/handleBlockGroup';
 import { handleBlockGroupChildren } from '../handlers/handleBlockGroupChildren';
 import { handleBr } from '../handlers/handleBr';
+import { handleCode } from '../handlers/handleCode';
 import { handleEntity } from '../handlers/handleEntity';
 import { handleGeneralModel } from '../handlers/handleGeneralModel';
 import { handleHR } from '../handlers/handleHr';
@@ -23,6 +24,7 @@ export const defaultContentModelHandlers: ContentModelHandlerMap = {
     blockGroup: handleBlockGroup,
     blockGroupChildren: handleBlockGroupChildren,
     br: handleBr,
+    code: handleCode,
     entity: handleEntity,
     general: handleGeneralModel,
     hr: handleHR,

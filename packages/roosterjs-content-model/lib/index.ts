@@ -27,6 +27,7 @@ export { ContentModelDocument } from './publicTypes/group/ContentModelDocument';
 export { ContentModelQuote } from './publicTypes/group/ContentModelQuote';
 export { ContentModelListItem } from './publicTypes/group/ContentModelListItem';
 export { ContentModelTableCell } from './publicTypes/group/ContentModelTableCell';
+export { ContentModelCode } from './publicTypes/group/ContentModelCode';
 export { ContentModelGeneralBlock } from './publicTypes/group/ContentModelGeneralBlock';
 export { ContentModelBlockGroup } from './publicTypes/group/ContentModelBlockGroup';
 export { ContentModelBlock } from './publicTypes/block/ContentModelBlock';
@@ -86,6 +87,7 @@ export {
     ImageRotateMetadataFormat,
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
 export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
+export { WhiteSpaceFormat } from './publicTypes/format/formatParts/WhiteSpaceFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 

@@ -1,5 +1,6 @@
 import { brProcessor } from '../processors/brProcessor';
 import { childProcessor } from '../processors/childProcessor';
+import { codeProcessor } from '../processors/codeProcessor';
 import { elementProcessor } from '../processors/elementProcessor';
 import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
 import { entityProcessor } from '../processors/entityProcessor';
@@ -22,6 +23,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     b: knownElementProcessor,
     blockquote: quoteProcessor,
     br: brProcessor,
+    code: codeProcessor,
     div: knownElementProcessor,
     em: knownElementProcessor,
     font: fontProcessor,
@@ -37,6 +39,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     li: listItemProcessor,
     ol: listProcessor,
     p: knownElementProcessor,
+    pre: knownElementProcessor,
     s: knownElementProcessor,
     span: knownElementProcessor,
     strike: knownElementProcessor,
