@@ -15,12 +15,10 @@ describe('toggleUnderline', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             0
@@ -31,7 +29,6 @@ describe('toggleUnderline', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -48,7 +45,6 @@ describe('toggleUnderline', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -71,7 +67,6 @@ describe('toggleUnderline', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -93,7 +88,6 @@ describe('toggleUnderline', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -121,7 +115,6 @@ describe('toggleUnderline', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -139,7 +132,6 @@ describe('toggleUnderline', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -165,7 +157,6 @@ describe('toggleUnderline', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -183,7 +174,6 @@ describe('toggleUnderline', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -209,7 +199,6 @@ describe('toggleUnderline', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -233,7 +222,6 @@ describe('toggleUnderline', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -267,7 +255,6 @@ describe('toggleUnderline', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -296,7 +283,6 @@ describe('toggleUnderline', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',

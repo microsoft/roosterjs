@@ -21,12 +21,10 @@ describe('setTextColor', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             0
@@ -37,7 +35,6 @@ describe('setTextColor', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -54,7 +51,6 @@ describe('setTextColor', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -77,7 +73,6 @@ describe('setTextColor', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -99,7 +94,6 @@ describe('setTextColor', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -127,7 +121,6 @@ describe('setTextColor', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -145,7 +138,6 @@ describe('setTextColor', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -171,7 +163,6 @@ describe('setTextColor', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -189,7 +180,6 @@ describe('setTextColor', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -215,7 +205,6 @@ describe('setTextColor', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -239,7 +228,6 @@ describe('setTextColor', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -273,7 +261,6 @@ describe('setTextColor', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -302,7 +289,6 @@ describe('setTextColor', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',

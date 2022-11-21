@@ -27,12 +27,10 @@ describe('changeFontSize', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [],
             },
             0
@@ -43,7 +41,6 @@ describe('changeFontSize', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -60,7 +57,6 @@ describe('changeFontSize', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -83,7 +79,6 @@ describe('changeFontSize', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -107,7 +102,6 @@ describe('changeFontSize', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -135,7 +129,6 @@ describe('changeFontSize', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -153,7 +146,6 @@ describe('changeFontSize', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -177,7 +169,6 @@ describe('changeFontSize', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -201,7 +192,6 @@ describe('changeFontSize', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -231,7 +221,6 @@ describe('changeFontSize', () => {
         runTest(
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -249,7 +238,6 @@ describe('changeFontSize', () => {
             },
             {
                 blockGroupType: 'Document',
-                document,
                 blocks: [
                     {
                         blockType: 'Paragraph',
@@ -331,7 +319,6 @@ describe('changeFontSize', () => {
 
         expect(setContentModel).toHaveBeenCalledWith({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
