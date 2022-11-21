@@ -19,7 +19,9 @@ export const datasetFormatHandler: FormatHandler<DatasetFormat> = {
         const dataset = element.dataset;
 
         getObjectKeys(dataset).forEach(key => {
-            if (DatasetNameToIgnore.indexOf(key) < 0) format[key] = dataset[key] || '';
+            if (DatasetNameToIgnore.indexOf(key) < 0) {
+                format[key] = dataset[key] || '';
+            }
         });
     },
 
