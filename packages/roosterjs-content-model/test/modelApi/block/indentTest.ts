@@ -7,20 +7,19 @@ import { indent } from '../../../lib/modelApi/block/indent';
 
 describe('indent', () => {
     it('Empty group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         const result = indent(group);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(result).toBeFalse();
     });
 
     it('Group without selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
 
         group.blocks.push(para);
@@ -29,13 +28,12 @@ describe('indent', () => {
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [para],
-            document: document,
         });
         expect(result).toBeFalse();
     });
 
     it('Group with selected paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -65,13 +63,12 @@ describe('indent', () => {
                 },
                 para3,
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with multiple selected paragraph - 1', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -101,13 +98,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with multiple selected paragraph - 2', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -143,13 +139,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with multiple selected paragraph - 3', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -216,13 +211,12 @@ describe('indent', () => {
                 },
                 para6,
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with paragraph under OL', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -255,13 +249,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with paragraph under OL with formats', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -304,13 +297,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with paragraph and multiple OL', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para2 = createParagraph();
         const text2 = createText('test2');
         const listItem1 = createListItem([{ listType: 'OL' }]);
@@ -341,13 +333,12 @@ describe('indent', () => {
                 },
                 listItem3,
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with multiple selected paragraph and multiple OL', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -395,13 +386,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with multiple selected paragraph and UL and OL', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -449,13 +439,12 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Mixed with paragraph, list item and quote', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -529,7 +518,6 @@ describe('indent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
