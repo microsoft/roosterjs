@@ -8,7 +8,7 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 
 describe('addSegment', () => {
     it('Add segment to empty document', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const segment = createText('test');
 
         addSegment(doc, segment);
@@ -29,12 +29,11 @@ describe('addSegment', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Add segment to document contains an empty paragraph', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         addBlock(doc, createParagraph(false));
 
         const segment = createText('test');
@@ -56,12 +55,11 @@ describe('addSegment', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Add segment to document contains a paragraph with existing text', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const block: ContentModelParagraph = {
             blockType: 'Paragraph',
             segments: [
@@ -99,12 +97,11 @@ describe('addSegment', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Add segment to document contains a paragraph with other type of block', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const div = document.createElement('div');
         const block: ContentModelGeneralBlock = {
             blockType: 'BlockGroup',
@@ -136,7 +133,6 @@ describe('addSegment', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 });

@@ -28,7 +28,7 @@ describe('formatSegmentWithContentModel', () => {
     });
 
     it('empty doc', () => {
-        model = createContentModelDocument(document);
+        model = createContentModelDocument();
 
         formatSegmentWithContentModel(
             editor,
@@ -38,14 +38,13 @@ describe('formatSegmentWithContentModel', () => {
 
         expect(model).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [],
         });
         expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 
     it('doc with selection', () => {
-        model = createContentModelDocument(document);
+        model = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
 
@@ -61,7 +60,6 @@ describe('formatSegmentWithContentModel', () => {
         );
         expect(model).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -83,7 +81,7 @@ describe('formatSegmentWithContentModel', () => {
     });
 
     it('doc with selection, all segments are already in expected state', () => {
-        model = createContentModelDocument(document);
+        model = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
 
@@ -106,7 +104,6 @@ describe('formatSegmentWithContentModel', () => {
 
         expect(model).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -132,7 +129,7 @@ describe('formatSegmentWithContentModel', () => {
     });
 
     it('doc with selection, some segments are in expected state', () => {
-        model = createContentModelDocument(document);
+        model = createContentModelDocument();
         const para = createParagraph();
         const text1 = createText('test1');
         const text2 = createText('test2');
@@ -162,7 +159,6 @@ describe('formatSegmentWithContentModel', () => {
 
         expect(model).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',

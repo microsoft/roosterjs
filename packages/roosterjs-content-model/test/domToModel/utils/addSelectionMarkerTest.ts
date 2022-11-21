@@ -4,14 +4,13 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 
 describe('addSelectionMarker', () => {
     it('add marker', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const context = createDomToModelContext();
 
         addSelectionMarker(doc, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -30,7 +29,7 @@ describe('addSelectionMarker', () => {
     });
 
     it('add marker with segment format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const context = createDomToModelContext();
 
         context.segmentFormat = {
@@ -41,7 +40,6 @@ describe('addSelectionMarker', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -60,7 +58,7 @@ describe('addSelectionMarker', () => {
     });
 
     it('add marker with block format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const context = createDomToModelContext();
 
         context.blockFormat = {
@@ -71,7 +69,6 @@ describe('addSelectionMarker', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -90,7 +87,7 @@ describe('addSelectionMarker', () => {
     });
 
     it('add marker with link format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const context = createDomToModelContext();
 
         context.link = {
@@ -102,7 +99,6 @@ describe('addSelectionMarker', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document,
             blocks: [
                 {
                     blockType: 'Paragraph',
