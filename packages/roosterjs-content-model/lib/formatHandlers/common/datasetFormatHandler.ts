@@ -1,4 +1,4 @@
-import { DarkModeDatasetNames } from 'roosterjs-editor-types/lib';
+import { DarkModeDatasetNames } from 'roosterjs-editor-types';
 import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
 import { FormatHandler } from '../FormatHandler';
 import { getObjectKeys } from 'roosterjs-editor-dom';
