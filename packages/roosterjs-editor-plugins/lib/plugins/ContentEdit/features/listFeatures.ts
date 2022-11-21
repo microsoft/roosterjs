@@ -333,7 +333,6 @@ const getPreviousListItem = (editor: IEditor, textRange: Range) => {
     const blockElement = editor
         .getBodyTraverser(textRange?.startContainer)
         .getPreviousBlockElement();
-    console.log(blockElement);
     const previousNode = blockElement?.getEndNode();
     return getTagOfNode(previousNode) === 'LI' ? previousNode : undefined;
 };
