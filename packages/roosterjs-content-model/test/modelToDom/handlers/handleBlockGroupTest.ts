@@ -37,7 +37,7 @@ describe('handleBlockGroup', () => {
     });
 
     it('Document', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         handleBlockGroup(document, parent, group, context);
 
