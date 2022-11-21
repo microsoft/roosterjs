@@ -19,23 +19,11 @@ import { Entity } from 'roosterjs-editor-types';
 
 describe('Creators', () => {
     it('createContentModelDocument', () => {
-        const result = createContentModelDocument(document);
+        const result = createContentModelDocument();
 
         expect(result).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
-        });
-    });
-
-    it('createContentModelDocument with different document', () => {
-        const anotherDoc = ({} as any) as Document;
-        const result = createContentModelDocument(anotherDoc);
-
-        expect(result).toEqual({
-            blockGroupType: 'Document',
-            blocks: [],
-            document: anotherDoc,
         });
     });
 
