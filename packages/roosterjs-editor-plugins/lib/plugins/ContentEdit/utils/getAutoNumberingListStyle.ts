@@ -159,6 +159,12 @@ export default function getAutoNumberingListStyle(
     return numberingType;
 }
 
+/**
+ * Check if index has only numbers or only letters to avoid sequence of character such 1:1. trigger a list.
+ * @param textBeforeCursor
+ * @param isDoubleParenthesis
+ * @returns
+ */
 function isValidNumbering(textBeforeCursor: string, isDoubleParenthesis: boolean) {
     const index = isDoubleParenthesis
         ? textBeforeCursor.slice(1, -1)
