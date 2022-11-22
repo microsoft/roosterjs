@@ -129,21 +129,22 @@ export default function getAutoNumberingListStyle(
         return null;
     }
 
-    // the marker must be a combination of 2 or 3 characters, so if the length is less than 2, no need to check
-    // If the marker length is 3, the marker style is double parenthesis such as (1), (A).
-    const isDoubleParenthesis = trigger.length === 3 && trigger[0] === '(' && trigger[2] === ')';
-    const numberingType =
-        trigger.length === 2 || isDoubleParenthesis
-            ? identifyNumberingListType(trigger, isDoubleParenthesis)
-            : null;
+    const isDoubleParenthesis = trigger[0] === '(' && trigger[trigger.length - 1] === ')';
+    const numberingType = isValidNumbering(trigger, isDoubleParenthesis)
+        ? identifyNumberingListType(trigger, isDoubleParenthesis, previousListStyle)
+        : null;
     return numberingType;
 }
 
 /**
  * Check if index has only numbers or only letters to avoid sequence of character such 1:1. trigger a list.
- * @param index
+ * @param textBeforeCursor
+ * @param isDoubleParenthesis
  * @returns
  */
-function isValidNumbering(index: string) {
+function isValidNumbering(textBeforeCursor: string, isDoubleParenthesis: boolean) {
+    const index = isDoubleParenthesis
+        ? textBeforeCursor.slice(1, -1)
+        : textBeforeCursor.slice(0, -1);
     return Number(index) || /^[A-Za-z\s]*$/.test(index);
 }

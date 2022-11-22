@@ -12,7 +12,6 @@ import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
 import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import { TableOperation } from 'roosterjs-editor-types';
@@ -110,8 +109,8 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
                 editor.focus();
                 if (model && table) {
                     editor.setContentModel(model, {
-                        mergingCallback: (fragment, _, entityPairs) => {
-                            preprocessEntitiesFromContentModel(entityPairs);
+                        doNotReuseEntityDom: true,
+                        mergingCallback: fragment => {
                             editor.replaceNode(table, fragment);
                         },
                     });

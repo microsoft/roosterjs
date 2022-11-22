@@ -357,7 +357,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 const getPreviousListItem = (editor: IEditor, textRange: Range) => {
-    const previousNode = editor
+    const blockElement = editor
         .getBodyTraverser(textRange?.startContainer)
         .getPreviousBlockElement();
     const previousNode = blockElement?.getEndNode();

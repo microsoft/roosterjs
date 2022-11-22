@@ -6,7 +6,6 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**
@@ -43,8 +42,8 @@ export default function insertTable(
     editor.addUndoSnapshot(
         () => {
             editor.setContentModel(doc, {
-                mergingCallback: (fragment, _, entityPairs) => {
-                    preprocessEntitiesFromContentModel(entityPairs);
+                doNotReuseEntityDom: true,
+                mergingCallback: fragment => {
                     editor.insertNode(fragment);
                 },
             });

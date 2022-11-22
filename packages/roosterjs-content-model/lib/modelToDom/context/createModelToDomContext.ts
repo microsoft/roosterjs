@@ -45,9 +45,10 @@ export function createModelToDomContext(
             ...defaultImplicitSegmentFormatMap,
             ...(options?.defaultImplicitSegmentFormatOverride || {}),
         },
-        entityPairs: [],
+        entities: {},
 
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
+        doNotReuseEntityDom: !!options?.doNotReuseEntityDom,
     };
 }

@@ -59,7 +59,9 @@ function getInlineChildElementsStyle(element: HTMLElement, styles: string[], isC
             const element: HTMLElement = currentNode;
 
             styles.forEach(styleName => {
-                const styleValue = (currentNode as HTMLElement).style.getPropertyValue(styleName);
+                const styleValue = isCssStyle
+                    ? element.style.getPropertyValue(styleName)
+                    : element.getAttribute(styleName);
 
                 if (!currentStyle) {
                     currentStyle = {};
