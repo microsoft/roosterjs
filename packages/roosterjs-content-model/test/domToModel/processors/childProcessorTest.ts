@@ -13,7 +13,7 @@ describe('childProcessor', () => {
 
     beforeEach(() => {
         textProcessor = jasmine.createSpy('textProcessor');
-        doc = createContentModelDocument(document);
+        doc = createContentModelDocument();
         context = createDomToModelContext(undefined, {
             processorOverride: {
                 '#text': textProcessor,
@@ -29,7 +29,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).not.toHaveBeenCalled();
     });
@@ -42,7 +41,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).not.toHaveBeenCalled();
     });
@@ -57,7 +55,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
@@ -73,7 +70,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).not.toHaveBeenCalled();
     });
@@ -104,7 +100,6 @@ describe('childProcessor', () => {
                     isImplicit: true,
                 },
             ],
-            document: document,
         });
         expect(textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
@@ -116,7 +111,7 @@ describe('childProcessor', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
-        doc = createContentModelDocument(document);
+        doc = createContentModelDocument();
         context = createDomToModelContext();
     });
 

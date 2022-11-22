@@ -11,7 +11,7 @@ describe('quoteProcessor', () => {
     });
 
     it('Empty BLOCKQUOTE tag', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const quote = document.createElement('blockquote');
 
         quoteProcessor(doc, quote, context);
@@ -27,12 +27,11 @@ describe('quoteProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('BLOCKQUOTE with non-zero value style', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const quote = document.createElement('blockquote');
 
         quote.style.marginTop = '1px';
@@ -51,12 +50,11 @@ describe('quoteProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('BLOCKQUOTE with other style', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const quote = document.createElement('blockquote');
 
         quote.style.marginTop = '0';
@@ -76,12 +74,11 @@ describe('quoteProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('BLOCKQUOTE with margin', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const quote = document.createElement('blockquote');
 
         quote.style.marginTop = '0';
@@ -99,7 +96,6 @@ describe('quoteProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 });

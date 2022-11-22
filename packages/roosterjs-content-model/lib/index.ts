@@ -6,13 +6,26 @@ export { default as setTableCellShade } from './publicApi/table/setTableCellShad
 export { default as editTable } from './publicApi/table/editTable';
 export { default as toggleBullet } from './publicApi/list/toggleBullet';
 export { default as toggleNumbering } from './publicApi/list/toggleNumbering';
+export { default as toggleBold } from './publicApi/segment/toggleBold';
+export { default as toggleItalic } from './publicApi/segment/toggleItalic';
+export { default as toggleUnderline } from './publicApi/segment/toggleUnderline';
+export { default as toggleStrikethrough } from './publicApi/segment/toggleStrikethrough';
+export { default as toggleSubscript } from './publicApi/segment/toggleSubscript';
+export { default as toggleSuperscript } from './publicApi/segment/toggleSuperscript';
+export { default as setBackgroundColor } from './publicApi/segment/setBackgroundColor';
 export { default as setFontName } from './publicApi/segment/setFontName';
+export { default as setFontSize } from './publicApi/segment/setFontSize';
+export { default as setTextColor } from './publicApi/segment/setTextColor';
+export { default as changeFontSize } from './publicApi/segment/changeFontSize';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
 export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
 export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export { default as setIndentation } from './publicApi/block/setIndentation';
+export { default as setAlignment } from './publicApi/block/setAlignment';
+export { default as setDirection } from './publicApi/block/setDirection';
+export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 
