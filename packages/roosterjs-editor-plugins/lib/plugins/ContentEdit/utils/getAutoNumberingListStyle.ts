@@ -153,10 +153,21 @@ export default function getAutoNumberingListStyle(
     }
 
     const isDoubleParenthesis = trigger[0] === '(' && trigger[trigger.length - 1] === ')';
-    const numberingType = identifyNumberingListType(
-        trigger,
-        isDoubleParenthesis,
-        previousListStyle
-    );
+    const numberingType = isValidNumbering(trigger, isDoubleParenthesis)
+        ? identifyNumberingListType(trigger, isDoubleParenthesis, previousListStyle)
+        : null;
     return numberingType;
+}
+
+/**
+ * Check if index has only numbers or only letters to avoid sequence of character such 1:1. trigger a list.
+ * @param textBeforeCursor
+ * @param isDoubleParenthesis
+ * @returns
+ */
+function isValidNumbering(textBeforeCursor: string, isDoubleParenthesis: boolean) {
+    const index = isDoubleParenthesis
+        ? textBeforeCursor.slice(1, -1)
+        : textBeforeCursor.slice(0, -1);
+    return Number(index) || /^[A-Za-z\s]*$/.test(index);
 }
