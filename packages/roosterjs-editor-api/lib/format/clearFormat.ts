@@ -144,7 +144,7 @@ function removeNotTableDefaultStyles(element: HTMLTableElement) {
 
 /**
  * Verifies recursively if a node and its parents have any siblings
- * Ignoring the children of contentDiv and returning true if any parent is LI
+ * Ignoring the children of contentDiv and returning true if any node is LI
  * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings
  */
 function isNodeWholeBlock(node: Node, editor: IEditor) {
