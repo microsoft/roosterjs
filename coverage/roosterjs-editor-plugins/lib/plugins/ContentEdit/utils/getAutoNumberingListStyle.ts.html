@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.55% </span>
+                <span class="strong">96.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>56/58</span>
+                <span class='fraction'>58/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.86% </span>
+                <span class="strong">65.79% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>44/70</span>
+                <span class='fraction'>50/76</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.55% </span>
+                <span class="strong">96.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>56/58</span>
+                <span class='fraction'>58/60</span>
             </div>
         
             
@@ -219,7 +219,18 @@
 <a name='L160'></a><a href='#L160'>160</a>
 <a name='L161'></a><a href='#L161'>161</a>
 <a name='L162'></a><a href='#L162'>162</a>
-<a name='L163'></a><a href='#L163'>163</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -357,13 +368,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -373,13 +384,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">45x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NumberingListType } from 'roosterjs-editor-types';
 import { VListChain } from 'roosterjs-editor-dom';
@@ -536,12 +558,23 @@ export default function getAutoNumberingListStyle(
     }
 &nbsp;
     const isDoubleParenthesis = trigger[0] === '(' &amp;&amp; trigger[trigger.length - 1] === ')';
-    const numberingType = identifyNumberingListType(
-        trigger,
-        isDoubleParenthesis,
-        previousListStyle
-    );
+    const numberingType = isValidNumbering(trigger, isDoubleParenthesis)
+        ? identifyNumberingListType(trigger, isDoubleParenthesis, previousListStyle)
+        : null;
     return numberingType;
+}
+&nbsp;
+/**
+ * Check if index has only numbers or only letters to avoid sequence of character such 1:1. trigger a list.
+ * @param textBeforeCursor
+ * @param isDoubleParenthesis
+ * @returns
+ */
+function isValidNumbering(textBeforeCursor: string, isDoubleParenthesis: boolean) {
+    const index = isDoubleParenthesis
+        ? textBeforeCursor.slice(1, -1)
+        : textBeforeCursor.slice(0, -1);
+    return Number(index) || /^[A-Za-z\s]*$/.test(index);
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -550,7 +583,7 @@ export default function getAutoNumberingListStyle(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Nov 22 2022 18:01:46 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 22 2022 18:20:15 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
