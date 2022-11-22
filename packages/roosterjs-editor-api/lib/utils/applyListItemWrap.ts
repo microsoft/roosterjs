@@ -41,7 +41,7 @@ export default function applyListItemStyleWrap(
 function applyStyleToListItems(parentNodes: Node[], styles: string[]) {
     parentNodes.forEach(node => {
         if (safeInstanceOf(node, 'HTMLLIElement')) {
-            setListItemStyle(node, styles, true /*isCssStyle*/);
+            setListItemStyle(node, styles);
         }
     });
 }

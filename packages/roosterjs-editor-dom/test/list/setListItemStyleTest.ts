@@ -326,6 +326,34 @@ describe('setListItemStyle', () => {
         );
     });
 
+    it('Set HTML attribute', () => {
+        // Arrange;
+        const listItemElement = document.createElement('li');
+        const divElement = document.createElement('div');
+
+        const spanElement = createElement({
+            elementTag: 'span',
+            styles: '',
+            textContent: 'test',
+        });
+
+        spanElement.dataset.ogsc = 'red';
+        spanElement.dataset.ogsb = 'blue';
+
+        const b = document.createElement('b');
+        b.appendChild(spanElement);
+        divElement.appendChild(b);
+        listItemElement.appendChild(divElement);
+
+        // Act;
+        setListItemStyle(listItemElement, ['data-ogsb', 'data-ogsc'], false /*isCssStyle*/);
+
+        // Assert;
+        expect(listItemElement.outerHTML).toBe(
+            '<li data-ogsb="blue" data-ogsc="red"><div><b><span data-ogsc="red" data-ogsb="blue">test</span></b></div></li>'
+        );
+    });
+
     function runTest(childElement: TestChildElement[], result: string) {
         // Arrange
         let listItemElement = document.createElement('li');
@@ -344,7 +372,11 @@ describe('setListItemStyle', () => {
     function createElement(input: TestChildElement): HTMLElement {
         const { elementTag, styles, textContent } = input;
         const element = document.createElement(elementTag);
-        element.setAttribute('style', styles);
+
+        if (styles) {
+            element.setAttribute('style', styles);
+        }
+
         element.textContent = textContent;
         return element;
     }

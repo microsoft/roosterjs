@@ -8,12 +8,12 @@ import { InlineElement } from 'roosterjs-editor-types';
  * If the child inline elements have different styles, it will not modify the styles of the list item
  * @param element the LI Element to set the styles
  * @param styles The styles that should be applied to the element.
- * @param isCssStyle True means the given styles are CSS style names, false means they are HTML attributes
+ * @param isCssStyle True means the given styles are CSS style names, false means they are HTML attributes @default true
  */
 export default function setListItemStyle(
     element: HTMLLIElement,
     styles: string[],
-    isCssStyle: boolean
+    isCssStyle: boolean = true
 ) {
     const elementsStyles = getInlineChildElementsStyle(element, styles, isCssStyle);
 
