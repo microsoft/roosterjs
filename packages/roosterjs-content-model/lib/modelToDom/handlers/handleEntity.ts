@@ -1,4 +1,5 @@
-import { commitEntity, createEntityPlaceholder } from 'roosterjs-editor-dom';
+import { applyFormat } from '../utils/applyFormat';
+import { commitEntity, createEntityPlaceholder, getObjectKeys } from 'roosterjs-editor-dom';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -12,10 +13,18 @@ export const handleEntity: ContentModelHandler<ContentModelEntity> = (
     entityModel: ContentModelEntity,
     context: ModelToDomContext
 ) => {
-    const { wrapper, id, type, isReadonly } = entityModel;
+    const { wrapper, id, type, isReadonly, format } = entityModel;
 
     // Commit the entity attributes in case there is any change
     commitEntity(wrapper, type, isReadonly, id);
+
+    if (getObjectKeys(format).length > 0) {
+        const span = doc.createElement('span');
+
+        parent.appendChild(span);
+        applyFormat(span, context.formatAppliers.segment, format, context);
+        parent = span;
+    }
 
     if (context.doNotReuseEntityDom) {
         parent.appendChild(wrapper);

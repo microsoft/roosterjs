@@ -7,20 +7,19 @@ import { outdent } from '../../../lib/modelApi/block/outdent';
 
 describe('outdent', () => {
     it('Empty group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         const result = outdent(group);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(result).toBeFalse();
     });
 
     it('Group without selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
 
         group.blocks.push(para);
@@ -29,13 +28,12 @@ describe('outdent', () => {
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [para],
-            document: document,
         });
         expect(result).toBeFalse();
     });
 
     it('Group with selected paragraph that cannot outdent', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -56,13 +54,12 @@ describe('outdent', () => {
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [para1, para2, para3],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with selected single indented paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -99,13 +96,12 @@ describe('outdent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with selected 2 indented paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -148,13 +144,12 @@ describe('outdent', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with selected multiple indented paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -187,13 +182,12 @@ describe('outdent', () => {
                 },
                 para3,
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with selected list item', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const text1 = createText('test1');
         const listItem = createListItem([{ listType: 'OL' }]);
@@ -213,13 +207,12 @@ describe('outdent', () => {
                     levels: [],
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with selected multiple level list item', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const text1 = createText('test1');
         const listItem = createListItem([
@@ -249,13 +242,12 @@ describe('outdent', () => {
                     ],
                 },
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });
 
     it('Group with mixed list item, quote and paragraph', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -291,7 +283,6 @@ describe('outdent', () => {
                 para2,
                 para3,
             ],
-            document: document,
         });
         expect(result).toBeTrue();
     });

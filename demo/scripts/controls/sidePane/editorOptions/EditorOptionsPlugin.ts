@@ -32,6 +32,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.ListItemAlignment,
         ExperimentalFeatures.PendingStyleBasedFormat,
         ExperimentalFeatures.DefaultFormatInSpan,
+        ExperimentalFeatures.AutoFormatList,
     ],
     isRtl: false,
 };
