@@ -48,12 +48,21 @@ export default function pasteTable(
         for (let j = cursorCol; j < columns; j++) {
             let cell = currentTable.getCell(i, j);
             let newCell = newTable.getTd(i - cursorRow, j - cursorCol);
-            if (cell.td) {
-                moveChildNodes(cell.td, newCell!);
+            if (cell.td && newCell) {
+                moveChildNodes(cell.td, newCell);
+                copyCellStyle(cell.td, newCell);
             } else {
                 cell.td = document.createElement('td');
             }
         }
     }
-    currentTable.writeBack();
+
+    currentTable.writeBack(true /* skipApplyFormat*/);
+}
+
+function copyCellStyle(cell: HTMLTableCellElement, styledCell: HTMLTableCellElement) {
+    const styles = styledCell.getAttribute('style');
+    if (styles) {
+        cell.setAttribute('style', styles);
+    }
 }
