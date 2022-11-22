@@ -1,4 +1,4 @@
-import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
+import { HtmlSanitizer, matchLink, wrap } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     DocumentCommand,
@@ -113,11 +113,8 @@ export default function createLink(
                     updateAnchorDisplayText(anchor, displayText);
                 }
             } else if (selection.type === SelectionRangeTypes.ImageSelection) {
-                selection.ranges[0].deleteContents();
-                anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
-                anchor.appendChild(selection.image);
+                anchor = wrap(selection.image, 'A') as HTMLAnchorElement;
                 anchor.href = normalizedUrl;
-                editor.insertNode(anchor);
             }
 
             if (altText && anchor) {
