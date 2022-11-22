@@ -405,7 +405,7 @@ describe('VListItem.writeBack', () => {
 
         // Assert
         expect(listStack[0].innerHTML).toBe(
-            '<ol><li style="font-size:14px;font-family:Courier New;color:blue"><span style="font-size: 14px; font-family: Courier New; color: blue;">test</span></li></ol>'
+            '<ol><li style="font-size: 14px; font-family: Courier New; color: blue;"><span style="font-size: 14px; font-family: Courier New; color: blue;">test</span></li></ol>'
         );
     });
 
