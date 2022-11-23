@@ -30,6 +30,18 @@ describe('datasetFormatHandler.parse', () => {
             c: 'd',
         });
     });
+
+    it('Ignore some of the keys', () => {
+        div.dataset.a = 'b';
+        div.dataset.c = 'd';
+        div.dataset.ogsc = 'red';
+        div.dataset.ogsb = 'green';
+        datasetFormatHandler.parse(format, div, context, {});
+        expect(format).toEqual({
+            a: 'b',
+            c: 'd',
+        });
+    });
 });
 
 describe('datasetFormatHandler.apply', () => {
