@@ -1,3 +1,5 @@
+import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
+import { MarkdownFeatures } from '../../../lib/plugins/ContentEdit/features/markdownFeatures';
 import {
     BuildInEditFeature,
     IEditor,
@@ -5,8 +7,6 @@ import {
     PluginKeyboardEvent,
     PositionType,
 } from 'roosterjs-editor-types';
-import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
-import { MarkdownFeatures } from '../../../lib/plugins/ContentEdit/features/markdownFeatures';
 
 describe('MarkdownFeatures | ', () => {
     let editor: IEditor;
@@ -69,7 +69,7 @@ describe('MarkdownFeatures | ', () => {
     ) {
         editor.setContent(`<div id="${TEST_ELEMENT_ID}">${testContent}</div>`);
         const element = document.getElementById(TEST_ELEMENT_ID);
-        editor.select(element, PositionType.End);
+        editor.select(element?.firstChild, PositionType.End);
         const keyboardPluginEvent: PluginKeyboardEvent = {
             eventType: PluginEventType.KeyDown,
             rawEvent: new KeyboardEvent('keydown', {
@@ -121,15 +121,15 @@ describe('MarkdownFeatures | ', () => {
 
     describe('Handle Event | ', () => {
         it('markdownBold normal scenario 1', () => {
-            runHandleEvent(markdownBold, '*abcd', '<b>abcd</b>');
+            runHandleEvent(markdownBold, '*abcd*', '<b>abcd</b>');
         });
 
         it('markdownBold normal scenario 2', () => {
-            runHandleEvent(markdownBold, '*abcd 123', '<b>abcd 123</b>');
+            runHandleEvent(markdownBold, '*abcd 123*', '<b>abcd 123</b>');
         });
 
         it('markdownBold normal scenario 3', () => {
-            runHandleEvent(markdownBold, 'abcd *123', 'abcd <b>123</b>');
+            runHandleEvent(markdownBold, 'abcd *123*', 'abcd <b>123</b>');
         });
     });
 });
