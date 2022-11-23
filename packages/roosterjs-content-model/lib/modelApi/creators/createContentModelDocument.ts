@@ -3,10 +3,9 @@ import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocume
 /**
  * @internal
  */
-export function createContentModelDocument(doc: Document): ContentModelDocument {
+export function createContentModelDocument(): ContentModelDocument {
     return {
         blockGroupType: 'Document',
         blocks: [],
-        document: doc,
     };
 }

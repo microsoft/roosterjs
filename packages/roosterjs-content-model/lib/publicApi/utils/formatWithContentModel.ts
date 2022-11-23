@@ -1,6 +1,9 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import {
+    DomToModelOption,
+    IExperimentalContentModelEditor,
+} from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
  * @internal
@@ -8,9 +11,10 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
 export function formatWithContentModel(
     editor: IExperimentalContentModelEditor,
     apiName: string,
-    callback: (model: ContentModelDocument) => boolean
+    callback: (model: ContentModelDocument) => boolean,
+    domToModelOptions?: DomToModelOption
 ) {
-    const model = editor.createContentModel();
+    const model = editor.createContentModel(undefined /*rootNode*/, domToModelOptions);
 
     if (callback(model)) {
         editor.addUndoSnapshot(

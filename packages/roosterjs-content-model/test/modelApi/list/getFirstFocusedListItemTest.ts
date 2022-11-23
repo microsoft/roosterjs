@@ -6,20 +6,19 @@ import { getFirstFocusedListItem } from '../../../lib/modelApi/list/getFirstFocu
 
 describe('getFirstFocusedListItem', () => {
     it('Empty group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         const result = getFirstFocusedListItem(group);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(result).toBeNull();
     });
 
     it('Group without selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
 
         group.blocks.push(para);
@@ -30,7 +29,7 @@ describe('getFirstFocusedListItem', () => {
     });
 
     it('Group with list selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
 
@@ -45,7 +44,7 @@ describe('getFirstFocusedListItem', () => {
     });
 
     it('Group with list selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem = createListItem([{ listType: 'OL' }]);
         const para = createParagraph();
         const text = createText('test');
@@ -62,7 +61,7 @@ describe('getFirstFocusedListItem', () => {
     });
 
     it('Group with multiple list selection', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem1 = createListItem([{ listType: 'OL' }]);
         const listItem2 = createListItem([{ listType: 'OL' }]);
         const para1 = createParagraph();
@@ -85,7 +84,7 @@ describe('getFirstFocusedListItem', () => {
     });
 
     it('Group with selection that is not start from list', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const listItem2 = createListItem([{ listType: 'OL' }]);
         const para1 = createParagraph();
         const para2 = createParagraph();
