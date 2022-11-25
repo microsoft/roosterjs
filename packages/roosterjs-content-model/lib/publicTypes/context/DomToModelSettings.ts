@@ -86,6 +86,11 @@ export type ElementProcessorMap = {
          * Workaround for typescript 4.4.4 that doesn't have element "strike" in its element type
          */
         strike?: ElementProcessor<HTMLElement>;
+
+        /**
+         * Workaround for typescript 4.4.4 that doesn't have element "center" in its element type
+         */
+        center?: ElementProcessor<HTMLElement>;
     };
 
 /**

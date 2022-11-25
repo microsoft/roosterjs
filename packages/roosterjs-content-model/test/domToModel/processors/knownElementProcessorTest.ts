@@ -13,7 +13,7 @@ describe('knownElementProcessor', () => {
     });
 
     it('Empty DIV', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const div = document.createElement('div');
 
         spyOn(parseFormat, 'parseFormat');
@@ -22,7 +22,7 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -54,7 +54,7 @@ describe('knownElementProcessor', () => {
     });
 
     it('Div with text content', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const div = document.createElement('div');
 
         div.appendChild(document.createTextNode('test'));
@@ -63,7 +63,7 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -87,7 +87,7 @@ describe('knownElementProcessor', () => {
     });
 
     it('Inline div with text content', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const div = document.createElement('div');
 
         group.blocks[0] = {
@@ -108,7 +108,7 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -130,7 +130,7 @@ describe('knownElementProcessor', () => {
     });
 
     it('Header with text content and format', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const h1 = document.createElement('h1');
 
         h1.appendChild(document.createTextNode('test'));
@@ -140,7 +140,7 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -168,7 +168,7 @@ describe('knownElementProcessor', () => {
     });
 
     it('Header with non-bold text', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const h1 = document.createElement('h1');
         const span = document.createElement('span');
 
@@ -181,7 +181,7 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -209,7 +209,7 @@ describe('knownElementProcessor', () => {
     });
 
     it('Simple Anchor element', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const a = document.createElement('a');
 
         a.href = '/test';
@@ -219,7 +219,6 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -243,7 +242,7 @@ describe('knownElementProcessor', () => {
     });
 
     it('Anchor element with dataset', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const a = document.createElement('a');
 
         a.href = '/test';
@@ -255,7 +254,6 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
             blocks: [
                 {
                     blockType: 'Paragraph',

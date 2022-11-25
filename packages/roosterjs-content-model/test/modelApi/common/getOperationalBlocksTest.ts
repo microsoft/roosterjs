@@ -12,7 +12,7 @@ describe('getOperationalBlocks', () => {
     });
 
     it('selected paragraph without expect group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para = createParagraph();
 
         const result = getOperationalBlocks(
@@ -20,6 +20,7 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para,
                     path: [group],
+                    segments: [],
                 },
             ],
             ['ListItem']
@@ -29,12 +30,13 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para,
                 path: [group],
+                segments: [],
             },
         ]);
     });
 
     it('selected paragraph with expect group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const listItem = createListItem([]);
@@ -44,10 +46,12 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [group],
+                    segments: [],
                 },
             ],
             ['ListItem']
@@ -58,12 +62,13 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para2,
                 path: [group],
+                segments: [],
             },
         ]);
     });
 
     it('selected multiple paragraphs in same expect group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const para3 = createParagraph();
@@ -74,14 +79,17 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para3,
                     path: [group],
+                    segments: [],
                 },
             ],
             ['ListItem']
@@ -92,12 +100,13 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para3,
                 path: [group],
+                segments: [],
             },
         ]);
     });
 
     it('selected paragraph with stop type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const listItem1 = createListItem([]);
@@ -109,10 +118,12 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem1, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [quote, listItem2, group],
+                    segments: [],
                 },
             ],
             ['ListItem'],
@@ -124,12 +135,13 @@ describe('getOperationalBlocks', () => {
             {
                 paragraph: para2,
                 path: [quote, listItem2, group],
+                segments: [],
             },
         ]);
     });
 
     it('selected paragraph with multiple group type', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
         const listItem = createListItem([]);
@@ -140,10 +152,12 @@ describe('getOperationalBlocks', () => {
                 {
                     paragraph: para1,
                     path: [listItem, group],
+                    segments: [],
                 },
                 {
                     paragraph: para2,
                     path: [quote, group],
+                    segments: [],
                 },
             ],
             ['ListItem', 'Quote']

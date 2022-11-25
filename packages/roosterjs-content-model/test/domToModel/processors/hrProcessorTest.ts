@@ -11,7 +11,7 @@ describe('hrProcessor', () => {
     });
 
     it('Regular HR', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const hr = document.createElement('hr');
 
         hrProcessor(doc, hr, context);
@@ -24,12 +24,11 @@ describe('hrProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('HR with format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const hr = document.createElement('hr');
 
         hr.style.marginBottom = '20px';
@@ -48,12 +47,11 @@ describe('hrProcessor', () => {
                     },
                 },
             ],
-            document: document,
         });
     });
 
     it('HR with selection', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const hr = document.createElement('hr');
 
         context.isInSelection = true;
@@ -69,7 +67,6 @@ describe('hrProcessor', () => {
                     isSelected: true,
                 },
             ],
-            document: document,
         });
     });
 });

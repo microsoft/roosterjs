@@ -1,5 +1,11 @@
-import { ChangeSource, DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
-import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
+import { HtmlSanitizer, matchLink, wrap } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    DocumentCommand,
+    IEditor,
+    QueryScope,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -66,42 +72,51 @@ export default function createLink(
         let originalUrl = linkData ? linkData.originalUrl : url;
 
         editor.addUndoSnapshot(() => {
-            let range = editor.getSelectionRange();
+            const selection = editor.getSelectionRangeEx();
             let anchor: HTMLAnchorElement = null;
-            if (range && range.collapsed) {
-                anchor = getAnchorNodeAtCursor(editor);
+            if (selection.type === SelectionRangeTypes.Normal) {
+                const range = selection.ranges[0];
+                if (range && range.collapsed) {
+                    anchor = getAnchorNodeAtCursor(editor);
 
-                // If there is already a link, just change its href
-                if (anchor) {
-                    anchor.href = normalizedUrl;
-                    // Change text content if it is specified
-                    updateAnchorDisplayText(anchor, displayText);
+                    // If there is already a link, just change its href
+                    if (anchor) {
+                        anchor.href = normalizedUrl;
+                        // Change text content if it is specified
+                        updateAnchorDisplayText(anchor, displayText);
+                    } else {
+                        anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
+                        anchor.textContent = displayText || originalUrl;
+                        anchor.href = normalizedUrl;
+                        editor.insertNode(anchor);
+                    }
                 } else {
-                    anchor = editor.getDocument().createElement('A') as HTMLAnchorElement;
-                    anchor.textContent = displayText || originalUrl;
-                    anchor.href = normalizedUrl;
-                    editor.insertNode(anchor);
+                    // the selection is not collapsed, use browser execCommand
+                    editor
+                        .getDocument()
+                        .execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
+                    const traverser = editor.getSelectionTraverser();
+
+                    let currentInline = traverser.getNextInlineElement();
+
+                    // list for removing unwanted lines
+                    let deletionInlineList: Node[] = [];
+
+                    while (currentInline) {
+                        deletionInlineList.push(currentInline.getContainerNode());
+                        currentInline = traverser.getNextInlineElement();
+                    }
+
+                    deletionInlineList.forEach(node => editor.deleteNode(node));
+
+                    anchor = getAnchorNodeAtCursor(editor);
+                    updateAnchorDisplayText(anchor, displayText);
                 }
-            } else {
-                // the selection is not collapsed, use browser execCommand
-                editor.getDocument().execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
-                const traverser = editor.getSelectionTraverser();
-
-                let currentInline = traverser.getNextInlineElement();
-
-                // list for removing unwanted lines
-                let deletionInlineList: Node[] = [];
-
-                while (currentInline) {
-                    deletionInlineList.push(currentInline.getContainerNode());
-                    currentInline = traverser.getNextInlineElement();
-                }
-
-                deletionInlineList.forEach(node => editor.deleteNode(node));
-
-                anchor = getAnchorNodeAtCursor(editor);
-                updateAnchorDisplayText(anchor, displayText);
+            } else if (selection.type === SelectionRangeTypes.ImageSelection) {
+                anchor = wrap(selection.image, 'A') as HTMLAnchorElement;
+                anchor.href = normalizedUrl;
             }
+
             if (altText && anchor) {
                 anchor.title = altText;
             }

@@ -15,7 +15,7 @@ describe('textProcessor', () => {
     });
 
     it('Empty group', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test');
 
         textProcessor(doc, text, context);
@@ -36,12 +36,11 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Group with empty paragraph', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test');
         doc.blocks.push({
             blockType: 'Paragraph',
@@ -66,12 +65,11 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Group with paragraph with text segment', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test1');
 
         doc.blocks.push({
@@ -103,12 +101,11 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Group with paragraph with different type of segment', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test');
 
         doc.blocks.push({
@@ -151,12 +148,11 @@ describe('textProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('Handle text with selection 1', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test2');
 
         doc.blocks.push({
@@ -195,7 +191,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with selection 2', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test2');
 
         doc.blocks.push({
@@ -233,7 +229,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with selection 3', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test2');
 
         doc.blocks.push({
@@ -268,7 +264,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test');
 
         context.segmentFormat = { a: 'b' } as any;
@@ -290,7 +286,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with link format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test');
 
         context.link = { format: { href: '/test' }, dataset: {} };
@@ -313,7 +309,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with selection and link format 1', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test2');
 
         doc.blocks.push({
@@ -356,7 +352,7 @@ describe('textProcessor', () => {
     });
 
     it('Handle text with selection and link format 2', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('test');
 
         context.link = { format: { href: '/test' }, dataset: {} };
@@ -408,7 +404,7 @@ describe('textProcessor', () => {
     });
 
     it('Empty text', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode('');
 
         textProcessor(doc, text, context);
@@ -416,12 +412,11 @@ describe('textProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
     });
 
     it('Space only text without existing paragraph', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode(' ');
 
         textProcessor(doc, text, context);
@@ -429,12 +424,11 @@ describe('textProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
     });
 
     it('Space only text with existing paragraph', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode(' ');
 
         addBlock(doc, createParagraph());
@@ -449,12 +443,11 @@ describe('textProcessor', () => {
                     segments: [],
                 },
             ],
-            document: document,
         });
     });
 
     it('Space only text with existing implicit paragraph with existing segment', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const text = document.createTextNode(' ');
 
         addSegment(doc, createText('test'));
@@ -476,7 +469,6 @@ describe('textProcessor', () => {
                     ],
                 },
             ],
-            document: document,
         });
     });
 });

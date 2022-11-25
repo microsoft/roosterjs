@@ -1,4 +1,6 @@
 import ModeIndependentColor from './ModeIndependentColor';
+import { ImageEditOperation } from '../enum/ImageEditOperation';
+import type { CompatibleImageEditOperation } from '../compatibleEnum/ImageEditOperation';
 
 /**
  * Options for ImageEdit plugin
@@ -63,4 +65,10 @@ export default interface ImageEditOptions {
      * Whether image crop is disabled. @default false
      */
     disableCrop?: boolean;
+
+    /**
+     * Which operations will be executed when image is selected
+     * @default ImageEditOperation.ResizeAndRotate
+     */
+    onSelectState?: ImageEditOperation | CompatibleImageEditOperation;
 }

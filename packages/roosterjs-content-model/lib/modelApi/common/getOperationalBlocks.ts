@@ -1,12 +1,12 @@
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelBlockGroupBase } from '../../publicTypes/group/ContentModelBlockGroupBase';
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
-import { SelectedParagraphWithPath } from '../selection/getSelectedParagraphs';
+import { ContentModelSelection } from '../selection/getSelections';
 
 /**
  * @internal
  */
-export type OperationalBlocks<T extends ContentModelBlockGroup> = T | SelectedParagraphWithPath;
+export type OperationalBlocks<T extends ContentModelBlockGroup> = T | ContentModelSelection;
 
 /**
  * @internal
@@ -19,13 +19,13 @@ export type TypeOfBlockGroup<
  * @internal
  */
 export function getOperationalBlocks<T extends ContentModelBlockGroup>(
-    paragraphs: SelectedParagraphWithPath[],
+    selections: ContentModelSelection[],
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[] = ['TableCell']
 ): OperationalBlocks<T>[] {
     const result: OperationalBlocks<T>[] = [];
 
-    paragraphs.forEach(p => {
+    selections.forEach(p => {
         const group = getClosestAncestorBlockGroupWithType(p, blockGroupTypes, stopTypes);
 
         if (group && result.indexOf(group) < 0) {
@@ -39,12 +39,12 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
 }
 
 function getClosestAncestorBlockGroupWithType<T extends ContentModelBlockGroup>(
-    paragraph: SelectedParagraphWithPath,
+    selections: ContentModelSelection,
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[]
 ): T | null {
-    for (let i = 0; i < paragraph.path.length; i++) {
-        const group = paragraph.path[i];
+    for (let i = 0; i < selections.path.length; i++) {
+        const group = selections.path[i];
 
         if ((blockGroupTypes as string[]).indexOf(group.blockGroupType) >= 0) {
             return group as T;
