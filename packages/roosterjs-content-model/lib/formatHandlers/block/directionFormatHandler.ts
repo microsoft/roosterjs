@@ -20,9 +20,10 @@ const ResultMap = {
  * @internal
  */
 export const directionFormatHandler: FormatHandler<DirectionFormat> = {
-    parse: (format, element, context, defaultStyle) => {
+    parse: (format, element, _, defaultStyle) => {
         const dir = element.style.direction || element.dir || defaultStyle.direction;
-        const align = element.style.textAlign || element.getAttribute('align');
+        const alignFromAttr = element.getAttribute('align');
+        const align = element.style.textAlign || alignFromAttr || defaultStyle.textAlign;
 
         if (dir) {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
@@ -47,7 +48,7 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
                 break;
         }
 
-        if (align && !element.style.textAlign) {
+        if (alignFromAttr && !element.style.textAlign) {
             format.isTextAlignFromAttr = true;
         }
     },

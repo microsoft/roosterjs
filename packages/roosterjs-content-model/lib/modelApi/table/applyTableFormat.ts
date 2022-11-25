@@ -7,6 +7,7 @@ import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentMod
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
+import { updateTableMetadata } from '../metadata/updateTableMetadata';
 
 const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     topBorderColor: '#ABABAB',
@@ -30,21 +31,24 @@ export function applyTableFormat(
     newFormat?: TableMetadataFormat,
     keepCellShade?: boolean
 ) {
-    const { cells, format } = table;
-    const effectiveMetadata = {
-        ...DEFAULT_FORMAT,
-        ...format,
-        ...(newFormat || {}),
-    };
+    const { cells } = table;
 
-    Object.assign(format, effectiveMetadata);
+    updateTableMetadata(table, format => {
+        const effectiveMetadata = {
+            ...DEFAULT_FORMAT,
+            ...format,
+            ...(newFormat || {}),
+        };
 
-    const bgColorOverrides = updateBgColorOverrides(cells, !keepCellShade);
+        const bgColorOverrides = updateBgColorOverrides(cells, !keepCellShade);
 
-    formatBorders(cells, effectiveMetadata);
-    formatBackgroundColors(cells, effectiveMetadata, bgColorOverrides);
-    setFirstColumnFormat(cells, effectiveMetadata, bgColorOverrides);
-    setHeaderRowFormat(cells, effectiveMetadata, bgColorOverrides);
+        formatBorders(cells, effectiveMetadata);
+        formatBackgroundColors(cells, effectiveMetadata, bgColorOverrides);
+        setFirstColumnFormat(cells, effectiveMetadata, bgColorOverrides);
+        setHeaderRowFormat(cells, effectiveMetadata, bgColorOverrides);
+
+        return effectiveMetadata;
+    });
 }
 
 function updateBgColorOverrides(

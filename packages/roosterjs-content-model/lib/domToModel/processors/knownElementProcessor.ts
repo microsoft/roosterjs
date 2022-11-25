@@ -48,9 +48,6 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 }
 
                 addBlock(group, paragraph);
-
-                // Block format will not be inherited by child blocks, so clear it.
-                context.blockFormat = {};
             } else {
                 parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             }
