@@ -108,7 +108,7 @@ describe('generalProcessor', () => {
     });
 
     it('Process a SPAN element with link format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const span = document.createElement('span');
         context.link = {
             format: { href: '/test' },
@@ -137,7 +137,6 @@ describe('generalProcessor', () => {
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 });

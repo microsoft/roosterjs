@@ -219,7 +219,7 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -255,7 +255,7 @@ describe('knownElementProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
