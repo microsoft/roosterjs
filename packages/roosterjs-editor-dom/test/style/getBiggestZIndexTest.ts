@@ -12,7 +12,7 @@ describe('getBiggestZIndex', () => {
         const span = document.createElement('span');
         span.style.zIndex = '10';
         div.appendChild(span);
-        runTest(div, 20);
+        runTest(span, 20);
     });
 
     it('should return child zIndex', () => {
@@ -21,7 +21,7 @@ describe('getBiggestZIndex', () => {
         const span = document.createElement('span');
         span.style.zIndex = '30';
         div.appendChild(span);
-        runTest(div, 30);
+        runTest(span, 30);
     });
 
     it('should return middle element zIndex', () => {
@@ -33,6 +33,6 @@ describe('getBiggestZIndex', () => {
         const span = document.createElement('span');
         span.style.zIndex = '20';
         spanParent.appendChild(span);
-        runTest(div, 30);
+        runTest(span, 30);
     });
 });
