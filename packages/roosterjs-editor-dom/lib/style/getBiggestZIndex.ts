@@ -1,7 +1,7 @@
 import getTagOfNode from '../utils/getTagOfNode';
 
 /**
- * Search through a element from parent to root for the biggest Z index value
+ * Search through from element to it's root for the biggest z-index value
  * @param element the parent element
  * @returns
  */
