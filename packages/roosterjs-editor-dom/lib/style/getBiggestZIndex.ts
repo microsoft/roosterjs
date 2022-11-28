@@ -1,3 +1,8 @@
+/**
+ * Search through a element from parent to root for the biggest Z index value
+ * @param element the parent element
+ * @returns
+ */
 export default function getBiggestZIndex(element: HTMLElement) {
     let zIndex = parseInt(element.style.zIndex);
     let parent = element;
