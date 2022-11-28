@@ -6,7 +6,7 @@ import getTagOfNode from '../utils/getTagOfNode';
  * @returns
  */
 export default function getBiggestZIndex(element: HTMLElement) {
-    let zIndex = parseInt(element.style.zIndex);
+    let zIndex = element.style.zIndex ? parseInt(element.style.zIndex) : 0;
     let child: HTMLElement | null = element;
     while (child && getTagOfNode(child) !== 'BODY') {
         const parent: HTMLElement | null = child?.parentElement;
