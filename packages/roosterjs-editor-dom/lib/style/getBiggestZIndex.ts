@@ -11,7 +11,7 @@ export default function getBiggestZIndex(element: HTMLElement) {
     while (child && getTagOfNode(child) !== 'BODY') {
         const parent: HTMLElement | null = child?.parentElement;
         if (parent) {
-            const parentZIndex = parseInt(parent.style?.zIndex) ?? 0;
+            const parentZIndex = parent.style?.zIndex ? parseInt(parent.style.zIndex) : 0;
             if (parentZIndex > zIndex) {
                 zIndex = parentZIndex;
             }
