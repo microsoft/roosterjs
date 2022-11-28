@@ -86,4 +86,20 @@ describe('getAutoListStyle ', () => {
     it('(I) ', () => {
         runTest('(I) ', NumberingListType.UpperRomanDoubleParenthesis);
     });
+
+    it('1:1. ', () => {
+        runTest('1:1. ', null);
+    });
+
+    it('30%). ', () => {
+        runTest('30%). ', null);
+    });
+
+    it('4th. ', () => {
+        runTest('4th. ', null);
+    });
+
+    it('30%) ', () => {
+        runTest('30%) ', null);
+    });
 });

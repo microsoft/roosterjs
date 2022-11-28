@@ -19,23 +19,11 @@ import { Entity } from 'roosterjs-editor-types';
 
 describe('Creators', () => {
     it('createContentModelDocument', () => {
-        const result = createContentModelDocument(document);
+        const result = createContentModelDocument();
 
         expect(result).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
-        });
-    });
-
-    it('createContentModelDocument with different document', () => {
-        const anotherDoc = ({} as any) as Document;
-        const result = createContentModelDocument(anotherDoc);
-
-        expect(result).toEqual({
-            blockGroupType: 'Document',
-            blocks: [],
-            document: anotherDoc,
         });
     });
 
@@ -353,6 +341,27 @@ describe('Creators', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
+            id,
+            type,
+            isReadonly,
+            wrapper,
+        });
+    });
+
+    it('createEntity with format', () => {
+        const id = 'entity_1';
+        const type = 'entity';
+        const isReadonly = true;
+        const wrapper = document.createElement('div');
+        const entity: Entity = { id, type, isReadonly, wrapper };
+        const entityModel = createEntity(entity, {
+            fontSize: '10pt',
+        });
+
+        expect(entityModel).toEqual({
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: { fontSize: '10pt' },
             id,
             type,
             isReadonly,

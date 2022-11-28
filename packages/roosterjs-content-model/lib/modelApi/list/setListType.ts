@@ -2,14 +2,14 @@ import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocume
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { createListItem } from '../creators/createListItem';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
-import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';
+import { getSelections } from '../selection/getSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 
 /**
  * @internal
  */
 export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') {
-    const paragraphs = getSelectedParagraphs(model);
+    const paragraphs = getSelections(model);
     const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
         paragraphs,
         ['ListItem'],
@@ -35,7 +35,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             ) {
                 item.blocks[0].isImplicit = false;
             }
-        } else {
+        } else if (item.paragraph) {
             const group = item.path[0];
             const index = group.blocks.indexOf(item.paragraph);
             const prevBlock = group.blocks[index - 1];
