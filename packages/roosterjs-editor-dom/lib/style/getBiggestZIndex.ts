@@ -5,14 +5,16 @@
  */
 export default function getBiggestZIndex(element: HTMLElement) {
     let zIndex = parseInt(element.style.zIndex);
-    let parent = element;
-    while (parent) {
-        const child = parent.firstElementChild as HTMLElement;
-        const childZIndex = parseInt(child?.style?.zIndex);
-        if (child && childZIndex > zIndex) {
-            zIndex = childZIndex;
+    let child: HTMLElement | null = element;
+    while (child) {
+        const parent: HTMLElement | null = child?.parentElement;
+        if (parent) {
+            const parentZIndex = parseInt(parent.style?.zIndex);
+            if (parentZIndex > zIndex) {
+                zIndex = parentZIndex;
+            }
         }
-        parent = child;
+        child = parent;
     }
     return zIndex;
 }
