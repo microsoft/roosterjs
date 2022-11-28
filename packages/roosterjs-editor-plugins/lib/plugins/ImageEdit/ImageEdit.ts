@@ -15,6 +15,7 @@ import {
     arrayPush,
     Browser,
     createElement,
+    getBiggestZIndex,
     getComputedStyle,
     getObjectKeys,
     removeGlobalCssStyle,
@@ -316,7 +317,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null, true);
+        // this.setEditingImage(null, true);
     };
 
     /**
@@ -374,7 +375,7 @@ export default class ImageEdit implements EditorPlugin {
             }
         });
 
-        this.insertImageWrapper(this.image, this.wrapper, this.editor.getZoomScale());
+        this.insertImageWrapper(this.editor, this.image, this.wrapper, this.editor.getZoomScale());
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
@@ -407,9 +408,21 @@ export default class ImageEdit implements EditorPlugin {
         return element;
     }
 
-    private insertImageWrapper(image: HTMLImageElement, wrapper: HTMLSpanElement, scale: number) {
+    private insertImageWrapper(
+        editor: IEditor,
+        image: HTMLImageElement,
+        wrapper: HTMLSpanElement,
+        scale: number
+    ) {
         this.zoomWrapper = this.copyImageSize(image, this.createZoomWrapper(wrapper, scale));
+        const editorDiv = this.getEditorDiv(editor);
+        this.zoomWrapper.style.zIndex = `${getBiggestZIndex(editorDiv) + 1}`;
         this.editor.getDocument().body.appendChild(this.zoomWrapper);
+    }
+
+    private getEditorDiv(editor: IEditor) {
+        const editorId = editor.getEditorDomAttribute('id');
+        return editor.getDocument().getElementById(editorId);
     }
 
     private getStylePropertyValue(element: HTMLElement, property: string): string {
