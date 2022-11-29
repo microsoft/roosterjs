@@ -16,20 +16,16 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
 ) => {
     let container: HTMLElement;
 
-    stackFormat(context, paragraph.header ? 'h' + paragraph.header.headerLevel : null, () => {
-        if (paragraph.header) {
-            const tag = 'h' + paragraph.header.headerLevel;
+    stackFormat(context, paragraph.decorator?.tagName || null, () => {
+        if (paragraph.decorator) {
+            const { tagName, format } = paragraph.decorator;
 
-            container = doc.createElement(tag);
+            container = doc.createElement(tagName);
+
             parent.appendChild(container);
 
             applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-            applyFormat(
-                container,
-                context.formatAppliers.segmentOnBlock,
-                paragraph.header.format,
-                context
-            );
+            applyFormat(container, context.formatAppliers.segmentOnBlock, format, context);
         } else if (
             !paragraph.isImplicit ||
             (getObjectKeys(paragraph.format).length > 0 &&

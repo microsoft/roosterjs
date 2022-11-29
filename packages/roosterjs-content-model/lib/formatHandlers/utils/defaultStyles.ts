@@ -160,4 +160,8 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
         fontWeight: 'bold',
         fontSize: '0.67em',
     },
+    p: {
+        marginTop: '1em',
+        marginBottom: '1em',
+    },
 };
