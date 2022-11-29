@@ -100,6 +100,7 @@ export {
     ImageRotateMetadataFormat,
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
 export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
+export { WhiteSpaceFormat } from './publicTypes/format/formatParts/WhiteSpaceFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 

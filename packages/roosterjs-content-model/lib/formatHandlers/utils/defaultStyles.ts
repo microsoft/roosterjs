@@ -33,6 +33,7 @@ export const defaultStyleMap: DefaultStyleMap = {
         display: 'block',
         textAlign: 'center',
     },
+    code: { fontFamily: 'monospace' },
     dd: blockElement,
     div: blockElement,
     dl: blockElement,
