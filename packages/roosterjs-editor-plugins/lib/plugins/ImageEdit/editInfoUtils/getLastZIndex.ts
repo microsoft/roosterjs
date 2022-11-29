@@ -1,22 +1,19 @@
 import { getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
+ * @internal
  * Search through from editor div to it's root for the latest z-index value
- * @param editor the editor object
- * @returns
+ * @param editorDiv the editor div element
+ * @returns the z index value
  */
 export default function getLatestZIndex(editorDiv: HTMLElement) {
     let child: HTMLElement | null = editorDiv;
-    let zIndex = child.style.zIndex ? parseInt(child.style.zIndex) : 0;
-    do {
-        const parent = child?.parentElement;
-        if (parent) {
-            const parentZIndex = parent.style.zIndex;
-            if (parentZIndex) {
-                zIndex = parseInt(parentZIndex);
-            }
+    let zIndex = 0;
+    while (child && getTagOfNode(child) !== 'BODY') {
+        if (child.style.zIndex) {
+            zIndex = parseInt(child.style.zIndex);
         }
-        child = parent;
-    } while (child && getTagOfNode(child) !== 'BODY');
+        child = child.parentElement;
+    }
     return zIndex;
 }
