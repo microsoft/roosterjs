@@ -82,10 +82,13 @@ function splitQuote(event: PluginKeyboardEvent, editor: IEditor) {
         }
         parent = splitBalancedNodeRange(childOfQuote);
         shouldClearFormat = isStyledBlockquote(parent);
-        unwrap(parent);
+        const newParent = unwrap(parent);
         editor.select(childOfQuote, PositionType.Begin);
 
         if (shouldClearFormat) {
+            if (safeInstanceOf(newParent, 'HTMLLIElement')) {
+                newParent.style.removeProperty('color');
+            }
             clearFormat(editor);
         }
     });

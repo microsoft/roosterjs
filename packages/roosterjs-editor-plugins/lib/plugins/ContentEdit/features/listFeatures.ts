@@ -131,7 +131,12 @@ const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
-        return li && isNodeEmpty(li) && !li.previousSibling;
+        return (
+            li &&
+            isNodeEmpty(li) &&
+            !li.previousSibling &&
+            !li.getElementsByTagName('blockquote').length
+        );
     },
     handleEvent: toggleListAndPreventDefault,
 };
@@ -371,7 +376,9 @@ const isFirstItemOfAList = (item: string) => {
 const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER, Keys.TAB, Keys.DELETE, Keys.BACKSPACE, Keys.RANGE],
     shouldHandleEvent: (event, editor) =>
-        editor.queryElements('li', QueryScope.OnSelection).length > 0,
+        editor
+            .queryElements('li', QueryScope.OnSelection)
+            .filter(li => !li.getElementsByTagName('blockquote').length).length > 0,
     handleEvent: (event, editor) => {
         const chains = getListChains(editor);
         editor.runAsync(editor => commitListChains(editor, chains));
