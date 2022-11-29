@@ -12,7 +12,7 @@ export function stackFormat(
         const implicitFormat = context.implicitFormat;
 
         try {
-            const newFormat = context.defaultImplicitSegmentFormatMap[tagName] || {};
+            const newFormat = context.defaultImplicitFormatMap[tagName] || {};
 
             context.implicitFormat = {
                 ...implicitFormat,

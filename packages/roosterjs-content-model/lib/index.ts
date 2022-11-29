@@ -142,7 +142,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
-    DefaultImplicitSegmentFormatMap,
+    DefaultImplicitFormatMap,
 } from './publicTypes/context/ModelToDomSettings';
 export { ModelToDomEntityContext } from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
