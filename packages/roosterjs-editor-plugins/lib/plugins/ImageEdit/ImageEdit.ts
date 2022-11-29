@@ -4,6 +4,7 @@ import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAn
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
+import getLatestZIndex from './editInfoUtils/getLastZIndex';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
@@ -15,7 +16,6 @@ import {
     arrayPush,
     Browser,
     createElement,
-    getBiggestZIndex,
     getComputedStyle,
     getObjectKeys,
     removeGlobalCssStyle,
@@ -415,14 +415,8 @@ export default class ImageEdit implements EditorPlugin {
         scale: number
     ) {
         this.zoomWrapper = this.copyImageSize(image, this.createZoomWrapper(wrapper, scale));
-        const editorDiv = this.getEditorDiv(editor);
-        this.zoomWrapper.style.zIndex = `${getBiggestZIndex(editorDiv) + 1}`;
+        this.zoomWrapper.style.zIndex = `${getLatestZIndex(editor.getScrollContainer()) + 1}`;
         this.editor.getDocument().body.appendChild(this.zoomWrapper);
-    }
-
-    private getEditorDiv(editor: IEditor) {
-        const editorId = editor.getEditorDomAttribute('id');
-        return editor.getDocument().getElementById(editorId);
     }
 
     private getStylePropertyValue(element: HTMLElement, property: string): string {

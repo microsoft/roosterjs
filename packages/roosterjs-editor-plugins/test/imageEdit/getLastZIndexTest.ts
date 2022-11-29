@@ -1,8 +1,8 @@
-import getBiggestZIndex from '../../lib/style/getBiggestZIndex';
+import getLatestZIndex from '../../lib/plugins/ImageEdit/editInfoUtils/getLastZIndex';
 
-describe('getBiggestZIndex', () => {
+describe('getLatestZIndex', () => {
     function runTest(element: HTMLElement, expected: number) {
-        const result = getBiggestZIndex(element);
+        const result = getLatestZIndex(element);
         expect(result).toBe(expected);
     }
 
@@ -17,7 +17,6 @@ describe('getBiggestZIndex', () => {
 
     it('should return child zIndex', () => {
         const div = document.createElement('div');
-        div.style.zIndex = '10';
         const span = document.createElement('span');
         span.style.zIndex = '30';
         div.appendChild(span);
@@ -26,7 +25,6 @@ describe('getBiggestZIndex', () => {
 
     it('should return middle element zIndex', () => {
         const div = document.createElement('div');
-        div.style.zIndex = '10';
         const spanParent = document.createElement('div');
         spanParent.style.zIndex = '30';
         div.appendChild(spanParent);
