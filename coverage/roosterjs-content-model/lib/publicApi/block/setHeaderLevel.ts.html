@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -105,7 +105,17 @@
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -123,9 +133,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -140,20 +149,30 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { getObjectKeys } from 'roosterjs-editor-dom';
@@ -171,25 +190,24 @@ export default function setHeaderLevel(
     headerLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
 ) {
     formatParagraphWithContentModel(editor, 'setHeaderLevel', para =&gt; {
-        const tag = (headerLevel &gt; 0
-            ? 'h' + headerLevel
-            : para.header &amp;&amp; para.header.headerLevel &gt; 0
-            ? 'h' + para.header.headerLevel
-            : null) as HeaderLevelTags | null;
+        const tagName =
+            headerLevel &gt; 0
+                ? (('h' + headerLevel) as HeaderLevelTags | null)
+                : getExistingHeaderHeaderTag(para.decorator);
         const headerStyle =
-            ((tag &amp;&amp; defaultImplicitFormatMap[tag]) as ContentModelSegmentFormat) || {};
+            (tagName &amp;&amp; (defaultImplicitFormatMap[tagName] as ContentModelSegmentFormat)) || {};
 &nbsp;
         if (headerLevel &gt; 0) {
-            para.header = {
-                headerLevel,
+            para.decorator = {
+                tagName: tagName!,
                 format: { ...headerStyle },
             };
 &nbsp;
             para.segments.forEach(segment =&gt; {
                 Object.assign(segment.format, headerStyle);
             });
-        } else {
-            delete para.header;
+        } else if (tagName) {
+            delete para.decorator;
 &nbsp;
             const headerStyleKeys = getObjectKeys(headerStyle);
 &nbsp;
@@ -201,6 +219,15 @@ export default function setHeaderLevel(
         }
     });
 }
+&nbsp;
+function getExistingHeaderHeaderTag(
+    decorator?: ContentModelParagraphDecorator
+): HeaderLevelTags | null {
+    const tag = decorator?.tagName || '';
+    const level = parseInt(tag.substring(1));
+&nbsp;
+    return level &gt;= 1 &amp;&amp; level &lt;= 6 ? (tag as HeaderLevelTags) : null;
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -208,7 +235,7 @@ export default function setHeaderLevel(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Nov 29 2022 20:28:31 GMT+0000 (Coordinated Universal Time)
+                at Tue Nov 29 2022 21:13:51 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
