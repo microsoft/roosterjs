@@ -1,3 +1,4 @@
+import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
@@ -288,5 +289,35 @@ describe('handleParagraph', () => {
             '<div style="text-align: center;"><span>test</span></div>',
             1
         );
+    });
+
+    it('call stackFormat', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        spyOn(stackFormat, 'stackFormat').and.callThrough();
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                header: {
+                    headerLevel: 1,
+                    format: { fontWeight: 'bold', fontSize: '2em' },
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: { fontWeight: 'bold' },
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1><span>test</span></h1>',
+            1
+        );
+
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
+        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
+        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(1)[1]).toBe(null);
     });
 });

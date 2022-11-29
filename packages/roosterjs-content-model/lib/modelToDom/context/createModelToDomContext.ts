@@ -34,7 +34,7 @@ export function createModelToDomContext(
             threadItemCounts: [],
             nodeStack: [],
         },
-        implicitSegmentFormat: {},
+        implicitFormat: {},
         formatAppliers: getFormatAppliers(
             options?.formatApplierOverride,
             options?.additionalFormatAppliers

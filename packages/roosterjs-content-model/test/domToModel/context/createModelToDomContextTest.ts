@@ -27,7 +27,7 @@ describe('createModelToDomContext', () => {
             threadItemCounts: [],
             nodeStack: [],
         },
-        implicitSegmentFormat: {},
+        implicitFormat: {},
         formatAppliers: getFormatAppliers(),
         modelHandlers: defaultContentModelHandlers,
         defaultImplicitSegmentFormatMap: defaultImplicitSegmentFormatMap,
@@ -90,7 +90,7 @@ describe('createModelToDomContext', () => {
             threadItemCounts: [],
             nodeStack: [],
         });
-        expect(context.implicitSegmentFormat).toEqual({});
+        expect(context.implicitFormat).toEqual({});
         expect(context.formatAppliers.block).toEqual([
             ...getFormatAppliers().block,
             mockedBlockApplier,
