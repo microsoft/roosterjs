@@ -1,4 +1,5 @@
-import { defaultImplicitSegmentFormatMap } from '../../formatHandlers/utils/defaultStyles';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
@@ -20,7 +21,8 @@ export default function setHeaderLevel(
             : para.header && para.header.headerLevel > 0
             ? 'h' + para.header.headerLevel
             : null) as HeaderLevelTags | null;
-        const headerStyle = (tag && defaultImplicitSegmentFormatMap[tag]) || {};
+        const headerStyle =
+            ((tag && defaultImplicitFormatMap[tag]) as ContentModelSegmentFormat) || {};
 
         if (headerLevel > 0) {
             para.header = {
@@ -34,8 +36,10 @@ export default function setHeaderLevel(
         } else {
             delete para.header;
 
+            const headerStyleKeys = getObjectKeys(headerStyle);
+
             para.segments.forEach(segment => {
-                getObjectKeys(headerStyle).forEach(key => {
+                headerStyleKeys.forEach(key => {
                     delete segment.format[key];
                 });
             });
