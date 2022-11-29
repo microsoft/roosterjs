@@ -1,3 +1,4 @@
+import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import {
     AddUndoSnapshot,
     ChangeSource,
@@ -10,7 +11,6 @@ import {
     SelectionRangeEx,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

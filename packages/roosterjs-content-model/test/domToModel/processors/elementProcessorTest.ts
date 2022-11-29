@@ -1,5 +1,5 @@
 import { commitEntity } from 'roosterjs-editor-dom';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -14,7 +14,7 @@ describe('elementProcessor', () => {
     let entityProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
 
     beforeEach(() => {
-        group = createContentModelDocument(document);
+        group = createContentModelDocument();
         divProcessor = jasmine.createSpy('div processor');
         generalProcessor = jasmine.createSpy('general processor');
         entityProcessor = jasmine.createSpy('entity processor');

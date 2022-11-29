@@ -29,7 +29,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    stackFormat(context, { segment: 'shallowClone' }, () => {
+    stackFormat(context, { segment: 'shallowClone', paragraph: 'empty' }, () => {
         parseFormat(tableElement, context.formatParsers.table, table.format, context);
         parseFormat(
             tableElement,
@@ -37,6 +37,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             context.segmentFormat,
             context
         );
+        parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
         addBlock(group, table);
 
         const columnPositions: number[] = [0];
@@ -96,6 +97,12 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                     td,
                                     context.formatParsers.segmentOnBlock,
                                     context.segmentFormat,
+                                    context
+                                );
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.dataset,
+                                    cell.dataset,
                                     context
                                 );
 

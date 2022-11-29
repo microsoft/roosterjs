@@ -26,12 +26,12 @@ describe('handleEntity', () => {
 
         handleEntity(document, parent, entityModel, context);
 
-        expect(parent.innerHTML).toBe('<!--Entity:entity_1-->');
-        expect(context.entityPairs).toEqual([
-            {
-                entityWrapper: div,
-                placeholder: parent.firstChild as Comment,
-            },
-        ]);
+        expect(parent.innerHTML).toBe('<entity-placeholder id="entity_1"></entity-placeholder>');
+        expect(context.entities).toEqual({
+            entity_1: div,
+        });
+        expect(div.outerHTML).toBe(
+            '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
+        );
     });
 });

@@ -1,4 +1,4 @@
-import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
 import { DomToModelOption } from '../publicTypes/IExperimentalContentModelEditor';
@@ -17,7 +17,7 @@ export default function domToContentModel(
     editorContext: EditorContext,
     option: DomToModelOption
 ): ContentModelDocument {
-    const model = createContentModelDocument(root.ownerDocument!);
+    const model = createContentModelDocument();
     const domToModelContext = createDomToModelContext(editorContext, option);
     const { element, child } = domToModelContext.elementProcessors;
     const processor = option.includeRoot ? element : child;

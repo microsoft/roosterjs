@@ -1,5 +1,5 @@
 import { childProcessor } from '../../../lib/domToModel/processors/childProcessor';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -13,7 +13,7 @@ describe('childProcessor', () => {
 
     beforeEach(() => {
         textProcessor = jasmine.createSpy('textProcessor');
-        doc = createContentModelDocument(document);
+        doc = createContentModelDocument();
         context = createDomToModelContext(undefined, {
             processorOverride: {
                 '#text': textProcessor,
@@ -29,7 +29,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).not.toHaveBeenCalled();
     });
@@ -42,7 +41,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).not.toHaveBeenCalled();
     });
@@ -57,7 +55,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
@@ -73,7 +70,6 @@ describe('childProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
         expect(textProcessor).not.toHaveBeenCalled();
     });
@@ -101,9 +97,9 @@ describe('childProcessor', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
+                    isImplicit: true,
                 },
             ],
-            document: document,
         });
         expect(textProcessor).toHaveBeenCalledTimes(1);
         expect(textProcessor).toHaveBeenCalledWith(doc, text, context);
@@ -115,7 +111,7 @@ describe('childProcessor', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
-        doc = createContentModelDocument(document);
+        doc = createContentModelDocument();
         context = createDomToModelContext();
     });
 

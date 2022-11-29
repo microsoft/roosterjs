@@ -1,16 +1,16 @@
-import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
-import { ContentModelQuote } from '../../publicTypes/block/group/ContentModelQuote';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { createQuote } from '../creators/createQuote';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
-import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';
+import { getSelections } from '../selection/getSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 
 /**
  * @internal
  */
 export function outdent(model: ContentModelDocument) {
-    const paragraphs = getSelectedParagraphs(model);
+    const paragraphs = getSelections(model);
     const paragraphOrListItem = getOperationalBlocks<ContentModelListItem>(paragraphs, [
         'ListItem',
     ]);
@@ -24,7 +24,7 @@ export function outdent(model: ContentModelDocument) {
 
             // TODO: Consider use CSS and a particular Content Model type to represent Indent rather than Quote
             if (isBlockGroupOfType<ContentModelQuote>(parent, 'Quote') && grandParent) {
-                const index = parent.blocks.indexOf(item.paragraph);
+                const index = item.paragraph ? parent.blocks.indexOf(item.paragraph) : -1;
                 let grandIndex = grandParent.blocks.indexOf(parent);
 
                 // When there are blocks before current one under the same parent, need to break the parent into two

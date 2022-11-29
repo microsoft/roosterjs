@@ -1,9 +1,9 @@
 import DragAndDropContext from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
-import ImageEditInfo, { RotateInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
+import { RotateInfo } from '../types/ImageEditInfo';
 
 const ROTATE_SIZE = 32;
 const ROTATE_GAP = 15;
@@ -41,34 +41,6 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
 
 /**
  * @internal
- * Move rotate handle. When image is very close to the border of editor, rotate handle may not be visible.
- * Fix it by reduce the distance from image to rotate handle
- */
-export function updateRotateHandlePosition(
-    editInfo: ImageEditInfo,
-    distance: number[],
-    marginVertical: number,
-    rotateCenter: HTMLElement,
-    rotateHandle: HTMLElement
-) {
-    if (rotateCenter && rotateHandle && distance) {
-        const { angleRad, heightPx } = editInfo;
-        const cosAngle = Math.cos(angleRad);
-        const adjustedDistance =
-            cosAngle <= 0
-                ? Number.MAX_SAFE_INTEGER
-                : (distance[1] + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
-
-        const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
-        const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-        rotateCenter.style.top = -rotateGap + 'px';
-        rotateCenter.style.height = rotateGap + 'px';
-        rotateHandle.style.top = -rotateTop + 'px';
-    }
-}
-
-/**
- * @internal
  * Get HTML for rotate elements, including the rotate handle with icon, and a line between the handle and the image
  */
 export function getRotateHTML({
@@ -80,12 +52,12 @@ export function getRotateHTML({
         {
             tag: 'div',
             className: ImageEditElementClass.RotateCenter,
-            style: `position:absolute;left:50%;width:1px;background-color:${borderColor}`,
+            style: `position:absolute;left:50%;width:1px;background-color:${borderColor};top:${-ROTATE_GAP}px;height:${ROTATE_GAP}px;`,
             children: [
                 {
                     tag: 'div',
                     className: ImageEditElementClass.RotateHandle,
-                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move`,
+                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move;top:${-ROTATE_SIZE}px;`,
                     children: [getRotateIconHTML(borderColor)],
                 },
             ],

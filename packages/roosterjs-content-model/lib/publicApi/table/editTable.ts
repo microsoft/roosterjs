@@ -5,6 +5,7 @@ import { ChangeSource, TableOperation } from 'roosterjs-editor-types';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
+import { hasMetadata } from '../../modelApi/metadata/updateMetadata';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
@@ -12,7 +13,6 @@ import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
 import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 
@@ -92,15 +92,18 @@ export default function editTable(
         }
 
         normalizeTable(tableModel);
-        applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+
+        if (hasMetadata(tableModel)) {
+            applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
+        }
 
         editor.addUndoSnapshot(
             () => {
                 editor.focus();
                 if (model && table) {
                     editor.setContentModel(model, {
-                        mergingCallback: (fragment, _, entityPairs) => {
-                            preprocessEntitiesFromContentModel(entityPairs);
+                        doNotReuseEntityDom: true,
+                        mergingCallback: fragment => {
                             editor.replaceNode(table, fragment);
                         },
                     });

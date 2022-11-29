@@ -50,6 +50,7 @@ describe('isEmpty', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeTrue();
@@ -62,6 +63,7 @@ describe('isEmpty', () => {
             cells: [[], [], []],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeTrue();
@@ -79,11 +81,13 @@ describe('isEmpty', () => {
                         spanAbove: false,
                         spanLeft: false,
                         blocks: [],
+                        dataset: {},
                     },
                 ],
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(result).toBeFalse();
@@ -186,7 +190,7 @@ describe('isEmpty', () => {
     it('Empty document', () => {
         const result = isEmpty({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         });
 
@@ -196,7 +200,7 @@ describe('isEmpty', () => {
     it('Document with empty block', () => {
         const result = isEmpty({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -212,7 +216,7 @@ describe('isEmpty', () => {
     it('Document with content', () => {
         const result = isEmpty({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -237,6 +241,7 @@ describe('isEmpty', () => {
             spanAbove: false,
             spanLeft: false,
             blocks: [],
+            dataset: {},
         });
 
         expect(result).toBeFalse();
@@ -259,7 +264,7 @@ describe('isEmpty', () => {
             text: ' \t \r \n ',
         });
 
-        expect(result).toBeTrue();
+        expect(result).toBeFalse();
     });
 
     it('Text has content', () => {

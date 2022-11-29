@@ -146,16 +146,67 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                headerLevel: 1,
+                header: {
+                    headerLevel: 1,
+                    format: { fontWeight: 'bold', fontSize: '2em' },
+                },
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: { bold: true },
+                        format: { fontWeight: 'bold' },
                         text: 'test',
                     },
                 ],
             },
             '<h1><span>test</span></h1>',
+            1
+        );
+    });
+
+    it('handle headers with default format override', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                header: {
+                    headerLevel: 1,
+                    format: { fontWeight: 'bold', fontSize: '20px' },
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: { fontWeight: 'bold' },
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1 style="font-size: 20px;"><span>test</span></h1>',
+            1
+        );
+    });
+
+    it('handle headers without default format', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                header: {
+                    headerLevel: 1,
+                    format: {},
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: { fontWeight: 'bold' },
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1 style="font-weight: normal;"><span>test</span></h1>',
             1
         );
     });
@@ -167,11 +218,16 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                headerLevel: 1,
+                header: {
+                    headerLevel: 1,
+                    format: {
+                        fontWeight: 'bold',
+                    },
+                },
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: { bold: true },
+                        format: { fontWeight: 'bold' },
                         text: 'test 1',
                     },
                     {
@@ -194,16 +250,42 @@ describe('handleParagraph', () => {
                 blockType: 'Paragraph',
                 isImplicit: true,
                 format: {},
-                headerLevel: 1,
+                header: {
+                    headerLevel: 1,
+                    format: { fontWeight: 'bold' },
+                },
                 segments: [
                     {
                         segmentType: 'Text',
-                        format: { bold: true, italic: true },
+                        format: { fontWeight: 'bold', italic: true },
                         text: 'test',
                     },
                 ],
             },
             '<h1><span><i>test</i></span></h1>',
+            1
+        );
+    });
+
+    it('handle implicit paragraph with segments and format', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                isImplicit: true,
+                format: {
+                    textAlign: 'center',
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
+                    },
+                ],
+            },
+            '<div style="text-align: center;"><span>test</span></div>',
             1
         );
     });

@@ -11,13 +11,21 @@ export const underlineFormatHandler: FormatHandler<UnderlineFormat> = {
 
         if (textDecoration?.indexOf('underline')! >= 0) {
             format.underline = true;
+        } else if (element.tagName == 'A' && textDecoration == 'none') {
+            format.underline = false;
         }
     },
-    apply: (format, element) => {
-        if (format.underline) {
-            const u = element.ownerDocument.createElement('u');
-            moveChildNodes(u, element);
-            element.appendChild(u);
+    apply: (format, element, context) => {
+        const blockUnderline = context.implicitSegmentFormat.underline;
+
+        if (!!blockUnderline != !!format.underline) {
+            if (format.underline) {
+                const u = element.ownerDocument.createElement('u');
+                moveChildNodes(u, element);
+                element.appendChild(u);
+            } else {
+                element.style.textDecoration = 'none';
+            }
         }
     },
 };

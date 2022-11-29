@@ -4,7 +4,7 @@ import { createTableStructure } from '../../../lib/modelApi/table/createTableStr
 
 describe('createTableStructure', () => {
     it('Create 1*1 table', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
 
         createTableStructure(doc, 1, 1);
 
@@ -19,17 +19,19 @@ describe('createTableStructure', () => {
                         spanAbove: false,
                         spanLeft: false,
                         isHeader: false,
+                        dataset: {},
                     },
                 ],
             ],
             format: {},
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
     it('Create 2*3 table', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
 
         createTableStructure(doc, 3, 2);
 

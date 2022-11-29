@@ -1,15 +1,15 @@
-import { ContentModelDocument } from '../../publicTypes/block/group/ContentModelDocument';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { createListItem } from '../creators/createListItem';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
-import { getSelectedParagraphs } from '../selection/getSelectedParagraphs';
+import { getSelections } from '../selection/getSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 
 /**
  * @internal
  */
 export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') {
-    const paragraphs = getSelectedParagraphs(model);
+    const paragraphs = getSelections(model);
     const paragraphOrListItems = getOperationalBlocks<ContentModelListItem>(
         paragraphs,
         ['ListItem'],
@@ -28,8 +28,14 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
                 item.levels.push(level);
+            } else if (
+                item.blocks.length == 1 &&
+                item.blocks[0].blockType == 'Paragraph' &&
+                item.blocks[0].isImplicit
+            ) {
+                item.blocks[0].isImplicit = false;
             }
-        } else {
+        } else if (item.paragraph) {
             const group = item.path[0];
             const index = group.blocks.indexOf(item.paragraph);
             const prevBlock = group.blocks[index - 1];
@@ -48,6 +54,10 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                 ],
                 item.paragraph.segments[0]?.format
             );
+
+            // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
+            // TODO: Do we need to keep the CSS styles applied to original DIV?
+            item.paragraph.isImplicit = true;
 
             newListItem.blocks.push(item.paragraph);
 

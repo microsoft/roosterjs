@@ -37,6 +37,7 @@ describe('handleSegment', () => {
             segmentType: 'Image',
             src: 'http://test.com/test',
             format: {},
+            dataset: {},
         };
 
         runTest(segment, '<img src="http://test.com/test">', 0);
@@ -50,6 +51,7 @@ describe('handleSegment', () => {
             src: 'http://test.com/test',
             format: {},
             isSelectedAsImageSelection: true,
+            dataset: {},
         };
 
         runTest(segment, '<img src="http://test.com/test">', 0);
@@ -64,8 +66,35 @@ describe('handleSegment', () => {
             format: {},
             alt: 'a',
             title: 'b',
+            dataset: {},
         };
 
         runTest(segment, '<img src="http://test.com/test" alt="a" title="b">', 0);
+    });
+
+    it('image segment with link', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true },
+            link: { format: { href: '/test' }, dataset: {} },
+            dataset: {},
+        };
+
+        runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
+    });
+
+    it('image segment with dataset', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true },
+            link: { format: { href: '/test' }, dataset: {} },
+            dataset: {
+                a: 'b',
+            },
+        };
+
+        runTest(segment, '<a href="/test"><img src="http://test.com/test" data-a="b"></a>', 0);
     });
 });

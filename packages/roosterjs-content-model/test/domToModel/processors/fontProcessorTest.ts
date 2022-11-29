@@ -13,7 +13,7 @@ describe('fontProcessor', () => {
     });
 
     it('Empty FONT tag', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const font = document.createElement('font');
 
         fontProcessor(doc, font, context);
@@ -21,14 +21,13 @@ describe('fontProcessor', () => {
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
-            document: document,
         });
 
         expect(context.segmentFormat).toEqual({});
     });
 
     it('FONT tag with face attributes', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const font = document.createElement('font');
         font.face = 'Arial';
 
@@ -40,7 +39,7 @@ describe('fontProcessor', () => {
     });
 
     it('FONT tag with color attributes', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const font = document.createElement('font');
         font.color = 'red';
 
@@ -52,7 +51,7 @@ describe('fontProcessor', () => {
     });
 
     it('FONT tag with size attributes 1', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const font = document.createElement('font');
         font.size = '4';
 
@@ -64,7 +63,7 @@ describe('fontProcessor', () => {
     });
 
     it('FONT tag with size attributes 2', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const font = document.createElement('font');
         font.size = '8';
 
@@ -76,7 +75,7 @@ describe('fontProcessor', () => {
     });
 
     it('FONT tag with all 3 attributes', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const font = document.createElement('font');
         font.face = 'Arial';
         font.size = '5';
@@ -92,7 +91,7 @@ describe('fontProcessor', () => {
     });
 
     it('FONT tag with all 3 attributes and override by CSS', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const font = document.createElement('font');
         font.face = 'Arial';
         font.size = '5';

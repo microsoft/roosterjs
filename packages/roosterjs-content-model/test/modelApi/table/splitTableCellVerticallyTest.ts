@@ -14,6 +14,7 @@ describe('splitTableCellVertically', () => {
             cells: [],
             widths: [],
             heights: [],
+            dataset: {},
         });
     });
 
@@ -40,6 +41,7 @@ describe('splitTableCellVertically', () => {
             ],
             widths: [],
             heights: [],
+            dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, false, false, false]);
@@ -74,6 +76,7 @@ describe('splitTableCellVertically', () => {
             ],
             widths: [100, 100],
             heights: [100, 100, 200],
+            dataset: {},
         });
     });
 
@@ -106,6 +109,7 @@ describe('splitTableCellVertically', () => {
             ],
             widths: [100, 100],
             heights: [100, 100, 200],
+            dataset: {},
         });
     });
 
@@ -139,6 +143,7 @@ describe('splitTableCellVertically', () => {
             ],
             widths: [100, 100],
             heights: [100, 100, 100, 100],
+            dataset: {},
         });
     });
 
@@ -174,6 +179,7 @@ describe('splitTableCellVertically', () => {
             ],
             widths: [100, 100],
             heights: [100, 100, 100, 100],
+            dataset: {},
         });
     });
 
@@ -209,6 +215,7 @@ describe('splitTableCellVertically', () => {
             ],
             widths: [100, 100],
             heights: [22, 22, 25, 25],
+            dataset: {},
         });
     });
 });

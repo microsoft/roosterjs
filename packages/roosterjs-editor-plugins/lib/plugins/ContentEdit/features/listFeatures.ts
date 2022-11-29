@@ -18,9 +18,12 @@ import {
     createVListFromRegion,
     isBlockElement,
     cacheGetEventData,
+    safeInstanceOf,
+    VList,
     createObjectDefinition,
     createNumberDefinition,
     getMetadata,
+    findClosestElementAncestor,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -33,9 +36,13 @@ import {
     RegionBase,
     ListType,
     ExperimentalFeatures,
+    PositionType,
     NumberingListType,
     BulletListType,
 } from 'roosterjs-editor-types';
+
+const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
+const NEXT_BLOCK_CACHE_KEY = 'nextBlock';
 
 interface ListStyleMetadata {
     orderedStyleType?: NumberingListType;
@@ -124,7 +131,12 @@ const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
-        return li && isNodeEmpty(li) && !li.previousSibling;
+        return (
+            li &&
+            isNodeEmpty(li) &&
+            !li.previousSibling &&
+            !li.getElementsByTagName('blockquote').length
+        );
     },
     handleEvent: toggleListAndPreventDefault,
 };
@@ -304,7 +316,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                         ? 1
                         : parseInt(textBeforeCursor);
 
-                    const isLi = getPreviousList(editor, textRange);
+                    const isLi = getPreviousListItem(editor, textRange);
                     const listStyle = getAutoNumberingListStyle(textBeforeCursor);
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
@@ -322,21 +334,26 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
     },
 };
 
-const getPreviousList = (editor: IEditor, textRange: Range) => {
-    const previousNode = editor
+const getPreviousListItem = (editor: IEditor, textRange: Range) => {
+    const blockElement = editor
         .getBodyTraverser(textRange?.startContainer)
-        .getPreviousBlockElement()
-        ?.collapseToSingleElement();
+        .getPreviousBlockElement();
+    const previousNode = blockElement?.getEndNode();
     return getTagOfNode(previousNode) === 'LI' ? previousNode : undefined;
 };
 
 const getPreviousListType = (editor: IEditor, textRange: Range, listType: ListType) => {
     const type = listType === ListType.Ordered ? 'orderedStyleType' : 'unorderedStyleType';
-    const previousNode = getPreviousList(editor, textRange);
-
-    return previousNode && getTagOfNode(previousNode) === 'LI'
-        ? getMetadata(previousNode.parentElement, ListStyleDefinitionMetadata)[type]
+    const listItem = getPreviousListItem(editor, textRange);
+    const list = listItem
+        ? findClosestElementAncestor(
+              listItem,
+              undefined /** root*/,
+              listType === ListType.Ordered ? 'ol' : 'ul'
+          )
         : null;
+    const metadata = list ? getMetadata(list, ListStyleDefinitionMetadata) : null;
+    return metadata ? metadata[type] : null;
 };
 
 const isFirstItemOfAList = (item: string) => {
@@ -359,7 +376,9 @@ const isFirstItemOfAList = (item: string) => {
 const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER, Keys.TAB, Keys.DELETE, Keys.BACKSPACE, Keys.RANGE],
     shouldHandleEvent: (event, editor) =>
-        editor.queryElements('li', QueryScope.OnSelection).length > 0,
+        editor
+            .queryElements('li', QueryScope.OnSelection)
+            .filter(li => !li.getElementsByTagName('blockquote').length).length > 0,
     handleEvent: (event, editor) => {
         const chains = getListChains(editor);
         editor.runAsync(editor => commitListChains(editor, chains));
@@ -457,6 +476,86 @@ function shouldTriggerList(
 }
 
 /**
+ * MergeListOnBackspaceAfterList edit feature, provides the ability to merge list on backspace on block after a list.
+ */
+const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.BACKSPACE],
+    shouldHandleEvent: (event, editor) => {
+        const target = editor.getElementAtCursor();
+        if (target) {
+            const cursorBlock = editor.getBlockElementAtNode(target)?.getStartNode() as HTMLElement;
+            const previousBlock = cursorBlock?.previousElementSibling ?? null;
+
+            if (isList(previousBlock)) {
+                const range = editor.getSelectionRange();
+                const searcher = editor.getContentSearcherOfCursor(event);
+                const textBeforeCursor = searcher?.getSubStringBefore(4);
+                const nearestInline = searcher?.getNearestNonTextInlineElement();
+
+                if (range && range.collapsed && textBeforeCursor === '' && !nearestInline) {
+                    const tempBlock = cursorBlock?.nextElementSibling;
+                    const nextBlock = isList(tempBlock) ? tempBlock : tempBlock?.firstChild;
+
+                    if (
+                        isList(nextBlock) &&
+                        getTagOfNode(previousBlock) == getTagOfNode(nextBlock)
+                    ) {
+                        const element = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
+                            event,
+                            PREVIOUS_BLOCK_CACHE_KEY,
+                            () => previousBlock
+                        );
+                        const nextElement = cacheGetEventData<HTMLOListElement | HTMLUListElement>(
+                            event,
+                            NEXT_BLOCK_CACHE_KEY,
+                            () => nextBlock
+                        );
+
+                        return !!element && !!nextElement;
+                    }
+                }
+            }
+        }
+
+        return false;
+    },
+    handleEvent: (event, editor) => {
+        editor.runAsync(editor => {
+            const previousList = cacheGetEventData<HTMLOListElement | HTMLUListElement | null>(
+                event,
+                PREVIOUS_BLOCK_CACHE_KEY,
+                () => null
+            );
+            const targetBlock = cacheGetEventData<HTMLOListElement | HTMLUListElement | null>(
+                event,
+                NEXT_BLOCK_CACHE_KEY,
+                () => null
+            );
+
+            const rangeBeforeWriteBack = editor.getSelectionRange();
+
+            if (previousList && targetBlock && rangeBeforeWriteBack) {
+                const fvList = new VList(previousList);
+                fvList.mergeVList(new VList(targetBlock));
+
+                let span = editor.getDocument().createElement('span');
+                span.id = 'restoreRange';
+                rangeBeforeWriteBack.insertNode(span);
+
+                fvList.writeBack();
+
+                span = editor.queryElements('#restoreRange')[0];
+
+                if (span.parentElement) {
+                    editor.select(new Position(span, PositionType.After));
+                    span.parentElement.removeChild(span);
+                }
+            }
+        });
+    },
+};
+
+/**
  * @internal
  */
 export const ListFeatures: Record<
@@ -473,4 +572,12 @@ export const ListFeatures: Record<
     maintainListChainWhenDelete: MaintainListChainWhenDelete,
     autoNumberingList: AutoNumberingList,
     autoBulletList: AutoBulletList,
+    mergeListOnBackspaceAfterList: MergeListOnBackspaceAfterList,
 };
+
+function isList(element: Node | null | undefined): element is HTMLOListElement | HTMLOListElement {
+    return (
+        !!element &&
+        (safeInstanceOf(element, 'HTMLOListElement') || safeInstanceOf(element, 'HTMLUListElement'))
+    );
+}

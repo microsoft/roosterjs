@@ -102,6 +102,11 @@ export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitize
 export { default as commitEntity } from './entity/commitEntity';
 export { default as getEntityFromElement } from './entity/getEntityFromElement';
 export { default as getEntitySelector } from './entity/getEntitySelector';
+export {
+    createEntityPlaceholder,
+    moveContentWithEntityPlaceholders,
+    restoreContentWithEntityPlaceholder,
+} from './entity/entityPlaceholderUtils';
 
 export { default as cacheGetEventData } from './event/cacheGetEventData';
 export { default as clearEventDataCache } from './event/clearEventDataCache';
@@ -112,6 +117,8 @@ export { default as isCtrlOrMetaPressed } from './event/isCtrlOrMetaPressed';
 export { default as getStyles } from './style/getStyles';
 export { default as setStyles } from './style/setStyles';
 export { default as removeImportantStyleRule } from './style/removeImportantStyleRule';
+export { default as setGlobalCssStyles } from './style/setGlobalCssStyles';
+export { default as removeGlobalCssStyle } from './style/removeGlobalCssStyle';
 
 export { default as adjustInsertPosition } from './edit/adjustInsertPosition';
 export { default as deleteSelectedContent } from './edit/deleteSelectedContent';

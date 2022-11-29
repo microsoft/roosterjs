@@ -1,4 +1,4 @@
-import { ContentModelGeneralBlock } from '../../publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
 
 /**
  * @internal

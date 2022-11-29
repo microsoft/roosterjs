@@ -9,5 +9,6 @@ export function createImage(src: string, format?: ContentModelImageFormat): Cont
         segmentType: 'Image',
         src: src,
         format: format ? { ...format } : {},
+        dataset: {},
     };
 }

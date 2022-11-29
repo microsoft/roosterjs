@@ -2,10 +2,12 @@ import { BorderFormat } from '../../publicTypes/format/formatParts/BorderFormat'
 import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
+import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
+import { updateTableMetadata } from '../metadata/updateTableMetadata';
 
 const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     topBorderColor: '#ABABAB',
@@ -29,31 +31,52 @@ export function applyTableFormat(
     newFormat?: TableMetadataFormat,
     keepCellShade?: boolean
 ) {
-    const { cells, format } = table;
-    const effectiveMetadata = {
-        ...DEFAULT_FORMAT,
-        ...format,
-        ...(newFormat || {}),
-    };
+    const { cells } = table;
 
-    Object.assign(format, effectiveMetadata);
+    updateTableMetadata(table, format => {
+        const effectiveMetadata = {
+            ...DEFAULT_FORMAT,
+            ...format,
+            ...(newFormat || {}),
+        };
 
-    if (!keepCellShade) {
-        deleteCellBackgroundColorOverride(cells);
-    }
+        const bgColorOverrides = updateBgColorOverrides(cells, !keepCellShade);
 
-    formatBorders(cells, effectiveMetadata);
-    formatBackgroundColors(cells, effectiveMetadata);
-    setFirstColumnFormat(cells, effectiveMetadata);
-    setHeaderRowFormat(cells, effectiveMetadata);
+        formatBorders(cells, effectiveMetadata);
+        formatBackgroundColors(cells, effectiveMetadata, bgColorOverrides);
+        setFirstColumnFormat(cells, effectiveMetadata, bgColorOverrides);
+        setHeaderRowFormat(cells, effectiveMetadata, bgColorOverrides);
+
+        return effectiveMetadata;
+    });
 }
 
-function deleteCellBackgroundColorOverride(cells: ContentModelTableCell[][]) {
+function updateBgColorOverrides(
+    cells: ContentModelTableCell[][],
+    forceClear: boolean
+): boolean[][] {
+    const result: boolean[][] = [];
+
     cells.forEach(row => {
+        const currentRow: boolean[] = [];
+
+        result.push(currentRow);
+
         row.forEach(cell => {
-            delete cell.format.bgColorOverride;
+            updateTableCellMetadata(cell, metadata => {
+                if (metadata && forceClear) {
+                    currentRow.push(false);
+                    delete metadata.bgColorOverride;
+                } else {
+                    currentRow.push(!!metadata?.bgColorOverride);
+                }
+
+                return metadata;
+            });
         });
     });
+
+    return result;
 }
 
 type ShouldUseTransparentBorder = (indexProp: {
@@ -135,22 +158,28 @@ function formatBorders(cells: ContentModelTableCell[][], format: TableMetadataFo
             ];
 
             transparentBorderMatrix.forEach((alwaysUseTransparent, i) => {
+                const borderColor = (!alwaysUseTransparent && formatColor[i]) || '';
+
                 cell.format[BorderKeys[i]] = combineBorderValue({
-                    style: 'solid',
+                    style: getBorderStyleFromColor(borderColor),
                     width: '1px',
-                    color: (!alwaysUseTransparent && formatColor[i]) || 'transparent',
+                    color: borderColor,
                 });
             });
         });
     });
 }
 
-function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableMetadataFormat) {
+function formatBackgroundColors(
+    cells: ContentModelTableCell[][],
+    format: TableMetadataFormat,
+    bgColorOverrides: boolean[][]
+) {
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
 
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
-            if (!cell.format.bgColorOverride) {
+            if (!bgColorOverrides[rowIndex][colIndex]) {
                 const color =
                     hasBandedRows || hasBandedColumns
                         ? (hasBandedColumns && colIndex % 2 != 0) ||
@@ -167,20 +196,21 @@ function formatBackgroundColors(cells: ContentModelTableCell[][], format: TableM
 
 function setFirstColumnFormat(
     cells: ContentModelTableCell[][],
-    format: Partial<TableMetadataFormat>
+    format: Partial<TableMetadataFormat>,
+    bgColorOverrides: boolean[][]
 ) {
     cells.forEach((row, rowIndex) => {
         row.forEach((cell, cellIndex) => {
             if (format.hasFirstColumn && cellIndex === 0) {
                 cell.isHeader = true;
 
-                if (rowIndex !== 0 && !cell.format.bgColorOverride) {
-                    setBorderColor(cell.format, 'borderTop', 'transparent');
+                if (rowIndex !== 0 && !bgColorOverrides[rowIndex][cellIndex]) {
+                    setBorderColor(cell.format, 'borderTop');
                     setBackgroundColor(cell.format, null /*color*/);
                 }
 
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
-                    setBorderColor(cell.format, 'borderBottom', 'transparent');
+                    setBorderColor(cell.format, 'borderBottom');
                 }
             } else {
                 cell.isHeader = false;
@@ -189,12 +219,20 @@ function setFirstColumnFormat(
     });
 }
 
-function setHeaderRowFormat(cells: ContentModelTableCell[][], format: TableMetadataFormat) {
-    cells[0]?.forEach(cell => {
+function setHeaderRowFormat(
+    cells: ContentModelTableCell[][],
+    format: TableMetadataFormat,
+    bgColorOverrides: boolean[][]
+) {
+    const rowIndex = 0;
+
+    cells[rowIndex]?.forEach((cell, cellIndex) => {
         cell.isHeader = format.hasHeaderRow;
 
         if (format.hasHeaderRow && format.headerRowColor) {
-            setBackgroundColor(cell.format, format.headerRowColor);
+            if (!bgColorOverrides[rowIndex][cellIndex]) {
+                setBackgroundColor(cell.format, format.headerRowColor);
+            }
 
             setBorderColor(cell.format, 'borderTop', format.headerRowColor);
             setBorderColor(cell.format, 'borderRight', format.headerRowColor);
@@ -205,16 +243,21 @@ function setHeaderRowFormat(cells: ContentModelTableCell[][], format: TableMetad
 
 function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: string) {
     const border = extractBorderValues(format[key]);
-    border.color = value || 'transparent';
+    border.color = value || '';
+    border.style = getBorderStyleFromColor(border.color);
     format[key] = combineBorderValue(border);
 }
 
 function setBackgroundColor(format: ContentModelTableCellFormat, color: string | null | undefined) {
-    if (color && !format.bgColorOverride) {
+    if (color) {
         format.backgroundColor = color;
 
         // TODO: Handle text color when background color is dark
     } else {
         delete format.backgroundColor;
     }
+}
+
+function getBorderStyleFromColor(color?: string): string {
+    return !color || color == 'transparent' ? 'none' : 'solid';
 }
