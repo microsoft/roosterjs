@@ -26,12 +26,12 @@ describe('setListStartNumber', () => {
     it('no list selected', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [],
         };
 
@@ -41,7 +41,7 @@ describe('setListStartNumber', () => {
     it('list is selected after paragraph', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -78,7 +78,7 @@ describe('setListStartNumber', () => {
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -120,7 +120,7 @@ describe('setListStartNumber', () => {
     it('single selected list item', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -147,7 +147,7 @@ describe('setListStartNumber', () => {
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -179,7 +179,7 @@ describe('setListStartNumber', () => {
     it('deeper selected list item', () => {
         const mockedModel: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',
@@ -206,7 +206,7 @@ describe('setListStartNumber', () => {
         };
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'BlockGroup',

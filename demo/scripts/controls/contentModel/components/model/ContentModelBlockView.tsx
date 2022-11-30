@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ContentModelBlock } from 'roosterjs-content-model';
 import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
+import { ContentModelDividerView } from './ContentModelDividerView';
 import { ContentModelEntityView } from './ContentModelEntityView';
-import { ContentModelHRView } from './ContentModelHRView';
 import { ContentModelParagraphView } from './ContentModelParagraphView';
 import { ContentModelTableView } from './ContentModelTableView';
 
@@ -22,7 +22,7 @@ export function ContentModelBlockView(props: { block: ContentModelBlock }) {
         case 'Entity':
             return <ContentModelEntityView entity={block} />;
 
-        case 'HR':
-            return <ContentModelHRView hr={block} />;
+        case 'Divider':
+            return <ContentModelDividerView divider={block} />;
     }
 }

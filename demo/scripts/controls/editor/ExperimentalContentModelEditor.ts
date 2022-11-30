@@ -69,6 +69,7 @@ export default class ExperimentalContentModelEditor extends Editor
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
         const [fragment, range, entityPairs] = contentModelToDom(
+            this.getDocument(),
             model,
             this.createEditorContext(),
             option

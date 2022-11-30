@@ -4,6 +4,7 @@ import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAn
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
+import getLatestZIndex from './editInfoUtils/getLastZIndex';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
@@ -374,7 +375,7 @@ export default class ImageEdit implements EditorPlugin {
             }
         });
 
-        this.insertImageWrapper(this.image, this.wrapper, this.editor.getZoomScale());
+        this.insertImageWrapper(this.editor, this.image, this.wrapper, this.editor.getZoomScale());
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
@@ -407,8 +408,14 @@ export default class ImageEdit implements EditorPlugin {
         return element;
     }
 
-    private insertImageWrapper(image: HTMLImageElement, wrapper: HTMLSpanElement, scale: number) {
+    private insertImageWrapper(
+        editor: IEditor,
+        image: HTMLImageElement,
+        wrapper: HTMLSpanElement,
+        scale: number
+    ) {
         this.zoomWrapper = this.copyImageSize(image, this.createZoomWrapper(wrapper, scale));
+        this.zoomWrapper.style.zIndex = `${getLatestZIndex(editor.getScrollContainer()) + 1}`;
         this.editor.getDocument().body.appendChild(this.zoomWrapper);
     }
 

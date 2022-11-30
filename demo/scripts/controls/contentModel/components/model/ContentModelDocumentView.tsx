@@ -14,7 +14,6 @@ export function ContentModelDocumentView(props: { doc: ContentModelDocument }) {
     return (
         <ContentModelView
             title="Document"
-            subTitle={doc.document.location.href}
             className={styles.modelDocument}
             hasSelection={hasSelectionInBlockGroup(doc)}
             jsonSource={doc}

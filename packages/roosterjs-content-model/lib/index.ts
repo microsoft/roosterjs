@@ -6,14 +6,28 @@ export { default as setTableCellShade } from './publicApi/table/setTableCellShad
 export { default as editTable } from './publicApi/table/editTable';
 export { default as toggleBullet } from './publicApi/list/toggleBullet';
 export { default as toggleNumbering } from './publicApi/list/toggleNumbering';
+export { default as toggleBold } from './publicApi/segment/toggleBold';
+export { default as toggleItalic } from './publicApi/segment/toggleItalic';
+export { default as toggleUnderline } from './publicApi/segment/toggleUnderline';
+export { default as toggleStrikethrough } from './publicApi/segment/toggleStrikethrough';
+export { default as toggleSubscript } from './publicApi/segment/toggleSubscript';
+export { default as toggleSuperscript } from './publicApi/segment/toggleSuperscript';
+export { default as setBackgroundColor } from './publicApi/segment/setBackgroundColor';
+export { default as setFontName } from './publicApi/segment/setFontName';
+export { default as setFontSize } from './publicApi/segment/setFontSize';
+export { default as setTextColor } from './publicApi/segment/setTextColor';
+export { default as changeFontSize } from './publicApi/segment/changeFontSize';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
 export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
 export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
 export { default as setIndentation } from './publicApi/block/setIndentation';
+export { default as setAlignment } from './publicApi/block/setAlignment';
+export { default as setDirection } from './publicApi/block/setDirection';
+export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 
-export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
+export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
@@ -38,8 +52,9 @@ export { ContentModelImage } from './publicTypes/segment/ContentModelImage';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
-export { ContentModelHR } from './publicTypes/block/ContentModelHR';
-export { ContentModelHeader } from './publicTypes/decorator/ContentModelHeader';
+export { ContentModelDivider } from './publicTypes/block/ContentModelDivider';
+
+export { ContentModelParagraphDecorator } from './publicTypes/decorator/ContentModelParagraphDecorator';
 export { ContentModelLink } from './publicTypes/decorator/ContentModelLink';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
@@ -128,7 +143,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
-    DefaultImplicitSegmentFormatMap,
+    DefaultImplicitFormatMap,
 } from './publicTypes/context/ModelToDomSettings';
 export { ModelToDomEntityContext } from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
