@@ -101,15 +101,18 @@ function handleMarkdownEvent(
             if (!!range) {
                 // get the text content range
                 const textContentRange = range.cloneRange();
-                textContentRange.setEnd(
-                    textContentRange.endContainer,
-                    textContentRange.endOffset + 1
+                textContentRange.setStart(
+                    textContentRange.startContainer,
+                    textContentRange.startOffset + 1
                 );
-                const text = textContentRange.extractContents().textContent.slice(1, -1);
+
+                const text = textContentRange.extractContents().textContent;
                 const textNode = editor.getDocument().createTextNode(text);
 
                 // extract content and put it into a new element.
                 const elementToWrap = wrap(textNode, elementTag);
+                range.setEnd(textContentRange.endContainer, textContentRange.endOffset + 1);
+                range.deleteContents();
 
                 // ZWS here ensures we don't end up inside the newly created node.
                 const nonPrintedSpaceTextNode = editor
@@ -117,6 +120,7 @@ function handleMarkdownEvent(
                     .createTextNode(ZERO_WIDTH_SPACE);
                 range.insertNode(nonPrintedSpaceTextNode);
                 range.insertNode(elementToWrap);
+
                 editor.select(nonPrintedSpaceTextNode, PositionType.End);
             }
         },
