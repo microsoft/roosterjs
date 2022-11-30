@@ -69,27 +69,29 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
 );
 
 /**
- * OutdentIndentListItem edit feature, provides the ability to indent current list when user press TAB OR SHIFT-ALT-RIGHT
- * Additionally, outdents when user press SHIFT-TAB OR SHIFT-ALT-LEFT
+ * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
-const OutdentIndentListItem: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB, Keys.LEFT, Keys.RIGHT],
-    shouldHandleEvent: (event, editor) => {
-        const { keyCode, altKey, shiftKey, ctrlKey, metaKey } = event.rawEvent;
-        return (
-            !ctrlKey &&
-            !metaKey &&
-            (keyCode === Keys.TAB ? !altKey : shiftKey && altKey) &&
-            cacheGetListElement(event, editor)
-        );
-    },
+const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.TAB],
+    shouldHandleEvent: (event, editor) =>
+        !event.rawEvent.shiftKey && cacheGetListElement(event, editor),
     handleEvent: (event, editor) => {
-        const { keyCode, shiftKey } = event.rawEvent;
-        const shouldIncrease = keyCode === Keys.TAB ? !shiftKey : keyCode === Keys.RIGHT;
-        setIndentation(editor, shouldIncrease ? Indentation.Increase : Indentation.Decrease);
+        setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
     },
-    allowFunctionKeys: true,
+};
+
+/**
+ * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
+ */
+const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.TAB],
+    shouldHandleEvent: (event, editor) =>
+        event.rawEvent.shiftKey && cacheGetListElement(event, editor),
+    handleEvent: (event, editor) => {
+        setIndentation(editor, Indentation.Decrease);
+        event.rawEvent.preventDefault();
+    },
 };
 
 /**
@@ -554,7 +556,8 @@ export const ListFeatures: Record<
     BuildInEditFeature<PluginKeyboardEvent>
 > = {
     autoBullet: AutoBullet,
-    outdentIndentListItem: OutdentIndentListItem,
+    indentWhenTab: IndentWhenTab,
+    outdentWhenShiftTab: OutdentWhenShiftTab,
     outdentWhenBackspaceOnEmptyFirstLine: OutdentWhenBackOn1stEmptyLine,
     outdentWhenEnterOnEmptyLine: OutdentWhenEnterOnEmptyLine,
     mergeInNewLineWhenBackspaceOnFirstChar: MergeInNewLine,

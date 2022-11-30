@@ -75,10 +75,16 @@ export interface ListFeatureSettings {
     autoBullet: boolean;
 
     /**
-     * When press Tab, Shift+Alt+Right in a list, indent current list item. Outdent when Shift+Tab, Shift+Alt+Left.
+     * When press Tab in a list, indent current list item
      * @default true
      */
-    outdentIndentListItem: boolean;
+    indentWhenTab: boolean;
+
+    /**
+     * When press Shift+Tab in a list, outdent current list item
+     * @default true
+     */
+    outdentWhenShiftTab: boolean;
 
     /**
      * When press BaskSpace on empty line which is the first item of a list, outdent current list item

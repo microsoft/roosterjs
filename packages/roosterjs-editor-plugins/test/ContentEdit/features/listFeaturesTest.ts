@@ -2,13 +2,7 @@ import * as blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import * as setIndentation from 'roosterjs-editor-api/lib/format/setIndentation';
 import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
 import * as toggleListType from 'roosterjs-editor-api/lib/utils/toggleListType';
-import {
-    IEditor,
-    Indentation,
-    PluginEventType,
-    PluginKeyboardEvent,
-    Keys,
-} from 'roosterjs-editor-types';
+import { IEditor, Indentation, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
 import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
 
@@ -154,18 +148,11 @@ describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
     let editor: IEditor;
     const TEST_ID = 'listFeatureTests';
     let setIndentationFn: jasmine.Spy;
-    const getKeyboardEvent = (keysPressed: (keyof KeyboardEventInit)[], keyCode: number) =>
+    const getKeyboardEvent = (shiftKey: boolean) =>
         new KeyboardEvent('keydown', {
+            shiftKey,
             altKey: false,
             ctrlKey: false,
-            keyCode,
-            ...keysPressed.reduce(
-                (obj, cv) => ({
-                    ...obj,
-                    [cv]: true,
-                }),
-                {}
-            ),
         });
     let list: HTMLOListElement;
 
@@ -186,79 +173,75 @@ describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
     });
 
     function runTestShouldHandleEvent(
-        keysPressed: (keyof KeyboardEventInit)[],
-        keyCode: number,
+        indent: boolean,
+        shiftKeyPressed: boolean,
         shouldHandle: boolean
     ) {
         const keyboardEvent: PluginKeyboardEvent = {
             eventType: PluginEventType.KeyDown,
-            rawEvent: getKeyboardEvent(keysPressed, keyCode),
+            rawEvent: getKeyboardEvent(shiftKeyPressed),
         };
-        const triggered = !!ListFeatures.outdentIndentListItem.shouldHandleEvent(
-            keyboardEvent,
-            editor,
-            false
-        );
-
+        let triggered: boolean;
+        if (indent) {
+            triggered = ListFeatures.indentWhenTab.shouldHandleEvent(keyboardEvent, editor, false)
+                ? true
+                : false;
+        } else {
+            triggered = ListFeatures.outdentWhenShiftTab.shouldHandleEvent(
+                keyboardEvent,
+                editor,
+                false
+            )
+                ? true
+                : false;
+        }
         expect(triggered).toBe(shouldHandle);
     }
 
-    function runTestHandleEvent(
-        keysPressed: (keyof KeyboardEventInit)[],
-        keyCode: number,
-        shouldIndent: boolean
-    ) {
+    function runTestHandleEvent(shiftKeyPressed: boolean) {
         const range = document.createRange();
         range.setStart(list, 0);
         range.setEnd(list, 1);
         editor.select(range);
         const keyboardEvent: PluginKeyboardEvent = {
             eventType: PluginEventType.KeyDown,
-            rawEvent: getKeyboardEvent(keysPressed, keyCode),
+            rawEvent: getKeyboardEvent(shiftKeyPressed),
         };
-        ListFeatures.outdentIndentListItem.handleEvent(keyboardEvent, editor);
+        if (shiftKeyPressed) {
+            ListFeatures.outdentWhenShiftTab.handleEvent(keyboardEvent, editor);
+        } else {
+            ListFeatures.indentWhenTab.handleEvent(keyboardEvent, editor);
+        }
 
         expect(setIndentationFn).toHaveBeenCalled();
         expect(setIndentationFn).toHaveBeenCalledWith(
             editor,
-            shouldIndent ? Indentation.Increase : Indentation.Decrease
+            shiftKeyPressed ? Indentation.Decrease : Indentation.Increase
         );
     }
 
-    it('should not handle event | TAB', () => {
-        (<const>['altKey', 'ctrlKey', 'metaKey']).forEach(key => {
-            runTestShouldHandleEvent([key], Keys.TAB, false);
-            runTestShouldHandleEvent([key, 'shiftKey'], Keys.TAB, false);
-        });
+    it('should not handle event | indent', () => {
+        runTestShouldHandleEvent(true, true, false);
     });
 
-    it('should handle event | TAB', () => {
-        runTestShouldHandleEvent([], Keys.TAB, true);
-        runTestShouldHandleEvent(['shiftKey'], Keys.TAB, true);
+    it('should handle event | indent', () => {
+        runTestShouldHandleEvent(true, false, true);
     });
 
-    it('should not handle event | SHIFT-ALT-LR', () => {
-        [Keys.LEFT, Keys.RIGHT].forEach(arrowKey =>
-            (<const>['altKey', 'shiftKey', 'ctrlKey', 'metaKey']).forEach(keyPressed =>
-                runTestShouldHandleEvent([keyPressed], arrowKey, false)
-            )
-        );
+    it('should not handle event | outdent', () => {
+        runTestShouldHandleEvent(false, true, true);
     });
 
-    it('should handle event | SHIFT-ALT-LR', () => {
-        [Keys.LEFT, Keys.RIGHT].forEach(arrowKey => {
-            runTestShouldHandleEvent(['altKey', 'shiftKey'], arrowKey, true);
-        });
+    it('should handle event | outdent', () => {
+        runTestShouldHandleEvent(false, false, false);
     });
 
     it('should handle indent | indent', () => {
-        runTestHandleEvent(['shiftKey', 'altKey'], Keys.RIGHT, true);
-        runTestHandleEvent([], Keys.TAB, true);
+        runTestHandleEvent(false);
     });
 
     it('should handle indent | outdent', () => {
-        runTestHandleEvent(['shiftKey', 'altKey'], Keys.LEFT, false);
-        runTestHandleEvent(['shiftKey'], Keys.TAB, false);
+        runTestHandleEvent(true);
     });
 });
 
