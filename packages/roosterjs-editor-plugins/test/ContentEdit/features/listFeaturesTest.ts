@@ -194,7 +194,7 @@ describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
             eventType: PluginEventType.KeyDown,
             rawEvent: getKeyboardEvent(keysPressed, keyCode),
         };
-        const triggered = !!ListFeatures.OutdentIndentListItem.shouldHandleEvent(
+        const triggered = !!ListFeatures.outdentIndentListItem.shouldHandleEvent(
             keyboardEvent,
             editor,
             false
@@ -216,7 +216,7 @@ describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
             eventType: PluginEventType.KeyDown,
             rawEvent: getKeyboardEvent(keysPressed, keyCode),
         };
-        ListFeatures.OutdentIndentListItem.handleEvent(keyboardEvent, editor);
+        ListFeatures.outdentIndentListItem.handleEvent(keyboardEvent, editor);
 
         expect(setIndentationFn).toHaveBeenCalled();
         expect(setIndentationFn).toHaveBeenCalledWith(
