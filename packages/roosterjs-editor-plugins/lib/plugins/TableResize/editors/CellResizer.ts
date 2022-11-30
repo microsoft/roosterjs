@@ -159,12 +159,7 @@ function onDraggingVertical(
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
-            td.style.width =
-                td.rowSpan > 1
-                    ? ''
-                    : (deltaX < 0
-                          ? width + Math.abs(deltaX) // When moving to the left from where the Drag started
-                          : width - deltaX) + 'px'; // When moving to the right from where the Drag started
+            td.style.width = td.rowSpan > 1 ? '' : width / zoomScale - deltaX + 'px';
         });
     }
 
