@@ -68,30 +68,45 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     true /** allowNull */
 );
 
+const shouldHandleIndentationEvent = (indenting: boolean) => (
+    event: PluginKeyboardEvent,
+    editor: IEditor
+) => {
+    const { keyCode, altKey, shiftKey, ctrlKey, metaKey } = event.rawEvent;
+    return (
+        !ctrlKey &&
+        !metaKey &&
+        (keyCode === Keys.TAB
+            ? !altKey && shiftKey === !indenting
+            : shiftKey && altKey && keyCode === (indenting ? Keys.RIGHT : Keys.LEFT)) &&
+        cacheGetListElement(event, editor)
+    );
+};
+
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
 const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB],
-    shouldHandleEvent: (event, editor) =>
-        !event.rawEvent.shiftKey && cacheGetListElement(event, editor),
+    keys: [Keys.TAB, Keys.RIGHT],
+    shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: (event, editor) => {
         setIndentation(editor, Indentation.Increase);
         event.rawEvent.preventDefault();
     },
+    allowFunctionKeys: true,
 };
 
 /**
  * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
  */
 const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB],
-    shouldHandleEvent: (event, editor) =>
-        event.rawEvent.shiftKey && cacheGetListElement(event, editor),
+    keys: [Keys.TAB, Keys.LEFT],
+    shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: (event, editor) => {
         setIndentation(editor, Indentation.Decrease);
         event.rawEvent.preventDefault();
     },
+    allowFunctionKeys: true,
 };
 
 /**
