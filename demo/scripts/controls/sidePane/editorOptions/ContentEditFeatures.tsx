@@ -9,8 +9,8 @@ type ContentEditItemId = keyof ContentEditFeatureSettings;
 const styles = require('./OptionsPane.scss');
 const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string> = {
     autoBullet: 'Auto Bullet / Numbering',
-    indentWhenTab: 'Indent list when Tab',
-    outdentWhenShiftTab: 'Outdent list when Shift + Tab',
+    outdentIndentListItem:
+        'Indent list when Tab, Shift+Alt+Right. Outdent when Shift+Tab, Shift+Alt+Left',
     outdentWhenBackspaceOnEmptyFirstLine: 'Outdent list when Backspace on empty first Line',
     outdentWhenEnterOnEmptyLine: 'Outdent list when Enter on empty line',
     mergeInNewLineWhenBackspaceOnFirstChar:
