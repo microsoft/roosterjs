@@ -2,12 +2,12 @@ import { ContentModelBlock } from '../block/ContentModelBlock';
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelBr } from '../segment/ContentModelBr';
+import { ContentModelDivider } from '../block/ContentModelDivider';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelHandler } from './ContentModelHandler';
-import { ContentModelHR } from '../block/ContentModelHR';
 import { ContentModelImage } from '../segment/ContentModelImage';
 import { ContentModelListItem } from '../group/ContentModelListItem';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
@@ -90,7 +90,7 @@ export interface ContentModelHandlerTypeMap {
     /**
      * Content Model type for ContentModelHR
      */
-    hr: ContentModelHR;
+    divider: ContentModelDivider;
 
     /**
      * Content Model type for ContentModelImage

@@ -327,4 +327,46 @@ describe('knownElementProcessor', () => {
             context
         );
     });
+
+    it('Div with top margin', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        context.defaultStyles.div = {
+            marginTop: '20px',
+            marginBottom: '40px',
+            display: 'block',
+        };
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginTop: '20px',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: { marginBottom: '40px' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });
