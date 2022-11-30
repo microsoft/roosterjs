@@ -10,6 +10,7 @@ import { createHR } from '../../../lib/modelApi/creators/createHR';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createParagraphDecorator } from '../../../lib/modelApi/creators/createParagraphDecorator';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
@@ -91,6 +92,45 @@ describe('Creators', () => {
             segments: [],
             format: {},
             isImplicit: true,
+        });
+    });
+
+    it('createParagraph - with decorator', () => {
+        const result = createParagraph(false, undefined, {
+            tagName: 'p',
+            format: {
+                fontSize: '10px',
+            },
+        });
+
+        expect(result).toEqual({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+            decorator: {
+                tagName: 'p',
+                format: {
+                    fontSize: '10px',
+                },
+            },
+        });
+    });
+
+    it('createParagraphDecorator', () => {
+        const format = {
+            fontSize: '10px',
+        };
+        const result = createParagraphDecorator('p', format);
+
+        expect(result).toEqual({
+            tagName: 'p',
+            format: format,
+        });
+
+        result.format.fontSize = '12px';
+
+        expect(format).toEqual({
+            fontSize: '10px',
         });
     });
 

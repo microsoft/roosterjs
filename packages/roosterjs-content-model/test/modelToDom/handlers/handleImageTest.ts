@@ -1,3 +1,4 @@
+import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
@@ -96,5 +97,22 @@ describe('handleSegment', () => {
         };
 
         runTest(segment, '<a href="/test"><img src="http://test.com/test" data-a="b"></a>', 0);
+    });
+
+    it('call stackFormat', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true },
+            link: { format: { href: '/test' }, dataset: {} },
+            dataset: {},
+        };
+
+        spyOn(stackFormat, 'stackFormat').and.callThrough();
+
+        runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
+
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
+        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
 });

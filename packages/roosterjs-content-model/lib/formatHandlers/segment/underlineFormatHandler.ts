@@ -16,7 +16,7 @@ export const underlineFormatHandler: FormatHandler<UnderlineFormat> = {
         }
     },
     apply: (format, element, context) => {
-        const blockUnderline = context.implicitSegmentFormat.underline;
+        const blockUnderline = context.implicitFormat.underline;
 
         if (!!blockUnderline != !!format.underline) {
             if (format.underline) {
