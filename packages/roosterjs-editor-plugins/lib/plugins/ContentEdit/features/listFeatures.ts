@@ -74,20 +74,20 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
  */
 const OutdentIndentListItem: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB, Keys.LEFT, Keys.RIGHT],
-    shouldHandleEvent: (event, editor) =>
-        !event.rawEvent.ctrlKey && !event.rawEvent.metaKey && cacheGetListElement(event, editor),
+    shouldHandleEvent: (event, editor) => {
+        const { keyCode, altKey, shiftKey, ctrlKey, metaKey } = event.rawEvent;
+        return (
+            !ctrlKey &&
+            !metaKey &&
+            (keyCode === Keys.TAB ? !altKey : shiftKey && altKey) &&
+            cacheGetListElement(event, editor)
+        );
+    },
     handleEvent: (event, editor) => {
-        const { keyCode, altKey, shiftKey } = event.rawEvent;
-        const shouldIncrease =
-            keyCode === Keys.TAB && !altKey
-                ? !shiftKey
-                : shiftKey && altKey && keyCode !== Keys.TAB
-                ? keyCode === Keys.RIGHT
-                : null;
-        if (shouldIncrease !== null) {
-            setIndentation(editor, shouldIncrease ? Indentation.Increase : Indentation.Decrease);
-            event.rawEvent.preventDefault();
-        }
+        const { keyCode, shiftKey } = event.rawEvent;
+        const shouldIncrease = keyCode === Keys.TAB ? !shiftKey : keyCode === Keys.RIGHT;
+        setIndentation(editor, shouldIncrease ? Indentation.Increase : Indentation.Decrease);
+        event.rawEvent.preventDefault();
     },
     allowFunctionKeys: true,
 };
