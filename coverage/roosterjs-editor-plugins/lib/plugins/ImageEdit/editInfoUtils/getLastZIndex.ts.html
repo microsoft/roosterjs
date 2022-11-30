@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-plugins/lib/plugins/TableResize/editors/TableEditorFeature.ts</title>
+    <title>Code coverage report for roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils/getLastZIndex.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-plugins/lib/plugins/TableResize/editors</a> TableEditorFeature.ts</h1>
+        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-plugins/lib/plugins/ImageEdit/editInfoUtils</a> getLastZIndex.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -76,16 +76,7 @@
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L20'></a><a href='#L20'>20</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -94,34 +85,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Disposable from '../../../pluginUtils/Disposable';
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getTagOfNode } from 'roosterjs-editor-dom';
 &nbsp;
 /**
  * @internal
+ * Search through from editor div to it's root for the latest z-index value
+ * @param editorDiv the editor div element
+ * @returns the z index value
  */
-export default interface TableEditFeature {
-    node: Node;
-    div: HTMLDivElement | null;
-    featureHandler: Disposable | null;
-}
-&nbsp;
-/**
- * @internal
- */
-export function <span class="fstat-no" title="function not covered" >disposeTableEditFeature(</span>resizer: TableEditFeature | null) {
-<span class="cstat-no" title="statement not covered" >    if (resizer) {</span>
-<span class="cstat-no" title="statement not covered" >        resizer.div?.parentNode?.removeChild(resizer.div);</span>
-<span class="cstat-no" title="statement not covered" >        resizer.div = null;</span>
-<span class="cstat-no" title="statement not covered" >        resizer.featureHandler?.dispose();</span>
-<span class="cstat-no" title="statement not covered" >        resizer.featureHandler = null;</span>
+export default function getLatestZIndex(editorDiv: HTMLElement) {
+    let child: HTMLElement | null = editorDiv;
+    let zIndex = 0;
+    while (child &amp;&amp; getTagOfNode(child) !== 'BODY') {
+        if (child.style.zIndex) {
+            zIndex = parseInt(child.style.zIndex);
+        }
+        child = child.parentElement;
     }
+    return zIndex;
 }
 &nbsp;</pre></td></tr></table></pre>
 
