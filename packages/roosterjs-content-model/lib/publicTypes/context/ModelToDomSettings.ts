@@ -1,4 +1,5 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
+import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelBr } from '../segment/ContentModelBr';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
@@ -19,9 +20,12 @@ import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap'
 import { ModelToDomContext } from './ModelToDomContext';
 
 /**
- * Default implicit format map from tag name (lower case) to segment fromat
+ * Default implicit format map from tag name (lower case) to segment format
  */
-export type DefaultImplicitSegmentFormatMap = Record<string, Readonly<ContentModelSegmentFormat>>;
+export type DefaultImplicitFormatMap = Record<
+    string,
+    Readonly<ContentModelSegmentFormat & ContentModelBlockFormat>
+>;
 
 /**
  * Apply format to the given HTML element
@@ -153,7 +157,7 @@ export interface ModelToDomSettings {
     /**
      * Map of default implicit format for segment
      */
-    defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap;
+    defaultImplicitFormatMap: DefaultImplicitFormatMap;
 
     /**
      * Default Content Model to DOM handlers before overriding.
