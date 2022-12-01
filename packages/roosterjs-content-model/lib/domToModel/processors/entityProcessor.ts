@@ -4,6 +4,7 @@ import { createEntity } from '../../modelApi/creators/createEntity';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getEntityFromElement } from 'roosterjs-editor-dom';
 import { isBlockElement } from '../utils/isBlockElement';
+import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal
@@ -12,13 +13,20 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
     const entity = getEntityFromElement(element);
 
     if (entity) {
-        const entityModel = createEntity(entity, context.segmentFormat);
         const isBlockEntity = isBlockElement(element, context);
 
-        if (isBlockEntity) {
-            addBlock(group, entityModel);
-        } else {
-            addSegment(group, entityModel);
-        }
+        stackFormat(
+            context,
+            { segment: isBlockEntity ? 'shallowCloneForBlock' : undefined },
+            () => {
+                const entityModel = createEntity(entity, context.segmentFormat);
+
+                if (isBlockEntity) {
+                    addBlock(group, entityModel);
+                } else {
+                    addSegment(group, entityModel);
+                }
+            }
+        );
     }
 };
