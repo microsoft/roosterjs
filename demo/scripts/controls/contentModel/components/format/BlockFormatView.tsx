@@ -7,6 +7,7 @@ import { FormatView } from './FormatView';
 import { LineHeightFormatRenderer } from './formatPart/LineHeightFormatRenderer';
 import { MarginFormatRenderer } from './formatPart/MarginFormatRenderer';
 import { PaddingFormatRenderer } from './formatPart/PaddingFormatRenderer';
+import { WhiteSpaceFormatRenderer } from './formatPart/WhiteSpaceFormatRenderer';
 
 const BlockFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
     BackgroundColorFormatRenderer,
@@ -14,6 +15,7 @@ const BlockFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
     MarginFormatRenderer,
     PaddingFormatRenderer,
     LineHeightFormatRenderer,
+    WhiteSpaceFormatRenderer,
 ];
 
 export function BlockFormatView(props: { format: ContentModelSegmentFormat }) {
