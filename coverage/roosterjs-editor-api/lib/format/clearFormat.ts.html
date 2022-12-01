@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.34% </span>
+                <span class="strong">67.55% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>102/145</span>
+                <span class='fraction'>102/151</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.55% </span>
+                <span class="strong">48.98% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>48/88</span>
+                <span class='fraction'>48/98</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.86% </span>
+                <span class="strong">65.52% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>19/28</span>
+                <span class='fraction'>19/29</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.06% </span>
+                <span class="strong">66.21% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>96/139</span>
+                <span class='fraction'>96/145</span>
             </div>
         
             
@@ -396,7 +396,16 @@
 <a name='L337'></a><a href='#L337'>337</a>
 <a name='L338'></a><a href='#L338'>338</a>
 <a name='L339'></a><a href='#L339'>339</a>
-<a name='L340'></a><a href='#L340'>340</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L340'></a><a href='#L340'>340</a>
+<a name='L341'></a><a href='#L341'>341</a>
+<a name='L342'></a><a href='#L342'>342</a>
+<a name='L343'></a><a href='#L343'>343</a>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -549,6 +558,15 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -880,15 +898,24 @@ function <span class="fstat-no" title="function not covered" >removeNotTableDefa
 }
 &nbsp;
 /**
- * Verifies recursively if a node and its parents have any siblings
+ * Verifies recursively if a node and its parents have any siblings with text content
  * Ignoring the children of contentDiv and returning true if any node is LI
- * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings
+ * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings with text content
  */
 function <span class="fstat-no" title="function not covered" >isNodeWholeBlock(</span>node: Node, editor: IEditor) {
     let currentNode = <span class="cstat-no" title="statement not covered" >node;</span>
 <span class="cstat-no" title="statement not covered" >    while (currentNode &amp;&amp; editor.contains(currentNode.parentNode)) {</span>
 <span class="cstat-no" title="statement not covered" >        if (currentNode.nextSibling || currentNode.previousSibling) {</span>
-<span class="cstat-no" title="statement not covered" >            return safeInstanceOf(currentNode, 'HTMLLIElement');</span>
+<span class="cstat-no" title="statement not covered" >            if (safeInstanceOf(currentNode, 'HTMLLIElement')) {</span>
+                return <span class="cstat-no" title="statement not covered" >true;</span>
+            }
+            let isOnlySiblingWithContent = <span class="cstat-no" title="statement not covered" >true;</span>
+<span class="cstat-no" title="statement not covered" >            currentNode.parentNode?.childNodes.forEach(<span class="fstat-no" title="function not covered" >node </span>=&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if (node != currentNode &amp;&amp; node.textContent.length) {</span>
+<span class="cstat-no" title="statement not covered" >                    isOnlySiblingWithContent = false;</span>
+                }
+            });
+            return <span class="cstat-no" title="statement not covered" >isOnlySiblingWithContent;</span>
         }
 <span class="cstat-no" title="statement not covered" >        currentNode = currentNode.parentNode;</span>
     }
@@ -1081,7 +1108,7 @@ export default function clearFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Dec 01 2022 16:34:07 GMT+0000 (Coordinated Universal Time)
+                at Thu Dec 01 2022 18:54:29 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
