@@ -13,6 +13,7 @@ import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMet
 import { updateTableCellMetadata } from 'roosterjs-content-model/lib/modelApi/metadata/updateTableCellMetadata';
 import { useProperty } from '../../hooks/useProperty';
 import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignFormatRenderer';
+import { WordBreakFormatRenderer } from '../format/formatPart/WordBreakFormatRenderer';
 import {
     ContentModelTableCell,
     ContentModelTableCellFormat,
@@ -28,6 +29,7 @@ const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = 
     BackgroundColorFormatRenderer,
     PaddingFormatRenderer,
     VerticalAlignFormatRenderer,
+    WordBreakFormatRenderer,
 ];
 
 export function ContentModelTableCellView(props: { cell: ContentModelTableCell }) {

@@ -24,6 +24,7 @@ import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
+import { WordBreakFormat } from 'roosterjs-content-model/lib';
 
 /**
  * Represents a record of all format handlers
@@ -168,6 +169,11 @@ export interface FormatHandlerTypeMap {
      * Format for WhiteSpaceFormat
      */
     whiteSpace: WhiteSpaceFormat;
+
+    /**
+     * Format for WordBreakFormat
+     */
+    wordBreak: WordBreakFormat;
 }
 
 /**
