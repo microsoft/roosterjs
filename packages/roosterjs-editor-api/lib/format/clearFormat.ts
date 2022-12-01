@@ -155,12 +155,11 @@ function isNodeWholeBlock(node: Node, editor: IEditor) {
                 return true;
             }
             let isOnlySiblingWithContent = true;
-            currentNode.parentNode?.childNodes.forEach(
-                node =>
-                    !node.isSameNode(currentNode) &&
-                    node.textContent?.length &&
-                    (isOnlySiblingWithContent = false)
-            );
+            currentNode.parentNode?.childNodes.forEach(node => {
+                if (node != currentNode && node.textContent.length) {
+                    isOnlySiblingWithContent = false;
+                }
+            });
             return isOnlySiblingWithContent;
         }
         currentNode = currentNode.parentNode;
