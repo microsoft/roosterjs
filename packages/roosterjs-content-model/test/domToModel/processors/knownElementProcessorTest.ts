@@ -369,4 +369,199 @@ describe('knownElementProcessor', () => {
             ],
         });
     });
+
+    it('Nested DIV with left margin', () => {
+        const group = createContentModelDocument();
+        const div1 = document.createElement('div');
+        const div2 = document.createElement('div');
+
+        div1.style.marginLeft = '40px';
+        div2.style.marginLeft = '60px';
+        div2.appendChild(document.createTextNode('test2'));
+
+        div1.appendChild(document.createTextNode('test1'));
+        div1.appendChild(div2);
+        div1.appendChild(document.createTextNode('test3'));
+
+        knownElementProcessor(group, div1, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '40px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '100px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test2',
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '40px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test3',
+                        },
+                    ],
+                    isImplicit: true,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('BLOCKQUOTE used for indent', () => {
+        const group = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+        quote.appendChild(document.createTextNode('test1'));
+
+        knownElementProcessor(group, quote, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginTop: '1em',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '40px',
+                        marginRight: '40px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginBottom: '1em',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('Nested BLOCKQUOTE with left margin and border', () => {
+        const group = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+        const div = document.createElement('div');
+
+        quote.style.borderLeft = 'solid 2px black';
+        quote.style.marginLeft = '40px';
+        div.style.marginLeft = '60px';
+        div.appendChild(document.createTextNode('test2'));
+
+        quote.appendChild(document.createTextNode('test1'));
+        quote.appendChild(div);
+        quote.appendChild(document.createTextNode('test3'));
+
+        knownElementProcessor(group, quote, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'Quote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test1',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test2',
+                                    format: {},
+                                },
+                            ],
+                            format: {
+                                marginLeft: '60px',
+                            },
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test3',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        borderLeft: '2px solid black',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

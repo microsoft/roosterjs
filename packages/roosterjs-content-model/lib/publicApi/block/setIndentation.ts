@@ -1,7 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { indent } from '../../modelApi/block/indent';
-import { outdent } from '../../modelApi/block/outdent';
+import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
 
 /**
  * Toggle bullet list type
@@ -9,10 +8,14 @@ import { outdent } from '../../modelApi/block/outdent';
  * - When all blocks are already in bullet list, turn off / outdent there list type
  * @param editor The editor to operate on
  * @param indentation Whether indent or outdent
+ * @param length The length of pixel to indent/outdent @default 40
  */
 export default function setIndentation(
     editor: IExperimentalContentModelEditor,
-    indentation: 'indent' | 'outdent'
+    indentation: 'indent' | 'outdent',
+    length?: number
 ) {
-    formatWithContentModel(editor, 'setIndentation', indentation == 'indent' ? indent : outdent);
+    formatWithContentModel(editor, 'setIndentation', model =>
+        setModelIndentation(model, indentation, length)
+    );
 }

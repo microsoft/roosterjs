@@ -79,7 +79,15 @@ const defaultFormatHandlerMap: FormatHandlers = {
 const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
-    block: ['backgroundColor', 'direction', 'margin', 'padding', 'lineHeight', 'whiteSpace'],
+    block: [
+        'backgroundColor',
+        'direction',
+        'margin',
+        'padding',
+        'lineHeight',
+        'whiteSpace',
+        'border',
+    ],
     listItem: ['listItemThread', 'listItemMetadata'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
     segment: [

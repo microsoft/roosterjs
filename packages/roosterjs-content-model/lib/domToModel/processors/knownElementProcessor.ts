@@ -1,9 +1,11 @@
 import { addBlock } from '../../modelApi/common/addBlock';
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
 import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
 import { createDivider } from '../../modelApi/creators/createDivider';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
+import { createQuote } from '../../modelApi/creators/createQuote';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { isBlockElement } from '../utils/isBlockElement';
 import { MarginFormat } from '../../publicTypes/format/formatParts/MarginFormat';
@@ -15,7 +17,8 @@ import { stackFormat } from '../utils/stackFormat';
  */
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const isBlock = isBlockElement(element, context);
-    const isLink = element.tagName == 'A';
+    const tagName = element.tagName;
+    const isLink = tagName == 'A';
 
     stackFormat(
         context,
@@ -27,6 +30,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         () => {
             let topDivider: ContentModelDivider | undefined;
             let bottomDivider: ContentModelDivider | undefined;
+            let newParent = group;
 
             if (isLink) {
                 parseFormat(element, context.formatParsers.link, context.link.format, context);
@@ -43,8 +47,9 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 );
 
                 let decorator: ContentModelParagraphDecorator | undefined;
+                let block: ContentModelBlock | undefined;
 
-                switch (element.tagName) {
+                switch (tagName) {
                     case 'P':
                     case 'H1':
                     case 'H2':
@@ -52,34 +57,37 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                     case 'H4':
                     case 'H5':
                     case 'H6':
-                        decorator = createParagraphDecorator(
-                            element.tagName,
-                            context.segmentFormat
-                        );
+                        decorator = createParagraphDecorator(tagName, context.segmentFormat);
                         break;
                     default:
-                        topDivider = tryCreateDivider(context.blockFormat, 'marginTop');
-                        bottomDivider = tryCreateDivider(context.blockFormat, 'marginBottom');
+                        if (
+                            tagName == 'BLOCKQUOTE' &&
+                            (context.blockFormat.borderLeft || context.blockFormat.borderRight)
+                        ) {
+                            block = createQuote(context.blockFormat);
+                            newParent = block;
+                            context.blockFormat = {};
+                        } else {
+                            topDivider = tryCreateDivider(context.blockFormat, 'marginTop');
+                            bottomDivider = tryCreateDivider(context.blockFormat, 'marginBottom');
+                        }
 
                         break;
                 }
 
-                const paragraph = createParagraph(
-                    false /*isImplicit*/,
-                    context.blockFormat,
-                    decorator
-                );
+                block =
+                    block || createParagraph(false /*isImplicit*/, context.blockFormat, decorator);
 
                 if (topDivider) {
                     addBlock(group, topDivider);
                 }
 
-                addBlock(group, paragraph);
+                addBlock(group, block);
             } else {
                 parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             }
 
-            context.elementProcessors.child(group, element, context);
+            context.elementProcessors.child(newParent, element, context);
 
             if (bottomDivider) {
                 addBlock(group, bottomDivider);

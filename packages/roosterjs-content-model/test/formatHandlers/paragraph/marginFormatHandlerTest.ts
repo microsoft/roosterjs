@@ -42,6 +42,15 @@ describe('marginFormatHandler.parse', () => {
             marginBottom: '1em',
         });
     });
+
+    it('Merge margin values', () => {
+        div.style.marginLeft = '15pt';
+        format.marginLeft = '30px';
+        marginFormatHandler.parse(format, div, context, {});
+        expect(format).toEqual({
+            marginLeft: '50px',
+        });
+    });
 });
 
 describe('marginFormatHandler.apply', () => {
