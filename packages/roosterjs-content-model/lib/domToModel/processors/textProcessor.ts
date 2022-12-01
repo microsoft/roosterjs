@@ -44,6 +44,9 @@ export const textProcessor: ElementProcessor<Text> = (
     addTextSegment(group, txt, context);
 };
 
+// When we see these values of white-space style, need to preserve spaces and line-breaks and let browser handle it for us.
+const WhiteSpaceValuesNeedToHandle = ['pre', 'pre-wrap', 'pre-line', 'break-spaces'];
+
 function addTextSegment(group: ContentModelBlockGroup, text: string, context: DomToModelContext) {
     if (text) {
         const lastBlock = group.blocks[group.blocks.length - 1];
@@ -57,7 +60,11 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
             areSameFormats(lastSegment.link || {}, context.link.format || {})
         ) {
             lastSegment.text += text;
-        } else if (!hasSpacesOnly(text) || paragraph?.segments.length! > 0) {
+        } else if (
+            !hasSpacesOnly(text) ||
+            paragraph?.segments.length! > 0 ||
+            WhiteSpaceValuesNeedToHandle.indexOf(paragraph?.format.whiteSpace || '') >= 0
+        ) {
             const textModel = createText(text, context.segmentFormat);
 
             if (context.isInSelection) {
