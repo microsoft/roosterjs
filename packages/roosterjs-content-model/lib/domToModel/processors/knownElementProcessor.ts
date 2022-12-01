@@ -20,7 +20,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
     stackFormat(
         context,
         {
-            segment: 'shallowClone',
+            segment: isBlock ? 'shallowCloneForBlock' : 'shallowClone',
             paragraph: 'shallowClone',
             link: isLink ? 'empty' : undefined,
         },

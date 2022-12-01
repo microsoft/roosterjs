@@ -133,8 +133,10 @@ function buildCss(
                         tag,
                         tdCount
                     );
+                    const elementsSelector = selector + ' *';
 
                     selectors.push(selector);
+                    selectors.push(elementsSelector);
                     firstSelected = firstSelected || table.querySelector(selector);
                     lastSelected = table.querySelector(selector);
                 }

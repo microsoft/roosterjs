@@ -1,4 +1,5 @@
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 
 /**
@@ -9,7 +10,7 @@ export type ObjectStackType = 'empty';
 /**
  * @internal
  */
-export type ShallowObjectStackType = 'shallowClone' | ObjectStackType;
+export type ShallowObjectStackType = 'shallowClone' | 'shallowCloneForBlock' | ObjectStackType;
 
 /**
  * @internal
@@ -19,6 +20,15 @@ export interface StackFormatOptions {
     paragraph?: ShallowObjectStackType;
     link?: ObjectStackType;
 }
+
+// Some styles, such as background color, won't be inherited by block element if it was originally
+// declared from an inline element. So we need to skip them.
+// e.g.
+// <span style="background-color: red">
+//   line 1       <---------------------------- in red here
+//   <div>line 2</div>  <---------------------- not in red here
+// </span>
+const SkippedStylesForBlock: (keyof ContentModelSegmentFormat)[] = ['backgroundColor'];
 
 /**
  * @internal
@@ -54,5 +64,18 @@ function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
     processType: ShallowObjectStackType | undefined
 ): T | {} {
-    return processType == 'empty' ? {} : processType == 'shallowClone' ? { ...format } : format;
+    const result =
+        processType == 'empty'
+            ? {}
+            : processType == 'shallowClone' || processType == 'shallowCloneForBlock'
+            ? { ...format }
+            : format;
+
+    if (processType == 'shallowCloneForBlock') {
+        SkippedStylesForBlock.forEach(key => {
+            delete (result as ContentModelSegmentFormat)[key];
+        });
+    }
+
+    return result;
 }
