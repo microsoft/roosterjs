@@ -24,6 +24,7 @@ import {
     createNumberDefinition,
     getMetadata,
     findClosestElementAncestor,
+    getComputedStyle,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -83,16 +84,24 @@ const shouldHandleIndentationEvent = (indenting: boolean) => (
     );
 };
 
+const handleIndentationEvent = (indenting: boolean) => (
+    event: PluginKeyboardEvent,
+    editor: IEditor
+) => {
+    const isRTL =
+        event.rawEvent.keyCode !== Keys.TAB &&
+        getComputedStyle(editor.getElementAtCursor(), 'direction') == 'rtl';
+    setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+    event.rawEvent.preventDefault();
+};
+
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
 const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB, Keys.RIGHT],
     shouldHandleEvent: shouldHandleIndentationEvent(true),
-    handleEvent: (event, editor) => {
-        setIndentation(editor, Indentation.Increase);
-        event.rawEvent.preventDefault();
-    },
+    handleEvent: handleIndentationEvent(true),
     allowFunctionKeys: true,
 };
 
@@ -102,10 +111,7 @@ const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB, Keys.LEFT],
     shouldHandleEvent: shouldHandleIndentationEvent(false),
-    handleEvent: (event, editor) => {
-        setIndentation(editor, Indentation.Decrease);
-        event.rawEvent.preventDefault();
-    },
+    handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
 };
 
