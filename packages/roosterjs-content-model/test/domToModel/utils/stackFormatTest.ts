@@ -21,4 +21,26 @@ describe('stackFormat', () => {
         });
         expect(context.segmentFormat).toEqual({ a: 1 } as any);
     });
+
+    it('shallow clone segment format for block', () => {
+        const context = createDomToModelContext();
+
+        context.segmentFormat.fontSize = '20px';
+        context.segmentFormat.textColor = 'red';
+        context.segmentFormat.backgroundColor = 'green';
+
+        stackFormat(context, { segment: 'shallowCloneForBlock' }, () => {
+            expect(context.segmentFormat).toEqual({
+                fontSize: '20px',
+                textColor: 'red',
+            });
+
+            context.segmentFormat.fontSize = '40px';
+        });
+        expect(context.segmentFormat).toEqual({
+            fontSize: '20px',
+            textColor: 'red',
+            backgroundColor: 'green',
+        });
+    });
 });
