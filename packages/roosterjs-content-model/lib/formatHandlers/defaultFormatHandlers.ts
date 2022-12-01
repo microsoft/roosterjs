@@ -29,6 +29,7 @@ import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
+import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
 import {
     FormatApplier,
     FormatAppliers,
@@ -72,12 +73,13 @@ const defaultFormatHandlerMap: FormatHandlers = {
     textColor: textColorFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
+    whiteSpace: whiteSpaceFormatHandler,
 };
 
 const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
-    block: ['backgroundColor', 'direction', 'margin', 'padding', 'lineHeight'],
+    block: ['backgroundColor', 'direction', 'margin', 'padding', 'lineHeight', 'whiteSpace'],
     listItem: ['listItemThread', 'listItemMetadata'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
     segment: [
