@@ -85,7 +85,7 @@ describe('fontSizeFormatHandler.apply', () => {
     });
 
     it('Has implicit font size from context', () => {
-        context.implicitSegmentFormat.fontSize = '20px';
+        context.implicitFormat.fontSize = '20px';
 
         fontSizeFormatHandler.apply(format, div, context);
 
@@ -93,7 +93,7 @@ describe('fontSizeFormatHandler.apply', () => {
     });
 
     it('Has implicit font size from context and same with current format', () => {
-        context.implicitSegmentFormat.fontSize = '20px';
+        context.implicitFormat.fontSize = '20px';
         format.fontSize = '20px';
 
         fontSizeFormatHandler.apply(format, div, context);
@@ -102,7 +102,7 @@ describe('fontSizeFormatHandler.apply', () => {
     });
 
     it('Has implicit font size from context but overridden by current format', () => {
-        context.implicitSegmentFormat.fontSize = '20px';
+        context.implicitFormat.fontSize = '20px';
         format.fontSize = '40px';
 
         fontSizeFormatHandler.apply(format, div, context);

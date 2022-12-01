@@ -1,6 +1,6 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { defaultContentModelHandlers } from '../../../lib/modelToDom/context/defaultContentModelHandlers';
-import { defaultImplicitSegmentFormatMap } from '../../../lib/formatHandlers/utils/defaultStyles';
+import { defaultImplicitFormatMap } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { EditorContext } from '../../../lib/publicTypes/context/EditorContext';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import {
@@ -27,10 +27,10 @@ describe('createModelToDomContext', () => {
             threadItemCounts: [],
             nodeStack: [],
         },
-        implicitSegmentFormat: {},
+        implicitFormat: {},
         formatAppliers: getFormatAppliers(),
         modelHandlers: defaultContentModelHandlers,
-        defaultImplicitSegmentFormatMap: defaultImplicitSegmentFormatMap,
+        defaultImplicitFormatMap: defaultImplicitFormatMap,
         entities: {},
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
@@ -75,7 +75,7 @@ describe('createModelToDomContext', () => {
             modelHandlerOverride: {
                 br: mockedBrHandler,
             },
-            defaultImplicitSegmentFormatOverride: {
+            defaultImplicitFormatOverride: {
                 a: mockedAStyle,
             },
         });
@@ -90,13 +90,13 @@ describe('createModelToDomContext', () => {
             threadItemCounts: [],
             nodeStack: [],
         });
-        expect(context.implicitSegmentFormat).toEqual({});
+        expect(context.implicitFormat).toEqual({});
         expect(context.formatAppliers.block).toEqual([
             ...getFormatAppliers().block,
             mockedBlockApplier,
         ]);
         expect(context.modelHandlers.br).toBe(mockedBrHandler);
-        expect(context.defaultImplicitSegmentFormatMap.a).toEqual(mockedAStyle);
+        expect(context.defaultImplicitFormatMap.a).toEqual(mockedAStyle);
         expect(context.entities).toEqual({});
         expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
         expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);

@@ -66,9 +66,10 @@ interface DragAndDropInitValue {
     vTable: VTable;
     currentCells: HTMLTableCellElement[];
     nextCells: HTMLTableCellElement[];
+    initialX: number;
 }
 
-function onDragStart(context: DragAndDropContext) {
+function onDragStart(context: DragAndDropContext, event: MouseEvent): DragAndDropInitValue {
     const { td, isRTL, zoomScale, onStart } = context;
     const vTable = new VTable(td, true /*normalizeSize*/, zoomScale);
     const rect = normalizeRect(td.getBoundingClientRect());
@@ -84,9 +85,10 @@ function onDragStart(context: DragAndDropContext) {
             vTable,
             currentCells,
             nextCells,
+            initialX: event.pageX,
         };
     } else {
-        return { vTable, currentCells: [], nextCells: [] }; // Just a fallback
+        return { vTable, currentCells: [], nextCells: [], initialX: 0 }; // Just a fallback
     }
 }
 
@@ -116,10 +118,11 @@ function onDraggingHorizontal(
 function onDraggingVertical(
     context: DragAndDropContext,
     event: MouseEvent,
-    initValue: DragAndDropInitValue
+    initValue: DragAndDropInitValue,
+    deltaX: number
 ) {
     const { isRTL, zoomScale } = context;
-    const { vTable, nextCells, currentCells } = initValue;
+    const { vTable, nextCells, currentCells, initialX } = initValue;
 
     if (!canResizeColumns(event.pageX, currentCells, nextCells, isRTL, zoomScale)) {
         return false;
@@ -152,10 +155,11 @@ function onDraggingVertical(
     });
     if (!isShiftPressed) {
         nextCells.forEach(td => {
+            const width = td.rowSpan > 1 ? 0 : td.getBoundingClientRect().right - initialX;
             td.style.wordBreak = 'break-word';
             td.style.whiteSpace = 'normal';
             td.style.boxSizing = 'border-box';
-            td.style.width = null;
+            td.style.width = td.rowSpan > 1 ? '' : width / zoomScale - deltaX + 'px';
         });
     }
 

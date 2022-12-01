@@ -1,9 +1,9 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
+import { ContentModelDivider } from '../../../lib/publicTypes/block/ContentModelDivider';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
-import { ContentModelHR } from '../../../lib/publicTypes/block/ContentModelHR';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
@@ -14,18 +14,18 @@ describe('handleBlock', () => {
     let context: ModelToDomContext;
     let handleEntity: jasmine.Spy<ContentModelHandler<ContentModelEntity>>;
     let handleParagraph: jasmine.Spy<ContentModelHandler<ContentModelParagraph>>;
-    let handleHR: jasmine.Spy<ContentModelHandler<ContentModelHR>>;
+    let handleDivider: jasmine.Spy<ContentModelHandler<ContentModelDivider>>;
 
     beforeEach(() => {
         handleEntity = jasmine.createSpy('handleEntity');
         handleParagraph = jasmine.createSpy('handleParagraph');
-        handleHR = jasmine.createSpy('handleHR');
+        handleDivider = jasmine.createSpy('handleDivider');
 
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
                 entity: handleEntity,
                 paragraph: handleParagraph,
-                hr: handleHR,
+                divider: handleDivider,
             },
         });
     });
@@ -129,8 +129,9 @@ describe('handleBlock', () => {
     });
 
     it('HR block', () => {
-        const block: ContentModelHR = {
-            blockType: 'HR',
+        const block: ContentModelDivider = {
+            blockType: 'Divider',
+            tagName: 'hr',
             format: {},
         };
 
@@ -138,6 +139,6 @@ describe('handleBlock', () => {
 
         handleBlock(document, parent, block, context);
 
-        expect(handleHR).toHaveBeenCalledWith(document, parent, block, context);
+        expect(handleDivider).toHaveBeenCalledWith(document, parent, block, context);
     });
 });
