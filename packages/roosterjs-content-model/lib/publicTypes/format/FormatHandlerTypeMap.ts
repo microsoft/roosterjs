@@ -24,7 +24,7 @@ import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
-import { WordBreakFormat } from 'roosterjs-content-model/lib';
+import { WordBreakFormat } from './formatParts/WordBreakFormat';
 
 /**
  * Represents a record of all format handlers
