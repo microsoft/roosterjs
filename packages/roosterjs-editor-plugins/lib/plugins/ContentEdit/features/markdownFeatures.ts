@@ -1,4 +1,4 @@
-import { cacheGetEventData, createRange } from 'roosterjs-editor-dom';
+import { cacheGetEventData, createRange, wrap } from 'roosterjs-editor-dom';
 import type { CompatibleKeys } from 'roosterjs-editor-types/lib/compatibleTypes';
 import {
     BuildInEditFeature,
@@ -106,13 +106,12 @@ function handleMarkdownEvent(
                     textContentRange.startOffset + 1
                 );
 
-                // set the removal range to include the typed last character.
-                const lastIndex: number = (range.endContainer as Text).length;
-                range.setEnd(range.endContainer, lastIndex);
+                const text = textContentRange.extractContents().textContent;
+                const textNode = editor.getDocument().createTextNode(text);
 
                 // extract content and put it into a new element.
-                const elementToWrap = editor.getDocument().createElement(elementTag);
-                elementToWrap.appendChild(textContentRange.extractContents());
+                const elementToWrap = wrap(textNode, elementTag);
+                range.setEnd(textContentRange.endContainer, textContentRange.endOffset + 1);
                 range.deleteContents();
 
                 // ZWS here ensures we don't end up inside the newly created node.
@@ -121,6 +120,7 @@ function handleMarkdownEvent(
                     .createTextNode(ZERO_WIDTH_SPACE);
                 range.insertNode(nonPrintedSpaceTextNode);
                 range.insertNode(elementToWrap);
+
                 editor.select(nonPrintedSpaceTextNode, PositionType.End);
             }
         },
