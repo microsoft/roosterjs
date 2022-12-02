@@ -3,9 +3,7 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
 import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
 
 /**
- * Toggle bullet list type
- * - When there are some blocks not in bullet list, set all blocks to the given type
- * - When all blocks are already in bullet list, turn off / outdent there list type
+ * Indent or outdent to selected paragraphs
  * @param editor The editor to operate on
  * @param indentation Whether indent or outdent
  * @param length The length of pixel to indent/outdent @default 40

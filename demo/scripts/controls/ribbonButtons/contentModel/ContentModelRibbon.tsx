@@ -3,6 +3,7 @@ import { alignCenterButton } from './alignCenterButton';
 import { alignLeftButton } from './alignLeftButton';
 import { alignRightButton } from './alignRightButton';
 import { backgroundColorButton } from './backgroundColorButton';
+import { blockQuoteButton } from './blockQuoteButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
@@ -52,19 +53,20 @@ const buttons = [
     numberedListButton,
     decreaseIndentButton,
     increaseIndentButton,
-    strikethroughButton,
-    superscriptButton,
-    subscriptButton,
+    blockQuoteButton,
     alignLeftButton,
     alignCenterButton,
     alignRightButton,
+    insertTableButton,
+    superscriptButton,
+    subscriptButton,
+    strikethroughButton,
     ltrButton,
     rtlButton,
     setHeaderLevelButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,
     listStartNumberButton,
-    insertTableButton,
     formatTableButton,
     setTableCellShadeButton,
     setTableHeaderButton,

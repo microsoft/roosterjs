@@ -10,6 +10,7 @@ import { imageProcessor } from '../processors/imageProcessor';
 import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
 import { listProcessor } from '../processors/listProcessor';
+import { quoteProcessor } from '../processors/quoteProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 
@@ -19,7 +20,7 @@ import { textProcessor } from '../processors/textProcessor';
 export const defaultProcessorMap: ElementProcessorMap = {
     a: knownElementProcessor,
     b: knownElementProcessor,
-    blockquote: knownElementProcessor,
+    blockquote: quoteProcessor,
     br: brProcessor,
     center: knownElementProcessor,
     code: knownElementProcessor,
