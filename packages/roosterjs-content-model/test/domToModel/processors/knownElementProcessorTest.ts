@@ -145,8 +145,8 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    header: {
-                        headerLevel: 1,
+                    decorator: {
+                        tagName: 'h1',
                         format: { fontWeight: 'bold', fontSize: '2em', fontFamily: 'Test' },
                     },
                     segments: [
@@ -186,8 +186,8 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
-                    header: {
-                        headerLevel: 1,
+                    decorator: {
+                        tagName: 'h1',
                         format: { fontWeight: 'bold', fontSize: '2em' },
                     },
                     segments: [
@@ -282,5 +282,91 @@ describe('knownElementProcessor', () => {
             ],
         });
         expect(context.link).toEqual({ format: {}, dataset: {} });
+    });
+
+    it('P tag', () => {
+        const group = createContentModelDocument();
+        const p = document.createElement('p');
+
+        spyOn(parseFormat, 'parseFormat');
+
+        knownElementProcessor(group, p, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    decorator: {
+                        tagName: 'p',
+                        format: {},
+                    },
+                    segments: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(2);
+        expect(parseFormat.parseFormat).toHaveBeenCalledWith(
+            p,
+            context.formatParsers.block,
+            context.blockFormat,
+            context
+        );
+        expect(parseFormat.parseFormat).toHaveBeenCalledWith(
+            p,
+            context.formatParsers.segmentOnBlock,
+            context.segmentFormat,
+            context
+        );
+    });
+
+    it('Div with top margin', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        context.defaultStyles.div = {
+            marginTop: '20px',
+            marginBottom: '40px',
+            display: 'block',
+        };
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginTop: '20px',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: { marginBottom: '40px' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
     });
 });

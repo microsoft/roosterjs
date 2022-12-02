@@ -14,7 +14,7 @@ export const handleDivider: ContentModelHandler<ContentModelDivider> = (
 ) => {
     const element = doc.createElement(divider.tagName);
 
-    applyFormat(element, context.formatAppliers.divider, divider.format, context);
+    applyFormat(element, context.formatAppliers.block, divider.format, context);
 
     parent.appendChild(element);
 };

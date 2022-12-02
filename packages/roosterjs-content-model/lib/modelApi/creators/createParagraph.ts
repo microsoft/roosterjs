@@ -7,7 +7,8 @@ import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/Cont
  */
 export function createParagraph(
     isImplicit?: boolean,
-    format?: ContentModelBlockFormat
+    format?: ContentModelBlockFormat,
+    decorator?: ContentModelParagraphDecorator
 ): ContentModelParagraph {
     const result: ContentModelParagraph = {
         blockType: 'Paragraph',

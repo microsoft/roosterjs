@@ -1,5 +1,6 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
+import { ContentModelDivider } from '../../../lib/publicTypes/block/ContentModelDivider';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
@@ -13,14 +14,18 @@ describe('handleBlock', () => {
     let context: ModelToDomContext;
     let handleEntity: jasmine.Spy<ContentModelHandler<ContentModelEntity>>;
     let handleParagraph: jasmine.Spy<ContentModelHandler<ContentModelParagraph>>;
+    let handleDivider: jasmine.Spy<ContentModelHandler<ContentModelDivider>>;
 
     beforeEach(() => {
         handleEntity = jasmine.createSpy('handleEntity');
         handleParagraph = jasmine.createSpy('handleParagraph');
+        handleDivider = jasmine.createSpy('handleDivider');
+
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
                 entity: handleEntity,
                 paragraph: handleParagraph,
+                divider: handleDivider,
             },
         });
     });
@@ -121,5 +126,19 @@ describe('handleBlock', () => {
         handleBlock(document, parent, block, context);
 
         expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context);
+    });
+
+    it('HR block', () => {
+        const block: ContentModelDivider = {
+            blockType: 'Divider',
+            tagName: 'hr',
+            format: {},
+        };
+
+        parent = document.createElement('div');
+
+        handleBlock(document, parent, block, context);
+
+        expect(handleDivider).toHaveBeenCalledWith(document, parent, block, context);
     });
 });

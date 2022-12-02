@@ -1,7 +1,7 @@
 import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionInBlock';
 import hasSelectionInBlockGroup from '../../../lib/publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelHR } from '../../../lib/publicTypes/block/ContentModelHR';
+import { ContentModelDivider } from '../../../lib/publicTypes/block/ContentModelDivider';
 import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
 
 describe('hasSelectionInBlock', () => {
@@ -213,6 +213,19 @@ describe('hasSelectionInBlock', () => {
                 },
             ],
             format: {},
+        };
+
+        const result = hasSelectionInBlock(block);
+
+        expect(result).toBeTrue();
+    });
+
+    it('HR has selection', () => {
+        const block: ContentModelDivider = {
+            blockType: 'Divider',
+            tagName: 'hr',
+            format: {},
+            isSelected: true,
         };
 
         const result = hasSelectionInBlock(block);

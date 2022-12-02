@@ -37,7 +37,7 @@ export interface ModelToDomFormatContext {
     listFormat: ModelToDomListContext;
 
     /**
-     * Existing segment format implicitly applied from parent element
+     * Existing format implicitly applied from parent element
      */
-    implicitSegmentFormat: ContentModelSegmentFormat;
+    implicitFormat: ContentModelSegmentFormat & ContentModelBlockFormat;
 }

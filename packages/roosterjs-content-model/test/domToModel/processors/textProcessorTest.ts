@@ -475,4 +475,35 @@ describe('textProcessor', () => {
             document: document,
         });
     });
+
+    it('Paragraph with white-space style', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('  \n  ');
+        const paragraph = createParagraph(false, {
+            whiteSpace: 'pre',
+        });
+
+        doc.blocks.push(paragraph);
+
+        textProcessor(doc, text, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        whiteSpace: 'pre',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: '  \n  ',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

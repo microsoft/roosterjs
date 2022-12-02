@@ -3,6 +3,7 @@ import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/Conte
 import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
@@ -431,12 +432,23 @@ describe('Creators', () => {
         });
     });
 
-    it('createHR', () => {
-        const hr = createHR();
+    it('createDivider', () => {
+        const hr = createDivider('hr');
 
         expect(hr).toEqual({
-            blockType: 'HR',
+            blockType: 'Divider',
+            tagName: 'hr',
             format: {},
+        });
+    });
+
+    it('createDivider with format', () => {
+        const hr = createDivider('div', { marginTop: '10px' });
+
+        expect(hr).toEqual({
+            blockType: 'Divider',
+            tagName: 'div',
+            format: { marginTop: '10px' },
         });
     });
 });

@@ -43,30 +43,4 @@ describe('stackFormat', () => {
             backgroundColor: 'green',
         });
     });
-
-    it('use default style for link', () => {
-        const context = createDomToModelContext();
-
-        context.link.format.textColor = 'red';
-        context.link.format.underline = false;
-
-        stackFormat(context, { link: 'linkDefault' }, () => {
-            expect(context.link).toEqual({
-                format: {
-                    underline: true,
-                },
-                dataset: {},
-            });
-
-            context.link.format.textColor = 'green';
-        });
-
-        expect(context.link).toEqual({
-            format: {
-                textColor: 'red',
-                underline: false,
-            },
-            dataset: {},
-        });
-    });
 });

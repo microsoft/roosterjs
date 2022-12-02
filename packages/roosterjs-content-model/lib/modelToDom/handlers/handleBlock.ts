@@ -24,5 +24,8 @@ export const handleBlock: ContentModelHandler<ContentModelBlock> = (
         case 'Entity':
             context.modelHandlers.entity(doc, parent, block, context);
             break;
+        case 'Divider':
+            context.modelHandlers.divider(doc, parent, block, context);
+            break;
     }
 };

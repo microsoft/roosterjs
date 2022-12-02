@@ -163,7 +163,11 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             const editor = this.editor;
             extractClipboardEvent(
                 event as ClipboardEvent,
-                clipboardData => editor.paste(clipboardData),
+                clipboardData => {
+                    if (editor && !editor.isDisposed()) {
+                        editor.paste(clipboardData);
+                    }
+                },
                 {
                     allowedCustomPasteType: this.state.allowedCustomPasteType,
                     getTempDiv: () => {

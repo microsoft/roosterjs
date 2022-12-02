@@ -51,33 +51,23 @@ describe('whiteSpaceFormatHandler.parse', () => {
 
 describe('whiteSpaceFormatHandler.apply', () => {
     let div: HTMLElement;
-    let container: HTMLElement;
     let format: WhiteSpaceFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
-        container = document.createElement('div');
         div = document.createElement('div');
-        container.appendChild(div);
-
         format = {};
         context = createModelToDomContext();
     });
 
     it('No white space', () => {
         whiteSpaceFormatHandler.apply(format, div, context);
-        expect(container.innerHTML).toBe('<div></div>');
+        expect(div.outerHTML).toBe('<div></div>');
     });
 
-    it('Has white space: pre', () => {
+    it('Has white space', () => {
         format.whiteSpace = 'pre';
         whiteSpaceFormatHandler.apply(format, div, context);
-        expect(container.innerHTML).toBe('<pre><div></div></pre>');
-    });
-
-    it('Has white space: pre-wrap', () => {
-        format.whiteSpace = 'pre-wrap';
-        whiteSpaceFormatHandler.apply(format, div, context);
-        expect(container.innerHTML).toBe('<div style="white-space: pre-wrap;"></div>');
+        expect(div.outerHTML).toBe('<div style="white-space: pre;"></div>');
     });
 });

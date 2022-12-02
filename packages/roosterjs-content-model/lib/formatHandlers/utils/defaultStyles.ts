@@ -1,4 +1,4 @@
-import { DefaultImplicitSegmentFormatMap } from '../../publicTypes/context/ModelToDomSettings';
+import { DefaultImplicitFormatMap } from '../../publicTypes/context/ModelToDomSettings';
 import { DefaultStyleMap } from '../../publicTypes/context/DomToModelSettings';
 
 const blockElement: Partial<CSSStyleDeclaration> = {
@@ -21,7 +21,24 @@ export const defaultStyleMap: DefaultStyleMap = {
     b: {
         fontWeight: 'bold',
     },
-    EM: {
+    blockquote: {
+        display: 'block',
+        marginTop: '1em',
+        marginBottom: '1em',
+        marginLeft: '40px',
+        marginRight: '40px',
+    },
+    br: blockElement,
+    center: {
+        display: 'block',
+        textAlign: 'center',
+    },
+    code: { fontFamily: 'monospace' },
+    dd: blockElement,
+    div: blockElement,
+    dl: blockElement,
+    dt: blockElement,
+    em: {
         fontStyle: 'italic',
     },
     fieldset: blockElement,
@@ -103,7 +120,7 @@ export const defaultStyleMap: DefaultStyleMap = {
     },
 };
 
-export const defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap = {
+export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     a: {
         underline: true,
         textColor: HyperLinkColorPlaceholder,
@@ -130,5 +147,9 @@ export const defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap = 
     h6: {
         fontWeight: 'bold',
         fontSize: '0.67em',
+    },
+    p: {
+        marginTop: '1em',
+        marginBottom: '1em',
     },
 };
