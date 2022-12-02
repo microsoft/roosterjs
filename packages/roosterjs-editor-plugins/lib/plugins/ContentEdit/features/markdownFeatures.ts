@@ -1,4 +1,4 @@
-import { cacheGetEventData, createRange } from 'roosterjs-editor-dom';
+import { cacheGetEventData, createRange, Position, wrap } from 'roosterjs-editor-dom';
 import type { CompatibleKeys } from 'roosterjs-editor-types/lib/compatibleTypes';
 import {
     BuildInEditFeature,
@@ -98,7 +98,9 @@ function handleMarkdownEvent(
     editor.addUndoSnapshot(
         () => {
             const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
-            if (!!range) {
+            const lastTypedTriggerPosition = new Position(range.endContainer, PositionType.End);
+            const hasLastTypedTrigger = range.endOffset + 1 <= lastTypedTriggerPosition.offset;
+            if (!!range && hasLastTypedTrigger) {
                 // get the text content range
                 const textContentRange = range.cloneRange();
                 textContentRange.setStart(
@@ -106,13 +108,13 @@ function handleMarkdownEvent(
                     textContentRange.startOffset + 1
                 );
 
-                // set the removal range to include the typed last character.
-                const lastIndex: number = (range.endContainer as Text).length;
-                range.setEnd(range.endContainer, lastIndex);
+                const text = textContentRange.extractContents().textContent;
+                const textNode = editor.getDocument().createTextNode(text);
 
                 // extract content and put it into a new element.
-                const elementToWrap = editor.getDocument().createElement(elementTag);
-                elementToWrap.appendChild(textContentRange.extractContents());
+                const elementToWrap = wrap(textNode, elementTag);
+                //include last typed character
+                range.setEnd(range.endContainer, range.endOffset + 1);
                 range.deleteContents();
 
                 // ZWS here ensures we don't end up inside the newly created node.
@@ -121,6 +123,7 @@ function handleMarkdownEvent(
                     .createTextNode(ZERO_WIDTH_SPACE);
                 range.insertNode(nonPrintedSpaceTextNode);
                 range.insertNode(elementToWrap);
+
                 editor.select(nonPrintedSpaceTextNode, PositionType.End);
             }
         },
