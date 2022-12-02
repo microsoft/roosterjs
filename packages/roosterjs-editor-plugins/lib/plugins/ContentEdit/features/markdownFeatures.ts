@@ -1,4 +1,4 @@
-import { cacheGetEventData, createRange, wrap } from 'roosterjs-editor-dom';
+import { cacheGetEventData, createRange, Position, wrap } from 'roosterjs-editor-dom';
 import type { CompatibleKeys } from 'roosterjs-editor-types/lib/compatibleTypes';
 import {
     BuildInEditFeature,
@@ -98,7 +98,9 @@ function handleMarkdownEvent(
     editor.addUndoSnapshot(
         () => {
             const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
-            if (!!range) {
+            const lastTypedTriggerPosition = new Position(range.endContainer, PositionType.End);
+            const hasLastTypedTrigger = range.endOffset + 1 <= lastTypedTriggerPosition.offset;
+            if (!!range && hasLastTypedTrigger) {
                 // get the text content range
                 const textContentRange = range.cloneRange();
                 textContentRange.setStart(
@@ -111,7 +113,8 @@ function handleMarkdownEvent(
 
                 // extract content and put it into a new element.
                 const elementToWrap = wrap(textNode, elementTag);
-                range.setEnd(textContentRange.endContainer, textContentRange.endOffset + 1);
+                //include last typed character
+                range.setEnd(range.endContainer, range.endOffset + 1);
                 range.deleteContents();
 
                 // ZWS here ensures we don't end up inside the newly created node.
