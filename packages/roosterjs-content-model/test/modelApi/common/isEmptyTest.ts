@@ -99,6 +99,7 @@ describe('isEmpty', () => {
             blockGroupType: 'Quote',
             format: {},
             blocks: [],
+            quoteSegmentFormat: {},
         });
 
         expect(result).toBeTrue();
@@ -116,6 +117,7 @@ describe('isEmpty', () => {
                     segments: [],
                 },
             ],
+            quoteSegmentFormat: {},
         });
 
         expect(result).toBeTrue();

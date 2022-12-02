@@ -4,6 +4,7 @@ import { createListItem } from '../creators/createListItem';
 import { getOperationalBlocks } from '../common/getOperationalBlocks';
 import { getSelections } from '../selection/getSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
+import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 
 /**
  * @internal
@@ -28,12 +29,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             if (!alreadyInExpectedType && level) {
                 level.listType = listType;
                 item.levels.push(level);
-            } else if (
-                item.blocks.length == 1 &&
-                item.blocks[0].blockType == 'Paragraph' &&
-                item.blocks[0].isImplicit
-            ) {
-                item.blocks[0].isImplicit = false;
+            } else if (item.blocks.length == 1) {
+                setParagraphNotImplicit(item.blocks[0]);
             }
         } else if (item.paragraph) {
             const group = item.path[0];
