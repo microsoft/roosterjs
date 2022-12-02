@@ -1,3 +1,4 @@
+import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
@@ -139,6 +140,54 @@ describe('handleParagraph', () => {
         );
     });
 
+    it('handle p without margin', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                decorator: {
+                    tagName: 'p',
+                    format: {},
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
+                    },
+                ],
+            },
+            '<p style="margin-top: 0px; margin-bottom: 0px;"><span>test</span></p>',
+            1
+        );
+    });
+
+    it('handle p with margin', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: { marginTop: '1em', marginBottom: '1em' },
+                decorator: {
+                    tagName: 'p',
+                    format: {},
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'test',
+                    },
+                ],
+            },
+            '<p><span>test</span></p>',
+            1
+        );
+    });
+
     it('handle headers', () => {
         handleSegment.and.callFake(originalHandleSegment);
 
@@ -146,8 +195,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                header: {
-                    headerLevel: 1,
+                decorator: {
+                    tagName: 'h1',
                     format: { fontWeight: 'bold', fontSize: '2em' },
                 },
                 segments: [
@@ -170,8 +219,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                header: {
-                    headerLevel: 1,
+                decorator: {
+                    tagName: 'h1',
                     format: { fontWeight: 'bold', fontSize: '20px' },
                 },
                 segments: [
@@ -194,8 +243,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                header: {
-                    headerLevel: 1,
+                decorator: {
+                    tagName: 'h1',
                     format: {},
                 },
                 segments: [
@@ -218,8 +267,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                header: {
-                    headerLevel: 1,
+                decorator: {
+                    tagName: 'h1',
                     format: {
                         fontWeight: 'bold',
                     },
@@ -250,8 +299,8 @@ describe('handleParagraph', () => {
                 blockType: 'Paragraph',
                 isImplicit: true,
                 format: {},
-                header: {
-                    headerLevel: 1,
+                decorator: {
+                    tagName: 'h1',
                     format: { fontWeight: 'bold' },
                 },
                 segments: [
@@ -288,5 +337,35 @@ describe('handleParagraph', () => {
             '<div style="text-align: center;"><span>test</span></div>',
             1
         );
+    });
+
+    it('call stackFormat', () => {
+        handleSegment.and.callFake(originalHandleSegment);
+
+        spyOn(stackFormat, 'stackFormat').and.callThrough();
+
+        runTest(
+            {
+                blockType: 'Paragraph',
+                format: {},
+                decorator: {
+                    tagName: 'h1',
+                    format: { fontWeight: 'bold', fontSize: '2em' },
+                },
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        format: { fontWeight: 'bold' },
+                        text: 'test',
+                    },
+                ],
+            },
+            '<h1><span>test</span></h1>',
+            1
+        );
+
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
+        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
+        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(1)[1]).toBe(null);
     });
 });

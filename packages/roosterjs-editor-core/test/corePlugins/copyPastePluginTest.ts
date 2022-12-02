@@ -18,7 +18,7 @@ describe('CopyPastePlugin paste', () => {
     let tempNode: HTMLElement = null;
     let addDomEventHandler: jasmine.Spy;
 
-    beforeEach(() => {
+    function getEditor(disposeResult: boolean = false) {
         handler = null;
         plugin = new CopyPastePlugin({});
 
@@ -33,7 +33,7 @@ describe('CopyPastePlugin paste', () => {
 
         paste = jasmine.createSpy('paste');
 
-        plugin.initialize(<IEditor>(<any>{
+        return <IEditor>(<any>{
             addDomEventHandler: addDomEventHandler,
             paste,
             getSelectionRange: (): Range => null,
@@ -51,7 +51,12 @@ describe('CopyPastePlugin paste', () => {
             getDocument: () => document,
             select: () => {},
             isFeatureEnabled: () => false,
-        }));
+            isDisposed: () => disposeResult,
+        });
+    }
+
+    beforeEach(() => {
+        plugin = new CopyPastePlugin({});
     });
 
     afterEach(() => {
@@ -63,12 +68,14 @@ describe('CopyPastePlugin paste', () => {
     });
 
     it('init and dispose', () => {
+        plugin.initialize(getEditor());
         expect(addDomEventHandler).toHaveBeenCalled();
         const parameter = addDomEventHandler.calls.argsFor(0)[0];
         expect(Object.keys(parameter)).toEqual(['paste', 'copy', 'cut']);
     });
 
     it('trigger paste event for html', () => {
+        plugin.initialize(getEditor());
         const items: ClipboardData = {
             rawHtml: '',
             text: '',
@@ -83,6 +90,25 @@ describe('CopyPastePlugin paste', () => {
 
         handler.paste(<any>{});
         expect(paste).toHaveBeenCalledWith(items);
+        expect(tempNode).toBeNull();
+    });
+
+    it('Editor disposed, do not handle.', () => {
+        plugin.initialize(getEditor(true /* disposeResult */));
+        const items: ClipboardData = {
+            rawHtml: '',
+            text: '',
+            image: null,
+            files: [],
+            types: [],
+            customValues: {},
+        };
+        spyOn(extractClipboardEvent, 'default').and.callFake((event, callback) => {
+            callback(items);
+        });
+
+        handler.paste(<any>{});
+        expect(paste).not.toHaveBeenCalled();
         expect(tempNode).toBeNull();
     });
 });

@@ -23,6 +23,7 @@ import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
+import { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
 
 /**
  * Represents a record of all format handlers
@@ -162,6 +163,11 @@ export interface FormatHandlerTypeMap {
      * Format for VerticalAlignFormat
      */
     verticalAlign: VerticalAlignFormat;
+
+    /**
+     * Format for WhiteSpaceFormat
+     */
+    whiteSpace: WhiteSpaceFormat;
 }
 
 /**
