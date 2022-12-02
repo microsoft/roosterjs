@@ -108,9 +108,8 @@ function handleMarkdownEvent(
                     textContentRange.startOffset + 1
                 );
 
-                // set the removal range to include the typed last character.
-                const lastIndex: number = (range.endContainer as Text).length;
-                range.setEnd(range.endContainer, lastIndex);
+                const text = textContentRange.extractContents().textContent;
+                const textNode = editor.getDocument().createTextNode(text);
 
                 // extract content and put it into a new element.
                 const elementToWrap = wrap(textNode, elementTag);

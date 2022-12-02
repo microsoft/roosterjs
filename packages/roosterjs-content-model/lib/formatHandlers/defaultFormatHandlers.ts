@@ -22,6 +22,7 @@ import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandle
 import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
 import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
+import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
@@ -29,6 +30,7 @@ import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
+import { wordBreakFormatHandler } from './common/wordBreakFormatHandler';
 import {
     FormatApplier,
     FormatAppliers,
@@ -65,6 +67,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listType: listTypeFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
+    size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
@@ -72,6 +75,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
+    wordBreak: wordBreakFormatHandler,
 };
 
 const defaultFormatKeysPerCategory: {
@@ -92,7 +96,15 @@ const defaultFormatKeysPerCategory: {
         'backgroundColor',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
-    tableCell: ['border', 'borderBox', 'backgroundColor', 'padding', 'direction', 'verticalAlign'],
+    tableCell: [
+        'border',
+        'borderBox',
+        'backgroundColor',
+        'padding',
+        'direction',
+        'verticalAlign',
+        'wordBreak',
+    ],
     table: [
         'id',
         'border',

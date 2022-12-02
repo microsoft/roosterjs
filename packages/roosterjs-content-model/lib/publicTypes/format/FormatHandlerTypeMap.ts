@@ -16,6 +16,7 @@ import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
 import { PaddingFormat } from './formatParts/PaddingFormat';
+import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
@@ -23,6 +24,7 @@ import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
+import { WordBreakFormat } from './formatParts/WordBreakFormat';
 
 /**
  * Represents a record of all format handlers
@@ -129,6 +131,11 @@ export interface FormatHandlerTypeMap {
     padding: PaddingFormat;
 
     /**
+     * Format for SizeFormat
+     */
+    size: SizeFormat;
+
+    /**
      * Format for StrikeFormat
      */
     strike: StrikeFormat;
@@ -162,6 +169,11 @@ export interface FormatHandlerTypeMap {
      * Format for WhiteSpaceFormat
      */
     whiteSpace: WhiteSpaceFormat;
+
+    /**
+     * Format for WordBreakFormat
+     */
+    wordBreak: WordBreakFormat;
 }
 
 /**
