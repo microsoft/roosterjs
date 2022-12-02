@@ -101,6 +101,7 @@ export {
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
 export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
 export { WhiteSpaceFormat } from './publicTypes/format/formatParts/WhiteSpaceFormat';
+export { WordBreakFormat } from './publicTypes/format/formatParts/WordBreakFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 
