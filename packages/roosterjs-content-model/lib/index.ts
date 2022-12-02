@@ -52,8 +52,9 @@ export { ContentModelImage } from './publicTypes/segment/ContentModelImage';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
-export { ContentModelHR } from './publicTypes/block/ContentModelHR';
-export { ContentModelHeader } from './publicTypes/decorator/ContentModelHeader';
+export { ContentModelDivider } from './publicTypes/block/ContentModelDivider';
+
+export { ContentModelParagraphDecorator } from './publicTypes/decorator/ContentModelParagraphDecorator';
 export { ContentModelLink } from './publicTypes/decorator/ContentModelLink';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
@@ -99,6 +100,8 @@ export {
     ImageRotateMetadataFormat,
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
 export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
+export { WhiteSpaceFormat } from './publicTypes/format/formatParts/WhiteSpaceFormat';
+export { WordBreakFormat } from './publicTypes/format/formatParts/WordBreakFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 
@@ -142,7 +145,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
-    DefaultImplicitSegmentFormatMap,
+    DefaultImplicitFormatMap,
 } from './publicTypes/context/ModelToDomSettings';
 export { ModelToDomEntityContext } from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';

@@ -1,4 +1,5 @@
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -25,7 +26,7 @@ export const fontProcessor: ElementProcessor<HTMLFontElement> = (group, element,
     stackFormat(
         context,
         {
-            segment: 'shallowClone',
+            segment: isBlockElement(element, context) ? 'shallowCloneForBlock' : 'shallowClone',
         },
         () => {
             const fontFamily = element.getAttribute('face');

@@ -1,3 +1,4 @@
+import cloneCellStyles from './cloneCellStyles';
 import moveChildNodes from '../utils/moveChildNodes';
 import VTable from './VTable';
 import { NodePosition, TableOperation } from 'roosterjs-editor-types';
@@ -48,12 +49,14 @@ export default function pasteTable(
         for (let j = cursorCol; j < columns; j++) {
             let cell = currentTable.getCell(i, j);
             let newCell = newTable.getTd(i - cursorRow, j - cursorCol);
-            if (cell.td) {
-                moveChildNodes(cell.td, newCell!);
+            if (cell.td && newCell) {
+                moveChildNodes(cell.td, newCell);
+                cloneCellStyles(cell.td, newCell);
             } else {
                 cell.td = document.createElement('td');
             }
         }
     }
+
     currentTable.writeBack();
 }
