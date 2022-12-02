@@ -125,4 +125,21 @@ describe('handleText', () => {
 
         expect(parent.innerHTML).toBe('<span style="font-size: 12px;"><a href="#">test</a></span>');
     });
+
+    it('call stackFormat', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: { underline: true },
+            link: { format: { href: '/test' }, dataset: {} },
+        };
+
+        spyOn(stackFormat, 'stackFormat').and.callThrough();
+
+        handleText(document, parent, text, context);
+
+        expect(parent.innerHTML).toBe('<a href="/test">test</a>');
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
+        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
+    });
 });

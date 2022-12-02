@@ -4,6 +4,7 @@ import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAn
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
+import getLatestZIndex from './editInfoUtils/getLastZIndex';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';

@@ -2,6 +2,7 @@ import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandl
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal

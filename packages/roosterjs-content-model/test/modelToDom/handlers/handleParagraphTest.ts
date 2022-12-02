@@ -271,8 +271,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                header: {
-                    headerLevel: 1,
+                decorator: {
+                    tagName: 'h1',
                     format: { fontWeight: 'bold', fontSize: '20px' },
                 },
                 segments: [
@@ -295,8 +295,8 @@ describe('handleParagraph', () => {
             {
                 blockType: 'Paragraph',
                 format: {},
-                header: {
-                    headerLevel: 1,
+                decorator: {
+                    tagName: 'h1',
                     format: {},
                 },
                 segments: [
