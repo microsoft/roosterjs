@@ -1,4 +1,4 @@
-import { Browser, findClosestElementAncestor, getTagOfNode, isModifierKey, Position } from 'roosterjs-editor-dom';
+import { Browser, findClosestElementAncestor, getTagOfNode, isCtrlOrMetaPressed, Position } from 'roosterjs-editor-dom';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 
 /**
@@ -47,7 +47,9 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyPress && this.editor && !(event.rawEvent && isModifierKey(event.rawEvent))) {
+        // We need to check if the ctrl key or the meta key is pressed,
+        // browsers like Safari fire the "keypress" event when the meta key is pressed.
+        if (event.eventType == PluginEventType.KeyPress && this.editor && !(event.rawEvent && isCtrlOrMetaPressed(event.rawEvent))) {
             // If normalization was not possible before the keypress,
             // check again after the keyboard event has been processed by browser native behavior.
             //
