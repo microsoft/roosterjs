@@ -47,7 +47,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyPress && this.editor && !isModifierKey(event.rawEvent)) {
+        if (event.eventType == PluginEventType.KeyPress && this.editor && !(event.rawEvent && isModifierKey(event.rawEvent))) {
             // If normalization was not possible before the keypress,
             // check again after the keyboard event has been processed by browser native behavior.
             //
