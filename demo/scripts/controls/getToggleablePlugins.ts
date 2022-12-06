@@ -33,7 +33,34 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
                       ? url => linkTitle.replace(UrlPlaceholder, url)
                       : linkTitle
                       ? () => linkTitle
-                      : null
+                      : null,
+                  '_blank',
+                  (anchor, event) => {
+                      let href: string | null;
+
+                      function tryGetHref(anchor: HTMLAnchorElement): string | null {
+                          try {
+                              return anchor ? anchor.href : null;
+                          } catch {
+                              return null;
+                          }
+                      }
+
+                      if ((href = tryGetHref(anchor)) && event.button === 0) {
+                          event.preventDefault();
+                          try {
+                              const target = '_blank';
+                              const window = anchor.ownerDocument.defaultView;
+                              window?.open(href, target);
+
+                              return true;
+                          } catch {
+                              return false;
+                          }
+                      }
+
+                      return false;
+                  }
               )
             : null,
         paste: pluginList.paste ? new Paste() : null,
