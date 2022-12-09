@@ -10,13 +10,11 @@ const HTTPS = 'https:';
  * @param sanitizingOption the sanitizingOption of BeforePasteEvent
  * */
 export default function sanitizeLinks(sanitizingOption: Required<HtmlSanitizerOptions>) {
-    ['href'].forEach(property => {
-        chainSanitizerCallback(
-            sanitizingOption.attributeCallbacks,
-            property,
-            (value: string, element: HTMLElement) => validateLink(value, element)
-        );
-    });
+    chainSanitizerCallback(
+        sanitizingOption.attributeCallbacks,
+        'href',
+        (value: string, element: HTMLElement) => validateLink(value, element)
+    );
 }
 
 function validateLink(link: string, htmlElement: HTMLElement) {
