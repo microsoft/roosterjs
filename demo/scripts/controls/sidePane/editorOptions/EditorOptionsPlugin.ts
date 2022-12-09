@@ -30,7 +30,7 @@ const initialState: BuildInPluginState = {
     experimentalFeatures: [
         ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.ListItemAlignment,
-        ExperimentalFeatures.PendingStyleBasedFormat,
+        // ExperimentalFeatures.PendingStyleBasedFormat,
         ExperimentalFeatures.DefaultFormatInSpan,
         ExperimentalFeatures.AutoFormatList,
     ],
