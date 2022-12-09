@@ -243,6 +243,7 @@ describe('indent', () => {
                         },
                     ],
                     format: {},
+                    quoteSegmentFormat: {},
                 },
             ],
         });
