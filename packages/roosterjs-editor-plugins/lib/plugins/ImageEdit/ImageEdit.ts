@@ -90,11 +90,6 @@ const DARK_MODE_BGCOLOR = '#333';
 const MAX_SMALL_SIZE_IMAGE = 10000;
 
 /**
- * A container to ensure the image wrapper will be inside the editor.
- */
-const FIT_CONTAINER = 'FIT_CONTAINER';
-
-/**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
  */
 export default class ImageEdit implements EditorPlugin {
@@ -411,12 +406,8 @@ export default class ImageEdit implements EditorPlugin {
      */
     private removeWrapper = () => {
         const doc = this.editor.getDocument();
-        if (this.zoomWrapper) {
-            const container =
-                this.zoomWrapper?.parentElement.id === FIT_CONTAINER
-                    ? this.zoomWrapper.parentElement
-                    : this.zoomWrapper;
-            doc.body?.removeChild(container);
+        if (this.zoomWrapper && doc.body?.contains(this.zoomWrapper)) {
+            doc.body?.removeChild(this.zoomWrapper);
             this.toggleImageVisibility(this.image, true /** showImage */);
         }
         this.wrapper = null;
