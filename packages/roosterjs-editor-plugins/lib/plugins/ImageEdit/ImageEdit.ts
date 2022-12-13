@@ -657,10 +657,10 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
 }
 
 function fitImageContainer(editor: IEditor, zoomWrapper: HTMLElement) {
-    const { top } = editor.getScrollContainer()?.getBoundingClientRect();
+    const top = editor.getScrollContainer()?.getBoundingClientRect()?.top;
     const zoomWrapperRect = zoomWrapper?.getBoundingClientRect();
-    const zoomWrapperTop = zoomWrapperRect.top;
-    if (zoomWrapperTop < top) {
+    const zoomWrapperTop = zoomWrapperRect?.top;
+    if (top && zoomWrapperTop && zoomWrapperTop < top) {
         const zoomWrapperHeight = top - zoomWrapperRect.top;
         const zoomWrapperHeightPercent = 100 * (zoomWrapperHeight / zoomWrapperRect.height);
         zoomWrapper.style.clipPath = `polygon(0 ${zoomWrapperHeightPercent}%, 100% ${zoomWrapperHeightPercent}%, 100% 100%, 0 100%)`;
