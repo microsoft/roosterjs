@@ -46,8 +46,9 @@ import {
 } from 'roosterjs-editor-types';
 import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
+const PI = Math.PI;
 const DIRECTIONS = 8;
-const DirectionRad = (Math.PI * 2) / DIRECTIONS;
+const DirectionRad = (PI * 2) / DIRECTIONS;
 const DirectionOrder = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 
 /**
@@ -460,7 +461,7 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.transform = `rotate(${angleRad}rad)`;
             this.zoomWrapper.style.width = getPx(visibleWidth);
             this.zoomWrapper.style.height = getPx(visibleHeight);
-            fitImageContainer(this.editor, this.zoomWrapper);
+            fitImageContainer(this.editor, this.zoomWrapper, angleRad);
 
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
@@ -647,14 +648,21 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
     return isDarkMode ? color.darkModeColor.trim() : color.lightModeColor.trim();
 }
 
-function fitImageContainer(editor: IEditor, zoomWrapper: HTMLElement) {
-    const top = editor.getScrollContainer()?.getBoundingClientRect()?.top;
-    const zoomWrapperRect = zoomWrapper?.getBoundingClientRect();
-    const zoomWrapperTop = zoomWrapperRect?.top;
-    if (top && zoomWrapperTop && zoomWrapperTop < top) {
-        const zoomWrapperHeight = top - zoomWrapperRect.top;
-        const zoomWrapperHeightPercent = 100 * (zoomWrapperHeight / zoomWrapperRect.height);
-        zoomWrapper.style.clipPath = `polygon(0 ${zoomWrapperHeightPercent}%, 100% ${zoomWrapperHeightPercent}%, 100% 100%, 0 100%)`;
+function fitImageContainer(editor: IEditor, zoomWrapper: HTMLElement, angle: number) {
+    const angleIndex = handleRadIndexCalculator(angle);
+    const isVertical = (angleIndex >= 2 && angleIndex < 4) || angleIndex >= 6;
+    const editorTop = editor.getScrollContainer()?.getBoundingClientRect()?.top;
+    const { top, width, height } = zoomWrapper?.getBoundingClientRect();
+    if (editorTop > top) {
+        const rotatePercent = 100 * Math.abs(angle);
+        const zoomWrapperHeight = editorTop - top;
+        const zoomWrapperHeightPercent = isVertical
+            ? rotatePercent * (zoomWrapperHeight / width)
+            : 100 * (zoomWrapperHeight / height);
+
+        zoomWrapper.style.clipPath = `polygon(0 ${zoomWrapperHeightPercent}%, 100% ${zoomWrapperHeightPercent}%, 100% ${
+            isVertical ? rotatePercent : '100'
+        }%, 0  ${isVertical ? rotatePercent : '100'}%)`;
     }
 }
 
