@@ -13,7 +13,11 @@ describe('createElement', () => {
     });
 
     it('create by index', () => {
-        runTest(KnownCreateElementDataIndex.EmptyLine, '<div><span><br></span></div>');
+        runTest(KnownCreateElementDataIndex.EmptyLine, '<div><br></div>');
+    });
+
+    it('create by index with span', () => {
+        runTest(KnownCreateElementDataIndex.EmptyLineFormatInSpan, '<div><span><br></span></div>');
     });
 
     it('create by tag', () => {
