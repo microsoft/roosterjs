@@ -1,3 +1,4 @@
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
@@ -12,6 +13,7 @@ import {
     ChangeSource,
     ClearFormatMode,
     DocumentCommand,
+    ExperimentalFeatures,
     IEditor,
     QueryScope,
 } from 'roosterjs-editor-types';
@@ -34,7 +36,6 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import type { CompatibleClearFormatMode } from 'roosterjs-editor-types/lib/compatibleTypes';
-import applyListItemStyleWrap from '../utils/applyListItemWrap';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
@@ -200,7 +201,11 @@ function clearBlockFormat(editor: IEditor) {
         editor,
         () => {
             blockFormat(editor, region => {
-                const blocks = getSelectedBlockElementsInRegion(region);
+                const blocks = getSelectedBlockElementsInRegion(
+                    region,
+                    undefined /* createBlockIfEmpty */,
+                    editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
+                );
                 let nodes = collapseNodesInRegion(region, blocks);
 
                 if (editor.contains(region.rootNode)) {
