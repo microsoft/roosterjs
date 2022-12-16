@@ -15,8 +15,6 @@ import {
     isNodeEmpty,
     Position,
     safeInstanceOf,
-    toArray,
-    wrap,
 } from 'roosterjs-editor-dom';
 
 /**
@@ -27,8 +25,7 @@ import {
 export const ensureTypeInContainer: EnsureTypeInContainer = (
     core: EditorCore,
     position: NodePosition,
-    keyboardEvent?: KeyboardEvent,
-    applyFormatToSpan?: boolean
+    keyboardEvent?: KeyboardEvent
 ) => {
     const table = findClosestElementAncestor(position.node, core.contentDiv, 'table');
     let td: HTMLElement | null;
@@ -54,34 +51,23 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
             isNodeEmpty(formatNode) ||
             (keyboardEvent && wasNodeJustCreatedByKeyboardEvent(keyboardEvent, formatNode));
         formatNode = formatNode && shouldSetNodeStyles ? formatNode : null;
-
-        if (formatNode && core.lifecycle.defaultFormat && applyFormatToSpan) {
-            const firstChild = formatNode.firstChild;
-            formatNode = safeInstanceOf(firstChild, 'HTMLSpanElement')
-                ? firstChild
-                : wrap(toArray(formatNode.childNodes), 'span');
-
-            position = new Position(formatNode, PositionType.Begin);
-        }
     } else {
         // Only reason we don't get the selection block is that we have an empty content div
         // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
         // The fix is to add a DIV wrapping, apply default format and move cursor over
-        const newNode = createElement(
+        formatNode = createElement(
             KnownCreateElementDataIndex.EmptyLine,
             core.contentDiv.ownerDocument
         ) as HTMLElement;
-        core.api.insertNode(core, newNode, {
+        core.api.insertNode(core, formatNode, {
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
         });
 
-        formatNode = newNode.firstChild as HTMLElement;
-
         // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
-        position = new Position(formatNode, PositionType.Begin);
+        position = new Position(formatNode.firstChild!, PositionType.Begin);
     }
 
     if (formatNode && core.lifecycle.defaultFormat) {

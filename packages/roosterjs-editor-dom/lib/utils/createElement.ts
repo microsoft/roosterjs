@@ -1,5 +1,6 @@
 import getObjectKeys from '../jsUtils/getObjectKeys';
 import safeInstanceOf from './safeInstanceOf';
+import { Browser } from './Browser';
 import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 import type { CompatibleKnownCreateElementDataIndex } from 'roosterjs-editor-types/lib/compatibleTypes';
 
@@ -11,10 +12,9 @@ export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateE
 
     // Edge can sometimes lose current format when Enter to new line.
     // So here we add an extra SPAN for Edge to workaround this bug
-    [KnownCreateElementDataIndex.EmptyLine]: {
-        tag: 'div',
-        children: [{ tag: 'span', children: [{ tag: 'br' }] }],
-    },
+    [KnownCreateElementDataIndex.EmptyLine]: Browser.isEdge
+        ? { tag: 'div', children: [{ tag: 'span', children: [{ tag: 'br' }] }] }
+        : { tag: 'div', children: [{ tag: 'br' }] },
     [KnownCreateElementDataIndex.BlockquoteWrapper]: {
         tag: 'blockquote',
         style: 'margin-top:0;margin-bottom:0',
