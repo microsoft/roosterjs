@@ -10,7 +10,8 @@ export default function getLatestZIndex(editorDiv: HTMLElement) {
     let child: HTMLElement | null = editorDiv;
     let zIndex = 0;
     while (child && getTagOfNode(child) !== 'BODY') {
-        if (child.style.zIndex) {
+        const childZIndex = child.style.zIndex || getComputedStyle(child).zIndex;
+        if (childZIndex) {
             zIndex = parseInt(child.style.zIndex);
         }
         child = child.parentElement;
