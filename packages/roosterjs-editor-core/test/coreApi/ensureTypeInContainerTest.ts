@@ -52,7 +52,7 @@ describe('ensureTypeInContainer', () => {
     });
 
     it('empty, no format span', () => {
-        runTest('', undefined, undefined, true, '<div><br></div>');
+        runTest('', undefined, undefined, false, '<div><br></div>');
     });
 
     it('pure text', () => {
