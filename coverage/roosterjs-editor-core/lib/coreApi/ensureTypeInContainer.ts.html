@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">97.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>34/35</span>
             </div>
         
             
@@ -160,7 +160,9 @@
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -192,18 +194,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3518x</span>
+<span class="cline-any cline-yes">3523x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3518x</span>
+<span class="cline-any cline-yes">3523x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3518x</span>
+<span class="cline-any cline-yes">3523x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3518x</span>
+<span class="cline-any cline-yes">3523x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3518x</span>
+<span class="cline-any cline-yes">3523x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -229,29 +231,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3506x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3506x</span>
+<span class="cline-any cline-yes">3511x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3506x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3506x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3518x</span>
-<span class="cline-any cline-yes">3509x</span>
+<span class="cline-any cline-yes">3511x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3511x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3511x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3523x</span>
+<span class="cline-any cline-yes">3513x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3523x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -332,18 +336,20 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
         // Only reason we don't get the selection block is that we have an empty content div
         // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
         // The fix is to add a DIV wrapping, apply default format and move cursor over
-        const newNode = createElement(
-            KnownCreateElementDataIndex.EmptyLine,
+        formatNode = createElement(
+            applyFormatToSpan
+                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
+                : KnownCreateElementDataIndex.EmptyLine,
             core.contentDiv.ownerDocument
         ) as HTMLElement;
-        core.api.insertNode(core, newNode, {
+        core.api.insertNode(core, formatNode, {
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
         });
 &nbsp;
-        formatNode = newNode.firstChild as HTMLElement;
+        formatNode = applyFormatToSpan ? (formatNode.firstChild as HTMLElement) : formatNode;
 &nbsp;
         // element points to a wrapping node we added "&lt;div&gt;&lt;br&gt;&lt;/div&gt;". We should move the selection left to &lt;br&gt;
         position = new Position(formatNode, PositionType.Begin);
@@ -373,7 +379,7 @@ function wasNodeJustCreatedByKeyboardEvent(event: KeyboardEvent, formatNode: HTM
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Dec 16 2022 07:42:07 GMT+0000 (Coordinated Universal Time)
+                at Fri Dec 16 2022 21:08:18 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
