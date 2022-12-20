@@ -5,6 +5,7 @@ import wrap from '../utils/wrap';
 import { getNextLeafSibling } from '../utils/getLeafSibling';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
+import safeInstanceOf from '../utils/safeInstanceOf';
 
 const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL,SUP,SUB'.split(',');
 
@@ -66,10 +67,12 @@ export default function applyTextStyle(
             formatNodes = [newNode];
         }
 
-        formatNodes.forEach(node => {
+        formatNodes.forEach(startingNode => {
             // When apply style within style tags like B/I/U/..., we split the tag and apply outside them
             // So that the inner style tag such as U, STRIKE can inherit the style we added
+            let node: Node | null = startingNode;
             while (
+                node &&
                 getTagOfNode(node) != 'SPAN' &&
                 STYLET_AGS.indexOf(getTagOfNode(node.parentNode)) >= 0
             ) {
@@ -77,11 +80,14 @@ export default function applyTextStyle(
                 node = splitBalancedNodeRange(node);
             }
 
-            if (getTagOfNode(node) != 'SPAN') {
+            if (node && getTagOfNode(node) != 'SPAN') {
                 callStylerWithInnerNode(node, styler);
                 node = wrap(node, 'SPAN');
             }
-            styler(<HTMLElement>node);
+
+            if (safeInstanceOf(node, 'HTMLElement')) {
+                styler(node);
+            }
         });
     }
 }
