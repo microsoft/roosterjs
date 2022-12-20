@@ -137,6 +137,12 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
         underline: true,
         textColor: HyperLinkColorPlaceholder,
     },
+    blockquote: {
+        marginTop: '1em',
+        marginBottom: '1em',
+        marginLeft: '40px',
+        marginRight: '40px',
+    },
     h1: {
         fontWeight: 'bold',
         fontSize: '2em',
