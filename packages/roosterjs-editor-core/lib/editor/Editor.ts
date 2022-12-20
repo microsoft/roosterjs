@@ -976,12 +976,7 @@ export default class Editor implements IEditor {
      */
     public ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
         const core = this.getCore();
-        core.api.ensureTypeInContainer(
-            core,
-            position,
-            keyboardEvent,
-            this.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
-        );
+        core.api.ensureTypeInContainer(core, position, keyboardEvent);
     }
 
     //#endregion
