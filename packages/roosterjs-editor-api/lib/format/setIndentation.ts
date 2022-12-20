@@ -43,11 +43,7 @@ export default function setIndentation(
     blockFormat(
         editor,
         (region, start, end) => {
-            const blocks = getSelectedBlockElementsInRegion(
-                region,
-                true /*createBlockIfEmpty*/,
-                editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
-            );
+            const blocks = getSelectedBlockElementsInRegion(region, true /*createBlockIfEmpty*/);
             const blockGroups: BlockElement[][] = [[]];
 
             for (let i = 0; i < blocks.length; i++) {

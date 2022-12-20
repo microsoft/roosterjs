@@ -67,20 +67,18 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
         // Only reason we don't get the selection block is that we have an empty content div
         // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
         // The fix is to add a DIV wrapping, apply default format and move cursor over
-        formatNode = createElement(
-            applyFormatToSpan
-                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
-                : KnownCreateElementDataIndex.EmptyLine,
+        const newNode = createElement(
+            KnownCreateElementDataIndex.EmptyLine,
             core.contentDiv.ownerDocument
         ) as HTMLElement;
-        core.api.insertNode(core, formatNode, {
+        core.api.insertNode(core, newNode, {
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
         });
 
-        formatNode = applyFormatToSpan ? (formatNode.firstChild as HTMLElement) : formatNode;
+        formatNode = newNode.firstChild as HTMLElement;
 
         // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
         position = new Position(formatNode, PositionType.Begin);
