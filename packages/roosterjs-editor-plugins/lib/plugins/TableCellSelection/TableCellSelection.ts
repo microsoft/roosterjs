@@ -23,6 +23,7 @@ import {
     Position,
     contains,
     isCtrlOrMetaPressed,
+    getUniqueIdQuerySelector,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
@@ -105,7 +106,7 @@ export default class TableCellSelection implements EditorPlugin {
                     break;
                 case PluginEventType.LeavingShadowEdit:
                     if (this.firstTable && this.tableSelection && this.tableRange) {
-                        const table = this.editor.queryElements('#' + this.firstTable.id);
+                        const table = this.editor.queryElements(`[${getUniqueIdQuerySelector}]`);
                         if (table.length == 1) {
                             this.firstTable = table[0] as HTMLTableElement;
                             this.editor.select(this.firstTable, this.tableRange);

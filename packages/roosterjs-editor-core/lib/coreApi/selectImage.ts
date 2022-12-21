@@ -1,6 +1,8 @@
-import addUniqueId from './utils/addUniqueId';
 import {
+    addUniqueId,
     createRange,
+    getUniqueId,
+    getUniqueIdQuerySelector,
     Position,
     removeGlobalCssStyle,
     removeImportantStyleRule,
@@ -53,18 +55,22 @@ export const selectImage: SelectImage = (core: EditorCore, image: HTMLImageEleme
 
 const select = (core: EditorCore, image: HTMLImageElement) => {
     removeImportantStyleRule(image, ['border', 'margin']);
-    const borderCSS = buildBorderCSS(core, image.id);
-    setGlobalCssStyles(core.contentDiv.ownerDocument, borderCSS, STYLE_ID + core.contentDiv.id);
+    const borderCSS = buildBorderCSS(core, image);
+    const divId = getUniqueId(core.contentDiv);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, borderCSS, STYLE_ID + divId);
 };
 
-const buildBorderCSS = (core: EditorCore, imageId: string): string => {
-    const divId = core.contentDiv.id;
+const buildBorderCSS = (core: EditorCore, image: HTMLImageElement): string => {
+    const divId = getUniqueId(core.contentDiv);
     const color = core.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;
-
-    return `#${divId} #${imageId} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
+    const imageId = getUniqueId(image);
+    return `div[${getUniqueIdQuerySelector(divId)}] img[${getUniqueIdQuerySelector(
+        imageId
+    )}] {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
 };
 
 const unselect = (core: EditorCore) => {
     const doc = core.contentDiv.ownerDocument;
-    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
+    const divId = getUniqueId(core.contentDiv);
+    removeGlobalCssStyle(doc, STYLE_ID + divId);
 };

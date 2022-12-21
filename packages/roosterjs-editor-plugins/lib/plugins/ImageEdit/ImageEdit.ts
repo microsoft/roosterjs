@@ -18,6 +18,8 @@ import {
     createElement,
     getComputedStyle,
     getObjectKeys,
+    getUniqueId,
+    getUniqueIdQuerySelector,
     removeGlobalCssStyle,
     safeInstanceOf,
     setGlobalCssStyles,
@@ -379,13 +381,16 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
-        const editorId = this.editor.getEditorDomAttribute('id');
+        const editorId = this.editor.getEditorDomAttribute(getUniqueIdQuerySelector());
         const doc = this.editor.getDocument();
         const editingId = 'editingId' + editorId;
+        const imageId = getUniqueId(image);
         if (showImage) {
             removeGlobalCssStyle(doc, editingId);
         } else {
-            const cssRule = `#${editorId} #${image.id} {visibility: hidden}`;
+            const cssRule = `div[${getUniqueIdQuerySelector(
+                editorId
+            )}] img[${getUniqueIdQuerySelector(imageId)}] {visibility: hidden}`;
             setGlobalCssStyles(doc, cssRule, editingId);
         }
     }

@@ -134,6 +134,8 @@ export {
 } from './metadata/definitionCreators';
 export { getMetadata, setMetadata, removeMetadata } from './metadata/metadata';
 
+export { addUniqueId, getUniqueIdQuerySelector, getUniqueId } from './uniqueId/uniqueId';
+
 export { default as arrayPush } from './jsUtils/arrayPush';
 export { default as getObjectKeys } from './jsUtils/getObjectKeys';
 export { default as toArray } from './jsUtils/toArray';

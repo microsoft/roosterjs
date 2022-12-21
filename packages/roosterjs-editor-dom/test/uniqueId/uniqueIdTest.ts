@@ -1,4 +1,4 @@
-import addUniqueId from '../../../lib/coreApi/utils/addUniqueId';
+import { addUniqueId, getUniqueId } from '../../lib/uniqueId/uniqueId';
 
 describe('addUniqueId', () => {
     let div: HTMLDivElement;
@@ -14,7 +14,7 @@ describe('addUniqueId', () => {
 
     it('should add an id ', () => {
         addUniqueId(div, 'test');
-        expect(div.id).toBe('test0');
+        expect(getUniqueId(div)).toBe('test0');
     });
 
     it('should unique id ', () => {
@@ -22,8 +22,8 @@ describe('addUniqueId', () => {
         document.body.appendChild(span);
         addUniqueId(div, 'test');
         addUniqueId(span, 'test');
-        expect(div.id).toBe('test0');
-        expect(span.id).toBe('test1');
+        expect(getUniqueId(div)).toBe('test0');
+        expect(getUniqueId(span)).toBe('test1');
         document.body.removeChild(span);
     });
 
@@ -33,8 +33,8 @@ describe('addUniqueId', () => {
         document.body.appendChild(span);
         addUniqueId(div, 'test');
         addUniqueId(span, 'test');
-        expect(div.id).toBe('test1');
-        expect(span.id).toBe('test0');
+        expect(getUniqueId(div)).toBe('test1');
+        expect(getUniqueId(span)).toBe('test0');
         document.body.removeChild(span);
     });
 });

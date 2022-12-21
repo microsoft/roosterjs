@@ -1,3 +1,4 @@
+import { addUniqueId } from '../../../roosterjs-editor-dom/lib/uniqueId/uniqueId';
 import { Browser } from 'roosterjs-editor-dom';
 import { DeleteTableContents } from '../../lib/plugins/TableCellSelection/features/DeleteTableContents';
 import { Editor } from 'roosterjs-editor-core';
@@ -24,7 +25,7 @@ describe('TableCellSelectionPlugin |', () => {
 
     beforeEach(() => {
         let node = document.createElement('div');
-        node.id = id;
+        addUniqueId(node, id);
         document.body.insertBefore(node, document.body.childNodes[0]);
         tableCellSelection = new TableCellSelection();
 
@@ -81,6 +82,8 @@ describe('TableCellSelectionPlugin |', () => {
         editor.setContent(content);
         const target = document.getElementById(targetId);
         const target2 = document.getElementById(targetId2);
+        addUniqueId(target!, targetId);
+        addUniqueId(target2!, targetId2);
 
         //Act
         editor.focus();

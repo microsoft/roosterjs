@@ -1,7 +1,9 @@
-import addUniqueId from './utils/addUniqueId';
 import {
+    addUniqueId,
     createRange,
     getTagOfNode,
+    getUniqueId,
+    getUniqueIdQuerySelector,
     Position,
     removeGlobalCssStyle,
     removeImportantStyleRule,
@@ -127,7 +129,7 @@ function buildCss(
 
                     const selector = generateCssFromCell(
                         contentDivSelector,
-                        table.id,
+                        getUniqueId(table),
                         middleElSelector,
                         currentRow,
                         tag,
@@ -159,19 +161,20 @@ function buildCss(
 }
 
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
-    const contentDivSelector = '#' + core.contentDiv.id;
-    let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
-    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
+    const contentDivId = getUniqueId(core.contentDiv);
+    let { css, ranges } = buildCss(table, coordinates, contentDivId);
+    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + contentDivId);
     return ranges;
 }
 
 const unselect = (core: EditorCore) => {
     const doc = core.contentDiv.ownerDocument;
-    removeGlobalCssStyle(doc, STYLE_ID + core.contentDiv.id);
+    const contentDivId = getUniqueId(core.contentDiv);
+    removeGlobalCssStyle(doc, STYLE_ID + contentDivId);
 };
 
 function generateCssFromCell(
-    contentDivSelector: string,
+    contentDivId: string,
     tableId: string,
     middleElSelector: string,
     rowIndex: number,
@@ -179,9 +182,8 @@ function generateCssFromCell(
     index: number
 ): string {
     return (
-        contentDivSelector +
-        ' #' +
-        tableId +
+        `div[${getUniqueIdQuerySelector(contentDivId)}]` +
+        ` table[${getUniqueIdQuerySelector(tableId)}]` +
         middleElSelector +
         ' tr:nth-child(' +
         rowIndex +
