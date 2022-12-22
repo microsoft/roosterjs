@@ -90,9 +90,6 @@ describe('TableCellSelectionPlugin |', () => {
 
         //Assert
         simulateMouseEvent('mouseup', target2);
-        editor.runAsync = callback => {
-            callback(editor);
-        };
 
         const selection = editor.getSelectionRangeEx();
         if (expectRangeCallback) {
