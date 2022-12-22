@@ -26,15 +26,4 @@ describe('addUniqueId', () => {
         expect(getUniqueId(span)).toBe('test1');
         document.body.removeChild(span);
     });
-
-    it('should replace existing ids', () => {
-        const span = document.createElement('span');
-        span.id = 'test0';
-        document.body.appendChild(span);
-        addUniqueId(div, 'test');
-        addUniqueId(span, 'test');
-        expect(getUniqueId(div)).toBe('test1');
-        expect(getUniqueId(span)).toBe('test0');
-        document.body.removeChild(span);
-    });
 });

@@ -24,6 +24,7 @@ import {
     contains,
     isCtrlOrMetaPressed,
     getUniqueIdQuerySelector,
+    getUniqueId,
 } from 'roosterjs-editor-dom';
 
 const TABLE_CELL_SELECTOR = 'td,th';
@@ -106,7 +107,9 @@ export default class TableCellSelection implements EditorPlugin {
                     break;
                 case PluginEventType.LeavingShadowEdit:
                     if (this.firstTable && this.tableSelection && this.tableRange) {
-                        const table = this.editor.queryElements(`[${getUniqueIdQuerySelector}]`);
+                        const uniqueId = getUniqueId(this.firstTable);
+                        const uniqueIdSelector = getUniqueIdQuerySelector(uniqueId);
+                        const table = this.editor.queryElements(`[${uniqueIdSelector}]`);
                         if (table.length == 1) {
                             this.firstTable = table[0] as HTMLTableElement;
                             this.editor.select(this.firstTable, this.tableRange);
@@ -293,7 +296,6 @@ export default class TableCellSelection implements EditorPlugin {
     //#region Mouse events
     private handleMouseDownEvent(event: PluginMouseDownEvent) {
         const { which, shiftKey } = event.rawEvent;
-
         if (which == RIGHT_CLICK && this.tableSelection) {
             //If the user is right clicking To open context menu
             const td = this.editor.getElementAtCursor(TABLE_CELL_SELECTOR);

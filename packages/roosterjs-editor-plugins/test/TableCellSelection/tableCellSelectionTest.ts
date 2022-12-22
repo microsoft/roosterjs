@@ -1,9 +1,9 @@
-import { addUniqueId } from '../../../roosterjs-editor-dom/lib/uniqueId/uniqueId';
 import { Browser } from 'roosterjs-editor-dom';
 import { DeleteTableContents } from '../../lib/plugins/TableCellSelection/features/DeleteTableContents';
 import { Editor } from 'roosterjs-editor-core';
 import { IEditor } from 'roosterjs-editor-types';
 import { TableCellSelection } from '../../lib/TableCellSelection';
+
 import {
     Coordinates,
     EditorOptions,
@@ -25,7 +25,7 @@ describe('TableCellSelectionPlugin |', () => {
 
     beforeEach(() => {
         let node = document.createElement('div');
-        addUniqueId(node, id);
+        node.id = id;
         document.body.insertBefore(node, document.body.childNodes[0]);
         tableCellSelection = new TableCellSelection();
 
@@ -82,8 +82,6 @@ describe('TableCellSelectionPlugin |', () => {
         editor.setContent(content);
         const target = document.getElementById(targetId);
         const target2 = document.getElementById(targetId2);
-        addUniqueId(target!, targetId);
-        addUniqueId(target2!, targetId2);
 
         //Act
         editor.focus();
@@ -92,6 +90,10 @@ describe('TableCellSelectionPlugin |', () => {
 
         //Assert
         simulateMouseEvent('mouseup', target2);
+        editor.runAsync = callback => {
+            callback(editor);
+        };
+
         const selection = editor.getSelectionRangeEx();
         if (expectRangeCallback) {
             expect(selection.ranges).toEqual(expectRangeCallback());
@@ -648,7 +650,7 @@ describe('TableCellSelectionPlugin |', () => {
     it('DeleteTableContents Feature', () => {
         //Arrange
         editor.setContent(
-            `<div><table id='table1' cellspacing="0" cellpadding="1"><tbody><tr ><td id=${targetId} >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td  >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td id=${targetId2} >Test string<br></td><td >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td >`
+            `<div><table unique_id='table1' id='table1' cellspacing="0" cellpadding="1"><tbody><tr ><td id=${targetId} >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td  >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td id=${targetId2} >Test string<br></td><td >Test string<br></td></tr><tr ><td >Test string<br></td><td >Test string<br></td><td >Test string<br></td><td >`
         );
 
         const table = editor.getDocument().getElementById('table1') as HTMLTableElement;

@@ -41,12 +41,14 @@ describe('selectImage |', () => {
 
     it('image should have an unique id', () => {
         selectImage(core, image);
-        expect(image!.id).toBe('imageSelected0');
+        const uniqueId = image?.getAttribute('unique_id');
+        expect(uniqueId).toBe('imageSelected0');
     });
 
     it('contentDiv should have an unique id', () => {
         selectImage(core, image);
-        expect(core.contentDiv.id).toBe('contentDiv_0');
+        const uniqueId = core.contentDiv.getAttribute('unique_id');
+        expect(uniqueId).toBe('contentDiv_0');
     });
 
     it('styleTag should be created', () => {

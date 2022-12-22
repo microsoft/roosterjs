@@ -1,6 +1,8 @@
 import {
     createRange,
     getSelectionPath,
+    getUniqueId,
+    getUniqueIdQuerySelector,
     moveContentWithEntityPlaceholders,
     restoreContentWithEntityPlaceholder,
 } from 'roosterjs-editor-dom';
@@ -118,7 +120,9 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
 
             if (core.domEvent.imageSelectionRange) {
                 const { image } = core.domEvent.imageSelectionRange;
-                const imageElement = core.contentDiv.querySelector('#' + image.id);
+                const imageId = getUniqueId(image);
+                const uniqueIdSelector = getUniqueIdQuerySelector(imageId);
+                const imageElement = core.contentDiv.querySelector(`[${uniqueIdSelector}]`);
                 if (imageElement) {
                     core.api.selectImage(core, image);
                 }
@@ -126,8 +130,9 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
 
             if (core.domEvent.tableSelectionRange) {
                 const { table, coordinates } = core.domEvent.tableSelectionRange;
-                const tableId = table.id;
-                const tableElement = core.contentDiv.querySelector('#' + tableId);
+                const tableId = getUniqueId(table);
+                const uniqueIdSelector = getUniqueIdQuerySelector(tableId);
+                const tableElement = core.contentDiv.querySelector(`[${uniqueIdSelector}]`);
                 if (table) {
                     core.domEvent.tableSelectionRange = core.api.selectTable(
                         core,
