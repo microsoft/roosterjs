@@ -115,6 +115,35 @@ describe('convertPastedContentFromWord', () => {
         let source = '<p style="line-height:122%"></p>';
         runTest(source, source);
     });
+
+    describe('List Convertion Tests | ', () => {
+        it('List with Headings', () => {
+            const html =
+                createListElementFromWord('p', 'test1') + createListElementFromWord('h1', 'test2');
+            runTest(html, '<ul><li>test1</li><li><h1>test2</h1></li></ul>');
+        });
+
+        it('List with Headings in sub level 1', () => {
+            const html =
+                createListElementFromWord('p', 'test1') +
+                createListElementFromWord('h1', 'test2', 'l0 level2 lfo1');
+            runTest(html, '<ul><li>test1</li><ul><li><h1>test2</h1></li></ul></ul>');
+        });
+
+        it('List with Headings in sub level 2', () => {
+            const html =
+                createListElementFromWord('p', 'test1') +
+                createListElementFromWord('h1', 'test2', 'l0 level3 lfo1');
+            runTest(html, '<ul><li>test1</li><ul><ul><li><h1>test2</h1></li></ul></ul></ul>');
+        });
+
+        it('List with Headings in sub level 3', () => {
+            const html =
+                createListElementFromWord('p', 'test1') +
+                createListElementFromWord('h1', 'test2', 'l1 level3 lfo2');
+            runTest(html, '<ul><li>test1</li><ul><ul><li><h1>test2</h1></li></ul></ul></ul>');
+        });
+    });
 });
 
 function createBeforePasteEventMock(fragment: DocumentFragment) {
@@ -139,4 +168,16 @@ function createBeforePasteEventMock(fragment: DocumentFragment) {
         htmlAfter: '',
         htmlAttributes: {},
     } as unknown) as BeforePasteEvent;
+}
+
+function createListElementFromWord(
+    tag: string,
+    content: string,
+    msoList: string = 'l0 level1 lfo1'
+) {
+    return (
+        `<${tag} style="text-indent:-.25in;mso-list: ${msoList}" class="MsoListParagraph"><!--[if !supportLists]--><span style="font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:` +
+        'Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+        `</span></span></span><!--[endif]-->${content}</${tag}>`
+    );
 }
