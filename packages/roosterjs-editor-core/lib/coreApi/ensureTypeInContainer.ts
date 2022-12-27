@@ -90,7 +90,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
 
     // If this is triggered by a keyboard event, let's select the new position
     if (keyboardEvent) {
-        core.api.selectRange(core, createRange(position));
+        core.api.selectRange(core, createRange(new Position(position)));
     }
 };
 

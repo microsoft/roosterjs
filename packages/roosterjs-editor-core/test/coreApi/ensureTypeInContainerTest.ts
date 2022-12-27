@@ -139,7 +139,13 @@ describe('ensureTypeInContainer', () => {
             } as any) as KeyboardEvent,
             true,
             '<div><span style="font-size: 10pt;">a</span></div>',
-            () => new Position(div.firstChild?.firstChild, PositionType.Begin)
+            () =>
+                new Position(<NodePosition>(<any>{
+                    element: div.firstChild?.firstChild,
+                    isAtEnd: false,
+                    offset: 0,
+                    node: div.firstChild?.firstChild?.firstChild,
+                }))
         );
     });
 
@@ -187,7 +193,7 @@ describe('ensureTypeInContainer', () => {
             } as any) as KeyboardEvent,
             true,
             '<table><tbody><tr><td id="td"><span style="font-size: 10pt;"><br></span></td></tr></tbody></table>',
-            () => new Position(div.querySelector('#td')!.firstChild, PositionType.Begin)
+            () => new Position(div.querySelector('#td')!, PositionType.Begin)
         );
     });
 });
