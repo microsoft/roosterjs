@@ -60,8 +60,6 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
             formatNode = safeInstanceOf(firstChild, 'HTMLSpanElement')
                 ? firstChild
                 : wrap(toArray(formatNode.childNodes), 'span');
-
-            position = new Position(formatNode, PositionType.Begin);
         }
     } else {
         // Only reason we don't get the selection block is that we have an empty content div
