@@ -122,7 +122,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 const { image } = core.domEvent.imageSelectionRange;
                 const imageId = getUniqueId(image);
                 const uniqueIdSelector = getUniqueIdQuerySelector(imageId);
-                const imageElement = core.contentDiv.querySelector(`[${uniqueIdSelector}]`);
+                const imageElement = core.contentDiv.querySelector(uniqueIdSelector);
                 if (imageElement) {
                     core.api.selectImage(core, image);
                 }
@@ -132,7 +132,7 @@ export const switchShadowEdit: SwitchShadowEdit = (core: EditorCore, isOn: boole
                 const { table, coordinates } = core.domEvent.tableSelectionRange;
                 const tableId = getUniqueId(table);
                 const uniqueIdSelector = getUniqueIdQuerySelector(tableId);
-                const tableElement = core.contentDiv.querySelector(`[${uniqueIdSelector}]`);
+                const tableElement = core.contentDiv.querySelector(uniqueIdSelector);
                 if (table) {
                     core.domEvent.tableSelectionRange = core.api.selectTable(
                         core,

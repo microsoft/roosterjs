@@ -10,6 +10,8 @@ import {
     createRange,
     VTable,
     isWholeTableSelected,
+    getUniqueId,
+    getUniqueIdQuerySelector,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -101,9 +103,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     selection.type === SelectionRangeTypes.TableSelection &&
                     selection.coordinates
                 ) {
-                    const table = tempDiv.querySelector(
-                        `#${selection.table.id}`
-                    ) as HTMLTableElement;
+                    const uniqueId = getUniqueId(selection.table);
+                    const tableSelector = getUniqueIdQuerySelector(uniqueId);
+                    const table = tempDiv.querySelector(tableSelector) as HTMLTableElement;
                     newRange = this.createTableRange(table, selection.coordinates);
                     if (isCut) {
                         this.deleteTableContent(
@@ -113,12 +115,14 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                         );
                     }
                 } else if (selection.type === SelectionRangeTypes.ImageSelection) {
-                    const image = tempDiv.querySelector('#' + selection.image.id);
+                    const uniqueId = getUniqueId(selection.image);
+                    const imageSelector = getUniqueIdQuerySelector(uniqueId);
+                    const image = tempDiv.querySelector(imageSelector) as HTMLImageElement;
 
                     if (image) {
                         newRange = createRange(image);
                         if (isCut) {
-                            this.deleteImage(this.editor, selection.image.id);
+                            this.deleteImage(this.editor, imageSelector);
                         }
                     }
                 } else {
@@ -288,8 +292,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         }
     }
 
-    private deleteImage(editor: IEditor, imageId: string) {
-        editor.queryElements('#' + imageId, node => {
+    private deleteImage(editor: IEditor, imageSelector: string) {
+        editor.queryElements(imageSelector, node => {
             editor.deleteNode(node);
         });
     }

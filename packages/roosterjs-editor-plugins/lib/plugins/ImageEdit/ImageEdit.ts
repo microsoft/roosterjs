@@ -381,16 +381,16 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
-        const editorId = this.editor.getEditorDomAttribute(getUniqueIdQuerySelector());
+        const editorId = this.editor.getEditorDomAttribute('data-unique-id');
         const doc = this.editor.getDocument();
         const editingId = 'editingId' + editorId;
         const imageId = getUniqueId(image);
         if (showImage) {
             removeGlobalCssStyle(doc, editingId);
         } else {
-            const cssRule = `div[${getUniqueIdQuerySelector(
-                editorId
-            )}] img[${getUniqueIdQuerySelector(imageId)}] {visibility: hidden}`;
+            const cssRule = `div${getUniqueIdQuerySelector(editorId)} img${getUniqueIdQuerySelector(
+                imageId
+            )} {visibility: hidden}`;
             setGlobalCssStyles(doc, cssRule, editingId);
         }
     }

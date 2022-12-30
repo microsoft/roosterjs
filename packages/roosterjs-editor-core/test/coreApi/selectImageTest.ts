@@ -41,13 +41,13 @@ describe('selectImage |', () => {
 
     it('image should have an unique id', () => {
         selectImage(core, image);
-        const uniqueId = image?.getAttribute('unique_id');
+        const uniqueId = image?.getAttribute('data-unique-id');
         expect(uniqueId).toBe('imageSelected0');
     });
 
     it('contentDiv should have an unique id', () => {
         selectImage(core, image);
-        const uniqueId = core.contentDiv.getAttribute('unique_id');
+        const uniqueId = core.contentDiv.getAttribute('data-unique-id');
         expect(uniqueId).toBe('contentDiv_0');
     });
 

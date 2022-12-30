@@ -69,7 +69,7 @@ describe('setIndentation()', () => {
                 });
             },
             Indentation.Decrease,
-            '<table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
+            '<table id="test" data-unique-id="tableSelected0"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
         );
     });
 
@@ -84,13 +84,13 @@ describe('setIndentation()', () => {
                 });
             },
             Indentation.Increase,
-            '<blockquote style="margin-top:0;margin-bottom:0"><table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table></blockquote>'
+            '<blockquote style="margin-top:0;margin-bottom:0"><table id="test" data-unique-id="tableSelected0"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table></blockquote>'
         );
     });
 
     it('Outdent whole table selected', () => {
         runTest(
-            '<blockquote style="margin-top:0;margin-bottom:0"><table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table></blockquote>',
+            '<blockquote style="margin-top:0;margin-bottom:0"><table id="test" data-unique-id="tableSelected0"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table></blockquote>',
             () => {
                 const table = editor.getDocument().getElementById('test') as HTMLTableElement;
                 editor.select(table, <TableSelection>{
@@ -99,7 +99,7 @@ describe('setIndentation()', () => {
                 });
             },
             Indentation.Decrease,
-            '<table id="test"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
+            '<table id="test" data-unique-id="tableSelected0"><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'
         );
     });
 });

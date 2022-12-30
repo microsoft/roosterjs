@@ -109,7 +109,7 @@ export default class TableCellSelection implements EditorPlugin {
                     if (this.firstTable && this.tableSelection && this.tableRange) {
                         const uniqueId = getUniqueId(this.firstTable);
                         const uniqueIdSelector = getUniqueIdQuerySelector(uniqueId);
-                        const table = this.editor.queryElements(`[${uniqueIdSelector}]`);
+                        const table = this.editor.queryElements(uniqueIdSelector);
                         if (table.length == 1) {
                             this.firstTable = table[0] as HTMLTableElement;
                             this.editor.select(this.firstTable, this.tableRange);

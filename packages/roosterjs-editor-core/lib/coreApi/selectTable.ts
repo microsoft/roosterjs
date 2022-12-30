@@ -182,8 +182,8 @@ function generateCssFromCell(
     index: number
 ): string {
     return (
-        `div[${getUniqueIdQuerySelector(contentDivId)}]` +
-        ` table[${getUniqueIdQuerySelector(tableId)}]` +
+        `div${getUniqueIdQuerySelector(contentDivId)}` +
+        ` table${getUniqueIdQuerySelector(tableId)}` +
         middleElSelector +
         ' tr:nth-child(' +
         rowIndex +

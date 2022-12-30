@@ -64,9 +64,9 @@ const buildBorderCSS = (core: EditorCore, image: HTMLImageElement): string => {
     const divId = getUniqueId(core.contentDiv);
     const color = core.imageSelectionBorderColor || DEFAULT_SELECTION_BORDER_COLOR;
     const imageId = getUniqueId(image);
-    return `div[${getUniqueIdQuerySelector(divId)}] img[${getUniqueIdQuerySelector(
+    return `div${getUniqueIdQuerySelector(divId)} img${getUniqueIdQuerySelector(
         imageId
-    )}] {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
+    )} {outline-style: auto!important;outline-color: ${color}!important;caret-color: transparent!important;}`;
 };
 
 const unselect = (core: EditorCore) => {
