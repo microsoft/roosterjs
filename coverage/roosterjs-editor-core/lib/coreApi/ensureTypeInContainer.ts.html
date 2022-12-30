@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>27/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">97.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>34/35</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
@@ -192,18 +192,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3522x</span>
+<span class="cline-any cline-yes">3337x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3522x</span>
+<span class="cline-any cline-yes">3337x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3522x</span>
+<span class="cline-any cline-yes">3337x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3522x</span>
+<span class="cline-any cline-yes">3337x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3522x</span>
+<span class="cline-any cline-yes">3337x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -223,35 +223,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3325x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3510x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3510x</span>
+<span class="cline-any cline-yes">3325x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3510x</span>
+<span class="cline-any cline-yes">3325x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3510x</span>
+<span class="cline-any cline-yes">3325x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3522x</span>
-<span class="cline-any cline-yes">3513x</span>
+<span class="cline-any cline-yes">3337x</span>
+<span class="cline-any cline-yes">3327x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3522x</span>
+<span class="cline-any cline-yes">3337x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -325,25 +325,25 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
             formatNode = safeInstanceOf(firstChild, 'HTMLSpanElement')
                 ? <span class="branch-0 cbranch-no" title="branch not covered" >firstChild</span>
                 : wrap(toArray(formatNode.childNodes), 'span');
-&nbsp;
-            position = new Position(formatNode, PositionType.Begin);
         }
     } else {
         // Only reason we don't get the selection block is that we have an empty content div
         // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
         // The fix is to add a DIV wrapping, apply default format and move cursor over
-        const newNode = createElement(
-            KnownCreateElementDataIndex.EmptyLine,
+        formatNode = createElement(
+            applyFormatToSpan
+                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
+                : KnownCreateElementDataIndex.EmptyLine,
             core.contentDiv.ownerDocument
         ) as HTMLElement;
-        core.api.insertNode(core, newNode, {
+        core.api.insertNode(core, formatNode, {
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
         });
 &nbsp;
-        formatNode = newNode.firstChild as HTMLElement;
+        formatNode = applyFormatToSpan ? (formatNode.firstChild as HTMLElement) : formatNode;
 &nbsp;
         // element points to a wrapping node we added "&lt;div&gt;&lt;br&gt;&lt;/div&gt;". We should move the selection left to &lt;br&gt;
         position = new Position(formatNode, PositionType.Begin);
@@ -355,7 +355,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
 &nbsp;
     // If this is triggered by a keyboard event, let's select the new position
     if (keyboardEvent) {
-        core.api.selectRange(core, createRange(position));
+        core.api.selectRange(core, createRange(new Position(position)));
     }
 };
 &nbsp;
@@ -373,7 +373,7 @@ function wasNodeJustCreatedByKeyboardEvent(event: KeyboardEvent, formatNode: HTM
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Dec 29 2022 21:13:42 GMT+0000 (Coordinated Universal Time)
+                at Fri Dec 30 2022 15:54:56 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
