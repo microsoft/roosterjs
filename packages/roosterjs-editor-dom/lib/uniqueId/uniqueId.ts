@@ -6,7 +6,7 @@ const UNIQUE_ID = 'uniqueId';
 /**
  * Unique Id data selector
  */
-const UNIQUE_ID_DATA_SELECTOR = 'data-unique-id';
+export const UNIQUE_ID_DATA_SELECTOR: string = 'data-unique-id';
 
 /**
  * Get unique id querySelector attribute

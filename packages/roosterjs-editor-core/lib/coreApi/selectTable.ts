@@ -153,9 +153,12 @@ function buildCss(
         }
     });
 
-    const css = `${selectors.join(
-        ','
-    )} {background-color: rgba(198,198,198,0.7) !important; caret-color: transparent}`;
+    const css =
+        selectors.length > 0
+            ? `${selectors.join(
+                  ','
+              )} {background-color: rgba(198,198,198,0.7) !important; caret-color: transparent}`
+            : '';
 
     return { css, ranges };
 }
@@ -163,7 +166,9 @@ function buildCss(
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
     const contentDivId = getUniqueId(core.contentDiv);
     let { css, ranges } = buildCss(table, coordinates, contentDivId);
-    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + contentDivId);
+    if (css) {
+        setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + contentDivId);
+    }
     return ranges;
 }
 

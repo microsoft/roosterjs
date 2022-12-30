@@ -24,6 +24,7 @@ import {
     safeInstanceOf,
     setGlobalCssStyles,
     toArray,
+    UNIQUE_ID_DATA_SELECTOR,
 } from 'roosterjs-editor-dom';
 import {
     Resizer,
@@ -328,6 +329,7 @@ export default class ImageEdit implements EditorPlugin {
     private createWrapper(operation: ImageEditOperation | CompatibleImageEditOperation) {
         //Clone the image and insert the clone in a entity
         this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
+        this.clonedImage.removeAttribute(UNIQUE_ID_DATA_SELECTOR);
         this.wrapper = createElement(
             KnownCreateElementDataIndex.ImageEditWrapper,
             this.image.ownerDocument
@@ -381,7 +383,7 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
-        const editorId = this.editor.getEditorDomAttribute('data-unique-id');
+        const editorId = this.editor.getEditorDomAttribute(UNIQUE_ID_DATA_SELECTOR);
         const doc = this.editor.getDocument();
         const editingId = 'editingId' + editorId;
         const imageId = getUniqueId(image);
