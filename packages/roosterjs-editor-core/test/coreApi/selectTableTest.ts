@@ -42,8 +42,8 @@ xdescribe('selectTable |', () => {
         expect(style.sheet.cssRules[0]).toBeDefined();
         expect(style.sheet.cssRules[0].cssText).toEqual(
             Browser.isFirefox
-                ? 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                ? 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
         );
     });
 
@@ -58,8 +58,8 @@ xdescribe('selectTable |', () => {
         expect(style.sheet.cssRules[0]).toBeDefined();
         expect(style.sheet.cssRules[0].cssText).toEqual(
             Browser.isFirefox
-                ? 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                ? 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
         );
     });
 
@@ -78,8 +78,8 @@ xdescribe('selectTable |', () => {
         expect(style.sheet.cssRules[0]).toBeDefined();
         expect(style.sheet.cssRules[0].cssText).toEqual(
             Browser.isFirefox
-                ? 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TH:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TH:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > th:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > th:nth-child(1), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                ? 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TH:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TH:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > th:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > th:nth-child(1), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
         );
     });
 
@@ -98,8 +98,8 @@ xdescribe('selectTable |', () => {
         expect(style.sheet.cssRules[0]).toBeDefined();
         expect(style.sheet.cssRules[0].cssText).toEqual(
             Browser.isFirefox
-                ? 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > THEAD > tr:nth-child(2) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > thead > tr:nth-child(2) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                ? 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > THEAD > tr:nth-child(2) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > thead > tr:nth-child(2) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
         );
     });
 
@@ -118,8 +118,8 @@ xdescribe('selectTable |', () => {
         expect(style.sheet.cssRules[0]).toBeDefined();
         expect(style.sheet.cssRules[0].cssText).toEqual(
             Browser.isFirefox
-                ? 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                ? 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
         );
     });
 
@@ -137,8 +137,8 @@ xdescribe('selectTable |', () => {
         expect(style.sheet.cssRules[0]).toBeDefined();
         expect(style.sheet.cssRules[0].cssText).toEqual(
             Browser.isFirefox
-                ? 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > THEAD > tr:nth-child(2) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > thead > tr:nth-child(2) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                ? 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > THEAD > tr:nth-child(2) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(1) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TBODY > tr:nth-child(2) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > thead > tr:nth-child(2) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(1) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tbody > tr:nth-child(2) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
         );
     });
 
@@ -156,8 +156,8 @@ xdescribe('selectTable |', () => {
         expect(style.sheet.cssRules[0]).toBeDefined();
         expect(style.sheet.cssRules[0].cssText).toEqual(
             Browser.isFirefox
-                ? 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > THEAD > tr:nth-child(2) > TD:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
-                : 'div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > thead > tr:nth-child(2) > td:nth-child(2), div[unique_id="contentDiv_0"] table[unique_id="tableSelected0"] > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                ? 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > THEAD > tr:nth-child(2) > TD:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : 'div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > thead > tr:nth-child(2) > td:nth-child(2), div[data-unique-id="contentDiv_0"] table[data-unique-id="tableSelected0"] > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
         );
     });
 
@@ -260,7 +260,7 @@ xdescribe('selectTable |', () => {
 });
 
 function buildTableHTML(tbody: boolean, thead: boolean = false, tfoot: boolean = false) {
-    let table = '<div><table unique_id="tableSelected0">';
+    let table = '<div><table data-unique-id="tableSelected0">';
 
     if (thead) {
         table +=
