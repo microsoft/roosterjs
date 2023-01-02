@@ -1,8 +1,7 @@
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
-import { getOperationalBlocks } from '../common/getOperationalBlocks';
-import { getSelections } from '../selection/getSelections';
+import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 
@@ -16,17 +15,18 @@ export function setModelIndentation(
     indentation: 'indent' | 'outdent',
     length: number = IndentStepInPixel
 ) {
-    const paragraphs = getSelections(model);
-    const paragraphOrListItem = getOperationalBlocks<ContentModelListItem>(paragraphs, [
-        'ListItem',
-    ]);
+    const paragraphOrListItem = getOperationalBlocks<ContentModelListItem>(
+        model,
+        ['ListItem'],
+        ['TableCell']
+    );
     const isIndent = indentation == 'indent';
 
-    paragraphOrListItem.forEach(item => {
-        if (isBlockGroupOfType(item, 'ListItem')) {
+    paragraphOrListItem.forEach(({ block }) => {
+        if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             if (isIndent) {
                 const newLevel: ContentModelListItemLevelFormat = {
-                    ...item.levels[item.levels.length - 1],
+                    ...block.levels[block.levels.length - 1],
                 };
 
                 // New level is totally new, no need to have these attributes for now
@@ -34,12 +34,12 @@ export function setModelIndentation(
                 delete newLevel.orderedStyleType;
                 delete newLevel.unorderedStyleType;
 
-                item.levels.push(newLevel);
+                block.levels.push(newLevel);
             } else {
-                item.levels.pop();
+                block.levels.pop();
             }
-        } else if (item.paragraph) {
-            const { format } = item.paragraph;
+        } else if (block) {
+            const { format } = block;
             const { marginLeft, marginRight, direction } = format;
             const originalValue = parseValueWithUnit(direction == 'rtl' ? marginRight : marginLeft);
             let newValue = (isIndent ? Math.ceil : Math.floor)(originalValue / length) * length;
