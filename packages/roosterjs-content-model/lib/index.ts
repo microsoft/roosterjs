@@ -26,6 +26,7 @@ export { default as setIndentation } from './publicApi/block/setIndentation';
 export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
 export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
+export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 
@@ -52,8 +53,9 @@ export { ContentModelImage } from './publicTypes/segment/ContentModelImage';
 export { ContentModelGeneralSegment } from './publicTypes/segment/ContentModelGeneralSegment';
 export { ContentModelSegment } from './publicTypes/segment/ContentModelSegment';
 export { ContentModelEntity } from './publicTypes/entity/ContentModelEntity';
-export { ContentModelHR } from './publicTypes/block/ContentModelHR';
-export { ContentModelHeader } from './publicTypes/decorator/ContentModelHeader';
+export { ContentModelDivider } from './publicTypes/block/ContentModelDivider';
+
+export { ContentModelParagraphDecorator } from './publicTypes/decorator/ContentModelParagraphDecorator';
 export { ContentModelLink } from './publicTypes/decorator/ContentModelLink';
 
 export { FormatHandlerTypeMap, FormatKey } from './publicTypes/format/FormatHandlerTypeMap';
@@ -65,6 +67,7 @@ export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentMod
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 export { ContentModelWithDataset } from './publicTypes/format/ContentModelWithDataset';
+export { ContentModelQuoteFormat } from './publicTypes/format/ContentModelQuoteFormat';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';
@@ -99,6 +102,8 @@ export {
     ImageRotateMetadataFormat,
 } from './publicTypes/format/formatParts/ImageMetadataFormat';
 export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
+export { WhiteSpaceFormat } from './publicTypes/format/formatParts/WhiteSpaceFormat';
+export { WordBreakFormat } from './publicTypes/format/formatParts/WordBreakFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 
@@ -142,7 +147,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     ContentModelHandlerTypeMap,
-    DefaultImplicitSegmentFormatMap,
+    DefaultImplicitFormatMap,
 } from './publicTypes/context/ModelToDomSettings';
 export { ModelToDomEntityContext } from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';

@@ -1,3 +1,4 @@
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
@@ -12,6 +13,7 @@ import {
     ChangeSource,
     ClearFormatMode,
     DocumentCommand,
+    ExperimentalFeatures,
     IEditor,
     QueryScope,
 } from 'roosterjs-editor-types';
@@ -34,7 +36,6 @@ import {
     wrap,
 } from 'roosterjs-editor-dom';
 import type { CompatibleClearFormatMode } from 'roosterjs-editor-types/lib/compatibleTypes';
-import applyListItemStyleWrap from '../utils/applyListItemWrap';
 
 const STYLES_TO_REMOVE = ['font', 'text-decoration', 'color', 'background'];
 const TAGS_TO_UNWRAP = 'B,I,U,STRONG,EM,SUB,SUP,STRIKE,FONT,CENTER,H1,H2,H3,H4,H5,H6,UL,OL,LI,SPAN,P,BLOCKQUOTE,CODE,S,PRE'.split(
@@ -143,15 +144,24 @@ function removeNotTableDefaultStyles(element: HTMLTableElement) {
 }
 
 /**
- * Verifies recursively if a node and its parents have any siblings
+ * Verifies recursively if a node and its parents have any siblings with text content
  * Ignoring the children of contentDiv and returning true if any node is LI
- * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings
+ * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings with text content
  */
 function isNodeWholeBlock(node: Node, editor: IEditor) {
     let currentNode = node;
     while (currentNode && editor.contains(currentNode.parentNode)) {
         if (currentNode.nextSibling || currentNode.previousSibling) {
-            return safeInstanceOf(currentNode, 'HTMLLIElement');
+            if (safeInstanceOf(currentNode, 'HTMLLIElement')) {
+                return true;
+            }
+            let isOnlySiblingWithContent = true;
+            currentNode.parentNode?.childNodes.forEach(node => {
+                if (node != currentNode && node.textContent.length) {
+                    isOnlySiblingWithContent = false;
+                }
+            });
+            return isOnlySiblingWithContent;
         }
         currentNode = currentNode.parentNode;
     }
@@ -191,7 +201,11 @@ function clearBlockFormat(editor: IEditor) {
         editor,
         () => {
             blockFormat(editor, region => {
-                const blocks = getSelectedBlockElementsInRegion(region);
+                const blocks = getSelectedBlockElementsInRegion(
+                    region,
+                    undefined /* createBlockIfEmpty */,
+                    editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
+                );
                 let nodes = collapseNodesInRegion(region, blocks);
 
                 if (editor.contains(region.rootNode)) {

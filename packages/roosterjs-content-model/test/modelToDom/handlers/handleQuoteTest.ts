@@ -43,7 +43,7 @@ describe('handleQuote', () => {
         handleQuote(document, parent, quote, context);
 
         expect(parent.outerHTML).toBe(
-            '<div><blockquote style="margin-top: 0px; margin-bottom: 0px;"><div><span>test</span></div></blockquote></div>'
+            '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote></div>'
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(

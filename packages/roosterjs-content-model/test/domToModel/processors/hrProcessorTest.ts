@@ -20,7 +20,8 @@ describe('hrProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'HR',
+                    blockType: 'Divider',
+                    tagName: 'hr',
                     format: {},
                 },
             ],
@@ -40,7 +41,8 @@ describe('hrProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'HR',
+                    blockType: 'Divider',
+                    tagName: 'hr',
                     format: {
                         marginTop: '10px',
                         marginBottom: '20px',
@@ -62,7 +64,8 @@ describe('hrProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'HR',
+                    blockType: 'Divider',
+                    tagName: 'hr',
                     format: {},
                     isSelected: true,
                 },

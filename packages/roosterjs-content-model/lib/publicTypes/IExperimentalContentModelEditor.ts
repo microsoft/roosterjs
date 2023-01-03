@@ -3,7 +3,7 @@ import { EditorContext } from './context/EditorContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
-    DefaultImplicitSegmentFormatMap,
+    DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
@@ -95,7 +95,7 @@ export interface ModelToDomOption {
     /**
      * Overrides default element styles
      */
-    defaultImplicitSegmentFormatOverride?: DefaultImplicitSegmentFormatMap;
+    defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
 }
 
 /**

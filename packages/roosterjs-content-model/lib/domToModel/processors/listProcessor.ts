@@ -20,7 +20,7 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
     stackFormat(
         context,
         {
-            segment: 'shallowClone',
+            segment: 'shallowCloneForBlock',
         },
         () => {
             processMetadata(element, context, level);

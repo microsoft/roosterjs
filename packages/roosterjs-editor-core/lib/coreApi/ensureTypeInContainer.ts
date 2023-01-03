@@ -60,25 +60,25 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
             formatNode = safeInstanceOf(firstChild, 'HTMLSpanElement')
                 ? firstChild
                 : wrap(toArray(formatNode.childNodes), 'span');
-
-            position = new Position(formatNode, PositionType.Begin);
         }
     } else {
         // Only reason we don't get the selection block is that we have an empty content div
         // which can happen when users removes everything (i.e. select all and DEL, or backspace from very end to begin)
         // The fix is to add a DIV wrapping, apply default format and move cursor over
-        const newNode = createElement(
-            KnownCreateElementDataIndex.EmptyLine,
+        formatNode = createElement(
+            applyFormatToSpan
+                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
+                : KnownCreateElementDataIndex.EmptyLine,
             core.contentDiv.ownerDocument
         ) as HTMLElement;
-        core.api.insertNode(core, newNode, {
+        core.api.insertNode(core, formatNode, {
             position: ContentPosition.End,
             updateCursor: false,
             replaceSelection: false,
             insertOnNewLine: false,
         });
 
-        formatNode = newNode.firstChild as HTMLElement;
+        formatNode = applyFormatToSpan ? (formatNode.firstChild as HTMLElement) : formatNode;
 
         // element points to a wrapping node we added "<div><br></div>". We should move the selection left to <br>
         position = new Position(formatNode, PositionType.Begin);
@@ -90,7 +90,7 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
 
     // If this is triggered by a keyboard event, let's select the new position
     if (keyboardEvent) {
-        core.api.selectRange(core, createRange(position));
+        core.api.selectRange(core, createRange(new Position(position)));
     }
 };
 

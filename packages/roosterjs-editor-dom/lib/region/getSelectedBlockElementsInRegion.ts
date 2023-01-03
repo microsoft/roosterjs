@@ -13,7 +13,8 @@ import { BlockElement, KnownCreateElementDataIndex, RegionBase } from 'roosterjs
  */
 export default function getSelectedBlockElementsInRegion(
     regionBase: RegionBase,
-    createBlockIfEmpty?: boolean
+    createBlockIfEmpty?: boolean,
+    shouldApplyFormatToSpan?: boolean
 ): BlockElement[] {
     const range = getSelectionRangeInRegion(regionBase);
     let blocks: BlockElement[] = [];
@@ -46,7 +47,9 @@ export default function getSelectedBlockElementsInRegion(
 
     if (blocks.length == 0 && regionBase && !regionBase.rootNode.firstChild && createBlockIfEmpty) {
         const newNode = createElement(
-            KnownCreateElementDataIndex.EmptyLine,
+            shouldApplyFormatToSpan
+                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
+                : KnownCreateElementDataIndex.EmptyLine,
             regionBase.rootNode.ownerDocument
         );
         regionBase.rootNode.appendChild(newNode!);

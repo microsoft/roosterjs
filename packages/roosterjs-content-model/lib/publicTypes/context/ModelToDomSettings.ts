@@ -1,12 +1,13 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
+import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelBr } from '../segment/ContentModelBr';
+import { ContentModelDivider } from '../block/ContentModelDivider';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelHandler } from './ContentModelHandler';
-import { ContentModelHR } from '../block/ContentModelHR';
 import { ContentModelImage } from '../segment/ContentModelImage';
 import { ContentModelListItem } from '../group/ContentModelListItem';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
@@ -19,9 +20,12 @@ import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap'
 import { ModelToDomContext } from './ModelToDomContext';
 
 /**
- * Default implicit format map from tag name (lower case) to segment fromat
+ * Default implicit format map from tag name (lower case) to segment format
  */
-export type DefaultImplicitSegmentFormatMap = Record<string, Readonly<ContentModelSegmentFormat>>;
+export type DefaultImplicitFormatMap = Record<
+    string,
+    Readonly<ContentModelSegmentFormat & ContentModelBlockFormat>
+>;
 
 /**
  * Apply format to the given HTML element
@@ -86,7 +90,7 @@ export interface ContentModelHandlerTypeMap {
     /**
      * Content Model type for ContentModelHR
      */
-    hr: ContentModelHR;
+    divider: ContentModelDivider;
 
     /**
      * Content Model type for ContentModelImage
@@ -153,7 +157,7 @@ export interface ModelToDomSettings {
     /**
      * Map of default implicit format for segment
      */
-    defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap;
+    defaultImplicitFormatMap: DefaultImplicitFormatMap;
 
     /**
      * Default Content Model to DOM handlers before overriding.
