@@ -1,12 +1,11 @@
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 import { FormatState } from 'roosterjs-editor-types';
-import { getOperationalBlocks } from '../../modelApi/common/getOperationalBlocks';
 import { getSelections } from '../../modelApi/selection/getSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { isBold } from '../segment/toggleBold';
+import { getClosestAncestorBlockGroupWithType } from '../../modelApi/common/getOperationalBlocks';
 
 /**
  * Get current format state
@@ -26,21 +25,26 @@ export default function getFormatState(
             const paragraph = selection.paragraph;
             const format = segment.format;
             const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
-            const listItem = getOperationalBlocks([selection], ['ListItem'])[0] as
-                | ContentModelListItem
-                | ContentModelParagraph
-                | undefined;
+            const listItem = getClosestAncestorBlockGroupWithType<ContentModelListItem>(
+                selection,
+                ['ListItem'],
+                []
+            );
             const listType =
                 listItem?.blockType == 'BlockGroup'
                     ? listItem.levels[listItem.levels.length - 1]?.listType
                     : undefined;
-            const quote = getOperationalBlocks([selection], ['Quote'])[0] as
-                | ContentModelQuote
-                | undefined;
+            const quote = getClosestAncestorBlockGroupWithType<ContentModelQuote>(
+                selection,
+                ['Quote'],
+                []
+            );
             const headerLevel = parseInt((paragraph?.decorator?.tagName || '').substring(1));
-            const tableCell = getOperationalBlocks([selection], ['TableCell'])[0] as
-                | ContentModelTableCell
-                | undefined;
+            const tableCell = getClosestAncestorBlockGroupWithType<ContentModelTableCell>(
+                selection,
+                ['TableCell'],
+                []
+            );
 
             return {
                 isBold: isBold(format.fontWeight),
@@ -52,7 +56,7 @@ export default function getFormatState(
 
                 isBullet: listType == 'UL',
                 isNumbering: listType == 'OL',
-                isBlockQuote: !!quote,
+                isBlockQuote: quote?.blockType == 'BlockGroup',
                 canUnlink: !!segment.link,
                 isMultilineSelection: selections.length > 1,
                 canAddImageAltText: segment.segmentType == 'Image',

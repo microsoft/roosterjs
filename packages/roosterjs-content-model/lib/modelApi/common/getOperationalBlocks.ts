@@ -47,7 +47,7 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
     return result;
 }
 
-function getClosestAncestorBlockGroupWithType<T extends ContentModelBlockGroup>(
+export function getClosestAncestorBlockGroupWithType<T extends ContentModelBlockGroup>(
     selections: ContentModelSelection,
     blockGroupTypes: TypeOfBlockGroup<T>[],
     stopTypes: ContentModelBlockGroupType[]
