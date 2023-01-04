@@ -123,4 +123,15 @@ export interface IExperimentalContentModelEditor extends IEditor {
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
+
+    /**
+     * Get a content model that can represent current content of editor.
+     * This will check if there is already a cached one, if not, create a new model.
+     */
+    getCurrentContentModel(): ContentModelDocument | null;
+
+    /**
+     * Set the given model as current pending content model
+     */
+    setCurrentContentModel(model: ContentModelDocument | null): void;
 }

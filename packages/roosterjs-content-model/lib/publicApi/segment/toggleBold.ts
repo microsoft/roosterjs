@@ -16,7 +16,10 @@ export default function toggleBold(editor: IExperimentalContentModelEditor) {
     );
 }
 
-function isBold(boldStyle?: string): boolean {
+/**
+ * @internal
+ */
+export function isBold(boldStyle?: string): boolean {
     return (
         !!boldStyle && (boldStyle == 'bold' || boldStyle == 'bolder' || parseInt(boldStyle) >= 600)
     );

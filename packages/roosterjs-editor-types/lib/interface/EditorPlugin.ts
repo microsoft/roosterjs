@@ -4,7 +4,7 @@ import { PluginEvent } from '../event/PluginEvent';
 /**
  * Interface of an editor plugin
  */
-export default interface EditorPlugin {
+export default interface EditorPlugin<TEditor extends IEditor = IEditor> {
     /**
      * Get a friendly name of this plugin
      */
@@ -16,7 +16,7 @@ export default interface EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize: (editor: IEditor) => void;
+    initialize: (editor: TEditor) => void;
 
     /**
      * The last method that editor will call to a plugin before it is disposed.
