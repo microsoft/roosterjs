@@ -43,7 +43,11 @@ export default function setIndentation(
     blockFormat(
         editor,
         (region, start, end) => {
-            const blocks = getSelectedBlockElementsInRegion(region, true /*createBlockIfEmpty*/);
+            const blocks = getSelectedBlockElementsInRegion(
+                region,
+                true /*createBlockIfEmpty*/,
+                editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
+            );
             const blockGroups: BlockElement[][] = [[]];
 
             for (let i = 0; i < blocks.length; i++) {
@@ -124,18 +128,18 @@ export default function setIndentation(
 
 function outdent(region: RegionBase, blocks: BlockElement[]) {
     blocks.forEach(blockElement => {
-        let node = blockElement.collapseToSingleElement();
+        let node: Node | null = blockElement.collapseToSingleElement();
         const quote = findClosestElementAncestor(node, region.rootNode, 'blockquote');
         if (quote) {
             if (node == quote) {
                 node = wrap(toArray(node.childNodes));
             }
 
-            while (isNodeInRegion(region, node) && getTagOfNode(node) != 'BLOCKQUOTE') {
+            while (node && isNodeInRegion(region, node) && getTagOfNode(node) != 'BLOCKQUOTE') {
                 node = splitBalancedNodeRange(node);
             }
 
-            if (isNodeInRegion(region, node)) {
+            if (node && isNodeInRegion(region, node)) {
                 unwrap(node);
             }
         }

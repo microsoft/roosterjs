@@ -31,6 +31,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.ListItemAlignment,
         ExperimentalFeatures.DefaultFormatInSpan,
+        ExperimentalFeatures.AutoFormatList,
     ],
     isRtl: false,
 };

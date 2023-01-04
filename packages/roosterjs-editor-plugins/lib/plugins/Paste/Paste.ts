@@ -7,6 +7,7 @@ import convertPastedContentFromWord from './wordConverter/convertPastedContentFr
 import getPasteSource from './sourceValidations/getPasteSource';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
+import sanitizeLinks from './sanitizeLinks/sanitizeLinks';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { GOOGLE_SHEET_NODE_NAME } from './sourceValidations/constants';
 import { KnownSourceType } from './sourceValidations/KnownSourceType';
@@ -83,7 +84,7 @@ export default class Paste implements EditorPlugin {
                     handleLineMerge(fragment);
                     break;
             }
-
+            sanitizeLinks(sanitizingOption);
             sanitizeHtmlColorsFromPastedContent(sanitizingOption);
 
             // Replace unknown tags with SPAN

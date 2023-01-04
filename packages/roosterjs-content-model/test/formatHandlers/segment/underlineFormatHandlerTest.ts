@@ -149,7 +149,7 @@ describe('underlineFormatHandler.apply', () => {
         a.textContent = 'test';
         format.underline = true;
 
-        context.implicitSegmentFormat.underline = true;
+        context.implicitFormat.underline = true;
 
         underlineFormatHandler.apply(format, a, context);
 
@@ -161,7 +161,7 @@ describe('underlineFormatHandler.apply', () => {
 
         a.textContent = 'test';
 
-        context.implicitSegmentFormat.underline = true;
+        context.implicitFormat.underline = true;
 
         underlineFormatHandler.apply(format, a, context);
 

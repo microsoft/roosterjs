@@ -15,7 +15,7 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
         }
     },
     apply: (format, element, context) => {
-        const implicitColor = context.implicitSegmentFormat.textColor;
+        const implicitColor = context.implicitFormat.textColor;
 
         if (format.textColor && format.textColor != implicitColor) {
             setColor(

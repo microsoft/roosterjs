@@ -92,15 +92,17 @@ function adjustInsertPositionForHyperLink(
                     : normalizedPosition.isAtEnd
                     ? normalizedPosition.node.nextSibling
                     : normalizedPosition.node;
-            let splitter: Node = root.ownerDocument.createTextNode('');
+            let splitter: Node | null = root.ownerDocument.createTextNode('');
             parentNode.insertBefore(splitter, nextNode);
 
-            while (contains(anchor, splitter)) {
+            while (splitter && contains(anchor, splitter)) {
                 splitter = splitBalancedNodeRange(splitter);
             }
 
-            position = new Position(splitter, PositionType.Before);
-            safeRemove(splitter);
+            if (splitter) {
+                position = new Position(splitter, PositionType.Before);
+                safeRemove(splitter);
+            }
         }
     }
 

@@ -168,7 +168,15 @@ export function processNodeConvert(wordConverter: WordConverter): boolean {
 
                 // Create a new list item and transfer the children
                 let li = node.ownerDocument.createElement('LI');
-                moveChildNodes(li, node);
+                if (getTagOfNode(node).startsWith('H')) {
+                    const clone = node.cloneNode(true /* deep */) as HTMLHeadingElement;
+                    clone.style.textIndent = '';
+                    clone.style.marginLeft = '';
+                    clone.style.marginRight = '';
+                    li.appendChild(clone);
+                } else {
+                    moveChildNodes(li, node);
+                }
 
                 // Append the list item into the list
                 list.appendChild(li);
