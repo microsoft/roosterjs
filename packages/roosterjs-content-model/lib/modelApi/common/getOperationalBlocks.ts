@@ -21,17 +21,26 @@ export type TypeOfBlockGroup<
 export function getOperationalBlocks<T extends ContentModelBlockGroup>(
     selections: ContentModelSelection[],
     blockGroupTypes: TypeOfBlockGroup<T>[],
-    stopTypes: ContentModelBlockGroupType[] = ['TableCell']
+    stopTypes: ContentModelBlockGroupType[] = ['TableCell'],
+    deepFirst?: boolean
 ): OperationalBlocks<T>[] {
     const result: OperationalBlocks<T>[] = [];
 
     selections.forEach(p => {
-        const group = getClosestAncestorBlockGroupWithType(p, blockGroupTypes, stopTypes);
+        const findSequence = deepFirst ? blockGroupTypes.map(type => [type]) : [blockGroupTypes];
 
-        if (group && result.indexOf(group) < 0) {
-            result.push(group);
-        } else if (!group) {
-            result.push(p);
+        for (let i = 0; i < findSequence.length; i++) {
+            const group = getClosestAncestorBlockGroupWithType(p, findSequence[i], stopTypes);
+
+            if (group) {
+                if (result.indexOf(group) < 0) {
+                    result.push(group);
+                }
+                break;
+            } else if (i == findSequence.length - 1) {
+                result.push(p);
+                break;
+            }
         }
     });
 

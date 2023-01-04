@@ -110,8 +110,8 @@ describe('setHeaderLevel to 1', () => {
                                 isSelected: true,
                             },
                         ],
-                        header: {
-                            headerLevel: 1,
+                        decorator: {
+                            tagName: 'h1',
                             format: {
                                 fontSize: '2em',
                                 fontWeight: 'bold',
@@ -160,8 +160,8 @@ describe('setHeaderLevel to 1', () => {
                                 isSelected: true,
                             },
                         ],
-                        header: {
-                            headerLevel: 1,
+                        decorator: {
+                            tagName: 'h1',
                             format: {
                                 fontSize: '2em',
                                 fontWeight: 'bold',
@@ -193,8 +193,8 @@ describe('setHeaderLevel to 1', () => {
                                 isSelected: true,
                             },
                         ],
-                        header: {
-                            headerLevel: 3,
+                        decorator: {
+                            tagName: 'h3',
                             format: {
                                 fontSize: '1em',
                                 fontWeight: 'normal',
@@ -220,8 +220,8 @@ describe('setHeaderLevel to 1', () => {
                                 isSelected: true,
                             },
                         ],
-                        header: {
-                            headerLevel: 1,
+                        decorator: {
+                            tagName: 'h1',
                             format: {
                                 fontSize: '2em',
                                 fontWeight: 'bold',
@@ -369,8 +369,8 @@ describe('setHeaderLevel to 0', () => {
                                 isSelected: true,
                             },
                         ],
-                        header: {
-                            headerLevel: 3,
+                        decorator: {
+                            tagName: 'h3',
                             format: {
                                 fontSize: '1em',
                                 fontWeight: 'normal',

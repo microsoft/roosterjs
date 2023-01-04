@@ -24,6 +24,7 @@ import {
     createNumberDefinition,
     getMetadata,
     findClosestElementAncestor,
+    getComputedStyle,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -68,30 +69,50 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     true /** allowNull */
 );
 
+const shouldHandleIndentationEvent = (indenting: boolean) => (
+    event: PluginKeyboardEvent,
+    editor: IEditor
+) => {
+    const { keyCode, altKey, shiftKey, ctrlKey, metaKey } = event.rawEvent;
+    return (
+        !ctrlKey &&
+        !metaKey &&
+        (keyCode === Keys.TAB
+            ? !altKey && shiftKey === !indenting
+            : shiftKey && altKey && keyCode === (indenting ? Keys.RIGHT : Keys.LEFT)) &&
+        cacheGetListElement(event, editor)
+    );
+};
+
+const handleIndentationEvent = (indenting: boolean) => (
+    event: PluginKeyboardEvent,
+    editor: IEditor
+) => {
+    const isRTL =
+        event.rawEvent.keyCode !== Keys.TAB &&
+        getComputedStyle(editor.getElementAtCursor(), 'direction') == 'rtl';
+    setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+    event.rawEvent.preventDefault();
+};
+
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
 const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB],
-    shouldHandleEvent: (event, editor) =>
-        !event.rawEvent.shiftKey && cacheGetListElement(event, editor),
-    handleEvent: (event, editor) => {
-        setIndentation(editor, Indentation.Increase);
-        event.rawEvent.preventDefault();
-    },
+    keys: [Keys.TAB, Keys.RIGHT],
+    shouldHandleEvent: shouldHandleIndentationEvent(true),
+    handleEvent: handleIndentationEvent(true),
+    allowFunctionKeys: true,
 };
 
 /**
  * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
  */
 const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB],
-    shouldHandleEvent: (event, editor) =>
-        event.rawEvent.shiftKey && cacheGetListElement(event, editor),
-    handleEvent: (event, editor) => {
-        setIndentation(editor, Indentation.Decrease);
-        event.rawEvent.preventDefault();
-    },
+    keys: [Keys.TAB, Keys.LEFT],
+    shouldHandleEvent: shouldHandleIndentationEvent(false),
+    handleEvent: handleIndentationEvent(false),
+    allowFunctionKeys: true,
 };
 
 /**

@@ -4,6 +4,7 @@ import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAn
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
+import getLatestZIndex from './editInfoUtils/getLastZIndex';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
@@ -45,8 +46,9 @@ import {
 } from 'roosterjs-editor-types';
 import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
+const PI = Math.PI;
 const DIRECTIONS = 8;
-const DirectionRad = (Math.PI * 2) / DIRECTIONS;
+const DirectionRad = (PI * 2) / DIRECTIONS;
 const DirectionOrder = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 
 /**
@@ -332,7 +334,7 @@ export default class ImageEdit implements EditorPlugin {
         this.wrapper.firstChild.appendChild(this.clonedImage);
 
         // keep the same vertical align
-        const originalVerticalAlign = this.getStylePropertyValue(this.image, 'vertical-align');
+        const originalVerticalAlign = getStylePropertyValue(this.image, 'vertical-align');
         if (originalVerticalAlign) {
             this.wrapper.style.verticalAlign = originalVerticalAlign;
         }
@@ -374,7 +376,7 @@ export default class ImageEdit implements EditorPlugin {
             }
         });
 
-        this.insertImageWrapper(this.image, this.wrapper, this.editor.getZoomScale());
+        this.insertImageWrapper(this.editor, this.image, this.wrapper, this.editor.getZoomScale());
     }
 
     private toggleImageVisibility(image: HTMLImageElement, showImage: boolean) {
@@ -389,33 +391,15 @@ export default class ImageEdit implements EditorPlugin {
         }
     }
 
-    private createZoomWrapper(wrapper: HTMLSpanElement, scale: number) {
-        const zoomWrapper = this.editor.getDocument().createElement('div');
-        zoomWrapper.style.transform = `scale(${scale || 1})`;
-        zoomWrapper.style.transformOrigin = 'top left';
-        zoomWrapper.style.position = 'fixed';
-        zoomWrapper.appendChild(wrapper);
-        return zoomWrapper;
-    }
-
-    private copyImageSize(image: HTMLImageElement, element: HTMLElement) {
-        const { top, left, right, bottom } = image.getBoundingClientRect();
-        element.style.top = `${top}px`;
-        element.style.bottom = `${bottom}px`;
-        element.style.right = `${right}px`;
-        element.style.left = `${left}px`;
-        return element;
-    }
-
-    private insertImageWrapper(image: HTMLImageElement, wrapper: HTMLSpanElement, scale: number) {
-        this.zoomWrapper = this.copyImageSize(image, this.createZoomWrapper(wrapper, scale));
+    private insertImageWrapper(
+        editor: IEditor,
+        image: HTMLImageElement,
+        wrapper: HTMLSpanElement,
+        scale: number
+    ) {
+        this.zoomWrapper = copyElementRect(image, createZoomWrapper(editor, wrapper, scale));
+        this.zoomWrapper.style.zIndex = `${getLatestZIndex(editor.getScrollContainer()) + 1}`;
         this.editor.getDocument().body.appendChild(this.zoomWrapper);
-    }
-
-    private getStylePropertyValue(element: HTMLElement, property: string): string {
-        return element.ownerDocument.defaultView
-            .getComputedStyle(this.image)
-            .getPropertyValue(property);
     }
 
     /**
@@ -477,6 +461,7 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.transform = `rotate(${angleRad}rad)`;
             this.zoomWrapper.style.width = getPx(visibleWidth);
             this.zoomWrapper.style.height = getPx(visibleHeight);
+            fitImageContainer(this.editor, this.zoomWrapper, angleRad);
 
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
@@ -661,4 +646,44 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
         return color.trim();
     }
     return isDarkMode ? color.darkModeColor.trim() : color.lightModeColor.trim();
+}
+
+function fitImageContainer(editor: IEditor, zoomWrapper: HTMLElement, angle: number) {
+    const angleIndex = handleRadIndexCalculator(angle);
+    const isVertical = (angleIndex >= 2 && angleIndex < 4) || angleIndex >= 6;
+    const editorTop = editor.getScrollContainer()?.getBoundingClientRect()?.top;
+    const { top, width, height } = zoomWrapper?.getBoundingClientRect();
+    if (editorTop > top) {
+        const rotatePercent = 100 * Math.abs(angle);
+        const zoomWrapperHeight = editorTop - top;
+        const zoomWrapperHeightPercent = isVertical
+            ? rotatePercent * (zoomWrapperHeight / width)
+            : 100 * (zoomWrapperHeight / height);
+
+        zoomWrapper.style.clipPath = `polygon(0 ${zoomWrapperHeightPercent}%, 100% ${zoomWrapperHeightPercent}%, 100% ${
+            isVertical ? rotatePercent : '100'
+        }%, 0  ${isVertical ? rotatePercent : '100'}%)`;
+    }
+}
+
+function copyElementRect(originalElement: HTMLElement, element: HTMLElement) {
+    const { top, left, right, bottom } = originalElement.getBoundingClientRect();
+    element.style.top = `${top}px`;
+    element.style.bottom = `${bottom}px`;
+    element.style.right = `${right}px`;
+    element.style.left = `${left}px`;
+    return element;
+}
+
+function createZoomWrapper(editor: IEditor, wrapper: HTMLSpanElement, scale: number) {
+    const zoomWrapper = editor.getDocument().createElement('div');
+    zoomWrapper.style.transform = `scale(${scale || 1})`;
+    zoomWrapper.style.transformOrigin = 'top left';
+    zoomWrapper.style.position = 'fixed';
+    zoomWrapper.appendChild(wrapper);
+    return zoomWrapper;
+}
+
+function getStylePropertyValue(element: HTMLElement, property: string): string {
+    return element.ownerDocument.defaultView.getComputedStyle(element).getPropertyValue(property);
 }

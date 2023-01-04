@@ -165,4 +165,60 @@ describe('getOperationalBlocks', () => {
 
         expect(result).toEqual([listItem, quote]);
     });
+
+    it('multiple group type, width first', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph(false, { backgroundColor: 'red' });
+        const para2 = createParagraph(false, { backgroundColor: 'green' });
+        const listItem = createListItem([]);
+        const quote1 = createQuote({ backgroundColor: 'blue' });
+        const quote2 = createQuote({ backgroundColor: 'black' });
+
+        const result = getOperationalBlocks(
+            [
+                {
+                    paragraph: para1,
+                    path: [quote1, listItem, group],
+                    segments: [],
+                },
+                {
+                    paragraph: para2,
+                    path: [quote2, group],
+                    segments: [],
+                },
+            ],
+            ['ListItem', 'Quote']
+        );
+
+        expect(result).toEqual([quote1, quote2]);
+    });
+
+    it('multiple group type, deep first', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph(false, { backgroundColor: 'red' });
+        const para2 = createParagraph(false, { backgroundColor: 'green' });
+        const listItem = createListItem([]);
+        const quote1 = createQuote({ backgroundColor: 'blue' });
+        const quote2 = createQuote({ backgroundColor: 'black' });
+
+        const result = getOperationalBlocks(
+            [
+                {
+                    paragraph: para1,
+                    path: [quote1, listItem, group],
+                    segments: [],
+                },
+                {
+                    paragraph: para2,
+                    path: [quote2, group],
+                    segments: [],
+                },
+            ],
+            ['ListItem', 'Quote'],
+            undefined,
+            true
+        );
+
+        expect(result).toEqual([listItem, quote2]);
+    });
 });

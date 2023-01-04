@@ -3,13 +3,14 @@ import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/Conte
 import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
-import { createHR } from '../../../lib/modelApi/creators/createHR';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createParagraphDecorator } from '../../../lib/modelApi/creators/createParagraphDecorator';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
@@ -91,6 +92,45 @@ describe('Creators', () => {
             segments: [],
             format: {},
             isImplicit: true,
+        });
+    });
+
+    it('createParagraph - with decorator', () => {
+        const result = createParagraph(false, undefined, {
+            tagName: 'p',
+            format: {
+                fontSize: '10px',
+            },
+        });
+
+        expect(result).toEqual({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+            decorator: {
+                tagName: 'p',
+                format: {
+                    fontSize: '10px',
+                },
+            },
+        });
+    });
+
+    it('createParagraphDecorator', () => {
+        const format = {
+            fontSize: '10px',
+        };
+        const result = createParagraphDecorator('p', format);
+
+        expect(result).toEqual({
+            tagName: 'p',
+            format: format,
+        });
+
+        result.format.fontSize = '12px';
+
+        expect(format).toEqual({
+            fontSize: '10px',
         });
     });
 
@@ -326,6 +366,21 @@ describe('Creators', () => {
             blockGroupType: 'Quote',
             blocks: [],
             format: {},
+            quoteSegmentFormat: {},
+        });
+    });
+
+    it('createQuote with format', () => {
+        const quote = createQuote({
+            borderLeft: 'solid 1px black',
+        });
+
+        expect(quote).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'Quote',
+            blocks: [],
+            format: { borderLeft: 'solid 1px black' },
+            quoteSegmentFormat: {},
         });
     });
 
@@ -380,12 +435,23 @@ describe('Creators', () => {
         });
     });
 
-    it('createHR', () => {
-        const hr = createHR();
+    it('createDivider', () => {
+        const hr = createDivider('hr');
 
         expect(hr).toEqual({
-            blockType: 'HR',
+            blockType: 'Divider',
+            tagName: 'hr',
             format: {},
+        });
+    });
+
+    it('createDivider with format', () => {
+        const hr = createDivider('div', { marginTop: '10px' });
+
+        expect(hr).toEqual({
+            blockType: 'Divider',
+            tagName: 'div',
+            format: { marginTop: '10px' },
         });
     });
 });
