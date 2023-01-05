@@ -1,15 +1,19 @@
+import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createText } from '../modelApi/creators/createText';
-import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { getSelections } from '../modelApi/selection/getSelections';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { getCollapsedInsertPoint } from '../modelApi/selection/getCollapsedInsertPoint';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
-import { isCharacterValue } from 'roosterjs-editor-dom';
+import { isCharacterValue, isModifierKey } from 'roosterjs-editor-dom';
+
+// "Process" is the value used when type within IME
+const IME_KEYDOWN_KEY = 'Process';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
  * This includes:
  * 1. Handle pending format changes when selection is collapsed
  */
-export default class ContentModelPlugin implements EditorPlugin<IExperimentalContentModelEditor> {
+export default class ContentModelPlugin implements EditorPlugin {
     private editor: IExperimentalContentModelEditor | null = null;
 
     /**
@@ -25,8 +29,9 @@ export default class ContentModelPlugin implements EditorPlugin<IExperimentalCon
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IExperimentalContentModelEditor) {
-        this.editor = editor;
+    initialize(editor: IEditor) {
+        // TODO: Later we may need a different interface for Content Model editor plugin
+        this.editor = editor as IExperimentalContentModelEditor;
     }
 
     /**
@@ -38,32 +43,59 @@ export default class ContentModelPlugin implements EditorPlugin<IExperimentalCon
         this.editor = null;
     }
 
+    /**
+     * Core method for a plugin. Once an event happens in editor, editor will call this
+     * method of each plugin to handle the event as long as the event is not handled
+     * exclusively by another plugin.
+     * @param event The event to handle:
+     */
     onPluginEvent(event: PluginEvent) {
-        if (this.editor && event.eventType == PluginEventType.KeyDown) {
-            if (isCharacterValue(event.rawEvent)) {
-                const model = this.editor.getCurrentContentModel();
-                const selections = model ? getSelections(model) : [];
+        if (this.editor) {
+            let model: ContentModelDocument | null;
 
-                if (
-                    model &&
-                    selections.length == 1 &&
-                    selections[0].paragraph &&
-                    selections[0].segments.length == 1 &&
-                    selections[0].segments[0].segmentType == 'SelectionMarker'
-                ) {
-                    const { paragraph, segments } = selections[0];
-                    const text = createText(event.rawEvent.key, segments[0].format);
-                    const index = paragraph.segments.indexOf(segments[0]);
+            if (
+                (event.eventType == PluginEventType.KeyDown ||
+                    event.eventType == PluginEventType.CompositionEnd) &&
+                (model = this.editor.getCurrentContentModel())
+            ) {
+                const input =
+                    event.eventType == PluginEventType.CompositionEnd
+                        ? event.rawEvent.data
+                        : isCharacterValue(event.rawEvent)
+                        ? event.rawEvent.key
+                        : null;
 
-                    if (index >= 0) {
-                        paragraph.segments.splice(index, 0, text);
-                        this.editor.setContentModel(model);
-                        event.rawEvent.preventDefault();
-                    }
+                if (input) {
+                    this.acceptInputWithPendingFormat(model, input);
+                    event.rawEvent.preventDefault();
                 }
             }
 
-            this.editor.setCurrentContentModel(null);
+            if (
+                event.eventType == PluginEventType.CompositionEnd ||
+                event.eventType == PluginEventType.ContentChanged ||
+                event.eventType == PluginEventType.SelectionChanged ||
+                (event.eventType == PluginEventType.KeyDown &&
+                    !isModifierKey(event.rawEvent) &&
+                    event.rawEvent.key != IME_KEYDOWN_KEY)
+            ) {
+                this.editor.setCurrentContentModel(null);
+            }
+        }
+    }
+
+    private acceptInputWithPendingFormat(model: ContentModelDocument, char: string) {
+        const insertPos = getCollapsedInsertPoint(model);
+
+        if (insertPos) {
+            const { paragraph, marker } = insertPos;
+            const text = createText(char, marker.format);
+            const index = paragraph.segments.indexOf(marker);
+
+            if (index >= 0) {
+                paragraph.segments.splice(index, 0, text);
+                this.editor!.setContentModel(model);
+            }
         }
     }
 }
