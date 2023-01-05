@@ -113,7 +113,7 @@ describe('setBackgroundColor', () => {
                     },
                 ],
             },
-            0
+            1
         );
     });
 

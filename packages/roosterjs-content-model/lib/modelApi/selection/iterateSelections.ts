@@ -64,36 +64,43 @@ export function iterateSelections(
 
                 if (
                     option?.ignoreContentUnderSelectedTableCell &&
-                    cells.every(row => row.every(cell => cell.isSelected)) &&
-                    callback(path, table, block)
+                    cells.every(row => row.every(cell => cell.isSelected))
                 ) {
-                    return true;
-                }
+                    if (callback(path, table, block)) {
+                        return true;
+                    }
+                } else {
+                    for (let rowIndex = 0; rowIndex < cells.length; rowIndex++) {
+                        const row = cells[rowIndex];
 
-                for (let rowIndex = 0; rowIndex < cells.length; rowIndex++) {
-                    const row = cells[rowIndex];
+                        for (let colIndex = 0; colIndex < row.length; colIndex++) {
+                            const cell = row[colIndex];
 
-                    for (let colIndex = 0; colIndex < row.length; colIndex++) {
-                        const cell = row[i];
+                            const newTable: TableSelectionContext = {
+                                table: block,
+                                rowIndex,
+                                colIndex,
+                            };
 
-                        const newTable: TableSelectionContext = {
-                            table: block,
-                            rowIndex,
-                            colIndex,
-                        };
-
-                        if (cell.isSelected && callback(path, newTable)) {
-                            return true;
-                        }
-
-                        if (!cell.isSelected || !option?.ignoreContentUnderSelectedTableCell) {
-                            const newPath = [cell, ...path];
-                            const isSelected = treatAllAsSelect || cell.isSelected;
-
-                            if (
-                                iterateSelections(newPath, callback, option, newTable, isSelected)
-                            ) {
+                            if (cell.isSelected && callback(path, newTable)) {
                                 return true;
+                            }
+
+                            if (!cell.isSelected || !option?.ignoreContentUnderSelectedTableCell) {
+                                const newPath = [cell, ...path];
+                                const isSelected = treatAllAsSelect || cell.isSelected;
+
+                                if (
+                                    iterateSelections(
+                                        newPath,
+                                        callback,
+                                        option,
+                                        newTable,
+                                        isSelected
+                                    )
+                                ) {
+                                    return true;
+                                }
                             }
                         }
                     }

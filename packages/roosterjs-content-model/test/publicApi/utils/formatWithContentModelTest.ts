@@ -26,6 +26,8 @@ describe('formatWithContentModel', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
+            getCurrentContentModel: (): ContentModelDocument | null => null,
+            setCurrentContentModel: () => {},
         } as any) as IExperimentalContentModelEditor;
     });
 

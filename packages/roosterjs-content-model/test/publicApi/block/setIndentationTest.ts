@@ -1,6 +1,7 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as setModelIndentation from '../../../lib/modelApi/block/setModelIndentation';
 import setIndentation from '../../../lib/publicApi/block/setIndentation';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('setIndentation', () => {
@@ -10,6 +11,8 @@ describe('setIndentation', () => {
     beforeEach(() => {
         editor = ({
             createContentModel: () => fakeModel,
+            getCurrentContentModel: (): ContentModelDocument | null => null,
+            setCurrentContentModel: () => {},
         } as any) as IExperimentalContentModelEditor;
     });
 

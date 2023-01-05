@@ -23,6 +23,8 @@ export function paragraphTestCommon(
         addUndoSnapshot,
         focus: jasmine.createSpy(),
         setContentModel,
+        getCurrentContentModel: (): ContentModelDocument | null => null,
+        setCurrentContentModel: () => {},
     } as any) as IExperimentalContentModelEditor;
 
     executionCallback(editor);

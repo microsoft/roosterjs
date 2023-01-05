@@ -24,6 +24,8 @@ describe('toggleBullet', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
+            getCurrentContentModel: (): ContentModelDocument | null => null,
+            setCurrentContentModel: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);

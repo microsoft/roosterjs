@@ -121,7 +121,7 @@ describe('changeFontSize', () => {
                     },
                 ],
             },
-            0
+            1
         );
     });
 
@@ -307,6 +307,8 @@ describe('changeFontSize', () => {
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
+            getCurrentContentModel: () => <ContentModelDocument | null>null,
+            setCurrentContentModel: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         spyOn(getComputedStyles, 'getComputedStyle').and.callFake(

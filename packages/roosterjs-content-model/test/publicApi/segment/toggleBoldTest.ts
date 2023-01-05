@@ -107,7 +107,7 @@ describe('toggleBold', () => {
                     },
                 ],
             },
-            0
+            1
         );
     });
 
