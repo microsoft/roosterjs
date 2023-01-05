@@ -35,7 +35,7 @@ const getSourceFunctions = new Map<KnownSourceType, getSourceFunction>([
  * @internal
  * This function tries to get the source of the Pasted content
  * @param event the before paste event
- * @param editor editor instance
+ * @param shouldConvertSingleImage Whether convert single image is enabled.
  * @returns The Type of pasted content, if no type found will return {KnownSourceType.Default}
  */
 export default function getPasteSource(

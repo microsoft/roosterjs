@@ -29,7 +29,7 @@ export default class Paste implements EditorPlugin {
      */
     constructor(
         private unknownTagReplacement: string = 'SPAN',
-        private convertSingleImageBody = false
+        private convertSingleImageBody: boolean = false
     ) {}
 
     /**
