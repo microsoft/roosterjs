@@ -1,6 +1,11 @@
 import * as dom from 'roosterjs-editor-dom';
 import TypeInContainerPlugin from '../../lib/corePlugins/TypeInContainerPlugin';
-import { ExperimentalFeatures, IEditor, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ExperimentalFeatures,
+    IEditor,
+    PluginEventType,
+    NodePosition,
+} from 'roosterjs-editor-types';
 
 describe('TypeInContainerPlugin', () => {
     let plugin: TypeInContainerPlugin;
@@ -13,7 +18,9 @@ describe('TypeInContainerPlugin', () => {
     };
 
     beforeEach(() => {
-        runAsync = jasmine.createSpy('runAsync').and.callFake((callback: () => any) => callback());
+        runAsync = jasmine
+            .createSpy('runAsync')
+            .and.callFake((callback: (editor: IEditor) => any) => callback(editor));
         select = jasmine.createSpy('select');
         ensureTypeInContainer = jasmine.createSpy('ensureTypeInContainer');
         editor = <IEditor>(<any>{
@@ -277,5 +284,117 @@ describe('TypeInContainerPlugin', () => {
         expect(runAsync).toHaveBeenCalled();
         expect(collapseToSingleElement).not.toHaveBeenCalled();
         expect(dom.applyFormat).toHaveBeenCalled();
+    });
+
+    it('Keydown Backspace and DefaultFormatInSpan ON', () => {
+        const divAfter: HTMLDivElement = <any>{};
+        const divBefore: HTMLDivElement = <any>{
+            previousSibling: divAfter,
+        };
+        const position: NodePosition = <any>{
+            element: divAfter,
+        };
+        const rawEvent: KeyboardEvent = <any>{
+            which: 8,
+        };
+
+        editor.getElementAtCursor = () => divBefore;
+        editor.getBlockElementAtNode = () => {
+            return <any>{
+                getStartNode: () => divBefore,
+            };
+        };
+        editor.getFocusedPosition = () => position;
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(ensureTypeInContainer).toHaveBeenCalledWith(position, rawEvent);
+    });
+
+    it('Keydown Backspace and DefaultFormatInSpan ON, FocusedPosition is not equal to previousSibling, not dot handle', () => {
+        const divAfter: HTMLDivElement = <any>{};
+        const divBefore: HTMLDivElement = <any>{
+            previousSibling: null,
+        };
+        const position: NodePosition = <any>{
+            element: divAfter,
+        };
+        const rawEvent: KeyboardEvent = <any>{
+            which: 8,
+        };
+
+        editor.getElementAtCursor = () => divBefore;
+        editor.getBlockElementAtNode = () => {
+            return <any>{
+                getStartNode: () => divBefore,
+            };
+        };
+        editor.getFocusedPosition = () => position;
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(ensureTypeInContainer).not.toHaveBeenCalled();
+    });
+
+    it('Keydown Backspace and DefaultFormatInSpan ON, getElementAtCursor is null, do not handle', () => {
+        const divAfter: HTMLDivElement = <any>{};
+        const divBefore: HTMLDivElement = <any>{
+            previousSibling: null,
+        };
+        const position: NodePosition = <any>{
+            element: divAfter,
+        };
+        const rawEvent: KeyboardEvent = <any>{
+            which: 8,
+        };
+
+        editor.getElementAtCursor = () => null;
+        editor.getBlockElementAtNode = () => {
+            return <any>{
+                getStartNode: () => divBefore,
+            };
+        };
+        editor.getFocusedPosition = () => position;
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(ensureTypeInContainer).not.toHaveBeenCalled();
+    });
+
+    it('Keydown Backspace and DefaultFormatInSpan OFF', () => {
+        const rawEvent: KeyboardEvent = <any>{
+            which: 8,
+        };
+
+        editor.isFeatureEnabled = () => false;
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(ensureTypeInContainer).not.toHaveBeenCalled();
+    });
+
+    it('Keydown not Backspace and DefaultFormatInSpan ON', () => {
+        const rawEvent: KeyboardEvent = <any>{
+            which: 9,
+        };
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(ensureTypeInContainer).not.toHaveBeenCalled();
     });
 });
