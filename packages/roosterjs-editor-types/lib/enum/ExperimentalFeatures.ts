@@ -54,6 +54,7 @@ export const enum ExperimentalFeatures {
     AlwaysApplyDefaultFormat = 'AlwaysApplyDefaultFormat',
 
     /**
+     * @deprecated This feature can be enabled/disabled using Paste Plugin contructor param
      * Paste the Html instead of the Img when the Html Body only have one IMG Child node
      */
     ConvertSingleImageBody = 'ConvertSingleImageBody',
