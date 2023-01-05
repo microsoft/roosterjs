@@ -1,6 +1,6 @@
-import insertContent from '../../modelApi/common/insertContent';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { insertContent } from '../../modelApi/common/insertContent';
 import { readFile } from 'roosterjs-editor-dom';
 
 /**
@@ -11,8 +11,8 @@ import { readFile } from 'roosterjs-editor-dom';
 export default function insertImage(editor: IExperimentalContentModelEditor, file: File) {
     readFile(file, dataUrl => {
         if (dataUrl && !editor.isDisposed()) {
-            formatWithContentModel(editor, 'insertContent', model => {
-                const image = document.createElement('img');
+            formatWithContentModel(editor, 'insertImage', model => {
+                const image = editor.getDocument().createElement('img');
 
                 image.src = dataUrl;
                 insertContent(model, image);

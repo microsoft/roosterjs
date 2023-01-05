@@ -7,13 +7,13 @@ import { setSelection } from '../../modelApi/selection/setSelection';
 /**
  * @internal
  */
-export default function insertContent(
+export function insertContent(
     model: ContentModelDocument,
     htmlContent: DocumentFragment | HTMLElement | ContentModelDocument,
     isFromDarkMode?: boolean
 ) {
     if (safeInstanceOf(htmlContent, 'DocumentFragment')) {
-        htmlContent = wrap(htmlContent, 'div');
+        htmlContent = wrap(htmlContent, 'span');
     }
 
     if (safeInstanceOf(htmlContent, 'HTMLElement')) {
