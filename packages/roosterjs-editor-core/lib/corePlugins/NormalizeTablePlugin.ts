@@ -7,7 +7,6 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
-    ExperimentalFeatures,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -84,9 +83,7 @@ export default class NormalizeTablePlugin implements EditorPlugin {
                 break;
 
             case PluginEventType.ExtractContentWithDom:
-                if (this.editor?.isFeatureEnabled(ExperimentalFeatures.NormalizeList)) {
-                    normalizeListsForExport(event.clonedRoot);
-                }
+                normalizeListsForExport(event.clonedRoot);
                 break;
         }
     }
