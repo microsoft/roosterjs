@@ -71,6 +71,10 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 );
 
                 if (topDivider) {
+                    if (context.isInSelection) {
+                        topDivider.isSelected = true;
+                    }
+
                     addBlock(group, topDivider);
                 }
 
@@ -82,6 +86,10 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
             context.elementProcessors.child(group, element, context);
 
             if (bottomDivider) {
+                if (context.isInSelection) {
+                    bottomDivider.isSelected = true;
+                }
+
                 addBlock(group, bottomDivider);
             }
         }

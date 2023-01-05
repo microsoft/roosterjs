@@ -50,13 +50,14 @@ describe('FormatUtils', () => {
     });
 
     it('setTextColor() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockColor = 'red';
         setTextColor(editor, mockColor);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
+        expect((<any>editor).core.pendingFormatState.pendableFormatSpan.style.color).toBe(
+            mockColor
+        );
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
@@ -66,13 +67,14 @@ describe('FormatUtils', () => {
     });
 
     it('setBackgroundColor() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockColor = 'red';
         setBackgroundColor(editor, mockColor);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
+        expect((<any>editor).core.pendingFormatState.pendableFormatSpan.style.backgroundColor).toBe(
+            mockColor
+        );
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
@@ -82,13 +84,14 @@ describe('FormatUtils', () => {
     });
 
     it('setFontName() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockFontName = 'Calibri, Arial, Helvetica, sans-serif';
         setFontName(editor, mockFontName);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
+        expect((<any>editor).core.pendingFormatState.pendableFormatSpan.style.fontFamily).toBe(
+            mockFontName
+        );
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
@@ -98,13 +101,14 @@ describe('FormatUtils', () => {
     });
 
     it('setFontSize() triggers the applyInlineStyle method in editor', () => {
-        spyOn(editor, 'addUndoSnapshot').and.callThrough();
         spyOn(applyInlineStyle, 'default').and.callThrough();
 
         let mockFontSize = '6pt';
         setFontSize(editor, mockFontSize);
 
-        expect(editor.addUndoSnapshot).toHaveBeenCalled();
+        expect((<any>editor).core.pendingFormatState.pendableFormatSpan.style.fontSize).toBe(
+            mockFontSize
+        );
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];

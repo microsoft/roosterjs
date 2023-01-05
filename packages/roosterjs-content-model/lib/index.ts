@@ -35,6 +35,7 @@ export { combineBorderValue, extractBorderValues, Border } from './domUtils/bord
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
 export { ContentModelSegmentType } from './publicTypes/enum/SegmentType';
+export { Selectable } from './publicTypes/selection/Selectable';
 
 export { ContentModelBlockBase } from './publicTypes/block/ContentModelBlockBase';
 export { ContentModelTable } from './publicTypes/block/ContentModelTable';

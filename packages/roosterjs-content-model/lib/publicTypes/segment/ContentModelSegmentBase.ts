@@ -2,6 +2,7 @@ import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelSegmentType } from '../enum/SegmentType';
 import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import { Selectable } from '../selection/Selectable';
 
 /**
  * Base type of Content Model Segment
@@ -9,16 +10,11 @@ import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 export interface ContentModelSegmentBase<
     T extends ContentModelSegmentType,
     TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
-> extends ContentModelWithFormat<TFormat> {
+> extends ContentModelWithFormat<TFormat>, Selectable {
     /**
      * Type of this segment
      */
     segmentType: T;
-
-    /**
-     * Whether this segment is selected
-     */
-    isSelected?: boolean;
 
     /**
      * Hyperlink info
