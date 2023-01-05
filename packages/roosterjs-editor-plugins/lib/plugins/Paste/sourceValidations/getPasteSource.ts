@@ -4,7 +4,7 @@ import isGoogleSheetDocument from './isGoogleSheetDocument';
 import isPowerPointDesktopDocument from './isPowerPointDesktopDocument';
 import isWordDesktopDocument from './isWordDesktopDocument';
 import shouldConvertToSingleImage from './shouldConvertToSingleImage';
-import { BeforePasteEvent, ClipboardData, IEditor } from 'roosterjs-editor-types';
+import { BeforePasteEvent, ClipboardData } from 'roosterjs-editor-types';
 import { KnownSourceType } from './KnownSourceType';
 
 /**
@@ -13,7 +13,7 @@ import { KnownSourceType } from './KnownSourceType';
 export type getSourceInputParams = {
     htmlAttributes: Record<string, string>;
     fragment: DocumentFragment;
-    editor: IEditor;
+    shouldConvertSingleImage: boolean;
     clipboardData: ClipboardData;
 };
 
@@ -38,14 +38,17 @@ const getSourceFunctions = new Map<KnownSourceType, getSourceFunction>([
  * @param editor editor instance
  * @returns The Type of pasted content, if no type found will return {KnownSourceType.Default}
  */
-export default function getPasteSource(event: BeforePasteEvent, editor: IEditor): KnownSourceType {
+export default function getPasteSource(
+    event: BeforePasteEvent,
+    shouldConvertSingleImage: boolean
+): KnownSourceType {
     const { htmlAttributes, clipboardData, fragment } = event;
 
     let result: KnownSourceType | null = null;
     const param: getSourceInputParams = {
         htmlAttributes,
         fragment,
-        editor,
+        shouldConvertSingleImage,
         clipboardData,
     };
 

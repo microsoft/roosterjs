@@ -24,8 +24,13 @@ export default class Paste implements EditorPlugin {
     /**
      * Construct a new instance of Paste class
      * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
+     * @param convertSingleImageBody When enabled, if clipboard HTML contains a single image, we reuse the image without modifying the src attribute.
+     *                               When disabled, pasted image src attribute will use the dataUri from clipboard data -- By Default disabled.
      */
-    constructor(private unknownTagReplacement: string = 'SPAN') {}
+    constructor(
+        private unknownTagReplacement: string = 'SPAN',
+        private convertSingleImageBody = false
+    ) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -58,7 +63,7 @@ export default class Paste implements EditorPlugin {
             const { fragment, sanitizingOption } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
 
-            switch (getPasteSource(event, this.editor)) {
+            switch (getPasteSource(event, this.convertSingleImageBody)) {
                 case KnownSourceType.WordDesktop:
                     // Handle HTML copied from Word
                     convertPastedContentFromWord(event);
