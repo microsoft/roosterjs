@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>28/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.65% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>23/34</span>
+                <span class='fraction'>24/36</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
@@ -129,20 +129,18 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,31 +157,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -192,8 +192,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { createListItem } from '../creators/createListItem';
-import { getOperationalBlocks } from '../common/getOperationalBlocks';
-import { getSelections } from '../selection/getSelections';
+import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 &nbsp;
@@ -201,55 +200,56 @@ import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
  * @internal
  */
 export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') {
-    const paragraphs = getSelections(model);
     const paragraphOrListItems = getOperationalBlocks&lt;ContentModelListItem&gt;(
-        paragraphs,
+        model,
         ['ListItem'],
         [] // Set stop types to be empty so we can find list items even cross the boundary of table, then we can always operation on the list item if any
     );
     const alreadyInExpectedType = paragraphOrListItems.every(
-        item =&gt;
-            isBlockGroupOfType(item, 'ListItem') &amp;&amp;
-            item.levels[item.levels.length - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>istType == listType
+        ({ block }) =&gt;
+            isBlockGroupOfType&lt;ContentModelListItem&gt;(block, 'ListItem') &amp;&amp;
+            block.levels[block.levels.length - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>istType == listType
     );
 &nbsp;
-    paragraphOrListItems.forEach((item, itemIndex) =&gt; {
-        if (isBlockGroupOfType(item, 'ListItem')) {
-            const level = item.levels.pop();
+    paragraphOrListItems.forEach(({ block, parent }, itemIndex) =&gt; {
+        if (isBlockGroupOfType&lt;ContentModelListItem&gt;(block, 'ListItem')) {
+            const level = block.levels.pop();
 &nbsp;
             if (!alreadyInExpectedType &amp;&amp; level) {
                 level.listType = listType;
-                item.levels.push(level);
-            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (item.blocks.length == 1) {
-                setParagraphNotImplicit(item.blocks[0]);
+                block.levels.push(level);
+            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (block.blocks.length == 1) {
+                setParagraphNotImplicit(block.blocks[0]);
             }
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (item.paragraph) {
-            const group = item.path[0];
-            const index = group.blocks.indexOf(item.paragraph);
-            const prevBlock = group.blocks[index - 1];
-            const newListItem = createListItem(
-                [
-                    {
-                        listType,
-                        startNumberOverride:
-                            itemIndex &gt; 0 ||
-                            (<span class="branch-1 cbranch-no" title="branch not covered" >prevBlock?.blockType </span>== 'BlockGroup' &amp;&amp;
-<span class="branch-2 cbranch-no" title="branch not covered" >                                prevBlock.blockGroupType == 'ListItem' </span>&amp;&amp;
-<span class="branch-3 cbranch-no" title="branch not covered" >                                prevBlock.levels[0]?.listType == 'OL')</span>
-                                ? undefined
-                                : 1,
-                    },
-                ],
-                item.paragraph.segments[0]<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>ormat
-            );
+        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (block.blockType == 'Paragraph') {
+            const index = parent.blocks.indexOf(block);
 &nbsp;
-            // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
-            // TODO: Do we need to keep the CSS styles applied to original DIV?
-            item.paragraph.isImplicit = true;
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (index &gt;= 0) {
+                const prevBlock = parent.blocks[index - 1];
+                const newListItem = createListItem(
+                    [
+                        {
+                            listType,
+                            startNumberOverride:
+                                itemIndex &gt; 0 ||
+                                (<span class="branch-1 cbranch-no" title="branch not covered" >prevBlock?.blockType </span>== 'BlockGroup' &amp;&amp;
+<span class="branch-2 cbranch-no" title="branch not covered" >                                    prevBlock.blockGroupType == 'ListItem' </span>&amp;&amp;
+<span class="branch-3 cbranch-no" title="branch not covered" >                                    prevBlock.levels[0]?.listType == 'OL')</span>
+                                    ? undefined
+                                    : 1,
+                        },
+                    ],
+                    block.segments[0]<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>ormat
+                );
 &nbsp;
-            newListItem.blocks.push(item.paragraph);
+                // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
+                // TODO: Do we need to keep the CSS styles applied to original DIV?
+                block.isImplicit = true;
 &nbsp;
-            group.blocks.splice(index, 1, newListItem);
+                newListItem.blocks.push(block);
+&nbsp;
+                parent.blocks.splice(index, 1, newListItem);
+            }
         }
     });
 &nbsp;
@@ -262,7 +262,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jan 05 2023 05:28:31 GMT+0000 (Coordinated Universal Time)
+                at Thu Jan 05 2023 21:54:42 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
