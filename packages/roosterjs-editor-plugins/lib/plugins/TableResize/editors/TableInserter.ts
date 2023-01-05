@@ -1,6 +1,6 @@
 import Disposable from '../../../pluginUtils/Disposable';
 import TableEditFeature from './TableEditorFeature';
-import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
+import { createElement, getIntersectedRect, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, TableOperation } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
@@ -25,7 +25,7 @@ export default function createTableInserter(
     const table = editor.getElementAtCursor('table', td);
 
     const tdRect = normalizeRect(td.getBoundingClientRect());
-    const tableRect = table ? normalizeRect(table.getBoundingClientRect()) : null;
+    let tableRect = table ? getIntersectedRect([table], [editor.getVisibleViewport()]) : null;
 
     // set inserter position
     if (tdRect && tableRect) {
