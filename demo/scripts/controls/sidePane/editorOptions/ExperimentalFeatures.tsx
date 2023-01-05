@@ -16,10 +16,6 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Align list elements elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.AutoFormatList]:
         'Trigger formatting by a especial characters. Ex: (A), 1. i).',
-    [ExperimentalFeatures.PendingStyleBasedFormat]:
-        'Use pending style format to do formatting when selection is collapsed',
-    [ExperimentalFeatures.NormalizeList]:
-        'Normalize list to make sure it can be displayed correctly in other client',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DefaultFormatInSpan]:
