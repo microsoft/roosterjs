@@ -25,7 +25,7 @@ export default function createTableInserter(
     const table = editor.getElementAtCursor('table', td);
 
     const tdRect = normalizeRect(td.getBoundingClientRect());
-    let tableRect = table ? getIntersectedRect([table], [editor.getVisibleViewport()]) : null;
+    const tableRect = table ? getIntersectedRect([table], [editor.getVisibleViewport()]) : null;
 
     // set inserter position
     if (tdRect && tableRect) {
