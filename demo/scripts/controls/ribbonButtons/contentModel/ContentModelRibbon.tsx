@@ -13,6 +13,7 @@ import { fontSizeButton } from './fontSizeButton';
 import { formatTableButton } from './formatTableButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
+import { insertImageButton } from './insertImageButton';
 import { insertTableButton } from './insertTableButton';
 import { italicButton } from './italicButton';
 import { listStartNumberButton } from './listStartNumberButton';
@@ -58,12 +59,13 @@ const buttons = [
     alignCenterButton,
     alignRightButton,
     insertTableButton,
+    insertImageButton,
     superscriptButton,
     subscriptButton,
     strikethroughButton,
+    setHeaderLevelButton,
     ltrButton,
     rtlButton,
-    setHeaderLevelButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,
     listStartNumberButton,
