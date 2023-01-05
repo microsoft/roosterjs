@@ -4,7 +4,7 @@ import { getClosestAncestorBlockGroupIndex } from '../../modelApi/common/getClos
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { isBold } from '../segment/toggleBold';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
-import { updateTableMetadata } from 'roosterjs-content-model/lib/modelApi/metadata/updateTableMetadata';
+import { updateTableMetadata } from '../../modelApi/metadata/updateTableMetadata';
 
 /**
  * Get current format state
