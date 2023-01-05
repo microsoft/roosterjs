@@ -485,4 +485,56 @@ describe('knownElementProcessor', () => {
             ],
         });
     });
+
+    it('BLOCKQUOTE used for indent with selection', () => {
+        const group = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+        quote.appendChild(document.createTextNode('test1'));
+
+        context.isInSelection = true;
+        knownElementProcessor(group, quote, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginTop: '1em',
+                    },
+                    isSelected: true,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '40px',
+                        marginRight: '40px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                            isSelected: true,
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginBottom: '1em',
+                    },
+                    isSelected: true,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

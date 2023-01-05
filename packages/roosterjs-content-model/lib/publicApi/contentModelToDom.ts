@@ -54,18 +54,7 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
     let startPosition: NodePosition | undefined;
     let endPosition: NodePosition | undefined;
 
-    if (tableSelection?.table) {
-        return {
-            type: SelectionRangeTypes.TableSelection,
-            ranges: [],
-            areAllCollapsed: false,
-            table: tableSelection.table,
-            coordinates: {
-                firstCell: tableSelection.firstCell,
-                lastCell: tableSelection.lastCell,
-            },
-        };
-    } else if (imageSelection?.image) {
+    if (imageSelection?.image) {
         return {
             type: SelectionRangeTypes.ImageSelection,
             ranges: [createRange(imageSelection.image)],
@@ -82,6 +71,17 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
             type: SelectionRangeTypes.Normal,
             ranges: [createRange(startPosition, endPosition)],
             areAllCollapsed: range.collapsed,
+        };
+    } else if (tableSelection?.table) {
+        return {
+            type: SelectionRangeTypes.TableSelection,
+            ranges: [],
+            areAllCollapsed: false,
+            table: tableSelection.table,
+            coordinates: {
+                firstCell: tableSelection.firstCell,
+                lastCell: tableSelection.lastCell,
+            },
         };
     } else {
         return null;
