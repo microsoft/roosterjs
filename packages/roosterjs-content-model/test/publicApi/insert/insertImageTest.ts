@@ -35,6 +35,8 @@ describe('insertImage', () => {
             setContentModel,
             isDisposed: () => false,
             getDocument: () => document,
+            getCurrentContentModel: (): ContentModelDocument | null => null,
+            setCurrentContentModel: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         executionCallback(editor);
