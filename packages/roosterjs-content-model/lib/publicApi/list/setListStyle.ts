@@ -1,6 +1,6 @@
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getFirstFocusedListItem } from '../../modelApi/list/getFirstFocusedListItem';
+import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { ListMetadataFormat } from '../../publicTypes/format/formatParts/ListMetadataFormat';
 
@@ -14,7 +14,7 @@ export default function setListStyle(
     style: ListMetadataFormat
 ) {
     formatWithContentModel(editor, 'setListStyle', model => {
-        const listItem = getFirstFocusedListItem(model);
+        const listItem = getFirstSelectedListItem(model);
 
         if (listItem) {
             const listItems = findListItemsInSameThread(model, listItem);
