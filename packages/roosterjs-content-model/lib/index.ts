@@ -17,6 +17,7 @@ export { default as setFontName } from './publicApi/segment/setFontName';
 export { default as setFontSize } from './publicApi/segment/setFontSize';
 export { default as setTextColor } from './publicApi/segment/setTextColor';
 export { default as changeFontSize } from './publicApi/segment/changeFontSize';
+export { default as insertImage } from './publicApi/insert/insertImage';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
@@ -26,12 +27,14 @@ export { default as setIndentation } from './publicApi/block/setIndentation';
 export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
 export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
+export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
 export { ContentModelSegmentType } from './publicTypes/enum/SegmentType';
+export { Selectable } from './publicTypes/selection/Selectable';
 
 export { ContentModelBlockBase } from './publicTypes/block/ContentModelBlockBase';
 export { ContentModelTable } from './publicTypes/block/ContentModelTable';
@@ -66,6 +69,7 @@ export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentMod
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 export { ContentModelWithDataset } from './publicTypes/format/ContentModelWithDataset';
+export { ContentModelQuoteFormat } from './publicTypes/format/ContentModelQuoteFormat';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';

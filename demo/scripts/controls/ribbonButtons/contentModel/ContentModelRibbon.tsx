@@ -3,6 +3,7 @@ import { alignCenterButton } from './alignCenterButton';
 import { alignLeftButton } from './alignLeftButton';
 import { alignRightButton } from './alignRightButton';
 import { backgroundColorButton } from './backgroundColorButton';
+import { blockQuoteButton } from './blockQuoteButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
@@ -12,6 +13,7 @@ import { fontSizeButton } from './fontSizeButton';
 import { formatTableButton } from './formatTableButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
+import { insertImageButton } from './insertImageButton';
 import { insertTableButton } from './insertTableButton';
 import { italicButton } from './italicButton';
 import { listStartNumberButton } from './listStartNumberButton';
@@ -52,19 +54,21 @@ const buttons = [
     numberedListButton,
     decreaseIndentButton,
     increaseIndentButton,
-    strikethroughButton,
-    superscriptButton,
-    subscriptButton,
+    blockQuoteButton,
     alignLeftButton,
     alignCenterButton,
     alignRightButton,
+    insertTableButton,
+    insertImageButton,
+    superscriptButton,
+    subscriptButton,
+    strikethroughButton,
+    setHeaderLevelButton,
     ltrButton,
     rtlButton,
-    setHeaderLevelButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,
     listStartNumberButton,
-    insertTableButton,
     formatTableButton,
     setTableCellShadeButton,
     setTableHeaderButton,

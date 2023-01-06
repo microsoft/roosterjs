@@ -99,6 +99,7 @@ describe('isEmpty', () => {
             blockGroupType: 'Quote',
             format: {},
             blocks: [],
+            quoteSegmentFormat: {},
         });
 
         expect(result).toBeTrue();
@@ -116,6 +117,7 @@ describe('isEmpty', () => {
                     segments: [],
                 },
             ],
+            quoteSegmentFormat: {},
         });
 
         expect(result).toBeTrue();
@@ -135,7 +137,7 @@ describe('isEmpty', () => {
             },
         });
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
     });
 
     it('List item has empty block', () => {
@@ -158,7 +160,7 @@ describe('isEmpty', () => {
             ],
         });
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
     });
 
     it('Empty general node', () => {

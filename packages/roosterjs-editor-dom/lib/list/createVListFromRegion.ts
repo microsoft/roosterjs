@@ -44,7 +44,11 @@ export default function createVListFromRegion(
             nodes.push(list);
         }
     } else {
-        const blocks = getSelectedBlockElementsInRegion(region);
+        const blocks = getSelectedBlockElementsInRegion(
+            region,
+            undefined,
+            true /* shouldApplyFormatToSpan */
+        );
         blocks.forEach(block => {
             const list = getRootListNode(region, ListSelector, block.getStartNode());
 
@@ -67,7 +71,7 @@ export default function createVListFromRegion(
 
         if (nodes.length == 0 && !region.rootNode.firstChild) {
             const newNode = createElement(
-                KnownCreateElementDataIndex.EmptyLine,
+                KnownCreateElementDataIndex.EmptyLineFormatInSpan,
                 region.rootNode.ownerDocument
             )!;
             region.rootNode.appendChild(newNode);

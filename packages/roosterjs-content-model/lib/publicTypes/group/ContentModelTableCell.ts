@@ -2,6 +2,7 @@ import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
 import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import { Selectable } from '../selection/Selectable';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 
 /**
@@ -10,7 +11,8 @@ import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 export interface ContentModelTableCell
     extends ContentModelBlockGroupBase<'TableCell'>,
         ContentModelWithFormat<ContentModelTableCellFormat>,
-        ContentModelWithDataset<TableCellMetadataFormat> {
+        ContentModelWithDataset<TableCellMetadataFormat>,
+        Selectable {
     /**
      * Whether this cell is spanned from left cell
      */
@@ -25,9 +27,4 @@ export interface ContentModelTableCell
      * Whether this cell is a table header (TH) element
      */
     isHeader?: boolean;
-
-    /**
-     * Whether this cell is selected
-     */
-    isSelected?: boolean;
 }

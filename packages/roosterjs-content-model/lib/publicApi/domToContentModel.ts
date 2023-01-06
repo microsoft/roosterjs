@@ -3,7 +3,7 @@ import { createContentModelDocument } from '../modelApi/creators/createContentMo
 import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
 import { DomToModelOption } from '../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { normalizeModel } from '../modelApi/common/normalizeContentModel';
+import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -24,7 +24,7 @@ export default function domToContentModel(
 
     processor(model, root, domToModelContext);
 
-    normalizeModel(model);
+    normalizeContentModel(model);
 
     return model;
 }
