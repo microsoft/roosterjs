@@ -1,4 +1,5 @@
 import cloneCellStyles from '../../lib/table/cloneCellStyles';
+import { decode64 } from '../DomTestHelper';
 
 describe('cloneCellStyles', () => {
     function runTest(style: string) {
@@ -7,7 +8,8 @@ describe('cloneCellStyles', () => {
         styledCell.setAttribute('style', style);
         cloneCellStyles(cell, styledCell);
         expect(cell.getAttribute('style')).toEqual(style);
-        expect(cell.getAttribute('data-editing-info')).toBe('{"bgColorOverride":true}');
+        const editingInfo = cell.getAttribute('data-editing-info');
+        expect(decode64(editingInfo!)).toBe('{"bgColorOverride":true}');
     }
 
     it('cloneCellStyles | should clone style and add metadata', () => {

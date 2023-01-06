@@ -1,4 +1,5 @@
 import { CustomizeDefinition, DefinitionType } from 'roosterjs-editor-types';
+import { encode64 } from '../DomTestHelper';
 import { getMetadata, removeMetadata, setMetadata } from '../../lib/metadata/metadata';
 
 describe('metadata', () => {
@@ -12,7 +13,8 @@ describe('metadata', () => {
         const div = document.createElement('div');
         div.innerHTML = '<span>test</span>';
         const node = div.firstChild as HTMLElement;
-        node.setAttribute('data-editing-info', JSON.stringify(obj));
+        const encodedMetadata = encode64(JSON.stringify(obj));
+        node.setAttribute('data-editing-info', encodedMetadata);
         const def: CustomizeDefinition = {
             type: DefinitionType.Customize,
             validator: validators.trueValidator,
@@ -34,8 +36,8 @@ describe('metadata', () => {
         const div = document.createElement('div');
         div.innerHTML = '<span>test</span>';
         const node = div.firstChild as HTMLElement;
-
-        node.setAttribute('data-editing-info', JSON.stringify(obj));
+        const encodedMetadata = encode64(JSON.stringify(obj));
+        node.setAttribute('data-editing-info', encodedMetadata);
 
         const def: CustomizeDefinition = {
             type: DefinitionType.Customize,
@@ -59,7 +61,8 @@ describe('metadata', () => {
         div.innerHTML = '<span>test</span>';
         const node = div.firstChild as HTMLElement;
 
-        node.setAttribute('data-editing-info', JSON.stringify(obj));
+        const encodedMetadata = encode64(JSON.stringify(obj));
+        node.setAttribute('data-editing-info', encodedMetadata);
 
         const def: CustomizeDefinition = {
             type: DefinitionType.Customize,
@@ -85,12 +88,10 @@ describe('metadata', () => {
             validator: validators.trueValidator,
         };
         const result = setMetadata(node, obj, def);
-
+        const editingInfo = encode64(JSON.stringify(obj));
         expect(validatorSpy).toHaveBeenCalled();
         expect(result).toBeTrue();
-        expect(node.outerHTML).toBe(
-            '<div data-editing-info="{&quot;x&quot;:1,&quot;y&quot;:&quot;test&quot;}"></div>'
-        );
+        expect(node.outerHTML).toBe(`<div data-editing-info="&quot;${editingInfo}&quot;"></div>`);
     });
 
     it('setMetadata sets an invalid metadata', () => {

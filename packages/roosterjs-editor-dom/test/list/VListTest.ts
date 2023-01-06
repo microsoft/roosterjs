@@ -1321,7 +1321,8 @@ describe('VList.setListStyleType', () => {
 
         // Act
         vList.setListStyleType(orderedStyle, unorderedStyle);
-        expect(list.dataset[editingInfo]).toEqual(JSON.stringify(style));
+        const editInfo = list.dataset[editingInfo];
+        expect(DomTestHelper.decode64(editInfo!)).toEqual(JSON.stringify(style));
         DomTestHelper.removeElement(testId);
     }
 

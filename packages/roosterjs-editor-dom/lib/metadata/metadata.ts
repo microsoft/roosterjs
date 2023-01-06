@@ -21,7 +21,12 @@ export function getMetadata<T>(
     let obj: any;
 
     try {
-        obj = str ? JSON.parse(str) : null;
+        if (str) {
+            const decodedMetadata = decode64(str);
+            obj = JSON.parse(decodedMetadata);
+        } else {
+            obj = null;
+        }
     } catch {}
 
     if (typeof obj !== 'undefined') {
@@ -49,7 +54,9 @@ export function getMetadata<T>(
  */
 export function setMetadata<T>(element: HTMLElement, metadata: T, def?: Definition<T>): boolean {
     if (!def || validate(metadata, def)) {
-        element.dataset[MetadataDataSetName] = JSON.stringify(metadata);
+        const metadataString = JSON.stringify(metadata);
+        const encodedMetadata = encode64(metadataString);
+        element.dataset[MetadataDataSetName] = JSON.stringify(encodedMetadata);
         return true;
     } else {
         return false;
@@ -62,4 +69,12 @@ export function setMetadata<T>(element: HTMLElement, metadata: T, def?: Definiti
  */
 export function removeMetadata(element: HTMLElement) {
     delete element.dataset[MetadataDataSetName];
+}
+
+function encode64(metadata: string) {
+    return Buffer.from(metadata, 'utf8').toString('base64');
+}
+
+function decode64(metadata: string) {
+    return Buffer.from(metadata, 'base64').toString('utf8');
 }

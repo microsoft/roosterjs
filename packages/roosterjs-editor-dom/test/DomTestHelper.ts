@@ -121,3 +121,11 @@ export function itChromeOnly(
     const func = Browser.isChrome ? it : xit;
     return func(expectation, assertion, timeout);
 }
+
+export function decode64(metadata: string) {
+    return Buffer.from(metadata, 'base64').toString('utf8');
+}
+
+export function encode64(metadata: string) {
+    return Buffer.from(metadata, 'utf8').toString('base64');
+}

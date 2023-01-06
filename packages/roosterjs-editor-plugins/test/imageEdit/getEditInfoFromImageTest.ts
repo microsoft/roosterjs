@@ -1,4 +1,5 @@
 import ImageEditInfo from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
+import { encode64 } from '../../../roosterjs-editor-dom/test/DomTestHelper';
 import { getEditInfoFromImage } from '../../lib/plugins/ImageEdit/editInfoUtils/editInfo';
 
 const IMG_SRC =
@@ -58,7 +59,7 @@ describe('getEditInfoFromImage', () => {
             bottomPercent: 0.4,
             angleRad: 0.5,
         };
-        img.dataset[IMAGE_EDIT_EDITINFO_NAME] = JSON.stringify(expectedEditInfo);
+        img.dataset[IMAGE_EDIT_EDITINFO_NAME] = encode64(JSON.stringify(expectedEditInfo));
         const editInfo = getEditInfoFromImage(img);
 
         expect(editInfo).toEqual(expectedEditInfo);
@@ -77,7 +78,7 @@ describe('getEditInfoFromImage', () => {
             bottomPercent: 0.4,
             angleRad: 0.5,
         };
-        img.dataset[IMAGE_EDIT_EDITINFO_NAME] = JSON.stringify(expectedEditInfo);
+        img.dataset[IMAGE_EDIT_EDITINFO_NAME] = encode64(JSON.stringify(expectedEditInfo));
         const editInfo = getEditInfoFromImage(img);
 
         expect(editInfo).toEqual({

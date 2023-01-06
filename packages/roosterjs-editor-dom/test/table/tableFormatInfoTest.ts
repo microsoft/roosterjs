@@ -1,4 +1,5 @@
 import VTable from '../../lib/table/VTable';
+import { decode64 } from '../DomTestHelper';
 import { getTableFormatInfo, saveTableInfo } from '../../lib/table/tableFormatInfo';
 import { TableFormat } from 'roosterjs-editor-types';
 
@@ -51,7 +52,8 @@ describe('saveTableInfo', () => {
     it('should return the info of a table ', () => {
         const table = createTable(format);
         saveTableInfo(table, format);
-        expect(JSON.parse(table?.dataset[TABLE_STYLE_INFO])).toEqual(JSON.parse(expectedTableInfo));
+        const editInfo = JSON.parse(decode64(table?.dataset[TABLE_STYLE_INFO]));
+        expect(editInfo).toEqual(JSON.parse(expectedTableInfo));
         removeTable();
     });
 });
