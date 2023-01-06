@@ -15,7 +15,7 @@ jobs:
             - name: Set Node Version
               uses: actions/setup-node@v2
               with:
-                  node-version: 'v14.18.2'
+                  node-version: 'v14.19.3'
 
             - name: Install dependencies
               run: yarn
