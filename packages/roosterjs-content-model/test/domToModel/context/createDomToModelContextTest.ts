@@ -108,12 +108,13 @@ describe('createDomToModelContext', () => {
     });
 
     it('with table selection', () => {
+        const mockTable = ('Table' as any) as HTMLTableElement;
         const context = createDomToModelContext(undefined, {
             selectionRange: {
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [],
                 areAllCollapsed: false,
-                table: 'TABLE' as any,
+                table: mockTable,
                 coordinates: {
                     firstCell: { x: 1, y: 2 },
                     lastCell: { x: 3, y: 4 },
@@ -127,7 +128,7 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             isInSelection: false,
             tableSelection: {
-                table: 'TABLE' as any,
+                table: mockTable,
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
             },
@@ -136,17 +137,19 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            selectionRootNode: mockTable,
             ...contextOptions,
         });
     });
 
     it('with image selection', () => {
+        const mockImage = ('Image' as any) as HTMLImageElement;
         const context = createDomToModelContext(undefined, {
             selectionRange: {
                 type: SelectionRangeTypes.ImageSelection,
                 ranges: [],
                 areAllCollapsed: false,
-                image: 'IMAGE' as any,
+                image: mockImage,
             },
         });
 
@@ -160,9 +163,10 @@ describe('createDomToModelContext', () => {
             },
             isInSelection: false,
             imageSelection: {
-                image: 'IMAGE' as any,
+                image: mockImage,
             },
             listFormat,
+            selectionRootNode: mockImage,
             ...contextOptions,
         });
     });
