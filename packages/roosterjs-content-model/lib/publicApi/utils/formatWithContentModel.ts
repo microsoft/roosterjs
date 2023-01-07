@@ -18,8 +18,6 @@ export function formatWithContentModel(
         editor.getCurrentContentModel() ||
         editor.createContentModel(undefined /*rootNode*/, domToModelOptions);
 
-    editor.setCurrentContentModel(model);
-
     if (callback(model)) {
         editor.addUndoSnapshot(
             () => {
@@ -34,5 +32,7 @@ export function formatWithContentModel(
                 formatApiName: apiName,
             }
         );
+
+        editor.setCurrentContentModel(model);
     }
 }

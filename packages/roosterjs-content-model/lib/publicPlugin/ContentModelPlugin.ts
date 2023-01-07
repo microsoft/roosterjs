@@ -74,7 +74,7 @@ export default class ContentModelPlugin implements EditorPlugin {
             if (
                 event.eventType == PluginEventType.CompositionEnd ||
                 event.eventType == PluginEventType.ContentChanged ||
-                event.eventType == PluginEventType.SelectionChanged ||
+                event.eventType == PluginEventType.MouseDown ||
                 (event.eventType == PluginEventType.KeyDown &&
                     !isModifierKey(event.rawEvent) &&
                     event.rawEvent.key != IME_KEYDOWN_KEY)

@@ -6,7 +6,7 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { createText } from '../../modelApi/creators/createText';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
+import { getRegularSelectionOffsets } from '../utils/childProcessorUtils';
 import { hasSpacesOnly } from '../../domUtils/hasSpacesOnly';
 
 /**
