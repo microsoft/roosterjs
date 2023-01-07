@@ -1,16 +1,7 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-
-/**
- * @internal
- */
-export interface TableSelectionContext {
-    table: ContentModelTable;
-    rowIndex: number;
-    colIndex: number;
-}
+import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 
 /**
  * @internal

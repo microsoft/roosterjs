@@ -1,9 +1,12 @@
-import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
+import { addSegment } from '../modelApi/common/addSegment';
+import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
+import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createText } from '../modelApi/creators/createText';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { getCollapsedInsertPoint } from '../modelApi/selection/getCollapsedInsertPoint';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
+import { InsertPosition } from '../publicTypes/selection/InsertPosition';
 import { isCharacterValue, isModifierKey } from 'roosterjs-editor-dom';
+import { mergeModel } from '../modelApi/common/mergeModel';
 
 // "Process" is the value used when type within IME
 const IME_KEYDOWN_KEY = 'Process';
@@ -51,12 +54,12 @@ export default class ContentModelPlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
-            let model: ContentModelDocument | null;
+            let insertPosition: InsertPosition | null;
 
             if (
                 (event.eventType == PluginEventType.KeyDown ||
                     event.eventType == PluginEventType.CompositionEnd) &&
-                (model = this.editor.getCurrentContentModel())
+                (insertPosition = this.editor.getCachedInsertPosition())
             ) {
                 const input =
                     event.eventType == PluginEventType.CompositionEnd
@@ -66,36 +69,35 @@ export default class ContentModelPlugin implements EditorPlugin {
                         : null;
 
                 if (input) {
-                    this.acceptInputWithPendingFormat(model, input);
+                    acceptInputWithPendingFormat(this.editor, insertPosition.marker.format, input);
                     event.rawEvent.preventDefault();
                 }
             }
 
             if (
                 event.eventType == PluginEventType.CompositionEnd ||
-                event.eventType == PluginEventType.ContentChanged ||
                 event.eventType == PluginEventType.MouseDown ||
                 (event.eventType == PluginEventType.KeyDown &&
                     !isModifierKey(event.rawEvent) &&
                     event.rawEvent.key != IME_KEYDOWN_KEY)
             ) {
-                this.editor.setCurrentContentModel(null);
+                this.editor.cacheInsertPosition(null);
             }
         }
     }
+}
 
-    private acceptInputWithPendingFormat(model: ContentModelDocument, char: string) {
-        const insertPos = getCollapsedInsertPoint(model);
+function acceptInputWithPendingFormat(
+    editor: IExperimentalContentModelEditor,
+    format: ContentModelSegmentFormat,
+    char: string
+) {
+    const model = editor.createContentModel();
+    const newModel = createContentModelDocument();
+    const text = createText(char, format);
 
-        if (insertPos) {
-            const { paragraph, marker } = insertPos;
-            const text = createText(char, marker.format);
-            const index = paragraph.segments.indexOf(marker);
+    addSegment(model, text);
+    mergeModel(model, newModel);
 
-            if (index >= 0) {
-                paragraph.segments.splice(index, 0, text);
-                this.editor!.setContentModel(model);
-            }
-        }
-    }
+    editor.setContentModel(model);
 }

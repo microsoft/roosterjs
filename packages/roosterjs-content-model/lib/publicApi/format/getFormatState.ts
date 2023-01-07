@@ -1,18 +1,16 @@
 import { contains } from 'roosterjs-editor-dom';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelParagraph } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from 'roosterjs-content-model/lib/publicTypes/segment/ContentModelSegment';
+import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from '../../modelApi/common/getClosestAncestorBlockGroupIndex';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { isBold } from '../segment/toggleBold';
+import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import { updateTableMetadata } from '../../modelApi/metadata/updateTableMetadata';
-import {
-    iterateSelections,
-    TableSelectionContext,
-} from '../../modelApi/selection/iterateSelections';
 import {
     getRegularSelectionOffsets,
     handleRegularSelection,
@@ -24,17 +22,6 @@ import {
  * @param editor The editor to get format from
  */
 export default function getFormatState(editor: IExperimentalContentModelEditor): FormatState {
-    // When there is cached pending content model, get format from it.
-    // Otherwise, create a "reduced" Content Model that only scan a sub DOM tree that contains the selection.
-    let model =
-        editor.getCurrentContentModel() ??
-        editor.createContentModel(undefined /*rootNode*/, {
-            processorOverride: {
-                child: childProcessorForFormat,
-            },
-        });
-
-    let isFirst = true;
     let result: FormatState = {
         ...editor.getUndoState(),
 
@@ -42,18 +29,34 @@ export default function getFormatState(editor: IExperimentalContentModelEditor):
         zoomScale: editor.getZoomScale(),
     };
 
-    iterateSelections([model], (path, tableContext, block, segments) => {
-        if (block?.blockType == 'Paragraph' && segments?.[0]) {
-            getFormatStateInternal(result, path, tableContext, block, segments, isFirst);
+    const insertPosition = editor.getCachedInsertPosition();
 
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                // Return true to stop iteration since we have already got everything we need
-                return true;
+    if (insertPosition) {
+        // When there is cached pending insert position, get format from it.
+        const { paragraph, path, marker, tableContext } = insertPosition;
+        getFormatStateInternal(result, path, tableContext, paragraph, [marker], true /*isFirst*/);
+    } else {
+        // Otherwise, create a "reduced" Content Model that only scan a sub DOM tree that contains the selection.
+        const model = editor.createContentModel(undefined /*rootNode*/, {
+            processorOverride: {
+                child: childProcessorForFormat,
+            },
+        });
+        let isFirst = true;
+
+        iterateSelections([model], (path, tableContext, block, segments) => {
+            if (block?.blockType == 'Paragraph' && segments?.[0]) {
+                getFormatStateInternal(result, path, tableContext, block, segments, isFirst);
+
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    // Return true to stop iteration since we have already got everything we need
+                    return true;
+                }
             }
-        }
-    });
+        });
+    }
 
     return result;
 }
@@ -62,7 +65,7 @@ function getFormatStateInternal(
     result: FormatState,
     path: ContentModelBlockGroup[],
     tableContext: TableSelectionContext | undefined,
-    block: ContentModelParagraph,
+    paragraph: ContentModelParagraph,
     segments: ContentModelSegment[],
     isFirstSelection: boolean
 ) {
@@ -72,7 +75,7 @@ function getFormatStateInternal(
         const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
         const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
         const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
-        const headerLevel = parseInt((block.decorator?.tagName || '').substring(1));
+        const headerLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
 
         result.fontName = format.fontFamily;
         result.fontSize = format.fontSize;

@@ -23,8 +23,8 @@ export function segmentTestCommon(
         addUndoSnapshot,
         focus: jasmine.createSpy(),
         setContentModel,
-        getCurrentContentModel: (): ContentModelDocument | null => null,
-        setCurrentContentModel: () => {},
+        getCachedInsertPosition: (): ContentModelDocument | null => null,
+        cacheInsertPosition: () => {},
     } as any) as IExperimentalContentModelEditor;
 
     executionCallback(editor);

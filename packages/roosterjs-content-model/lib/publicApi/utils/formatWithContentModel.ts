@@ -14,9 +14,7 @@ export function formatWithContentModel(
     callback: (model: ContentModelDocument) => boolean,
     domToModelOptions?: DomToModelOption
 ) {
-    const model =
-        editor.getCurrentContentModel() ||
-        editor.createContentModel(undefined /*rootNode*/, domToModelOptions);
+    const model = editor.createContentModel(undefined /*rootNode*/, domToModelOptions);
 
     if (callback(model)) {
         editor.addUndoSnapshot(
@@ -32,7 +30,5 @@ export function formatWithContentModel(
                 formatApiName: apiName,
             }
         );
-
-        editor.setCurrentContentModel(model);
     }
 }

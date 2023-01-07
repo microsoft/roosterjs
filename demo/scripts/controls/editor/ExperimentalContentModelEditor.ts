@@ -7,6 +7,7 @@ import {
     DomToModelOption,
     EditorContext,
     IExperimentalContentModelEditor,
+    InsertPosition,
     ModelToDomOption,
 } from 'roosterjs-content-model';
 import {
@@ -23,7 +24,7 @@ import {
 export default class ExperimentalContentModelEditor extends Editor
     implements IExperimentalContentModelEditor {
     private getDarkColor: ((lightColor: string) => string) | undefined;
-    private cachedContentModel: ContentModelDocument | null = null;
+    private cachedInsertPosition: InsertPosition | null = null;
 
     /**
      * Creates an instance of ExperimentalContentModelEditor
@@ -94,14 +95,14 @@ export default class ExperimentalContentModelEditor extends Editor
      * Get a content model that can represent current content of editor.
      * @param option The options to customize the behavior of DOM to Content Model conversion
      */
-    getCurrentContentModel(): ContentModelDocument | null {
-        return this.cachedContentModel;
+    getCachedInsertPosition(): InsertPosition | null {
+        return this.cachedInsertPosition;
     }
 
     /**
      * Set the given model as current pending content model
      */
-    setCurrentContentModel(model: ContentModelDocument | null) {
-        this.cachedContentModel = model;
+    cacheInsertPosition(model: InsertPosition | null) {
+        this.cachedInsertPosition = model;
     }
 }

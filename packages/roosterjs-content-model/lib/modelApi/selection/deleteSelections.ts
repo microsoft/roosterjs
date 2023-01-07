@@ -1,21 +1,11 @@
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
-import { iterateSelections, TableSelectionContext } from './iterateSelections';
-
-/**
- * @internal
- */
-export interface InsertPosition {
-    marker: ContentModelSelectionMarker;
-    paragraph: ContentModelParagraph;
-    path: ContentModelBlockGroup[];
-    tableContext?: TableSelectionContext;
-}
+import { InsertPosition } from '../../publicTypes/selection/InsertPosition';
+import { iterateSelections } from './iterateSelections';
+import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 
 /**
  * @internal

@@ -1,6 +1,7 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
 import { EditorContext } from './context/EditorContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import { InsertPosition } from '../publicTypes/selection/InsertPosition';
 import {
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
@@ -125,13 +126,12 @@ export interface IExperimentalContentModelEditor extends IEditor {
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
 
     /**
-     * Get a content model that can represent current content of editor.
-     * This will check if there is already a cached one, if not, create a new model.
+     * Get a cache insert position that can represent current insert position of editor content
      */
-    getCurrentContentModel(): ContentModelDocument | null;
+    getCachedInsertPosition(): InsertPosition | null;
 
     /**
-     * Set the given model as current pending content model
+     * Cache an insert position. Set to null to clear existing cache if any
      */
-    setCurrentContentModel(model: ContentModelDocument | null): void;
+    cacheInsertPosition(position: InsertPosition | null): void;
 }

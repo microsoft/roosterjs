@@ -24,8 +24,8 @@ describe('formatSegmentWithContentModel', () => {
             addUndoSnapshot,
             createContentModel: () => model,
             setContentModel,
-            getCurrentContentModel: (): ContentModelDocument | null => null,
-            setCurrentContentModel: () => {},
+            getCachedInsertPosition: (): ContentModelDocument | null => null,
+            cacheInsertPosition: () => {},
         } as any) as IExperimentalContentModelEditor;
     });
 

@@ -24,8 +24,8 @@ describe('toggleNumbering', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
-            getCurrentContentModel: (): ContentModelDocument | null => null,
-            setCurrentContentModel: () => {},
+            getCachedInsertPosition: (): ContentModelDocument | null => null,
+            cacheInsertPosition: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);

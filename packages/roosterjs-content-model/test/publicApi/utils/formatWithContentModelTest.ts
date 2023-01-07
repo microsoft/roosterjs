@@ -26,8 +26,8 @@ describe('formatWithContentModel', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
-            getCurrentContentModel: (): ContentModelDocument | null => null,
-            setCurrentContentModel: () => {},
+            getCachedInsertPosition: (): ContentModelDocument | null => null,
+            cacheInsertPosition: () => {},
         } as any) as IExperimentalContentModelEditor;
     });
 
