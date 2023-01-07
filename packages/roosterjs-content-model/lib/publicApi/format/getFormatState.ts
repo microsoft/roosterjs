@@ -1,26 +1,23 @@
 import { contains } from 'roosterjs-editor-dom';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import { ContentModelParagraph } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelParagraph';
+import { ContentModelSegment } from 'roosterjs-content-model/lib/publicTypes/segment/ContentModelSegment';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from '../../modelApi/common/getClosestAncestorBlockGroupIndex';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { isBold } from '../segment/toggleBold';
-import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import { updateTableMetadata } from '../../modelApi/metadata/updateTableMetadata';
+import {
+    iterateSelections,
+    TableSelectionContext,
+} from '../../modelApi/selection/iterateSelections';
 import {
     getRegularSelectionOffsets,
     handleRegularSelection,
     processChildNode,
 } from '../../domToModel/utils/childProcessorUtils';
-
-interface FormatStateContext extends DomToModelContext {
-    /**
-     * An optional stack of parent elements to process. When provided, the child nodes of current parent element will be ignored,
-     * but use the top element in this stack instead in childProcessor.
-     */
-    nodeStack?: Node[];
-}
 
 /**
  * Get current format state
@@ -47,62 +44,11 @@ export default function getFormatState(editor: IExperimentalContentModelEditor):
 
     iterateSelections([model], (path, tableContext, block, segments) => {
         if (block?.blockType == 'Paragraph' && segments?.[0]) {
+            getFormatStateInternal(result, path, tableContext, block, segments, isFirst);
+
             if (isFirst) {
                 isFirst = false;
-
-                const segment = segments[0];
-                const format = segment.format;
-                const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
-                const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
-                const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
-                const headerLevel = parseInt((block.decorator?.tagName || '').substring(1));
-
-                result.fontName = format.fontFamily;
-                result.fontSize = format.fontSize;
-                result.backgroundColor = format.backgroundColor;
-                result.textColor = format.textColor;
-
-                result.isBold = isBold(format.fontWeight);
-                result.isItalic = format.italic;
-                result.isUnderline = format.underline;
-                result.isStrikeThrough = format.strikethrough;
-                result.isSuperscript = superOrSubscript == 'super';
-                result.isSubscript = superOrSubscript == 'sub';
-
-                result.canUnlink = !!segment.link;
-                result.canAddImageAltText = segment.segmentType == 'Image';
-
-                if (listItemIndex >= 0) {
-                    const listItem = path[listItemIndex] as ContentModelListItem;
-                    const listType = listItem?.levels[listItem.levels.length - 1]?.listType;
-
-                    result.isBullet = listType == 'UL';
-                    result.isNumbering = listType == 'OL';
-                }
-
-                if (quoteIndex >= 0) {
-                    result.isBlockQuote = true;
-                }
-
-                if (headerLevel >= 1 && headerLevel <= 6) {
-                    result.headerLevel = headerLevel;
-                }
-
-                if (tableContext) {
-                    const tableFormat = updateTableMetadata(tableContext.table);
-                    const tableCell =
-                        tableContext.table.cells[tableContext.rowIndex][tableContext.colIndex];
-
-                    result.isInTable = true;
-                    result.tableHasHeader = !!tableCell?.isSelected;
-
-                    if (tableFormat) {
-                        result.tableFormat = tableFormat;
-                    }
-                }
             } else {
-                result.isMultilineSelection = true;
-
                 // Return true to stop iteration since we have already got everything we need
                 return true;
             }
@@ -110,6 +56,78 @@ export default function getFormatState(editor: IExperimentalContentModelEditor):
     });
 
     return result;
+}
+
+function getFormatStateInternal(
+    result: FormatState,
+    path: ContentModelBlockGroup[],
+    tableContext: TableSelectionContext | undefined,
+    block: ContentModelParagraph,
+    segments: ContentModelSegment[],
+    isFirstSelection: boolean
+) {
+    if (isFirstSelection) {
+        const segment = segments[0];
+        const format = segment.format;
+        const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
+        const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
+        const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
+        const headerLevel = parseInt((block.decorator?.tagName || '').substring(1));
+
+        result.fontName = format.fontFamily;
+        result.fontSize = format.fontSize;
+        result.backgroundColor = format.backgroundColor;
+        result.textColor = format.textColor;
+
+        result.isBold = isBold(format.fontWeight);
+        result.isItalic = format.italic;
+        result.isUnderline = format.underline;
+        result.isStrikeThrough = format.strikethrough;
+        result.isSuperscript = superOrSubscript == 'super';
+        result.isSubscript = superOrSubscript == 'sub';
+
+        result.canUnlink = !!segment.link;
+        result.canAddImageAltText = segment.segmentType == 'Image';
+
+        if (listItemIndex >= 0) {
+            const listItem = path[listItemIndex] as ContentModelListItem;
+            const listType = listItem?.levels[listItem.levels.length - 1]?.listType;
+
+            result.isBullet = listType == 'UL';
+            result.isNumbering = listType == 'OL';
+        }
+
+        if (quoteIndex >= 0) {
+            result.isBlockQuote = true;
+        }
+
+        if (headerLevel >= 1 && headerLevel <= 6) {
+            result.headerLevel = headerLevel;
+        }
+
+        if (tableContext) {
+            const tableFormat = updateTableMetadata(tableContext.table);
+            const tableCell =
+                tableContext.table.cells[tableContext.rowIndex][tableContext.colIndex];
+
+            result.isInTable = true;
+            result.tableHasHeader = !!tableCell?.isSelected;
+
+            if (tableFormat) {
+                result.tableFormat = tableFormat;
+            }
+        }
+    } else {
+        result.isMultilineSelection = true;
+    }
+}
+
+interface FormatStateContext extends DomToModelContext {
+    /**
+     * An optional stack of parent elements to process. When provided, the child nodes of current parent element will be ignored,
+     * but use the top element in this stack instead in childProcessor.
+     */
+    nodeStack?: Node[];
 }
 
 function childProcessorForFormat(
