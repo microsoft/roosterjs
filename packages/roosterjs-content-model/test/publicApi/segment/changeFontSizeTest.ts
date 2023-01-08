@@ -307,8 +307,8 @@ describe('changeFontSize', () => {
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
-            getCachedInsertPosition: () => <ContentModelDocument | null>null,
-            cacheInsertPosition: () => {},
+            getPendingFormat: () => <ContentModelDocument | null>null,
+            setPendingFormat: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         spyOn(getComputedStyles, 'getComputedStyle').and.callFake(

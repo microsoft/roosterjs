@@ -1,7 +1,7 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
+import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
 import { EditorContext } from './context/EditorContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
-import { InsertPosition } from '../publicTypes/selection/InsertPosition';
 import {
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
@@ -126,12 +126,14 @@ export interface IExperimentalContentModelEditor extends IEditor {
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
 
     /**
-     * Get a cache insert position that can represent current insert position of editor content
+     * Get current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
      */
-    getCachedInsertPosition(): InsertPosition | null;
+    getPendingFormat(): ContentModelSegmentFormat | null;
 
     /**
-     * Cache an insert position. Set to null to clear existing cache if any
+     * Set current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
      */
-    cacheInsertPosition(position: InsertPosition | null): void;
+    setPendingFormat(format: ContentModelSegmentFormat | null): void;
 }

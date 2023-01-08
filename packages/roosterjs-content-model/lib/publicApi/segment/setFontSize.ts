@@ -10,8 +10,8 @@ export default function setFontSize(editor: IExperimentalContentModelEditor, fon
     formatSegmentWithContentModel(
         editor,
         'setFontSize',
-        segment => {
-            segment.format.fontSize = fontSize;
+        format => {
+            format.fontSize = fontSize;
         },
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/

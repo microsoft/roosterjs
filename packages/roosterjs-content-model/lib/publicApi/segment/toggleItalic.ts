@@ -9,9 +9,9 @@ export default function toggleItalic(editor: IExperimentalContentModelEditor) {
     formatSegmentWithContentModel(
         editor,
         'toggleItalic',
-        (segment, isTurningOn) => {
-            segment.format.italic = !!isTurningOn;
+        (format, isTurningOn) => {
+            format.italic = !!isTurningOn;
         },
-        segment => !!segment.format.italic
+        format => !!format.italic
     );
 }

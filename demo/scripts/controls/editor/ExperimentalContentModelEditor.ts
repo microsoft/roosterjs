@@ -2,12 +2,12 @@ import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
+    ContentModelSegmentFormat,
     contentModelToDom,
     domToContentModel,
     DomToModelOption,
     EditorContext,
     IExperimentalContentModelEditor,
-    InsertPosition,
     ModelToDomOption,
 } from 'roosterjs-content-model';
 import {
@@ -24,7 +24,7 @@ import {
 export default class ExperimentalContentModelEditor extends Editor
     implements IExperimentalContentModelEditor {
     private getDarkColor: ((lightColor: string) => string) | undefined;
-    private cachedInsertPosition: InsertPosition | null = null;
+    private pendingFormat: ContentModelSegmentFormat | null = null;
 
     /**
      * Creates an instance of ExperimentalContentModelEditor
@@ -92,17 +92,18 @@ export default class ExperimentalContentModelEditor extends Editor
     }
 
     /**
-     * Get a content model that can represent current content of editor.
-     * @param option The options to customize the behavior of DOM to Content Model conversion
+     * Get current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
      */
-    getCachedInsertPosition(): InsertPosition | null {
-        return this.cachedInsertPosition;
+    getPendingFormat(): ContentModelSegmentFormat | null {
+        return this.pendingFormat;
     }
 
     /**
-     * Set the given model as current pending content model
+     * Set current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
      */
-    cacheInsertPosition(model: InsertPosition | null) {
-        this.cachedInsertPosition = model;
+    setPendingFormat(format: ContentModelSegmentFormat | null) {
+        this.pendingFormat = format;
     }
 }

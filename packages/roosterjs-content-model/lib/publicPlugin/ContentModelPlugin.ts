@@ -4,7 +4,6 @@ import { createContentModelDocument } from '../modelApi/creators/createContentMo
 import { createText } from '../modelApi/creators/createText';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
-import { InsertPosition } from '../publicTypes/selection/InsertPosition';
 import { isCharacterValue, isModifierKey } from 'roosterjs-editor-dom';
 import { mergeModel } from '../modelApi/common/mergeModel';
 
@@ -54,12 +53,12 @@ export default class ContentModelPlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
-            let insertPosition: InsertPosition | null;
+            let format: ContentModelSegmentFormat | null;
 
             if (
                 (event.eventType == PluginEventType.KeyDown ||
                     event.eventType == PluginEventType.CompositionEnd) &&
-                (insertPosition = this.editor.getCachedInsertPosition())
+                (format = this.editor.getPendingFormat())
             ) {
                 const input =
                     event.eventType == PluginEventType.CompositionEnd
@@ -69,7 +68,7 @@ export default class ContentModelPlugin implements EditorPlugin {
                         : null;
 
                 if (input) {
-                    acceptInputWithPendingFormat(this.editor, insertPosition.marker.format, input);
+                    acceptInputWithPendingFormat(this.editor, format, input);
                     event.rawEvent.preventDefault();
                 }
             }
@@ -81,7 +80,7 @@ export default class ContentModelPlugin implements EditorPlugin {
                     !isModifierKey(event.rawEvent) &&
                     event.rawEvent.key != IME_KEYDOWN_KEY)
             ) {
-                this.editor.cacheInsertPosition(null);
+                this.editor.setPendingFormat(null);
             }
         }
     }
@@ -96,7 +95,7 @@ function acceptInputWithPendingFormat(
     const newModel = createContentModelDocument();
     const text = createText(char, format);
 
-    addSegment(model, text);
+    addSegment(newModel, text);
     mergeModel(model, newModel);
 
     editor.setContentModel(model);

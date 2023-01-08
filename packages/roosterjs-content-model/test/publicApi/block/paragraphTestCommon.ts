@@ -23,8 +23,8 @@ export function paragraphTestCommon(
         addUndoSnapshot,
         focus: jasmine.createSpy(),
         setContentModel,
-        getCachedInsertPosition: (): ContentModelDocument | null => null,
-        cacheInsertPosition: () => {},
+        getPendingFormat: (): ContentModelDocument | null => null,
+        setPendingFormat: () => {},
     } as any) as IExperimentalContentModelEditor;
 
     executionCallback(editor);

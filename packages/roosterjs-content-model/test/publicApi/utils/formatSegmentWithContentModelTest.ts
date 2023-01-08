@@ -24,19 +24,15 @@ describe('formatSegmentWithContentModel', () => {
             addUndoSnapshot,
             createContentModel: () => model,
             setContentModel,
-            getCachedInsertPosition: (): ContentModelDocument | null => null,
-            cacheInsertPosition: () => {},
+            getPendingFormat: (): ContentModelDocument | null => null,
+            setPendingFormat: () => {},
         } as any) as IExperimentalContentModelEditor;
     });
 
     it('empty doc', () => {
         model = createContentModelDocument();
 
-        formatSegmentWithContentModel(
-            editor,
-            apiName,
-            segment => (segment.format.fontFamily = 'test')
-        );
+        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -55,11 +51,7 @@ describe('formatSegmentWithContentModel', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        formatSegmentWithContentModel(
-            editor,
-            apiName,
-            segment => (segment.format.fontFamily = 'test')
-        );
+        formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -95,7 +87,7 @@ describe('formatSegmentWithContentModel', () => {
         const segmentHasStyleCallback = jasmine.createSpy().and.returnValue(true);
         const toggleStyleCallback = jasmine
             .createSpy()
-            .and.callFake(segment => (segment.format.fontFamily = 'test'));
+            .and.callFake(format => (format.fontFamily = 'test'));
 
         formatSegmentWithContentModel(
             editor,
@@ -125,9 +117,9 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(1);
-        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text, 0, [text]);
+        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text.format);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(1);
-        expect(toggleStyleCallback).toHaveBeenCalledWith(text, false);
+        expect(toggleStyleCallback).toHaveBeenCalledWith(text.format, false);
     });
 
     it('doc with selection, some segments are in expected state', () => {
@@ -147,10 +139,10 @@ describe('formatSegmentWithContentModel', () => {
 
         const segmentHasStyleCallback = jasmine
             .createSpy()
-            .and.callFake(segment => segment == text1);
+            .and.callFake(format => format == text1.format);
         const toggleStyleCallback = jasmine
             .createSpy()
-            .and.callFake(segment => (segment.format.fontFamily = 'test'));
+            .and.callFake(format => (format.fontFamily = 'test'));
 
         formatSegmentWithContentModel(
             editor,
@@ -193,10 +185,10 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(2);
-        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text1, 0, [text1, text3]);
-        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text3, 1, [text1, text3]);
+        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text1.format);
+        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text3.format);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(2);
-        expect(toggleStyleCallback).toHaveBeenCalledWith(text1, true);
-        expect(toggleStyleCallback).toHaveBeenCalledWith(text3, true);
+        expect(toggleStyleCallback).toHaveBeenCalledWith(text1.format, true);
+        expect(toggleStyleCallback).toHaveBeenCalledWith(text3.format, true);
     });
 });

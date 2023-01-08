@@ -35,8 +35,8 @@ describe('insertImage', () => {
             setContentModel,
             isDisposed: () => false,
             getDocument: () => document,
-            getCachedInsertPosition: (): ContentModelDocument | null => null,
-            cacheInsertPosition: () => {},
+            getPendingFormat: (): ContentModelDocument | null => null,
+            setPendingFormat: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         executionCallback(editor);

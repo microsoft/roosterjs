@@ -11,8 +11,8 @@ describe('toggleBlockQuote', () => {
     beforeEach(() => {
         editor = ({
             createContentModel: () => fakeModel,
-            getCachedInsertPosition: (): ContentModelDocument | null => null,
-            cacheInsertPosition: () => {},
+            getPendingFormat: (): ContentModelDocument | null => null,
+            setPendingFormat: () => {},
         } as any) as IExperimentalContentModelEditor;
     });
 

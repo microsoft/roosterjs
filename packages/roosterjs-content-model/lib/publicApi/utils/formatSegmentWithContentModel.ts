@@ -1,5 +1,4 @@
-import { ContentModelParagraph } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import {
@@ -13,8 +12,8 @@ import {
 export function formatSegmentWithContentModel(
     editor: IExperimentalContentModelEditor,
     apiName: string,
-    toggleStyleCallback: (segment: ContentModelSegment, isTuringOn: boolean) => void,
-    segmentHasStyleCallback?: (segment: ContentModelSegment) => boolean,
+    toggleStyleCallback: (format: ContentModelSegmentFormat, isTuringOn: boolean) => void,
+    segmentHasStyleCallback?: (format: ContentModelSegmentFormat) => boolean,
     includingFormatHolder?: boolean,
     domToModelOptions?: DomToModelOption
 ) {
@@ -22,33 +21,27 @@ export function formatSegmentWithContentModel(
         editor,
         apiName,
         model => {
-            let insertPosition = editor.getCachedInsertPosition();
-            const segments = insertPosition
-                ? [insertPosition.marker]
-                : getSelectedSegments(model, !!includingFormatHolder);
+            const segments = getSelectedSegments(model, !!includingFormatHolder);
+            const pendingFormat = editor.getPendingFormat();
+            const formats = pendingFormat
+                ? [pendingFormat]
+                : segments.map(segment => segment.format);
 
             const isTurningOff = segmentHasStyleCallback
-                ? segments.every(segmentHasStyleCallback)
+                ? formats.every(format => segmentHasStyleCallback(format))
                 : false;
 
-            segments.forEach(segment => toggleStyleCallback(segment, !isTurningOff));
+            formats.forEach(format => toggleStyleCallback(format, !isTurningOff));
 
             if (
-                !insertPosition &&
+                !pendingFormat &&
                 segments.length == 1 &&
                 segments[0].segmentType == 'SelectionMarker'
             ) {
-                insertPosition = {
-                    marker: segments[0],
-                    path: [],
-                    tableContext: undefined,
-                    paragraph: ({} as any) as ContentModelParagraph, // TODO!!!!!!!!!!!!!!!!
-                };
+                editor.setPendingFormat(segments[0].format);
             }
 
-            editor.cacheInsertPosition(insertPosition);
-
-            return segments.length > 0;
+            return formats.length > 0;
         },
         domToModelOptions
     );

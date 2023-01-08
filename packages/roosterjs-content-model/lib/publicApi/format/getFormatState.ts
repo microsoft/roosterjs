@@ -3,6 +3,7 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from '../../modelApi/common/getClosestAncestorBlockGroupIndex';
@@ -29,34 +30,28 @@ export default function getFormatState(editor: IExperimentalContentModelEditor):
         zoomScale: editor.getZoomScale(),
     };
 
-    const insertPosition = editor.getCachedInsertPosition();
+    // Otherwise, create a "reduced" Content Model that only scan a sub DOM tree that contains the selection.
+    const model = editor.createContentModel(undefined /*rootNode*/, {
+        processorOverride: {
+            child: childProcessorForFormat,
+        },
+    });
+    const pendingFormat = editor.getPendingFormat();
+    let isFirst = true;
 
-    if (insertPosition) {
-        // When there is cached pending insert position, get format from it.
-        const { paragraph, path, marker, tableContext } = insertPosition;
-        getFormatStateInternal(result, path, tableContext, paragraph, [marker], true /*isFirst*/);
-    } else {
-        // Otherwise, create a "reduced" Content Model that only scan a sub DOM tree that contains the selection.
-        const model = editor.createContentModel(undefined /*rootNode*/, {
-            processorOverride: {
-                child: childProcessorForFormat,
-            },
-        });
-        let isFirst = true;
+    iterateSelections([model], (path, tableContext, block, segments) => {
+        if (block?.blockType == 'Paragraph' && segments?.[0]) {
+            if (isFirst) {
+                getFormatStateInternal(result, path, tableContext, block, segments, pendingFormat);
+                isFirst = false;
+            } else {
+                result.isMultilineSelection = true;
 
-        iterateSelections([model], (path, tableContext, block, segments) => {
-            if (block?.blockType == 'Paragraph' && segments?.[0]) {
-                getFormatStateInternal(result, path, tableContext, block, segments, isFirst);
-
-                if (isFirst) {
-                    isFirst = false;
-                } else {
-                    // Return true to stop iteration since we have already got everything we need
-                    return true;
-                }
+                // Return true to stop iteration since we have already got everything we need
+                return true;
             }
-        });
-    }
+        }
+    });
 
     return result;
 }
@@ -67,61 +62,56 @@ function getFormatStateInternal(
     tableContext: TableSelectionContext | undefined,
     paragraph: ContentModelParagraph,
     segments: ContentModelSegment[],
-    isFirstSelection: boolean
+    pendingFormat: ContentModelSegmentFormat | null
 ) {
-    if (isFirstSelection) {
-        const segment = segments[0];
-        const format = segment.format;
-        const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
-        const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
-        const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
-        const headerLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
+    const segment = segments[0];
+    const format = pendingFormat || segment.format;
+    const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
+    const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
+    const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
+    const headerLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
 
-        result.fontName = format.fontFamily;
-        result.fontSize = format.fontSize;
-        result.backgroundColor = format.backgroundColor;
-        result.textColor = format.textColor;
+    result.fontName = format.fontFamily;
+    result.fontSize = format.fontSize;
+    result.backgroundColor = format.backgroundColor;
+    result.textColor = format.textColor;
 
-        result.isBold = isBold(format.fontWeight);
-        result.isItalic = format.italic;
-        result.isUnderline = format.underline;
-        result.isStrikeThrough = format.strikethrough;
-        result.isSuperscript = superOrSubscript == 'super';
-        result.isSubscript = superOrSubscript == 'sub';
+    result.isBold = isBold(format.fontWeight);
+    result.isItalic = format.italic;
+    result.isUnderline = format.underline;
+    result.isStrikeThrough = format.strikethrough;
+    result.isSuperscript = superOrSubscript == 'super';
+    result.isSubscript = superOrSubscript == 'sub';
 
-        result.canUnlink = !!segment.link;
-        result.canAddImageAltText = segment.segmentType == 'Image';
+    result.canUnlink = !!segment.link;
+    result.canAddImageAltText = segments.some(segment => segment.segmentType == 'Image');
 
-        if (listItemIndex >= 0) {
-            const listItem = path[listItemIndex] as ContentModelListItem;
-            const listType = listItem?.levels[listItem.levels.length - 1]?.listType;
+    if (listItemIndex >= 0) {
+        const listItem = path[listItemIndex] as ContentModelListItem;
+        const listType = listItem?.levels[listItem.levels.length - 1]?.listType;
 
-            result.isBullet = listType == 'UL';
-            result.isNumbering = listType == 'OL';
+        result.isBullet = listType == 'UL';
+        result.isNumbering = listType == 'OL';
+    }
+
+    if (quoteIndex >= 0) {
+        result.isBlockQuote = true;
+    }
+
+    if (headerLevel >= 1 && headerLevel <= 6) {
+        result.headerLevel = headerLevel;
+    }
+
+    if (tableContext) {
+        const tableFormat = updateTableMetadata(tableContext.table);
+        const tableCell = tableContext.table.cells[tableContext.rowIndex][tableContext.colIndex];
+
+        result.isInTable = true;
+        result.tableHasHeader = !!tableCell?.isSelected;
+
+        if (tableFormat) {
+            result.tableFormat = tableFormat;
         }
-
-        if (quoteIndex >= 0) {
-            result.isBlockQuote = true;
-        }
-
-        if (headerLevel >= 1 && headerLevel <= 6) {
-            result.headerLevel = headerLevel;
-        }
-
-        if (tableContext) {
-            const tableFormat = updateTableMetadata(tableContext.table);
-            const tableCell =
-                tableContext.table.cells[tableContext.rowIndex][tableContext.colIndex];
-
-            result.isInTable = true;
-            result.tableHasHeader = !!tableCell?.isSelected;
-
-            if (tableFormat) {
-                result.tableFormat = tableFormat;
-            }
-        }
-    } else {
-        result.isMultilineSelection = true;
     }
 }
 
