@@ -1,3 +1,4 @@
+import convertAlphaToDecimals from './convertAlphaToDecimals';
 import { NumberingListType } from 'roosterjs-editor-types';
 import { VListChain } from 'roosterjs-editor-dom';
 
@@ -140,7 +141,13 @@ export default function getAutoNumberingListStyle(
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
     //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
-    const index = parseInt(listIndex);
+    let index = isNaN(parseInt(listIndex))
+        ? convertAlphaToDecimals(listIndex)
+        : parseInt(listIndex);
+
+    if (!index || index < 1) {
+        return null;
+    }
 
     if (previousListChain && index > 1) {
         if (
@@ -153,6 +160,7 @@ export default function getAutoNumberingListStyle(
     }
 
     const isDoubleParenthesis = trigger[0] === '(' && trigger[trigger.length - 1] === ')';
+
     const numberingType = isValidNumbering(trigger, isDoubleParenthesis)
         ? identifyNumberingListType(trigger, isDoubleParenthesis, previousListStyle)
         : null;
