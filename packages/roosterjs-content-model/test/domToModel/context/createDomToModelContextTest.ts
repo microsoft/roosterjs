@@ -71,12 +71,14 @@ describe('createDomToModelContext', () => {
     });
 
     it('with normal selection', () => {
+        const mockNode = ('Node' as any) as Node;
         const mockedRange = ({
             startContainer: 'DIV 1',
             startOffset: 0,
             endContainer: 'DIV 2',
             endOffset: 1,
             collapsed: false,
+            commonAncestorContainer: mockNode,
         } as any) as Range;
         const context = createDomToModelContext(undefined, {
             selectionRange: {
@@ -103,17 +105,19 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            selectionRootNode: mockNode,
             ...contextOptions,
         });
     });
 
     it('with table selection', () => {
+        const mockTable = ('Table' as any) as HTMLTableElement;
         const context = createDomToModelContext(undefined, {
             selectionRange: {
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [],
                 areAllCollapsed: false,
-                table: 'TABLE' as any,
+                table: mockTable,
                 coordinates: {
                     firstCell: { x: 1, y: 2 },
                     lastCell: { x: 3, y: 4 },
@@ -127,7 +131,7 @@ describe('createDomToModelContext', () => {
             blockFormat: {},
             isInSelection: false,
             tableSelection: {
-                table: 'TABLE' as any,
+                table: mockTable,
                 firstCell: { x: 1, y: 2 },
                 lastCell: { x: 3, y: 4 },
             },
@@ -136,17 +140,19 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            selectionRootNode: mockTable,
             ...contextOptions,
         });
     });
 
     it('with image selection', () => {
+        const mockImage = ('Image' as any) as HTMLImageElement;
         const context = createDomToModelContext(undefined, {
             selectionRange: {
                 type: SelectionRangeTypes.ImageSelection,
                 ranges: [],
                 areAllCollapsed: false,
-                image: 'IMAGE' as any,
+                image: mockImage,
             },
         });
 
@@ -160,9 +166,10 @@ describe('createDomToModelContext', () => {
             },
             isInSelection: false,
             imageSelection: {
-                image: 'IMAGE' as any,
+                image: mockImage,
             },
             listFormat,
+            selectionRootNode: mockImage,
             ...contextOptions,
         });
     });

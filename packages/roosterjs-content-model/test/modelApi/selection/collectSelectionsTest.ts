@@ -39,6 +39,8 @@ describe('getSelectedSegments', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getSelectedSegments(null!, includingFormatHolder);
@@ -169,6 +171,8 @@ describe('getSelectedParagraphs', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getSelectedParagraphs(null!);
@@ -332,6 +336,8 @@ describe('getFirstSelectedTable', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getFirstSelectedTable(null!);
@@ -581,6 +587,8 @@ describe('getOperationalBlocks', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getOperationalBlocks(null!, blockGroupTypes, stopTypes, deepFirst);

@@ -80,7 +80,7 @@ export type ElementProcessorMap = {
         /**
          * Common processor for child nodes of a given element
          */
-        child: ElementProcessor<HTMLElement>;
+        child: ElementProcessor<ParentNode>;
 
         /**
          * Workaround for typescript 4.4.4 that doesn't have element "strike" in its element type

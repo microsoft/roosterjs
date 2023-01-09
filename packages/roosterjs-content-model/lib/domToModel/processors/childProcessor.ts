@@ -17,21 +17,35 @@ export function childProcessor(
     let index = 0;
 
     for (let child = parent.firstChild; child; child = child.nextSibling) {
-        handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 
-        if (isNodeOfType(child, NodeType.Element)) {
-            context.elementProcessors.element(group, child, context);
-        } else if (isNodeOfType(child, NodeType.Text)) {
-            context.elementProcessors['#text'](group, child, context);
-        }
+        processChildNode(group, child, context);
 
         index++;
     }
 
-    handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 }
 
-function handleSelection(
+/**
+ * @internal
+ */
+export function processChildNode(
+    group: ContentModelBlockGroup,
+    child: Node,
+    context: DomToModelContext
+) {
+    if (isNodeOfType(child, NodeType.Element)) {
+        context.elementProcessors.element(group, child, context);
+    } else if (isNodeOfType(child, NodeType.Text)) {
+        context.elementProcessors['#text'](group, child, context);
+    }
+}
+
+/**
+ * @internal
+ */
+export function handleRegularSelection(
     index: number,
     context: DomToModelContext,
     group: ContentModelBlockGroup,
