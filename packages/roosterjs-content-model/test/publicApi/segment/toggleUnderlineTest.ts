@@ -107,7 +107,7 @@ describe('toggleUnderline', () => {
                     },
                 ],
             },
-            0
+            1
         );
     });
 

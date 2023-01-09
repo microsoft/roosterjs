@@ -113,7 +113,7 @@ describe('setTextColor', () => {
                     },
                 ],
             },
-            0
+            1
         );
     });
 

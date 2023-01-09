@@ -107,7 +107,7 @@ describe('toggleStrikethrough', () => {
                     },
                 ],
             },
-            0
+            1
         );
     });
 
