@@ -2,6 +2,7 @@ import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionIn
 import hasSelectionInBlockGroup from '../../../lib/publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { ContentModelDivider } from '../../../lib/publicTypes/block/ContentModelDivider';
+import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
 
 describe('hasSelectionInBlock', () => {
@@ -226,6 +227,23 @@ describe('hasSelectionInBlock', () => {
             tagName: 'hr',
             format: {},
             isSelected: true,
+        };
+
+        const result = hasSelectionInBlock(block);
+
+        expect(result).toBeTrue();
+    });
+
+    it('Entity has selection', () => {
+        const block: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            isSelected: true,
+            type: 'entity',
+            id: 'entity',
+            wrapper: null!,
+            isReadonly: false,
         };
 
         const result = hasSelectionInBlock(block);

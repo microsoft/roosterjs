@@ -18,6 +18,7 @@ export default function hasSelectionInBlock(block: ContentModelBlock): boolean {
             return hasSelectionInBlockGroup(block);
 
         case 'Divider':
+        case 'Entity':
             return !!block.isSelected;
 
         default:

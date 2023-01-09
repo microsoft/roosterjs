@@ -1,5 +1,18 @@
-import { Browser, findClosestElementAncestor, getTagOfNode, Position } from 'roosterjs-editor-dom';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    EditorPlugin,
+    ExperimentalFeatures,
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
+import {
+    Browser,
+    findClosestElementAncestor,
+    getTagOfNode,
+    isCtrlOrMetaPressed,
+    Position,
+} from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -47,7 +60,13 @@ export default class TypeInContainerPlugin implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.KeyPress && this.editor) {
+        // We need to check if the ctrl key or the meta key is pressed,
+        // browsers like Safari fire the "keypress" event when the meta key is pressed.
+        if (
+            event.eventType == PluginEventType.KeyPress &&
+            this.editor &&
+            !(event.rawEvent && isCtrlOrMetaPressed(event.rawEvent))
+        ) {
             // If normalization was not possible before the keypress,
             // check again after the keyboard event has been processed by browser native behavior.
             //
@@ -80,6 +99,29 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                 } else {
                     this.editor.runAsync(callback);
                 }
+            }
+        }
+
+        /**
+         * Add a Span with default format to the previous element when pressing backspace
+         */
+        if (
+            event.eventType == PluginEventType.KeyDown &&
+            event.rawEvent.which == Keys.BACKSPACE &&
+            this.editor?.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
+        ) {
+            const element = this.editor?.getElementAtCursor();
+            const block =
+                element &&
+                this.editor?.getBlockElementAtNode(element)?.getStartNode().previousSibling;
+
+            if (block) {
+                this.editor?.runAsync(editor => {
+                    const position = editor.getFocusedPosition();
+                    if (position && block == position.element) {
+                        editor.ensureTypeInContainer(position, event.rawEvent);
+                    }
+                });
             }
         }
     }
