@@ -477,8 +477,11 @@ function shouldTriggerList(
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
     const traverser = editor.getBlockTraverser();
-    const text = traverser.currentBlockElement.getTextContent();
-    const isATheBeginning = text === textBeforeCursor;
+    const text =
+        traverser && traverser.currentBlockElement
+            ? traverser.currentBlockElement.getTextContent()
+            : null;
+    const isATheBeginning = text && text === textBeforeCursor;
     const listChains = getListChains(editor);
     const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
     const previousListType = getPreviousListType(editor, textRange, listType);
