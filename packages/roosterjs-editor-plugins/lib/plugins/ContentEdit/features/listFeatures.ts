@@ -476,7 +476,9 @@ function shouldTriggerList(
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
-    const itHasSpace = /\s/g.test(textBeforeCursor);
+    const traverser = editor.getBlockTraverser();
+    const text = traverser.currentBlockElement.getTextContent();
+    const isATheBeginning = text === textBeforeCursor;
     const listChains = getListChains(editor);
     const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
     const previousListType = getPreviousListType(editor, textRange, listType);
@@ -489,7 +491,7 @@ function shouldTriggerList(
         listType === ListType.Unordered;
 
     return (
-        !itHasSpace &&
+        isATheBeginning &&
         !searcher.getNearestNonTextInlineElement() &&
         listStyle &&
         shouldTriggerNewListStyle

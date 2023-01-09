@@ -141,9 +141,8 @@ export default function getAutoNumberingListStyle(
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
     //The index is always the character before the last character
     const listIndex = trigger[trigger.length - 2];
-    let index = isNaN(parseInt(listIndex))
-        ? convertAlphaToDecimals(listIndex)
-        : parseInt(listIndex);
+    const indexNumber = parseInt(listIndex);
+    let index = !isNaN(indexNumber) ? indexNumber : convertAlphaToDecimals(listIndex);
 
     if (!index || index < 1) {
         return null;
