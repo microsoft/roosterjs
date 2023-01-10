@@ -33,6 +33,8 @@ export function retrieveModelFormatState(
                         segments,
                         pendingFormat
                     );
+                } else if (tableContext) {
+                    retrieveTableFormat(tableContext, formatState);
                 }
                 isFirst = false;
             } else {
@@ -95,14 +97,16 @@ function retrieveFormatStateInternal(
     }
 
     if (tableContext) {
-        const tableFormat = updateTableMetadata(tableContext.table);
-        const tableCell = tableContext.table.cells[tableContext.rowIndex][tableContext.colIndex];
+        retrieveTableFormat(tableContext, result);
+    }
+}
+function retrieveTableFormat(tableContext: TableSelectionContext, result: FormatState) {
+    const tableFormat = updateTableMetadata(tableContext.table);
 
-        result.isInTable = true;
-        result.tableHasHeader = !!tableCell?.isSelected;
+    result.isInTable = true;
+    result.tableHasHeader = tableContext.table.cells.some(row => row.some(cell => cell.isHeader));
 
-        if (tableFormat) {
-            result.tableFormat = tableFormat;
-        }
+    if (tableFormat) {
+        result.tableFormat = tableFormat;
     }
 }

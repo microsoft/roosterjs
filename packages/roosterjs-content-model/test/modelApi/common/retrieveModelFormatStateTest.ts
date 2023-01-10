@@ -210,6 +210,29 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
+    it('With table header', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const table = createTable(1);
+        const cell1 = createTableCell();
+        const cell2 = createTableCell(false, false, true);
+
+        table.cells[0].push(cell1, cell2);
+        model.blocks.push(table);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, { table: table, rowIndex: 0, colIndex: 0 });
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isInTable: true,
+            tableHasHeader: true,
+        });
+    });
+
     it('Multiple selections', () => {
         const model = createContentModelDocument();
         const result: FormatState = {};

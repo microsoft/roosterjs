@@ -1,6 +1,7 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
@@ -8,11 +9,11 @@ import { NodeType } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export function childProcessor(
+export const childProcessor: ElementProcessor<ParentNode> = (
     group: ContentModelBlockGroup,
     parent: ParentNode,
     context: DomToModelContext
-) {
+) => {
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
     let index = 0;
 
@@ -25,7 +26,7 @@ export function childProcessor(
     }
 
     handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
-}
+};
 
 /**
  * @internal
