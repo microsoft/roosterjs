@@ -370,6 +370,35 @@ describe('knownElementProcessor', () => {
         });
     });
 
+    it('Div with 0 margin', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.margin = '0px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '0px',
+                        marginRight: '0px',
+                    },
+                    segments: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
     it('Nested DIV with left margin', () => {
         const group = createContentModelDocument();
         const div1 = document.createElement('div');
