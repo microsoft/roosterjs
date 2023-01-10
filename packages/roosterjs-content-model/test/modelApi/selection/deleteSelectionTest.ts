@@ -318,6 +318,7 @@ describe('deleteSelection', () => {
                 table: table,
                 colIndex: 1,
                 rowIndex: 0,
+                isWholeTableSelected: false,
             },
         });
 

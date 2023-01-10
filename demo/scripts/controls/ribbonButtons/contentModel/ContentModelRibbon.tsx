@@ -6,6 +6,7 @@ import { backgroundColorButton } from './backgroundColorButton';
 import { blockQuoteButton } from './blockQuoteButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
+import { clearFormatButton } from './clearFormatButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
@@ -66,6 +67,7 @@ const buttons = [
     setHeaderLevelButton,
     ltrButton,
     rtlButton,
+    clearFormatButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,
     listStartNumberButton,

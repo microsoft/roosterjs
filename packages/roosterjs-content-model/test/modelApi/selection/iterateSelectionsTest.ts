@@ -166,6 +166,7 @@ describe('iterateSelections', () => {
                 table: table,
                 rowIndex: 0,
                 colIndex: 0,
+                isWholeTableSelected: false,
             },
             para1,
             [text1]
@@ -204,6 +205,7 @@ describe('iterateSelections', () => {
                 table: table,
                 colIndex: 0,
                 rowIndex: 0,
+                isWholeTableSelected: false,
             },
             para1,
             [text1]
@@ -214,6 +216,7 @@ describe('iterateSelections', () => {
                 table: table,
                 colIndex: 0,
                 rowIndex: 0,
+                isWholeTableSelected: false,
             },
             undefined,
             [listItem.formatHolder]
@@ -248,6 +251,7 @@ describe('iterateSelections', () => {
             table: table,
             colIndex: 0,
             rowIndex: 0,
+            isWholeTableSelected: false,
         });
         expect(callback).toHaveBeenCalledWith(
             [cell1, group],
@@ -255,6 +259,7 @@ describe('iterateSelections', () => {
                 table: table,
                 colIndex: 0,
                 rowIndex: 0,
+                isWholeTableSelected: false,
             },
             para1,
             [text1]
@@ -265,6 +270,7 @@ describe('iterateSelections', () => {
                 table: table,
                 colIndex: 0,
                 rowIndex: 0,
+                isWholeTableSelected: false,
             },
             para2,
             [text2]
@@ -299,6 +305,7 @@ describe('iterateSelections', () => {
             table: table,
             colIndex: 0,
             rowIndex: 0,
+            isWholeTableSelected: false,
         });
     });
 
@@ -704,11 +711,105 @@ describe('iterateSelections', () => {
             table: table,
             rowIndex: 0,
             colIndex: 0,
+            isWholeTableSelected: true,
         });
         expect(newCallback).toHaveBeenCalledWith([group], {
             table: table,
             rowIndex: 0,
             colIndex: 1,
+            isWholeTableSelected: true,
         });
+    });
+
+    it('includeListFormatHolder=anySegment', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'anySegment' });
+
+        expect(callback).toHaveBeenCalledTimes(2);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text2]);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, undefined, [
+            {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
+            },
+        ]);
+    });
+
+    it('includeListFormatHolder=allSegment', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'allSegments' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text2]);
+    });
+
+    it('includeListFormatHolder=allSegment 2', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'allSegments' });
+
+        expect(callback).toHaveBeenCalledTimes(2);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, undefined, [
+            {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
+            },
+        ]);
+    });
+
+    it('includeListFormatHolder=never', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'never' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
     });
 });

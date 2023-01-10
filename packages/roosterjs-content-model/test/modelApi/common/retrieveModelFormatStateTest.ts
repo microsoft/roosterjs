@@ -145,6 +145,7 @@ describe('retrieveModelFormatState', () => {
                     table: table,
                     colIndex: 0,
                     rowIndex: 0,
+                    isWholeTableSelected: false,
                 },
                 para,
                 [marker]
@@ -179,6 +180,7 @@ describe('retrieveModelFormatState', () => {
                     table: table,
                     colIndex: 0,
                     rowIndex: 0,
+                    isWholeTableSelected: false,
                 },
                 para,
                 [marker]
