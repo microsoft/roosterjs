@@ -472,14 +472,25 @@ function shouldTriggerList(
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
-    const itHasSpace = /\s/g.test(textBeforeCursor);
-    const element = editor.getElementAtCursor();
-    const previousNode = editor.getBodyTraverser(element).getPreviousBlockElement();
-    const isLi = previousNode
-        ? getTagOfNode(previousNode?.collapseToSingleElement()) === 'LI'
-        : false;
+    const traverser = editor.getBlockTraverser();
+    const text =
+        traverser && traverser.currentBlockElement
+            ? traverser.currentBlockElement.getTextContent()
+            : null;
+    const isATheBeginning = text && text === textBeforeCursor;
+    const listChains = getListChains(editor);
+    const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
+    const previousListType = getPreviousListType(editor, textRange, listType);
+    const isFirstItem = isFirstItemOfAList(textBeforeCursor);
+    const listStyle = getListStyle(textBeforeCursor, listChains, previousListType);
+    const shouldTriggerNewListStyle =
+        isFirstItem ||
+        !previousListType ||
+        previousListType === listStyle ||
+        listType === ListType.Unordered;
+
     return (
-        !itHasSpace &&
+        isATheBeginning &&
         !searcher.getNearestNonTextInlineElement() &&
         getListStyle(textBeforeCursor, !isLi)
     );
