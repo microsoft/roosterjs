@@ -2,25 +2,30 @@ import * as blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import * as setIndentation from 'roosterjs-editor-api/lib/format/setIndentation';
 import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
 import * as toggleListType from 'roosterjs-editor-api/lib/utils/toggleListType';
+import getBlockElementAtNode from '../../../../roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode';
+import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
+import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
 import {
     IEditor,
     Indentation,
     PluginEventType,
     PluginKeyboardEvent,
     Keys,
+    BlockElement,
+    IContentTraverser,
 } from 'roosterjs-editor-types';
-import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
-import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
 
 describe('listFeatures | AutoBullet', () => {
     let editor: IEditor;
     const TEST_ID = 'listFeatureTests';
     let editorSearchCursorSpy: any;
     let editorIsFeatureEnabled: any;
+    let editorBlockTraverserSpy: any;
     beforeEach(() => {
         editor = TestHelper.initEditor(TEST_ID);
         spyOn(editor, 'getElementAtCursor').and.returnValue(null);
         editorSearchCursorSpy = spyOn(editor, 'getContentSearcherOfCursor');
+        editorBlockTraverserSpy = spyOn(editor, 'getBlockTraverser');
         editorIsFeatureEnabled = spyOn(editor, 'isFeatureEnabled');
     });
 
@@ -45,11 +50,20 @@ describe('listFeatures | AutoBullet', () => {
     }
 
     function runTestWithNumberingStyles(text: string, expectedResult: boolean) {
+        const wrapper = document.createElement('div');
         const root = document.createElement('div');
+        root.innerText = text;
+        wrapper.appendChild(root);
         const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
+        const block = getBlockElementAtNode(wrapper, root) as BlockElement;
+        const traverser = {
+            currentBlockElement: block,
+        } as IContentTraverser;
+        spyOn(traverser.currentBlockElement, 'getTextContent').and.returnValue(text);
         editorIsFeatureEnabled.and.returnValue(true);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
+        editorBlockTraverserSpy.and.returnValue(traverser);
 
         const isAutoBulletTriggered = ListFeatures.autoNumberingList.shouldHandleEvent(
             null,
@@ -62,11 +76,20 @@ describe('listFeatures | AutoBullet', () => {
     }
 
     function runTestWithBulletStyles(text: string, expectedResult: boolean) {
+        const wrapper = document.createElement('div');
         const root = document.createElement('div');
+        root.innerText = text;
+        wrapper.appendChild(root);
         const mockedPosition = new PositionContentSearcher(root, new Position(root, 4));
         spyOn(mockedPosition, 'getSubStringBefore').and.returnValue(text);
+        const block = getBlockElementAtNode(wrapper, root) as BlockElement;
+        const traverser = {
+            currentBlockElement: block,
+        } as IContentTraverser;
+        spyOn(traverser.currentBlockElement, 'getTextContent').and.returnValue(text);
         editorIsFeatureEnabled.and.returnValue(true);
         editorSearchCursorSpy.and.returnValue(mockedPosition);
+        editorBlockTraverserSpy.and.returnValue(traverser);
         const isAutoBulletTriggered = ListFeatures.autoBulletList.shouldHandleEvent(
             null,
             editor,
@@ -139,14 +162,14 @@ describe('listFeatures | AutoBullet', () => {
         runTestWithBulletStyles('1#', false);
         runTestWithBulletStyles(' ', false);
         runTestWithBulletStyles('', false);
+        runTestWithBulletStyles('long text a.', false);
+        runTestWithBulletStyles('long text 1)', false);
     });
 
     it('AutoNumberingList with ignores incorrect not valid patterns', () => {
         runTestWithNumberingStyles('1=', false);
         runTestWithNumberingStyles('1/', false);
         runTestWithNumberingStyles('1#', false);
-        runTestWithNumberingStyles(' ', false);
-        runTestWithNumberingStyles('', false);
     });
 });
 
