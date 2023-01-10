@@ -75,7 +75,6 @@ describe('quoteProcessor', () => {
                     segments: [],
                     format: {
                         marginRight: '40px',
-                        marginBottom: '0px',
                         marginLeft: '40px',
                     },
                 },
@@ -115,9 +114,7 @@ describe('quoteProcessor', () => {
                         },
                     ],
                     format: {
-                        marginTop: '0px',
                         marginRight: '40px',
-                        marginBottom: '0px',
                         marginLeft: '40px',
                     },
                 },
