@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.81% </span>
+                <span class="strong">64.15% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>134/210</span>
+                <span class='fraction'>136/212</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.55% </span>
+                <span class="strong">59.17% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>122/212</span>
+                <span class='fraction'>129/218</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.18% </span>
+                <span class="strong">63.55% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>127/201</span>
+                <span class='fraction'>129/203</span>
             </div>
         
             
@@ -661,7 +661,12 @@
 <a name='L602'></a><a href='#L602'>602</a>
 <a name='L603'></a><a href='#L603'>603</a>
 <a name='L604'></a><a href='#L604'>604</a>
-<a name='L605'></a><a href='#L605'>605</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L605'></a><a href='#L605'>605</a>
+<a name='L606'></a><a href='#L606'>606</a>
+<a name='L607'></a><a href='#L607'>607</a>
+<a name='L608'></a><a href='#L608'>608</a>
+<a name='L609'></a><a href='#L609'>609</a>
+<a name='L610'></a><a href='#L610'>610</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -941,11 +946,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -978,11 +983,11 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1139,6 +1144,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-yes">38x</span>
@@ -1624,7 +1634,7 @@ const AutoNumberingList: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
 &nbsp;
 const getPreviousListItem = (editor: IEditor, textRange: Range) =&gt; {
     const blockElement = editor
-        .getBodyTraverser(<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >textRange?.s</span>tartContainer)</span>
+        .getBodyTraverser(textRange?.startContainer)
         .getPreviousBlockElement();
     const previousNode = <span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >blockElement?.g</span>etEndNode();</span>
     return getTagOfNode(previousNode) === 'LI' ? <span class="branch-0 cbranch-no" title="branch not covered" >previousNode </span>: undefined;
@@ -1743,7 +1753,12 @@ function shouldTriggerList(
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
-    const itHasSpace = /\s/g.test(textBeforeCursor);
+    const traverser = editor.getBlockTraverser();
+    const text =
+        traverser &amp;&amp; traverser.currentBlockElement
+            ? traverser.currentBlockElement.getTextContent()
+            : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
+    const isATheBeginning = text &amp;&amp; text === textBeforeCursor;
     const listChains = getListChains(editor);
     const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
     const previousListType = getPreviousListType(editor, textRange, listType);
@@ -1756,7 +1771,7 @@ function shouldTriggerList(
 <span class="branch-3 cbranch-no" title="branch not covered" >        listType === ListType.Unordered;</span>
 &nbsp;
     return (
-        !itHasSpace &amp;&amp;
+        isATheBeginning &amp;&amp;
         !searcher.getNearestNonTextInlineElement() &amp;&amp;
         listStyle &amp;&amp;
         shouldTriggerNewListStyle
@@ -1876,7 +1891,7 @@ function isList(element: Node | null | undefined): element is HTMLOListElement |
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jan 10 2023 07:29:21 GMT+0000 (Coordinated Universal Time)
+                at Tue Jan 10 2023 17:41:11 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

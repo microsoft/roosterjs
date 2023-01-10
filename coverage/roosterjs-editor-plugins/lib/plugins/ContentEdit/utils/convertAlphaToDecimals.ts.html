@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-plugins/lib/plugins/Paste/sourceValidations/isGoogleSheetDocument.ts</title>
+    <title>Code coverage report for roosterjs-editor-plugins/lib/plugins/ContentEdit/utils/convertAlphaToDecimals.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-plugins/lib/plugins/Paste/sourceValidations</a> isGoogleSheetDocument.ts</h1>
+        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-plugins/lib/plugins/ContentEdit/utils</a> convertAlphaToDecimals.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
@@ -72,36 +72,36 @@
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
-<a name='L16'></a><a href='#L16'>16</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L16'></a><a href='#L16'>16</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { GOOGLE_SHEET_NODE_NAME } from './constants';
-import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
-&nbsp;
-/**
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @internal
- * Checks whether the fragment provided contain elements from Google sheets
- * @param props Properties related to the PasteEvent
+ * Convert english alphabet numbers into decimal numbers
+ * @param letter The letter that needs to be converted
  * @returns
  */
-const isGoogleSheetDocument: getSourceFunction = (props: getSourceInputParams) =&gt; {
-    const { fragment } = props;
-    return !!fragment.querySelector(GOOGLE_SHEET_NODE_NAME);
-};
-&nbsp;
-export default isGoogleSheetDocument;
+export default function convertAlphaToDecimals(letter: string): number | null {
+    const alpha = letter.toLocaleLowerCase();
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (alpha) {
+        const size = alpha.length - 1;
+        const number = 26 * size + alpha.charCodeAt(size) - 96;
+        return number;
+    }
+<span class="cstat-no" title="statement not covered" >    return null;</span>
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
