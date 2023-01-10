@@ -109,8 +109,9 @@ function tryCreateDivider(
 
     if (margin > 0) {
         result = createDivider('div', { [propName]: format[propName] });
-        delete format[propName];
     }
+
+    delete format[propName];
 
     return result;
 }
