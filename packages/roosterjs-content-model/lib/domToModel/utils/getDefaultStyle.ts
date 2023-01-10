@@ -12,5 +12,12 @@ export function getDefaultStyle(
     element: HTMLElement,
     context: DomToModelContext
 ): Partial<CSSStyleDeclaration> {
-    return context.defaultStyles[element.tagName.toLowerCase() as keyof DefaultStyleMap] || {};
+    let tag = element.tagName.toLowerCase() as keyof DefaultStyleMap;
+
+    if (tag == 'a' && !element.hasAttribute('href')) {
+        // For A tag without Href, treat it as SPAN since it will not be rendered as a link
+        tag = 'span';
+    }
+
+    return context.defaultStyles[tag] || {};
 }

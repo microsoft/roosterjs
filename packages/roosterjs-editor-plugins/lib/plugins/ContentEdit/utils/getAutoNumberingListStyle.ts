@@ -1,3 +1,4 @@
+import convertAlphaToDecimals from './convertAlphaToDecimals';
 import { NumberingListType } from 'roosterjs-editor-types';
 import { VListChain } from 'roosterjs-editor-dom';
 
@@ -135,12 +136,19 @@ export default function getAutoNumberingListStyle(
     textBeforeCursor: string,
     previousListChain?: VListChain[],
     previousListStyle?: NumberingListType
-): NumberingListType {
+): NumberingListType | null {
     const trigger = textBeforeCursor.trim();
+    const isDoubleParenthesis = trigger[0] === '(' && trigger[trigger.length - 1] === ')';
     //Only the staring items ['1', 'a', 'A', 'I', 'i'] must trigger a new list. All the other triggers is used to keep the list chain.
-    //The index is always the character before the last character
-    const listIndex = trigger[trigger.length - 2];
-    const index = parseInt(listIndex);
+    //The index is always the characters before the last character
+    const listIndex = isDoubleParenthesis ? trigger.slice(1, -1) : trigger.slice(0, -1);
+
+    const indexNumber = parseInt(listIndex);
+    let index = !isNaN(indexNumber) ? indexNumber : convertAlphaToDecimals(listIndex);
+
+    if (!index || index < 1) {
+        return null;
+    }
 
     if (previousListChain && index > 1) {
         if (
@@ -152,8 +160,7 @@ export default function getAutoNumberingListStyle(
         }
     }
 
-    const isDoubleParenthesis = trigger[0] === '(' && trigger[trigger.length - 1] === ')';
-    const numberingType = isValidNumbering(trigger, isDoubleParenthesis)
+    const numberingType = isValidNumbering(listIndex)
         ? identifyNumberingListType(trigger, isDoubleParenthesis, previousListStyle)
         : null;
     return numberingType;
@@ -161,13 +168,9 @@ export default function getAutoNumberingListStyle(
 
 /**
  * Check if index has only numbers or only letters to avoid sequence of character such 1:1. trigger a list.
- * @param textBeforeCursor
- * @param isDoubleParenthesis
+ * @param index
  * @returns
  */
-function isValidNumbering(textBeforeCursor: string, isDoubleParenthesis: boolean) {
-    const index = isDoubleParenthesis
-        ? textBeforeCursor.slice(1, -1)
-        : textBeforeCursor.slice(0, -1);
+function isValidNumbering(index: string) {
     return Number(index) || /^[A-Za-z\s]*$/.test(index);
 }
