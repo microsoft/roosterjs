@@ -221,7 +221,7 @@ describe('retrieveModelFormatState', () => {
         model.blocks.push(table);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
-            callback(path, { table: table, rowIndex: 0, colIndex: 0 });
+            callback(path, { table: table, rowIndex: 0, colIndex: 0, isWholeTableSelected: false });
             return false;
         });
 
