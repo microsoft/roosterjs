@@ -1,15 +1,21 @@
 import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
+import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
+import { setSelection } from '../../modelApi/selection/setSelection';
+import {
+    getSelectedParagraphs,
+    getSelectedSegments,
+} from '../../modelApi/selection/collectSelections';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;
@@ -41,16 +47,57 @@ export default function insertLink(
     let url = (checkXss(link) || '').trim();
     if (url) {
         let linkData = matchLink(url);
-
-        // matchLink can match most links, but not all, i.e. if you pass link a link as "abc", it won't match
-        // we know in that case, users will want to insert a link like http://abc
-        // so we have separate logic in applyLinkPrefix to add link prefix depending on the format of the link
-        // i.e. if the link starts with something like abc@xxx, we will add mailto: prefix
-        // if the link starts with ftp.xxx, we will add ftp:// link. For more, see applyLinkPrefix
         let normalizedUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         let originalUrl = linkData ? linkData.originalUrl : url;
 
         formatWithContentModel(editor, 'insertLink', model => {
+            const paragraphs = getSelectedParagraphs(model);
+            let first: ContentModelSegment | undefined;
+            let last: ContentModelSegment | undefined;
+            let isStopped = false;
+
+            paragraphs.forEach(p => {
+                let index: number;
+
+                if (!first) {
+                    index = p.segments.findIndex(x => x.isSelected && !!x.link);
+                    first = p.segments[index];
+                    let isThisStopped = false;
+
+                    for (; !isThisStopped && index >= 0; index--) {
+                        const segment = p.segments[index];
+                        if (
+                            segment.link &&
+                            areSameFormats(first.link!.format, segment.link.format)
+                        ) {
+                            first = segment;
+                        } else {
+                            isThisStopped = true;
+                        }
+                    }
+                } else {
+                    index = 0;
+                }
+
+                if (first && index >= 0) {
+                    for (; !isStopped && index < p.segments.length; index++) {
+                        const segment = p.segments[index];
+                        if (
+                            segment.link &&
+                            areSameFormats(first.link!.format, segment.link.format)
+                        ) {
+                            last = segment;
+                        } else {
+                            isStopped = true;
+                        }
+                    }
+                }
+            });
+
+            if (first && last) {
+                setSelection(model, first, last);
+            }
+
             const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
             const originalText = segments
                 .map(x => (x.segmentType == 'Text' ? x.text : ''))

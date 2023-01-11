@@ -18,7 +18,6 @@ export { default as setFontSize } from './publicApi/segment/setFontSize';
 export { default as setTextColor } from './publicApi/segment/setTextColor';
 export { default as changeFontSize } from './publicApi/segment/changeFontSize';
 export { default as insertImage } from './publicApi/insert/insertImage';
-export { default as insertLink } from './publicApi/insert/insertLink';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
@@ -31,6 +30,8 @@ export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
 export { default as getFormatState } from './publicApi/format/getFormatState';
 export { default as clearFormat } from './publicApi/format/clearFormat';
+export { default as insertLink } from './publicApi/link/insertLink';
+export { default as removeLink } from './publicApi/link/removeLink';
 export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
