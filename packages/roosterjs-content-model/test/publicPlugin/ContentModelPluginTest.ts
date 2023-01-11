@@ -1,12 +1,13 @@
-import * as mergeModel from '../../lib/modelApi/common/mergeModel';
 import ContentModelPlugin from '../../lib/publicPlugin/ContentModelPlugin';
+import { addSegment } from '../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../lib/modelApi/creators/createContentModelDocument';
+import { createSelectionMarker } from '../../lib/modelApi/creators/createSelectionMarker';
+import { createText } from '../../lib/modelApi/creators/createText';
 import { FormatState, PluginEventType } from 'roosterjs-editor-types';
 import { IExperimentalContentModelEditor } from '../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('ContentModelPlugin', () => {
     it('no pending format, trigger key down event', () => {
-        spyOn(mergeModel, 'mergeModel');
         const setPendingFormat = jasmine.createSpy('setPendingFormat');
         const editor = ({
             getPendingFormat: (): FormatState | null => null,
@@ -18,20 +19,51 @@ describe('ContentModelPlugin', () => {
 
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
-            rawEvent: ({ key: 'a' } as any) as KeyboardEvent,
+            rawEvent: ({ which: 33 } as any) as KeyboardEvent,
         });
 
-        expect(mergeModel.mergeModel).not.toHaveBeenCalled();
+        plugin.dispose();
+
         expect(setPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledWith(null);
     });
 
-    it('with pending format, trigger key down event', () => {
-        spyOn(mergeModel, 'mergeModel');
+    it('no selection, trigger input event', () => {
         const setPendingFormat = jasmine.createSpy('setPendingFormat');
         const setContentModel = jasmine.createSpy('setContentModel');
-        const preventDefault = jasmine.createSpy('preventDefault');
+        const editor = ({
+            getPendingFormat: (): FormatState | null => ({
+                fontSize: '10px',
+            }),
+            createContentModel: () => model,
+            setPendingFormat,
+            setContentModel,
+        } as any) as IExperimentalContentModelEditor;
+        const plugin = new ContentModelPlugin();
         const model = createContentModelDocument();
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.Input,
+            rawEvent: ({ data: 'a' } as any) as InputEvent,
+        });
+
+        plugin.dispose();
+
+        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(setPendingFormat).toHaveBeenCalledTimes(1);
+        expect(setPendingFormat).toHaveBeenCalledWith(null);
+    });
+
+    it('with pending format and selection, has correct text before, trigger input event with isComposing = true', () => {
+        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        const setContentModel = jasmine.createSpy('setContentModel');
+        const model = createContentModelDocument();
+        const marker = createSelectionMarker();
+
+        addSegment(model, marker);
+
         const editor = ({
             getPendingFormat: (): FormatState | null => ({
                 fontSize: '10px',
@@ -43,14 +75,75 @@ describe('ContentModelPlugin', () => {
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
-
         plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
-            rawEvent: ({ key: 'a', preventDefault } as any) as KeyboardEvent,
+            eventType: PluginEventType.Input,
+            rawEvent: ({ data: 'a', isComposing: true } as any) as InputEvent,
         });
+        plugin.dispose();
 
-        expect(mergeModel.mergeModel).toHaveBeenCalledTimes(1);
-        expect(mergeModel.mergeModel).toHaveBeenCalledWith(model, {
+        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(setPendingFormat).toHaveBeenCalledTimes(0);
+    });
+
+    it('with pending format and selection, no correct text before, trigger input event', () => {
+        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        const setContentModel = jasmine.createSpy('setContentModel');
+        const model = createContentModelDocument();
+        const marker = createSelectionMarker();
+
+        addSegment(model, marker);
+
+        const editor = ({
+            getPendingFormat: (): FormatState | null => ({
+                fontSize: '10px',
+            }),
+            createContentModel: () => model,
+            setPendingFormat,
+            setContentModel,
+        } as any) as IExperimentalContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.Input,
+            rawEvent: ({ data: 'a' } as any) as InputEvent,
+        });
+        plugin.dispose();
+
+        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(setPendingFormat).toHaveBeenCalledTimes(1);
+        expect(setPendingFormat).toHaveBeenCalledWith(null);
+    });
+
+    it('with pending format and selection, has correct text before, trigger input event', () => {
+        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        const setContentModel = jasmine.createSpy('setContentModel');
+        const model = createContentModelDocument();
+        const text = createText('a');
+        const marker = createSelectionMarker();
+
+        addSegment(model, text);
+        addSegment(model, marker);
+
+        const editor = ({
+            getPendingFormat: (): FormatState | null => ({
+                fontSize: '10px',
+            }),
+            createContentModel: () => model,
+            setPendingFormat,
+            setContentModel,
+        } as any) as IExperimentalContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.Input,
+            rawEvent: ({ data: 'a' } as any) as InputEvent,
+        });
+        plugin.dispose();
+
+        expect(setContentModel).toHaveBeenCalledTimes(1);
+        expect(setContentModel).toHaveBeenCalledWith({
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -58,58 +151,39 @@ describe('ContentModelPlugin', () => {
                     format: {},
                     isImplicit: true,
                     segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: '',
+                        },
                         {
                             segmentType: 'Text',
                             format: { fontSize: '10px' },
                             text: 'a',
                         },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
                     ],
                 },
             ],
-        });
-        expect(preventDefault).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith({
-            blockGroupType: 'Document',
-            blocks: [],
         });
         expect(setPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledWith(null);
     });
 
-    it('with pending format, trigger key down event with "Process"', () => {
-        spyOn(mergeModel, 'mergeModel');
+    it('with pending format and selection, has correct text before, trigger CompositionEnd event', () => {
         const setPendingFormat = jasmine.createSpy('setPendingFormat');
         const setContentModel = jasmine.createSpy('setContentModel');
-        const preventDefault = jasmine.createSpy('preventDefault');
         const model = createContentModelDocument();
-        const editor = ({
-            getPendingFormat: (): FormatState | null => ({ fontSize: '10px' }),
-            createContentModel: () => model,
-            setPendingFormat,
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const text = createText('test a test', { fontFamily: 'Arial' });
+        const marker = createSelectionMarker();
 
-        plugin.initialize(editor);
+        addSegment(model, text);
+        addSegment(model, marker);
 
-        plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
-            rawEvent: ({ key: 'Process', preventDefault } as any) as KeyboardEvent,
-        });
-
-        expect(mergeModel.mergeModel).toHaveBeenCalledTimes(0);
-        expect(preventDefault).toHaveBeenCalledTimes(0);
-        expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
-    });
-
-    it('with pending format, trigger CompositionEnd event', () => {
-        spyOn(mergeModel, 'mergeModel');
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
-        const setContentModel = jasmine.createSpy('setContentModel');
-        const preventDefault = jasmine.createSpy('preventDefault');
-        const model = createContentModelDocument();
         const editor = ({
             getPendingFormat: (): FormatState | null => ({
                 fontSize: '10px',
@@ -121,14 +195,14 @@ describe('ContentModelPlugin', () => {
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
-
         plugin.onPluginEvent({
             eventType: PluginEventType.CompositionEnd,
-            rawEvent: { data: 'test', preventDefault } as any,
+            rawEvent: ({ data: 'test' } as any) as CompositionEvent,
         });
+        plugin.dispose();
 
-        expect(mergeModel.mergeModel).toHaveBeenCalledTimes(1);
-        expect(mergeModel.mergeModel).toHaveBeenCalledWith(model, {
+        expect(setContentModel).toHaveBeenCalledTimes(1);
+        expect(setContentModel).toHaveBeenCalledWith({
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -138,29 +212,32 @@ describe('ContentModelPlugin', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { fontSize: '10px' },
+                            format: { fontFamily: 'Arial' },
+                            text: 'test a ',
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: { fontSize: '10px', fontFamily: 'Arial' },
                             text: 'test',
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
                         },
                     ],
                 },
             ],
         });
-        expect(preventDefault).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith({
-            blockGroupType: 'Document',
-            blocks: [],
-        });
         expect(setPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledWith(null);
     });
 
-    it('with pending format, trigger MouseDown event', () => {
-        spyOn(mergeModel, 'mergeModel');
+    it('Non-input and cursor moving key down should not trigger pending format change', () => {
         const setPendingFormat = jasmine.createSpy('setPendingFormat');
         const setContentModel = jasmine.createSpy('setContentModel');
-        const preventDefault = jasmine.createSpy('preventDefault');
         const model = createContentModelDocument();
+
         const editor = ({
             getPendingFormat: (): FormatState | null => ({
                 fontSize: '10px',
@@ -172,45 +249,67 @@ describe('ContentModelPlugin', () => {
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
-            rawEvent: null!,
-        });
-
-        expect(mergeModel.mergeModel).toHaveBeenCalledTimes(0);
-        expect(preventDefault).toHaveBeenCalledTimes(0);
-        expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
-    });
-
-    it('with pending format, trigger Keydown event with modifier key', () => {
-        spyOn(mergeModel, 'mergeModel');
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
-        const setContentModel = jasmine.createSpy('setContentModel');
-        const preventDefault = jasmine.createSpy('preventDefault');
-        const model = createContentModelDocument();
-        const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
-            createContentModel: () => model,
-            setPendingFormat,
-            setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-        const plugin = new ContentModelPlugin();
-
-        plugin.initialize(editor);
-
         plugin.onPluginEvent({
             eventType: PluginEventType.KeyDown,
-            rawEvent: { ctrlKey: true } as any,
+            rawEvent: ({ which: 17 } as any) as KeyboardEvent,
         });
+        plugin.dispose();
 
-        expect(mergeModel.mergeModel).toHaveBeenCalledTimes(0);
-        expect(preventDefault).toHaveBeenCalledTimes(0);
         expect(setContentModel).toHaveBeenCalledTimes(0);
         expect(setPendingFormat).toHaveBeenCalledTimes(0);
+    });
+
+    it('Content changed event', () => {
+        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        const setContentModel = jasmine.createSpy('setContentModel');
+        const model = createContentModelDocument();
+
+        const editor = ({
+            getPendingFormat: (): FormatState | null => ({
+                fontSize: '10px',
+            }),
+            createContentModel: () => model,
+            setPendingFormat,
+            setContentModel,
+        } as any) as IExperimentalContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContentChanged,
+            source: '',
+        });
+        plugin.dispose();
+
+        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(setPendingFormat).toHaveBeenCalledTimes(1);
+        expect(setPendingFormat).toHaveBeenCalledWith(null);
+    });
+
+    it('Mouse down event', () => {
+        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        const setContentModel = jasmine.createSpy('setContentModel');
+        const model = createContentModelDocument();
+
+        const editor = ({
+            getPendingFormat: (): FormatState | null => ({
+                fontSize: '10px',
+            }),
+            createContentModel: () => model,
+            setPendingFormat,
+            setContentModel,
+        } as any) as IExperimentalContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseDown,
+            rawEvent: ({} as any) as MouseEvent,
+        });
+        plugin.dispose();
+
+        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(setPendingFormat).toHaveBeenCalledTimes(1);
+        expect(setPendingFormat).toHaveBeenCalledWith(null);
     });
 });

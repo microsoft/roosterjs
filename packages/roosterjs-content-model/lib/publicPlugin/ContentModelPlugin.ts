@@ -78,6 +78,7 @@ function applyPendingFormat(
     format: ContentModelSegmentFormat
 ) {
     const model = editor.createContentModel();
+    let isChanged = false;
 
     iterateSelections([model], (_, __, block, segments) => {
         if (
@@ -100,11 +101,14 @@ function applyPendingFormat(
                     });
 
                     block.segments.splice(index, 0, newText);
+                    isChanged = true;
                 }
             }
         }
         return true;
     });
 
-    editor.setContentModel(model);
+    if (isChanged) {
+        editor.setContentModel(model);
+    }
 }
