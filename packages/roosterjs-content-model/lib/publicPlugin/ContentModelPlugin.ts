@@ -1,14 +1,8 @@
-import { addSegment } from '../modelApi/common/addSegment';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
-import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createText } from '../modelApi/creators/createText';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
-import { isCharacterValue, isModifierKey } from 'roosterjs-editor-dom';
-import { mergeModel } from '../modelApi/common/mergeModel';
-
-// "Process" is the value used when type within IME
-const IME_KEYDOWN_KEY = 'Process';
+import { iterateSelections } from '../modelApi/selection/iterateSelections';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -56,29 +50,21 @@ export default class ContentModelPlugin implements EditorPlugin {
             let format: ContentModelSegmentFormat | null;
 
             if (
-                (event.eventType == PluginEventType.KeyDown ||
+                ((event.eventType == PluginEventType.Input && !event.rawEvent.isComposing) ||
                     event.eventType == PluginEventType.CompositionEnd) &&
+                event.rawEvent.data &&
                 (format = this.editor.getPendingFormat())
             ) {
-                const input =
-                    event.eventType == PluginEventType.CompositionEnd
-                        ? event.rawEvent.data
-                        : isCharacterValue(event.rawEvent)
-                        ? event.rawEvent.key
-                        : null;
-
-                if (input) {
-                    acceptInputWithPendingFormat(this.editor, format, input);
-                    event.rawEvent.preventDefault();
-                }
+                applyPendingFormat(this.editor, event.rawEvent.data, format);
+                this.editor.setPendingFormat(null);
             }
 
             if (
-                event.eventType == PluginEventType.CompositionEnd ||
-                event.eventType == PluginEventType.MouseDown ||
                 (event.eventType == PluginEventType.KeyDown &&
-                    !isModifierKey(event.rawEvent) &&
-                    event.rawEvent.key != IME_KEYDOWN_KEY)
+                    event.rawEvent.which >= Keys.PAGEUP &&
+                    event.rawEvent.which <= Keys.DOWN) ||
+                event.eventType == PluginEventType.MouseDown ||
+                event.eventType == PluginEventType.ContentChanged
             ) {
                 this.editor.setPendingFormat(null);
             }
@@ -86,17 +72,39 @@ export default class ContentModelPlugin implements EditorPlugin {
     }
 }
 
-function acceptInputWithPendingFormat(
+function applyPendingFormat(
     editor: IExperimentalContentModelEditor,
-    format: ContentModelSegmentFormat,
-    char: string
+    data: string,
+    format: ContentModelSegmentFormat
 ) {
     const model = editor.createContentModel();
-    const newModel = createContentModelDocument();
-    const text = createText(char, format);
 
-    addSegment(newModel, text);
-    mergeModel(model, newModel);
+    iterateSelections([model], (_, __, block, segments) => {
+        if (
+            block?.blockType == 'Paragraph' &&
+            segments?.length == 1 &&
+            segments[0].segmentType == 'SelectionMarker'
+        ) {
+            const index = block.segments.indexOf(segments[0]);
+            const previousSegment = block.segments[index - 1];
+
+            if (previousSegment?.segmentType == 'Text') {
+                const text = previousSegment.text;
+
+                if (text.substr(-data.length, data.length) == data) {
+                    previousSegment.text = text.substring(0, text.length - data.length);
+
+                    const newText = createText(data, {
+                        ...previousSegment.format,
+                        ...format,
+                    });
+
+                    block.segments.splice(index, 0, newText);
+                }
+            }
+        }
+        return true;
+    });
 
     editor.setContentModel(model);
 }
