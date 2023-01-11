@@ -107,7 +107,7 @@ describe('toggleSuperscript', () => {
                     },
                 ],
             },
-            1
+            0
         );
     });
 

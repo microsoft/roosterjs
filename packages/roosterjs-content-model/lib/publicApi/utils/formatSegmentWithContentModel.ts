@@ -33,15 +33,19 @@ export function formatSegmentWithContentModel(
 
             formats.forEach(format => toggleStyleCallback(format, !isTurningOff));
 
-            if (
-                !pendingFormat &&
-                segments.length == 1 &&
-                segments[0].segmentType == 'SelectionMarker'
-            ) {
+            const isCollapsedSelection =
+                segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
+
+            if (!pendingFormat && isCollapsedSelection) {
                 editor.setPendingFormat(segments[0].format);
             }
 
-            return formats.length > 0;
+            if (isCollapsedSelection) {
+                editor.focus();
+                return false;
+            } else {
+                return formats.length > 0;
+            }
         },
         domToModelOptions
     );
