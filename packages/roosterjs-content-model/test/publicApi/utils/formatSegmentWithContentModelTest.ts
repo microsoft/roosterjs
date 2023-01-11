@@ -237,7 +237,7 @@ describe('formatSegmentWithContentModel', () => {
                 },
             ],
         });
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledWith({
