@@ -10,8 +10,8 @@ export default function setTextColor(editor: IExperimentalContentModelEditor, te
     formatSegmentWithContentModel(
         editor,
         'setTextColor',
-        segment => {
-            segment.format.textColor = textColor;
+        format => {
+            format.textColor = textColor;
         },
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/
