@@ -107,7 +107,7 @@ describe('toggleSubscript', () => {
                     },
                 ],
             },
-            1
+            0
         );
     });
 

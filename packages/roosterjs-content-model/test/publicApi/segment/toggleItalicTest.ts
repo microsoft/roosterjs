@@ -107,7 +107,7 @@ describe('toggleItalic', () => {
                     },
                 ],
             },
-            1
+            0
         );
     });
 

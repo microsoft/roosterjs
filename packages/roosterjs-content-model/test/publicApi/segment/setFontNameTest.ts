@@ -115,7 +115,7 @@ describe('setFontName', () => {
                     },
                 ],
             },
-            1
+            0
         );
     });
 

@@ -113,7 +113,7 @@ describe('setFontSize', () => {
                     },
                 ],
             },
-            1
+            0
         );
     });
 
