@@ -38,6 +38,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setPendingFormat,
             setContentModel,
+            isInIME: () => false,
         } as any) as IExperimentalContentModelEditor;
         const plugin = new ContentModelPlugin();
         const model = createContentModelDocument();
@@ -100,6 +101,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setPendingFormat,
             setContentModel,
+            isInIME: () => false,
         } as any) as IExperimentalContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -132,6 +134,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setPendingFormat,
             setContentModel,
+            isInIME: () => false,
         } as any) as IExperimentalContentModelEditor;
         const plugin = new ContentModelPlugin();
 
