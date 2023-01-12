@@ -50,7 +50,9 @@ export default class ContentModelPlugin implements EditorPlugin {
             let format: ContentModelSegmentFormat | null;
 
             if (
-                ((event.eventType == PluginEventType.Input && !event.rawEvent.isComposing) ||
+                ((event.eventType == PluginEventType.Input &&
+                    !event.rawEvent.isComposing &&
+                    !this.editor.isInIME()) || // In Safari, isComposing will be undfined but isInIME() works
                     event.eventType == PluginEventType.CompositionEnd) &&
                 event.rawEvent.data &&
                 (format = this.editor.getPendingFormat())
