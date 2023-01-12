@@ -2,8 +2,6 @@ import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
-import { findDelimiter, splitTextSegment } from './wordSelection';
 
 /**
  * @internal
@@ -105,61 +103,6 @@ export function iterateSelections(
                 });
 
                 if (segments.length > 0) {
-                    if (segments.length == 1 && segments[0].segmentType == 'SelectionMarker') {
-                        let markerSelectionIndex = block.segments.indexOf(segments[0]);
-                        for (let i = markerSelectionIndex - 1; i >= 0; i--) {
-                            if (block.segments[i].segmentType == 'Text') {
-                                const found = findDelimiter(
-                                    block.segments[i] as ContentModelText,
-                                    false
-                                );
-                                if (found != null) {
-                                    let blenght = block.segments[i] as ContentModelText;
-                                    if (found == blenght.text.length) {
-                                        break;
-                                    }
-                                    splitTextSegment(
-                                        block.segments as ContentModelText[],
-                                        i,
-                                        found
-                                    );
-                                    //block.segments[i + 1].isSelected = true;
-                                    segments.push(block.segments[i + 1]);
-                                    break;
-                                } else {
-                                    segments.push(block.segments[i]);
-                                }
-                            } else {
-                                break;
-                            }
-                        }
-                        markerSelectionIndex = block.segments.indexOf(segments[0]);
-                        for (let i = markerSelectionIndex + 1; i < block.segments.length; i++) {
-                            if (block.segments[i].segmentType == 'Text') {
-                                const found = findDelimiter(
-                                    block.segments[i] as ContentModelText,
-                                    true
-                                );
-                                if (found != null) {
-                                    if (found == 0) {
-                                        break;
-                                    }
-                                    splitTextSegment(
-                                        block.segments as ContentModelText[],
-                                        i,
-                                        found
-                                    );
-                                    //block.segments[i].isSelected = true;
-                                    segments.push(block.segments[i]);
-                                    break;
-                                } else {
-                                    segments.push(block.segments[i]);
-                                }
-                            } else {
-                                break;
-                            }
-                        }
-                    }
                     callback(path, table, block, segments);
                 }
                 break;

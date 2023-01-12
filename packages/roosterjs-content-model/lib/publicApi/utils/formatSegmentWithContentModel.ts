@@ -1,11 +1,11 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
+import { selectWord } from '../utils/selectWord';
 import {
     DomToModelOption,
     IExperimentalContentModelEditor,
 } from '../../publicTypes/IExperimentalContentModelEditor';
-
 /**
  * @internal
  */
@@ -21,8 +21,15 @@ export function formatSegmentWithContentModel(
         editor,
         apiName,
         model => {
-            const segments = getSelectedSegments(model, !!includingFormatHolder);
+            let segments = getSelectedSegments(model, !!includingFormatHolder);
             const pendingFormat = editor.getPendingFormat();
+            const isCollapsedSelection =
+                segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
+
+            if (isCollapsedSelection) {
+                segments = selectWord([model], segments[0]);
+            }
+
             const formats = pendingFormat
                 ? [pendingFormat]
                 : segments.map(segment => segment.format);
@@ -33,19 +40,7 @@ export function formatSegmentWithContentModel(
 
             formats.forEach(format => toggleStyleCallback(format, !isTurningOff));
 
-            const isCollapsedSelection =
-                segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
-
-            if (!pendingFormat && isCollapsedSelection) {
-                editor.setPendingFormat(segments[0].format);
-            }
-
-            if (isCollapsedSelection) {
-                editor.focus();
-                return false;
-            } else {
-                return formats.length > 0;
-            }
+            return formats.length > 0;
         },
         domToModelOptions
     );
