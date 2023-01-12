@@ -1,7 +1,8 @@
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-
+import { ContentModelText } from 'roosterjs-content-model/lib/publicTypes/segment/ContentModelText';
+import { createText } from 'roosterjs-content-model/lib/modelApi/creators/createText';
 /**
  * @internal
  */
@@ -51,6 +52,9 @@ export interface GetSelectionOptions {
      */
     includeUnmeaningfulSelectedParagraph?: boolean;
 }
+
+const PUNCTUATION_REGEX = /[.,:!?()\[\]\\/]/gu;
+const SPACES_REGEX = /[\u00A0\u1680​\u180e\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
 
 /**
  * @internal
@@ -138,6 +142,7 @@ function getSelectionsInternal(
 
             case 'Paragraph':
                 const selectedSegments: ContentModelSegment[] = [];
+                //let markerSegmentIndex: number = 0;
 
                 block.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
@@ -156,13 +161,59 @@ function getSelectionsInternal(
                 });
 
                 if (selectedSegments.length > 0) {
-                    result.push({
-                        paragraph: block,
-                        segments: selectedSegments,
-                        path: [...path],
-                    });
+                    if (
+                        selectedSegments.length == 1 &&
+                        selectedSegments[0].segmentType == 'SelectionMarker'
+                    ) {
+                        let markerSelectionIndex = block.segments.indexOf(selectedSegments[0]);
+                        //selectedSegments.pop();
+                        for (let i = markerSelectionIndex - 1; i >= 0; i--) {
+                            if (block.segments[i].segmentType == 'Text') {
+                                const found = findDelimiter(
+                                    block.segments[i] as ContentModelText,
+                                    false
+                                );
+                                if (found != null) {
+                                    let blenght = block.segments[i] as ContentModelText;
+                                    if (found == blenght.text.length) break;
+                                    splitSegment(block.segments as ContentModelText[], i, found);
+                                    //block.segments[i + 1].isSelected = true;
+                                    selectedSegments.push(block.segments[i + 1]);
+                                    break;
+                                } else selectedSegments.push(block.segments[i]);
+                            } else break;
+                        }
+                        markerSelectionIndex = block.segments.indexOf(selectedSegments[0]);
+                        for (let i = markerSelectionIndex + 1; i < block.segments.length; i++) {
+                            if (block.segments[i].segmentType == 'Text') {
+                                const found = findDelimiter(
+                                    block.segments[i] as ContentModelText,
+                                    true
+                                );
+                                if (found != null) {
+                                    if (found == 0) break;
+                                    splitSegment(block.segments as ContentModelText[], i, found);
+                                    //block.segments[i].isSelected = true;
+                                    selectedSegments.push(block.segments[i]);
+                                    break;
+                                } else selectedSegments.push(block.segments[i]);
+                            } else break;
+                        }
+                        //console.log('>>', selectedSegments);
+                        //debugger;
+                        result.push({
+                            paragraph: block,
+                            segments: selectedSegments,
+                            path: [...path],
+                        });
+                    } else {
+                        result.push({
+                            paragraph: block,
+                            segments: selectedSegments,
+                            path: [...path],
+                        });
+                    }
                 }
-
                 break;
         }
     }
@@ -178,6 +229,48 @@ function getSelectionsInternal(
             path: [...path],
         });
     }
+}
+
+function findDelimiter(segment: ContentModelText, moveRightward: boolean): number | null {
+    const word = segment.text;
+    let offset = null;
+    if (moveRightward) {
+        for (let i = 0; i < word.length; i++) {
+            if (isWordDelimiter(word[i])) {
+                offset = i;
+                break;
+            }
+        }
+    } else {
+        for (let i = word.length - 1; i >= 0; i--) {
+            if (isWordDelimiter(word[i])) {
+                offset = i + 1;
+                break;
+            }
+        }
+    }
+    return offset;
+}
+
+function splitSegment(segments: ContentModelText[], index: number, found: number) {
+    const segment1 = createText(segments[index].text.substring(0, found));
+    const segment2 = createText(segments[index].text.substring(found, segments[index].text.length));
+
+    segments.splice(index, 1, segment2);
+    segments.splice(index, 0, segment1);
+}
+
+function isWordDelimiter(char: string) {
+    return PUNCTUATION_REGEX.test(char) || isSpace(char);
+}
+
+function isSpace(char: string) {
+    return (
+        char &&
+        (char.toString() == String.fromCharCode(160) /* &nbsp */ ||
+        char.toString() == String.fromCharCode(32) /* RegularSpace */ ||
+            SPACES_REGEX.test(char))
+    );
 }
 
 function getSelectedParagraphFromBlockGroup(
