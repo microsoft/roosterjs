@@ -19,7 +19,7 @@ const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableC
  */
 export function updateTableCellMetadata(
     cell: ContentModelTableCell,
-    callback: (format: TableCellMetadataFormat | null) => TableCellMetadataFormat | null
-) {
-    updateMetadata(cell, callback, TableCellMetadataFormatDefinition);
+    callback?: (format: TableCellMetadataFormat | null) => TableCellMetadataFormat | null
+): TableCellMetadataFormat | null {
+    return updateMetadata(cell, callback, TableCellMetadataFormatDefinition);
 }
