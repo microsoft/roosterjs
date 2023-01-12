@@ -54,6 +54,7 @@ export const enum ExperimentalFeatures {
     AlwaysApplyDefaultFormat = 'AlwaysApplyDefaultFormat',
 
     /**
+     * @deprecated This feature can be enabled/disabled using Paste Plugin contructor param
      * Paste the Html instead of the Img when the Html Body only have one IMG Child node
      */
     ConvertSingleImageBody = 'ConvertSingleImageBody',
@@ -92,6 +93,7 @@ export const enum ExperimentalFeatures {
     AutoHyphen = 'AutoHyphen',
 
     /**
+     * @deprecated this feature is always disabled
      * Use pending format strategy to do style based format, e.g. Font size, Color.
      * With this feature enabled, we don't need to insert temp ZeroWidthSpace character to hold pending format
      * when selection is collapsed. Instead, we will hold the pending format in memory and only apply it when type something
@@ -99,6 +101,7 @@ export const enum ExperimentalFeatures {
     PendingStyleBasedFormat = 'PendingStyleBasedFormat',
 
     /**
+     * @deprecated this feature is always disabled
      * Normalize list to make sure it can be displayed correctly in other client
      * e.g. We will move list items with "display: block" into previous list item and change tag to be DIV
      */

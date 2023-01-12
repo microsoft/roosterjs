@@ -9,9 +9,9 @@ export default function toggleSubscript(editor: IExperimentalContentModelEditor)
     formatSegmentWithContentModel(
         editor,
         'toggleSubscript',
-        (segment, isTurningOn) => {
-            segment.format.superOrSubScriptSequence = isTurningOn ? 'sub' : '';
+        (format, isTurningOn) => {
+            format.superOrSubScriptSequence = isTurningOn ? 'sub' : '';
         },
-        segment => segment.format.superOrSubScriptSequence?.split(' ').pop() == 'sub'
+        format => format.superOrSubScriptSequence?.split(' ').pop() == 'sub'
     );
 }

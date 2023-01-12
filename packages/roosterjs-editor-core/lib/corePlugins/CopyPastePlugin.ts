@@ -13,7 +13,6 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
-    ContentPosition,
     CopyPastePluginState,
     EditorOptions,
     GetContentMode,
@@ -194,9 +193,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     KnownCreateElementDataIndex.CopyPasteTempDiv,
                     editor.getDocument()
                 ) as HTMLDivElement;
-                editor.insertNode(tempDiv, {
-                    position: ContentPosition.Outside,
-                });
+
+                editor.getDocument().body.appendChild(tempDiv);
 
                 return tempDiv;
             },

@@ -1,5 +1,5 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getFirstFocusedListItem } from '../../modelApi/list/getFirstFocusedListItem';
+import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
@@ -9,7 +9,7 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
  */
 export default function setListStartNumber(editor: IExperimentalContentModelEditor, value: number) {
     formatWithContentModel(editor, 'setListStartNumber', model => {
-        const listItem = getFirstFocusedListItem(model);
+        const listItem = getFirstSelectedListItem(model);
         const level = listItem?.levels[listItem?.levels.length - 1];
 
         if (level) {

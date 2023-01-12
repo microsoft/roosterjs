@@ -1,6 +1,15 @@
 import hasSelectionInBlockGroup from '../../publicApi/selection/hasSelectionInBlockGroup';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { TableSelectionCoordinates } from '../selection/setSelectionToTable';
+
+/**
+ * @internal
+ */
+export interface TableSelectionCoordinates {
+    firstRow: number;
+    firstCol: number;
+    lastRow: number;
+    lastCol: number;
+}
 
 /**
  * @internal

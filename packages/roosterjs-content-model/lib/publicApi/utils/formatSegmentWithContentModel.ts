@@ -1,7 +1,6 @@
-import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
-import { getSelections } from '../../modelApi/selection/getSelections';
+import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import {
     DomToModelOption,
     IExperimentalContentModelEditor,
@@ -13,33 +12,40 @@ import {
 export function formatSegmentWithContentModel(
     editor: IExperimentalContentModelEditor,
     apiName: string,
-    toggleStyleCallback: (segment: ContentModelSegment, isTuringOn: boolean) => void,
-    segmentHasStyleCallback?: (segment: ContentModelSegment) => boolean,
+    toggleStyleCallback: (format: ContentModelSegmentFormat, isTuringOn: boolean) => void,
+    segmentHasStyleCallback?: (format: ContentModelSegmentFormat) => boolean,
     includingFormatHolder?: boolean,
     domToModelOptions?: DomToModelOption
 ) {
-    const segments: ContentModelSegment[] = [];
-
     formatWithContentModel(
         editor,
         apiName,
         model => {
-            const selections = getSelections(model, {
-                includeFormatHolder: includingFormatHolder,
-            });
-
-            selections.forEach(selection => arrayPush(segments, selection.segments));
+            const segments = getSelectedSegments(model, !!includingFormatHolder);
+            const pendingFormat = editor.getPendingFormat();
+            const formats = pendingFormat
+                ? [pendingFormat]
+                : segments.map(segment => segment.format);
 
             const isTurningOff = segmentHasStyleCallback
-                ? segments.every(segmentHasStyleCallback)
+                ? formats.every(format => segmentHasStyleCallback(format))
                 : false;
 
-            segments.forEach(segment => toggleStyleCallback(segment, !isTurningOff));
+            formats.forEach(format => toggleStyleCallback(format, !isTurningOff));
 
-            return (
-                segments.length > 1 ||
-                (!!segments[0] && segments[0].segmentType != 'SelectionMarker')
-            );
+            const isCollapsedSelection =
+                segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
+
+            if (!pendingFormat && isCollapsedSelection) {
+                editor.setPendingFormat(segments[0].format);
+            }
+
+            if (isCollapsedSelection) {
+                editor.focus();
+                return false;
+            } else {
+                return formats.length > 0;
+            }
         },
         domToModelOptions
     );

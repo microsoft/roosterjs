@@ -137,7 +137,7 @@ describe('isEmpty', () => {
             },
         });
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
     });
 
     it('List item has empty block', () => {
@@ -160,7 +160,7 @@ describe('isEmpty', () => {
             ],
         });
 
-        expect(result).toBeFalse();
+        expect(result).toBeTrue();
     });
 
     it('Empty general node', () => {

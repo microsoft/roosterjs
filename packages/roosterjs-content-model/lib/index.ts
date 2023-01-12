@@ -17,6 +17,7 @@ export { default as setFontName } from './publicApi/segment/setFontName';
 export { default as setFontSize } from './publicApi/segment/setFontSize';
 export { default as setTextColor } from './publicApi/segment/setTextColor';
 export { default as changeFontSize } from './publicApi/segment/changeFontSize';
+export { default as insertImage } from './publicApi/insert/insertImage';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
@@ -33,6 +34,7 @@ export { combineBorderValue, extractBorderValues, Border } from './domUtils/bord
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
 export { ContentModelSegmentType } from './publicTypes/enum/SegmentType';
+export { Selectable } from './publicTypes/selection/Selectable';
 
 export { ContentModelBlockBase } from './publicTypes/block/ContentModelBlockBase';
 export { ContentModelTable } from './publicTypes/block/ContentModelTable';

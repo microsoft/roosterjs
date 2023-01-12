@@ -20,7 +20,7 @@ export function wrapBlockStep1<T extends ContentModelBlockGroup & ContentModelBl
     parent: ContentModelBlockGroup | null,
     blockToWrap: ContentModelBlock,
     creator: () => T,
-    canMerge: (target: Object | null | undefined) => target is T
+    canMerge: (target: ContentModelBlock) => target is T
 ) {
     const index = parent?.blocks.indexOf(blockToWrap) ?? -1;
 
@@ -43,7 +43,7 @@ export function wrapBlockStep1<T extends ContentModelBlockGroup & ContentModelBl
  */
 export function wrapBlockStep2<T extends ContentModelBlockGroup & ContentModelBlock>(
     step1Result: WrapBlockStep1Result<T>[],
-    canMerge: (target: Object | null | undefined, current: T) => target is T
+    canMerge: (target: ContentModelBlock, current: T) => target is T
 ) {
     step1Result.forEach(({ parent, wrapper }) => {
         const index = parent.blocks.indexOf(wrapper);

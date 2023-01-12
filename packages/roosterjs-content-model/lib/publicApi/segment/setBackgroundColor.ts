@@ -10,7 +10,7 @@ export default function setBackgroundColor(
     editor: IExperimentalContentModelEditor,
     backgroundColor: string
 ) {
-    formatSegmentWithContentModel(editor, 'setBackgroundColor', segment => {
-        segment.format.backgroundColor = backgroundColor;
+    formatSegmentWithContentModel(editor, 'setBackgroundColor', format => {
+        format.backgroundColor = backgroundColor;
     });
 }
