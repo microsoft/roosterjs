@@ -1,6 +1,7 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleBullet from '../../../lib/publicApi/list/toggleBullet';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('toggleBullet', () => {
@@ -24,6 +25,8 @@ describe('toggleBullet', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
+            getPendingFormat: (): ContentModelSegmentFormat | null => null,
+            setPendingFormat: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);
