@@ -1,13 +1,13 @@
 import { addLink } from '../common/addLink';
 import { addSegment } from '../common/addSegment';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { ContentModelLink } from 'roosterjs-content-model/lib/publicTypes/decorator/ContentModelLink';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model/lib/publicTypes/format/ContentModelSegmentFormat';
+import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../creators/createContentModelDocument';
 import { createText } from '../creators/createText';
 import { getSelectedSegments } from '../selection/collectSelections';
-import { HyperLinkColorPlaceholder } from 'roosterjs-content-model/lib/formatHandlers/utils/defaultStyles';
-import { LinkFormat } from 'roosterjs-content-model/lib/publicTypes/format/formatParts/LinkFormat';
+import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
+import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
 import { mergeModel } from '../common/mergeModel';
 
 /**
