@@ -63,7 +63,7 @@ export default class ImageSelection implements EditorPlugin {
                             this.editor.select(target);
                         }
                     } else {
-                        this.editor.focus;
+                        this.editor.focus();
                     }
                     break;
                 case PluginEventType.KeyUp:
