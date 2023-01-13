@@ -30,6 +30,9 @@ export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
 export { default as getFormatState } from './publicApi/format/getFormatState';
 export { default as clearFormat } from './publicApi/format/clearFormat';
+export { default as insertLink } from './publicApi/link/insertLink';
+export { default as removeLink } from './publicApi/link/removeLink';
+export { default as adjustLinkSelection } from './publicApi/link/adjustLinkSelection';
 export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
