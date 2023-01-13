@@ -3,7 +3,10 @@
         "strict": false
     },
     "extends": "../tsconfig.json",
-    "include": ["./lib/**/*.ts"],
+    "include": [
+        "./lib/**/*.ts",
+        "../roosterjs-content-model/lib/modelApi/image/addBorderToWrapperDimensions.ts"
+    ],
     "references": [
         { "path": "./lib/plugins/AutoFormat/tsconfig.child.json" },
         { "path": "./lib/plugins/ContextMenu/tsconfig.child.json" },

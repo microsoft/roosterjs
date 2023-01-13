@@ -9,6 +9,9 @@ export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderRight',
     'borderBottom',
     'borderLeft',
+    'borderColor',
+    'borderWidth',
+    'borderStyle',
 ];
 
 /**

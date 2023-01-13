@@ -5,6 +5,7 @@ import {
     IEditor,
     PluginEvent,
     QueryScope,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
 /**
@@ -34,11 +35,15 @@ export function getElementBasedFormatState(
     const headerTag = getTagOfNode(
         editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', null /*startFrom*/, event)
     );
+
     const table = editor.queryElements('table', QueryScope.OnSelection)[0];
     const tableFormat = table ? getTableFormatInfo(table) : undefined;
     const hasHeader = table?.rows[0]
         ? toArray(table.rows[0].cells).every(cell => getTagOfNode(cell) == 'TH')
         : undefined;
+
+    const selectionType = editor.getSelectionRangeEx()?.type;
+    const image = selectionType === SelectionRangeTypes.ImageSelection;
 
     return {
         isBullet: listTag == 'UL',
@@ -49,6 +54,7 @@ export function getElementBasedFormatState(
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
         isInTable: !!table,
+        isImageSelected: !!image,
         tableFormat: tableFormat,
         tableHasHeader: hasHeader,
     };

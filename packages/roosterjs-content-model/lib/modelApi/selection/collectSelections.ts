@@ -3,6 +3,7 @@ import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
@@ -61,6 +62,24 @@ export function getSelectedParagraphs(model: ContentModelDocument): ContentModel
     });
 
     return result;
+}
+
+/**
+ * @internal
+ */
+export function getSelectedImage(model: ContentModelDocument): ContentModelImage | undefined {
+    const selections = collectSelections(model);
+    let image: ContentModelImage | undefined;
+
+    removeUnmeaningfulSelections(selections);
+
+    selections.forEach(({ segments }) => {
+        if (segments?.[0].segmentType === 'Image') {
+            image = segments[0];
+        }
+    });
+
+    return image;
 }
 
 /**

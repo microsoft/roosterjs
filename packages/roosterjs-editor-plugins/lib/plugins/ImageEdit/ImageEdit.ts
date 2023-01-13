@@ -198,7 +198,14 @@ export default class ImageEdit implements EditorPlugin {
                 this.setEditingImage(null);
                 break;
             case PluginEventType.ContentChanged:
-                if (e.source !== ChangeSource.Format) {
+                const selection = this.editor.getSelectionRangeEx();
+                if (
+                    e.source === ChangeSource.Format &&
+                    selection?.type === SelectionRangeTypes.ImageSelection
+                ) {
+                    this.setEditingImage(null);
+                    this.editor.focus();
+                } else if (e.source !== ChangeSource.Format) {
                     // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
                     this.removeWrapper();
                 }
@@ -328,6 +335,7 @@ export default class ImageEdit implements EditorPlugin {
         //Clone the image and insert the clone in a entity
         this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
         this.clonedImage.removeAttribute('id');
+        removeBorderStyles(this.clonedImage);
         this.wrapper = createElement(
             KnownCreateElementDataIndex.ImageEditWrapper,
             this.image.ownerDocument
@@ -469,6 +477,7 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.textAlign = isRtl(wrapper.parentNode) ? 'right' : 'left';
 
             // Update size of the image
+
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
 
@@ -570,6 +579,13 @@ function setSize(
     element.style.bottom = getPx(bottom);
     element.style.width = getPx(width);
     element.style.height = getPx(height);
+}
+
+function removeBorderStyles(image: HTMLImageElement) {
+    image.style.removeProperty('border-width');
+    image.style.removeProperty('border-color');
+    image.style.removeProperty('border-style');
+    image.style.removeProperty('border');
 }
 
 function getPx(value: number): string {

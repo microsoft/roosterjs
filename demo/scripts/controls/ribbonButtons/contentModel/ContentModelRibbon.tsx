@@ -11,9 +11,13 @@ import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
 import { formatTableButton } from './formatTableButton';
+import { imageBorderColor } from './setImageBorderColor';
+import { imageBorderStyle } from './setImageBorderStyle';
+import { imageBorderWidth } from './setImageBorderWidth';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertImageButton } from './insertImageButton';
+import { insertNewImage } from './changeImage';
 import { insertTableButton } from './insertTableButton';
 import { italicButton } from './italicButton';
 import { listStartNumberButton } from './listStartNumberButton';
@@ -78,6 +82,10 @@ const buttons = [
     tableSplitButton,
     tableAlignCellButton,
     tableAlignTableButton,
+    imageBorderColor,
+    imageBorderWidth,
+    imageBorderStyle,
+    insertNewImage,
 ];
 
 export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {

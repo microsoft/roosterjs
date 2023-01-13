@@ -28,6 +28,10 @@ export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
 export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
+export { default as setImageBorderColor } from './publicApi/image/setImageBorderColor';
+export { default as setImageBorderStyle } from './publicApi/image/setImageBorderStyle';
+export { default as setImageBorderWidth } from './publicApi/image/setImageBorderWidth';
+export { default as changeImage } from './publicApi/image/changeImage';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 
