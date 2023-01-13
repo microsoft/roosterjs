@@ -33,7 +33,12 @@ export type BorderFormat = {
     borderWidth?: string;
 
     /**
-     * Style to be applied in all borders in format 'width style color'
+     * Style to be applied in all borders
      */
     borderStyle?: string;
+
+    /**
+     * Radius to be applied in all borders corners
+     */
+    borderRadius?: string;
 };

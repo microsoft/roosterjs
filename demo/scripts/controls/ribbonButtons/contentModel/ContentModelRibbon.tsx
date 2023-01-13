@@ -14,6 +14,7 @@ import { formatTableButton } from './formatTableButton';
 import { imageBorderColor } from './setImageBorderColor';
 import { imageBorderStyle } from './setImageBorderStyle';
 import { imageBorderWidth } from './setImageBorderWidth';
+import { imageBoxShadow } from './setImageBoxShadow';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertImageButton } from './insertImageButton';
@@ -86,6 +87,7 @@ const buttons = [
     imageBorderWidth,
     imageBorderStyle,
     insertNewImage,
+    imageBoxShadow,
 ];
 
 export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {

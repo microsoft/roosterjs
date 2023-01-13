@@ -31,6 +31,7 @@ export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote'
 export { default as setImageBorderColor } from './publicApi/image/setImageBorderColor';
 export { default as setImageBorderStyle } from './publicApi/image/setImageBorderStyle';
 export { default as setImageBorderWidth } from './publicApi/image/setImageBorderWidth';
+export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
 export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
 export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';

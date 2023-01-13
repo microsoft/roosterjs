@@ -12,6 +12,7 @@ export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderColor',
     'borderWidth',
     'borderStyle',
+    'borderRadius',
 ];
 
 /**

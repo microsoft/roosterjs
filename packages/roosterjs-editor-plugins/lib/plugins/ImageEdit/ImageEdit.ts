@@ -203,8 +203,7 @@ export default class ImageEdit implements EditorPlugin {
                     e.source === ChangeSource.Format &&
                     selection?.type === SelectionRangeTypes.ImageSelection
                 ) {
-                    this.setEditingImage(null);
-                    this.editor.focus();
+                    this.setEditingImage(null, true);
                 } else if (e.source !== ChangeSource.Format) {
                     // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
                     this.removeWrapper();
@@ -335,7 +334,6 @@ export default class ImageEdit implements EditorPlugin {
         //Clone the image and insert the clone in a entity
         this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
         this.clonedImage.removeAttribute('id');
-        removeBorderStyles(this.clonedImage);
         this.wrapper = createElement(
             KnownCreateElementDataIndex.ImageEditWrapper,
             this.image.ownerDocument
@@ -464,11 +462,16 @@ export default class ImageEdit implements EditorPlugin {
             const cropBottomPx = originalHeight * bottomPercent;
 
             // Update size and margin of the wrapper
-            wrapper.style.width = getPx(visibleWidth);
-            wrapper.style.height = getPx(visibleHeight);
             wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
             wrapper.style.transform = `rotate(${angleRad}rad)`;
-            this.zoomWrapper.style.width = getPx(visibleWidth);
+            this.image.style.transform = `rotate(${angleRad}rad)`;
+            setWrapperSizeDimensions(wrapper, this.clonedImage, visibleWidth, visibleHeight);
+            setWrapperSizeDimensions(
+                this.zoomWrapper,
+                this.clonedImage,
+                visibleWidth,
+                visibleHeight
+            );
             this.zoomWrapper.style.height = getPx(visibleHeight);
             fitImageContainer(this.editor, this.zoomWrapper, angleRad);
 
@@ -581,11 +584,21 @@ function setSize(
     element.style.height = getPx(height);
 }
 
-function removeBorderStyles(image: HTMLImageElement) {
-    image.style.removeProperty('border-width');
-    image.style.removeProperty('border-color');
-    image.style.removeProperty('border-style');
-    image.style.removeProperty('border');
+function setWrapperSizeDimensions(
+    wrapper: HTMLElement,
+    image: HTMLImageElement,
+    width: number,
+    height: number
+) {
+    const hasBorder = image.style.borderStyle;
+    if (hasBorder) {
+        const borderWidth = image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;
+        wrapper.style.width = getPx(width + borderWidth);
+        wrapper.style.height = getPx(height + borderWidth);
+        return;
+    }
+    wrapper.style.width = getPx(width);
+    wrapper.style.height = getPx(height);
 }
 
 function getPx(value: number): string {

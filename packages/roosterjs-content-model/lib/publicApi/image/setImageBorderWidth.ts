@@ -7,15 +7,17 @@ import { setContentModelImageBorderWidth } from '../../modelApi/image/setContent
  * Set border width to an image (only supports width in px or pts)
  * @param editor The editor instance
  * @param width of the border
+ * @param isPt if this value is points, if undefined the border width will be considered in px
  */
 export default function setImageBorderWidth(
     editor: IExperimentalContentModelEditor,
-    width: string
+    width: string,
+    isPt: boolean = true
 ) {
     formatImageWithContentModel(
         editor,
         (image: ContentModelImage) => {
-            setContentModelImageBorderWidth(image, width);
+            setContentModelImageBorderWidth(image, width, isPt);
         },
         'setImageBorderWidth'
     );
