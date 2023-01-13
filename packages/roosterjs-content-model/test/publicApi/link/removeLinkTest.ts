@@ -6,40 +6,19 @@ import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentMode
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from '../segment/segmentTestCommon';
 
 describe('removeLink', () => {
-    let editor: IExperimentalContentModelEditor;
-    let setContentModel: jasmine.Spy<IExperimentalContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IExperimentalContentModelEditor['createContentModel']>;
-
-    beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-
-        editor = ({
-            focus: () => {},
-            addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
-        } as any) as IExperimentalContentModelEditor;
-    });
-
-    function runTest(model: ContentModelDocument, expectedModel: ContentModelDocument | null) {
-        createContentModel.and.returnValue(model);
-
-        removeLink(editor);
-
-        if (expectedModel) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel);
-        } else {
-            expect(setContentModel).not.toHaveBeenCalled();
-        }
+    function runTest(
+        model: ContentModelDocument,
+        expectedModel: ContentModelDocument,
+        calledTimes: number
+    ) {
+        segmentTestCommon('removeLink', removeLink, model, expectedModel, calledTimes);
     }
 
     it('Empty doc', () => {
-        runTest(createContentModelDocument(), null);
+        runTest(createContentModelDocument(), { blockGroupType: 'Document', blocks: [] }, 0);
     });
 
     it('No link', () => {
@@ -50,7 +29,28 @@ describe('removeLink', () => {
 
         addSegment(doc, text);
 
-        runTest(doc, null);
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'test',
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            0
+        );
     });
 
     it('One link is selected', () => {
@@ -67,24 +67,28 @@ describe('removeLink', () => {
         });
         addSegment(doc, text);
 
-        runTest(doc, {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: { underline: false },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        isImplicit: true,
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { underline: false },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
     });
 
     it('Multiple links are selected', () => {
@@ -113,38 +117,42 @@ describe('removeLink', () => {
         addSegment(doc, text2);
         addSegment(doc, image);
 
-        runTest(doc, {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test1',
-                            format: { underline: false },
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test2',
-                            format: {},
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Image',
-                            src: 'test',
-                            dataset: {},
-                            format: { underline: false },
-                            isSelected: true,
-                            isSelectedAsImageSelection: false,
-                        },
-                    ],
-                },
-            ],
-        });
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        isImplicit: true,
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test1',
+                                format: { underline: false },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test2',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Image',
+                                src: 'test',
+                                dataset: {},
+                                format: { underline: false },
+                                isSelected: true,
+                                isSelectedAsImageSelection: false,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
     });
 
     it('Expand selection with multiple links', () => {
@@ -180,42 +188,46 @@ describe('removeLink', () => {
         addSegment(doc, text3);
         addSegment(doc, text4);
 
-        runTest(doc, {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test1',
-                            format: { underline: false },
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test2',
-                            format: { underline: false },
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test3',
-                            format: { underline: false },
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test4',
-                            format: { underline: false },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        isImplicit: true,
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test1',
+                                format: { underline: false },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test2',
+                                format: { underline: false },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test3',
+                                format: { underline: false },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test4',
+                                format: { underline: false },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
     });
 
     it('Do not shrink selection', () => {
@@ -241,35 +253,39 @@ describe('removeLink', () => {
         addSegment(doc, text2);
         addSegment(doc, text3);
 
-        runTest(doc, {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test1',
-                            format: {},
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test2',
-                            format: { underline: false },
-                            isSelected: true,
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: 'test3',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        isImplicit: true,
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test1',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test2',
+                                format: { underline: false },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test3',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
     });
 });

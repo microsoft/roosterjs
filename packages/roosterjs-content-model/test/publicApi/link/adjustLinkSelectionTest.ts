@@ -8,48 +8,43 @@ import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from '../segment/segmentTestCommon';
 
 describe('adjustLinkSelection', () => {
-    let editor: IExperimentalContentModelEditor;
-    let setContentModel: jasmine.Spy<IExperimentalContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IExperimentalContentModelEditor['createContentModel']>;
-
-    beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-
-        editor = ({
-            focus: () => {},
-            addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
-        } as any) as IExperimentalContentModelEditor;
-    });
-
     function runTest(
         model: ContentModelDocument,
-        expectedModel: ContentModelDocument | null,
+        expectedModel: ContentModelDocument,
         expectedText: string,
-        expectedUrl: string | null
+        expectedUrl: string | null,
+        calledTimes: number
     ) {
-        createContentModel.and.returnValue(model);
+        let result: (string | null)[] = [];
 
-        const [text, url] = adjustLinkSelection(editor);
+        segmentTestCommon(
+            'adjustLinkSelection',
+            editor => {
+                result = adjustLinkSelection(editor);
+            },
+            model,
+            expectedModel,
+            calledTimes
+        );
 
-        if (expectedModel) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel);
-        } else {
-            expect(setContentModel).not.toHaveBeenCalled();
-        }
-
-        expect(text).toBe(expectedText);
-        expect(url).toBe(expectedUrl);
+        expect(result[0]).toBe(expectedText);
+        expect(result[1]).toBe(expectedUrl);
     }
 
     it('Empty doc', () => {
-        runTest(createContentModelDocument(), null, '', null);
+        runTest(
+            createContentModelDocument(),
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            '',
+            null,
+            0
+        );
     });
 
     it('Doc without selection', () => {
@@ -58,7 +53,29 @@ describe('adjustLinkSelection', () => {
 
         addSegment(doc, text);
 
-        runTest(doc, null, '', null);
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                        ],
+                    },
+                ],
+            },
+            '',
+            null,
+            0
+        );
     });
 
     it('Doc with selection, but no link', () => {
@@ -69,7 +86,30 @@ describe('adjustLinkSelection', () => {
 
         addSegment(doc, text);
 
-        runTest(doc, null, 'test', null);
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            'test',
+            null,
+            0
+        );
     });
 
     it('Doc with selection and link', () => {
@@ -86,7 +126,36 @@ describe('adjustLinkSelection', () => {
         });
         addSegment(doc, text);
 
-        runTest(doc, null, 'test', 'http://test.com');
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                                link: {
+                                    dataset: {},
+                                    format: {
+                                        href: 'http://test.com',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            'test',
+            'http://test.com',
+            0
+        );
     });
 
     it('Doc with link, expand to left', () => {
@@ -159,7 +228,8 @@ describe('adjustLinkSelection', () => {
                 ],
             },
             'test1test2',
-            'http://test.com'
+            'http://test.com',
+            1
         );
     });
 
@@ -233,7 +303,8 @@ describe('adjustLinkSelection', () => {
                 ],
             },
             'test1test2',
-            'http://test.com'
+            'http://test.com',
+            1
         );
     });
 
@@ -297,7 +368,8 @@ describe('adjustLinkSelection', () => {
                 ],
             },
             'test1test2',
-            'http://test.com'
+            'http://test.com',
+            1
         );
     });
 });

@@ -7,85 +7,80 @@ import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { segmentTestCommon } from '../segment/segmentTestCommon';
 
 describe('insertLink', () => {
-    let editor: IExperimentalContentModelEditor;
-    let setContentModel: jasmine.Spy<IExperimentalContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IExperimentalContentModelEditor['createContentModel']>;
-
-    beforeEach(() => {
-        setContentModel = jasmine.createSpy('setContentModel');
-        createContentModel = jasmine.createSpy('createContentModel');
-
-        editor = ({
-            focus: () => {},
-            addUndoSnapshot: (callback: Function) => callback(),
-            setContentModel,
-            createContentModel,
-        } as any) as IExperimentalContentModelEditor;
-    });
-
     function runTest(
         model: ContentModelDocument,
         url: string,
-        expectedModel: ContentModelDocument | null,
+        expectedModel: ContentModelDocument,
+        calledTimes: number,
         title?: string,
         displayText?: string,
         target?: string
     ) {
-        createContentModel.and.returnValue(model);
-
-        insertLink(editor, url, title, displayText, target);
-
-        if (expectedModel) {
-            expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel);
-        } else {
-            expect(setContentModel).not.toHaveBeenCalled();
-        }
+        segmentTestCommon(
+            'insertLink',
+            editor => insertLink(editor, url, title, displayText, target),
+            model,
+            expectedModel,
+            calledTimes
+        );
     }
 
     it('Empty link string', () => {
-        runTest(createContentModelDocument(), '', null);
+        runTest(
+            createContentModelDocument(),
+            '',
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            0
+        );
     });
 
     it('Valid url', () => {
         const doc = createContentModelDocument();
         addSegment(doc, createSelectionMarker());
-        runTest(doc, 'http://test.com', {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
-                            text: 'http://test.com',
-                            link: {
-                                dataset: {},
+        runTest(
+            doc,
+            'http://test.com',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
                                 format: {
-                                    href: 'http://test.com',
-                                    anchorTitle: undefined,
-                                    target: undefined,
+                                    underline: true,
+                                    textColor: HyperLinkColorPlaceholder,
+                                },
+                                text: 'http://test.com',
+                                link: {
+                                    dataset: {},
+                                    format: {
+                                        href: 'http://test.com',
+                                        anchorTitle: undefined,
+                                        target: undefined,
+                                    },
                                 },
                             },
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: {},
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
     });
 
     it('Valid url on existing text, no display text', () => {
@@ -127,6 +122,7 @@ describe('insertLink', () => {
                     },
                 ],
             },
+            1,
             'title'
         );
     });
@@ -174,6 +170,7 @@ describe('insertLink', () => {
                     },
                 ],
             },
+            1,
             'title',
             'linkText',
             'target'
@@ -249,6 +246,7 @@ describe('insertLink', () => {
                     },
                 ],
             },
+            1,
             'title',
             'test1test2'
         );
@@ -306,6 +304,7 @@ describe('insertLink', () => {
                     },
                 ],
             },
+            1,
             'title',
             'new text'
         );
