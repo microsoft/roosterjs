@@ -62,6 +62,8 @@ export default class ImageSelection implements EditorPlugin {
                         } else if (event.rawEvent.button === mouseLeftButton) {
                             this.editor.select(target);
                         }
+                    } else {
+                        this.editor.focus;
                     }
                     break;
                 case PluginEventType.KeyUp:

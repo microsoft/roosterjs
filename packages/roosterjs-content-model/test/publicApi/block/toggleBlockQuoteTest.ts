@@ -1,6 +1,7 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('toggleBlockQuote', () => {
@@ -10,6 +11,8 @@ describe('toggleBlockQuote', () => {
     beforeEach(() => {
         editor = ({
             createContentModel: () => fakeModel,
+            getPendingFormat: (): ContentModelSegmentFormat | null => null,
+            setPendingFormat: () => {},
         } as any) as IExperimentalContentModelEditor;
     });
 

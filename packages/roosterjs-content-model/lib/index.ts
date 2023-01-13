@@ -32,6 +32,8 @@ export { default as setImageBorderColor } from './publicApi/image/setImageBorder
 export { default as setImageBorderStyle } from './publicApi/image/setImageBorderStyle';
 export { default as setImageBorderWidth } from './publicApi/image/setImageBorderWidth';
 export { default as changeImage } from './publicApi/image/changeImage';
+export { default as getFormatState } from './publicApi/format/getFormatState';
+export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
 

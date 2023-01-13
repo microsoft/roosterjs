@@ -159,7 +159,10 @@ describe('CopyPastePlugin copy', () => {
             triggerPluginEvent,
             getSelectionRange: () => <Range>{ collapsed: false },
             getContent: () => '<div>test</div><!--{"start":[0,0],"end":[0,1]}-->',
-            getCustomData: (key: string, getter: () => any) => getter(),
+            getCustomData: (key: string, getter: () => any) => {
+                tempNode = getter();
+                return tempNode;
+            },
             insertNode: (node: HTMLElement) => {
                 tempNode = node;
                 document.body.appendChild(node);

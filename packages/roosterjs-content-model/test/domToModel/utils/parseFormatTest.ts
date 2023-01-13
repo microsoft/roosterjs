@@ -75,4 +75,37 @@ describe('Default styles', () => {
     it('Default style for U', () => {
         runTest('u', { textDecoration: 'underline' });
     });
+
+    it('Default style for A with href', () => {
+        const element = document.createElement('a');
+        const defaultContext = createDomToModelContext();
+        const segmentFormat = {};
+        const linkFormat = {};
+
+        element.href = 'http://test.com';
+
+        parseFormat(element, defaultContext.formatParsers.segment, segmentFormat, defaultContext);
+        parseFormat(element, defaultContext.formatParsers.link, linkFormat, defaultContext);
+
+        expect(segmentFormat).toEqual({
+            underline: true,
+            textColor: '__hyperLinkColor',
+        });
+        expect(linkFormat).toEqual({
+            href: 'http://test.com',
+        });
+    });
+
+    it('Default style for A without href', () => {
+        const element = document.createElement('a');
+        const defaultContext = createDomToModelContext();
+        const segmentFormat = {};
+        const linkFormat = {};
+
+        parseFormat(element, defaultContext.formatParsers.segment, segmentFormat, defaultContext);
+        parseFormat(element, defaultContext.formatParsers.link, linkFormat, defaultContext);
+
+        expect(segmentFormat).toEqual({});
+        expect(linkFormat).toEqual({});
+    });
 });
