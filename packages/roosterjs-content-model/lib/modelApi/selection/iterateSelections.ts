@@ -10,6 +10,7 @@ export interface TableSelectionContext {
     table: ContentModelTable;
     rowIndex: number;
     colIndex: number;
+    isWholeTableSelected: boolean;
 }
 
 /**
@@ -20,6 +21,15 @@ export interface IterateSelectionsOption {
      * When set to true, and a table cell is marked as selected, all content under this table cell will not be included in result
      */
     ignoreContentUnderSelectedTableCell?: boolean;
+
+    /**
+     * Whether call the callback for the list item format holder segment
+     * anySegment: call the callback if any segment is selected under a list item
+     * allSegments: call the callback only when all segments under the list item are selected
+     * never: never call the callback for list item format holder
+     * @default allSegments
+     */
+    includeListFormatHolder?: 'anySegment' | 'allSegments' | 'never';
 }
 
 /**
@@ -45,6 +55,7 @@ export function iterateSelections(
     treatAllAsSelect?: boolean
 ): boolean {
     const parent = path[0];
+    const includeListFormatHolder = option?.includeListFormatHolder || 'allSegments';
     let hasSelectedSegment = false;
     let hasUnselectedSegment = false;
 
@@ -61,11 +72,9 @@ export function iterateSelections(
 
             case 'Table':
                 const cells = block.cells;
+                const isWholeTableSelected = cells.every(row => row.every(cell => cell.isSelected));
 
-                if (
-                    option?.ignoreContentUnderSelectedTableCell &&
-                    cells.every(row => row.every(cell => cell.isSelected))
-                ) {
+                if (option?.ignoreContentUnderSelectedTableCell && isWholeTableSelected) {
                     if (callback(path, table, block)) {
                         return true;
                     }
@@ -80,6 +89,7 @@ export function iterateSelections(
                                 table: block,
                                 rowIndex,
                                 colIndex,
+                                isWholeTableSelected,
                             };
 
                             if (cell.isSelected && callback(path, newTable)) {
@@ -145,9 +155,10 @@ export function iterateSelections(
     }
 
     if (
+        includeListFormatHolder != 'never' &&
         parent.blockGroupType == 'ListItem' &&
         hasSelectedSegment &&
-        !hasUnselectedSegment &&
+        (!hasUnselectedSegment || includeListFormatHolder == 'anySegment') &&
         // When whole list item is selected, also add its format holder as selected segment
         callback(path, table, undefined /*block*/, [parent.formatHolder])
     ) {
