@@ -1,12 +1,13 @@
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelDocument } from 'roosterjs-content-model/lib/publicTypes/group/ContentModelDocument';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { createText } from '../../modelApi/creators/createText';
 
 export function selectWord(
-    path: ContentModelBlockGroup[],
+    model: ContentModelDocument,
     marker: ContentModelSegment
 ): ContentModelSegment[] {
+    const path = [model];
     const parent = path[0];
     const block = parent.blocks[0];
 
@@ -16,12 +17,12 @@ export function selectWord(
         for (let i = markerSelectionIndex - 1; i >= 0; i--) {
             const currentSegment = block.segments[i];
             if (currentSegment.segmentType == 'Text') {
-                const found = findDelimiter(currentSegment, false);
-                if (found != null) {
+                const found = findDelimiter(currentSegment, false /*moveRightward*/);
+                if (found > -1) {
                     if (found == currentSegment.text.length) {
                         break;
                     }
-                    splitTextSegment(block.segments as ContentModelText[], i, found);
+                    splitTextSegment(block.segments, currentSegment, i, found);
                     //block.segments[i + 1].isSelected = true;
                     segments.push(block.segments[i + 1]);
                     break;
@@ -36,12 +37,12 @@ export function selectWord(
         for (let i = markerSelectionIndex + 1; i < block.segments.length; i++) {
             const currentSegment = block.segments[i];
             if (currentSegment.segmentType == 'Text') {
-                const found = findDelimiter(currentSegment, true);
-                if (found != null) {
+                const found = findDelimiter(currentSegment, true /*moveRightward*/);
+                if (found > -1) {
                     if (found == 0) {
                         break;
                     }
-                    splitTextSegment(block.segments as ContentModelText[], i, found);
+                    splitTextSegment(block.segments, currentSegment, i, found);
                     //block.segments[i].isSelected = true;
                     segments.push(block.segments[i]);
                     break;
@@ -61,9 +62,9 @@ export function selectWord(
 const PUNCTUATION_REGEX = /[.,:!?()\[\]\\/]/gu;
 const SPACES_REGEX = /[\u00A0\u1680​\u180e\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
 
-function findDelimiter(segment: ContentModelText, moveRightward: boolean): number | null {
+function findDelimiter(segment: ContentModelText, moveRightward: boolean): number {
     const word = segment.text;
-    let offset = null;
+    let offset = -1;
     if (moveRightward) {
         for (let i = 0; i < word.length; i++) {
             if (isWordDelimiter(word[i])) {
@@ -82,10 +83,15 @@ function findDelimiter(segment: ContentModelText, moveRightward: boolean): numbe
     return offset;
 }
 
-function splitTextSegment(segments: ContentModelText[], index: number, found: number) {
-    const text = segments[index].text;
+function splitTextSegment(
+    segments: ContentModelSegment[],
+    textSegment: ContentModelText,
+    index: number,
+    found: number
+) {
+    const text = textSegment.text;
     const newSegment = createText(text.substring(0, found), segments[index].format);
-    segments[index].text = text.substring(found, text.length);
+    textSegment.text = text.substring(found, text.length);
     segments.splice(index, 0, newSegment);
 }
 

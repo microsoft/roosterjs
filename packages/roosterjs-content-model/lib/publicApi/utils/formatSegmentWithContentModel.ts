@@ -27,7 +27,7 @@ export function formatSegmentWithContentModel(
                 segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 
             if (isCollapsedSelection) {
-                segments = selectWord([model], segments[0]);
+                segments = selectWord(model, segments[0]);
             }
 
             const formats = pendingFormat
