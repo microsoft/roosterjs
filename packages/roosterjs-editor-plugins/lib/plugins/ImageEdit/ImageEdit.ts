@@ -198,10 +198,9 @@ export default class ImageEdit implements EditorPlugin {
                 this.setEditingImage(null);
                 break;
             case PluginEventType.ContentChanged:
-                if (e.source !== ChangeSource.Format) {
-                    // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
-                    this.removeWrapper();
-                }
+                //After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
+                this.removeWrapper;
+
                 break;
 
             case PluginEventType.ExtractContentWithDom:
