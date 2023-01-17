@@ -68,9 +68,9 @@ export default class ImageSelection implements EditorPlugin {
                     const mouseTarget = event.rawEvent.target;
                     const mouseSelection = this.editor.getSelectionRangeEx();
                     if (
-                        !safeInstanceOf(mouseTarget, 'HTMLImageElement') &&
                         mouseSelection &&
-                        mouseSelection.type === SelectionRangeTypes.ImageSelection
+                        mouseSelection.type === SelectionRangeTypes.ImageSelection &&
+                        mouseSelection.image !== mouseTarget
                     ) {
                         this.editor.select(null);
                     }
