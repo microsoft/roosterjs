@@ -1,3 +1,4 @@
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
@@ -12,8 +13,15 @@ import {
 export function formatSegmentWithContentModel(
     editor: IExperimentalContentModelEditor,
     apiName: string,
-    toggleStyleCallback: (format: ContentModelSegmentFormat, isTuringOn: boolean) => void,
-    segmentHasStyleCallback?: (format: ContentModelSegmentFormat) => boolean,
+    toggleStyleCallback: (
+        format: ContentModelSegmentFormat,
+        isTuringOn: boolean,
+        segment: ContentModelSegment | null
+    ) => void,
+    segmentHasStyleCallback?: (
+        format: ContentModelSegmentFormat,
+        segment: ContentModelSegment | null
+    ) => boolean,
     includingFormatHolder?: boolean,
     domToModelOptions?: DomToModelOption
 ) {
@@ -23,15 +31,22 @@ export function formatSegmentWithContentModel(
         model => {
             const segments = getSelectedSegments(model, !!includingFormatHolder);
             const pendingFormat = editor.getPendingFormat();
-            const formats = pendingFormat
-                ? [pendingFormat]
-                : segments.map(segment => segment.format);
+            const formatsAndSegments: [
+                ContentModelSegmentFormat,
+                ContentModelSegment | null
+            ][] = pendingFormat
+                ? [[pendingFormat, null]]
+                : segments.map(segment => [segment.format, segment]);
 
             const isTurningOff = segmentHasStyleCallback
-                ? formats.every(format => segmentHasStyleCallback(format))
+                ? formatsAndSegments.every(([format, segment]) =>
+                      segmentHasStyleCallback(format, segment)
+                  )
                 : false;
 
-            formats.forEach(format => toggleStyleCallback(format, !isTurningOff));
+            formatsAndSegments.forEach(([format, segment]) =>
+                toggleStyleCallback(format, !isTurningOff, segment)
+            );
 
             const isCollapsedSelection =
                 segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
@@ -44,7 +59,7 @@ export function formatSegmentWithContentModel(
                 editor.focus();
                 return false;
             } else {
-                return formats.length > 0;
+                return formatsAndSegments.length > 0;
             }
         },
         domToModelOptions
