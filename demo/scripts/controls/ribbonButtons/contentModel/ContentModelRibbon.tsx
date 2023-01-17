@@ -6,6 +6,7 @@ import { backgroundColorButton } from './backgroundColorButton';
 import { blockQuoteButton } from './blockQuoteButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
+import { clearFormatButton } from './clearFormatButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
@@ -14,11 +15,13 @@ import { formatTableButton } from './formatTableButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertImageButton } from './insertImageButton';
+import { insertLinkButton } from './insertLinkButton';
 import { insertTableButton } from './insertTableButton';
 import { italicButton } from './italicButton';
 import { listStartNumberButton } from './listStartNumberButton';
 import { ltrButton } from './ltrButton';
 import { numberedListButton } from './numberedListButton';
+import { removeLinkButton } from './removeLinkButton';
 import { Ribbon, RibbonPlugin } from 'roosterjs-react';
 import { rtlButton } from './rtlButton';
 import { setBulletedListStyleButton } from './setBulletedListStyleButton';
@@ -58,6 +61,8 @@ const buttons = [
     alignLeftButton,
     alignCenterButton,
     alignRightButton,
+    insertLinkButton,
+    removeLinkButton,
     insertTableButton,
     insertImageButton,
     superscriptButton,
@@ -66,6 +71,7 @@ const buttons = [
     setHeaderLevelButton,
     ltrButton,
     rtlButton,
+    clearFormatButton,
     setBulletedListStyleButton,
     setNumberedListStyleButton,
     listStartNumberButton,

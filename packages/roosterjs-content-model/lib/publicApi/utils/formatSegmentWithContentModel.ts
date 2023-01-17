@@ -13,8 +13,15 @@ import {
 export function formatSegmentWithContentModel(
     editor: IExperimentalContentModelEditor,
     apiName: string,
-    toggleStyleCallback: (format: ContentModelSegmentFormat, isTuringOn: boolean) => void,
-    segmentHasStyleCallback?: (format: ContentModelSegmentFormat) => boolean,
+    toggleStyleCallback: (
+        format: ContentModelSegmentFormat,
+        isTuringOn: boolean,
+        segment: ContentModelSegment | null
+    ) => void,
+    segmentHasStyleCallback?: (
+        format: ContentModelSegmentFormat,
+        segment: ContentModelSegment | null
+    ) => boolean,
     includingFormatHolder?: boolean,
     domToModelOptions?: DomToModelOption
 ) {

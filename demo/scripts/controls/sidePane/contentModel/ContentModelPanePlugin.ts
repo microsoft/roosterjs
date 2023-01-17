@@ -6,7 +6,7 @@ import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 
-export default class ContentModelPlugin extends SidePanePluginImpl<
+export default class ContentModelPanePlugin extends SidePanePluginImpl<
     ContentModelPane,
     ContentModelPaneProps
 > {
