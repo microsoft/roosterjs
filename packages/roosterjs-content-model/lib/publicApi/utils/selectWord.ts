@@ -1,53 +1,66 @@
+import { ContentModelBlock } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelBlock';
 import { ContentModelDocument } from 'roosterjs-content-model/lib/publicTypes/group/ContentModelDocument';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { createText } from '../../modelApi/creators/createText';
+import { iterateSelections } from 'roosterjs-content-model/lib/modelApi/selection/iterateSelections';
 
 export function selectWord(
     model: ContentModelDocument,
     marker: ContentModelSegment
 ): ContentModelSegment[] {
     const path = [model];
-    const parent = path[0];
-    const block = parent.blocks[0];
+    let markerBlock: ContentModelBlock = path[0].blocks[0];
 
-    if (block.blockType == 'Paragraph') {
+    iterateSelections(
+        [model],
+        (path, tableContext, block, segments) => {
+            //Find the block with the selection marker
+            if (block?.blockType == 'Paragraph' && block.segments.indexOf(marker) > -1) {
+                markerBlock = block;
+            }
+        }
+        //option
+    );
+
+    if (markerBlock.blockType == 'Paragraph') {
         const segments: ContentModelSegment[] = [];
-        let markerSelectionIndex = block.segments.indexOf(marker);
+        let markerSelectionIndex = markerBlock.segments.indexOf(marker);
         for (let i = markerSelectionIndex - 1; i >= 0; i--) {
-            const currentSegment = block.segments[i];
+            const currentSegment = markerBlock.segments[i];
             if (currentSegment.segmentType == 'Text') {
                 const found = findDelimiter(currentSegment, false /*moveRightward*/);
                 if (found > -1) {
                     if (found == currentSegment.text.length) {
                         break;
                     }
-                    splitTextSegment(block.segments, currentSegment, i, found);
-                    //block.segments[i + 1].isSelected = true;
-                    segments.push(block.segments[i + 1]);
+                    splitTextSegment(markerBlock.segments, currentSegment, i, found);
+                    //markerBlock.segments[i + 1].isSelected = true;
+                    segments.push(markerBlock.segments[i + 1]);
                     break;
                 } else {
-                    segments.push(block.segments[i]);
+                    segments.push(markerBlock.segments[i]);
                 }
             } else {
                 break;
             }
         }
-        markerSelectionIndex = block.segments.indexOf(marker);
-        for (let i = markerSelectionIndex + 1; i < block.segments.length; i++) {
-            const currentSegment = block.segments[i];
+        markerSelectionIndex = markerBlock.segments.indexOf(marker);
+        segments.push(marker);
+        for (let i = markerSelectionIndex + 1; i < markerBlock.segments.length; i++) {
+            const currentSegment = markerBlock.segments[i];
             if (currentSegment.segmentType == 'Text') {
                 const found = findDelimiter(currentSegment, true /*moveRightward*/);
                 if (found > -1) {
                     if (found == 0) {
                         break;
                     }
-                    splitTextSegment(block.segments, currentSegment, i, found);
-                    //block.segments[i].isSelected = true;
-                    segments.push(block.segments[i]);
+                    splitTextSegment(markerBlock.segments, currentSegment, i, found);
+                    //markerBlock.segments[i].isSelected = true;
+                    segments.push(markerBlock.segments[i]);
                     break;
                 } else {
-                    segments.push(block.segments[i]);
+                    segments.push(markerBlock.segments[i]);
                 }
             } else {
                 break;
@@ -62,7 +75,7 @@ export function selectWord(
 const PUNCTUATION_REGEX = /[.,:!?()\[\]\\/]/gu;
 const SPACES_REGEX = /[\u00A0\u1680​\u180e\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
 
-function findDelimiter(segment: ContentModelText, moveRightward: boolean): number {
+export function findDelimiter(segment: ContentModelText, moveRightward: boolean): number {
     const word = segment.text;
     let offset = -1;
     if (moveRightward) {
