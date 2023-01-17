@@ -62,17 +62,17 @@ export default class ImageSelection implements EditorPlugin {
                         } else if (event.rawEvent.button === mouseLeftButton) {
                             this.editor.select(target);
                         }
-                    } else if (safeInstanceOf(target, 'HTMLElement')) {
-                        const mouseSelection = this.editor.getSelectionRangeEx();
-                        const range = this.editor.getSelectionRange();
-                        if (
-                            range &&
-                            mouseSelection &&
-                            mouseSelection.type === SelectionRangeTypes.ImageSelection
-                        ) {
-                            this.editor.select(range);
-                            event.rawEvent.stopPropagation();
-                        }
+                    }
+                    break;
+                case PluginEventType.MouseDown:
+                    const mouseTarget = event.rawEvent.target;
+                    const mouseSelection = this.editor.getSelectionRangeEx();
+                    if (
+                        !safeInstanceOf(mouseTarget, 'HTMLImageElement') &&
+                        mouseSelection &&
+                        mouseSelection.type === SelectionRangeTypes.ImageSelection
+                    ) {
+                        this.editor.select(null);
                     }
                     break;
                 case PluginEventType.KeyUp:
