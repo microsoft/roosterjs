@@ -1,4 +1,5 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import { ContentModelDividerFormat } from './ContentModelDividerFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelQuoteFormat } from './ContentModelQuoteFormat';
@@ -68,4 +69,9 @@ export interface ContentModelFormatMap {
      * Format type for quote
      */
     quote: ContentModelQuoteFormat;
+
+    /**
+     * Format type for divider
+     */
+    divider: ContentModelDividerFormat;
 }

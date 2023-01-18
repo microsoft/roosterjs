@@ -80,6 +80,7 @@ export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageF
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 export { ContentModelWithDataset } from './publicTypes/format/ContentModelWithDataset';
 export { ContentModelQuoteFormat } from './publicTypes/format/ContentModelQuoteFormat';
+export { ContentModelDividerFormat } from './publicTypes/format/ContentModelDividerFormat';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';

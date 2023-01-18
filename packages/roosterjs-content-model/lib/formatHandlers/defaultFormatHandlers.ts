@@ -127,6 +127,16 @@ const defaultFormatKeysPerCategory: {
         'whiteSpace',
         'border',
     ],
+    divider: [
+        'backgroundColor',
+        'direction',
+        'margin',
+        'padding',
+        'lineHeight',
+        'whiteSpace',
+        'display',
+        'size',
+    ],
 };
 
 /**
