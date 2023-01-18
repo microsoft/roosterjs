@@ -2,7 +2,6 @@ import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelDividerFormat } from './ContentModelDividerFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
-import { ContentModelQuoteFormat } from './ContentModelQuoteFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
 import { ContentModelTableFormat } from './ContentModelTableFormat';
@@ -64,11 +63,6 @@ export interface ContentModelFormatMap {
      * Format type for dataset
      */
     dataset: DatasetFormat;
-
-    /**
-     * Format type for quote
-     */
-    quote: ContentModelQuoteFormat;
 
     /**
      * Format type for divider

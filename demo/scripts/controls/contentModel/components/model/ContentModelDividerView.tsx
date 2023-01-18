@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
+import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelDivider, ContentModelDividerFormat } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
 import { DirectionFormatRenderers } from '../format/formatPart/DirectionFormatRenderers';
@@ -21,6 +22,7 @@ const DividerFormatRenders: FormatRenderer<ContentModelDividerFormat>[] = [
     PaddingFormatRenderer,
     LineHeightFormatRenderer,
     WhiteSpaceFormatRenderer,
+    ...BorderFormatRenderers,
     DisplayFormatRenderer,
     ...SizeFormatRenderers,
 ];

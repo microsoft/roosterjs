@@ -1,12 +1,13 @@
 import { addBlock } from '../../modelApi/common/addBlock';
+import { ContentModelBlockFormat } from 'roosterjs-content-model/lib/publicTypes/format/ContentModelBlockFormat';
 import { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
 import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
 import { createDivider } from '../../modelApi/creators/createDivider';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { extractBorderValues } from 'roosterjs-content-model/lib/domUtils/borderValues';
 import { isBlockElement } from '../utils/isBlockElement';
-import { MarginFormat } from '../../publicTypes/format/formatParts/MarginFormat';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -58,8 +59,8 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                         );
                         break;
                     default:
-                        topDivider = tryCreateDivider(context.blockFormat, 'marginTop');
-                        bottomDivider = tryCreateDivider(context.blockFormat, 'marginBottom');
+                        topDivider = tryCreateDivider(context.blockFormat, true /*isTop*/);
+                        bottomDivider = tryCreateDivider(context.blockFormat, false /*isBottom*/);
 
                         break;
                 }
@@ -101,17 +102,42 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
 };
 
 function tryCreateDivider(
-    format: MarginFormat,
-    propName: keyof MarginFormat
+    format: ContentModelBlockFormat,
+    isTop: boolean
 ): ContentModelDivider | undefined {
-    const margin = parseInt(format[propName] || '');
+    const marginName: keyof ContentModelBlockFormat = isTop ? 'marginTop' : 'marginBottom';
+    const paddingName: keyof ContentModelBlockFormat = isTop ? 'paddingTop' : 'paddingBottom';
+    const borderName: keyof ContentModelBlockFormat = isTop ? 'borderTop' : 'borderBottom';
+
+    const marginNumber = parseInt(format[marginName] || '');
+    const paddingNumber = parseInt(format[paddingName] || '');
+    const borderString = format[borderName];
+
     let result: ContentModelDivider | undefined;
 
-    if (margin > 0) {
-        result = createDivider('div', { [propName]: format[propName] });
+    if (marginNumber > 0 || paddingNumber > 0 || borderString) {
+        result = createDivider('div');
+
+        if (marginNumber > 0) {
+            result.format[marginName] = format[marginName];
+        }
+
+        if (paddingNumber > 0) {
+            result.format[paddingName] = format[paddingName];
+        }
+
+        if (borderString) {
+            const border = extractBorderValues(borderString);
+
+            if (border.style && border.style != 'none') {
+                result.format[borderName] = borderString;
+            }
+        }
     }
 
-    delete format[propName];
+    delete format[marginName];
+    delete format[paddingName];
+    delete format[borderName];
 
     return result;
 }
