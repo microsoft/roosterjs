@@ -1,12 +1,12 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelBlockFormat } from 'roosterjs-content-model/lib/publicTypes/format/ContentModelBlockFormat';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
 import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
 import { createDivider } from '../../modelApi/creators/createDivider';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { extractBorderValues } from 'roosterjs-content-model/lib/domUtils/borderValues';
+import { extractBorderValues } from '../../domUtils/borderValues';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
