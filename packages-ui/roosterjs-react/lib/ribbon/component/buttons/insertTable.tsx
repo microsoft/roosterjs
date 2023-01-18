@@ -26,6 +26,7 @@ const classNames = mergeStyleSets({
         width: '160px',
         minWidth: 'auto',
         padding: '4px',
+        boxSizing: 'content-box',
     },
     tablePaneInner: {
         lineHeight: '12px',
