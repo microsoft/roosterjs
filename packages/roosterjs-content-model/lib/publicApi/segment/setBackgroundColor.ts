@@ -13,12 +13,12 @@ export default function setBackgroundColor(
     formatSegmentWithContentModel(
         editor,
         'setBackgroundColor',
-        backgroundColor
+        backgroundColor === null
             ? format => {
-                  format.backgroundColor = backgroundColor;
+                  delete format.backgroundColor;
               }
             : format => {
-                  delete format.backgroundColor;
+                  format.backgroundColor = backgroundColor;
               }
     );
 }

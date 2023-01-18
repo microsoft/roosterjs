@@ -13,12 +13,12 @@ export default function setTextColor(
     formatSegmentWithContentModel(
         editor,
         'setTextColor',
-        textColor
+        textColor === null
             ? format => {
-                  format.textColor = textColor;
+                  delete format.textColor;
               }
             : format => {
-                  delete format.textColor;
+                  format.textColor = textColor;
               },
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/
