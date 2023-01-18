@@ -68,4 +68,23 @@ describe('handleDivider', () => {
 
         expect(parent.innerHTML).toBe('<hr style="display: inline-block; width: 98%;">');
     });
+
+    it('DIV with border and padding', () => {
+        const hr: ContentModelDivider = {
+            blockType: 'Divider',
+            tagName: 'hr',
+            format: {
+                borderTop: 'solid 1px black',
+                paddingBottom: '30px',
+            },
+        };
+
+        const parent = document.createElement('div');
+
+        handleDivider(document, parent, hr, context);
+
+        expect(parent.innerHTML).toBe(
+            '<hr style="padding-bottom: 30px; border-top: 1px solid black;">'
+        );
+    });
 });
