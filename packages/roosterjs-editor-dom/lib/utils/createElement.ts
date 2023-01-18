@@ -34,7 +34,7 @@ export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateE
     },
     [KnownCreateElementDataIndex.ImageEditWrapper]: {
         tag: 'span',
-        style: 'max-width:100%;position:fixed',
+        style: 'max-width:100%',
         children: [
             {
                 tag: 'div',
