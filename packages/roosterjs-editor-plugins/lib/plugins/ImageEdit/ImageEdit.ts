@@ -372,6 +372,8 @@ export default class ImageEdit implements EditorPlugin {
             mode: 'open',
         });
 
+        span.style.verticalAlign = 'bottom';
+
         shadowRoot.appendChild(wrapper);
     }
 
