@@ -1,8 +1,8 @@
+import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
-import { selectWord } from '../utils/selectWord';
 import {
     DomToModelOption,
     IExperimentalContentModelEditor,
@@ -35,7 +35,7 @@ export function formatSegmentWithContentModel(
                 segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 
             if (isCollapsedSelection) {
-                segments = selectWord(model, segments[0]);
+                segments = adjustWordSelection(model, segments[0]);
                 if (segments.length > 1) {
                     isCollapsedSelection = false;
                 }
@@ -60,6 +60,8 @@ export function formatSegmentWithContentModel(
 
             if (!pendingFormat && isCollapsedSelection) {
                 editor.setPendingFormat(segments[0].format);
+                editor.focus();
+                return false;
             }
 
             return formatsAndSegments.length > 0;

@@ -2,26 +2,23 @@ import { ContentModelBlock } from 'roosterjs-content-model/lib/publicTypes/block
 import { ContentModelDocument } from 'roosterjs-content-model/lib/publicTypes/group/ContentModelDocument';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
-import { createText } from '../../modelApi/creators/createText';
+import { createText } from '../creators/createText';
 import { iterateSelections } from 'roosterjs-content-model/lib/modelApi/selection/iterateSelections';
 
-export function selectWord(
+export function adjustWordSelection(
     model: ContentModelDocument,
     marker: ContentModelSegment
 ): ContentModelSegment[] {
     const path = [model];
     let markerBlock: ContentModelBlock = path[0].blocks[0];
 
-    iterateSelections(
-        [model],
-        (path, tableContext, block, segments) => {
-            //Find the block with the selection marker
-            if (block?.blockType == 'Paragraph' && block.segments.indexOf(marker) > -1) {
-                markerBlock = block;
-            }
+    iterateSelections([model], (path, tableContext, block, segments) => {
+        //Find the block with the selection marker
+        if (block?.blockType == 'Paragraph' && segments?.length == 1 && segments[0] == marker) {
+            markerBlock = block;
         }
-        //option
-    );
+        return true;
+    });
 
     if (markerBlock.blockType == 'Paragraph') {
         const segments: ContentModelSegment[] = [];
@@ -35,7 +32,6 @@ export function selectWord(
                         break;
                     }
                     splitTextSegment(markerBlock.segments, currentSegment, i, found);
-                    //markerBlock.segments[i + 1].isSelected = true;
                     segments.push(markerBlock.segments[i + 1]);
                     break;
                 } else {
@@ -56,7 +52,6 @@ export function selectWord(
                         break;
                     }
                     splitTextSegment(markerBlock.segments, currentSegment, i, found);
-                    //markerBlock.segments[i].isSelected = true;
                     segments.push(markerBlock.segments[i]);
                     break;
                 } else {
@@ -72,7 +67,7 @@ export function selectWord(
     }
 }
 
-const PUNCTUATION_REGEX = /[.,:!?()\[\]\\/]/gu;
+const PUNCTUATION_REGEX = /[.,:?!"()\[\]\\/]/gu;
 const SPACES_REGEX = /[\u00A0\u1680​\u180e\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
 
 export function findDelimiter(segment: ContentModelText, moveRightward: boolean): number {
