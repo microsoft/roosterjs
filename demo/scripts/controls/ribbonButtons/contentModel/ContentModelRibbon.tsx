@@ -11,6 +11,7 @@ import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
+import { formatPainterButton } from './formatPainterButton';
 import { formatTableButton } from './formatTableButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
@@ -44,6 +45,7 @@ import {
 } from './tableEditButtons';
 
 const buttons = [
+    formatPainterButton,
     boldButton,
     italicButton,
     underlineButton,
