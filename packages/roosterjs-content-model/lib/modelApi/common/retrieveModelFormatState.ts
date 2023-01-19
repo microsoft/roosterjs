@@ -20,28 +20,34 @@ export function retrieveModelFormatState(
 ) {
     let isFirst = true;
 
-    iterateSelections([model], (path, tableContext, block, segments) => {
-        if (isFirst) {
-            if (block?.blockType == 'Paragraph' && segments?.[0]) {
-                retrieveFormatStateInternal(
-                    formatState,
-                    path,
-                    tableContext,
-                    block,
-                    segments,
-                    pendingFormat
-                );
-            } else if (tableContext) {
-                retrieveTableFormat(tableContext, formatState);
-            }
-            isFirst = false;
-        } else {
-            formatState.isMultilineSelection = true;
+    iterateSelections(
+        [model],
+        (path, tableContext, block, segments) => {
+            if (isFirst) {
+                if (block?.blockType == 'Paragraph' && segments?.[0]) {
+                    retrieveFormatStateInternal(
+                        formatState,
+                        path,
+                        tableContext,
+                        block,
+                        segments,
+                        pendingFormat
+                    );
+                } else if (tableContext) {
+                    retrieveTableFormat(tableContext, formatState);
+                }
+                isFirst = false;
+            } else {
+                formatState.isMultilineSelection = true;
 
-            // Return true to stop iteration since we have already got everything we need
-            return true;
+                // Return true to stop iteration since we have already got everything we need
+                return true;
+            }
+        },
+        {
+            includeListFormatHolder: 'never',
         }
-    });
+    );
 }
 
 function retrieveFormatStateInternal(

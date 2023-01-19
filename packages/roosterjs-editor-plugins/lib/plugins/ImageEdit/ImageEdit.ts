@@ -11,7 +11,6 @@ import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
-
 import {
     arrayPush,
     Browser,
@@ -34,7 +33,6 @@ import {
 import {
     ImageEditOperation,
     ImageEditOptions,
-    ChangeSource,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -43,6 +41,7 @@ import {
     KnownCreateElementDataIndex,
     ModeIndependentColor,
     SelectionRangeTypes,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 import type { CompatibleImageEditOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
@@ -198,16 +197,8 @@ export default class ImageEdit implements EditorPlugin {
                 this.setEditingImage(null);
                 break;
             case PluginEventType.ContentChanged:
-                const selection = this.editor.getSelectionRangeEx();
-                if (
-                    e.source === ChangeSource.Format &&
-                    selection?.type === SelectionRangeTypes.ImageSelection
-                ) {
-                    this.setEditingImage(null, true);
-                } else if (e.source !== ChangeSource.Format) {
-                    // After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
-                    this.removeWrapper();
-                }
+                //After contentChanged event, the current image wrapper may not be valid any more, remove all of them if any
+                this.removeWrapper();
                 break;
 
             case PluginEventType.ExtractContentWithDom:

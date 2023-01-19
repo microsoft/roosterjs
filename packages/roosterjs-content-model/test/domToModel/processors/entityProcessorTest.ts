@@ -80,4 +80,36 @@ describe('entityProcessor', () => {
             ],
         });
     });
+
+    it('Readonly element (fake entity)', () => {
+        const group = createContentModelDocument();
+        const span = document.createElement('span');
+
+        span.contentEditable = 'false';
+
+        entityProcessor(group, span, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'Entity',
+                            segmentType: 'Entity',
+                            format: {},
+                            id: undefined,
+                            type: undefined,
+                            isReadonly: undefined,
+                            wrapper: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
 });

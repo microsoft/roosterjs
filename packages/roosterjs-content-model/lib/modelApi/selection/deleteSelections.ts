@@ -78,6 +78,7 @@ export function deleteSelection(model: ContentModelDocument): InsertPosition | n
         },
         {
             ignoreContentUnderSelectedTableCell: true,
+            includeListFormatHolder: 'never',
         }
     );
 

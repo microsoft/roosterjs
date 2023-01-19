@@ -17,6 +17,7 @@ export { default as setFontName } from './publicApi/segment/setFontName';
 export { default as setFontSize } from './publicApi/segment/setFontSize';
 export { default as setTextColor } from './publicApi/segment/setTextColor';
 export { default as changeFontSize } from './publicApi/segment/changeFontSize';
+export { default as changeCapitalization } from './publicApi/segment/changeCapitalization';
 export { default as insertImage } from './publicApi/insert/insertImage';
 export { default as setListStyle } from './publicApi/list/setListStyle';
 export { default as setListStartNumber } from './publicApi/list/setListStartNumber';
@@ -34,6 +35,13 @@ export { default as setImageBorderWidth } from './publicApi/image/setImageBorder
 export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
 export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
+export { default as clearFormat } from './publicApi/format/clearFormat';
+export { default as insertLink } from './publicApi/link/insertLink';
+export { default as removeLink } from './publicApi/link/removeLink';
+export { default as adjustLinkSelection } from './publicApi/link/adjustLinkSelection';
+export { default as setImageAltText } from './publicApi/image/setImageAltText';
+export { default as adjustImageSelection } from './publicApi/image/adjustImageSelection';
+
 export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';
 
 export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
@@ -76,7 +84,7 @@ export { ContentModelListItemLevelFormat } from './publicTypes/format/ContentMod
 export { ContentModelImageFormat } from './publicTypes/format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './publicTypes/format/ContentModelWithFormat';
 export { ContentModelWithDataset } from './publicTypes/format/ContentModelWithDataset';
-export { ContentModelQuoteFormat } from './publicTypes/format/ContentModelQuoteFormat';
+export { ContentModelDividerFormat } from './publicTypes/format/ContentModelDividerFormat';
 
 export { VerticalAlignFormat } from './publicTypes/format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './publicTypes/format/formatParts/BackgroundColorFormat';

@@ -87,4 +87,20 @@ describe('elementProcessor', () => {
             ],
         });
     });
+
+    it('Readonly', () => {
+        const element = document.createElement('div') as HTMLElement;
+        element.textContent = 'test';
+        element.contentEditable = 'false';
+
+        elementProcessor(group, element, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).toHaveBeenCalled();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+        });
+    });
 });

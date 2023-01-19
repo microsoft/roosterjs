@@ -72,4 +72,28 @@ describe('hrProcessor', () => {
             ],
         });
     });
+
+    it('HR with width and display', () => {
+        const doc = createContentModelDocument();
+        const hr = document.createElement('hr');
+
+        hr.style.display = 'inline-block';
+        hr.style.width = '98%';
+
+        hrProcessor(doc, hr, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'hr',
+                    format: {
+                        display: 'inline-block',
+                        width: '98%',
+                    },
+                },
+            ],
+        });
+    });
 });
