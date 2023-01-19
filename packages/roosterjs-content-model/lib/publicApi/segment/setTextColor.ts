@@ -4,15 +4,22 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
 /**
  * Set text color
  * @param editor The editor to operate on
- * @param textColor The text color to set
+ * @param textColor The text color to set. Pass null to remove existing color.
  */
-export default function setTextColor(editor: IExperimentalContentModelEditor, textColor: string) {
+export default function setTextColor(
+    editor: IExperimentalContentModelEditor,
+    textColor: string | null
+) {
     formatSegmentWithContentModel(
         editor,
         'setTextColor',
-        format => {
-            format.textColor = textColor;
-        },
+        textColor === null
+            ? format => {
+                  delete format.textColor;
+              }
+            : format => {
+                  format.textColor = textColor;
+              },
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/
     );

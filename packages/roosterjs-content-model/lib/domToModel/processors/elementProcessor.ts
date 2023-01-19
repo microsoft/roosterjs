@@ -19,7 +19,8 @@ export const elementProcessor: ElementProcessor<HTMLElement> = (group, element, 
 };
 
 function tryGetProcessorForEntity(element: HTMLElement, context: DomToModelContext) {
-    return element.className && getEntityFromElement(element)
+    return (element.className && getEntityFromElement(element)) ||
+        element.contentEditable == 'false' // For readonly element, treat as an entity
         ? context.elementProcessors.entity
         : null;
 }
