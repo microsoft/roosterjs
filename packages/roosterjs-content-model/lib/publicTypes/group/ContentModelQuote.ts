@@ -1,6 +1,5 @@
 import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelQuoteFormat } from '../format/ContentModelQuoteFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
@@ -8,6 +7,6 @@ import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
  */
 export interface ContentModelQuote
     extends ContentModelBlockGroupBase<'Quote'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelQuoteFormat> {
+        ContentModelBlockBase<'BlockGroup'> {
     quoteSegmentFormat: ContentModelSegmentFormat;
 }
