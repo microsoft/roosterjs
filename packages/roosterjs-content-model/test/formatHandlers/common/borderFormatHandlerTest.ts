@@ -52,6 +52,29 @@ describe('borderFormatHandler.parse', () => {
             borderLeft: '4px solid red',
         });
     });
+
+    it('Has border width none value', () => {
+        div.style.borderWidth = '1px 2px 3px 4px';
+        div.style.borderStyle = 'none';
+        div.style.borderColor = 'red';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px none red',
+            borderRight: '2px none red',
+            borderBottom: '3px none red',
+            borderLeft: '4px none red',
+        });
+    });
+
+    it('Has border width none value only', () => {
+        div.style.borderStyle = 'none';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({});
+    });
 });
 
 describe('borderFormatHandler.apply', () => {
