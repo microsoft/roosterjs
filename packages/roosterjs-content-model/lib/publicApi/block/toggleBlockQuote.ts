@@ -1,16 +1,16 @@
-import { ContentModelQuoteFormat } from '../../publicTypes/format/ContentModelQuoteFormat';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
 
-const DefaultQuoteFormat: ContentModelQuoteFormat = {
+const DefaultQuoteFormat: ContentModelBlockFormat = {
     borderLeft: '3px solid rgb(200, 200, 200)', // TODO: Support RTL
 };
 const DefaultSegmentFormat: ContentModelSegmentFormat = {
     textColor: 'rgb(102, 102, 102)',
 };
-const BuildInQuoteFormat: ContentModelQuoteFormat = {
+const BuildInQuoteFormat: ContentModelBlockFormat = {
     marginTop: '1em',
     marginBottom: '1em',
     marginLeft: '40px',
@@ -28,7 +28,7 @@ const BuildInQuoteFormat: ContentModelQuoteFormat = {
  */
 export default function toggleBlockQuote(
     editor: IExperimentalContentModelEditor,
-    quoteFormat: ContentModelQuoteFormat = DefaultQuoteFormat,
+    quoteFormat: ContentModelBlockFormat = DefaultQuoteFormat,
     segmentFormat: ContentModelSegmentFormat = DefaultSegmentFormat
 ) {
     const fullQuoteFormat = {
