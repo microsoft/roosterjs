@@ -8,7 +8,7 @@ import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
-import { getRotateHTML, Rotator } from './imageEditors/Rotator';
+import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import {
     arrayPush,
@@ -157,7 +157,10 @@ export default class ImageEdit implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = editor.addDomEventHandler('blur', this.onBlur);
+        this.disposer = editor.addDomEventHandler({
+            blur: () => this.onBlur,
+            drop: e => e.preventDefault(),
+        });
     }
 
     /**
@@ -200,6 +203,9 @@ export default class ImageEdit implements EditorPlugin {
                 toArray(e.clonedRoot.querySelectorAll(this.options.imageSelector)).forEach(img => {
                     deleteEditInfo(img as HTMLImageElement);
                 });
+                break;
+            case PluginEventType.BeforeDispose:
+                this.removeWrapper();
                 break;
         }
     }
@@ -398,6 +404,8 @@ export default class ImageEdit implements EditorPlugin {
             const cropContainers = getEditElements(wrapper, ImageEditElementClass.CropContainer);
             const cropOverlays = getEditElements(wrapper, ImageEditElementClass.CropOverlay);
             const resizeHandles = getEditElements(wrapper, ImageEditElementClass.ResizeHandle);
+            const rotateCenter = getEditElements(wrapper, ImageEditElementClass.RotateCenter)[0];
+            const rotateHandle = getEditElements(wrapper, ImageEditElementClass.RotateHandle)[0];
             const cropHandles = getEditElements(wrapper, ImageEditElementClass.CropHandle);
 
             // Cropping and resizing will show different UI, so check if it is cropping here first
@@ -457,6 +465,7 @@ export default class ImageEdit implements EditorPlugin {
                 setSize(cropOverlays[1], undefined, 0, 0, cropBottomPx, cropRightPx, undefined);
                 setSize(cropOverlays[2], cropLeftPx, undefined, 0, 0, undefined, cropBottomPx);
                 setSize(cropOverlays[3], 0, cropTopPx, undefined, 0, cropLeftPx, undefined);
+
                 updateHandleCursor(cropHandles, angleRad);
             } else {
                 // For rotate/resize, set the margin of the image so that cropped part won't be visible
@@ -476,6 +485,14 @@ export default class ImageEdit implements EditorPlugin {
 
                     this.updateWrapper();
                 }
+
+                updateRotateHandlePosition(
+                    this.editInfo,
+                    this.editor.getVisibleViewport(),
+                    marginVertical,
+                    rotateCenter,
+                    rotateHandle
+                );
 
                 updateHandleCursor(resizeHandles, angleRad);
             }
