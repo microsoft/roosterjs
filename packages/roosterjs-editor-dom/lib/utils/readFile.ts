@@ -4,7 +4,7 @@
  * @param callback the callback to invoke with data url of the file.
  * If fail to read, dataUrl will be null
  */
-export default function readFile(file: File, callback: (dataUrl: string | null) => void) {
+export default function readFile(file: Blob, callback: (dataUrl: string | null) => void) {
     if (file) {
         const reader = new FileReader();
         reader.onload = () => {
