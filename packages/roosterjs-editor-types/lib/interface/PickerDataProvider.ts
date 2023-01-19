@@ -51,7 +51,7 @@ export default interface PickerDataProvider {
      * Function that is called when a delete command is issued.
      * Returns the intended replacement node (if partial delete) or null (if full delete)
      */
-    onRemove: (nodeRemoved: Node, isBackwards: boolean) => Node;
+    onRemove: (nodeRemoved: Node, isBackwards: boolean) => Node | null;
 
     /**
      * Function that is called by the plugin to set the current cursor position as an
