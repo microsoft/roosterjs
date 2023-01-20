@@ -43,6 +43,12 @@ export function adjustWordSelection(
         }
         markerSelectionIndex = markerBlock.segments.indexOf(marker);
         segments.push(marker);
+
+        // Marker is at start of word
+        if (segments.length <= 1) {
+            return segments;
+        }
+
         for (let i = markerSelectionIndex + 1; i < markerBlock.segments.length; i++) {
             const currentSegment = markerBlock.segments[i];
             if (currentSegment.segmentType == 'Text') {
@@ -61,6 +67,12 @@ export function adjustWordSelection(
                 break;
             }
         }
+
+        // Marker is at end of word
+        if (segments.length <= 2) {
+            return [marker];
+        }
+
         return segments;
     } else {
         return [];
