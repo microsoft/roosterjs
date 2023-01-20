@@ -36,7 +36,7 @@ export function processChildNode(
     child: Node,
     context: DomToModelContext
 ) {
-    if (isNodeOfType(child, NodeType.Element)) {
+    if (isNodeOfType(child, NodeType.Element) && child.style.display != 'none') {
         context.elementProcessors.element(group, child, context);
     } else if (isNodeOfType(child, NodeType.Text)) {
         context.elementProcessors['#text'](group, child, context);

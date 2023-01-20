@@ -14,7 +14,7 @@ export const hrProcessor: ElementProcessor<HTMLHRElement> = (group, element, con
             paragraph: 'shallowClone',
         },
         () => {
-            parseFormat(element, context.formatParsers.block, context.blockFormat, context);
+            parseFormat(element, context.formatParsers.divider, context.blockFormat, context);
 
             const hr = createDivider('hr', context.blockFormat);
 
