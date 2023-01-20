@@ -1,3 +1,4 @@
+import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
@@ -11,11 +12,18 @@ import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBa
  */
 export default function setTableCellShade(editor: IExperimentalContentModelEditor, color: string) {
     formatWithContentModel(editor, 'setTableCellShade', model => {
-        const tableModel = getFirstSelectedTable(model);
+        const table = getFirstSelectedTable(model);
 
-        if (tableModel) {
-            normalizeTable(tableModel);
-            setTableCellBackgroundColor(tableModel, color);
+        if (table) {
+            normalizeTable(table);
+
+            table.cells.forEach(row =>
+                row.forEach(cell => {
+                    if (hasSelectionInBlockGroup(cell)) {
+                        setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
+                    }
+                })
+            );
 
             return true;
         } else {

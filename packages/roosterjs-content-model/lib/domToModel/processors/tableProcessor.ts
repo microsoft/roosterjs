@@ -89,7 +89,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                 );
                                 parseFormat(
                                     td,
-                                    context.formatParsers.segmentOnBlock,
+                                    context.formatParsers.segmentOnTableCell,
                                     context.segmentFormat,
                                     context
                                 );

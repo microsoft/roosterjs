@@ -3,7 +3,7 @@ import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
@@ -188,7 +188,7 @@ function formatBackgroundColors(
                             : bgColorEven
                         : bgColorEven;
 
-                setBackgroundColor(cell.format, color);
+                setTableCellBackgroundColor(cell, color);
             }
         });
     });
@@ -206,7 +206,7 @@ function setFirstColumnFormat(
 
                 if (rowIndex !== 0 && !bgColorOverrides[rowIndex][cellIndex]) {
                     setBorderColor(cell.format, 'borderTop');
-                    setBackgroundColor(cell.format, null /*color*/);
+                    setTableCellBackgroundColor(cell, null /*color*/);
                 }
 
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
@@ -231,7 +231,7 @@ function setHeaderRowFormat(
 
         if (format.hasHeaderRow && format.headerRowColor) {
             if (!bgColorOverrides[rowIndex][cellIndex]) {
-                setBackgroundColor(cell.format, format.headerRowColor);
+                setTableCellBackgroundColor(cell, format.headerRowColor);
             }
 
             setBorderColor(cell.format, 'borderTop', format.headerRowColor);
@@ -246,16 +246,6 @@ function setBorderColor(format: BorderFormat, key: keyof BorderFormat, value?: s
     border.color = value || '';
     border.style = getBorderStyleFromColor(border.color);
     format[key] = combineBorderValue(border);
-}
-
-function setBackgroundColor(format: ContentModelTableCellFormat, color: string | null | undefined) {
-    if (color) {
-        format.backgroundColor = color;
-
-        // TODO: Handle text color when background color is dark
-    } else {
-        delete format.backgroundColor;
-    }
 }
 
 function getBorderStyleFromColor(color?: string): string {
