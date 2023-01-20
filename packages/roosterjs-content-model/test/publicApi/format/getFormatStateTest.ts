@@ -135,7 +135,7 @@ describe('getFormatState', () => {
 
     it('Multiple node, has child under selection', () => {
         runTest(
-            `<div>test1</div><div id=${selectedNodeId}><div>line1</div><div>line2</div></div>><div>test3</div>`,
+            `<div>test1</div><div id=${selectedNodeId}><div>line1</div><div>line2</div></div><div>test3</div>`,
             null,
             {
                 blockGroupType: 'Document',
