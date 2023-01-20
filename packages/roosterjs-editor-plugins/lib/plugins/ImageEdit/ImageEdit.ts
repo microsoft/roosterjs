@@ -159,7 +159,12 @@ export default class ImageEdit implements EditorPlugin {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler({
             blur: () => this.onBlur,
-            drop: e => e.preventDefault(),
+            drag: e => {
+                if (this.wrapper) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                }
+            },
         });
     }
 
@@ -312,7 +317,6 @@ export default class ImageEdit implements EditorPlugin {
     private onBlur = () => {
         this.setEditingImage(null, true);
     };
-
     /**
      * Create editing wrapper for the image
      */
@@ -325,13 +329,6 @@ export default class ImageEdit implements EditorPlugin {
             this.image.ownerDocument
         ) as HTMLSpanElement;
         this.wrapper.firstChild.appendChild(this.clonedImage);
-
-        // keep the same vertical align
-        const originalVerticalAlign = getStylePropertyValue(this.image, 'vertical-align');
-        if (originalVerticalAlign) {
-            this.wrapper.style.verticalAlign = originalVerticalAlign;
-        }
-
         this.wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
         // Cache current src so that we can compare it after edit see if src is changed
@@ -368,7 +365,6 @@ export default class ImageEdit implements EditorPlugin {
                 this.wrapper.appendChild(element);
             }
         });
-
         this.insertImageWrapper(this.wrapper);
     }
 
@@ -634,8 +630,4 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
         return color.trim();
     }
     return isDarkMode ? color.darkModeColor.trim() : color.lightModeColor.trim();
-}
-
-function getStylePropertyValue(element: HTMLElement, property: string): string {
-    return element.ownerDocument.defaultView.getComputedStyle(element).getPropertyValue(property);
 }
