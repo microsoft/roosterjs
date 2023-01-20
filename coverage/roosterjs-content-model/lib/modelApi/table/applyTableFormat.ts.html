@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.85% </span>
+                <span class="strong">80.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>76/94</span>
+                <span class='fraction'>74/92</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76% </span>
+                <span class="strong">75.34% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>57/75</span>
+                <span class='fraction'>55/73</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">93.1% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>28/30</span>
+                <span class='fraction'>27/29</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.25% </span>
+                <span class="strong">79.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>65/81</span>
+                <span class='fraction'>63/79</span>
             </div>
         
             
@@ -310,22 +310,12 @@
 <a name='L251'></a><a href='#L251'>251</a>
 <a name='L252'></a><a href='#L252'>252</a>
 <a name='L253'></a><a href='#L253'>253</a>
-<a name='L254'></a><a href='#L254'>254</a>
-<a name='L255'></a><a href='#L255'>255</a>
-<a name='L256'></a><a href='#L256'>256</a>
-<a name='L257'></a><a href='#L257'>257</a>
-<a name='L258'></a><a href='#L258'>258</a>
-<a name='L259'></a><a href='#L259'>259</a>
-<a name='L260'></a><a href='#L260'>260</a>
-<a name='L261'></a><a href='#L261'>261</a>
-<a name='L262'></a><a href='#L262'>262</a>
-<a name='L263'></a><a href='#L263'>263</a>
-<a name='L264'></a><a href='#L264'>264</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L254'></a><a href='#L254'>254</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -571,16 +561,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">86x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">408x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { BorderFormat } from '../../publicTypes/format/formatParts/BorderFormat';
@@ -588,7 +568,7 @@ import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
@@ -773,7 +753,7 @@ function formatBackgroundColors(
                             : bgColorEven
                         : bgColorEven;
 &nbsp;
-                setBackgroundColor(cell.format, color);
+                setTableCellBackgroundColor(cell, color);
             }
         });
     });
@@ -791,7 +771,7 @@ function setFirstColumnFormat(
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (rowIndex !== 0 &amp;&amp; !bgColorOverrides[rowIndex][cellIndex]) {</span>
 <span class="cstat-no" title="statement not covered" >                    setBorderColor(cell.format, 'borderTop');</span>
-<span class="cstat-no" title="statement not covered" >                    setBackgroundColor(cell.format, null /*color*/);</span>
+<span class="cstat-no" title="statement not covered" >                    setTableCellBackgroundColor(cell, null /*color*/);</span>
                 }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                if (rowIndex !== cells.length - 1 &amp;&amp; rowIndex !== 0) {</span>
@@ -816,7 +796,7 @@ function setHeaderRowFormat(
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (format.hasHeaderRow &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >format.headerRowColor)</span> {
 <span class="cstat-no" title="statement not covered" >            if (!bgColorOverrides[rowIndex][cellIndex]) {</span>
-<span class="cstat-no" title="statement not covered" >                setBackgroundColor(cell.format, format.headerRowColor);</span>
+<span class="cstat-no" title="statement not covered" >                setTableCellBackgroundColor(cell, format.headerRowColor);</span>
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            setBorderColor(cell.format, 'borderTop', format.headerRowColor);</span>
@@ -833,16 +813,6 @@ function <span class="fstat-no" title="function not covered" >setBorderColor(</s
 <span class="cstat-no" title="statement not covered" >    format[key] = combineBorderValue(border);</span>
 }
 &nbsp;
-function setBackgroundColor(format: ContentModelTableCellFormat, color: string | null | undefined) {
-    if (color) {
-        format.backgroundColor = color;
-&nbsp;
-        // TODO: Handle text color when background color is dark
-    } else {
-        delete format.backgroundColor;
-    }
-}
-&nbsp;
 function getBorderStyleFromColor(color?: string): string {
     return !color || color == 'transparent' ? 'none' : 'solid';
 }
@@ -853,7 +823,7 @@ function getBorderStyleFromColor(color?: string): string {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jan 20 2023 07:47:50 GMT+0000 (Coordinated Universal Time)
+                at Fri Jan 20 2023 16:50:16 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
