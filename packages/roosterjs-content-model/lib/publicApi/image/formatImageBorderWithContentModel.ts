@@ -1,3 +1,4 @@
+import { ContentModelImage } from 'roosterjs-content-model/lib/publicTypes/segment/ContentModelImage';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
@@ -10,13 +11,21 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
  * @param editor The editor instance
  * @param altText The image alt text
  */
-export default function setImageBoxShadow(
+export default function (
     editor: IExperimentalContentModelEditor,
-    boxShadow: string
+    callback: (segment: ContentModelImage) => void
 ) {
-    formatSegmentWithContentModel(editor, 'setImageBorderColor', (_, __, segment) => {
+    formatSegmentWithContentModel(editor, 'formatImageBorderWithContentModel', (_, __, segment) => {
         if (segment?.segmentType == 'Image') {
-            segment.format.boxShadow = boxShadow;
+            segment.format.borderRadius = '5px';
+            const { borderWidth, borderStyle } = segment.format;
+            if (!borderWidth) {
+                segment.format.borderWidth = '1px';
+            }
+            if (!borderStyle) {
+                segment.format.borderStyle = 'solid';
+            }
+            callback(segment);
         }
     });
 }

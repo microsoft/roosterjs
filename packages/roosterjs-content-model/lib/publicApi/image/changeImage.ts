@@ -1,5 +1,4 @@
-import formatImageWithContentModel from './formatImageWithContentModel';
-import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
+import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { readFile } from 'roosterjs-editor-dom';
 
@@ -11,13 +10,11 @@ import { readFile } from 'roosterjs-editor-dom';
 export default function changeImage(editor: IExperimentalContentModelEditor, file: File) {
     readFile(file, dataUrl => {
         if (dataUrl && !editor.isDisposed()) {
-            formatImageWithContentModel(
-                editor,
-                (image: ContentModelImage) => {
-                    image.src = dataUrl;
-                },
-                'changeImage'
-            );
+            formatSegmentWithContentModel(editor, 'changeImage', (_, __, segment) => {
+                if (segment?.segmentType == 'Image') {
+                    segment.src = dataUrl;
+                }
+            });
         }
     });
 }
