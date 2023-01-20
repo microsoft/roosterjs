@@ -1404,4 +1404,253 @@ describe('iterateSelections', () => {
             ],
         });
     });
+
+    it('Return true from first selection', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        group.blocks.push(para1);
+        group.blocks.push(para2);
+
+        const newCallback = jasmine
+            .createSpy()
+            .and.callFake((path, tableContext, block, segments) => {
+                return block == para1;
+            });
+
+        iterateSelections([group], newCallback);
+
+        expect(newCallback).toHaveBeenCalledTimes(1);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
+    });
+
+    it('Return true from divider', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const divider = createDivider('hr');
+        const para2 = createParagraph();
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+
+        text1.isSelected = true;
+        divider.isSelected = true;
+        text2.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        group.blocks.push(para1, divider, para2);
+
+        const newCallback = jasmine
+            .createSpy()
+            .and.callFake((path, tableContext, block, segments) => {
+                return block == divider;
+            });
+
+        iterateSelections([group], newCallback);
+
+        expect(newCallback).toHaveBeenCalledTimes(2);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, divider);
+    });
+
+    it('Return true from first selection in nested block group', () => {
+        const group = createContentModelDocument();
+        const quote1 = createQuote();
+        const quote2 = createQuote();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        quote1.blocks.push(para1);
+        quote2.blocks.push(para2);
+        group.blocks.push(quote1);
+        group.blocks.push(quote2);
+
+        const newCallback = jasmine
+            .createSpy()
+            .and.callFake((path, tableContext, block, segments) => {
+                return block == para1;
+            });
+
+        iterateSelections([group], newCallback);
+
+        expect(newCallback).toHaveBeenCalledTimes(1);
+        expect(newCallback).toHaveBeenCalledWith([quote1, group], undefined, para1, [text1]);
+    });
+
+    it('Return true from whole table selection', () => {
+        const group = createContentModelDocument();
+        const table = createTable(1);
+        const cell = createTableCell();
+        const para = createParagraph();
+        const text = createText('text');
+
+        cell.isSelected = true;
+        text.isSelected = true;
+
+        para.segments.push(text);
+        table.cells[0].push(cell);
+        group.blocks.push(table);
+        group.blocks.push(para);
+
+        const newCallback = jasmine
+            .createSpy()
+            .and.callFake((path, tableContext, block, segments) => {
+                return block == table;
+            });
+
+        iterateSelections([group], newCallback, { ignoreContentUnderSelectedTableCell: true });
+
+        expect(newCallback).toHaveBeenCalledTimes(1);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, table);
+    });
+
+    it('Return true from table cell selection', () => {
+        const group = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell(false, false, false, { textAlign: 'start' });
+        const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
+        const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
+
+        cell1.isSelected = true;
+        cell2.isSelected = true;
+        cell3.isSelected = true;
+
+        table.cells[0].push(cell1, cell2, cell3);
+        group.blocks.push(table);
+
+        const newCallback = jasmine
+            .createSpy()
+            .and.callFake((path, tableContext, block, segments) => {
+                if (tableContext) {
+                    const { table, colIndex, rowIndex } = tableContext;
+
+                    if (table.cells[rowIndex][colIndex] == cell2) {
+                        return true;
+                    }
+                }
+            });
+
+        iterateSelections([group], newCallback);
+
+        expect(newCallback).toHaveBeenCalledTimes(2);
+        expect(newCallback).toHaveBeenCalledWith([group], {
+            table: table,
+            rowIndex: 0,
+            colIndex: 0,
+            isWholeTableSelected: true,
+        });
+        expect(newCallback).toHaveBeenCalledWith([group], {
+            table: table,
+            rowIndex: 0,
+            colIndex: 1,
+            isWholeTableSelected: true,
+        });
+    });
+
+    it('includeListFormatHolder=anySegment', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'anySegment' });
+
+        expect(callback).toHaveBeenCalledTimes(2);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text2]);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, undefined, [
+            {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
+            },
+        ]);
+    });
+
+    it('includeListFormatHolder=allSegment', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'allSegments' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text2]);
+    });
+
+    it('includeListFormatHolder=allSegment 2', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'allSegments' });
+
+        expect(callback).toHaveBeenCalledTimes(2);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, undefined, [
+            {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
+            },
+        ]);
+    });
+
+    it('includeListFormatHolder=never', () => {
+        const doc = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }]);
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        para.segments.push(text1, text2);
+        list.blocks.push(para);
+        doc.blocks.push(list);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'never' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
+    });
 });

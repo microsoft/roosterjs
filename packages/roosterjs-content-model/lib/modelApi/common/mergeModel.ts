@@ -51,6 +51,7 @@ export interface MergeModelOption {
 
 /**
  * @internal
+ * Options to specify how to merge models
  */
 export function mergeModel(
     target: ContentModelDocument,

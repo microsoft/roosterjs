@@ -578,10 +578,6 @@ describe('tableProcessor with format', () => {
                             tagName: 'TD',
                             style: {},
                             dataset: {},
-                            getBoundingClientRect: () => ({
-                                width: 100,
-                                height: 200,
-                            }),
                             getAttribute: () => '',
                         },
                     ],
@@ -620,10 +616,6 @@ describe('tableProcessor with format', () => {
                             tagName: 'TD',
                             style: {},
                             dataset: {},
-                            getBoundingClientRect: () => ({
-                                width: 100,
-                                height: 200,
-                            }),
                             getAttribute: () => '',
                         },
                     ],

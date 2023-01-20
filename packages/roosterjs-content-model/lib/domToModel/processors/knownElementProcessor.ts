@@ -7,7 +7,6 @@ import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { formatContainerProcessor } from './formatContainerProcessor';
 import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
-import { MarginFormat } from '../../publicTypes/format/formatParts/MarginFormat';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 

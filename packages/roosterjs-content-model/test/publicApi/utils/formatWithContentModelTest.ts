@@ -1,6 +1,7 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from '../../../lib/publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 

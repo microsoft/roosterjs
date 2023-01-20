@@ -198,4 +198,24 @@ describe('handleEntity', () => {
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(entityModel);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
     });
+
+    it('Fake entity', () => {
+        const div = document.createElement('div');
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            wrapper: div,
+        };
+
+        div.textContent = 'test';
+
+        const parent = document.createElement('div');
+
+        handleEntity(document, parent, entityModel, context);
+
+        expect(parent.innerHTML).toBe('<div>test</div>');
+        expect(context.entities).toEqual({});
+        expect(div.outerHTML).toBe('<div>test</div>');
+    });
 });

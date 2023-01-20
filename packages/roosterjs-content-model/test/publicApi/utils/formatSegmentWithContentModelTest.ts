@@ -24,6 +24,8 @@ describe('formatSegmentWithContentModel', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
+        getPendingFormat = jasmine.createSpy('getPendingFormat');
+        setPendingFormat = jasmine.createSpy('setPendingFormat');
 
         setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
         getPendingFormat = spyOn(pendingFormat, 'getPendingFormat');

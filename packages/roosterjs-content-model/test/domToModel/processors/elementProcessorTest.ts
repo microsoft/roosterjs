@@ -124,4 +124,48 @@ describe('elementProcessor', () => {
         expect(entityProcessor).not.toHaveBeenCalled();
         expect(delimiterProcessor).toHaveBeenCalled();
     });
+
+    it('Namespace', () => {
+        const element = document.createElement('o:p') as HTMLElement;
+        element.textContent = 'test';
+
+        elementProcessor(group, element, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).not.toHaveBeenCalled();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Readonly', () => {
+        const element = document.createElement('div') as HTMLElement;
+        element.textContent = 'test';
+        element.contentEditable = 'false';
+
+        elementProcessor(group, element, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).toHaveBeenCalled();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+        });
+    });
 });
