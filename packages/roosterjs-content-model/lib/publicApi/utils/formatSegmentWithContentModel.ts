@@ -60,11 +60,14 @@ export function formatSegmentWithContentModel(
 
             if (!pendingFormat && isCollapsedSelection) {
                 editor.setPendingFormat(segments[0].format);
-                editor.focus();
-                return false;
             }
 
-            return formatsAndSegments.length > 0;
+            if (isCollapsedSelection) {
+                editor.focus();
+                return false;
+            } else {
+                return formatsAndSegments.length > 0;
+            }
         },
         domToModelOptions
     );

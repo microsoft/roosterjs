@@ -1,16 +1,18 @@
-import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { createText } from '../creators/createText';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 
+/**
+ * @internal
+ */
 export function adjustWordSelection(
     model: ContentModelDocument,
     marker: ContentModelSegment
 ): ContentModelSegment[] {
-    const path = [model];
-    let markerBlock: ContentModelBlock = path[0].blocks[0];
+    let markerBlock: ContentModelParagraph | undefined;
 
     iterateSelections([model], (path, tableContext, block, segments) => {
         //Find the block with the selection marker
@@ -20,7 +22,7 @@ export function adjustWordSelection(
         return true;
     });
 
-    if (markerBlock.blockType == 'Paragraph') {
+    if (markerBlock) {
         const segments: ContentModelSegment[] = [];
         let markerSelectionIndex = markerBlock.segments.indexOf(marker);
         for (let i = markerSelectionIndex - 1; i >= 0; i--) {
@@ -80,7 +82,21 @@ export function adjustWordSelection(
 }
 
 const PUNCTUATION_REGEX = /[.,:?!"()\[\]\\/]/gu;
-const SPACES_REGEX = /[\u00A0\u1680​\u180e\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
+const SPACES_REGEX = /[\u1680\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
+/*
+// These are unicode characters from the Category Space Separator (Zs)
+
+\u2000 = EN QUAD
+\u2009 = THIN SPACE
+\u200a = HAIR SPACE
+​\u200b = ZERO WIDTH SPACE
+​\u202f = NARROW NO-BREAK SPACE
+\u205f​ = MEDIUM MATHEMATICAL SPACE
+\u3000 = IDEOGRAPHIC SPACE
+\u1680 = OGHAM SPACE MARK
+
+\u180e = MONGOLIAN VOWEL SEPARATOR
+*/
 
 export function findDelimiter(segment: ContentModelText, moveRightward: boolean): number {
     const word = segment.text;
@@ -122,8 +138,8 @@ function isWordDelimiter(char: string) {
 function isSpace(char: string) {
     return (
         char &&
-        (char.toString() == String.fromCharCode(160) /* &nbsp */ ||
-        char.toString() == String.fromCharCode(32) /* RegularSpace */ ||
+        (char.toString() == String.fromCharCode(160) /* &nbsp | \u00A0*/ ||
+        char.toString() == String.fromCharCode(32) /* RegularSpace \u0020*/ ||
             SPACES_REGEX.test(char))
     );
 }
