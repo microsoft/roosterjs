@@ -6,11 +6,12 @@ describe('setTextColor', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
-        calledTimes: number
+        calledTimes: number,
+        newColor: string | null = 'red'
     ) {
         segmentTestCommon(
             'setTextColor',
-            editor => setTextColor(editor, 'red'),
+            editor => setTextColor(editor, newColor),
             model,
             result,
             calledTimes
@@ -316,6 +317,47 @@ describe('setTextColor', () => {
                 ],
             },
             1
+        );
+    });
+
+    it('Remove existing color', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { textColor: 'green' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            null
         );
     });
 });

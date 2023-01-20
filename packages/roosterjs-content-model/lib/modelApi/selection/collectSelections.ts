@@ -33,7 +33,9 @@ export function getSelectedSegments(
     model: ContentModelDocument,
     includingFormatHolder: boolean
 ): ContentModelSegment[] {
-    const selections = collectSelections(model);
+    const selections = collectSelections(model, {
+        includeListFormatHolder: includingFormatHolder ? 'allSegments' : 'never',
+    });
     const result: ContentModelSegment[] = [];
 
     selections.forEach(({ segments, block }) => {
@@ -49,7 +51,7 @@ export function getSelectedSegments(
  * @internal
  */
 export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[] {
-    const selections = collectSelections(model);
+    const selections = collectSelections(model, { includeListFormatHolder: 'never' });
     const result: ContentModelParagraph[] = [];
 
     removeUnmeaningfulSelections(selections);
@@ -74,7 +76,7 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
 ): OperationalBlocks<T>[] {
     const result: OperationalBlocks<T>[] = [];
     const findSequence = deepFirst ? blockGroupTypes.map(type => [type]) : [blockGroupTypes];
-    const selections = collectSelections(model);
+    const selections = collectSelections(model, { includeListFormatHolder: 'never' });
 
     removeUnmeaningfulSelections(selections);
 
@@ -107,7 +109,7 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
  * @internal
  */
 export function getFirstSelectedTable(model: ContentModelDocument): ContentModelTable | undefined {
-    const selections = collectSelections(model);
+    const selections = collectSelections(model, { includeListFormatHolder: 'never' });
     let table: ContentModelTable | undefined;
 
     removeUnmeaningfulSelections(selections);

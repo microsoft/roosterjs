@@ -1,6 +1,7 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
@@ -8,30 +9,44 @@ import { NodeType } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export function childProcessor(
+export const childProcessor: ElementProcessor<ParentNode> = (
     group: ContentModelBlockGroup,
     parent: ParentNode,
     context: DomToModelContext
-) {
+) => {
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
     let index = 0;
 
     for (let child = parent.firstChild; child; child = child.nextSibling) {
-        handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 
-        if (isNodeOfType(child, NodeType.Element)) {
-            context.elementProcessors.element(group, child, context);
-        } else if (isNodeOfType(child, NodeType.Text)) {
-            context.elementProcessors['#text'](group, child, context);
-        }
+        processChildNode(group, child, context);
 
         index++;
     }
 
-    handleSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+};
+
+/**
+ * @internal
+ */
+export function processChildNode(
+    group: ContentModelBlockGroup,
+    child: Node,
+    context: DomToModelContext
+) {
+    if (isNodeOfType(child, NodeType.Element) && child.style.display != 'none') {
+        context.elementProcessors.element(group, child, context);
+    } else if (isNodeOfType(child, NodeType.Text)) {
+        context.elementProcessors['#text'](group, child, context);
+    }
 }
 
-function handleSelection(
+/**
+ * @internal
+ */
+export function handleRegularSelection(
     index: number,
     context: DomToModelContext,
     group: ContentModelBlockGroup,

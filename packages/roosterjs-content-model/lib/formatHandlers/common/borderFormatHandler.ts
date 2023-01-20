@@ -20,7 +20,7 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
             const value = element.style[key];
 
             if (value) {
-                format[key] = value;
+                format[key] = value == 'none' ? '' : value;
             }
         });
     },

@@ -6,7 +6,7 @@ import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { setCurrentContentModel } from './currentModel';
 import { SidePaneElementProps } from '../SidePaneElement';
 
-export default class ContentModelPlugin extends SidePanePluginImpl<
+export default class ContentModelPanePlugin extends SidePanePluginImpl<
     ContentModelPane,
     ContentModelPaneProps
 > {
@@ -34,7 +34,18 @@ export default class ContentModelPlugin extends SidePanePluginImpl<
     }
 
     onPluginEvent(e: PluginEvent) {
-        if (e.eventType == PluginEventType.Input || e.eventType == PluginEventType.ContentChanged) {
+        if (e.eventType == PluginEventType.ContentChanged && e.source == 'RefreshModel') {
+            this.getComponent(component => {
+                const model = isContentModelEditor(this.editor)
+                    ? this.editor.createContentModel()
+                    : null;
+                component.setContentModel(model);
+                setCurrentContentModel(this.editor, model);
+            });
+        } else if (
+            e.eventType == PluginEventType.Input ||
+            e.eventType == PluginEventType.ContentChanged
+        ) {
             this.onModelChange();
         }
 
