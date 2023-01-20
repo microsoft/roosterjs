@@ -1,9 +1,9 @@
-import { ContentModelBlock } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelBlock';
-import { ContentModelDocument } from 'roosterjs-content-model/lib/publicTypes/group/ContentModelDocument';
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { createText } from '../creators/createText';
-import { iterateSelections } from 'roosterjs-content-model/lib/modelApi/selection/iterateSelections';
+import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 
 export function adjustWordSelection(
     model: ContentModelDocument,
