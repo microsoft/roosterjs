@@ -1,4 +1,4 @@
-import { isCharacterValue, Position, setColor } from 'roosterjs-editor-dom';
+import { isCharacterValue, Position } from 'roosterjs-editor-dom';
 import {
     IEditor,
     Keys,
@@ -140,7 +140,6 @@ export default class PendingFormatStatePlugin
         if (!span && this.editor) {
             const currentStyle = this.editor.getStyleBasedFormatState();
             const doc = this.editor.getDocument();
-            const isDarkMode = this.editor.isDarkMode();
 
             span = doc.createElement('span');
             span.contentEditable = 'true';
@@ -149,22 +148,15 @@ export default class PendingFormatStatePlugin
             span.style.setProperty('font-family', currentStyle.fontName ?? null);
             span.style.setProperty('font-size', currentStyle.fontSize ?? null);
 
-            if (currentStyle.textColors || currentStyle.textColor) {
-                setColor(
-                    span,
-                    (currentStyle.textColors || currentStyle.textColor)!,
-                    false /*isBackground*/,
-                    isDarkMode
-                );
+            const textColor = currentStyle.textColors || currentStyle.textColor;
+            const backColor = currentStyle.backgroundColors || currentStyle.backgroundColor;
+
+            if (textColor) {
+                this.editor.setColorToElement(span, textColor, 'color');
             }
 
-            if (currentStyle.backgroundColors || currentStyle.backgroundColor) {
-                setColor(
-                    span,
-                    (currentStyle.backgroundColors || currentStyle.backgroundColor)!,
-                    true /*isBackground*/,
-                    isDarkMode
-                );
+            if (backColor) {
+                this.editor.setColorToElement(span, backColor, 'background-color');
             }
         }
 

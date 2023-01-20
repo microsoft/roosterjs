@@ -1,29 +1,25 @@
-import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
+import { ModeIndependentColor } from 'roosterjs-editor-types';
 
 const WHITE = '#ffffff';
 const GRAY = '#333333';
 const BLACK = '#000000';
 const TRANSPARENT = 'transparent';
-const enum ColorTones {
-    BRIGHT,
-    DARK,
-    NONE,
-}
+const TEXT_COLOR_FOR_DARK: ModeIndependentColor = {
+    lightModeColor: WHITE,
+    darkModeColor: GRAY,
+};
+const TEXT_COLOR_FOR_LIGHT: ModeIndependentColor = {
+    lightModeColor: BLACK,
+    darkModeColor: WHITE,
+};
 
 //Using the HSL (hue, saturation and lightness) representation for RGB color values, if the value of the lightness is less than 20, the color is dark
 const DARK_COLORS_LIGHTNESS = 20;
 //If the value of the lightness is more than 80, the color is bright
 const BRIGHT_COLORS_LIGHTNESS = 80;
-const TRANSPARENT_COLOR = 'transparent';
 
 /**
- * Set text color or background color to the given element
- * @param element The element to set color to
- * @param color The color to set, it can be a string of color name/value or a ModeIndependentColor object
- * @param isBackgroundColor Whether set background color or text color
- * @param isDarkMode Whether current mode is dark mode. @default false
- * @param shouldAdaptTheFontColor Whether the font color needs to be adapted to be visible in a dark or bright background color. @default false
- * @param defaultFontColor Set the default colors that needs to be set to the to be visible.
+ * @deprecated Use IEditor.setColorToElement() instead
  */
 export default function setColor(
     element: HTMLElement,
@@ -43,19 +39,12 @@ export default function setColor(
                 : modeIndependentColor?.lightModeColor) || colorString
         );
 
-        if (element.dataset) {
-            const dataSetName = isBackgroundColor
-                ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                : DarkModeDatasetNames.OriginalStyleColor;
-            if (!isDarkMode || color == TRANSPARENT_COLOR) {
-                delete element.dataset[dataSetName];
-            } else if (modeIndependentColor) {
-                element.dataset[dataSetName] = modeIndependentColor.lightModeColor;
-            }
-        }
-
         if (isBackgroundColor && shouldAdaptTheFontColor) {
-            adaptFontColorToBackgroundColor(element, isDarkMode);
+            adaptFontColorToBackgroundColor(
+                element,
+                modeIndependentColor?.lightModeColor || colorString,
+                isDarkMode
+            );
         }
     }
 }
@@ -64,47 +53,39 @@ export default function setColor(
  * Change the font color to white or some other color, so the text can be visible with a darker background
  * @param element The element that contains text.
  */
-function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: boolean) {
-    if (element.firstElementChild?.hasAttribute('style')) {
-        return;
-    }
-    const backgroundColor = element.style.getPropertyValue('background-color');
-    const lightModeBackgroundColor =
-        (isDarkMode &&
-            (element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] ||
-                element.dataset[DarkModeDatasetNames.OriginalAttributeBackgroundColor])) ||
-        backgroundColor;
-    if (!lightModeBackgroundColor || lightModeBackgroundColor === TRANSPARENT) {
-        return;
-    }
-    const isADarkOrBrightOrNone = isADarkOrBrightColor(lightModeBackgroundColor!);
-    switch (isADarkOrBrightOrNone) {
-        case ColorTones.DARK:
-            const fontForDark: ModeIndependentColor = {
-                lightModeColor: WHITE,
-                darkModeColor: GRAY,
-            };
-            setColor(element, fontForDark, false /*isBackground*/, isDarkMode);
-            break;
-        case ColorTones.BRIGHT:
-            const fontForLight: ModeIndependentColor = {
-                lightModeColor: BLACK,
-                darkModeColor: WHITE,
-            };
-            setColor(element, fontForLight, false /*isBackground*/, isDarkMode);
-            break;
+function adaptFontColorToBackgroundColor(
+    element: HTMLElement,
+    lightModelBackColor: string,
+    isDarkMode?: boolean
+) {
+    const textColor = getTextColorForBackground(lightModelBackColor);
+
+    if (textColor) {
+        setColor(element, textColor, false /*isBackground*/, isDarkMode);
     }
 }
 
-function isADarkOrBrightColor(color: string): ColorTones {
-    let lightness = calculateLightness(color);
-    if (lightness < DARK_COLORS_LIGHTNESS) {
-        return ColorTones.DARK;
-    } else if (lightness > BRIGHT_COLORS_LIGHTNESS) {
-        return ColorTones.BRIGHT;
+/**
+ * Given a light mode background color, check if it is too bright or too dark, and return a proper text color, or null
+ * @param lightModelBackColor The light mode background color
+ * @returns The suggested text color
+ */
+export function getTextColorForBackground(
+    lightModelBackColor: string
+): ModeIndependentColor | null {
+    if (!lightModelBackColor || lightModelBackColor === TRANSPARENT) {
+        return null;
     }
 
-    return ColorTones.NONE;
+    const lightness = calculateLightness(lightModelBackColor);
+
+    if (lightness < DARK_COLORS_LIGHTNESS) {
+        return TEXT_COLOR_FOR_DARK;
+    } else if (lightness > BRIGHT_COLORS_LIGHTNESS) {
+        return TEXT_COLOR_FOR_LIGHT;
+    } else {
+        return null;
+    }
 }
 
 /**
@@ -136,9 +117,10 @@ function getColorsFromHEX(color: string) {
         color = color.replace(/(.)/g, '$1$1');
     }
     const colors = color.replace('#', '');
-    let r = parseInt(colors.substr(0, 2), 16);
-    let g = parseInt(colors.substr(2, 2), 16);
-    let b = parseInt(colors.substr(4, 2), 16);
+    const r = parseInt(colors.substr(0, 2), 16);
+    const g = parseInt(colors.substr(2, 2), 16);
+    const b = parseInt(colors.substr(4, 2), 16);
+
     return [r, g, b];
 }
 
@@ -146,8 +128,9 @@ function getColorsFromRGB(color: string) {
     const colors = color.match(
         /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
     ) as RegExpMatchArray;
-    let r = parseInt(colors[1]);
-    let g = parseInt(colors[2]);
-    let b = parseInt(colors[3]);
+    const r = parseInt(colors[1]);
+    const g = parseInt(colors[2]);
+    const b = parseInt(colors[3]);
+
     return [r, g, b];
 }

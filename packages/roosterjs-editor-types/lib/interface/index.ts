@@ -90,6 +90,7 @@ export {
     TriggerEvent,
     SelectTable,
     SelectImage,
+    SetColorToElement,
 } from './EditorCore';
 export { default as EditorOptions } from './EditorOptions';
 export {

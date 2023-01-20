@@ -1,6 +1,7 @@
 import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
 import EditorPlugin from './EditorPlugin';
+import ModeIndependentColor from './ModeIndependentColor';
 import NodePosition from './NodePosition';
 import Rect from './Rect';
 import TableSelection from './TableSelection';
@@ -291,6 +292,22 @@ export type SelectImage = (
 ) => ImageSelectionRange | null;
 
 /**
+ * Set color to an HTML Element inside editor. If editor is in dark mode, color will be adjusted according to dark mode.
+ * @param core The EditorCore object
+ * @param element The element to set color to
+ * @param color The color to set
+ * @param cssName Css property name of the color to set
+ * @param isDarkMode Whether set color for dark mode. This value can be different than editor's current color mode
+ */
+export type SetColorToElement = (
+    core: EditorCore,
+    element: HTMLElement,
+    color: string | ModeIndependentColor,
+    cssName: 'background-color' | 'color',
+    isDarkMode: boolean
+) => void;
+
+/**
  * The interface for the map of core API.
  * Editor can call call API from this map under EditorCore object
  */
@@ -466,4 +483,14 @@ export interface CoreApiMap {
      * @returns true if successful
      */
     selectImage: SelectImage;
+
+    /**
+     * Set color to an HTML Element inside editor. If editor is in dark mode, color will be adjusted according to dark mode.
+     * @param core The EditorCore object
+     * @param element The element to set color to
+     * @param color The color to set
+     * @param cssName Css property name of the color to set
+     * @param isDarkMode Whether set color for dark mode. This value can be different than editor's current color mode
+     */
+    setColorToElement: SetColorToElement;
 }

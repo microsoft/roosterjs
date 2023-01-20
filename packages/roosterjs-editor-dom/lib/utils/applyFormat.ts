@@ -1,29 +1,48 @@
 import setColor from './setColor';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { DefaultFormat, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Apply format to an HTML element
  * @param element The HTML element to apply format to
  * @param format The format to apply
  */
+export default function applyFormat(element: HTMLElement, format: DefaultFormat): void;
+
+/**
+ * @deprecated
+ * Apply format to an HTML element
+ * @param element The HTML element to apply format to
+ * @param format The format to apply
+ * @param isDarkMode Whether apply format for dark mode @default false
+ */
 export default function applyFormat(
     element: HTMLElement,
     format: DefaultFormat,
-    isDarkMode?: boolean
+    isDarkMode: boolean
+): void;
+
+/**
+ * Apply format to an HTML element
+ * @param element The HTML element to apply format to
+ * @param format The format to apply
+ * @param editor Editor object
+ */
+export default function applyFormat(
+    element: HTMLElement,
+    format: DefaultFormat,
+    editor: IEditor
+): void;
+
+export default function applyFormat(
+    element: HTMLElement,
+    format: DefaultFormat,
+    editorOrIsDarkMode?: IEditor | boolean
 ) {
     if (format) {
-        let elementStyle = element.style;
-        let {
-            fontFamily,
-            fontSize,
-            textColor,
-            textColors,
-            backgroundColor,
-            backgroundColors,
-            bold,
-            italic,
-            underline,
-        } = format;
+        const elementStyle = element.style;
+        const { fontFamily, fontSize, bold, italic, underline } = format;
+        const textColor = format.textColors || format.textColor;
+        const backColor = format.backgroundColors || format.backgroundColor;
 
         if (fontFamily) {
             elementStyle.fontFamily = fontFamily;
@@ -32,16 +51,20 @@ export default function applyFormat(
             elementStyle.fontSize = fontSize;
         }
 
-        if (textColors) {
-            setColor(element, textColors, false /*isBackground*/, isDarkMode);
-        } else if (textColor) {
-            setColor(element, textColor, false /*isBackground*/, isDarkMode);
-        }
-
-        if (backgroundColors) {
-            setColor(element, backgroundColors, true /*isBackground*/, isDarkMode);
-        } else if (backgroundColor) {
-            setColor(element, backgroundColor, true /*isBackground*/, isDarkMode);
+        if (typeof editorOrIsDarkMode == 'object') {
+            if (textColor) {
+                editorOrIsDarkMode.setColorToElement(element, textColor, 'color');
+            }
+            if (backColor) {
+                editorOrIsDarkMode.setColorToElement(element, backColor, 'background-color');
+            }
+        } else {
+            if (textColor) {
+                setColor(element, textColor, false /*isBackground*/, editorOrIsDarkMode);
+            }
+            if (backColor) {
+                setColor(element, backColor, true /*isBackground*/, editorOrIsDarkMode);
+            }
         }
 
         if (bold) {

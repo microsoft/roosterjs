@@ -1,6 +1,5 @@
 import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
-import { setColor } from 'roosterjs-editor-dom';
 
 /**
  * Set text color at selection
@@ -23,12 +22,7 @@ export default function setTextColor(
         'color',
         (element, isInnerNode) => {
             if (!shouldApplyInlineStyle || shouldApplyInlineStyle(element)) {
-                setColor(
-                    element,
-                    isInnerNode ? '' : color,
-                    false /*isBackground*/,
-                    editor.isDarkMode()
-                );
+                editor.setColorToElement(element, isInnerNode ? '' : color, 'color');
             }
         },
         'setTextColor'

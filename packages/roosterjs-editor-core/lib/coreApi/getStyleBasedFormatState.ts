@@ -1,8 +1,5 @@
-import { DarkModeDatasetNames, EditorCore, GetStyleBasedFormatState } from 'roosterjs-editor-types';
-import { findClosestElementAncestor, getComputedStyles } from 'roosterjs-editor-dom';
-
-const ORIGINAL_STYLE_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.OriginalStyleColor}],[data-${DarkModeDatasetNames.OriginalAttributeColor}]`;
-const ORIGINAL_STYLE_BACK_COLOR_SELECTOR = `[data-${DarkModeDatasetNames.OriginalStyleBackgroundColor}],[data-${DarkModeDatasetNames.OriginalAttributeBackgroundColor}]`;
+import { EditorCore, GetStyleBasedFormatState, ModeIndependentColor } from 'roosterjs-editor-types';
+import { getComputedStyles, processCssVariable } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -31,45 +28,42 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
     }
 
     const styles = node ? getComputedStyles(node) : [];
+    const textColor = processColorVariable(core, override[2] || styles[2]);
+    const backColor = processColorVariable(core, override[3] || styles[3]);
     const isDarkMode = core.lifecycle.isDarkMode;
-    const root = core.contentDiv;
-    const ogTextColorNode =
-        isDarkMode &&
-        (override[2]
-            ? pendableFormatSpan
-            : findClosestElementAncestor(node, root, ORIGINAL_STYLE_COLOR_SELECTOR));
-    const ogBackgroundColorNode =
-        isDarkMode &&
-        (override[3]
-            ? pendableFormatSpan
-            : findClosestElementAncestor(node, root, ORIGINAL_STYLE_BACK_COLOR_SELECTOR));
 
     return {
         fontName: override[0] || styles[0],
         fontSize: override[1] || styles[1],
-        textColor: override[2] || styles[2],
-        backgroundColor: override[3] || styles[3],
-        textColors: ogTextColorNode
-            ? {
-                  darkModeColor: override[2] || styles[2],
-                  lightModeColor:
-                      ogTextColorNode.dataset[DarkModeDatasetNames.OriginalStyleColor] ||
-                      ogTextColorNode.dataset[DarkModeDatasetNames.OriginalAttributeColor] ||
-                      styles[2],
-              }
-            : undefined,
-        backgroundColors: ogBackgroundColorNode
-            ? {
-                  darkModeColor: override[3] || styles[3],
-                  lightModeColor:
-                      ogBackgroundColorNode.dataset[
-                          DarkModeDatasetNames.OriginalStyleBackgroundColor
-                      ] ||
-                      ogBackgroundColorNode.dataset[
-                          DarkModeDatasetNames.OriginalAttributeBackgroundColor
-                      ] ||
-                      styles[3],
-              }
-            : undefined,
+        textColor:
+            isDarkMode && textColor.darkModeColor
+                ? textColor.darkModeColor
+                : textColor.lightModeColor,
+        backgroundColor:
+            isDarkMode && backColor.darkModeColor
+                ? backColor.darkModeColor
+                : backColor.lightModeColor,
+        textColors: textColor.lightModeColor && textColor.darkModeColor ? textColor : undefined,
+        backgroundColors:
+            backColor.lightModeColor && backColor.darkModeColor ? backColor : undefined,
     };
 };
+
+function processColorVariable(core: EditorCore, input: string): ModeIndependentColor {
+    const match = processCssVariable(input);
+
+    if (match) {
+        const darkColor = core.lifecycle.knownDarkColorKeys[match[1]];
+        const lightColor = match[2];
+
+        return {
+            lightModeColor: lightColor,
+            darkModeColor: darkColor,
+        };
+    } else {
+        return {
+            lightModeColor: input,
+            darkModeColor: '',
+        };
+    }
+}

@@ -85,7 +85,28 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
     }
 
     if (formatNode && core.lifecycle.defaultFormat) {
-        applyFormat(formatNode, core.lifecycle.defaultFormat, core.lifecycle.isDarkMode);
+        const defaultFormat = core.lifecycle.defaultFormat;
+
+        // Get a reduced format object to avoid set color using applyFormat since with the "var dark mode solution" this API won't work for colors
+        const reducedFormat = {
+            fontFamily: defaultFormat.fontFamily,
+            fontSize: defaultFormat.fontSize,
+            bold: defaultFormat.bold,
+            italic: defaultFormat.italic,
+            underline: defaultFormat.underline,
+        };
+        const textColor = defaultFormat.textColors || defaultFormat.textColor;
+        const backColor = defaultFormat.backgroundColors || defaultFormat.backgroundColor;
+        const isDarkMode = core.lifecycle.isDarkMode;
+
+        applyFormat(formatNode, reducedFormat);
+
+        if (textColor) {
+            core.api.setColorToElement(core, formatNode, textColor, 'color', isDarkMode);
+        }
+        if (backColor) {
+            core.api.setColorToElement(core, formatNode, backColor, 'background-color', isDarkMode);
+        }
     }
 
     // If this is triggered by a keyboard event, let's select the new position

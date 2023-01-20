@@ -4,6 +4,7 @@ import ContentChangedData from './ContentChangedData';
 import DefaultFormat from './DefaultFormat';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
+import ModeIndependentColor from './ModeIndependentColor';
 import NodePosition from './NodePosition';
 import Rect from './Rect';
 import Region from './Region';
@@ -648,5 +649,17 @@ export default interface IEditor {
      * Retrieves the rect of the visible viewport of the editor.
      */
     getVisibleViewport(): Rect | null;
+
+    /**
+     * Set color to an element. When editor is in dark mode, it will also adjust the color for dark mode
+     * @param element The element to set color to
+     * @param color The color to set
+     * @param cssName Name of Css property name to set
+     */
+    setColorToElement(
+        element: HTMLElement,
+        color: string | ModeIndependentColor,
+        cssName: 'background-color' | 'color'
+    ): void;
     //#endregion
 }

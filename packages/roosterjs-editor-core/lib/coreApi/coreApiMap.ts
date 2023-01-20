@@ -15,6 +15,7 @@ import { restoreUndoSnapshot } from './restoreUndoSnapshot';
 import { selectImage } from './selectImage';
 import { selectRange } from './selectRange';
 import { selectTable } from './selectTable';
+import { setColorToElement } from './setColorToElement';
 import { setContent } from './setContent';
 import { switchShadowEdit } from './switchShadowEdit';
 import { transformColor } from './transformColor';
@@ -44,4 +45,5 @@ export const coreApiMap: CoreApiMap = {
     triggerEvent,
     selectTable,
     selectImage,
+    setColorToElement,
 };

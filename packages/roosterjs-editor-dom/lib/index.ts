@@ -44,7 +44,7 @@ export { default as normalizeRect } from './utils/normalizeRect';
 export { default as safeInstanceOf } from './utils/safeInstanceOf';
 export { default as readFile } from './utils/readFile';
 export { default as getInnerHTML } from './utils/getInnerHTML';
-export { default as setColor } from './utils/setColor';
+export { default as setColor, getTextColorForBackground } from './utils/setColor';
 export { default as matchesSelector } from './utils/matchesSelector';
 export { default as createElement, KnownCreateElementData } from './utils/createElement';
 export { default as moveChildNodes } from './utils/moveChildNodes';
@@ -98,6 +98,7 @@ export { default as HtmlSanitizer } from './htmlSanitizer/HtmlSanitizer';
 export { default as getInheritableStyles } from './htmlSanitizer/getInheritableStyles';
 export { default as createDefaultHtmlSanitizerOptions } from './htmlSanitizer/createDefaultHtmlSanitizerOptions';
 export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitizerCallback';
+export { processCssVariable } from './htmlSanitizer/processCssVariable';
 
 export { default as commitEntity } from './entity/commitEntity';
 export { default as getEntityFromElement } from './entity/getEntityFromElement';

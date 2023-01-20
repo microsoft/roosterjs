@@ -269,7 +269,7 @@ export default class HtmlSanitizer {
             }
 
             if (keep && isCssVariable(value)) {
-                value = processCssVariable(value);
+                value = processCssVariable(value)?.[2] || '';
                 keep = !!value;
             }
 

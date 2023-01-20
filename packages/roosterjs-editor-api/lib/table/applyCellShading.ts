@@ -1,6 +1,10 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
-import { safeInstanceOf, saveTableCellMetadata, setColor } from 'roosterjs-editor-dom';
+import {
+    getTextColorForBackground,
+    safeInstanceOf,
+    saveTableCellMetadata,
+} from 'roosterjs-editor-dom';
 
 /**
  * Set background color of cells.
@@ -15,13 +19,16 @@ export default function applyCellShading(editor: IEditor, color: string | ModeIn
             const regions = editor.getSelectedRegions();
             regions.forEach(region => {
                 if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
-                    setColor(
-                        region.rootNode,
-                        color,
-                        true /* isBackgroundColor */,
-                        editor.isDarkMode(),
-                        true /** shouldAdaptFontColor */
+                    editor.setColorToElement(region.rootNode, color, 'background-color');
+
+                    const textColor = getTextColorForBackground(
+                        typeof color == 'string' ? color : color.lightModeColor
                     );
+
+                    if (textColor) {
+                        editor.setColorToElement(region.rootNode, textColor, 'color');
+                    }
+
                     saveTableCellMetadata(region.rootNode, { bgColorOverride: true });
                 }
             });

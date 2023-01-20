@@ -1,4 +1,4 @@
-import { Browser, getComputedStyles, getObjectKeys, setColor } from 'roosterjs-editor-dom';
+import { Browser, getComputedStyles, getObjectKeys } from 'roosterjs-editor-dom';
 import {
     DefaultFormat,
     DocumentCommand,
@@ -84,9 +84,8 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             ? () => {}
             : () => {
                   const { textColors, backgroundColors } = DARK_MODE_DEFAULT_FORMAT;
-                  const { isDarkMode } = this.state;
-                  setColor(contentDiv, textColors, false /*isBackground*/, isDarkMode);
-                  setColor(contentDiv, backgroundColors, true /*isBackground*/, isDarkMode);
+                  this.editor?.setColorToElement(contentDiv, textColors, 'color');
+                  this.editor?.setColorToElement(contentDiv, backgroundColors, 'background-color');
               };
 
         this.state = {
@@ -101,6 +100,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             shadowEditSelectionPath: null,
             shadowEditTableSelectionPath: null,
             shadowEditImageSelectionPath: null,
+            knownDarkColorKeys: {},
         };
     }
 

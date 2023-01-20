@@ -62,4 +62,9 @@ export default interface LifecyclePluginState {
      * Cached image selection path for original content
      */
     shadowEditImageSelectionPath: SelectionPath[] | null;
+
+    /**
+     * Map from known dark color key to dark color value
+     */
+    knownDarkColorKeys: Record<string, string>;
 }
