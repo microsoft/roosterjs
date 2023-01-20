@@ -17,6 +17,7 @@ const BlockFormatRenders: FormatRenderer<ContentModelBlockFormat>[] = [
     PaddingFormatRenderer,
     LineHeightFormatRenderer,
     WhiteSpaceFormatRenderer,
+    ...BorderFormatRenderers,
 ];
 
 export function BlockFormatView(props: { format: ContentModelSegmentFormat }) {

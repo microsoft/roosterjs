@@ -6,24 +6,19 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  * @param editor The editor to operate on
  * @param textColor The text color to set. Pass null to remove existing color.
  */
-export default function setTextColor(editor: IContentModelEditor, textColor: string | null) {
+export default function setTextColor(
+    editor: IExperimentalContentModelEditor,
+    textColor: string | null
+) {
     formatSegmentWithContentModel(
         editor,
         'setTextColor',
         textColor === null
-            ? (format, _, segment) => {
+            ? format => {
                   delete format.textColor;
-
-                  if (segment?.link) {
-                      delete segment.link.format.textColor;
-                  }
               }
-            : (format, _, segment) => {
+            : format => {
                   format.textColor = textColor;
-
-                  if (segment?.link) {
-                      segment.link.format.textColor = textColor;
-                  }
               },
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/

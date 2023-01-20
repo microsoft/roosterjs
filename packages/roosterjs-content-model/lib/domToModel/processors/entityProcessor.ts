@@ -12,14 +12,22 @@ import { stackFormat } from '../utils/stackFormat';
 export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const entity = getEntityFromElement(element);
 
-    if (entity) {
+    // In Content Model we also treat read only element as an entity since we cannot edit it
+    if (entity || element.contentEditable == 'false') {
+        const { id, type, isReadonly } = entity || {};
         const isBlockEntity = isBlockElement(element, context);
 
         stackFormat(
             context,
             { segment: isBlockEntity ? 'shallowCloneForBlock' : undefined },
             () => {
-                const entityModel = createEntity(entity, context.segmentFormat);
+                const entityModel = createEntity(
+                    element,
+                    context.segmentFormat,
+                    id,
+                    type,
+                    isReadonly
+                );
 
                 if (isBlockEntity) {
                     addBlock(group, entityModel);

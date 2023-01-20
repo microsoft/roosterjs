@@ -26,7 +26,7 @@ export interface IterateSelectionsOption {
      * invoke callback for the table cell itself but not for its content, otherwise keep invoking callback for content.
      * @default include
      */
-    contentUnderSelectedTableCell?: 'include' | 'ignoreForTable' | 'ignoreForTableOrCell';
+    ignoreContentUnderSelectedTableCell?: boolean;
 
     /**
      * Whether call the callback for the list item format holder segment
@@ -62,8 +62,6 @@ export function iterateSelections(
 ): boolean {
     const parent = path[0];
     const includeListFormatHolder = option?.includeListFormatHolder || 'allSegments';
-    const contentUnderSelectedTableCell = option?.contentUnderSelectedTableCell || 'include';
-
     let hasSelectedSegment = false;
     let hasUnselectedSegment = false;
 
@@ -82,7 +80,7 @@ export function iterateSelections(
                 const cells = block.cells;
                 const isWholeTableSelected = cells.every(row => row.every(cell => cell.isSelected));
 
-                if (contentUnderSelectedTableCell != 'include' && isWholeTableSelected) {
+                if (option?.ignoreContentUnderSelectedTableCell && isWholeTableSelected) {
                     if (callback(path, table, block)) {
                         return true;
                     }
@@ -147,6 +145,10 @@ export function iterateSelections(
                     } else {
                         hasUnselectedSegment = true;
                     }
+                }
+
+                if (segments.length > 0 && callback(path, table, block, segments)) {
+                    return true;
                 }
 
                 if (segments.length > 0 && callback(path, table, block, segments)) {

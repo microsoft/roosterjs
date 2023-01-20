@@ -1,4 +1,5 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
+import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
 import { EditorContext } from './context/EditorContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
@@ -117,4 +118,16 @@ export interface IContentModelEditor extends IEditor {
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
+
+    /**
+     * Get current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
+     */
+    getPendingFormat(): ContentModelSegmentFormat | null;
+
+    /**
+     * Set current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
+     */
+    setPendingFormat(format: ContentModelSegmentFormat | null): void;
 }

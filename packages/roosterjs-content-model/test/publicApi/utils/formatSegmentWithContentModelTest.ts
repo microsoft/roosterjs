@@ -24,6 +24,8 @@ describe('formatSegmentWithContentModel', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
+        getPendingFormat = jasmine.createSpy('getPendingFormat');
+        setPendingFormat = jasmine.createSpy('setPendingFormat');
 
         setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
         getPendingFormat = spyOn(pendingFormat, 'getPendingFormat');
@@ -33,8 +35,9 @@ describe('formatSegmentWithContentModel', () => {
             addUndoSnapshot,
             createContentModel: () => model,
             setContentModel,
-            getFocusedPosition: () => null as NodePosition,
-        } as any) as IContentModelEditor;
+            getPendingFormat: getPendingFormat,
+            setPendingFormat: setPendingFormat,
+        } as any) as IExperimentalContentModelEditor;
     });
 
     it('empty doc', () => {
@@ -219,10 +222,6 @@ describe('formatSegmentWithContentModel', () => {
         para.segments.push(marker);
         model.blocks.push(para);
 
-        const mockedPosition = ('Position' as any) as NodePosition;
-
-        editor.getFocusedPosition = () => mockedPosition;
-
         formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -246,14 +245,10 @@ describe('formatSegmentWithContentModel', () => {
         expect(addUndoSnapshot).toHaveBeenCalledTimes(0);
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(
-            editor,
-            {
-                fontSize: '10px',
-                fontFamily: 'test',
-            },
-            mockedPosition
-        );
+        expect(setPendingFormat).toHaveBeenCalledWith({
+            fontSize: '10px',
+            fontFamily: 'test',
+        });
     });
 
     it('With pending format', () => {

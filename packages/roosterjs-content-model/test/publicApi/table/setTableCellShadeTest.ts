@@ -2,12 +2,12 @@ import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import setTableCellShade from '../../../lib/publicApi/table/setTableCellShade';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('setTableCellShade', () => {
-    let editor: IContentModelEditor;
-    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let editor: IExperimentalContentModelEditor;
+    let setContentModel: jasmine.Spy<IExperimentalContentModelEditor['setContentModel']>;
+    let createContentModel: jasmine.Spy<IExperimentalContentModelEditor['createContentModel']>;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
@@ -20,7 +20,7 @@ describe('setTableCellShade', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
-        } as any) as IContentModelEditor;
+        } as any) as IExperimentalContentModelEditor;
     });
 
     function runTest(table: ContentModelTable, expectedTable: ContentModelTable | null) {

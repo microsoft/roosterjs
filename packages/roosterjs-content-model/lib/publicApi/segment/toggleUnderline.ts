@@ -9,12 +9,8 @@ export default function toggleUnderline(editor: IContentModelEditor) {
     formatSegmentWithContentModel(
         editor,
         'toggleUnderline',
-        (format, isTurningOn, segment) => {
+        (format, isTurningOn) => {
             format.underline = !!isTurningOn;
-
-            if (segment?.link) {
-                segment.link.format.underline = !!isTurningOn;
-            }
         },
         format => !!format.underline
     );

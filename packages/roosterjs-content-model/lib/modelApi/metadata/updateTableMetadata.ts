@@ -48,7 +48,7 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
  */
 export function updateTableMetadata(
     table: ContentModelTable,
-    callback: (format: TableMetadataFormat | null) => TableMetadataFormat | null
-) {
-    updateMetadata(table, callback, TableFormatDefinition);
+    callback?: (format: TableMetadataFormat | null) => TableMetadataFormat | null
+): TableMetadataFormat | null {
+    return updateMetadata(table, callback, TableFormatDefinition);
 }

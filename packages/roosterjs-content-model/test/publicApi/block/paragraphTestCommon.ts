@@ -1,5 +1,6 @@
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
+import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 export function paragraphTestCommon(
     apiName: string,
@@ -23,7 +24,9 @@ export function paragraphTestCommon(
         addUndoSnapshot,
         focus: jasmine.createSpy(),
         setContentModel,
-    } as any) as IContentModelEditor;
+        getPendingFormat: (): ContentModelSegmentFormat | null => null,
+        setPendingFormat: () => {},
+    } as any) as IExperimentalContentModelEditor;
 
     executionCallback(editor);
 

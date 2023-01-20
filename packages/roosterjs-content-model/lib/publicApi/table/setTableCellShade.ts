@@ -1,7 +1,7 @@
 import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
 
@@ -10,30 +10,24 @@ import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBa
  * @param editor The editor instance
  * @param color The color to set
  */
-export default function setTableCellShade(editor: IContentModelEditor, color: string) {
+export default function setTableCellShade(editor: IExperimentalContentModelEditor, color: string) {
     formatWithContentModel(editor, 'setTableCellShade', model => {
         const table = getFirstSelectedTable(model);
 
-    if (tableModel?.blockType == 'Table') {
-        normalizeTable(tableModel);
-        setTableCellBackgroundColor(tableModel, color);
-        editor.addUndoSnapshot(
-            () => {
-                editor.focus();
-                if (model && table) {
-                    editor.setContentModel(model, {
-                        doNotReuseEntityDom: true,
-                        mergingCallback: fragment => {
-                            editor.replaceNode(table, fragment);
-                        },
-                    });
-                }
-            },
-            ChangeSource.Format,
-            false /*canUndoByBackspace*/,
-            {
-                formatApiName: 'setTableCellShade',
-            }
-        );
-    }
+        if (table) {
+            normalizeTable(table);
+
+            table.cells.forEach(row =>
+                row.forEach(cell => {
+                    if (hasSelectionInBlockGroup(cell)) {
+                        setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
+                    }
+                })
+            );
+
+            return true;
+        } else {
+            return false;
+        }
+    });
 }

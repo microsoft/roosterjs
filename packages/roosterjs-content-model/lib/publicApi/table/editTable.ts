@@ -4,6 +4,8 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { hasMetadata } from '../../modelApi/metadata/updateMetadata';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
@@ -21,7 +23,10 @@ import { TableOperation } from 'roosterjs-editor-types';
  * @param editor The editor instance
  * @param operation The table operation to apply
  */
-export default function editTable(editor: IContentModelEditor, operation: TableOperation) {
+export default function editTable(
+    editor: IExperimentalContentModelEditor,
+    operation: TableOperation
+) {
     formatWithContentModel(editor, 'editTable', model => {
         const tableModel = getFirstSelectedTable(model);
 
@@ -97,28 +102,5 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
         } else {
             return false;
         }
-
-        normalizeTable(tableModel);
-
-        if (hasMetadata(tableModel)) {
-            applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
-        }
-
-        editor.addUndoSnapshot(
-            () => {
-                editor.focus();
-                if (model && table) {
-                    editor.setContentModel(model, {
-                        doNotReuseEntityDom: true,
-                        mergingCallback: fragment => {
-                            editor.replaceNode(table, fragment);
-                        },
-                    });
-                }
-            },
-            ChangeSource.Format,
-            false /*canUndoByBackspace*/,
-            { formatApiName: 'editTable' }
-        );
-    }
+    });
 }

@@ -6,12 +6,12 @@ import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentMode
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('removeLink', () => {
-    let editor: IContentModelEditor;
-    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let editor: IExperimentalContentModelEditor;
+    let setContentModel: jasmine.Spy<IExperimentalContentModelEditor['setContentModel']>;
+    let createContentModel: jasmine.Spy<IExperimentalContentModelEditor['createContentModel']>;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
@@ -22,7 +22,7 @@ describe('removeLink', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
-        } as any) as IContentModelEditor;
+        } as any) as IExperimentalContentModelEditor;
     });
 
     function runTest(model: ContentModelDocument, expectedModel: ContentModelDocument | null) {
@@ -78,7 +78,7 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                         },
                     ],
@@ -124,7 +124,7 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test1',
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                         },
                         {
@@ -137,7 +137,7 @@ describe('removeLink', () => {
                             segmentType: 'Image',
                             src: 'test',
                             dataset: {},
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                             isSelectedAsImageSelection: false,
                         },
@@ -191,25 +191,25 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test1',
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                         },
                         {
                             segmentType: 'Text',
                             text: 'test2',
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                         },
                         {
                             segmentType: 'Text',
                             text: 'test3',
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                         },
                         {
                             segmentType: 'Text',
                             text: 'test4',
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                         },
                     ],
@@ -258,7 +258,7 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test2',
-                            format: {},
+                            format: { underline: false },
                             isSelected: true,
                         },
                         {

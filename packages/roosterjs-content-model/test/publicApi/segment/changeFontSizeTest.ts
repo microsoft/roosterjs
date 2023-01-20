@@ -355,7 +355,15 @@ describe('changeFontSize', () => {
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
-        } as any) as IContentModelEditor;
+            getPendingFormat: () => <ContentModelDocument | null>null,
+            setPendingFormat: () => {},
+        } as any) as IExperimentalContentModelEditor;
+
+        spyOn(getComputedStyles, 'getComputedStyle').and.callFake(
+            (node: HTMLElement, style: string) => {
+                return node.style.fontSize;
+            }
+        );
 
         changeFontSize(editor, 'increase');
 

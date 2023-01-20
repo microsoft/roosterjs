@@ -6,6 +6,7 @@ import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlug
 import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
+import ExperimentalContentModelEditor from './editor/ExperimentalContentModelEditor';
 import FormatPainterPlugin from './contentModel/plugins/FormatPainterPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
@@ -14,7 +15,7 @@ import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditor, ContentModelPlugin } from 'roosterjs-content-model';
+import { ContentModelPlugin } from 'roosterjs-content-model';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';

@@ -19,6 +19,16 @@ export const handleQuote: ContentModelHandler<ContentModelQuote> = (
         const blockQuote = doc.createElement(QuoteTagName);
         parent.appendChild(blockQuote);
 
+        stackFormat(context, QuoteTagName, () => {
+            applyFormat(blockQuote, context.formatAppliers.block, quote.format, context);
+            applyFormat(
+                blockQuote,
+                context.formatAppliers.segmentOnBlock,
+                quote.quoteSegmentFormat,
+                context
+            );
+        });
+
         context.modelHandlers.blockGroupChildren(doc, blockQuote, quote, context);
     }
 };

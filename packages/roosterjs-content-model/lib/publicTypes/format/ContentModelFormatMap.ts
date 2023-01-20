@@ -1,4 +1,6 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import { ContentModelDividerFormat } from './ContentModelDividerFormat';
+import { ContentModelImageFormat } from './ContentModelImageFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
@@ -26,6 +28,14 @@ export interface ContentModelFormatMap {
      * But some segment format should not be read from block, like background color.
      */
     segmentOnBlock: ContentModelSegmentFormat;
+
+    /**
+     * Format type for segment on table cell.
+     * This is very similar with segmentOnBlock, without 'textColor'. Because we will keep
+     * text color style on table cell to indicate auto calculated segment color when set table cell shade.
+     * Segments can set its own text color to override this value
+     */
+    segmentOnTableCell: ContentModelSegmentFormat;
 
     /**
      * Format type for table
@@ -61,4 +71,9 @@ export interface ContentModelFormatMap {
      * Format type for dataset
      */
     dataset: DatasetFormat;
+
+    /**
+     * Format type for divider
+     */
+    divider: ContentModelDividerFormat;
 }

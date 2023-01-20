@@ -8,7 +8,7 @@ import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
 import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
-import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
+import { updateTableMetadata } from '../metadata/updateTableMetadata';
 
 /**
  * @internal
@@ -19,15 +19,10 @@ export function retrieveModelFormatState(
     formatState: FormatState
 ) {
     let isFirst = true;
-    let firstTableContext: TableSelectionContext | undefined;
 
     iterateSelections(
         [model],
         (path, tableContext, block, segments) => {
-            if (tableContext && !firstTableContext) {
-                firstTableContext = tableContext;
-            }
-
             if (isFirst) {
                 if (block?.blockType == 'Paragraph' && segments?.[0]) {
                     retrieveFormatStateInternal(
@@ -45,16 +40,8 @@ export function retrieveModelFormatState(
             } else {
                 formatState.isMultilineSelection = true;
 
-                if (tableContext && firstTableContext) {
-                    const { table, colIndex, rowIndex } = firstTableContext;
-
-                    if (
-                        tableContext.table == table &&
-                        (tableContext.colIndex != colIndex || tableContext.rowIndex != rowIndex)
-                    ) {
-                        formatState.canMergeTableCell = true;
-                    }
-                }
+                // Return true to stop iteration since we have already got everything we need
+                return true;
             }
         },
         {
@@ -82,8 +69,6 @@ function retrieveFormatStateInternal(
     result.fontSize = format.fontSize;
     result.backgroundColor = format.backgroundColor;
     result.textColor = format.textColor;
-    //TODO: handle block owning segments with different line-heights
-    result.lineHeight = paragraph.format.lineHeight || format.lineHeight;
 
     result.isBold = isBold(format.fontWeight);
     result.isItalic = format.italic;
@@ -114,10 +99,7 @@ function retrieveFormatStateInternal(
     if (tableContext) {
         retrieveTableFormat(tableContext, result);
     }
-
-    // TODO: Support Code block in format state for Content Model
 }
-
 function retrieveTableFormat(tableContext: TableSelectionContext, result: FormatState) {
     const tableFormat = updateTableMetadata(tableContext.table);
 

@@ -1,5 +1,6 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
-import { ChangeSource } from 'roosterjs-editor-types';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
@@ -20,23 +21,9 @@ export default function formatTable(
         if (tableModel) {
             applyTableFormat(tableModel, format, keepCellShade);
 
-        editor.addUndoSnapshot(
-            () => {
-                editor.focus();
-                if (model && table) {
-                    editor.setContentModel(model, {
-                        doNotReuseEntityDom: true,
-                        mergingCallback: fragment => {
-                            editor.replaceNode(table, fragment);
-                        },
-                    });
-                }
-            },
-            ChangeSource.Format,
-            false /*canUndoByBackspace*/,
-            {
-                formatApiName: 'formatTable',
-            }
-        );
-    }
+            return true;
+        } else {
+            return false;
+        }
+    });
 }

@@ -1,10 +1,10 @@
 import { FormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { getFormatState, IContentModelEditor } from 'roosterjs-content-model';
+import { getFormatState, IExperimentalContentModelEditor } from 'roosterjs-content-model';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { LocalizedStrings, RibbonButton, RibbonPlugin, UIUtilities } from 'roosterjs-react';
 
 export class ContentModelRibbonPlugin implements RibbonPlugin {
-    private editor: IContentModelEditor | null = null;
+    private editor: IExperimentalContentModelEditor | null = null;
     private onFormatChanged: ((formatState: FormatState) => void) | null = null;
     private timer = 0;
     private formatState: FormatState | null = null;
@@ -27,7 +27,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
      * Initialize this plugin
      * @param editor The editor instance
      */
-    initialize(editor: IContentModelEditor) {
+    initialize(editor: IExperimentalContentModelEditor) {
         this.editor = editor;
     }
 

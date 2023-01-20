@@ -27,7 +27,7 @@ const BuildInQuoteFormat: ContentModelBlockFormat = {
  * @param segmentFormat @optional Segment format for the content of model
  */
 export default function toggleBlockQuote(
-    editor: IContentModelEditor,
+    editor: IExperimentalContentModelEditor,
     quoteFormat: ContentModelBlockFormat = DefaultQuoteFormat,
     segmentFormat: ContentModelSegmentFormat = DefaultSegmentFormat
 ) {

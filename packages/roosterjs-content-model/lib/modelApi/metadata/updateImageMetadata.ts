@@ -31,7 +31,7 @@ const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetad
  */
 export function updateImageMetadata(
     image: ContentModelImage,
-    callback: (format: ImageMetadataFormat | null) => ImageMetadataFormat | null
-) {
-    updateMetadata(image, callback, ImageMetadataFormatDefinition);
+    callback?: (format: ImageMetadataFormat | null) => ImageMetadataFormat | null
+): ImageMetadataFormat | null {
+    return updateMetadata(image, callback, ImageMetadataFormatDefinition);
 }

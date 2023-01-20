@@ -60,6 +60,7 @@ export function createDomToModelContext(
     }
 
     const range = options?.selectionRange;
+    let selectionRoot: Node | undefined;
 
     switch (range?.type) {
         case SelectionRangeTypes.Normal:

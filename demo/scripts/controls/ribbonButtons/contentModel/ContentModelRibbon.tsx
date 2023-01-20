@@ -1,11 +1,19 @@
 import * as React from 'react';
 import { bulletedListButton } from './bulletedListButton';
+import { clearFormatButton } from './clearFormatButton';
+import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
+import { fontButton } from './fontButton';
+import { fontSizeButton } from './fontSizeButton';
+import { formatPainterButton } from './formatPainterButton';
 import { formatTableButton } from './formatTableButton';
 import { increaseIndentButton } from './increaseIndentButton';
+import { insertImageButton } from './insertImageButton';
+import { insertLinkButton } from './insertLinkButton';
 import { insertTableButton } from './insertTableButton';
 import { listStartNumberButton } from './listStartNumberButton';
 import { numberedListButton } from './numberedListButton';
+import { removeLinkButton } from './removeLinkButton';
 import { Ribbon, RibbonPlugin } from 'roosterjs-react';
 import { setBulletedListStyleButton } from './setBulletedListStyleButton';
 import { setNumberedListStyleButton } from './setNumberedListStyleButton';
@@ -27,13 +35,26 @@ import {
 import { spacingButton } from './spacingButton';
 
 const buttons = [
+    formatPainterButton,
+    boldButton,
+    italicButton,
+    underlineButton,
+    fontButton,
+    fontSizeButton,
+    increaseFontSizeButton,
+    decreaseFontSizeButton,
+    textColorButton,
+    backgroundColorButton,
     bulletedListButton,
     numberedListButton,
     decreaseIndentButton,
     increaseIndentButton,
-    setBulletedListStyleButton,
-    setNumberedListStyleButton,
-    listStartNumberButton,
+    blockQuoteButton,
+    alignLeftButton,
+    alignCenterButton,
+    alignRightButton,
+    insertLinkButton,
+    removeLinkButton,
     insertTableButton,
     insertImageButton,
     superscriptButton,

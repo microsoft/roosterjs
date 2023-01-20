@@ -1,12 +1,14 @@
 import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 
 // Regex matching Uri scheme
@@ -30,7 +32,7 @@ const FTP_REGEX = /^ftp\./i;
  * If not specified and there wasn't a link, the link url will be used as display text.
  */
 export default function insertLink(
-    editor: IContentModelEditor,
+    editor: IExperimentalContentModelEditor,
     link: string,
     anchorTitle?: string,
     displayText?: string,
@@ -45,7 +47,6 @@ export default function insertLink(
                 href: linkData ? linkData.normalizedUrl : applyLinkPrefix(url),
                 anchorTitle,
                 target,
-                underline: true,
             },
         };
 
@@ -54,31 +55,35 @@ export default function insertLink(
             const originalText = segments
                 .map(x => (x.segmentType == 'Text' ? x.text : ''))
                 .join('');
-            const text = displayText || originalText || '';
+            const text = displayText || originalText || (linkData ? linkData.originalUrl : url);
 
-            if (segments.some(x => x.segmentType != 'SelectionMarker') && originalText == text) {
-                segments.forEach(x => {
-                    addLink(x, link);
-                });
-            } else if (
+            if (
                 segments.every(x => x.segmentType == 'SelectionMarker') ||
                 (!!text && text != originalText)
             ) {
-                const segment = createText(
-                    text || (linkData ? linkData.originalUrl : url),
-                    segments[0]?.format
-                );
+                const segment = createText(text, segments[0]?.format);
                 const doc = createContentModelDocument();
 
                 addLink(segment, link);
                 addSegment(doc, segment);
+                updateLinkSegmentFormat(segment.format);
 
                 mergeModel(model, doc);
+            } else if (text == originalText || !text) {
+                segments.forEach(x => {
+                    addLink(x, link);
+                    updateLinkSegmentFormat(x.format);
+                });
             }
 
             return segments.length > 0;
         });
     }
+}
+
+function updateLinkSegmentFormat(format: ContentModelSegmentFormat) {
+    format.underline = true;
+    format.textColor = HyperLinkColorPlaceholder;
 }
 
 // TODO: This is copied from original code. We may need to integrate this logic into matchLink() later.

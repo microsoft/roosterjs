@@ -887,6 +887,109 @@ describe('mergeModel', () => {
         });
     });
 
+    it('table to table, merge table', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell11 = createTableCell();
+        const cell12 = createTableCell();
+        const cell21 = createTableCell();
+        const cell22 = createTableCell();
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell22.blocks.push(para1);
+        table1.cells = [
+            [cell11, cell12],
+            [cell21, cell22],
+        ];
+
+        majorModel.blocks.push(table1);
+
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell();
+        const newCell12 = createTableCell();
+        const newCell21 = createTableCell();
+        const newCell22 = createTableCell();
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell12.blocks.push(newPara1);
+        newTable1.cells = [
+            [newCell11, newCell12],
+            [newCell21, newCell22],
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(majorModel, sourceModel, {
+            mergeTable: true,
+        });
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [cell11, cell12],
+                        [
+                            cell21,
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Table',
+                                        format: {},
+                                        widths: [],
+                                        heights: [],
+                                        dataset: {},
+                                        cells: [
+                                            [newCell11, newCell12],
+                                            [newCell21, newCell22],
+                                        ],
+                                    },
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'SelectionMarker',
+                                                format: {},
+                                                isSelected: true,
+                                            },
+                                            {
+                                                segmentType: 'Br',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    ],
+                    format: {},
+                    widths: [],
+                    heights: [],
+                    dataset: {},
+                },
+            ],
+        });
+    });
+
     it('table to table, merge table 1', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();

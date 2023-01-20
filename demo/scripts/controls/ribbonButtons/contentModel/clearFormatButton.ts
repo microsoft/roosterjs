@@ -1,6 +1,6 @@
+import isContentModelEditor from '../../editor/isContentModelEditor';
 import { clearFormat } from 'roosterjs-content-model';
 import { ClearFormatButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model';
 
 /**
  * "Clear format" button on the format ribbon

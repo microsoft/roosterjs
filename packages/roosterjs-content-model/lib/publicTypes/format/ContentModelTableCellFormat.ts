@@ -3,6 +3,7 @@ import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
 import { DirectionFormat } from './formatParts/DirectionFormat';
 import { PaddingFormat } from './formatParts/PaddingFormat';
+import { TextColorFormat } from './formatParts/TextColorFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import { WordBreakFormat } from '../format/formatParts/WordBreakFormat';
 
@@ -15,4 +16,5 @@ export type ContentModelTableCellFormat = BorderFormat &
     PaddingFormat &
     DirectionFormat &
     VerticalAlignFormat &
-    WordBreakFormat;
+    WordBreakFormat &
+    TextColorFormat;

@@ -1,4 +1,6 @@
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 
 /**
  * @internal

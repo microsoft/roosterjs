@@ -1,6 +1,6 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
  * Bulk apply segment format to all selected content. This is usually used for format painter.
@@ -8,7 +8,7 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  * @param newFormat The segment format to apply
  */
 export default function applySegmentFormat(
-    editor: IContentModelEditor,
+    editor: IExperimentalContentModelEditor,
     newFormat: ContentModelSegmentFormat
 ) {
     formatSegmentWithContentModel(

@@ -1,4 +1,3 @@
-import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import getFormatState from '../../../lib/publicApi/format/getFormatState';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
@@ -10,8 +9,8 @@ import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeCon
 
 import {
     DomToModelOption,
-    IContentModelEditor,
-} from '../../../lib/publicTypes/IContentModelEditor';
+    IExperimentalContentModelEditor,
+} from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 const selectedNodeId = 'Selected';
 
@@ -33,7 +32,8 @@ describe('getFormatState', () => {
             }),
             isDarkMode: () => false,
             getZoomScale: () => 1,
-            createContentModel: (options: DomToModelOption) => {
+            getPendingFormat: () => pendingFormat,
+            createContentModel: (root: Node, options: DomToModelOption) => {
                 const model = createContentModelDocument();
                 const editorDiv = document.createElement('div');
 
@@ -54,10 +54,7 @@ describe('getFormatState', () => {
 
                 return model;
             },
-        } as any) as IContentModelEditor;
-
-        spyOn(getPendingFormat, 'getPendingFormat').and.returnValue(pendingFormat);
-
+        } as any) as IExperimentalContentModelEditor;
         const result = getFormatState(editor);
 
         expect(retrieveModelFormatState.retrieveModelFormatState).toHaveBeenCalledTimes(1);

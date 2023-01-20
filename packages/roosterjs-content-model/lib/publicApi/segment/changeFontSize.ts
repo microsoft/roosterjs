@@ -1,4 +1,6 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { FontSizeFormat } from '../../publicTypes/format/formatParts/FontSizeFormat';
+import { FormatParser } from '../../publicTypes/context/DomToModelSettings';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
@@ -37,8 +39,15 @@ function changeFontSizeInternal(
     if (format.fontSize) {
         let sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');
 
-        if (sizeInPt > 0) {
-            const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, FONT_SIZES);
+function changeFontSizeInternal(
+    format: ContentModelSegmentFormat,
+    change: 'increase' | 'decrease'
+) {
+    if (format.fontSize) {
+        let sizeNumber = parseFloat(format.fontSize);
+
+        if (sizeNumber > 0) {
+            const newSize = getNewFontSize(sizeNumber, change == 'increase' ? 1 : -1, FONT_SIZES);
 
             format.fontSize = newSize + 'pt';
         }

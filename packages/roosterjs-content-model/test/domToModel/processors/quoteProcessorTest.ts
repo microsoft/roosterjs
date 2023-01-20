@@ -43,10 +43,23 @@ describe('quoteProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'General',
-                    blocks: [],
-                    element: quote,
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginTop: '1px',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {
+                        marginRight: '40px',
+                        marginLeft: '40px',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
                     format: {},
                 },
             ],
@@ -68,10 +81,24 @@ describe('quoteProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'General',
-                    blocks: [],
-                    element: quote,
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                textColor: 'red',
+                            },
+                            text: 'test',
+                        },
+                    ],
+                    format: {
+                        marginRight: '40px',
+                        marginLeft: '40px',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
                     format: {},
                 },
             ],

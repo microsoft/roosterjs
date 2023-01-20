@@ -97,6 +97,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            selectionRootNode: mockNode,
             ...contextOptions,
         });
     });
@@ -108,7 +109,7 @@ describe('createDomToModelContext', () => {
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [],
                 areAllCollapsed: false,
-                table: 'TABLE' as any,
+                table: mockTable,
                 coordinates: {
                     firstCell: { x: 1, y: 2 },
                     lastCell: { x: 3, y: 4 },
@@ -131,6 +132,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            selectionRootNode: mockTable,
             ...contextOptions,
         });
     });
@@ -160,74 +162,6 @@ describe('createDomToModelContext', () => {
             },
             listFormat,
             selectionRootNode: mockImage,
-            ...contextOptions,
-        });
-    });
-
-    it('with base parameters and wrong selection 1', () => {
-        const getDarkColor = () => '';
-
-        const context = createDomToModelContext(
-            {
-                isDarkMode: true,
-                getDarkColor,
-            },
-            {
-                selectionRange: {
-                    type: SelectionRangeTypes.Normal,
-                    ranges: [],
-                    areAllCollapsed: true,
-                },
-            }
-        );
-
-        expect(context).toEqual({
-            isDarkMode: true,
-            getDarkColor: getDarkColor,
-            isInSelection: false,
-            blockFormat: {},
-            zoomScaleFormat: {},
-            segmentFormat: {},
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
-            ...contextOptions,
-        });
-    });
-
-    it('with base parameters and wrong selection 2', () => {
-        const getDarkColor = () => '';
-
-        const context = createDomToModelContext(
-            {
-                isDarkMode: true,
-                getDarkColor,
-            },
-            {
-                selectionRange: {
-                    type: SelectionRangeTypes.TableSelection,
-                    ranges: [],
-                    areAllCollapsed: false,
-                    table: null!,
-                    coordinates: null!,
-                },
-            }
-        );
-
-        expect(context).toEqual({
-            isDarkMode: true,
-            getDarkColor: getDarkColor,
-            isInSelection: false,
-            blockFormat: {},
-            zoomScaleFormat: {},
-            segmentFormat: {},
-            link: {
-                format: {},
-                dataset: {},
-            },
-            listFormat,
             ...contextOptions,
         });
     });

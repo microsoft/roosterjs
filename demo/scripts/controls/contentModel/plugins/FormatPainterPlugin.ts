@@ -3,7 +3,7 @@ import {
     applySegmentFormat,
     ContentModelSegmentFormat,
     getSegmentFormat,
-    IContentModelEditor,
+    IExperimentalContentModelEditor,
 } from 'roosterjs-content-model';
 
 const FORMATPAINTERCURSOR_SVG = require('./formatpaintercursor.svg');
@@ -15,14 +15,14 @@ interface FormatPainterFormatHolder {
 }
 
 export default class FormatPainterPlugin implements EditorPlugin {
-    private editor: IContentModelEditor | null = null;
+    private editor: IExperimentalContentModelEditor | null = null;
 
     getName() {
         return 'FormatPainter';
     }
 
     initialize(editor: IEditor) {
-        this.editor = editor as IContentModelEditor;
+        this.editor = editor as IExperimentalContentModelEditor;
     }
 
     dispose() {
@@ -42,7 +42,7 @@ export default class FormatPainterPlugin implements EditorPlugin {
         }
     }
 
-    static startFormatPainter(editor: IContentModelEditor) {
+    static startFormatPainter(editor: IExperimentalContentModelEditor) {
         const formatHolder = getFormatHolder(editor);
         const format = getSegmentFormat(editor);
 

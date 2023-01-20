@@ -3,9 +3,10 @@ import { createContentModelDocument } from '../../modelApi/creators/createConten
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
+import { setSelection } from '../../modelApi/selection/setSelection';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**
@@ -39,17 +40,6 @@ export default function insertTable(
             setSelection(model, marker);
         }
 
-    editor.addUndoSnapshot(
-        () => {
-            editor.setContentModel(doc, {
-                doNotReuseEntityDom: true,
-                mergingCallback: fragment => {
-                    editor.insertNode(fragment);
-                },
-            });
-        },
-        ChangeSource.Format,
-        false /*canUndoByBackspace*/,
-        { formatApiName: 'insertTable' }
-    );
+        return true;
+    });
 }

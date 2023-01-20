@@ -3,11 +3,11 @@ import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWith
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
 import clearFormat from '../../../lib/publicApi/format/clearFormat';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('clearFormat', () => {
     it('Clear format', () => {
-        const editor = ({} as any) as IContentModelEditor;
+        const editor = ({} as any) as IExperimentalContentModelEditor;
         const model = ('Model' as any) as ContentModelDocument;
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
