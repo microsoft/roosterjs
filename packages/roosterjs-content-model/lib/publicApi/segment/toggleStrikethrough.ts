@@ -9,9 +9,9 @@ export default function toggleStrikethrough(editor: IExperimentalContentModelEdi
     formatSegmentWithContentModel(
         editor,
         'toggleStrikethrough',
-        (segment, isTurningOn) => {
-            segment.format.strikethrough = !!isTurningOn;
+        (format, isTurningOn) => {
+            format.strikethrough = !!isTurningOn;
         },
-        segment => !!segment.format.strikethrough
+        format => !!format.strikethrough
     );
 }

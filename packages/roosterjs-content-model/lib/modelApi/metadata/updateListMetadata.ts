@@ -31,7 +31,7 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListMetadataFormat>(
  */
 export function updateListMetadata(
     list: ContentModelWithDataset<ListMetadataFormat>,
-    callback: (format: ListMetadataFormat | null) => ListMetadataFormat | null
-) {
-    updateMetadata(list, callback, ListStyleDefinitionMetadata);
+    callback?: (format: ListMetadataFormat | null) => ListMetadataFormat | null
+): ListMetadataFormat | null {
+    return updateMetadata(list, callback, ListStyleDefinitionMetadata);
 }

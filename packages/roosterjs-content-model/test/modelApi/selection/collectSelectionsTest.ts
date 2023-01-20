@@ -39,6 +39,8 @@ describe('getSelectedSegments', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getSelectedSegments(null!, includingFormatHolder);
@@ -169,6 +171,8 @@ describe('getSelectedParagraphs', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getSelectedParagraphs(null!);
@@ -332,6 +336,8 @@ describe('getFirstSelectedTable', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getFirstSelectedTable(null!);
@@ -354,6 +360,7 @@ describe('getFirstSelectedTable', () => {
                         table: table,
                         colIndex: 0,
                         rowIndex: 0,
+                        isWholeTableSelected: false,
                     },
                 },
             ],
@@ -388,6 +395,7 @@ describe('getFirstSelectedTable', () => {
                         table: table2,
                         rowIndex: 0,
                         colIndex: 0,
+                        isWholeTableSelected: false,
                     },
                 },
             ],
@@ -426,6 +434,7 @@ describe('getFirstSelectedTable', () => {
                         table: table1,
                         rowIndex: 0,
                         colIndex: 0,
+                        isWholeTableSelected: false,
                     },
                 },
                 {
@@ -434,6 +443,7 @@ describe('getFirstSelectedTable', () => {
                         table: table2,
                         rowIndex: 0,
                         colIndex: 0,
+                        isWholeTableSelected: false,
                     },
                 },
             ],
@@ -581,6 +591,8 @@ describe('getOperationalBlocks', () => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
             });
+
+            return false;
         });
 
         const result = getOperationalBlocks(null!, blockGroupTypes, stopTypes, deepFirst);

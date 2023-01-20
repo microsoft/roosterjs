@@ -1,5 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelQuoteFormat } from '../../publicTypes/format/ContentModelQuoteFormat';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createQuote } from '../../modelApi/creators/createQuote';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
@@ -20,10 +20,10 @@ export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, elemen
                 segment: 'shallowCloneForBlock',
             },
             () => {
-                const quoteFormat: ContentModelQuoteFormat = {};
+                const quoteFormat: ContentModelBlockFormat = {};
                 const segmentFormat: ContentModelSegmentFormat = {};
 
-                parseFormat(element, context.formatParsers.quote, quoteFormat, context);
+                parseFormat(element, context.formatParsers.block, quoteFormat, context);
                 parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
 
                 const quote = createQuote(quoteFormat, segmentFormat);
