@@ -57,6 +57,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     private initializer: (() => void) | null = null;
     private disposer: (() => void) | null = null;
     private adjustColor: () => void;
+    private cleanUpDarkColor: () => void;
 
     /**
      * Construct a new instance of LifecyclePlugin
@@ -87,6 +88,12 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                   this.editor?.setColorToElement(contentDiv, textColors, 'color');
                   this.editor?.setColorToElement(contentDiv, backgroundColors, 'background-color');
               };
+        this.cleanUpDarkColor = () => {
+            getObjectKeys(this.state.knownDarkColors).forEach(key => {
+                contentDiv.style.removeProperty(key);
+            });
+            this.state.knownDarkColors = {};
+        };
 
         this.state = {
             customData: {},
@@ -182,6 +189,8 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
             this.recalculateDefaultFormat();
             this.adjustColor();
+        } else if (event.eventType == PluginEventType.BeforeDispose) {
+            this.cleanUpDarkColor();
         }
     }
 
