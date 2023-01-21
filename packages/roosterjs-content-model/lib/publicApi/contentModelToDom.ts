@@ -24,13 +24,19 @@ import {
  * 1. Document Fragment that contains the DOM tree generated from the given model
  * 2. A SelectionRangeEx object that contains selection info from the model if any, or null
  * 3. An array entity DOM wrapper and its placeholder node pair for reusable root level entities.
+ * 4. New {color key => light color value} map that need editor to handle them and add CSS variables to content DIV
  */
 export default function contentModelToDom(
     doc: Document,
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null, Record<string, HTMLElement>] {
+): [
+    DocumentFragment,
+    SelectionRangeEx | null,
+    Record<string, HTMLElement>,
+    Record<string, string>
+] {
     const fragment = doc.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
@@ -41,7 +47,7 @@ export default function contentModelToDom(
 
     fragment.normalize();
 
-    return [fragment, range, modelToDomContext.entities];
+    return [fragment, range, modelToDomContext.entities, modelToDomContext.newDarkColors];
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {

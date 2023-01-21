@@ -98,7 +98,6 @@ export { default as HtmlSanitizer } from './htmlSanitizer/HtmlSanitizer';
 export { default as getInheritableStyles } from './htmlSanitizer/getInheritableStyles';
 export { default as createDefaultHtmlSanitizerOptions } from './htmlSanitizer/createDefaultHtmlSanitizerOptions';
 export { default as chainSanitizerCallback } from './htmlSanitizer/chainSanitizerCallback';
-export { processCssVariable } from './htmlSanitizer/processCssVariable';
 
 export { default as commitEntity } from './entity/commitEntity';
 export { default as getEntityFromElement } from './entity/getEntityFromElement';
@@ -120,6 +119,11 @@ export { default as setStyles } from './style/setStyles';
 export { default as removeImportantStyleRule } from './style/removeImportantStyleRule';
 export { default as setGlobalCssStyles } from './style/setGlobalCssStyles';
 export { default as removeGlobalCssStyle } from './style/removeGlobalCssStyle';
+export {
+    processCssVariable,
+    createCssVariable,
+    createCssVariableKey,
+} from './style/processCssVariable';
 
 export { default as adjustInsertPosition } from './edit/adjustInsertPosition';
 export { default as deleteSelectedContent } from './edit/deleteSelectedContent';

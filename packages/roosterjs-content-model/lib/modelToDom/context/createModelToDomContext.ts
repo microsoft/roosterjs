@@ -48,6 +48,7 @@ export function createModelToDomContext(
             ...(options?.defaultImplicitFormatOverride || {}),
         },
         entities: {},
+        newDarkColors: {},
 
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,

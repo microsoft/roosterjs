@@ -12,6 +12,7 @@ import {
 } from 'roosterjs-content-model';
 import {
     getComputedStyles,
+    getObjectKeys,
     Position,
     restoreContentWithEntityPlaceholder,
 } from 'roosterjs-editor-dom';
@@ -23,7 +24,6 @@ import {
  */
 export default class ExperimentalContentModelEditor extends Editor
     implements IExperimentalContentModelEditor {
-    private getDarkColor: ((lightColor: string) => string) | undefined;
     private pendingFormat: ContentModelSegmentFormat | null = null;
 
     /**
@@ -33,7 +33,6 @@ export default class ExperimentalContentModelEditor extends Editor
      */
     constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
         super(contentDiv, options);
-        this.getDarkColor = options?.getDarkColor;
     }
 
     /**
@@ -44,7 +43,6 @@ export default class ExperimentalContentModelEditor extends Editor
             isDarkMode: this.isDarkMode(),
             zoomScale: this.getZoomScale(),
             isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
-            getDarkColor: this.getDarkColor,
         };
     }
 
@@ -70,7 +68,7 @@ export default class ExperimentalContentModelEditor extends Editor
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
-        const [fragment, range, entityPairs] = contentModelToDom(
+        const [fragment, range, entityPairs, newDarkColors] = contentModelToDom(
             this.getDocument(),
             model,
             this.createEditorContext(),
@@ -88,6 +86,23 @@ export default class ExperimentalContentModelEditor extends Editor
         } else {
             mergingCallback(fragment, this.contentDiv, entityPairs);
             this.select(range);
+        }
+
+        if (this.isDarkMode()) {
+            const {
+                contentDiv,
+                lifecycle: { knownDarkColors, getDarkColor },
+            } = this.core;
+
+            getObjectKeys(newDarkColors).forEach(key => {
+                if (!knownDarkColors[key]) {
+                    const lightColor = newDarkColors[key];
+                    const darkColor = getDarkColor(lightColor);
+
+                    contentDiv.style.setProperty(key, darkColor);
+                    knownDarkColors[key] = darkColor;
+                }
+            });
         }
     }
 

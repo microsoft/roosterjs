@@ -1,5 +1,10 @@
-import { EditorCore, GetStyleBasedFormatState, ModeIndependentColor } from 'roosterjs-editor-types';
-import { getComputedStyles, processCssVariable } from 'roosterjs-editor-dom';
+import { contains, getComputedStyles, processCssVariable } from 'roosterjs-editor-dom';
+import {
+    EditorCore,
+    GetStyleBasedFormatState,
+    ModeIndependentColor,
+    NodeType,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -27,7 +32,20 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
         ];
     }
 
-    const styles = node ? getComputedStyles(node) : [];
+    const styles = node ? getComputedStyles(node, ['font-family', 'font-size']) : [];
+
+    if (core.lifecycle.isDarkMode) {
+        while (node && contains(core.contentDiv, node) && !(styles[2] && styles[3])) {
+            if (node.nodeType == NodeType.Element) {
+                const element = node as HTMLElement;
+
+                styles[2] = styles[2] || element.style.getPropertyValue('color');
+                styles[3] = styles[3] || element.style.getPropertyValue('background-color');
+            }
+            node = node.parentNode;
+        }
+    }
+
     const textColor = processColorVariable(core, override[2] || styles[2]);
     const backColor = processColorVariable(core, override[3] || styles[3]);
     const isDarkMode = core.lifecycle.isDarkMode;
@@ -53,7 +71,7 @@ function processColorVariable(core: EditorCore, input: string): ModeIndependentC
     const match = processCssVariable(input);
 
     if (match) {
-        const darkColor = core.lifecycle.knownDarkColorKeys[match[1]];
+        const darkColor = core.lifecycle.knownDarkColors[match[1]];
         const lightColor = match[2];
 
         return {

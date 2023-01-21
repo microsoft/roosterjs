@@ -13,6 +13,14 @@ export function processCssVariable(value: string): RegExpExecArray | null {
     return VARIABLE_REGEX.exec(value);
 }
 
+export function createCssVariable(key: string, value: string): string {
+    return `var(${key},${value})`;
+}
+
+export function createCssVariableKey(value: string, prefix: string): string {
+    return `--${prefix}${value.replace(/[^\d\w]/g, '_')}`;
+}
+
 /**
  * @internal
  */

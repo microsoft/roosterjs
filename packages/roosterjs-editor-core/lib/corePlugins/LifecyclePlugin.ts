@@ -100,7 +100,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             shadowEditSelectionPath: null,
             shadowEditTableSelectionPath: null,
             shadowEditImageSelectionPath: null,
-            knownDarkColorKeys: {},
+            knownDarkColors: {},
         };
     }
 

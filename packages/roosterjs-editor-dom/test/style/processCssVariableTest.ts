@@ -1,4 +1,4 @@
-import { isCssVariable, processCssVariable } from '../../lib/htmlSanitizer/processCssVariable';
+import { isCssVariable, processCssVariable } from '../../lib/style/processCssVariable';
 
 describe('processCssVariable', () => {
     it('no var', () => {

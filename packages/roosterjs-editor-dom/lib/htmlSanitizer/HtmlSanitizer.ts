@@ -8,7 +8,7 @@ import safeInstanceOf from '../utils/safeInstanceOf';
 import setStyles from '../style/setStyles';
 import toArray from '../jsUtils/toArray';
 import { cloneObject } from './cloneObject';
-import { isCssVariable, processCssVariable } from './processCssVariable';
+import { isCssVariable, processCssVariable } from '../style/processCssVariable';
 import {
     getAllowedAttributes,
     getAllowedCssClassesRegex,

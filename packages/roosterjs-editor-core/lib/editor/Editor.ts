@@ -78,7 +78,7 @@ import type {
  * RoosterJs core editor class
  */
 export default class Editor implements IEditor {
-    private core: EditorCore | null = null;
+    protected core: EditorCore | null = null;
 
     //#region Lifecycle
 

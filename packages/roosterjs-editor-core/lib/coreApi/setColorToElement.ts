@@ -1,7 +1,7 @@
-import { processCssVariable } from 'roosterjs-editor-dom';
+import { createCssVariable, createCssVariableKey, processCssVariable } from 'roosterjs-editor-dom';
 import { SetColorToElement } from 'roosterjs-editor-types';
 
-const ColorNamePrefix = '--darkColor_';
+const ColorNamePrefix = 'darkColor_';
 
 /**
  * @internal
@@ -24,14 +24,15 @@ export const setColorToElement: SetColorToElement = (core, element, color, cssNa
 
     if (lightColor) {
         const {
-            lifecycle: { getDarkColor, knownDarkColorKeys },
+            lifecycle: { getDarkColor, knownDarkColors: knownDarkColorKeys },
             contentDiv,
         } = core;
 
-        colorKey = isDarkMode ? ColorNamePrefix + lightColor.replace(/[^\d\w]/g, '_') : null;
-        const colorValue = isDarkMode ? `var(${colorKey},${lightColor})` : lightColor;
-
-        element.style.setProperty(cssName, colorValue);
+        colorKey = isDarkMode ? createCssVariableKey(lightColor, ColorNamePrefix) : null;
+        element.style.setProperty(
+            cssName,
+            colorKey ? createCssVariable(colorKey, lightColor) : lightColor
+        );
 
         if (colorKey && !knownDarkColorKeys[colorKey]) {
             const darkColor = typeof color == 'string' ? getDarkColor(color) : color.darkModeColor;

@@ -66,5 +66,5 @@ export default interface LifecyclePluginState {
     /**
      * Map from known dark color key to dark color value
      */
-    knownDarkColorKeys: Record<string, string>;
+    knownDarkColors: Record<string, string>;
 }

@@ -40,4 +40,9 @@ export interface ModelToDomFormatContext {
      * Existing format implicitly applied from parent element
      */
     implicitFormat: ContentModelSegmentFormat & ContentModelBlockFormat;
+
+    /**
+     * New dark color that need to be added into editor DIV CSS variables
+     */
+    newDarkColors: Record<string, string>;
 }

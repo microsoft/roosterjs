@@ -7,8 +7,7 @@ import { TextColorFormat } from '../../publicTypes/format/formatParts/TextColorF
  */
 export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
     parse: (format, element, context, defaultStyle) => {
-        const textColor =
-            getColor(element, false /*isBackground*/, context.isDarkMode) || defaultStyle.color;
+        const textColor = getColor(element, false /*isBackground*/) || defaultStyle.color;
 
         if (textColor && textColor != 'inherit') {
             format.textColor = textColor;
@@ -23,7 +22,7 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
                 format.textColor,
                 false /*isBackground*/,
                 context.isDarkMode,
-                context.getDarkColor
+                context.newDarkColors
             );
         }
     },

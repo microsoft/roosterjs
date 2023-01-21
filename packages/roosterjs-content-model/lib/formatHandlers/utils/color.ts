@@ -1,36 +1,17 @@
-import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
+import { createCssVariable, createCssVariableKey, processCssVariable } from 'roosterjs-editor-dom';
+
+const ColorNamePrefix = 'darkColor_';
 
 /**
  * @internal
  */
-export function getColor(
-    element: HTMLElement,
-    isBackground: boolean,
-    isDarkMode: boolean
-): string | undefined {
-    let color: string | undefined;
-    if (isDarkMode) {
-        color =
-            element.dataset[
-                isBackground
-                    ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                    : DarkModeDatasetNames.OriginalStyleColor
-            ] ||
-            element.dataset[
-                isBackground
-                    ? DarkModeDatasetNames.OriginalAttributeBackgroundColor
-                    : DarkModeDatasetNames.OriginalAttributeColor
-            ];
-    }
+export function getColor(element: HTMLElement, isBackground: boolean): string | undefined {
+    const color =
+        element.style.getPropertyValue(isBackground ? 'background-color' : 'color') ||
+        element.getAttribute(isBackground ? 'bgcolor' : 'color');
+    const match = color ? processCssVariable(color) : null;
 
-    if (!color) {
-        color =
-            (isBackground ? element.style.backgroundColor : element.style.color) ||
-            element.getAttribute(isBackground ? 'bgcolor' : 'color') ||
-            undefined;
-    }
-
-    return color;
+    return (match ? match[2] : color) || undefined;
 }
 
 /**
@@ -38,29 +19,17 @@ export function getColor(
  */
 export function setColor(
     element: HTMLElement,
-    color: string | ModeIndependentColor,
+    color: string,
     isBackground: boolean,
     isDarkMode: boolean,
-    getDarkColor?: (color: string) => string
+    newDarkColors: Record<string, string>
 ) {
-    const originalColor = typeof color === 'object' ? color.lightModeColor : color;
-    const effectiveColor = isDarkMode
-        ? typeof color === 'object'
-            ? color.darkModeColor
-            : getDarkColor?.(color) || color
-        : originalColor;
+    if (isDarkMode) {
+        const colorKey = createCssVariableKey(color, ColorNamePrefix);
 
-    if (isDarkMode && originalColor) {
-        element.dataset[
-            isBackground
-                ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                : DarkModeDatasetNames.OriginalStyleColor
-        ] = originalColor;
+        newDarkColors[colorKey] = color;
+        color = createCssVariable(colorKey, color);
     }
 
-    if (isBackground) {
-        element.style.backgroundColor = effectiveColor;
-    } else {
-        element.style.color = effectiveColor;
-    }
+    element.style.setProperty(isBackground ? 'background-color' : 'color', color);
 }
