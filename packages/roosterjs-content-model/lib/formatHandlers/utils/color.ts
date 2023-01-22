@@ -24,12 +24,14 @@ export function setColor(
     isDarkMode: boolean,
     newDarkColors: Record<string, string>
 ) {
-    if (isDarkMode) {
+    if (isDarkMode && color) {
         const colorKey = createCssVariableKey(color, ColorNamePrefix);
 
         newDarkColors[colorKey] = color;
         color = createCssVariable(colorKey, color);
     }
 
-    element.style.setProperty(isBackground ? 'background-color' : 'color', color);
+    if (color) {
+        element.style.setProperty(isBackground ? 'background-color' : 'color', color);
+    }
 }

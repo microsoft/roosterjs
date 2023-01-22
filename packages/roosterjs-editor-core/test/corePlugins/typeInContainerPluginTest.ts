@@ -171,7 +171,7 @@ describe('TypeInContainerPlugin', () => {
         expect(select.calls.argsFor(0)[0].offset).toBe(0);
         expect(runAsync).not.toHaveBeenCalled();
         expect(collapseToSingleElement).toHaveBeenCalled();
-        expect(dom.applyFormat).toHaveBeenCalledWith(targetDiv, defaultFormat, false);
+        expect(dom.applyFormat).toHaveBeenCalledWith(targetDiv, defaultFormat, null!);
     });
 
     xit('key press event for expanded selection out of editor', () => {
@@ -207,7 +207,7 @@ describe('TypeInContainerPlugin', () => {
         expect(select.calls.argsFor(0)[0].offset).toBe(0);
         expect(runAsync).toHaveBeenCalled();
         expect(collapseToSingleElement).toHaveBeenCalled();
-        expect(dom.applyFormat).toHaveBeenCalledWith(targetDiv, defaultFormat, false);
+        expect(dom.applyFormat).toHaveBeenCalledWith(targetDiv, defaultFormat, null!);
     });
 
     xit('key press event and no block element', () => {

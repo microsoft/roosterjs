@@ -52,39 +52,6 @@ describe('textColorFormatHandler.parse', () => {
         expect(format.textColor).toBe('red');
     });
 
-    it('Dark mode color with ogsb', () => {
-        context.isDarkMode = true;
-        div.style.color = 'red';
-        div.dataset.ogsc = 'blue';
-        div.dataset.ogsb = 'green';
-
-        textColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.textColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogab', () => {
-        context.isDarkMode = true;
-        div.style.color = 'red';
-        div.dataset.ogac = 'blue';
-        div.dataset.ogab = 'green';
-
-        textColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.textColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogsb and ogab', () => {
-        context.isDarkMode = true;
-        div.style.color = 'red';
-        div.dataset.ogac = 'blue';
-        div.dataset.ogsc = 'green';
-
-        textColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.textColor).toBe('green');
-    });
-
     it('Color from element overwrite default style', () => {
         div.style.color = 'red';
 
@@ -149,11 +116,10 @@ describe('textColorFormatHandler.apply', () => {
     it('Simple color in dark mode', () => {
         format.textColor = 'red';
         context.isDarkMode = true;
-        context.getDarkColor = () => 'green';
 
         textColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe('<div data-ogsc="red" style="color: green;"></div>');
+        expect(div.outerHTML).toBe('<div style="color: var(--darkColor_red,red);"></div>');
     });
 
     it('HyperLink without color', () => {

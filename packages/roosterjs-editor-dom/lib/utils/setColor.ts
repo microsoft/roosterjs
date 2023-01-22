@@ -128,9 +128,8 @@ function getColorsFromRGB(color: string) {
     const colors = color.match(
         /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
     ) as RegExpMatchArray;
-    const r = parseInt(colors[1]);
-    const g = parseInt(colors[2]);
-    const b = parseInt(colors[3]);
 
-    return [r, g, b];
+    return colors
+        ? [parseInt(colors[1]), parseInt(colors[2]), parseInt(colors[3])]
+        : [255, 255, 255];
 }

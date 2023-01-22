@@ -3,27 +3,31 @@ import { isCssVariable, processCssVariable } from '../../lib/style/processCssVar
 describe('processCssVariable', () => {
     it('no var', () => {
         const result = processCssVariable('test');
-        expect(result).toBe('');
+        expect(result).toBe(null);
     });
 
     it('var without fallback', () => {
         const result = processCssVariable('var(--test)');
-        expect(result).toBe('');
+        expect(result![1]).toBe('--test');
+        expect(result![2]).toBe(undefined!);
     });
 
     it('var with fallback', () => {
         const result = processCssVariable('var(--test, fallback)');
-        expect(result).toBe('fallback');
+        expect(result![1]).toBe('--test');
+        expect(result![2]).toBe('fallback');
     });
 
     it('var with fallback that has complex value', () => {
         const result = processCssVariable('var(--test, rgb(1, 2, 3))');
-        expect(result).toBe('rgb(1, 2, 3)');
+        expect(result![1]).toBe('--test');
+        expect(result![2]).toBe('rgb(1, 2, 3)');
     });
 
     it('var with fallback and more spaces', () => {
         const result = processCssVariable('var(    --test    ,   aa bb  cc   )');
-        expect(result).toBe('aa bb  cc   ');
+        expect(result![1]).toBe('--test');
+        expect(result![2]).toBe('aa bb  cc   ');
     });
 });
 

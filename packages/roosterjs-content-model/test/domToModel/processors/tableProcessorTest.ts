@@ -305,14 +305,18 @@ describe('tableProcessor with format', () => {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: {
+                                getPropertyValue: () => <string | null>null,
+                            },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: {
+                getPropertyValue: () => <string | null>null,
+            },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -360,14 +364,18 @@ describe('tableProcessor with format', () => {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: {
+                                getPropertyValue: () => <string | null>null,
+                            },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: {
+                getPropertyValue: () => <string | null>null,
+            },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -398,14 +406,18 @@ describe('tableProcessor with format', () => {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: {
+                                getPropertyValue: () => <string | null>null,
+                            },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: {
+                getPropertyValue: () => <string | null>null,
+            },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -466,14 +478,18 @@ describe('tableProcessor', () => {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: {
+                                getPropertyValue: () => <string | null>null,
+                            },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: {
+                getPropertyValue: () => <string | null>null,
+            },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -498,7 +514,8 @@ describe('tableProcessor', () => {
                             rowSpan: 1,
                             tagName: 'TD',
                             style: {
-                                color: 'red',
+                                getPropertyValue: (name: string) =>
+                                    name == 'color' ? 'red' : null,
                             },
                             dataset: {},
                             getAttribute: () => '',
@@ -506,7 +523,9 @@ describe('tableProcessor', () => {
                     ],
                 },
             ],
-            style: {},
+            style: {
+                getPropertyValue: () => <string | null>null,
+            },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;

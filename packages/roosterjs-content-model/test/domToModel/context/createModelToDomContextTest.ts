@@ -13,7 +13,6 @@ describe('createModelToDomContext', () => {
         isDarkMode: false,
         zoomScale: 1,
         isRightToLeft: false,
-        getDarkColor: undefined,
     };
     const defaultResult: ModelToDomContext = {
         ...editorContext,
@@ -35,6 +34,7 @@ describe('createModelToDomContext', () => {
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
         doNotReuseEntityDom: false,
+        newDarkColors: {},
     };
     it('no param', () => {
         const context = createModelToDomContext();
@@ -47,7 +47,6 @@ describe('createModelToDomContext', () => {
             isDarkMode: true,
             zoomScale: 2,
             isRightToLeft: true,
-            getDarkColor: () => '',
         };
 
         const context = createModelToDomContext(editorContext);

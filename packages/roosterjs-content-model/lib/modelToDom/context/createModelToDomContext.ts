@@ -22,7 +22,6 @@ export function createModelToDomContext(
             isDarkMode: false,
             isRightToLeft: false,
             zoomScale: 1,
-            getDarkColor: undefined,
         }),
         regularSelection: {
             current: {

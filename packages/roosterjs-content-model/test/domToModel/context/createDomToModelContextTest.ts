@@ -14,7 +14,6 @@ describe('createDomToModelContext', () => {
         isDarkMode: false,
         zoomScale: 1,
         isRightToLeft: false,
-        getDarkColor: undefined,
     };
     const listFormat: DomToModelListFormat = {
         threadItemCounts: [],
@@ -49,7 +48,6 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             zoomScale: 2,
             isRightToLeft: true,
-            getDarkColor: () => '',
         };
 
         const context = createDomToModelContext(editorContext);
@@ -175,14 +173,11 @@ describe('createDomToModelContext', () => {
     });
 
     it('with base parameters and wrong selection 1', () => {
-        const getDarkColor = () => '';
-
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
                 zoomScale: 2,
                 isRightToLeft: true,
-                getDarkColor,
             },
             {
                 selectionRange: {
@@ -197,7 +192,6 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             zoomScale: 2,
             isRightToLeft: true,
-            getDarkColor: getDarkColor,
             isInSelection: false,
             blockFormat: {
                 direction: 'rtl',
@@ -213,14 +207,11 @@ describe('createDomToModelContext', () => {
     });
 
     it('with base parameters and wrong selection 2', () => {
-        const getDarkColor = () => '';
-
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
                 zoomScale: 2,
                 isRightToLeft: true,
-                getDarkColor,
             },
             {
                 selectionRange: {
@@ -237,7 +228,6 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             zoomScale: 2,
             isRightToLeft: true,
-            getDarkColor: getDarkColor,
             isInSelection: false,
             blockFormat: {
                 direction: 'rtl',

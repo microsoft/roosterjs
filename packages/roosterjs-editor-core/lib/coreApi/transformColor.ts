@@ -39,7 +39,7 @@ export const transformColor: TransformColor = (
                   transformToLightMode(core, element, 'color');
               }
             : onExternalContentTransform
-            ? onExternalContentTransform
+            ? (element: HTMLElement) => onExternalContentTransform(element)
             : (element: HTMLElement) => {
                   transformToDarkModel(core, element, 'background-color');
                   transformToDarkModel(core, element, 'color');

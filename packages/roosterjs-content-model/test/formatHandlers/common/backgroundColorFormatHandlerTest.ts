@@ -51,39 +51,6 @@ describe('backgroundColorFormatHandler.parse', () => {
         expect(format.backgroundColor).toBe('red');
     });
 
-    it('Dark mode color with ogsb', () => {
-        context.isDarkMode = true;
-        div.style.backgroundColor = 'red';
-        div.dataset.ogsb = 'blue';
-        div.dataset.ogsc = 'green';
-
-        backgroundColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.backgroundColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogab', () => {
-        context.isDarkMode = true;
-        div.style.backgroundColor = 'red';
-        div.dataset.ogab = 'blue';
-        div.dataset.ogac = 'green';
-
-        backgroundColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.backgroundColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogsb and ogab', () => {
-        context.isDarkMode = true;
-        div.style.backgroundColor = 'red';
-        div.dataset.ogab = 'blue';
-        div.dataset.ogsb = 'green';
-
-        backgroundColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.backgroundColor).toBe('green');
-    });
-
     it('Color from element overwrite default style', () => {
         div.style.backgroundColor = 'red';
 
@@ -122,10 +89,11 @@ describe('backgroundColorFormatHandler.apply', () => {
     it('Simple color in dark mode', () => {
         format.backgroundColor = 'red';
         context.isDarkMode = true;
-        context.getDarkColor = () => 'green';
 
         backgroundColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe('<div data-ogsb="red" style="background-color: green;"></div>');
+        expect(div.outerHTML).toBe(
+            '<div style="background-color: var(--darkColor_red,red);"></div>'
+        );
     });
 });

@@ -13,6 +13,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            setColorToElement: () => {},
         }));
 
         expect(state.defaultFormat.textColor).toBe('');
@@ -42,6 +43,7 @@ describe('LifecyclePlugin', () => {
             shadowEditImageSelectionPath: null,
             shadowEditEntities: null,
             getDarkColor,
+            knownDarkColors: {},
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -73,6 +75,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            setColorToElement: () => {},
         }));
 
         expect(state).toEqual({
@@ -97,6 +100,7 @@ describe('LifecyclePlugin', () => {
             shadowEditImageSelectionPath: null,
             shadowEditEntities: null,
             getDarkColor,
+            knownDarkColors: {},
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -119,6 +123,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            setColorToElement: () => {},
         }));
 
         expect(div.isContentEditable).toBeTrue();
@@ -140,6 +145,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            setColorToElement: () => {},
         }));
 
         expect(div.isContentEditable).toBeFalse();
@@ -180,6 +186,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            setColorToElement: () => {},
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({
@@ -201,6 +208,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            setColorToElement: () => {},
         }));
 
         // First time it initials the default format
@@ -255,6 +263,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            setColorToElement: () => {},
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({
@@ -285,6 +294,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            setColorToElement: () => {},
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({
@@ -314,6 +324,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            setColorToElement: () => {},
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({});

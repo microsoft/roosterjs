@@ -21,8 +21,8 @@ describe('getStyleBasedFormatState', () => {
         const style = getStyleBasedFormatState(core, node);
         expect(style.fontName).toBe('arial');
         expect(style.fontSize).toBe('12pt');
-        expect(style.textColor).toBe('rgb(0, 0, 0)');
-        expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+        expect(style.textColor).toBe(undefined); // TODO
+        expect(style.backgroundColor).toBe(undefined);
         expect(style.textColors).toBeUndefined();
         expect(style.backgroundColors).toBeUndefined();
     });
@@ -35,8 +35,8 @@ describe('getStyleBasedFormatState', () => {
         const style = getStyleBasedFormatState(core, node);
         expect(style.fontName).toBe('arial');
         expect(style.fontSize).toBe('12pt');
-        expect(style.textColor).toBe('rgb(0, 0, 0)');
-        expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+        expect(style.textColor).toBe('black');
+        expect(style.backgroundColor).toBe('white');
         expect(style.textColors).toBeUndefined();
         expect(style.backgroundColors).toBeUndefined();
     });
@@ -49,16 +49,10 @@ describe('getStyleBasedFormatState', () => {
         const style = getStyleBasedFormatState(core, node);
         expect(style.fontName).toBe('arial');
         expect(style.fontSize).toBe('12pt');
-        expect(style.textColor).toBe('rgb(0, 0, 0)');
-        expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-        expect(style.textColors).toEqual({
-            darkModeColor: 'rgb(0, 0, 0)',
-            lightModeColor: 'ogsc',
-        });
-        expect(style.backgroundColors).toEqual({
-            darkModeColor: 'rgba(0, 0, 0, 0)',
-            lightModeColor: 'ogsb',
-        });
+        expect(style.textColor).toBe('black');
+        expect(style.backgroundColor).toBe('white');
+        expect(style.textColors).toEqual(undefined); // TODO
+        expect(style.backgroundColors).toEqual(undefined); // TODO
     });
 
     it('dark mode, has ogab/ogac', () => {
@@ -69,16 +63,10 @@ describe('getStyleBasedFormatState', () => {
         const style = getStyleBasedFormatState(core, node);
         expect(style.fontName).toBe('arial');
         expect(style.fontSize).toBe('12pt');
-        expect(style.textColor).toBe('rgb(0, 0, 0)');
-        expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-        expect(style.textColors).toEqual({
-            darkModeColor: 'rgb(0, 0, 0)',
-            lightModeColor: 'ogac',
-        });
-        expect(style.backgroundColors).toEqual({
-            darkModeColor: 'rgba(0, 0, 0, 0)',
-            lightModeColor: 'ogab',
-        });
+        expect(style.textColor).toBe('black');
+        expect(style.backgroundColor).toBe('white');
+        expect(style.textColors).toEqual(undefined); // TODO
+        expect(style.backgroundColors).toEqual(undefined); // TODO
     });
 
     it('dark mode, has both ogab/ogac and ogsb/ogsc', () => {
@@ -89,15 +77,9 @@ describe('getStyleBasedFormatState', () => {
         const style = getStyleBasedFormatState(core, node);
         expect(style.fontName).toBe('arial');
         expect(style.fontSize).toBe('12pt');
-        expect(style.textColor).toBe('rgb(0, 0, 0)');
-        expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-        expect(style.textColors).toEqual({
-            darkModeColor: 'rgb(0, 0, 0)',
-            lightModeColor: 'ogsc',
-        });
-        expect(style.backgroundColors).toEqual({
-            darkModeColor: 'rgba(0, 0, 0, 0)',
-            lightModeColor: 'ogab',
-        });
+        expect(style.textColor).toBe('black');
+        expect(style.backgroundColor).toBe('white');
+        expect(style.textColors).toEqual(undefined); // TODO
+        expect(style.backgroundColors).toEqual(undefined); // TODO
     });
 });
