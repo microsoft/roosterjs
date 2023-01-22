@@ -122,7 +122,7 @@ export { default as removeGlobalCssStyle } from './style/removeGlobalCssStyle';
 export {
     processCssVariable,
     createCssVariable,
-    createCssVariableKey,
+    createCssVariableName,
 } from './style/processCssVariable';
 
 export { default as adjustInsertPosition } from './edit/adjustInsertPosition';

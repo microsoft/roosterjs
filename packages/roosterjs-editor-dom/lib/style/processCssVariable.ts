@@ -13,12 +13,24 @@ export function processCssVariable(value: string): RegExpExecArray | null {
     return VARIABLE_REGEX.exec(value);
 }
 
-export function createCssVariable(key: string, value: string): string {
-    return `var(${key},${value})`;
+/**
+ * Create CSS variable string from given key and fallback value
+ * @param name The name of the CSS variable, must start with "--"
+ * @param fallbackValue Fallback value of the CSS variable
+ * @returns The CSS variable string
+ */
+export function createCssVariable(name: string, fallbackValue: string): string {
+    return `var(${name},${fallbackValue})`;
 }
 
-export function createCssVariableKey(value: string, prefix: string): string {
-    return `--${prefix}${value.replace(/[^\d\w]/g, '_')}`;
+/**
+ * Create CSS variable name with given var name and prefix
+ * @param varName Variable name (no need to add prefix "--", this function will handle it)
+ * @param prefix Variable prefix (no need to add prefix "--", this function will handle it)
+ * @returns The CSS variable name
+ */
+export function createCssVariableName(varName: string, prefix: string): string {
+    return `--${prefix}${varName.replace(/[^\d\w]/g, '_')}`;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { createCssVariable, createCssVariableKey, processCssVariable } from 'roosterjs-editor-dom';
+import { createCssVariable, createCssVariableName, processCssVariable } from 'roosterjs-editor-dom';
 
 const ColorNamePrefix = 'darkColor_';
 
@@ -25,7 +25,7 @@ export function setColor(
     newDarkColors: Record<string, string>
 ) {
     if (isDarkMode && color) {
-        const colorKey = createCssVariableKey(color, ColorNamePrefix);
+        const colorKey = createCssVariableName(color, ColorNamePrefix);
 
         newDarkColors[colorKey] = color;
         color = createCssVariable(colorKey, color);
