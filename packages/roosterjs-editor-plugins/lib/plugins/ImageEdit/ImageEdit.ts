@@ -197,6 +197,8 @@ export default class ImageEdit implements EditorPlugin {
                 }
                 break;
             case PluginEventType.MouseDown:
+                // When left click in a image that already in editing mode, do not quit edit mode
+                // This will avoid another image into the editor after drag
                 const mouseTarget = e.rawEvent.target;
                 const button = e.rawEvent.button;
                 if (
