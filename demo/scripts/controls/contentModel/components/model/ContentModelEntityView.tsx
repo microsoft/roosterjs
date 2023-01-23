@@ -71,6 +71,7 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
             title="Entity"
             subTitle={id}
             className={styles.modelEntity}
+            isSelected={entity.isSelected}
             jsonSource={entity}
             getContent={getContent}
             getFormat={getFormat}
