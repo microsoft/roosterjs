@@ -531,13 +531,18 @@ describe('knownElementProcessor', () => {
                     format: {
                         borderLeft: '1px solid black',
                         borderRight: '1px solid black',
+                        borderColor: 'black',
+                        borderWidth: '1px',
+                        borderStyle: 'solid',
                     },
                     segments: [],
                 },
                 {
                     blockType: 'Divider',
                     tagName: 'div',
-                    format: { borderBottom: '1px solid black' },
+                    format: {
+                        borderBottom: '1px solid black',
+                    },
                 },
                 {
                     blockType: 'Paragraph',

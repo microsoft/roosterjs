@@ -12,7 +12,7 @@ export const imageBorderWidth: RibbonButton<'buttonNameImageBorderWidth'> = {
     key: 'buttonNameImageBorderWidth',
     unlocalizedText: 'Image Border Width',
     iconName: 'Photo2',
-    isDisabled: formatState => !formatState.isImageSelected,
+    isDisabled: formatState => !formatState.canAddImageAltText,
     dropDownMenu: {
         items: WIDTH.reduce((map, size) => {
             map[size + 'pt'] = size.toString();
@@ -22,7 +22,7 @@ export const imageBorderWidth: RibbonButton<'buttonNameImageBorderWidth'> = {
     },
     onClick: (editor, size) => {
         if (isContentModelEditor(editor)) {
-            setImageBorderWidth(editor, size);
+            setImageBorderWidth(editor, size, true /**isPt */);
         }
         return true;
     },

@@ -79,7 +79,6 @@ function retrieveFormatStateInternal(
 
     result.canUnlink = !!segment.link;
     result.canAddImageAltText = segments.some(segment => segment.segmentType == 'Image');
-    result.isImageSelected = segment.segmentType == 'Image';
 
     if (listItemIndex >= 0) {
         const listItem = path[listItemIndex] as ContentModelListItem;

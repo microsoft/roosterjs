@@ -36,7 +36,7 @@ export const imageBoxShadow: RibbonButton<'buttonNameImageBoxSHadow'> = {
     key: 'buttonNameImageBoxSHadow',
     unlocalizedText: 'Image Shadow',
     iconName: 'Photo2',
-    isDisabled: formatState => !formatState.isImageSelected,
+    isDisabled: formatState => !formatState.canAddImageAltText,
     dropDownMenu: {
         items: STYLES_NAMES,
         allowLivePreview: true,

@@ -93,11 +93,6 @@ export interface ElementBasedFormatState {
      * If there is a table, whether the table has header row
      */
     tableHasHeader?: boolean;
-
-    /**
-     *  Whether the image is selected
-     */
-    isImageSelected?: boolean;
 }
 
 /**

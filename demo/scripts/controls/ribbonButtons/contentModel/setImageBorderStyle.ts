@@ -21,7 +21,7 @@ export const imageBorderStyle: RibbonButton<'buttonNameImageBorderStyle'> = {
     key: 'buttonNameImageBorderStyle',
     unlocalizedText: 'Image Border Style',
     iconName: 'Photo2',
-    isDisabled: formatState => !formatState.isImageSelected,
+    isDisabled: formatState => !formatState.canAddImageAltText,
     dropDownMenu: {
         items: STYLES,
         allowLivePreview: true,

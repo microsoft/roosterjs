@@ -3,9 +3,9 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
 import { readFile } from 'roosterjs-editor-dom';
 
 /**
- * Set border color to an image
+ * Change the selected image src
  * @param editor The editor instance
- * @param color of the border
+ * @param file The image file
  */
 export default function changeImage(editor: IExperimentalContentModelEditor, file: File) {
     readFile(file, dataUrl => {

@@ -35,6 +35,9 @@ describe('borderFormatHandler.parse', () => {
             borderRight: '1px solid red',
             borderBottom: '1px solid red',
             borderLeft: '1px solid red',
+            borderColor: 'red',
+            borderWidth: '1px',
+            borderStyle: 'solid',
         });
     });
 
@@ -50,6 +53,9 @@ describe('borderFormatHandler.parse', () => {
             borderRight: '2px solid red',
             borderBottom: '3px solid red',
             borderLeft: '4px solid red',
+            borderWidth: '1px 2px 3px 4px',
+            borderStyle: 'solid',
+            borderColor: 'red',
         });
     });
 
@@ -65,11 +71,14 @@ describe('borderFormatHandler.parse', () => {
             borderRight: '2px none red',
             borderBottom: '3px none red',
             borderLeft: '4px none red',
+            borderColor: 'red',
+            borderWidth: '1px 2px 3px 4px',
+            borderStyle: '',
         });
     });
 
     it('Has border width none value only', () => {
-        div.style.borderStyle = 'none';
+        div.style.borderStyle = '';
 
         borderFormatHandler.parse(format, div, context, {});
 

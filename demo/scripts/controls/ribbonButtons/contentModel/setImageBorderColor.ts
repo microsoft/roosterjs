@@ -15,7 +15,7 @@ export const imageBorderColor: RibbonButton<'buttonNameImageBorderColor'> = {
     ...originalButton,
     unlocalizedText: 'Image Border Color',
     iconName: 'Photo2',
-    isDisabled: formatState => !formatState.isImageSelected,
+    isDisabled: formatState => !formatState.canAddImageAltText,
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameImageBorderColor' && isContentModelEditor(editor)) {

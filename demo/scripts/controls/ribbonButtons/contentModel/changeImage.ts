@@ -21,7 +21,7 @@ export const insertNewImage: RibbonButton<'buttonNameChangeImage'> = {
     key: 'buttonNameChangeImage',
     unlocalizedText: 'Change Image',
     iconName: 'Photo2',
-    isChecked: formatState => !formatState.isImageSelected,
+    isChecked: formatState => !formatState.canAddImageAltText,
     onClick: editor => {
         if (isContentModelEditor(editor)) {
             const document = editor.getDocument();
