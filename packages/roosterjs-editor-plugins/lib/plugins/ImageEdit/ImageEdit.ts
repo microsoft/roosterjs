@@ -169,6 +169,11 @@ export default class ImageEdit implements EditorPlugin {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler({
             blur: () => this.onBlur,
+            dragstart: e => {
+                if (this.image) {
+                    e.preventDefault();
+                }
+            },
         });
     }
 
@@ -198,7 +203,6 @@ export default class ImageEdit implements EditorPlugin {
                 break;
             case PluginEventType.MouseDown:
                 // When left click in a image that already in editing mode, do not quit edit mode
-                // This will avoid another image into the editor after drag
                 const mouseTarget = e.rawEvent.target;
                 const button = e.rawEvent.button;
                 if (
@@ -208,7 +212,6 @@ export default class ImageEdit implements EditorPlugin {
                 ) {
                     this.setEditingImage(null);
                 }
-
                 break;
             case PluginEventType.KeyDown:
                 this.setEditingImage(null);
