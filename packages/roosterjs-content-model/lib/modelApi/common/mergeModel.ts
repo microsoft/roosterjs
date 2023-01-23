@@ -16,8 +16,25 @@ import { normalizeTable } from '../table/normalizeTable';
 
 /**
  * @internal
+ * Options to specify how to merge models
  */
-export function mergeModel(target: ContentModelDocument, source: ContentModelDocument) {
+export interface MergeModelOption {
+    /**
+     * When there is only a table to merge, whether merge this table into current table (if any), or just directly insert (nested table).
+     * This is usually used when paste table inside a table
+     * @default false
+     */
+    mergeTable?: boolean;
+}
+
+/**
+ * @internal
+ */
+export function mergeModel(
+    target: ContentModelDocument,
+    source: ContentModelDocument,
+    options?: MergeModelOption
+) {
     const insertPosition = deleteSelection(target);
 
     if (insertPosition) {
@@ -35,7 +52,11 @@ export function mergeModel(target: ContentModelDocument, source: ContentModelDoc
                     break;
 
                 case 'Table':
-                    mergeTable(insertPosition, block, source);
+                    if (source.blocks.length == 1 && options?.mergeTable) {
+                        mergeTable(insertPosition, block, source);
+                    } else {
+                        insertBlock(insertPosition, block);
+                    }
                     break;
 
                 case 'BlockGroup':

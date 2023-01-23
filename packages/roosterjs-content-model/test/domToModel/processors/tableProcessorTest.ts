@@ -236,7 +236,7 @@ describe('tableProcessor with format', () => {
             } else if (element == td) {
                 if (handlers == context.formatParsers.tableCell) {
                     (<any>format).format3 = 'td';
-                } else if (handlers == context.formatParsers.segmentOnBlock) {
+                } else if (handlers == context.formatParsers.segmentOnTableCell) {
                     (<any>format).format4 = 'tdSegment';
                 }
             }
@@ -484,5 +484,65 @@ describe('tableProcessor', () => {
         expect(context.listFormat.levels).toBe(listLevels);
         expect(context.listFormat.listParent).toBe(listParent);
         expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
+    });
+
+    it('Parse text color into table cell format and not impact segment format', () => {
+        const group = createContentModelDocument();
+        const mockedTable = ({
+            tagName: 'table',
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {
+                                color: 'red',
+                            },
+                            dataset: {},
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        context.segmentFormat = {
+            textColor: 'green',
+        };
+
+        tableProcessor(group, mockedTable, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    textColor: 'red',
+                                },
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    ],
+                },
+            ],
+        });
     });
 });
