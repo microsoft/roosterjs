@@ -33,7 +33,16 @@ describe('adjustWordSelection', () => {
                 },
             ],
         };
-        runTest(model, [defaultMarker], model);
+        runTest(model, [defaultMarker], {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [defaultMarker],
+                },
+            ],
+        });
     });
 
     it('Adjust Spaces', () => {
@@ -60,7 +69,28 @@ describe('adjustWordSelection', () => {
                 },
             ],
         };
-        runTest(model, [defaultMarker], model);
+        runTest(model, [defaultMarker], {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                        defaultMarker,
+                        {
+                            segmentType: 'Text',
+                            text: '    ',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
     });
 
     it('Adjust Single Word - Before', () => {
@@ -82,7 +112,23 @@ describe('adjustWordSelection', () => {
                 },
             ],
         };
-        runTest(model, [defaultMarker], model);
+        runTest(model, [defaultMarker], {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        defaultMarker,
+                        {
+                            segmentType: 'Text',
+                            text: 'Word',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
     });
 
     it('Adjust Single Word - Middle', () => {
@@ -144,7 +190,23 @@ describe('adjustWordSelection', () => {
                 },
             ],
         };
-        runTest(model, [defaultMarker], model);
+        runTest(model, [defaultMarker], {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Word',
+                            format: {},
+                        },
+                        defaultMarker,
+                    ],
+                },
+            ],
+        });
     });
 
     it('Adjust Multiple Words', () => {
@@ -380,7 +442,34 @@ describe('adjustWordSelection', () => {
                     },
                 ],
             };
-            runTest(model, result, model);
+            runTest(model, result, {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: result,
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'UL',
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            });
         });
 
         it('Table', () => {
@@ -439,7 +528,60 @@ describe('adjustWordSelection', () => {
                     },
                 ],
             };
-            runTest(model, result, model);
+            runTest(model, result, {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        cells: [
+                            [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: result,
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        ],
+                        format: {
+                            useBorderBox: true,
+                            borderCollapse: true,
+                        },
+                        widths: [120],
+                        heights: [22],
+                        dataset: {
+                            editingInfo:
+                                '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Br',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            });
         });
     });
 
@@ -477,7 +619,18 @@ describe('adjustWordSelection', () => {
                     emptyBlock,
                 ],
             };
-            runTest(model, result, model);
+            runTest(model, result, {
+                blockGroupType: 'Document',
+                blocks: [
+                    emptyBlock,
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: result,
+                    },
+                    emptyBlock,
+                ],
+            });
         });
     });
 });
