@@ -17,6 +17,7 @@ export { default as setFontName } from './publicApi/segment/setFontName';
 export { default as setFontSize } from './publicApi/segment/setFontSize';
 export { default as setTextColor } from './publicApi/segment/setTextColor';
 export { default as changeFontSize } from './publicApi/segment/changeFontSize';
+export { default as applySegmentFormat } from './publicApi/segment/applySegmentFormat';
 export { default as changeCapitalization } from './publicApi/segment/changeCapitalization';
 export { default as insertImage } from './publicApi/insert/insertImage';
 export { default as setListStyle } from './publicApi/list/setListStyle';
@@ -35,6 +36,7 @@ export { default as setImageBorderWidth } from './publicApi/image/setImageBorder
 export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
 export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
+export { default as getSegmentFormat } from './publicApi/format/getSegmentFormat';
 export { default as clearFormat } from './publicApi/format/clearFormat';
 export { default as insertLink } from './publicApi/link/insertLink';
 export { default as removeLink } from './publicApi/link/removeLink';

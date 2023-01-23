@@ -11,6 +11,7 @@ import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
+import { formatPainterButton } from './formatPainterButton';
 import { formatTableButton } from './formatTableButton';
 import { imageBorderColor } from './setImageBorderColor';
 import { imageBorderStyle } from './setImageBorderStyle';
@@ -49,6 +50,7 @@ import {
 } from './tableEditButtons';
 
 const buttons = [
+    formatPainterButton,
     boldButton,
     italicButton,
     underlineButton,

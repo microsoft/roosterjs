@@ -30,6 +30,14 @@ export interface ContentModelFormatMap {
     segmentOnBlock: ContentModelSegmentFormat;
 
     /**
+     * Format type for segment on table cell.
+     * This is very similar with segmentOnBlock, without 'textColor'. Because we will keep
+     * text color style on table cell to indicate auto calculated segment color when set table cell shade.
+     * Segments can set its own text color to override this value
+     */
+    segmentOnTableCell: ContentModelSegmentFormat;
+
+    /**
      * Format type for table
      */
     table: ContentModelTableFormat;

@@ -108,6 +108,7 @@ const defaultFormatKeysPerCategory: {
         'backgroundColor',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
+    segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
     tableCell: [
         'border',
         'borderBox',
@@ -116,6 +117,7 @@ const defaultFormatKeysPerCategory: {
         'direction',
         'verticalAlign',
         'wordBreak',
+        'textColor',
     ],
     table: [
         'id',
