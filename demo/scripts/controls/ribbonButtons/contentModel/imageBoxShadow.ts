@@ -30,7 +30,7 @@ const STYLES: Record<string, string> = {
 
 /**
  * @internal
- * "Italic" button on the format ribbon
+ * "Image Shadow" button on the format ribbon
  */
 export const imageBoxShadow: RibbonButton<'buttonNameImageBoxSHadow'> = {
     key: 'buttonNameImageBoxSHadow',

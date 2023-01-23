@@ -9,7 +9,7 @@ const originalButton = getButtons([KnownRibbonButtonKey.TextColor])[0] as Ribbon
 
 /**
  * @internal
- * "Align center" button on the format ribbon
+ * "Image Border Color" button on the format ribbon
  */
 export const imageBorderColor: RibbonButton<'buttonNameImageBorderColor'> = {
     ...originalButton,

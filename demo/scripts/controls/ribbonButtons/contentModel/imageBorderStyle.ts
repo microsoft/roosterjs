@@ -15,12 +15,12 @@ const STYLES: Record<string, string> = {
 
 /**
  * @internal
- * "Italic" button on the format ribbon
+ * "Image Border Style" button on the format ribbon
  */
 export const imageBorderStyle: RibbonButton<'buttonNameImageBorderStyle'> = {
     key: 'buttonNameImageBorderStyle',
     unlocalizedText: 'Image Border Style',
-    iconName: 'Photo2',
+    iconName: 'BorderDash',
     isDisabled: formatState => !formatState.canAddImageAltText,
     dropDownMenu: {
         items: STYLES,

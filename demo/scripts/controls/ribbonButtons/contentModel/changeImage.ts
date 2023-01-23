@@ -15,13 +15,13 @@ const FileInput: CreateElementData = {
 
 /**
  * @internal
- * "Align center" button on the format ribbon
+ * "Change Image" button on the format ribbon
  */
 export const insertNewImage: RibbonButton<'buttonNameChangeImage'> = {
     key: 'buttonNameChangeImage',
     unlocalizedText: 'Change Image',
-    iconName: 'Photo2',
-    isChecked: formatState => !formatState.canAddImageAltText,
+    iconName: 'ImageSearch',
+    isDisabled: formatState => !formatState.canAddImageAltText,
     onClick: editor => {
         if (isContentModelEditor(editor)) {
             const document = editor.getDocument();

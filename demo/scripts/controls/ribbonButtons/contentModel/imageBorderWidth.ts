@@ -6,7 +6,7 @@ const WIDTH = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
 
 /**
  * @internal
- * "Italic" button on the format ribbon
+ * "Image Border Width" button on the format ribbon
  */
 export const imageBorderWidth: RibbonButton<'buttonNameImageBorderWidth'> = {
     key: 'buttonNameImageBorderWidth',
