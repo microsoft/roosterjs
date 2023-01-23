@@ -125,6 +125,16 @@ export default class ImageEdit implements EditorPlugin {
     private wasResized: boolean;
 
     /**
+     * The span element that wraps the image and opens shadow dom
+     */
+    private shadowSpan: HTMLSpanElement;
+
+    /**
+     * The span element that wraps the image and opens shadow dom
+     */
+    private isCropping: boolean;
+
+    /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
      * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
@@ -159,12 +169,6 @@ export default class ImageEdit implements EditorPlugin {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler({
             blur: () => this.onBlur,
-            drag: e => {
-                if (this.wrapper) {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                }
-            },
         });
     }
 
@@ -193,7 +197,16 @@ export default class ImageEdit implements EditorPlugin {
                 }
                 break;
             case PluginEventType.MouseDown:
-                this.setEditingImage(null);
+                const mouseTarget = e.rawEvent.target;
+                const button = e.rawEvent.button;
+                if (
+                    this.shadowSpan !== mouseTarget ||
+                    (this.shadowSpan === mouseTarget && button !== 0) ||
+                    this.isCropping
+                ) {
+                    this.setEditingImage(null);
+                }
+
                 break;
             case PluginEventType.KeyDown:
                 this.setEditingImage(null);
@@ -278,6 +291,7 @@ export default class ImageEdit implements EditorPlugin {
             this.editInfo = null;
             this.lastSrc = null;
             this.clonedImage = null;
+            this.isCropping = false;
         }
 
         if (!this.image && image?.isContentEditable) {
@@ -337,7 +351,6 @@ export default class ImageEdit implements EditorPlugin {
         // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
         this.clonedImage.src = this.editInfo.src;
         this.clonedImage.style.position = 'absolute';
-        this.clonedImage.style.maxWidth = null;
 
         // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
         const options: ImageHtmlOptions = {
@@ -369,12 +382,12 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     private insertImageWrapper(wrapper: HTMLSpanElement) {
-        const span = wrap(this.image, 'span');
-        const shadowRoot = span.attachShadow({
+        this.shadowSpan = wrap(this.image, 'span');
+        const shadowRoot = this.shadowSpan.attachShadow({
             mode: 'open',
         });
 
-        span.style.verticalAlign = 'bottom';
+        this.shadowSpan.style.verticalAlign = 'bottom';
 
         shadowRoot.appendChild(wrapper);
     }
@@ -387,6 +400,7 @@ export default class ImageEdit implements EditorPlugin {
             unwrap(this.image.parentNode);
         }
         this.wrapper = null;
+        this.shadowSpan = null;
     };
 
     /**
@@ -405,7 +419,7 @@ export default class ImageEdit implements EditorPlugin {
             const cropHandles = getEditElements(wrapper, ImageEditElementClass.CropHandle);
 
             // Cropping and resizing will show different UI, so check if it is cropping here first
-            const isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
+            this.isCropping = cropContainers.length == 1 && cropOverlays.length == 4;
             const {
                 angleRad,
                 bottomPercent,
@@ -422,7 +436,7 @@ export default class ImageEdit implements EditorPlugin {
                 originalHeight,
                 visibleWidth,
                 visibleHeight,
-            } = getGeneratedImageSize(this.editInfo, isCropping);
+            } = getGeneratedImageSize(this.editInfo, this.isCropping);
             const marginHorizontal = (targetWidth - visibleWidth) / 2;
             const marginVertical = (targetHeight - visibleHeight) / 2;
             const cropLeftPx = originalWidth * leftPercent;
@@ -446,7 +460,7 @@ export default class ImageEdit implements EditorPlugin {
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
 
-            if (isCropping) {
+            if (this.isCropping) {
                 // For crop, we also need to set position of the overlays
                 setSize(
                     cropContainers[0],
