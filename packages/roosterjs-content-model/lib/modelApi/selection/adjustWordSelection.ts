@@ -77,14 +77,13 @@ export function adjustWordSelection(
 
         return segments;
     } else {
-        return [];
+        return [marker];
     }
 }
 
-const PUNCTUATION_REGEX = /[.,:?!"()\[\]\\/]/gu;
-const SPACES_REGEX = /[\u1680\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
 /*
-// These are unicode characters from the Category Space Separator (Zs)
+// These are unicode characters mostly from the Category Space Separator (Zs)
+https://unicode.org/Public/UNIDATA/Scripts.txt
 
 \u2000 = EN QUAD
 \u2009 = THIN SPACE
@@ -93,10 +92,9 @@ const SPACES_REGEX = /[\u1680\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000
 ​\u202f = NARROW NO-BREAK SPACE
 \u205f​ = MEDIUM MATHEMATICAL SPACE
 \u3000 = IDEOGRAPHIC SPACE
-\u1680 = OGHAM SPACE MARK
-
-\u180e = MONGOLIAN VOWEL SEPARATOR
 */
+const SPACES_REGEX = /[\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
+const PUNCTUATION_REGEX = /[.,?!:"()\[\]\\/]/gu;
 
 export function findDelimiter(segment: ContentModelText, moveRightward: boolean): number {
     const word = segment.text;
@@ -139,7 +137,7 @@ function isSpace(char: string) {
     return (
         char &&
         (char.toString() == String.fromCharCode(160) /* &nbsp | \u00A0*/ ||
-        char.toString() == String.fromCharCode(32) /* RegularSpace \u0020*/ ||
+        char.toString() == String.fromCharCode(32) /* RegularSpace | \u0020*/ ||
             SPACES_REGEX.test(char))
     );
 }
