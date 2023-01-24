@@ -93,6 +93,11 @@ export interface ElementBasedFormatState {
      * If there is a table, whether the table has header row
      */
     tableHasHeader?: boolean;
+
+    /**
+     * Whether we can execute table cell merge operation
+     */
+    canMergeTableCell?: boolean;
 }
 
 /**

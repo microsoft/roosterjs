@@ -7,6 +7,7 @@ import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentMod
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
@@ -161,6 +162,26 @@ describe('getSelectedSegments', () => {
             ],
             true,
             [m1, s2, s3, m2]
+        );
+    });
+
+    it('Include editable entity, but filter out readonly entity', () => {
+        const e1 = createEntity(null!, true);
+        const e2 = createEntity(null!, false);
+        const p1 = createParagraph();
+
+        p1.segments.push(e1, e2);
+
+        runTest(
+            [
+                {
+                    path: [],
+                    block: p1,
+                    segments: [e1, e2],
+                },
+            ],
+            false,
+            [e2]
         );
     });
 });
