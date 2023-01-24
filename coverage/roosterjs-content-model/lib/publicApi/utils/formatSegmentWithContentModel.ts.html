@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">96.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>27/28</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">96% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>24/25</span>
             </div>
         
             
@@ -124,11 +124,18 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,6 +164,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">131x</span>
 <span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">131x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,9 +190,6 @@
 <span class="cline-any cline-yes">132x</span>
 <span class="cline-any cline-yes">132x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">131x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">131x</span>
 <span class="cline-any cline-yes">13x</span>
@@ -191,7 +205,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
@@ -199,7 +214,6 @@ import {
     DomToModelOption,
     IExperimentalContentModelEditor,
 } from '../../publicTypes/IExperimentalContentModelEditor';
-&nbsp;
 /**
  * @internal
  */
@@ -222,8 +236,18 @@ export function formatSegmentWithContentModel(
         editor,
         apiName,
         model =&gt; {
-            const segments = getSelectedSegments(model, !!includingFormatHolder);
+            let segments = getSelectedSegments(model, !!includingFormatHolder);
             const pendingFormat = editor.getPendingFormat();
+            let isCollapsedSelection =
+                segments.length == 1 &amp;&amp; segments[0].segmentType == 'SelectionMarker';
+&nbsp;
+            if (isCollapsedSelection) {
+                segments = adjustWordSelection(model, segments[0]);
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (segments.length &gt; 1) {
+<span class="cstat-no" title="statement not covered" >                    isCollapsedSelection = false;</span>
+                }
+            }
+&nbsp;
             const formatsAndSegments: [
                 ContentModelSegmentFormat,
                 ContentModelSegment | null
@@ -240,9 +264,6 @@ export function formatSegmentWithContentModel(
             formatsAndSegments.forEach(([format, segment]) =&gt;
                 toggleStyleCallback(format, !isTurningOff, segment)
             );
-&nbsp;
-            const isCollapsedSelection =
-                segments.length == 1 &amp;&amp; segments[0].segmentType == 'SelectionMarker';
 &nbsp;
             if (!pendingFormat &amp;&amp; isCollapsedSelection) {
                 editor.setPendingFormat(segments[0].format);
@@ -265,7 +286,7 @@ export function formatSegmentWithContentModel(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jan 24 2023 17:50:25 GMT+0000 (Coordinated Universal Time)
+                at Tue Jan 24 2023 18:13:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
