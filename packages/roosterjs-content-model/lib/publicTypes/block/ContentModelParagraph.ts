@@ -1,5 +1,5 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelHeader } from './ContentModelHeader';
+import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 
 /**
@@ -14,7 +14,7 @@ export interface ContentModelParagraph extends ContentModelBlockBase<'Paragraph'
     /**
      * Header info for this paragraph if it is a header
      */
-    header?: ContentModelHeader;
+    decorator?: ContentModelParagraphDecorator;
 
     /**
      * Whether this block was created from a block HTML element or just some simple segment between other block elements.

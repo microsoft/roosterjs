@@ -1,5 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { createHR } from '../../modelApi/creators/createHR';
+import { createDivider } from '../../modelApi/creators/createDivider';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
@@ -14,9 +14,9 @@ export const hrProcessor: ElementProcessor<HTMLHRElement> = (group, element, con
             paragraph: 'shallowClone',
         },
         () => {
-            parseFormat(element, context.formatParsers.block, context.blockFormat, context);
+            parseFormat(element, context.formatParsers.divider, context.blockFormat, context);
 
-            const hr = createHR(context.blockFormat);
+            const hr = createDivider('hr', context.blockFormat);
 
             if (context.isInSelection) {
                 hr.isSelected = true;

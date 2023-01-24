@@ -1,6 +1,8 @@
 import FormatStatePane, { FormatStatePaneProps } from './FormatStatePane';
+import isContentModelEditor from '../../editor/isContentModelEditor';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { getFormatState } from 'roosterjs-editor-api';
+import { getFormatState as getFormatStateFromContentModel } from 'roosterjs-content-model';
 import { getPositionRect } from 'roosterjs-editor-dom';
 import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
@@ -44,7 +46,13 @@ export default class FormatStatePlugin extends SidePanePluginImpl<
     }
 
     private getFormatState() {
-        const format = this.editor && getFormatState(this.editor);
+        if (!this.editor) {
+            return null;
+        }
+
+        const format = isContentModelEditor(this.editor)
+            ? getFormatStateFromContentModel(this.editor)
+            : getFormatState(this.editor);
         const position = this.editor && this.editor.getFocusedPosition();
         const rect = position && getPositionRect(position);
         return {

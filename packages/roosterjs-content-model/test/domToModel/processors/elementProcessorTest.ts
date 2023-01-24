@@ -1,5 +1,5 @@
 import { commitEntity } from 'roosterjs-editor-dom';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -14,7 +14,7 @@ describe('elementProcessor', () => {
     let entityProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
 
     beforeEach(() => {
-        group = createContentModelDocument(document);
+        group = createContentModelDocument();
         divProcessor = jasmine.createSpy('div processor');
         generalProcessor = jasmine.createSpy('general processor');
         entityProcessor = jasmine.createSpy('entity processor');
@@ -58,5 +58,49 @@ describe('elementProcessor', () => {
         expect(divProcessor).not.toHaveBeenCalled();
         expect(generalProcessor).not.toHaveBeenCalled();
         expect(entityProcessor).toHaveBeenCalledWith(group, div, context);
+    });
+
+    it('Namespace', () => {
+        const element = document.createElement('o:p') as HTMLElement;
+        element.textContent = 'test';
+
+        elementProcessor(group, element, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).not.toHaveBeenCalled();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Readonly', () => {
+        const element = document.createElement('div') as HTMLElement;
+        element.textContent = 'test';
+        element.contentEditable = 'false';
+
+        elementProcessor(group, element, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).toHaveBeenCalled();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+        });
     });
 });

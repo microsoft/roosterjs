@@ -1,9 +1,12 @@
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
-import { defaultImplicitSegmentFormatMap } from '../../formatHandlers/utils/defaultStyles';
+import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
-import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
+import {
+    defaultFormatAppliers,
+    getFormatAppliers,
+} from '../../formatHandlers/defaultFormatHandlers';
 
 /**
  * @internal
@@ -31,7 +34,7 @@ export function createModelToDomContext(
             threadItemCounts: [],
             nodeStack: [],
         },
-        implicitSegmentFormat: {},
+        implicitFormat: {},
         formatAppliers: getFormatAppliers(
             options?.formatApplierOverride,
             options?.additionalFormatAppliers
@@ -40,10 +43,14 @@ export function createModelToDomContext(
             ...defaultContentModelHandlers,
             ...(options?.modelHandlerOverride || {}),
         },
-        defaultImplicitSegmentFormatMap: {
-            ...defaultImplicitSegmentFormatMap,
-            ...(options?.defaultImplicitSegmentFormatOverride || {}),
+        defaultImplicitFormatMap: {
+            ...defaultImplicitFormatMap,
+            ...(options?.defaultImplicitFormatOverride || {}),
         },
-        entityPairs: [],
+        entities: {},
+
+        defaultModelHandlers: defaultContentModelHandlers,
+        defaultFormatAppliers: defaultFormatAppliers,
+        doNotReuseEntityDom: !!options?.doNotReuseEntityDom,
     };
 }

@@ -1,4 +1,4 @@
-import { ContentModelTableCell } from '../../../lib/publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { updateTableCellMetadata } from '../../../lib/modelApi/metadata/updateTableCellMetadata';
 

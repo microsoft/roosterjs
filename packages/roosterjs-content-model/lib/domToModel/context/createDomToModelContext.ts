@@ -1,9 +1,9 @@
+import { defaultFormatParsers, getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { defaultProcessorMap } from './defaultProcessors';
 import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
-import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
@@ -48,6 +48,9 @@ export function createDomToModelContext(
             options?.formatParserOverride,
             options?.additionalFormatParsers
         ),
+
+        defaultElementProcessors: defaultProcessorMap,
+        defaultFormatParsers: defaultFormatParsers,
     };
 
     if (editorContext?.isRightToLeft) {
@@ -59,11 +62,13 @@ export function createDomToModelContext(
     }
 
     const range = options?.selectionRange;
+    let selectionRoot: Node | undefined;
 
     switch (range?.type) {
         case SelectionRangeTypes.Normal:
             const regularRange = range.ranges[0];
             if (regularRange) {
+                selectionRoot = regularRange.commonAncestorContainer;
                 context.regularSelection = {
                     startContainer: regularRange.startContainer,
                     startOffset: regularRange.startOffset,
@@ -76,6 +81,7 @@ export function createDomToModelContext(
 
         case SelectionRangeTypes.TableSelection:
             if (range.coordinates && range.table) {
+                selectionRoot = range.table;
                 context.tableSelection = {
                     table: range.table,
                     firstCell: { ...range.coordinates.firstCell },
@@ -86,10 +92,15 @@ export function createDomToModelContext(
             break;
 
         case SelectionRangeTypes.ImageSelection:
+            selectionRoot = range.image;
             context.imageSelection = {
                 image: range.image,
             };
             break;
+    }
+
+    if (selectionRoot) {
+        context.selectionRootNode = selectionRoot;
     }
 
     return context;

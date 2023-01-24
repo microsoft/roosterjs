@@ -1,16 +1,17 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
+import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelBr } from '../segment/ContentModelBr';
+import { ContentModelDivider } from '../block/ContentModelDivider';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
-import { ContentModelGeneralBlock } from '../block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelHandler } from './ContentModelHandler';
-import { ContentModelHR } from '../block/ContentModelHR';
 import { ContentModelImage } from '../segment/ContentModelImage';
-import { ContentModelListItem } from '../block/group/ContentModelListItem';
+import { ContentModelListItem } from '../group/ContentModelListItem';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
-import { ContentModelQuote } from '../block/group/ContentModelQuote';
+import { ContentModelQuote } from '../group/ContentModelQuote';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../block/ContentModelTable';
@@ -19,9 +20,12 @@ import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap'
 import { ModelToDomContext } from './ModelToDomContext';
 
 /**
- * Default implicit format map from tag name (lower case) to segment fromat
+ * Default implicit format map from tag name (lower case) to segment format
  */
-export type DefaultImplicitSegmentFormatMap = Record<string, Readonly<ContentModelSegmentFormat>>;
+export type DefaultImplicitFormatMap = Record<
+    string,
+    Readonly<ContentModelSegmentFormat & ContentModelBlockFormat>
+>;
 
 /**
  * Apply format to the given HTML element
@@ -86,7 +90,7 @@ export interface ContentModelHandlerTypeMap {
     /**
      * Content Model type for ContentModelHR
      */
-    hr: ContentModelHR;
+    divider: ContentModelDivider;
 
     /**
      * Content Model type for ContentModelImage
@@ -153,5 +157,17 @@ export interface ModelToDomSettings {
     /**
      * Map of default implicit format for segment
      */
-    defaultImplicitSegmentFormatMap: DefaultImplicitSegmentFormatMap;
+    defaultImplicitFormatMap: DefaultImplicitFormatMap;
+
+    /**
+     * Default Content Model to DOM handlers before overriding.
+     * This provides a way to call original handler from an overridden handler function
+     */
+    defaultModelHandlers: Readonly<ContentModelHandlerMap>;
+
+    /**
+     * Default format parsers before overriding.
+     * This provides a way to call original format applier from an overridden applier function
+     */
+    defaultFormatAppliers: Readonly<FormatAppliers>;
 }

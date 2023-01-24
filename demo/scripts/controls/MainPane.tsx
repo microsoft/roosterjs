@@ -2,11 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import BuildInPluginState from './BuildInPluginState';
-import ContentModelPlugin from './sidePane/contentModel/ContentModelPlugin';
+import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
 import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import ExperimentalContentModelEditor from './editor/ExperimentalContentModelEditor';
+import FormatPainterPlugin from './contentModel/plugins/FormatPainterPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase from './MainPaneBase';
@@ -14,6 +15,8 @@ import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
+import { ContentModelPlugin } from 'roosterjs-content-model';
+import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
@@ -118,13 +121,15 @@ class MainPane extends MainPaneBase {
     private eventViewPlugin: EventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private snapshotPlugin: SnapshotPlugin;
-    private contentModelPlugin: ContentModelPlugin;
+    private ContentModelPanePlugin: ContentModelPanePlugin;
     private ribbonPlugin: RibbonPlugin;
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
+    private contentModelPlugin: ContentModelPlugin;
+    private formatPainterPlugin: FormatPainterPlugin;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
@@ -140,12 +145,14 @@ class MainPane extends MainPaneBase {
         this.eventViewPlugin = new EventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
-        this.contentModelPlugin = new ContentModelPlugin();
+        this.ContentModelPanePlugin = new ContentModelPanePlugin();
         this.ribbonPlugin = createRibbonPlugin();
-        this.contentModelRibbonPlugin = createRibbonPlugin();
+        this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
+        this.contentModelPlugin = new ContentModelPlugin();
+        this.formatPainterPlugin = new FormatPainterPlugin();
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
             darkMode,
@@ -417,7 +424,7 @@ class MainPane extends MainPaneBase {
             this.eventViewPlugin,
             this.apiPlaygroundPlugin,
             this.snapshotPlugin,
-            this.contentModelPlugin,
+            this.ContentModelPanePlugin,
         ];
     }
 
@@ -429,9 +436,11 @@ class MainPane extends MainPaneBase {
             ...this.toggleablePlugins,
             this.ribbonPlugin,
             this.contentModelRibbonPlugin,
-            this.contentModelPlugin.getInnerRibbonPlugin(),
+            this.ContentModelPanePlugin.getInnerRibbonPlugin(),
             this.pasteOptionPlugin,
             this.emojiPlugin,
+            this.contentModelPlugin,
+            this.formatPainterPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {

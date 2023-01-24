@@ -1,9 +1,9 @@
-import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
 import { DomToModelOption } from '../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { normalizeModel } from '../modelApi/common/normalizeContentModel';
+import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -17,14 +17,14 @@ export default function domToContentModel(
     editorContext: EditorContext,
     option: DomToModelOption
 ): ContentModelDocument {
-    const model = createContentModelDocument(root.ownerDocument!);
+    const model = createContentModelDocument();
     const domToModelContext = createDomToModelContext(editorContext, option);
     const { element, child } = domToModelContext.elementProcessors;
     const processor = option.includeRoot ? element : child;
 
     processor(model, root, domToModelContext);
 
-    normalizeModel(model);
+    normalizeContentModel(model);
 
     return model;
 }

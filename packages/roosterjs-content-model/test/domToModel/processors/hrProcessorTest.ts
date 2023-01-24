@@ -11,7 +11,7 @@ describe('hrProcessor', () => {
     });
 
     it('Regular HR', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const hr = document.createElement('hr');
 
         hrProcessor(doc, hr, context);
@@ -20,16 +20,16 @@ describe('hrProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'HR',
+                    blockType: 'Divider',
+                    tagName: 'hr',
                     format: {},
                 },
             ],
-            document: document,
         });
     });
 
     it('HR with format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const hr = document.createElement('hr');
 
         hr.style.marginBottom = '20px';
@@ -41,19 +41,19 @@ describe('hrProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'HR',
+                    blockType: 'Divider',
+                    tagName: 'hr',
                     format: {
                         marginTop: '10px',
                         marginBottom: '20px',
                     },
                 },
             ],
-            document: document,
         });
     });
 
     it('HR with selection', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const hr = document.createElement('hr');
 
         context.isInSelection = true;
@@ -64,12 +64,36 @@ describe('hrProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'HR',
+                    blockType: 'Divider',
+                    tagName: 'hr',
                     format: {},
                     isSelected: true,
                 },
             ],
-            document: document,
+        });
+    });
+
+    it('HR with width and display', () => {
+        const doc = createContentModelDocument();
+        const hr = document.createElement('hr');
+
+        hr.style.display = 'inline-block';
+        hr.style.width = '98%';
+
+        hrProcessor(doc, hr, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'hr',
+                    format: {
+                        display: 'inline-block',
+                        width: '98%',
+                    },
+                },
+            ],
         });
     });
 });

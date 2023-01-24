@@ -13,7 +13,6 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
-    ContentPosition,
     CopyPastePluginState,
     EditorOptions,
     GetContentMode,
@@ -164,7 +163,11 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
             const editor = this.editor;
             extractClipboardEvent(
                 event as ClipboardEvent,
-                clipboardData => editor.paste(clipboardData),
+                clipboardData => {
+                    if (editor && !editor.isDisposed()) {
+                        editor.paste(clipboardData);
+                    }
+                },
                 {
                     allowedCustomPasteType: this.state.allowedCustomPasteType,
                     getTempDiv: () => {
@@ -190,9 +193,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                     KnownCreateElementDataIndex.CopyPasteTempDiv,
                     editor.getDocument()
                 ) as HTMLDivElement;
-                editor.insertNode(tempDiv, {
-                    position: ContentPosition.Outside,
-                });
+
+                editor.getDocument().body.appendChild(tempDiv);
 
                 return tempDiv;
             },

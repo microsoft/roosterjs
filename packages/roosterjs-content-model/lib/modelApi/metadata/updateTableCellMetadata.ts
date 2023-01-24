@@ -1,4 +1,4 @@
-import { ContentModelTableCell } from '../../publicTypes/block/group/ContentModelTableCell';
+import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 import { createBooleanDefinition, createObjectDefinition } from 'roosterjs-editor-dom';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { updateMetadata } from './updateMetadata';
@@ -19,7 +19,7 @@ const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableC
  */
 export function updateTableCellMetadata(
     cell: ContentModelTableCell,
-    callback: (format: TableCellMetadataFormat | null) => TableCellMetadataFormat | null
-) {
-    updateMetadata(cell, callback, TableCellMetadataFormatDefinition);
+    callback?: (format: TableCellMetadataFormat | null) => TableCellMetadataFormat | null
+): TableCellMetadataFormat | null {
+    return updateMetadata(cell, callback, TableCellMetadataFormatDefinition);
 }

@@ -1,7 +1,8 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { preprocessEntitiesFromContentModel } from '../mergeFragmentWithEntity';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
 
 /**
@@ -10,30 +11,23 @@ import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBa
  * @param color The color to set
  */
 export default function setTableCellShade(editor: IExperimentalContentModelEditor, color: string) {
-    const table = editor.getElementAtCursor('TABLE');
-    const model = table && editor.createContentModel(table);
-    const tableModel = model?.blocks[0];
+    formatWithContentModel(editor, 'setTableCellShade', model => {
+        const table = getFirstSelectedTable(model);
 
-    if (tableModel?.blockType == 'Table') {
-        normalizeTable(tableModel);
-        setTableCellBackgroundColor(tableModel, color);
-        editor.addUndoSnapshot(
-            () => {
-                editor.focus();
-                if (model && table) {
-                    editor.setContentModel(model, {
-                        mergingCallback: (fragment, _, entityPairs) => {
-                            preprocessEntitiesFromContentModel(entityPairs);
-                            editor.replaceNode(table, fragment);
-                        },
-                    });
-                }
-            },
-            ChangeSource.Format,
-            false /*canUndoByBackspace*/,
-            {
-                formatApiName: 'setTableCellShade',
-            }
-        );
-    }
+        if (table) {
+            normalizeTable(table);
+
+            table.cells.forEach(row =>
+                row.forEach(cell => {
+                    if (hasSelectionInBlockGroup(cell)) {
+                        setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
+                    }
+                })
+            );
+
+            return true;
+        } else {
+            return false;
+        }
+    });
 }

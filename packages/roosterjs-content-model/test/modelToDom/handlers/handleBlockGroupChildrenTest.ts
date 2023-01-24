@@ -23,7 +23,7 @@ describe('handleBlockGroupChildren', () => {
     });
 
     it('Empty block group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
 
         handleBlockGroupChildren(document, parent, group, context);
 
@@ -33,7 +33,7 @@ describe('handleBlockGroupChildren', () => {
     });
 
     it('Single child block group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const paragraph = createParagraph();
 
         group.blocks.push(paragraph);
@@ -47,7 +47,7 @@ describe('handleBlockGroupChildren', () => {
     });
 
     it('Multiple child block group', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const paragraph1 = createParagraph();
         const paragraph2 = createParagraph(true /*isImplicit*/);
 
@@ -64,7 +64,7 @@ describe('handleBlockGroupChildren', () => {
     });
 
     it('Multiple child block group with nodeStack and no list', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const paragraph = createParagraph();
         const nodeStack = [{ a: 'b' } as any];
 
@@ -85,7 +85,7 @@ describe('handleBlockGroupChildren', () => {
     });
 
     it('Multiple child block group with nodeStack and no list', () => {
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const paragraph1 = createParagraph();
         const paragraph2 = createParagraph();
         const list = createListItem([]);

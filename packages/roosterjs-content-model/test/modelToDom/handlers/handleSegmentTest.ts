@@ -1,6 +1,6 @@
 import { ContentModelBr } from '../../../lib/publicTypes/segment/ContentModelBr';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
-import { ContentModelGeneralBlock } from '../../../lib/publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';

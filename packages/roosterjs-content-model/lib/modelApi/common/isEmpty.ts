@@ -1,5 +1,5 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 
 /**
@@ -30,11 +30,11 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
 export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
     switch (group.blockGroupType) {
         case 'Quote':
+        case 'ListItem':
             return group.blocks.every(isBlockEmpty);
 
         case 'Document':
         case 'General':
-        case 'ListItem':
         case 'TableCell':
             return false;
 

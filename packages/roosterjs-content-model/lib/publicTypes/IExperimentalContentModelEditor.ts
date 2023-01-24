@@ -1,10 +1,10 @@
-import { ContentModelDocument } from './block/group/ContentModelDocument';
+import { ContentModelDocument } from './group/ContentModelDocument';
+import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
 import { EditorContext } from './context/EditorContext';
-import { EntityPlaceholderPair } from './context/ModelToDomEntityContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
-    DefaultImplicitSegmentFormatMap,
+    DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
 } from './context/ModelToDomSettings';
@@ -65,13 +65,18 @@ export interface ModelToDomOption {
      * A callback to specify how to merge DOM tree generated from Content Model in to existing container
      * @param source Source document fragment that is generated from Content Model
      * @param target Target container, usually to be editor root container
-     * @param entityPairs An array of entity wrapper - placeholder pairs, used for reuse existing DOM structure for entity
+     * @param entities An array of entity wrapper - placeholder pairs, used for reuse existing DOM structure for entity
      */
     mergingCallback?: (
         source: DocumentFragment,
         target: HTMLElement,
-        entityPairs: EntityPlaceholderPair[]
+        entities: Record<string, HTMLElement>
     ) => void;
+
+    /**
+     * When set to true, directly put entity DOM nodes into the result DOM tree when doing Content Model to DOM conversion and do not use placeholder
+     */
+    doNotReuseEntityDom?: boolean;
 
     /**
      * Overrides default format appliers
@@ -91,7 +96,7 @@ export interface ModelToDomOption {
     /**
      * Overrides default element styles
      */
-    defaultImplicitSegmentFormatOverride?: DefaultImplicitSegmentFormatMap;
+    defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
 }
 
 /**
@@ -119,4 +124,16 @@ export interface IExperimentalContentModelEditor extends IEditor {
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
+
+    /**
+     * Get current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
+     */
+    getPendingFormat(): ContentModelSegmentFormat | null;
+
+    /**
+     * Set current pending format if any. A pending format is a format that user set when selection is collapsed,
+     * it will be applied when next time user input something
+     */
+    setPendingFormat(format: ContentModelSegmentFormat | null): void;
 }

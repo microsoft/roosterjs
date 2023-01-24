@@ -1,3 +1,4 @@
+import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import blockFormat from '../utils/blockFormat';
 import execCommand from '../utils/execCommand';
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
@@ -12,6 +13,7 @@ import {
     ChangeSource,
     ClearFormatMode,
     DocumentCommand,
+    ExperimentalFeatures,
     IEditor,
     QueryScope,
 } from 'roosterjs-editor-types';
@@ -25,6 +27,7 @@ import {
     isNodeInRegion,
     isVoidHtmlElement,
     PartialInlineElement,
+    NodeInlineElement,
     safeInstanceOf,
     setStyles,
     splitBalancedNodeRange,
@@ -141,6 +144,31 @@ function removeNotTableDefaultStyles(element: HTMLTableElement) {
 }
 
 /**
+ * Verifies recursively if a node and its parents have any siblings with text content
+ * Ignoring the children of contentDiv and returning true if any node is LI
+ * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings with text content
+ */
+function isNodeWholeBlock(node: Node, editor: IEditor) {
+    let currentNode = node;
+    while (currentNode && editor.contains(currentNode.parentNode)) {
+        if (currentNode.nextSibling || currentNode.previousSibling) {
+            if (safeInstanceOf(currentNode, 'HTMLLIElement')) {
+                return true;
+            }
+            let isOnlySiblingWithContent = true;
+            currentNode.parentNode?.childNodes.forEach(node => {
+                if (node != currentNode && node.textContent.length) {
+                    isOnlySiblingWithContent = false;
+                }
+            });
+            return isOnlySiblingWithContent;
+        }
+        currentNode = currentNode.parentNode;
+    }
+    return true;
+}
+
+/**
  * Clear the format of the selected text or list of blocks
  * If the current selection is compose of multiple block elements then remove the text and struture format for all the selected blocks
  * If the current selection is compose of a partial inline element then only the text format is removed from the current selection
@@ -151,7 +179,10 @@ function clearAutoDetectFormat(editor: IEditor) {
     if (!isMultiBlock) {
         const transverser = editor.getSelectionTraverser();
         const inlineElement = transverser.currentInlineElement;
-        const isPartial = inlineElement instanceof PartialInlineElement;
+        const isPartial =
+            inlineElement instanceof PartialInlineElement ||
+            (inlineElement instanceof NodeInlineElement &&
+                !isNodeWholeBlock(inlineElement.getContainerNode(), editor));
         if (isPartial) {
             clearFormat(editor);
             return;
@@ -170,7 +201,11 @@ function clearBlockFormat(editor: IEditor) {
         editor,
         () => {
             blockFormat(editor, region => {
-                const blocks = getSelectedBlockElementsInRegion(region);
+                const blocks = getSelectedBlockElementsInRegion(
+                    region,
+                    undefined /* createBlockIfEmpty */,
+                    editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
+                );
                 let nodes = collapseNodesInRegion(region, blocks);
 
                 if (editor.contains(region.rootNode)) {
@@ -207,6 +242,15 @@ function clearInlineFormat(editor: IEditor) {
 
         return 'clearInlineFormat';
     }, ChangeSource.Format);
+}
+
+function setDefaultFontWeight(editor: IEditor, fontWeight: string = '400') {
+    applyListItemStyleWrap(
+        editor,
+        'font-weight',
+        element => (element.style.fontWeight = fontWeight),
+        'setDefaultFontWeight'
+    );
 }
 
 function setDefaultFormat(editor: IEditor) {
@@ -261,6 +305,8 @@ function setDefaultFormat(editor: IEditor) {
         }
         if (defaultFormat.bold) {
             toggleBold(editor);
+        } else {
+            setDefaultFontWeight(editor);
         }
         if (defaultFormat.italic) {
             toggleItalic(editor);

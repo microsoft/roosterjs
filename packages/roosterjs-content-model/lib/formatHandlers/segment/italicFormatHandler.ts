@@ -16,7 +16,7 @@ export const italicFormatHandler: FormatHandler<ItalicFormat> = {
         }
     },
     apply: (format, element, context) => {
-        const implicitItalic = context.implicitSegmentFormat.italic;
+        const implicitItalic = context.implicitFormat.italic;
 
         if (!!implicitItalic != !!format.italic) {
             if (format.italic) {

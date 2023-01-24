@@ -1,6 +1,7 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleNumbering from '../../../lib/publicApi/list/toggleNumbering';
-import { ContentModelDocument } from '../../../lib/publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
 
 describe('toggleNumbering', () => {
@@ -24,6 +25,8 @@ describe('toggleNumbering', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
+            getPendingFormat: (): ContentModelSegmentFormat | null => null,
+            setPendingFormat: () => {},
         } as any) as IExperimentalContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);

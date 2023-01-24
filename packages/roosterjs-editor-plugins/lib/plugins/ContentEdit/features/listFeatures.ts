@@ -24,6 +24,7 @@ import {
     createNumberDefinition,
     getMetadata,
     findClosestElementAncestor,
+    getComputedStyle,
 } from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
@@ -68,30 +69,50 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     true /** allowNull */
 );
 
+const shouldHandleIndentationEvent = (indenting: boolean) => (
+    event: PluginKeyboardEvent,
+    editor: IEditor
+) => {
+    const { keyCode, altKey, shiftKey, ctrlKey, metaKey } = event.rawEvent;
+    return (
+        !ctrlKey &&
+        !metaKey &&
+        (keyCode === Keys.TAB
+            ? !altKey && shiftKey === !indenting
+            : shiftKey && altKey && keyCode === (indenting ? Keys.RIGHT : Keys.LEFT)) &&
+        cacheGetListElement(event, editor)
+    );
+};
+
+const handleIndentationEvent = (indenting: boolean) => (
+    event: PluginKeyboardEvent,
+    editor: IEditor
+) => {
+    const isRTL =
+        event.rawEvent.keyCode !== Keys.TAB &&
+        getComputedStyle(editor.getElementAtCursor(), 'direction') == 'rtl';
+    setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+    event.rawEvent.preventDefault();
+};
+
 /**
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
 const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB],
-    shouldHandleEvent: (event, editor) =>
-        !event.rawEvent.shiftKey && cacheGetListElement(event, editor),
-    handleEvent: (event, editor) => {
-        setIndentation(editor, Indentation.Increase);
-        event.rawEvent.preventDefault();
-    },
+    keys: [Keys.TAB, Keys.RIGHT],
+    shouldHandleEvent: shouldHandleIndentationEvent(true),
+    handleEvent: handleIndentationEvent(true),
+    allowFunctionKeys: true,
 };
 
 /**
  * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
  */
 const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB],
-    shouldHandleEvent: (event, editor) =>
-        event.rawEvent.shiftKey && cacheGetListElement(event, editor),
-    handleEvent: (event, editor) => {
-        setIndentation(editor, Indentation.Decrease);
-        event.rawEvent.preventDefault();
-    },
+    keys: [Keys.TAB, Keys.LEFT],
+    shouldHandleEvent: shouldHandleIndentationEvent(false),
+    handleEvent: handleIndentationEvent(false),
+    allowFunctionKeys: true,
 };
 
 /**
@@ -131,7 +152,12 @@ const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
         let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
-        return li && isNodeEmpty(li) && !li.previousSibling;
+        return (
+            li &&
+            isNodeEmpty(li) &&
+            !li.previousSibling &&
+            !li.getElementsByTagName('blockquote').length
+        );
     },
     handleEvent: toggleListAndPreventDefault,
 };
@@ -330,10 +356,10 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 const getPreviousListItem = (editor: IEditor, textRange: Range) => {
-    const previousNode = editor
+    const blockElement = editor
         .getBodyTraverser(textRange?.startContainer)
-        .getPreviousBlockElement()
-        ?.collapseToSingleElement();
+        .getPreviousBlockElement();
+    const previousNode = blockElement?.getEndNode();
     return getTagOfNode(previousNode) === 'LI' ? previousNode : undefined;
 };
 
@@ -371,7 +397,9 @@ const isFirstItemOfAList = (item: string) => {
 const MaintainListChain: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER, Keys.TAB, Keys.DELETE, Keys.BACKSPACE, Keys.RANGE],
     shouldHandleEvent: (event, editor) =>
-        editor.queryElements('li', QueryScope.OnSelection).length > 0,
+        editor
+            .queryElements('li', QueryScope.OnSelection)
+            .filter(li => !li.getElementsByTagName('blockquote').length).length > 0,
     handleEvent: (event, editor) => {
         const chains = getListChains(editor);
         editor.runAsync(editor => commitListChains(editor, chains));
@@ -448,7 +476,12 @@ function shouldTriggerList(
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
     const textBeforeCursor = searcher.getSubStringBefore(4);
-    const itHasSpace = /\s/g.test(textBeforeCursor);
+    const traverser = editor.getBlockTraverser();
+    const text =
+        traverser && traverser.currentBlockElement
+            ? traverser.currentBlockElement.getTextContent()
+            : null;
+    const isATheBeginning = text && text === textBeforeCursor;
     const listChains = getListChains(editor);
     const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
     const previousListType = getPreviousListType(editor, textRange, listType);
@@ -461,7 +494,7 @@ function shouldTriggerList(
         listType === ListType.Unordered;
 
     return (
-        !itHasSpace &&
+        isATheBeginning &&
         !searcher.getNearestNonTextInlineElement() &&
         listStyle &&
         shouldTriggerNewListStyle

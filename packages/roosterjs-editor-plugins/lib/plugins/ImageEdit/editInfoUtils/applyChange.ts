@@ -72,7 +72,6 @@ export default function applyChange(
     image.src = newSrc;
 
     if (wasResized || state == ImageEditInfoState.FullyChanged) {
-        image.style.maxWidth = 'initial';
         image.width = targetWidth;
         image.height = targetHeight;
         image.style.width = targetWidth + 'px';

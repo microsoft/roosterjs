@@ -2,6 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
@@ -29,7 +30,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
     const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    stackFormat(context, { segment: 'shallowClone' }, () => {
+    stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'empty' }, () => {
         parseFormat(tableElement, context.formatParsers.table, table.format, context);
         parseFormat(
             tableElement,
@@ -50,27 +51,24 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 for (; table.cells[row][targetCol]; targetCol++) {}
 
                 const td = tr.cells[sourceCol];
-                const isCellSelected =
-                    hasTableSelection &&
-                    row >= firstCell.y &&
-                    row <= lastCell.y &&
-                    targetCol >= firstCell.x &&
-                    targetCol <= lastCell.x;
-
+                const hasSelectionBeforeCell = context.isInSelection;
                 const colEnd = targetCol + td.colSpan;
                 const rowEnd = row + td.rowSpan;
                 const needCalcWidth = columnPositions[colEnd] === undefined;
                 const needCalcHeight = rowPositions[rowEnd] === undefined;
 
                 if (needCalcWidth || needCalcHeight) {
-                    const rect = td.getBoundingClientRect();
+                    const rect = getBoundingClientRect(td);
 
-                    if (needCalcWidth) {
-                        columnPositions[colEnd] =
-                            columnPositions[targetCol] + rect.width / zoomScale;
-                    }
-                    if (needCalcHeight) {
-                        rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
+                    if (rect.width > 0 || rect.height > 0) {
+                        if (needCalcWidth) {
+                            columnPositions[colEnd] =
+                                columnPositions[targetCol] + rect.width / zoomScale;
+                        }
+
+                        if (needCalcHeight) {
+                            rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
+                        }
                     }
                 }
 
@@ -78,10 +76,6 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                     for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
                         const hasTd = colSpan == 1 && rowSpan == 1;
                         const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
-
-                        if (isCellSelected) {
-                            cell.isSelected = true;
-                        }
 
                         table.cells[row + rowSpan - 1][targetCol] = cell;
 
@@ -95,7 +89,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                 );
                                 parseFormat(
                                     td,
-                                    context.formatParsers.segmentOnBlock,
+                                    context.formatParsers.segmentOnTableCell,
                                     context.segmentFormat,
                                     context
                                 );
@@ -118,6 +112,19 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                     context.listFormat.levels = levels;
                                 }
                             });
+                        }
+
+                        const hasSelectionAfterCell = context.isInSelection;
+
+                        if (
+                            (hasSelectionBeforeCell && hasSelectionAfterCell) ||
+                            (hasTableSelection &&
+                                row >= firstCell.y &&
+                                row <= lastCell.y &&
+                                targetCol >= firstCell.x &&
+                                targetCol <= lastCell.x)
+                        ) {
+                            cell.isSelected = true;
                         }
                     }
                 }

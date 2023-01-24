@@ -1,4 +1,4 @@
-import { ContentModelBlockGroup } from '../../../lib/publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -43,7 +43,7 @@ describe('handleQuote', () => {
         handleQuote(document, parent, quote, context);
 
         expect(parent.outerHTML).toBe(
-            '<div><blockquote style="margin-top: 0px; margin-bottom: 0px;"><div><span>test</span></div></blockquote></div>'
+            '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote></div>'
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(

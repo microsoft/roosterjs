@@ -1,5 +1,5 @@
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelBlockGroup } from '../block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';

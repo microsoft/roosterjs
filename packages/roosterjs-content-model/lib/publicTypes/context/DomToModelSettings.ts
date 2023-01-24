@@ -80,12 +80,17 @@ export type ElementProcessorMap = {
         /**
          * Common processor for child nodes of a given element
          */
-        child: ElementProcessor<HTMLElement>;
+        child: ElementProcessor<ParentNode>;
 
         /**
          * Workaround for typescript 4.4.4 that doesn't have element "strike" in its element type
          */
         strike?: ElementProcessor<HTMLElement>;
+
+        /**
+         * Workaround for typescript 4.4.4 that doesn't have element "center" in its element type
+         */
+        center?: ElementProcessor<HTMLElement>;
     };
 
 /**
@@ -106,4 +111,16 @@ export interface DomToModelSettings {
      * Map of format parsers
      */
     formatParsers: FormatParsersPerCategory;
+
+    /**
+     * Default DOM to Content Model processors before overriding.
+     * This provides a way to call original processor from an overridden processor function
+     */
+    defaultElementProcessors: Readonly<ElementProcessorMap>;
+
+    /**
+     * Default format parsers before overriding.
+     * This provides a way to call original format parser from an overridden parser function
+     */
+    defaultFormatParsers: Readonly<FormatParsers>;
 }

@@ -1,10 +1,11 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelGeneralBlock } from '../../publicTypes/block/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
+import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal
@@ -22,20 +23,14 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
             context.regularSelection.current.segment = newParent;
         }
 
-        const implicitSegmentFormat = context.implicitSegmentFormat;
-        let segmentElement: HTMLElement;
+        stackFormat(context, group.link ? 'a' : null, () => {
+            let segmentElement: HTMLElement;
 
-        try {
             if (group.link) {
                 segmentElement = doc.createElement('a');
 
                 parent.appendChild(segmentElement);
                 segmentElement.appendChild(newParent);
-
-                context.implicitSegmentFormat = {
-                    ...implicitSegmentFormat,
-                    ...(context.defaultImplicitSegmentFormatMap.a || {}),
-                };
 
                 applyFormat(
                     segmentElement,
@@ -55,9 +50,7 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
             }
 
             applyFormat(segmentElement, context.formatAppliers.segment, group.format, context);
-        } finally {
-            context.implicitSegmentFormat = implicitSegmentFormat;
-        }
+        });
     } else {
         parent.appendChild(newParent);
     }

@@ -1,3 +1,4 @@
+import * as getBoundingClientRect from '../../../lib/domToModel/utils/getBoundingClientRect';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
@@ -19,10 +20,15 @@ describe('tableProcessor', () => {
                 child: childProcessor,
             },
         });
+
+        spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
+            width: 100,
+            height: 200,
+        } as any) as DOMRect);
     });
 
     function runTest(tableHTML: string, expectedModel: ContentModelBlock) {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
 
         const div = document.createElement('div');
         div.innerHTML = tableHTML;
@@ -49,8 +55,8 @@ describe('tableProcessor', () => {
                 ],
             ],
             format: {},
-            widths: [0],
-            heights: [0],
+            widths: [100],
+            heights: [200],
             dataset: {},
         });
     });
@@ -68,8 +74,8 @@ describe('tableProcessor', () => {
                 [tdModel, tdModel],
             ],
             format: {},
-            widths: [0, 0],
-            heights: [0, 0],
+            widths: [100, 100],
+            heights: [200, 200],
             dataset: {},
         });
     });
@@ -86,8 +92,8 @@ describe('tableProcessor', () => {
                 [tdModel, createTableCell(2, 1, false)],
             ],
             format: {},
-            widths: [0, 0],
-            heights: [0, 0],
+            widths: [100, 100],
+            heights: [200, 200],
             dataset: {},
         });
     });
@@ -102,8 +108,8 @@ describe('tableProcessor', () => {
                 [createTableCell(1, 2, false), createTableCell(2, 2, false)],
             ],
             format: {},
-            widths: [0, 0],
-            heights: [0, 0],
+            widths: [100, 0],
+            heights: [200, 0],
             dataset: {},
         });
     });
@@ -116,8 +122,8 @@ describe('tableProcessor', () => {
             blockType: 'Table',
             cells: [[tdModel]],
             format: {},
-            widths: [0],
-            heights: [0],
+            widths: [100],
+            heights: [200],
             dataset: {},
         });
 
@@ -133,8 +139,8 @@ describe('tableProcessor', () => {
             blockType: 'Table',
             cells: [[tdModel, tdModel]],
             format: {},
-            widths: [0, 0],
-            heights: [0],
+            widths: [100, 100],
+            heights: [200],
             dataset: {},
         });
 
@@ -149,8 +155,8 @@ describe('tableProcessor', () => {
             blockType: 'Table',
             cells: [[tdModel, createTableCell(2, 1, false)]],
             format: {},
-            widths: [0, 0],
-            heights: [0],
+            widths: [100, 0],
+            heights: [200],
             dataset: {},
         });
 
@@ -160,7 +166,7 @@ describe('tableProcessor', () => {
     it('Process table with selection', () => {
         const tableHTML = '<table><tr><td></td><td></td></tr><tr><td></td><td></td></tr></table>';
         const tdModel = createTableCell(1, 1, false);
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const div = document.createElement('div');
 
         div.innerHTML = tableHTML;
@@ -185,8 +191,8 @@ describe('tableProcessor', () => {
                 [tdModel, { ...tdModel, isSelected: true }],
             ],
             format: {},
-            widths: [0, 0],
-            heights: [0, 0],
+            widths: [100, 100],
+            heights: [200, 200],
             dataset: {},
         });
 
@@ -199,10 +205,15 @@ describe('tableProcessor with format', () => {
 
     beforeEach(() => {
         context = createDomToModelContext();
+
+        spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
+            width: 100,
+            height: 200,
+        } as any) as DOMRect);
     });
 
     it('Process table and check segment format', () => {
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const table = document.createElement('table');
         const tr = document.createElement('tr');
         const td = document.createElement('td');
@@ -225,7 +236,7 @@ describe('tableProcessor with format', () => {
             } else if (element == td) {
                 if (handlers == context.formatParsers.tableCell) {
                     (<any>format).format3 = 'td';
-                } else if (handlers == context.formatParsers.segmentOnBlock) {
+                } else if (handlers == context.formatParsers.segmentOnTableCell) {
                     (<any>format).format4 = 'tdSegment';
                 }
             }
@@ -238,7 +249,7 @@ describe('tableProcessor with format', () => {
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Table',
@@ -273,8 +284,8 @@ describe('tableProcessor with format', () => {
                             },
                         ],
                     ],
-                    widths: [0],
-                    heights: [0],
+                    widths: [100],
+                    heights: [200],
                     format: {
                         format1: 'table',
                     } as any,
@@ -296,10 +307,6 @@ describe('tableProcessor with format', () => {
                             tagName: 'TD',
                             style: {},
                             dataset: {},
-                            getBoundingClientRect: () => ({
-                                width: 100,
-                                height: 200,
-                            }),
                             getAttribute: () => '',
                         },
                     ],
@@ -310,14 +317,14 @@ describe('tableProcessor with format', () => {
             getAttribute: () => '',
         } as any) as HTMLTableElement;
 
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         context.zoomScale = 2;
 
         tableProcessor(doc, mockedTable, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            document: document,
+
             blocks: [
                 {
                     blockType: 'Table',
@@ -355,10 +362,6 @@ describe('tableProcessor with format', () => {
                             tagName: 'TD',
                             style: {},
                             dataset: {},
-                            getBoundingClientRect: () => ({
-                                width: 100,
-                                height: 200,
-                            }),
                             getAttribute: () => '',
                         },
                     ],
@@ -369,7 +372,7 @@ describe('tableProcessor with format', () => {
             getAttribute: () => '',
         } as any) as HTMLTableElement;
 
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
         context.formatParsers.dataset = [datasetParser];
@@ -397,10 +400,6 @@ describe('tableProcessor with format', () => {
                             tagName: 'TD',
                             style: {},
                             dataset: {},
-                            getBoundingClientRect: () => ({
-                                width: 100,
-                                height: 200,
-                            }),
                             getAttribute: () => '',
                         },
                     ],
@@ -411,7 +410,7 @@ describe('tableProcessor with format', () => {
             getAttribute: () => '',
         } as any) as HTMLTableElement;
 
-        const doc = createContentModelDocument(document);
+        const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
         context.formatParsers.dataset = [datasetParser];
@@ -435,6 +434,11 @@ describe('tableProcessor', () => {
                 child: childProcessor,
             },
         });
+
+        spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
+            width: 100,
+            height: 200,
+        } as any) as DOMRect);
     });
 
     it('list context is stacked during table processing', () => {
@@ -452,7 +456,7 @@ describe('tableProcessor', () => {
             expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
         });
 
-        const group = createContentModelDocument(document);
+        const group = createContentModelDocument();
         const mockedTable = ({
             tagName: 'table',
             rows: [
@@ -464,10 +468,6 @@ describe('tableProcessor', () => {
                             tagName: 'TD',
                             style: {},
                             dataset: {},
-                            getBoundingClientRect: () => ({
-                                width: 100,
-                                height: 200,
-                            }),
                             getAttribute: () => '',
                         },
                     ],
@@ -484,5 +484,65 @@ describe('tableProcessor', () => {
         expect(context.listFormat.levels).toBe(listLevels);
         expect(context.listFormat.listParent).toBe(listParent);
         expect(context.listFormat.threadItemCounts).toBe(threadItemCounts);
+    });
+
+    it('Parse text color into table cell format and not impact segment format', () => {
+        const group = createContentModelDocument();
+        const mockedTable = ({
+            tagName: 'table',
+            rows: [
+                {
+                    cells: [
+                        {
+                            colSpan: 1,
+                            rowSpan: 1,
+                            tagName: 'TD',
+                            style: {
+                                color: 'red',
+                            },
+                            dataset: {},
+                            getAttribute: () => '',
+                        },
+                    ],
+                },
+            ],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        context.segmentFormat = {
+            textColor: 'green',
+        };
+
+        tableProcessor(group, mockedTable, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    textColor: 'red',
+                                },
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    ],
+                },
+            ],
+        });
     });
 });

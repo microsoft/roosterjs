@@ -1,35 +1,48 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
+import * as setModelIndentation from '../../../lib/modelApi/block/setModelIndentation';
 import setIndentation from '../../../lib/publicApi/block/setIndentation';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
-import { indent } from '../../../lib/modelApi/block/indent';
-import { outdent } from '../../../lib/modelApi/block/outdent';
 
 describe('setIndentation', () => {
-    let editor = ({} as any) as IExperimentalContentModelEditor;
+    const fakeModel: any = { a: 'b' };
+    let editor: IExperimentalContentModelEditor;
 
     beforeEach(() => {
-        spyOn(formatWithContentModel, 'formatWithContentModel');
+        editor = ({
+            createContentModel: () => fakeModel,
+            getPendingFormat: (): ContentModelSegmentFormat | null => null,
+            setPendingFormat: () => {},
+        } as any) as IExperimentalContentModelEditor;
     });
 
     it('indent', () => {
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
+        spyOn(setModelIndentation, 'setModelIndentation');
+
         setIndentation(editor, 'indent');
 
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledWith(
-            editor,
-            'setIndentation',
-            indent
+        expect(setModelIndentation.setModelIndentation).toHaveBeenCalledTimes(1);
+        expect(setModelIndentation.setModelIndentation).toHaveBeenCalledWith(
+            fakeModel,
+            'indent',
+            undefined
         );
     });
 
     it('outdent', () => {
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
+        spyOn(setModelIndentation, 'setModelIndentation');
+
         setIndentation(editor, 'outdent');
 
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledWith(
-            editor,
-            'setIndentation',
-            outdent
+        expect(setModelIndentation.setModelIndentation).toHaveBeenCalledTimes(1);
+        expect(setModelIndentation.setModelIndentation).toHaveBeenCalledWith(
+            fakeModel,
+            'outdent',
+            undefined
         );
     });
 });

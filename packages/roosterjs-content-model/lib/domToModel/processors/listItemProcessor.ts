@@ -18,7 +18,7 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
         stackFormat(
             context,
             {
-                segment: 'shallowClone',
+                segment: 'shallowCloneForBlock',
             },
             () => {
                 parseFormat(

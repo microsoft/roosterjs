@@ -8,13 +8,33 @@ describe('updateMetadata', () => {
         const model: ContentModelWithDataset<void> = {
             dataset: {},
         };
-        const callback = jasmine.createSpy('callback');
+        const callback = jasmine.createSpy('callback').and.returnValue(null);
 
-        updateMetadata(model, callback);
+        const result = updateMetadata(model, callback);
 
         expect(callback).toHaveBeenCalledWith(null);
         expect(model).toEqual({
             dataset: {},
+        });
+        expect(result).toBeNull();
+    });
+
+    it('with metadata, no callback', () => {
+        const model: ContentModelWithDataset<any> = {
+            dataset: {
+                editingInfo: '{"a":"b"}',
+            },
+        };
+
+        const result = updateMetadata(model);
+
+        expect(model).toEqual({
+            dataset: {
+                editingInfo: '{"a":"b"}',
+            },
+        });
+        expect(result).toEqual({
+            a: 'b',
         });
     });
 
@@ -26,7 +46,7 @@ describe('updateMetadata', () => {
         };
         const callback = jasmine.createSpy('callback').and.callFake(obj => obj);
 
-        updateMetadata(model, callback);
+        const result = updateMetadata(model, callback);
 
         expect(callback).toHaveBeenCalledWith({ a: 'b' });
         expect(model).toEqual({
@@ -34,6 +54,7 @@ describe('updateMetadata', () => {
                 editingInfo: '{"a":"b"}',
             },
         });
+        expect(result).toEqual({ a: 'b' });
     });
 
     it('with metadata, change the value', () => {
@@ -44,7 +65,7 @@ describe('updateMetadata', () => {
         };
         const callback = jasmine.createSpy('callback').and.callFake(() => ({ c: 'd' }));
 
-        updateMetadata(model, callback);
+        const result = updateMetadata(model, callback);
 
         expect(callback).toHaveBeenCalledWith({ a: 'b' });
         expect(model).toEqual({
@@ -52,6 +73,7 @@ describe('updateMetadata', () => {
                 editingInfo: '{"c":"d"}',
             },
         });
+        expect(result).toEqual({ c: 'd' });
     });
 
     it('with metadata, delete metadata', () => {
@@ -62,12 +84,13 @@ describe('updateMetadata', () => {
         };
         const callback = jasmine.createSpy('callback').and.callFake(() => null);
 
-        updateMetadata(model, callback);
+        const result = updateMetadata(model, callback);
 
         expect(callback).toHaveBeenCalledWith({ a: 'b' });
         expect(model).toEqual({
             dataset: {},
         });
+        expect(result).toBeNull();
     });
 
     it('with metadata, pass the validation', () => {
@@ -80,12 +103,13 @@ describe('updateMetadata', () => {
 
         spyOn(validate, 'default').and.returnValue(true);
 
-        updateMetadata(model, callback, {} as Definition<void>);
+        const result = updateMetadata(model, callback, {} as Definition<void>);
 
         expect(callback).toHaveBeenCalledWith({ a: 'b' });
         expect(model).toEqual({
             dataset: {},
         });
+        expect(result).toBeNull();
     });
 
     it('with metadata, fail the validation, return new value', () => {
@@ -102,7 +126,7 @@ describe('updateMetadata', () => {
 
         spyOn(validate, 'default').and.callFake(fakeValidation);
 
-        updateMetadata(model, callback, {} as Definition<void>);
+        const result = updateMetadata(model, callback, {} as Definition<void>);
 
         expect(callback).toHaveBeenCalledWith(null);
         expect(model).toEqual({
@@ -110,6 +134,7 @@ describe('updateMetadata', () => {
                 editingInfo: '{"c":"d"}',
             },
         });
+        expect(result).toEqual({ c: 'd' });
     });
 
     it('with metadata, pass the input validation, fail the output validation', () => {
@@ -126,7 +151,7 @@ describe('updateMetadata', () => {
 
         spyOn(validate, 'default').and.callFake(fakeValidation);
 
-        updateMetadata(model, callback, {} as Definition<void>);
+        const result = updateMetadata(model, callback, {} as Definition<void>);
 
         expect(callback).toHaveBeenCalledWith({ a: 'b' });
         expect(model).toEqual({
@@ -134,6 +159,7 @@ describe('updateMetadata', () => {
                 editingInfo: '{"a":"b"}',
             },
         });
+        expect(result).toEqual({ c: 'd' });
     });
 });
 

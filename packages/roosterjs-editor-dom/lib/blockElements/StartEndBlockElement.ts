@@ -47,7 +47,12 @@ export default class StartEndBlockElement implements BlockElement {
             nodes[0].parentNode != this.rootNode &&
             STRUCTURE_NODE_TAGS.indexOf(getTagOfNode(nodes[0].parentNode)) < 0
         ) {
-            nodes = [splitBalancedNodeRange(nodes)];
+            const newNode = splitBalancedNodeRange(nodes);
+            if (newNode) {
+                nodes = [newNode];
+            } else {
+                break;
+            }
         }
         return nodes.length == 1 && isBlockElement(nodes[0])
             ? (nodes[0] as HTMLElement)

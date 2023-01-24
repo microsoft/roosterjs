@@ -1,4 +1,3 @@
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
 
 /**
@@ -9,9 +8,9 @@ import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
  * @returns
  */
 const shouldConvertToSingleImage: getSourceFunction = (props: getSourceInputParams) => {
-    const { editor, clipboardData } = props;
+    const { shouldConvertSingleImage, clipboardData } = props;
     return (
-        editor.isFeatureEnabled(ExperimentalFeatures.ConvertSingleImageBody) &&
+        shouldConvertSingleImage &&
         clipboardData.htmlFirstLevelChildTags?.length == 1 &&
         clipboardData.htmlFirstLevelChildTags[0] == 'IMG'
     );

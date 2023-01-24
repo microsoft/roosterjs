@@ -1,7 +1,9 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal
@@ -13,46 +15,37 @@ export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
     context: ModelToDomContext
 ) => {
     let container: HTMLElement;
-    const implicitSegmentFormat = context.implicitSegmentFormat;
 
-    if (paragraph.header) {
-        const tag = ('h' + paragraph.header.headerLevel) as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+    stackFormat(context, paragraph.decorator?.tagName || null, () => {
+        if (paragraph.decorator) {
+            const { tagName, format } = paragraph.decorator;
 
-        container = doc.createElement(tag);
-        parent.appendChild(container);
-        context.implicitSegmentFormat = {
-            ...implicitSegmentFormat,
-            ...(context.defaultImplicitSegmentFormatMap[tag] || {}),
+            container = doc.createElement(tagName);
+
+            parent.appendChild(container);
+
+            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+            applyFormat(container, context.formatAppliers.segmentOnBlock, format, context);
+        } else if (
+            !paragraph.isImplicit ||
+            (getObjectKeys(paragraph.format).length > 0 &&
+                paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'))
+        ) {
+            container = doc.createElement('div');
+            parent.appendChild(container);
+
+            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+        } else {
+            container = parent as HTMLElement;
+        }
+
+        context.regularSelection.current = {
+            block: container,
+            segment: null,
         };
 
-        applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-        applyFormat(
-            container,
-            context.formatAppliers.segmentOnBlock,
-            paragraph.header.format,
-            context
-        );
-
-        Object.assign(context.implicitSegmentFormat, paragraph.header.format);
-    } else if (!paragraph.isImplicit) {
-        container = doc.createElement('div');
-        parent.appendChild(container);
-
-        applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-    } else {
-        container = parent as HTMLElement;
-    }
-
-    context.regularSelection.current = {
-        block: container,
-        segment: null,
-    };
-
-    try {
         paragraph.segments.forEach(segment => {
             context.modelHandlers.segment(doc, container, segment, context);
         });
-    } finally {
-        context.implicitSegmentFormat = implicitSegmentFormat;
-    }
+    });
 };

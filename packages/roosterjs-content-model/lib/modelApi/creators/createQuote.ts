@@ -1,13 +1,19 @@
-import { ContentModelQuote } from '../../publicTypes/block/group/ContentModelQuote';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 
 /**
  * @internal
  */
-export function createQuote(): ContentModelQuote {
+export function createQuote(
+    format?: ContentModelBlockFormat,
+    quoteSegmentFormat?: ContentModelSegmentFormat
+): ContentModelQuote {
     return {
         blockType: 'BlockGroup',
         blockGroupType: 'Quote',
         blocks: [],
-        format: {},
+        format: { ...(format || {}) },
+        quoteSegmentFormat: { ...(quoteSegmentFormat || {}) },
     };
 }

@@ -1,28 +1,46 @@
 import { addBlock } from '../../modelApi/common/addBlock';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createQuote } from '../../modelApi/creators/createQuote';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { getObjectKeys, getStyles } from 'roosterjs-editor-dom';
-
-const KnownQuoteStyleNames = ['margin-top', 'margin-bottom'];
+import { getObjectKeys } from 'roosterjs-editor-dom';
+import { knownElementProcessor } from './knownElementProcessor';
+import { parseFormat } from '../utils/parseFormat';
+import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal
  */
 export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, element, context) => {
-    const styles = getStyles(element);
+    if (element.style.borderLeft || element.style.borderRight) {
+        stackFormat(
+            context,
+            {
+                paragraph: 'empty',
+                segment: 'shallowCloneForBlock',
+            },
+            () => {
+                const quoteFormat: ContentModelBlockFormat = {};
+                const segmentFormat: ContentModelSegmentFormat = {};
 
-    if (
-        parseInt(element.style.marginTop) === 0 &&
-        parseInt(element.style.marginBottom) === 0 &&
-        getObjectKeys(styles).every(key => KnownQuoteStyleNames.indexOf(key) >= 0)
-    ) {
-        // Temporary solution: Use Quote to provide indentation
-        // TODO: We should use CSS to do indentation, and only use Quote for quoted text
-        const quote = createQuote();
+                parseFormat(element, context.formatParsers.block, quoteFormat, context);
+                parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
 
-        addBlock(group, quote);
-        context.elementProcessors.child(quote, element, context);
+                const quote = createQuote(quoteFormat, segmentFormat);
+
+                addBlock(group, quote);
+
+                // These inline formats are overridden by quote, and will be applied onto BLOCKQUOTE element
+                // So no need to pass them down into segments.
+                // And when toggle blockquote (unwrap the quote model), no need to modify the inline format of segments
+                getObjectKeys(segmentFormat).forEach(key => {
+                    delete context.segmentFormat[key];
+                });
+
+                context.elementProcessors.child(quote, element, context);
+            }
+        );
     } else {
-        context.elementProcessors['*'](group, element, context);
+        knownElementProcessor(group, element, context);
     }
 };

@@ -1,8 +1,9 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../publicTypes/block/group/ContentModelListItem';
+import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 
 /**
  * @internal
@@ -35,11 +36,7 @@ export const handleListItem: ContentModelHandler<ContentModelListItem> = (
     } else {
         // There is no level for this list item, that means it should be moved out of the list
         // For each paragraph, make it not implicit so it will have a DIV around it, to avoid more paragraphs connected together
-        listItem.blocks.forEach(block => {
-            if (block.blockType == 'Paragraph') {
-                block.isImplicit = false;
-            }
-        });
+        listItem.blocks.forEach(setParagraphNotImplicit);
     }
 
     context.modelHandlers.blockGroupChildren(doc, listParent, listItem, context);

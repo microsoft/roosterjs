@@ -4,6 +4,7 @@ import { createEntity } from '../../modelApi/creators/createEntity';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getEntityFromElement } from 'roosterjs-editor-dom';
 import { isBlockElement } from '../utils/isBlockElement';
+import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal
@@ -11,14 +12,22 @@ import { isBlockElement } from '../utils/isBlockElement';
 export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const entity = getEntityFromElement(element);
 
-    if (entity) {
-        const entityModel = createEntity(entity);
-        const isBlockEntity = isBlockElement(element, context);
+    // In Content Model we also treat read only element as an entity since we cannot edit it
+    const { id, type, isReadonly } = entity || { isReadonly: true };
+    const isBlockEntity = isBlockElement(element, context);
+
+    stackFormat(context, { segment: isBlockEntity ? 'shallowCloneForBlock' : undefined }, () => {
+        const entityModel = createEntity(element, isReadonly, context.segmentFormat, id, type);
+
+        // TODO: Need to handle selection for editable entity
+        if (context.isInSelection) {
+            entityModel.isSelected = true;
+        }
 
         if (isBlockEntity) {
             addBlock(group, entityModel);
         } else {
             addSegment(group, entityModel);
         }
-    }
+    });
 };

@@ -1,8 +1,7 @@
-import { ContentModelDocument } from '../publicTypes/block/group/ContentModelDocument';
+import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createModelToDomContext } from '../modelToDom/context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { EntityPlaceholderPair } from '../publicTypes/context/ModelToDomEntityContext';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
@@ -17,6 +16,7 @@ import {
 
 /**
  * Create DOM tree fragment from Content Model document
+ * @param doc Document object of the target DOM tree
  * @param model The content model document to generate DOM tree from
  * @param editorContext Content for Content Model editor
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
@@ -26,21 +26,22 @@ import {
  * 3. An array entity DOM wrapper and its placeholder node pair for reusable root level entities.
  */
 export default function contentModelToDom(
+    doc: Document,
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null, EntityPlaceholderPair[]] {
-    const fragment = model.document.createDocumentFragment();
+): [DocumentFragment, SelectionRangeEx | null, Record<string, HTMLElement>] {
+    const fragment = doc.createDocumentFragment();
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
-    modelToDomContext.modelHandlers.blockGroup(model.document, fragment, model, modelToDomContext);
+    modelToDomContext.modelHandlers.blockGroup(doc, fragment, model, modelToDomContext);
     optimize(fragment, 2 /*optimizeLevel*/);
 
     const range = extractSelectionRange(modelToDomContext);
 
     fragment.normalize();
 
-    return [fragment, range, modelToDomContext.entityPairs];
+    return [fragment, range, modelToDomContext.entities];
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {
@@ -53,18 +54,7 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
     let startPosition: NodePosition | undefined;
     let endPosition: NodePosition | undefined;
 
-    if (tableSelection?.table) {
-        return {
-            type: SelectionRangeTypes.TableSelection,
-            ranges: [],
-            areAllCollapsed: false,
-            table: tableSelection.table,
-            coordinates: {
-                firstCell: tableSelection.firstCell,
-                lastCell: tableSelection.lastCell,
-            },
-        };
-    } else if (imageSelection?.image) {
+    if (imageSelection?.image) {
         return {
             type: SelectionRangeTypes.ImageSelection,
             ranges: [createRange(imageSelection.image)],
@@ -81,6 +71,17 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
             type: SelectionRangeTypes.Normal,
             ranges: [createRange(startPosition, endPosition)],
             areAllCollapsed: range.collapsed,
+        };
+    } else if (tableSelection?.table) {
+        return {
+            type: SelectionRangeTypes.TableSelection,
+            ranges: [],
+            areAllCollapsed: false,
+            table: tableSelection.table,
+            coordinates: {
+                firstCell: tableSelection.firstCell,
+                lastCell: tableSelection.lastCell,
+            },
         };
     } else {
         return null;

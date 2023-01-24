@@ -28,10 +28,9 @@ const initialState: BuildInPluginState = {
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     experimentalFeatures: [
-        ExperimentalFeatures.ConvertSingleImageBody,
         ExperimentalFeatures.ListItemAlignment,
-        ExperimentalFeatures.PendingStyleBasedFormat,
         ExperimentalFeatures.DefaultFormatInSpan,
+        ExperimentalFeatures.AutoFormatList,
     ],
     isRtl: false,
 };

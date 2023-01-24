@@ -1,6 +1,6 @@
 import { addLink } from '../../modelApi/common/addLink';
 import { addSegment } from '../../modelApi/common/addSegment';
-import { ContentModelBlockGroup } from '../../publicTypes/block/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 

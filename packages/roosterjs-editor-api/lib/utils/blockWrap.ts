@@ -1,5 +1,5 @@
 import blockFormat from './blockFormat';
-import { IEditor } from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
     getSelectedBlockElementsInRegion,
@@ -28,7 +28,11 @@ export default function blockWrap(
     blockFormat(
         editor,
         region => {
-            const blocks = getSelectedBlockElementsInRegion(region, true /*createBlockIfEmpty*/);
+            const blocks = getSelectedBlockElementsInRegion(
+                region,
+                true /*createBlockIfEmpty*/,
+                editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
+            );
             let nodes = collapseNodesInRegion(region, blocks);
             if (nodes.length > 0) {
                 if (nodes.length == 1) {

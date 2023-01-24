@@ -23,6 +23,6 @@ export type ContentModelBlockType =
     | 'Entity'
 
     /**
-     * Represents a HR element
+     * Represents a horizontal divider element
      */
-    | 'HR';
+    | 'Divider';
