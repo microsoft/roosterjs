@@ -40,7 +40,10 @@ export function getSelectedSegments(
 
     selections.forEach(({ segments, block }) => {
         if (segments && ((includingFormatHolder && !block) || block?.blockType == 'Paragraph')) {
-            arrayPush(result, segments);
+            arrayPush(
+                result,
+                segments.filter(x => x.segmentType != 'Entity' || !x.isReadonly)
+            );
         }
     });
 

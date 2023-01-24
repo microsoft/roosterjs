@@ -1,5 +1,6 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
+import { createEntity } from '../../../lib/modelApi/creators/createEntity';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -811,5 +812,21 @@ describe('iterateSelections', () => {
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
+    });
+
+    it('With selected entity', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph();
+        const entity = createEntity(null!, true);
+
+        entity.isSelected = true;
+
+        para.segments.push(entity);
+        doc.blocks.push(para);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'never' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([doc], undefined, para, [entity]);
     });
 });
