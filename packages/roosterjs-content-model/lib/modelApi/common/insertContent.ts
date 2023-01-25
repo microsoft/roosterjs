@@ -23,6 +23,7 @@ export function insertContent(
                 isDarkMode: !!isFromDarkMode,
                 zoomScale: 1,
                 isRightToLeft: false,
+                darkColorHandler: null,
             },
             {
                 includeRoot: true,

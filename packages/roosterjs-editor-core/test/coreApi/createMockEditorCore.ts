@@ -19,5 +19,6 @@ export default function createMockEditorCore(
         sizeTransformer: x => x,
         zoomScale: 1,
         getVisibleViewport: () => contentDiv.getBoundingClientRect(),
+        darkColorHandler: null,
     };
 }

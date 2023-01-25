@@ -1,4 +1,5 @@
 import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlugins';
+import DarkColorHandlerImpl from './DarkColorHandlerImpl';
 import { coreApiMap } from '../coreApi/coreApiMap';
 import {
     BlockElement,
@@ -7,6 +8,7 @@ import {
     ColorTransformDirection,
     ContentChangedData,
     ContentPosition,
+    DarkColorHandler,
     DefaultFormat,
     DOMEventHandler,
     EditorCore,
@@ -130,7 +132,15 @@ export default class Editor implements IEditor {
                     );
                 }),
             imageSelectionBorderColor: options.imageSelectionBorderColor,
+            darkColorHandler: null,
         };
+
+        if (this.isFeatureEnabled(ExperimentalFeatures.VariableBasedDarkColor)) {
+            this.core.darkColorHandler = new DarkColorHandlerImpl(
+                contentDiv,
+                this.core.lifecycle.getDarkColor
+            );
+        }
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -149,6 +159,8 @@ export default class Editor implements IEditor {
         for (let i = core.plugins.length - 1; i >= 0; i--) {
             core.plugins[i].dispose();
         }
+
+        core.darkColorHandler?.reset();
 
         this.core = null;
     }
@@ -1035,6 +1047,13 @@ export default class Editor implements IEditor {
             null /*callback*/,
             ColorTransformDirection.LightToDark
         );
+    }
+
+    /**
+     * Get a darkColorHandler object for this editor. It will return null if experimental feature "VariableBasedDarkColor" is not enabled
+     */
+    public getDarkColorHandler(): DarkColorHandler | null {
+        return this.getCore().darkColorHandler;
     }
 
     /**

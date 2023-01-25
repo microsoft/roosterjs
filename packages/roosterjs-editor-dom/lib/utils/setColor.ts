@@ -1,4 +1,8 @@
-import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
+import {
+    DarkColorHandler,
+    DarkModeDatasetNames,
+    ModeIndependentColor,
+} from 'roosterjs-editor-types';
 
 const WHITE = '#ffffff';
 const GRAY = '#333333';
@@ -30,32 +34,49 @@ export default function setColor(
     color: string | ModeIndependentColor,
     isBackgroundColor: boolean,
     isDarkMode?: boolean,
-    shouldAdaptTheFontColor?: boolean
+    shouldAdaptTheFontColor?: boolean,
+    darkColorHandler?: DarkColorHandler | null
 ) {
     const colorString = typeof color === 'string' ? color.trim() : '';
     const modeIndependentColor = typeof color === 'string' ? null : color;
+    const cssName = isBackgroundColor ? 'background-color' : 'color';
 
     if (colorString || modeIndependentColor) {
-        element.style.setProperty(
-            isBackgroundColor ? 'background-color' : 'color',
-            (isDarkMode
-                ? modeIndependentColor?.darkModeColor
-                : modeIndependentColor?.lightModeColor) || colorString
-        );
+        if (darkColorHandler) {
+            const colorValue = darkColorHandler.registerColor(
+                modeIndependentColor?.lightModeColor || colorString,
+                !!isDarkMode,
+                modeIndependentColor?.darkModeColor
+            );
 
-        if (element.dataset) {
-            const dataSetName = isBackgroundColor
-                ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                : DarkModeDatasetNames.OriginalStyleColor;
-            if (!isDarkMode || color == TRANSPARENT_COLOR) {
-                delete element.dataset[dataSetName];
-            } else if (modeIndependentColor) {
-                element.dataset[dataSetName] = modeIndependentColor.lightModeColor;
+            element.style.setProperty(cssName, colorValue);
+        } else {
+            element.style.setProperty(
+                cssName,
+                (isDarkMode
+                    ? modeIndependentColor?.darkModeColor
+                    : modeIndependentColor?.lightModeColor) || colorString
+            );
+
+            if (element.dataset) {
+                const dataSetName = isBackgroundColor
+                    ? DarkModeDatasetNames.OriginalStyleBackgroundColor
+                    : DarkModeDatasetNames.OriginalStyleColor;
+                if (!isDarkMode || color == TRANSPARENT_COLOR) {
+                    delete element.dataset[dataSetName];
+                } else if (modeIndependentColor) {
+                    element.dataset[dataSetName] = modeIndependentColor.lightModeColor;
+                }
             }
         }
 
         if (isBackgroundColor && shouldAdaptTheFontColor) {
-            adaptFontColorToBackgroundColor(element, isDarkMode);
+            adaptFontColorToBackgroundColor(
+                element,
+                modeIndependentColor?.lightModeColor || colorString,
+                isDarkMode,
+                darkColorHandler
+            );
         }
     }
 }
@@ -64,16 +85,12 @@ export default function setColor(
  * Change the font color to white or some other color, so the text can be visible with a darker background
  * @param element The element that contains text.
  */
-function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: boolean) {
-    if (element.firstElementChild?.hasAttribute('style')) {
-        return;
-    }
-    const backgroundColor = element.style.getPropertyValue('background-color');
-    const lightModeBackgroundColor =
-        (isDarkMode &&
-            (element.dataset[DarkModeDatasetNames.OriginalStyleBackgroundColor] ||
-                element.dataset[DarkModeDatasetNames.OriginalAttributeBackgroundColor])) ||
-        backgroundColor;
+function adaptFontColorToBackgroundColor(
+    element: HTMLElement,
+    lightModeBackgroundColor: string,
+    isDarkMode?: boolean,
+    darkColorHandler?: DarkColorHandler | null
+) {
     if (!lightModeBackgroundColor || lightModeBackgroundColor === TRANSPARENT) {
         return;
     }
@@ -84,14 +101,28 @@ function adaptFontColorToBackgroundColor(element: HTMLElement, isDarkMode?: bool
                 lightModeColor: WHITE,
                 darkModeColor: GRAY,
             };
-            setColor(element, fontForDark, false /*isBackground*/, isDarkMode);
+            setColor(
+                element,
+                fontForDark,
+                false /*isBackground*/,
+                isDarkMode,
+                false /*shouldAdaptFontColor*/,
+                darkColorHandler
+            );
             break;
         case ColorTones.BRIGHT:
             const fontForLight: ModeIndependentColor = {
                 lightModeColor: BLACK,
                 darkModeColor: WHITE,
             };
-            setColor(element, fontForLight, false /*isBackground*/, isDarkMode);
+            setColor(
+                element,
+                fontForLight,
+                false /*isBackground*/,
+                isDarkMode,
+                false /*shouldAdaptFontColor*/,
+                darkColorHandler
+            );
             break;
     }
 }

@@ -14,6 +14,7 @@ describe('createModelToDomContext', () => {
         zoomScale: 1,
         isRightToLeft: false,
         getDarkColor: undefined,
+        darkColorHandler: null,
     };
     const defaultResult: ModelToDomContext = {
         ...editorContext,
@@ -48,6 +49,7 @@ describe('createModelToDomContext', () => {
             zoomScale: 2,
             isRightToLeft: true,
             getDarkColor: () => '',
+            darkColorHandler: null,
         };
 
         const context = createModelToDomContext(editorContext);

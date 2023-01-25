@@ -149,12 +149,16 @@ export default class PendingFormatStatePlugin
             span.style.setProperty('font-family', currentStyle.fontName ?? null);
             span.style.setProperty('font-size', currentStyle.fontSize ?? null);
 
+            const darkColorHandler = this.editor.getDarkColorHandler();
+
             if (currentStyle.textColors || currentStyle.textColor) {
                 setColor(
                     span,
                     (currentStyle.textColors || currentStyle.textColor)!,
                     false /*isBackground*/,
-                    isDarkMode
+                    isDarkMode,
+                    false /*shouldAdaptFontColor*/,
+                    darkColorHandler
                 );
             }
 
@@ -163,7 +167,9 @@ export default class PendingFormatStatePlugin
                     span,
                     (currentStyle.backgroundColors || currentStyle.backgroundColor)!,
                     true /*isBackground*/,
-                    isDarkMode
+                    isDarkMode,
+                    false /*shouldAdaptFontColor*/,
+                    darkColorHandler
                 );
             }
         }

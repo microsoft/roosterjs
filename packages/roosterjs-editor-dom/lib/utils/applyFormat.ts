@@ -1,5 +1,5 @@
 import setColor from './setColor';
-import { DefaultFormat } from 'roosterjs-editor-types';
+import { DarkColorHandler, DefaultFormat } from 'roosterjs-editor-types';
 
 /**
  * Apply format to an HTML element
@@ -9,7 +9,8 @@ import { DefaultFormat } from 'roosterjs-editor-types';
 export default function applyFormat(
     element: HTMLElement,
     format: DefaultFormat,
-    isDarkMode?: boolean
+    isDarkMode?: boolean,
+    darkColorHandler?: DarkColorHandler | null
 ) {
     if (format) {
         let elementStyle = element.style;
@@ -33,15 +34,43 @@ export default function applyFormat(
         }
 
         if (textColors) {
-            setColor(element, textColors, false /*isBackground*/, isDarkMode);
+            setColor(
+                element,
+                textColors,
+                false /*isBackground*/,
+                isDarkMode,
+                false /*shouldAdaptFontColor*/,
+                darkColorHandler
+            );
         } else if (textColor) {
-            setColor(element, textColor, false /*isBackground*/, isDarkMode);
+            setColor(
+                element,
+                textColor,
+                false /*isBackground*/,
+                isDarkMode,
+                false /*shouldAdaptFontColor*/,
+                darkColorHandler
+            );
         }
 
         if (backgroundColors) {
-            setColor(element, backgroundColors, true /*isBackground*/, isDarkMode);
+            setColor(
+                element,
+                backgroundColors,
+                true /*isBackground*/,
+                isDarkMode,
+                false /*shouldAdaptFontColor*/,
+                darkColorHandler
+            );
         } else if (backgroundColor) {
-            setColor(element, backgroundColor, true /*isBackground*/, isDarkMode);
+            setColor(
+                element,
+                backgroundColor,
+                true /*isBackground*/,
+                isDarkMode,
+                false /*shouldAdaptFontColor*/,
+                darkColorHandler
+            );
         }
 
         if (bold) {

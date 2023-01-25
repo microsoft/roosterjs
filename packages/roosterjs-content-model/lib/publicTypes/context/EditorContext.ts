@@ -1,3 +1,5 @@
+import { DarkColorHandler } from 'roosterjs-editor-types';
+
 /**
  * An editor context interface used by ContentModel PAI
  */
@@ -16,6 +18,11 @@ export interface EditorContext {
      * Whether current content is from right to left
      */
     isRightToLeft: boolean;
+
+    /**
+     * Dark model color handler
+     */
+    darkColorHandler: DarkColorHandler | null;
 
     /**
      * Calculate color for dark mode

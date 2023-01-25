@@ -37,7 +37,7 @@ export const getContent: GetContent = (
         content = root.textContent;
     } else if (mode == GetContentMode.PlainText) {
         content = getTextContent(root);
-    } else if (triggerExtractContentEvent || core.lifecycle.isDarkMode) {
+    } else if (triggerExtractContentEvent || core.lifecycle.isDarkMode || core.darkColorHandler) {
         const clonedRoot = cloneNode(root);
         clonedRoot.normalize();
 
@@ -51,13 +51,14 @@ export const getContent: GetContent = (
             : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 
-        if (core.lifecycle.isDarkMode) {
+        if (core.lifecycle.isDarkMode || core.darkColorHandler) {
             core.api.transformColor(
                 core,
                 clonedRoot,
                 false /*includeSelf*/,
                 null /*callback*/,
-                ColorTransformDirection.DarkToLight
+                ColorTransformDirection.DarkToLight,
+                !!core.darkColorHandler
             );
         }
 
