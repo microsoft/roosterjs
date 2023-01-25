@@ -21,211 +21,34 @@ describe('adjustWordSelection', () => {
         expect(adjustedResult).toContain(defaultMarker);
     }
 
-    it('Adjust No Words', () => {
-        //'|'
-        const model: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [defaultMarker],
-                },
-            ],
-        };
-        runTest(model, [defaultMarker], {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [defaultMarker],
-                },
-            ],
-        });
-    });
-
-    it('Adjust Spaces', () => {
-        //'    |    '
-        const model: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: '    ',
-                            format: {},
-                        },
-                        defaultMarker,
-                        {
-                            segmentType: 'Text',
-                            text: '    ',
-                            format: {},
-                        },
-                    ],
-                },
-            ],
-        };
-        runTest(model, [defaultMarker], {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: '    ',
-                            format: {},
-                        },
-                        defaultMarker,
-                        {
-                            segmentType: 'Text',
-                            text: '    ',
-                            format: {},
-                        },
-                    ],
-                },
-            ],
-        });
-    });
-
-    it('Adjust Single Word - Before', () => {
-        //'|Word'
-        const model: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        defaultMarker,
-                        {
-                            segmentType: 'Text',
-                            text: 'Word',
-                            format: {},
-                        },
-                    ],
-                },
-            ],
-        };
-        runTest(model, [defaultMarker], {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        defaultMarker,
-                        {
-                            segmentType: 'Text',
-                            text: 'Word',
-                            format: {},
-                        },
-                    ],
-                },
-            ],
-        });
-    });
-
-    it('Adjust Single Word - Middle', () => {
-        //'Wo|rd'
-        const result: ContentModelSegment[] = [
-            {
-                segmentType: 'Text',
-                text: 'Wo',
-                format: {},
-            },
-            defaultMarker,
-            {
-                segmentType: 'Text',
-                text: 'rd',
-                format: {},
-            },
-        ];
-        runTest(
-            {
+    describe('No format -', () => {
+        it('Adjust No Words', () => {
+            //'|'
+            const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        segments: result,
+                        segments: [defaultMarker],
                     },
                 ],
-            },
-            result,
-            {
+            };
+            runTest(model, [defaultMarker], {
                 blockGroupType: 'Document',
                 blocks: [
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        segments: result,
+                        segments: [defaultMarker],
                     },
                 ],
-            }
-        );
-    });
-
-    it('Adjust Single Word - After', () => {
-        //'Word|'
-        const model: ContentModelDocument = {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'Word',
-                            format: {},
-                        },
-                        defaultMarker,
-                    ],
-                },
-            ],
-        };
-        runTest(model, [defaultMarker], {
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'Word',
-                            format: {},
-                        },
-                        defaultMarker,
-                    ],
-                },
-            ],
+            });
         });
-    });
 
-    it('Adjust Multiple Words', () => {
-        //'Subject Ve|rb Object'
-        const result: ContentModelSegment[] = [
-            {
-                segmentType: 'Text',
-                text: 'Ve',
-                format: {},
-            },
-            defaultMarker,
-            {
-                segmentType: 'Text',
-                text: 'rb',
-                format: {},
-            },
-        ];
-        runTest(
-            {
+        it('Adjust Spaces', () => {
+            //'    |    '
+            const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
                     {
@@ -234,21 +57,20 @@ describe('adjustWordSelection', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'Subject Ve',
+                                text: '    ',
                                 format: {},
                             },
                             defaultMarker,
                             {
                                 segmentType: 'Text',
-                                text: 'rb Object',
+                                text: '    ',
                                 format: {},
                             },
                         ],
                     },
                 ],
-            },
-            result,
-            {
+            };
+            runTest(model, [defaultMarker], {
                 blockGroupType: 'Document',
                 blocks: [
                     {
@@ -257,102 +79,102 @@ describe('adjustWordSelection', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'Subject ',
-                                format: {},
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'Ve',
+                                text: '    ',
                                 format: {},
                             },
                             defaultMarker,
                             {
                                 segmentType: 'Text',
-                                text: 'rb',
-                                format: {},
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: ' Object',
+                                text: '    ',
                                 format: {},
                             },
                         ],
                     },
                 ],
-            }
-        );
-    });
+            });
+        });
 
-    it('Adjust Multiple Formatted Words', () => {
-        //'Subject Ve|rb Object'
-        // Every letter on Verb has different formats
-        runTest(
-            {
+        it('Adjust Single Word - Before', () => {
+            //'|Word'
+            const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
                     {
                         blockType: 'Paragraph',
                         format: {},
                         segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'Subject ',
-                                format: {},
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'V',
-                                format: { fontFamily: 'V_font' },
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'e',
-                                format: { backgroundColor: 'e_color' },
-                            },
                             defaultMarker,
                             {
                                 segmentType: 'Text',
-                                text: 'r',
-                                format: { textColor: 'r_color' },
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: 'b',
-                                format: { fontWeight: 'b_weight' },
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: ' Object',
+                                text: 'Word',
                                 format: {},
                             },
                         ],
                     },
                 ],
-            },
-            [
+            };
+            runTest(model, [defaultMarker], {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            defaultMarker,
+                            {
+                                segmentType: 'Text',
+                                text: 'Word',
+                                format: {},
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
+
+        it('Adjust Single Word - Middle', () => {
+            //'Wo|rd'
+            const result: ContentModelSegment[] = [
                 {
                     segmentType: 'Text',
-                    text: 'e',
-                    format: { backgroundColor: 'e_color' },
-                },
-                {
-                    segmentType: 'Text',
-                    text: 'V',
-                    format: { fontFamily: 'V_font' },
+                    text: 'Wo',
+                    format: {},
                 },
                 defaultMarker,
                 {
                     segmentType: 'Text',
-                    text: 'r',
-                    format: { textColor: 'r_color' },
+                    text: 'rd',
+                    format: {},
                 },
+            ];
+            runTest(
                 {
-                    segmentType: 'Text',
-                    text: 'b',
-                    format: { fontWeight: 'b_weight' },
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: result,
+                        },
+                    ],
                 },
-            ],
-            {
+                result,
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: result,
+                        },
+                    ],
+                }
+            );
+        });
+
+        it('Adjust Single Word - After', () => {
+            //'Word|'
+            const model: ContentModelDocument = {
                 blockGroupType: 'Document',
                 blocks: [
                     {
@@ -361,43 +183,363 @@ describe('adjustWordSelection', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'Subject ',
+                                text: 'Word',
                                 format: {},
                             },
+                            defaultMarker,
+                        ],
+                    },
+                ],
+            };
+            runTest(model, [defaultMarker], {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
                             {
                                 segmentType: 'Text',
-                                text: 'V',
-                                format: { fontFamily: 'V_font' },
+                                text: 'Word',
+                                format: {},
                             },
-                            {
-                                segmentType: 'Text',
-                                text: 'e',
-                                format: { backgroundColor: 'e_color' },
-                            },
+                            defaultMarker,
+                        ],
+                    },
+                ],
+            });
+        });
+
+        it('Adjust Multiple Words', () => {
+            //'Subject Ve|rb Object'
+            const result: ContentModelSegment[] = [
+                {
+                    segmentType: 'Text',
+                    text: 'Ve',
+                    format: {},
+                },
+                defaultMarker,
+                {
+                    segmentType: 'Text',
+                    text: 'rb',
+                    format: {},
+                },
+            ];
+            runTest(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'Subject Ve',
+                                    format: {},
+                                },
+                                defaultMarker,
+                                {
+                                    segmentType: 'Text',
+                                    text: 'rb Object',
+                                    format: {},
+                                },
+                            ],
+                        },
+                    ],
+                },
+                result,
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'Subject ',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'Ve',
+                                    format: {},
+                                },
+                                defaultMarker,
+                                {
+                                    segmentType: 'Text',
+                                    text: 'rb',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: ' Object',
+                                    format: {},
+                                },
+                            ],
+                        },
+                    ],
+                }
+            );
+        });
+    });
+
+    describe('Formatted -', () => {
+        it('Adjust Single Word - Before', () => {
+            //'|Word'
+            // 'Wo' and 'rd' have different formats
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
                             defaultMarker,
                             {
                                 segmentType: 'Text',
-                                text: 'r',
-                                format: { textColor: 'r_color' },
+                                text: 'Wo',
+                                format: { fontFamily: 'family' },
                             },
                             {
                                 segmentType: 'Text',
-                                text: 'b',
-                                format: { fontWeight: 'b_weight' },
-                            },
-                            {
-                                segmentType: 'Text',
-                                text: ' Object',
-                                format: {},
+                                text: 'rd',
+                                format: { backgroundColor: 'color' },
                             },
                         ],
                     },
                 ],
-            }
-        );
-    });
+            };
+            runTest(model, [defaultMarker], {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            defaultMarker,
+                            {
+                                segmentType: 'Text',
+                                text: 'Wo',
+                                format: { fontFamily: 'family' },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'rd',
+                                format: { backgroundColor: 'color' },
+                            },
+                        ],
+                    },
+                ],
+            });
+        });
 
-    describe('Different blockGroupTypes', () => {
+        it('Adjust Single Word - Middle', () => {
+            //'Wo|rd'
+            // 'Wo' and 'rd' have different formats
+            const result: ContentModelSegment[] = [
+                {
+                    segmentType: 'Text',
+                    text: 'Wo',
+                    format: { fontFamily: 'family' },
+                },
+                defaultMarker,
+                {
+                    segmentType: 'Text',
+                    text: 'rd',
+                    format: { backgroundColor: 'color' },
+                },
+            ];
+            runTest(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: result,
+                        },
+                    ],
+                },
+                result,
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: result,
+                        },
+                    ],
+                }
+            );
+        });
+
+        it('Adjust Single Word - After', () => {
+            //'Word|'
+            // 'Wo' and 'rd' have different formats
+            const model: ContentModelDocument = {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Wo',
+                                format: { fontFamily: 'family' },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'rd',
+                                format: { backgroundColor: 'color' },
+                            },
+                            defaultMarker,
+                        ],
+                    },
+                ],
+            };
+            runTest(model, [defaultMarker], {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Wo',
+                                format: { fontFamily: 'family' },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'rd',
+                                format: { backgroundColor: 'color' },
+                            },
+                            defaultMarker,
+                        ],
+                    },
+                ],
+            });
+        });
+
+        it('Adjust Multiple Words', () => {
+            //'Subject Ve|rb Object'
+            // Every letter on Verb has different formats
+            runTest(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'Subject ',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'V',
+                                    format: { fontFamily: 'V_font' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'e',
+                                    format: { backgroundColor: 'e_color' },
+                                },
+                                defaultMarker,
+                                {
+                                    segmentType: 'Text',
+                                    text: 'r',
+                                    format: { textColor: 'r_color' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'b',
+                                    format: { fontWeight: 'b_weight' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: ' Object',
+                                    format: {},
+                                },
+                            ],
+                        },
+                    ],
+                },
+                [
+                    {
+                        segmentType: 'Text',
+                        text: 'e',
+                        format: { backgroundColor: 'e_color' },
+                    },
+                    {
+                        segmentType: 'Text',
+                        text: 'V',
+                        format: { fontFamily: 'V_font' },
+                    },
+                    defaultMarker,
+                    {
+                        segmentType: 'Text',
+                        text: 'r',
+                        format: { textColor: 'r_color' },
+                    },
+                    {
+                        segmentType: 'Text',
+                        text: 'b',
+                        format: { fontWeight: 'b_weight' },
+                    },
+                ],
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'Subject ',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'V',
+                                    format: { fontFamily: 'V_font' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'e',
+                                    format: { backgroundColor: 'e_color' },
+                                },
+                                defaultMarker,
+                                {
+                                    segmentType: 'Text',
+                                    text: 'r',
+                                    format: { textColor: 'r_color' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: 'b',
+                                    format: { fontWeight: 'b_weight' },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    text: ' Object',
+                                    format: {},
+                                },
+                            ],
+                        },
+                    ],
+                }
+            );
+        });
+    });
+    describe('Different blockGroupTypes -', () => {
         const result: ContentModelSegment[] = [
             {
                 segmentType: 'Text',
@@ -585,7 +727,7 @@ describe('adjustWordSelection', () => {
         });
     });
 
-    describe('Multiple Blocks', () => {
+    describe('Multiple Blocks -', () => {
         const emptyBlock: ContentModelBlock = {
             blockType: 'Paragraph',
             segments: [],
