@@ -71,7 +71,7 @@ export function adjustWordSelection(
         }
 
         // Marker is at end of word
-        if (segments.length <= 2) {
+        if (segments[segments.length - 1] == marker) {
             return [marker];
         }
 
