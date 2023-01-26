@@ -16,7 +16,14 @@ export default function setBackgroundColor(editor: IEditor, color: string | Mode
     applyInlineStyle(
         editor,
         (element, isInnerNode) => {
-            setColor(element, isInnerNode ? '' : color, true /*isBackground*/, editor.isDarkMode());
+            setColor(
+                element,
+                isInnerNode ? '' : color,
+                true /*isBackground*/,
+                editor.isDarkMode(),
+                false /*shouldAdaptFontColor*/,
+                editor.getDarkColorHandler()
+            );
         },
         'setBackgroundColor'
     );

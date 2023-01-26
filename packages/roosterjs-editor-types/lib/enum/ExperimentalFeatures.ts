@@ -126,4 +126,11 @@ export const enum ExperimentalFeatures {
      * the block element (In most case, the DIV element) so keep the block element clean.
      */
     DefaultFormatInSpan = 'DefaultFormatInSpan',
+
+    /**
+     * Use variable-based dark mode solution rather than dataset-based solution.
+     * When enable this feature, need to pass in a DarkModelHandler object to each call of setColor and applyFormat
+     * if you need them work for dark mode
+     */
+    VariableBasedDarkColor = 'VariableBasedDarkColor',
 }

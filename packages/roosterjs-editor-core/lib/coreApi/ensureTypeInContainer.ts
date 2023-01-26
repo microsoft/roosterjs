@@ -85,7 +85,12 @@ export const ensureTypeInContainer: EnsureTypeInContainer = (
     }
 
     if (formatNode && core.lifecycle.defaultFormat) {
-        applyFormat(formatNode, core.lifecycle.defaultFormat, core.lifecycle.isDarkMode);
+        applyFormat(
+            formatNode,
+            core.lifecycle.defaultFormat,
+            core.lifecycle.isDarkMode,
+            core.darkColorHandler
+        );
     }
 
     // If this is triggered by a keyboard event, let's select the new position
