@@ -49,6 +49,7 @@ export function getElementBasedFormatState(
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
+        isCode: !!editor.queryElements('code', QueryScope.OnSelection)[0],
         isInTable: !!table,
         tableFormat: tableFormat,
         tableHasHeader: hasHeader,

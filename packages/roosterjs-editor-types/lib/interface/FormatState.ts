@@ -60,6 +60,11 @@ export interface ElementBasedFormatState {
     isBlockQuote?: boolean;
 
     /**
+     * Whether the text is in Code block
+     */
+    isCode?: boolean;
+
+    /**
      * Whether unlink command can be called to the text
      */
     canUnlink?: boolean;
