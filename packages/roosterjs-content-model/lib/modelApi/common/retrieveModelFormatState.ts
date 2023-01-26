@@ -112,7 +112,10 @@ function retrieveFormatStateInternal(
     if (tableContext) {
         retrieveTableFormat(tableContext, result);
     }
+
+    // TODO: Support Code block in format state for Content Model
 }
+
 function retrieveTableFormat(tableContext: TableSelectionContext, result: FormatState) {
     const tableFormat = updateTableMetadata(tableContext.table);
 

@@ -27,7 +27,9 @@ export default function setTextColor(
                     element,
                     isInnerNode ? '' : color,
                     false /*isBackground*/,
-                    editor.isDarkMode()
+                    editor.isDarkMode(),
+                    false /*shouldAdaptFontColor*/,
+                    editor.getDarkColorHandler()
                 );
             }
         },
