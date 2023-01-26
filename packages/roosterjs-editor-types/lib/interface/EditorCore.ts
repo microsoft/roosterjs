@@ -78,7 +78,7 @@ export default interface EditorCore extends PluginState {
      * Dark model handler for the editor, used for variable-based solution.
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
-    darkColorHandler: DarkColorHandler | null;
+    darkColorHandler?: DarkColorHandler;
 }
 
 /**

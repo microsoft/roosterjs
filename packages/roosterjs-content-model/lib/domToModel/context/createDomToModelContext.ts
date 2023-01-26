@@ -19,7 +19,6 @@ export function createDomToModelContext(
             zoomScale: 1,
             isRightToLeft: false,
             getDarkColor: undefined,
-            darkColorHandler: null,
         }),
 
         blockFormat: {},

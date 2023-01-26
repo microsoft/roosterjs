@@ -132,7 +132,6 @@ export default class Editor implements IEditor {
                     );
                 }),
             imageSelectionBorderColor: options.imageSelectionBorderColor,
-            darkColorHandler: null,
         };
 
         if (this.isFeatureEnabled(ExperimentalFeatures.VariableBasedDarkColor)) {
@@ -1053,7 +1052,7 @@ export default class Editor implements IEditor {
      * Get a darkColorHandler object for this editor. It will return null if experimental feature "VariableBasedDarkColor" is not enabled
      */
     public getDarkColorHandler(): DarkColorHandler | null {
-        return this.getCore().darkColorHandler;
+        return this.getCore().darkColorHandler || null;
     }
 
     /**

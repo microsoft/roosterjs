@@ -20,14 +20,14 @@ export interface EditorContext {
     isRightToLeft: boolean;
 
     /**
-     * Dark model color handler
-     */
-    darkColorHandler: DarkColorHandler | null;
-
-    /**
      * Calculate color for dark mode
      * @param lightColor Light mode color
      * @returns Dark mode color calculated from lightColor
      */
     getDarkColor?: (lightColor: string) => string;
+
+    /**
+     * Dark model color handler
+     */
+    darkColorHandler?: DarkColorHandler | null;
 }

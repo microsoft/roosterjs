@@ -6,7 +6,7 @@ import { DarkColorHandler, DarkModeDatasetNames } from 'roosterjs-editor-types';
 export function getColor(
     element: HTMLElement,
     isBackground: boolean,
-    darkColorHandler: DarkColorHandler | null,
+    darkColorHandler: DarkColorHandler | undefined | null,
     isDarkMode: boolean
 ): string | undefined {
     let color: string | undefined;
@@ -45,7 +45,7 @@ export function setColor(
     element: HTMLElement,
     lightModeColor: string,
     isBackground: boolean,
-    darkColorHandler: DarkColorHandler | null,
+    darkColorHandler: DarkColorHandler | undefined | null,
     isDarkMode: boolean,
     getDarkColor?: (color: string) => string
 ) {

@@ -15,7 +15,6 @@ describe('createDomToModelContext', () => {
         zoomScale: 1,
         isRightToLeft: false,
         getDarkColor: undefined,
-        darkColorHandler: null,
     };
     const listFormat: DomToModelListFormat = {
         threadItemCounts: [],
@@ -51,7 +50,6 @@ describe('createDomToModelContext', () => {
             zoomScale: 2,
             isRightToLeft: true,
             getDarkColor: () => '',
-            darkColorHandler: null,
         };
 
         const context = createDomToModelContext(editorContext);
@@ -185,7 +183,6 @@ describe('createDomToModelContext', () => {
                 zoomScale: 2,
                 isRightToLeft: true,
                 getDarkColor,
-                darkColorHandler: null,
             },
             {
                 selectionRange: {
@@ -212,7 +209,6 @@ describe('createDomToModelContext', () => {
                 dataset: {},
             },
             ...contextOptions,
-            darkColorHandler: null,
         });
     });
 
@@ -225,7 +221,6 @@ describe('createDomToModelContext', () => {
                 zoomScale: 2,
                 isRightToLeft: true,
                 getDarkColor,
-                darkColorHandler: null,
             },
             {
                 selectionRange: {
@@ -254,7 +249,6 @@ describe('createDomToModelContext', () => {
             },
             listFormat,
             ...contextOptions,
-            darkColorHandler: null,
         });
     });
 
