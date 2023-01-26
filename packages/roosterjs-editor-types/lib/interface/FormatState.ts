@@ -62,7 +62,7 @@ export interface ElementBasedFormatState {
     /**
      * Whether the text is in Code block
      */
-    isCode?: boolean;
+    isCodeBlock?: boolean;
 
     /**
      * Whether unlink command can be called to the text
