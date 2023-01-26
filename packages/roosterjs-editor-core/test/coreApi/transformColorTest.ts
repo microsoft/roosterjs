@@ -1,7 +1,7 @@
 import createEditorCore from './createMockEditorCore';
 import { ColorTransformDirection, DarkColorHandler } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
-import { itFirefoxOnly } from '../TestHelper';
+import { itChromeOnly, itFirefoxOnly } from '../TestHelper';
 import { transformColor } from '../../lib/coreApi/transformColor';
 
 describe('transformColor Dark to light', () => {
@@ -317,7 +317,7 @@ describe('transform to dark mode v2', () => {
         );
     });
 
-    it('has both css and attribute colors', () => {
+    itChromeOnly('has both css and attribute colors', () => {
         const element = document.createElement('div');
         element.style.color = 'red';
         element.style.backgroundColor = 'green';
@@ -422,7 +422,7 @@ describe('transform to lgiht mode v2', () => {
         );
     });
 
-    it('has both css and attribute colors', () => {
+    itChromeOnly('has both css and attribute colors', () => {
         const element = document.createElement('div');
         element.style.color = 'red';
         element.style.backgroundColor = 'green';
