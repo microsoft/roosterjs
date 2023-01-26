@@ -1,6 +1,7 @@
 import BlockElement from './BlockElement';
 import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
+import DarkColorHandler from './DarkColorHandler';
 import DefaultFormat from './DefaultFormat';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
@@ -589,6 +590,11 @@ export default interface IEditor {
      * @param node The node to transform
      */
     transformToDarkColor(node: Node): void;
+
+    /**
+     * Get a darkColorHandler object for this editor. It will return null if experimental feature "VariableBasedDarkColor" is not enabled
+     */
+    getDarkColorHandler(): DarkColorHandler | null;
 
     /**
      * Make the editor in "Shadow Edit" mode.

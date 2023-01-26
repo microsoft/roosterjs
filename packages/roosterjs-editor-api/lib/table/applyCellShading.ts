@@ -20,7 +20,8 @@ export default function applyCellShading(editor: IEditor, color: string | ModeIn
                         color,
                         true /* isBackgroundColor */,
                         editor.isDarkMode(),
-                        true /** shouldAdaptFontColor */
+                        true /** shouldAdaptFontColor */,
+                        editor.getDarkColorHandler()
                     );
                     saveTableCellMetadata(region.rootNode, { bgColorOverride: true });
                 }
