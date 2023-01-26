@@ -1,4 +1,4 @@
-import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-types';
+import { DarkColorHandler, DarkModeDatasetNames } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -6,10 +6,11 @@ import { DarkModeDatasetNames, ModeIndependentColor } from 'roosterjs-editor-typ
 export function getColor(
     element: HTMLElement,
     isBackground: boolean,
+    darkColorHandler: DarkColorHandler | undefined | null,
     isDarkMode: boolean
 ): string | undefined {
     let color: string | undefined;
-    if (isDarkMode) {
+    if (isDarkMode && !darkColorHandler) {
         color =
             element.dataset[
                 isBackground
@@ -30,6 +31,10 @@ export function getColor(
             undefined;
     }
 
+    if (darkColorHandler) {
+        color = darkColorHandler.parseColorValue(color).lightModeColor;
+    }
+
     return color;
 }
 
@@ -38,24 +43,28 @@ export function getColor(
  */
 export function setColor(
     element: HTMLElement,
-    color: string | ModeIndependentColor,
+    lightModeColor: string,
     isBackground: boolean,
+    darkColorHandler: DarkColorHandler | undefined | null,
     isDarkMode: boolean,
     getDarkColor?: (color: string) => string
 ) {
-    const originalColor = typeof color === 'object' ? color.lightModeColor : color;
-    const effectiveColor = isDarkMode
-        ? typeof color === 'object'
-            ? color.darkModeColor
-            : getDarkColor?.(color) || color
-        : originalColor;
+    let effectiveColor: string;
 
-    if (isDarkMode && originalColor) {
-        element.dataset[
-            isBackground
-                ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                : DarkModeDatasetNames.OriginalStyleColor
-        ] = originalColor;
+    if (darkColorHandler) {
+        effectiveColor = darkColorHandler.registerColor(lightModeColor, isDarkMode);
+    } else {
+        effectiveColor = isDarkMode
+            ? getDarkColor?.(lightModeColor) || lightModeColor
+            : lightModeColor;
+
+        if (isDarkMode && lightModeColor) {
+            element.dataset[
+                isBackground
+                    ? DarkModeDatasetNames.OriginalStyleBackgroundColor
+                    : DarkModeDatasetNames.OriginalStyleColor
+            ] = lightModeColor;
+        }
     }
 
     if (isBackground) {

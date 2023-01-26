@@ -2,7 +2,6 @@ import * as TestHelper from '../TestHelper';
 import changeFontSize, { FONT_SIZES, getNewFontSize } from '../../lib/format/changeFontSize';
 import { Browser } from 'roosterjs-editor-dom';
 import { FontSizeChange, IEditor } from 'roosterjs-editor-types';
-const ZERO_WIDTH_SPACE = '\u200B';
 
 describe('getNewFontSize()', () => {
     function runTest(currentSize: number, isIncrease: boolean, expectedSize: number) {
@@ -96,11 +95,7 @@ describe('changeFontSize', () => {
     }
 
     it('empty editor', () => {
-        runTest(
-            '',
-            `<span style="font-size: 14pt;">${ZERO_WIDTH_SPACE}</span>`,
-            `<span style="font-size: 11pt;">${ZERO_WIDTH_SPACE}</span>`
-        );
+        runTest('', '', '');
     });
 
     it('Single text node', () => {

@@ -1,37 +1,29 @@
 import shouldConvertToSingleImage from '../../../lib/plugins/Paste/sourceValidations/shouldConvertToSingleImage';
-import { ClipboardData, IEditor } from 'roosterjs-editor-types';
+import { ClipboardData } from 'roosterjs-editor-types';
 import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
 
 describe('shouldConvertToSingleImage |', () => {
-    let editor: IEditor;
-
-    beforeEach(() => {
-        editor = <IEditor>(<any>{
-            isFeatureEnabled: () => true,
-        });
-    });
-
     it('Is Single Image', () => {
-        spyOn(editor, 'isFeatureEnabled').and.returnValue(true);
-        runTest(['IMG'], true);
+        runTest(['IMG'], true, true /* shouldConvertToSingleImage */);
     });
 
     it('Is Single Image, feature is not enabled', () => {
-        spyOn(editor, 'isFeatureEnabled').and.returnValue(false);
-        runTest(['IMG'], false);
+        runTest(['IMG'], false, false /* shouldConvertToSingleImage */);
     });
 
     it('Is Not single Image, feature is not enabled', () => {
-        spyOn(editor, 'isFeatureEnabled').and.returnValue(false);
-        runTest(['IMG', 'DIV'], false);
+        runTest(['IMG', 'DIV'], false, false /* shouldConvertToSingleImage */);
     });
 
     it('Is Not single Image, feature is enabled', () => {
-        spyOn(editor, 'isFeatureEnabled').and.returnValue(true);
-        runTest(['IMG', 'DIV'], false);
+        runTest(['IMG', 'DIV'], false, true /* shouldConvertToSingleImage */);
     });
 
-    function runTest(htmlFirstLevelChildTags: string[], resultExpected: boolean) {
+    function runTest(
+        htmlFirstLevelChildTags: string[],
+        resultExpected: boolean,
+        shouldConvertToSingleImageInput: boolean
+    ) {
         const fragment = document.createDocumentFragment();
         const clipboardData = <ClipboardData>{
             htmlFirstLevelChildTags,
@@ -39,7 +31,7 @@ describe('shouldConvertToSingleImage |', () => {
 
         const result = shouldConvertToSingleImage(<getSourceInputParams>{
             fragment,
-            editor,
+            shouldConvertSingleImage: shouldConvertToSingleImageInput,
             clipboardData,
         });
 

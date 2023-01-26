@@ -1,16 +1,16 @@
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { Entity } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
 export function createEntity(
-    entity: Entity,
-    segmentFormat?: ContentModelSegmentFormat
+    wrapper: HTMLElement,
+    isReadonly: boolean,
+    segmentFormat?: ContentModelSegmentFormat,
+    id?: string,
+    type?: string
 ): ContentModelEntity {
-    const { id, type, isReadonly, wrapper } = entity;
-
     return {
         segmentType: 'Entity',
         blockType: 'Entity',

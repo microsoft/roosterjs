@@ -34,4 +34,25 @@ describe('handleEntity', () => {
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
         );
     });
+
+    it('Fake entity', () => {
+        const div = document.createElement('div');
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            wrapper: div,
+            isReadonly: true,
+        };
+
+        div.textContent = 'test';
+
+        const parent = document.createElement('div');
+
+        handleEntity(document, parent, entityModel, context);
+
+        expect(parent.innerHTML).toBe('<div>test</div>');
+        expect(context.entities).toEqual({});
+        expect(div.outerHTML).toBe('<div>test</div>');
+    });
 });

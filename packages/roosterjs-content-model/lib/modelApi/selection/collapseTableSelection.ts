@@ -1,7 +1,7 @@
 import { addSegment } from '../common/addSegment';
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
-import { TableSelectionCoordinates } from './setSelectionToTable';
+import { TableSelectionCoordinates } from '../table/getSelectedCells';
 
 /**
  * @internal

@@ -9,9 +9,9 @@ export default function toggleSuperscript(editor: IExperimentalContentModelEdito
     formatSegmentWithContentModel(
         editor,
         'toggleSuperscript',
-        (segment, isTurningOn) => {
-            segment.format.superOrSubScriptSequence = isTurningOn ? 'super' : '';
+        (format, isTurningOn) => {
+            format.superOrSubScriptSequence = isTurningOn ? 'super' : '';
         },
-        segment => segment.format.superOrSubScriptSequence?.split(' ').pop() == 'super'
+        format => format.superOrSubScriptSequence?.split(' ').pop() == 'super'
     );
 }

@@ -33,7 +33,7 @@ const htmlRoosterReact =
     '<div id="root"></div>\n' +
     '<script src="https://unpkg.com/react@16/umd/react.development.js"></script>\n' +
     '<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>\n' +
-    '<script src="https://unpkg.com/@fluentui/react/dist/fluentui-react.js"></script>\n' +
+    '<script src="https://cdnjs.cloudflare.com/ajax/libs/fluentui-react/8.60.1/fluentui-react.min.js"></script>\n' +
     '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
     '<script src="https://microsoft.github.io/roosterjs/rooster-react-min.js"></script>\n' +
     '</body>\n' +

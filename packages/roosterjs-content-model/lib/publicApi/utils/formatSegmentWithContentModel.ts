@@ -1,45 +1,73 @@
-import { arrayPush } from 'roosterjs-editor-dom';
+import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
-import { getSelections } from '../../modelApi/selection/getSelections';
+import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import {
     DomToModelOption,
     IExperimentalContentModelEditor,
 } from '../../publicTypes/IExperimentalContentModelEditor';
-
 /**
  * @internal
  */
 export function formatSegmentWithContentModel(
     editor: IExperimentalContentModelEditor,
     apiName: string,
-    toggleStyleCallback: (segment: ContentModelSegment, isTuringOn: boolean) => void,
-    segmentHasStyleCallback?: (segment: ContentModelSegment) => boolean,
+    toggleStyleCallback: (
+        format: ContentModelSegmentFormat,
+        isTuringOn: boolean,
+        segment: ContentModelSegment | null
+    ) => void,
+    segmentHasStyleCallback?: (
+        format: ContentModelSegmentFormat,
+        segment: ContentModelSegment | null
+    ) => boolean,
     includingFormatHolder?: boolean,
     domToModelOptions?: DomToModelOption
 ) {
-    const segments: ContentModelSegment[] = [];
-
     formatWithContentModel(
         editor,
         apiName,
         model => {
-            const selections = getSelections(model, {
-                includeFormatHolder: includingFormatHolder,
-            });
+            let segments = getSelectedSegments(model, !!includingFormatHolder);
+            const pendingFormat = editor.getPendingFormat();
+            let isCollapsedSelection =
+                segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 
-            selections.forEach(selection => arrayPush(segments, selection.segments));
+            if (isCollapsedSelection) {
+                segments = adjustWordSelection(model, segments[0]);
+                if (segments.length > 1) {
+                    isCollapsedSelection = false;
+                }
+            }
+
+            const formatsAndSegments: [
+                ContentModelSegmentFormat,
+                ContentModelSegment | null
+            ][] = pendingFormat
+                ? [[pendingFormat, null]]
+                : segments.map(segment => [segment.format, segment]);
 
             const isTurningOff = segmentHasStyleCallback
-                ? segments.every(segmentHasStyleCallback)
+                ? formatsAndSegments.every(([format, segment]) =>
+                      segmentHasStyleCallback(format, segment)
+                  )
                 : false;
 
-            segments.forEach(segment => toggleStyleCallback(segment, !isTurningOff));
-
-            return (
-                segments.length > 1 ||
-                (!!segments[0] && segments[0].segmentType != 'SelectionMarker')
+            formatsAndSegments.forEach(([format, segment]) =>
+                toggleStyleCallback(format, !isTurningOff, segment)
             );
+
+            if (!pendingFormat && isCollapsedSelection) {
+                editor.setPendingFormat(segments[0].format);
+            }
+
+            if (isCollapsedSelection) {
+                editor.focus();
+                return false;
+            } else {
+                return formatsAndSegments.length > 0;
+            }
         },
         domToModelOptions
     );

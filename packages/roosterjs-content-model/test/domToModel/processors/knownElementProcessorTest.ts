@@ -370,6 +370,35 @@ describe('knownElementProcessor', () => {
         });
     });
 
+    it('Div with 0 margin', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.margin = '0px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '0px',
+                        marginRight: '0px',
+                    },
+                    segments: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
     it('Nested DIV with left margin', () => {
         const group = createContentModelDocument();
         const div1 = document.createElement('div');
@@ -438,6 +467,88 @@ describe('knownElementProcessor', () => {
         });
     });
 
+    it('Div with padding', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.padding = '20px 0 40px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        paddingTop: '20px',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        paddingLeft: '0px',
+                        paddingRight: '0px',
+                    },
+                    segments: [],
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: { paddingBottom: '40px' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('Div with border', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.border = 'solid 1px black';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        borderTop: '1px solid black',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        borderLeft: '1px solid black',
+                        borderRight: '1px solid black',
+                    },
+                    segments: [],
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: { borderBottom: '1px solid black' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
     it('BLOCKQUOTE used for indent', () => {
         const group = createContentModelDocument();
         const quote = document.createElement('blockquote');
@@ -475,6 +586,58 @@ describe('knownElementProcessor', () => {
                     format: {
                         marginBottom: '1em',
                     },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('BLOCKQUOTE used for indent with selection', () => {
+        const group = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+        quote.appendChild(document.createTextNode('test1'));
+
+        context.isInSelection = true;
+        knownElementProcessor(group, quote, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginTop: '1em',
+                    },
+                    isSelected: true,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginLeft: '40px',
+                        marginRight: '40px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                            isSelected: true,
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        marginBottom: '1em',
+                    },
+                    isSelected: true,
                 },
                 {
                     blockType: 'Paragraph',

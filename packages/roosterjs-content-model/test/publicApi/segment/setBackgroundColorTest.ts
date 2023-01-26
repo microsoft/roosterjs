@@ -6,11 +6,12 @@ describe('setBackgroundColor', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
-        calledTimes: number
+        calledTimes: number,
+        newColor: string | null = 'red'
     ) {
         segmentTestCommon(
             'setBackgroundColor',
-            editor => setBackgroundColor(editor, 'red'),
+            editor => setBackgroundColor(editor, newColor),
             model,
             result,
             calledTimes
@@ -316,6 +317,47 @@ describe('setBackgroundColor', () => {
                 ],
             },
             1
+        );
+    });
+
+    it('Remove existing color', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { backgroundColor: 'green' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            null
         );
     });
 });

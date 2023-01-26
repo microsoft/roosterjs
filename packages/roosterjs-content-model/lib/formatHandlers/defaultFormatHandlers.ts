@@ -78,10 +78,20 @@ const defaultFormatHandlerMap: FormatHandlers = {
     wordBreak: wordBreakFormatHandler,
 };
 
+const blockFormatHandlers: (keyof FormatHandlerTypeMap)[] = [
+    'backgroundColor',
+    'direction',
+    'margin',
+    'padding',
+    'lineHeight',
+    'whiteSpace',
+    'border',
+];
+
 const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
-    block: ['backgroundColor', 'direction', 'margin', 'padding', 'lineHeight', 'whiteSpace'],
+    block: blockFormatHandlers,
     listItem: ['listItemThread', 'listItemMetadata'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
     segment: [
@@ -96,6 +106,7 @@ const defaultFormatKeysPerCategory: {
         'backgroundColor',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
+    segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
     tableCell: [
         'border',
         'borderBox',
@@ -104,6 +115,7 @@ const defaultFormatKeysPerCategory: {
         'direction',
         'verticalAlign',
         'wordBreak',
+        'textColor',
     ],
     table: [
         'id',
@@ -118,15 +130,7 @@ const defaultFormatKeysPerCategory: {
     image: ['id', 'size', 'margin', 'padding', 'borderBox'],
     link: ['link'],
     dataset: ['dataset'],
-    quote: [
-        'backgroundColor',
-        'direction',
-        'margin',
-        'padding',
-        'lineHeight',
-        'whiteSpace',
-        'border',
-    ],
+    divider: [...blockFormatHandlers, 'display', 'size'],
 };
 
 /**
