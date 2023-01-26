@@ -27,7 +27,7 @@ const TRANSPARENT_COLOR = 'transparent';
  * @param isBackgroundColor Whether set background color or text color
  * @param isDarkMode Whether current mode is dark mode. @default false
  * @param shouldAdaptTheFontColor Whether the font color needs to be adapted to be visible in a dark or bright background color. @default false
- * @param defaultFontColor Set the default colors that needs to be set to the to be visible.
+ * @param darkColorHandler An optional dark color handler object. When it is passed, we will use this handler to do variable-based dark color instead of original dataset base dark color
  */
 export default function setColor(
     element: HTMLElement,
@@ -84,6 +84,9 @@ export default function setColor(
 /**
  * Change the font color to white or some other color, so the text can be visible with a darker background
  * @param element The element that contains text.
+ * @param lightModeBackgroundColor Existing background color in light mode
+ * @param isDarkMode Whether the content is in dark mode
+ * @param darkColorHandler An optional dark color handler object. When it is passed, we will use this handler to do variable-based dark color instead of original dataset base dark color
  */
 function adaptFontColorToBackgroundColor(
     element: HTMLElement,
