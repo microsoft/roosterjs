@@ -1,5 +1,6 @@
 import { isCharacterValue, Position, setColor } from 'roosterjs-editor-dom';
 import {
+    ChangeSource,
     IEditor,
     Keys,
     NodePosition,
@@ -109,7 +110,10 @@ export default class PendingFormatStatePlugin
                         event.rawEvent.which <= Keys.DOWN) ||
                     (this.state.pendableFormatPosition &&
                         (currentPosition = this.getCurrentPosition()) &&
-                        !this.state.pendableFormatPosition.equalTo(currentPosition))
+                        !this.state.pendableFormatPosition.equalTo(currentPosition)) ||
+                    (event.eventType == PluginEventType.ContentChanged &&
+                        (event.source == ChangeSource.SwitchToDarkMode ||
+                            event.source == ChangeSource.SwitchToLightMode))
                 ) {
                     // If content or position is changed (by keyboard, mouse, or code),
                     // check if current position is still the same with the cached one (if exist),
@@ -149,12 +153,16 @@ export default class PendingFormatStatePlugin
             span.style.setProperty('font-family', currentStyle.fontName ?? null);
             span.style.setProperty('font-size', currentStyle.fontSize ?? null);
 
+            const darkColorHandler = this.editor.getDarkColorHandler();
+
             if (currentStyle.textColors || currentStyle.textColor) {
                 setColor(
                     span,
                     (currentStyle.textColors || currentStyle.textColor)!,
                     false /*isBackground*/,
-                    isDarkMode
+                    isDarkMode,
+                    false /*shouldAdaptFontColor*/,
+                    darkColorHandler
                 );
             }
 
@@ -163,7 +171,9 @@ export default class PendingFormatStatePlugin
                     span,
                     (currentStyle.backgroundColors || currentStyle.backgroundColor)!,
                     true /*isBackground*/,
-                    isDarkMode
+                    isDarkMode,
+                    false /*shouldAdaptFontColor*/,
+                    darkColorHandler
                 );
             }
         }

@@ -19,6 +19,7 @@ export function retrieveModelFormatState(
     formatState: FormatState
 ) {
     let isFirst = true;
+    let previousTableContext: TableSelectionContext | undefined;
 
     iterateSelections(
         [model],
@@ -35,10 +36,22 @@ export function retrieveModelFormatState(
                     );
                 } else if (tableContext) {
                     retrieveTableFormat(tableContext, formatState);
+                    previousTableContext = tableContext;
                 }
                 isFirst = false;
             } else {
                 formatState.isMultilineSelection = true;
+
+                if (tableContext && previousTableContext) {
+                    const { table, colIndex, rowIndex } = previousTableContext;
+
+                    if (
+                        tableContext.table == table &&
+                        (tableContext.colIndex != colIndex || tableContext.rowIndex != rowIndex)
+                    ) {
+                        formatState.canMergeTableCell = true;
+                    }
+                }
 
                 // Return true to stop iteration since we have already got everything we need
                 return true;
@@ -99,7 +112,10 @@ function retrieveFormatStateInternal(
     if (tableContext) {
         retrieveTableFormat(tableContext, result);
     }
+
+    // TODO: Support Code block in format state for Content Model
 }
+
 function retrieveTableFormat(tableContext: TableSelectionContext, result: FormatState) {
     const tableFormat = updateTableMetadata(tableContext.table);
 

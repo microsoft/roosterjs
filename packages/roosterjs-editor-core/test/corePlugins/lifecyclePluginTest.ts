@@ -1,5 +1,11 @@
 import LifecyclePlugin from '../../lib/corePlugins/LifecyclePlugin';
-import { ChangeSource, IEditor, NodePosition, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    IEditor,
+    NodePosition,
+    PluginEventType,
+    DarkColorHandler,
+} from 'roosterjs-editor-types';
 
 describe('LifecyclePlugin', () => {
     const getDarkColor = (color: string) => color;
@@ -13,6 +19,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(state.defaultFormat.textColor).toBe('');
@@ -73,6 +80,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(state).toEqual({
@@ -119,6 +127,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(div.isContentEditable).toBeTrue();
@@ -140,6 +149,7 @@ describe('LifecyclePlugin', () => {
             triggerPluginEvent,
             setContent: (content: string) => (div.innerHTML = content),
             getFocusedPosition: () => <any>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(div.isContentEditable).toBeFalse();
@@ -180,6 +190,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({
@@ -201,6 +212,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         // First time it initials the default format
@@ -255,6 +267,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({
@@ -285,6 +298,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({
@@ -314,6 +328,7 @@ describe('recalculateDefaultFormat', () => {
             setContent: () => {},
             triggerPluginEvent: () => {},
             getFocusedPosition: () => <NodePosition>null,
+            getDarkColorHandler: () => <DarkColorHandler | null>null,
         }));
 
         expect(plugin.getState().defaultFormat).toEqual({});

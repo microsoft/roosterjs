@@ -1,6 +1,7 @@
-import { arrayPush, safeInstanceOf, toArray } from 'roosterjs-editor-dom';
+import { arrayPush, safeInstanceOf, setColor, toArray } from 'roosterjs-editor-dom';
 import {
     ColorTransformDirection,
+    DarkColorHandler,
     DarkModeDatasetNames,
     EditorCore,
     TransformColor,
@@ -48,6 +49,7 @@ export const transformColor: TransformColor = (
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) => {
+    const { darkColorHandler } = core;
     const elements =
         rootNode && (forceTransform || core.lifecycle.isDarkMode)
             ? getAll(rootNode, includeSelf)
@@ -55,14 +57,40 @@ export const transformColor: TransformColor = (
 
     callback?.();
 
-    if (direction == ColorTransformDirection.DarkToLight) {
-        transformToLightMode(elements);
-    } else if (core.lifecycle.onExternalContentTransform) {
-        elements.forEach(element => core.lifecycle.onExternalContentTransform!(element));
+    if (darkColorHandler) {
+        transformV2(elements, darkColorHandler, direction == ColorTransformDirection.LightToDark);
     } else {
-        transformToDarkMode(elements, core.lifecycle.getDarkColor);
+        if (direction == ColorTransformDirection.DarkToLight) {
+            transformToLightMode(elements);
+        } else if (core.lifecycle.onExternalContentTransform) {
+            elements.forEach(element => core.lifecycle.onExternalContentTransform!(element));
+        } else {
+            transformToDarkMode(elements, core.lifecycle.getDarkColor);
+        }
     }
 };
+
+function transformV2(elements: HTMLElement[], darkColorHandler: DarkColorHandler, toDark: boolean) {
+    elements.forEach(element => {
+        ColorAttributeName.forEach((names, i) => {
+            const color = darkColorHandler.parseColorValue(
+                element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
+                    element.getAttribute(names[ColorAttributeEnum.HtmlColor])
+            ).lightModeColor;
+
+            if (color && color != 'inherit') {
+                setColor(
+                    element,
+                    color,
+                    i != 0,
+                    toDark,
+                    false /*shouldAdaptFontColor*/,
+                    darkColorHandler
+                );
+            }
+        });
+    });
+}
 
 function transformToLightMode(elements: HTMLElement[]) {
     elements.forEach(element => {

@@ -1,5 +1,6 @@
 import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
+import DarkColorHandler from './DarkColorHandler';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import Rect from './Rect';
@@ -72,6 +73,12 @@ export default interface EditorCore extends PluginState {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
+
+    /**
+     * Dark model handler for the editor, used for variable-based solution.
+     * If keep it null, editor will still use original dataset-based dark mode solution.
+     */
+    darkColorHandler?: DarkColorHandler;
 }
 
 /**

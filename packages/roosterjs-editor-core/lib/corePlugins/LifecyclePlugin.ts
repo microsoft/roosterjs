@@ -85,8 +85,23 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             : () => {
                   const { textColors, backgroundColors } = DARK_MODE_DEFAULT_FORMAT;
                   const { isDarkMode } = this.state;
-                  setColor(contentDiv, textColors, false /*isBackground*/, isDarkMode);
-                  setColor(contentDiv, backgroundColors, true /*isBackground*/, isDarkMode);
+                  const darkColorHandler = this.editor?.getDarkColorHandler();
+                  setColor(
+                      contentDiv,
+                      textColors,
+                      false /*isBackground*/,
+                      isDarkMode,
+                      false /*shouldAdaptFontColor*/,
+                      darkColorHandler
+                  );
+                  setColor(
+                      contentDiv,
+                      backgroundColors,
+                      true /*isBackground*/,
+                      isDarkMode,
+                      false /*shouldAdaptFontColor*/,
+                      darkColorHandler
+                  );
               };
 
         this.state = {
