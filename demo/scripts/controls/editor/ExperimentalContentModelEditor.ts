@@ -45,6 +45,7 @@ export default class ExperimentalContentModelEditor extends Editor
             zoomScale: this.getZoomScale(),
             isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
             getDarkColor: this.getDarkColor,
+            darkColorHandler: this.getDarkColorHandler(),
         };
     }
 

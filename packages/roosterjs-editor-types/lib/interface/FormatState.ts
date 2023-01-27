@@ -60,6 +60,11 @@ export interface ElementBasedFormatState {
     isBlockQuote?: boolean;
 
     /**
+     * Whether the text is in Code block
+     */
+    isCodeBlock?: boolean;
+
+    /**
      * Whether unlink command can be called to the text
      */
     canUnlink?: boolean;
@@ -93,6 +98,11 @@ export interface ElementBasedFormatState {
      * If there is a table, whether the table has header row
      */
     tableHasHeader?: boolean;
+
+    /**
+     * Whether we can execute table cell merge operation
+     */
+    canMergeTableCell?: boolean;
 }
 
 /**

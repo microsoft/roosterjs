@@ -5,6 +5,7 @@ import {
     IEditor,
     PluginEvent,
     QueryScope,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
 /**
@@ -48,9 +49,11 @@ export function getElementBasedFormatState(
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
+        isCodeBlock: !!editor.queryElements('pre>code', QueryScope.OnSelection)[0],
         isInTable: !!table,
         tableFormat: tableFormat,
         tableHasHeader: hasHeader,
+        canMergeTableCell: canMergeTableCell(editor),
     };
 }
 
@@ -74,3 +77,22 @@ export default function getFormatState(editor: IEditor, event?: PluginEvent): Fo
         zoomScale: editor.getZoomScale(),
     };
 }
+
+/**
+ * Checks whether the editor selection range is starting and ending at a table element.
+ * @param editor Editor Instance
+ * @returns
+ */
+
+const canMergeTableCell = (editor: IEditor): boolean => {
+    const selection = editor.getSelectionRangeEx();
+    const isATable = selection && selection.type === SelectionRangeTypes.TableSelection;
+    if (isATable && selection.coordinates) {
+        const { firstCell, lastCell } = selection.coordinates;
+        if (firstCell.x !== lastCell.x || firstCell.y !== lastCell.y) {
+            return true;
+        }
+        return false;
+    }
+    return false;
+};
