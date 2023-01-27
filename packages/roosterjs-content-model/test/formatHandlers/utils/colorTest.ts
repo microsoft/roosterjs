@@ -136,6 +136,7 @@ describe('setColor with darkColorHandler', () => {
         expect(registerColor).toHaveBeenCalledTimes(1);
         expect(registerColor).toHaveBeenCalledWith('', true);
     });
+});
 
     itChromeOnly('setColor from a color with existing color, dark mode', () => {
         const registerColor = jasmine.createSpy().and.returnValue('green');

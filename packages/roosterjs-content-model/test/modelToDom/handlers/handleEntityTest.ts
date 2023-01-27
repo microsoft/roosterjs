@@ -206,6 +206,7 @@ describe('handleEntity', () => {
             segmentType: 'Entity',
             format: {},
             wrapper: div,
+            isReadonly: true,
         };
 
         div.textContent = 'test';

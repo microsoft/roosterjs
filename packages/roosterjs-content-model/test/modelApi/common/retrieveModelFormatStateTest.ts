@@ -735,4 +735,47 @@ describe('retrieveModelFormatState', () => {
             canAddImageAltText: false,
         });
     });
+
+    it('With single table cell selected', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const cell3 = createTableCell();
+        const table = createTable(1);
+
+        cell2.isSelected = true;
+        table.cells[0] = [cell1, cell2, cell3];
+        model.blocks.push(table);
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isInTable: true,
+            tableHasHeader: false,
+        });
+    });
+
+    it('With multiple table cell selected', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const cell3 = createTableCell();
+        const table = createTable(1);
+
+        cell2.isSelected = true;
+        cell3.isSelected = true;
+        table.cells[0] = [cell1, cell2, cell3];
+        model.blocks.push(table);
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isInTable: true,
+            tableHasHeader: false,
+            isMultilineSelection: true,
+            canMergeTableCell: true,
+        });
+    });
 });

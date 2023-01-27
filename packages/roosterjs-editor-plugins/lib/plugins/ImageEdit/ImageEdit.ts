@@ -4,12 +4,11 @@ import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAn
 import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
-import getLatestZIndex from './editInfoUtils/getLastZIndex';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
-import { getRotateHTML, Rotator } from './imageEditors/Rotator';
+import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import {
     arrayPush,
@@ -18,7 +17,6 @@ import {
     getComputedStyle,
     getObjectKeys,
     safeInstanceOf,
-    setGlobalCssStyles,
     toArray,
     unwrap,
     wrap,
@@ -143,9 +141,14 @@ export default class ImageEdit implements EditorPlugin {
     private isCropping: boolean = false;
 
     /**
-     * Editor zoom scale
+     * The span element that wraps the image and opens shadow dom
      */
-    private zoomWrapper: HTMLElement;
+    private shadowSpan: HTMLSpanElement;
+
+    /**
+     * The span element that wraps the image and opens shadow dom
+     */
+    private isCropping: boolean;
 
     /**
      * Create a new instance of ImageEdit
@@ -250,9 +253,8 @@ export default class ImageEdit implements EditorPlugin {
             case PluginEventType.BeforeDispose:
                 this.removeWrapper();
                 break;
-
-            case PluginEventType.Scroll:
-                this.setEditingImage(null);
+            case PluginEventType.BeforeDispose:
+                this.removeWrapper();
                 break;
         }
     }
