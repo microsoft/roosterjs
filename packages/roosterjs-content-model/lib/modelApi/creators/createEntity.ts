@@ -6,10 +6,10 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
  */
 export function createEntity(
     wrapper: HTMLElement,
+    isReadonly: boolean,
     segmentFormat?: ContentModelSegmentFormat,
     id?: string,
-    type?: string,
-    isReadonly?: boolean
+    type?: string
 ): ContentModelEntity {
     return {
         segmentType: 'Entity',

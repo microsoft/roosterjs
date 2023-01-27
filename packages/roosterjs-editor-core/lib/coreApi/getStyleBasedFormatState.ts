@@ -35,15 +35,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
         ];
     }
 
-    const styles = node
-        ? getComputedStyles(node, [
-              'font-family',
-              'font-size',
-              'color',
-              'background-color',
-              'line-height',
-          ])
-        : [];
+    const styles = node ? getComputedStyles(node) : [];
     const {
         contentDiv,
         darkColorHandler,
@@ -94,7 +86,6 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
                       darkModeColor: backColor.darkModeColor,
                   }
                 : undefined,
-            lineHeight: styles[4],
         };
     } else {
         const ogTextColorNode =
@@ -135,7 +126,6 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
                           styles[3],
                   }
                 : undefined,
-            lineHeight: styles[4],
         };
     }
 };

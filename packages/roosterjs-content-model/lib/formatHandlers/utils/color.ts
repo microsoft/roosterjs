@@ -51,12 +51,20 @@ export function setColor(
 ) {
     let effectiveColor: string;
 
-    if (isDarkMode && originalColor) {
-        element.dataset[
-            isBackground
-                ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                : DarkModeDatasetNames.OriginalStyleColor
-        ] = originalColor;
+    if (darkColorHandler) {
+        effectiveColor = darkColorHandler.registerColor(lightModeColor, isDarkMode);
+    } else {
+        effectiveColor = isDarkMode
+            ? getDarkColor?.(lightModeColor) || lightModeColor
+            : lightModeColor;
+
+        if (isDarkMode && lightModeColor) {
+            element.dataset[
+                isBackground
+                    ? DarkModeDatasetNames.OriginalStyleBackgroundColor
+                    : DarkModeDatasetNames.OriginalStyleColor
+            ] = lightModeColor;
+        }
     }
 
     if (isBackground) {

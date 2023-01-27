@@ -871,4 +871,20 @@ describe('iterateSelections', () => {
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([list, doc], undefined, para, [text1, text2]);
     });
+
+    it('With selected entity', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph();
+        const entity = createEntity(null!, true);
+
+        entity.isSelected = true;
+
+        para.segments.push(entity);
+        doc.blocks.push(para);
+
+        iterateSelections([doc], callback, { includeListFormatHolder: 'never' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([doc], undefined, para, [entity]);
+    });
 });

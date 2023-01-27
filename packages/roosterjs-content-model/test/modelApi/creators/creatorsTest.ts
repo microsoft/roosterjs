@@ -385,7 +385,7 @@ describe('Creators', () => {
         const type = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, undefined, id, type, isReadonly);
+        const entityModel = createEntity(wrapper, isReadonly, undefined, id, type);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
@@ -405,12 +405,12 @@ describe('Creators', () => {
         const wrapper = document.createElement('div');
         const entityModel = createEntity(
             wrapper,
+            isReadonly,
             {
                 fontSize: '10pt',
             },
             id,
-            type,
-            isReadonly
+            type
         );
 
         expect(entityModel).toEqual({

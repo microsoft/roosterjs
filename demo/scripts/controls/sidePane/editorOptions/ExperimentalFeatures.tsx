@@ -24,6 +24,7 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DefaultFormatInSpan]:
         'When apply default format when initialize or user type, apply the format on a SPAN element.',
+    [ExperimentalFeatures.VariableBasedDarkColor]: 'Use variable-based color for dark mode',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<

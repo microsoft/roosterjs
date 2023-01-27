@@ -57,10 +57,8 @@ export const transformColor: TransformColor = (
 
     callback?.();
 
-    if (direction == ColorTransformDirection.DarkToLight) {
-        transformToLightMode(elements);
-    } else if (core.lifecycle.onExternalContentTransform) {
-        elements.forEach(element => core.lifecycle.onExternalContentTransform!(element));
+    if (darkColorHandler) {
+        transformV2(elements, darkColorHandler, direction == ColorTransformDirection.LightToDark);
     } else {
         if (direction == ColorTransformDirection.DarkToLight) {
             transformToLightMode(elements);

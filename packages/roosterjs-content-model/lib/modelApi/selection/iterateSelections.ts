@@ -150,10 +150,6 @@ export function iterateSelections(
                 if (segments.length > 0 && callback(path, table, block, segments)) {
                     return true;
                 }
-
-                if (segments.length > 0 && callback(path, table, block, segments)) {
-                    return true;
-                }
                 break;
 
             case 'Divider':

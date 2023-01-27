@@ -19,8 +19,18 @@ describe('entityProcessor', () => {
 
         expect(group).toEqual({
             blockGroupType: 'Document',
-            document: document,
-            blocks: [],
+            blocks: [
+                // We now treat everything as entity as long as it is passed into entity processor
+                {
+                    blockType: 'Entity',
+                    segmentType: 'Entity',
+                    format: {},
+                    id: undefined,
+                    type: undefined,
+                    isReadonly: true,
+                    wrapper: div,
+                },
+            ],
         });
     });
 
@@ -103,8 +113,42 @@ describe('entityProcessor', () => {
                             format: {},
                             id: undefined,
                             type: undefined,
-                            isReadonly: undefined,
+                            isReadonly: true,
                             wrapper: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Entity in selection', () => {
+        const group = createContentModelDocument();
+        const span = document.createElement('span');
+
+        commitEntity(span, 'entity', true, 'entity_1');
+        context.isInSelection = true;
+
+        entityProcessor(group, span, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'Entity',
+                            segmentType: 'Entity',
+                            format: {},
+                            id: 'entity_1',
+                            type: 'entity',
+                            isReadonly: true,
+                            wrapper: span,
+                            isSelected: true,
                         },
                     ],
                     format: {},

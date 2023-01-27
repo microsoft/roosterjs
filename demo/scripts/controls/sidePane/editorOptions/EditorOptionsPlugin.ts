@@ -33,6 +33,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.PendingStyleBasedFormat,
         ExperimentalFeatures.DefaultFormatInSpan,
         ExperimentalFeatures.AutoFormatList,
+        ExperimentalFeatures.VariableBasedDarkColor,
     ],
     isRtl: false,
 };
