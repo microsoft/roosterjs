@@ -23,21 +23,6 @@ export type BorderFormat = {
     borderLeft?: string;
 
     /**
-     * Color to be applied in all borders
-     */
-    borderColor?: string;
-
-    /**
-     * Width to be applied in all borders
-     */
-    borderWidth?: string;
-
-    /**
-     * Style to be applied in all borders
-     */
-    borderStyle?: string;
-
-    /**
      * Radius to be applied in all borders corners
      */
     borderRadius?: string;

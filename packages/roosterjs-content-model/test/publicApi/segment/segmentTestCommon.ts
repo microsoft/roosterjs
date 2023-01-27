@@ -26,6 +26,7 @@ export function segmentTestCommon(
         setContentModel,
         getPendingFormat: (): ContentModelSegmentFormat | null => null,
         setPendingFormat: () => {},
+        isDisposed: () => false,
     } as any) as IExperimentalContentModelEditor;
 
     executionCallback(editor);

@@ -1,16 +1,15 @@
-import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
+import formatImageWithContentModel from './formatImageWithContentModel';
+import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
- * Set image box shadow for all selected images at selection. If no images is contained
+ * Set image alt text for all selected images at selection. If no images is contained
  * in selection, do nothing.
  * @param editor The editor instance
- * @param boxShadow The image box shadow
+ * @param altText The image alt text
  */
 export default function setImageAltText(editor: IExperimentalContentModelEditor, altText: string) {
-    formatSegmentWithContentModel(editor, 'setImageAltText', (_, __, segment) => {
-        if (segment?.segmentType == 'Image') {
-            segment.alt = altText;
-        }
+    formatImageWithContentModel(editor, 'setImageAltText', (image: ContentModelImage) => {
+        image.alt = altText;
     });
 }

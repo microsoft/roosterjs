@@ -1,6 +1,6 @@
 import isContentModelEditor from '../../editor/isContentModelEditor';
 import { RibbonButton } from 'roosterjs-react';
-import { setImageBorderStyle } from 'roosterjs-content-model';
+import { setImageBorder } from 'roosterjs-content-model';
 
 const STYLES: Record<string, string> = {
     dashed: 'dashed',
@@ -28,7 +28,7 @@ export const imageBorderStyle: RibbonButton<'buttonNameImageBorderStyle'> = {
     },
     onClick: (editor, size) => {
         if (isContentModelEditor(editor)) {
-            setImageBorderStyle(editor, size);
+            setImageBorder(editor, undefined /*color*/, size);
         }
         return true;
     },

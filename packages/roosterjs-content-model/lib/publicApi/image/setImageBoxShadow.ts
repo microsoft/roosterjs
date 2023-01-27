@@ -1,4 +1,5 @@
-import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
+import formatImageWithContentModel from './formatImageWithContentModel';
+import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
@@ -10,9 +11,7 @@ export default function setImageBoxShadow(
     editor: IExperimentalContentModelEditor,
     boxShadow: string
 ) {
-    formatSegmentWithContentModel(editor, 'setImageBorderColor', (_, __, segment) => {
-        if (segment?.segmentType == 'Image') {
-            segment.format.boxShadow = boxShadow;
-        }
+    formatImageWithContentModel(editor, 'setImageBoxShadow', (image: ContentModelImage) => {
+        image.format.boxShadow = boxShadow;
     });
 }
