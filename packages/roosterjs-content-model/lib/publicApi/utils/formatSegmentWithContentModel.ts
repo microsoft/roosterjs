@@ -1,3 +1,4 @@
+import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
@@ -6,7 +7,6 @@ import {
     DomToModelOption,
     IExperimentalContentModelEditor,
 } from '../../publicTypes/IExperimentalContentModelEditor';
-
 /**
  * @internal
  */
@@ -29,8 +29,18 @@ export function formatSegmentWithContentModel(
         editor,
         apiName,
         model => {
-            const segments = getSelectedSegments(model, !!includingFormatHolder);
+            let segments = getSelectedSegments(model, !!includingFormatHolder);
             const pendingFormat = editor.getPendingFormat();
+            let isCollapsedSelection =
+                segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
+
+            if (isCollapsedSelection) {
+                segments = adjustWordSelection(model, segments[0]);
+                if (segments.length > 1) {
+                    isCollapsedSelection = false;
+                }
+            }
+
             const formatsAndSegments: [
                 ContentModelSegmentFormat,
                 ContentModelSegment | null
@@ -47,9 +57,6 @@ export function formatSegmentWithContentModel(
             formatsAndSegments.forEach(([format, segment]) =>
                 toggleStyleCallback(format, !isTurningOff, segment)
             );
-
-            const isCollapsedSelection =
-                segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 
             if (!pendingFormat && isCollapsedSelection) {
                 editor.setPendingFormat(segments[0].format);

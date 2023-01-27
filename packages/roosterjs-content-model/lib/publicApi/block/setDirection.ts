@@ -11,6 +11,23 @@ export default function setDirection(
     direction: 'ltr' | 'rtl'
 ) {
     formatParagraphWithContentModel(editor, 'setDirection', para => {
-        para.format.direction = direction;
+        const isOldValueRtl = para.format.direction == 'rtl';
+        const isNewValueRtl = direction == 'rtl';
+
+        if (isOldValueRtl != isNewValueRtl) {
+            para.format.direction = direction;
+
+            // Adjust margin when change direction
+            // TODO: make margin and padding direction-aware, like what we did for textAlign. So no need to adjust them here
+            // TODO: Do we also need to handle border here?
+            const marginLeft = para.format.marginLeft;
+            const paddingLeft = para.format.paddingLeft;
+
+            para.format.marginLeft = para.format.marginRight;
+            para.format.marginRight = marginLeft;
+
+            para.format.paddingLeft = para.format.paddingRight;
+            para.format.paddingRight = paddingLeft;
+        }
     });
 }

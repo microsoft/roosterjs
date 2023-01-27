@@ -35,6 +35,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
 
             if (index >= 0) {
                 const prevBlock = parent.blocks[index - 1];
+                const segmentFormat = block.segments[0]?.format || {};
                 const newListItem = createListItem(
                     [
                         {
@@ -46,9 +47,16 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                     prevBlock.levels[0]?.listType == 'OL')
                                     ? undefined
                                     : 1,
+                            direction: block.format.direction,
+                            textAlign: block.format.textAlign,
                         },
                     ],
-                    block.segments[0]?.format
+                    // For list bullet, we only want to carry over these formats from segments:
+                    {
+                        fontFamily: segmentFormat.fontFamily,
+                        fontSize: segmentFormat.fontSize,
+                        textColor: segmentFormat.textColor,
+                    }
                 );
 
                 // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).

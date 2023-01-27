@@ -1,3 +1,5 @@
+import { DarkColorHandler } from 'roosterjs-editor-types';
+
 /**
  * An editor context interface used by ContentModel PAI
  */
@@ -23,4 +25,9 @@ export interface EditorContext {
      * @returns Dark mode color calculated from lightColor
      */
     getDarkColor?: (lightColor: string) => string;
+
+    /**
+     * Dark model color handler
+     */
+    darkColorHandler?: DarkColorHandler | null;
 }
