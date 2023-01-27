@@ -62,7 +62,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text2],
                 },
@@ -104,7 +103,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text1],
                 },
@@ -112,7 +110,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '80px',
-                        marginRight: '80px',
                     },
                     segments: [text2],
                 },
@@ -120,7 +117,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '80px',
-                        marginRight: '80px',
                     },
                     segments: [text3],
                 },
@@ -150,7 +146,7 @@ describe('indent', () => {
                 {
                     blockType: 'Paragraph',
                     format: {
-                        marginLeft: '120px',
+                        marginLeft: '20px',
                         marginRight: '120px',
                         direction: 'rtl',
                     },
@@ -193,7 +189,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text2],
                 },
@@ -201,7 +196,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text3],
                 },
@@ -237,7 +231,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text1],
                 },
@@ -250,7 +243,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text3],
                 },
@@ -539,7 +531,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text3],
                 },
@@ -568,7 +559,6 @@ describe('indent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '75px',
-                        marginRight: '75px',
                     },
                     segments: [text1],
                 },
@@ -670,7 +660,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '0px',
-                        marginRight: '0px',
                     },
                     segments: [text2],
                 },
@@ -724,7 +713,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '0px',
-                        marginRight: '0px',
                     },
                     segments: [text2],
                 },
@@ -732,7 +720,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text3],
                 },
@@ -775,7 +762,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '0px',
-                        marginRight: '0px',
                     },
                     segments: [text1],
                 },
@@ -790,7 +776,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '80px',
-                        marginRight: '80px',
                     },
                     segments: [text3],
                 },
@@ -895,7 +880,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '0px',
-                        marginRight: '0px',
                     },
                     segments: [text2],
                 },
@@ -903,7 +887,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
-                        marginRight: '40px',
                     },
                     segments: [text3],
                 },
@@ -933,7 +916,7 @@ describe('outdent', () => {
                 {
                     blockType: 'Paragraph',
                     format: {
-                        marginLeft: '40px',
+                        marginLeft: '20px',
                         marginRight: '40px',
                         direction: 'rtl',
                     },
@@ -964,7 +947,6 @@ describe('outdent', () => {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '45px',
-                        marginRight: '45px',
                     },
                     segments: [text1],
                 },
