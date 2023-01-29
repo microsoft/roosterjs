@@ -4,7 +4,7 @@ import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-import { setSelection } from 'roosterjs-content-model/lib/modelApi/selection/setSelection';
+import { setSelection } from '../../modelApi/selection/setSelection';
 
 /**
  * Adjust selection to make sure select a hyperlink if any, or a word if original selection is collapsed
