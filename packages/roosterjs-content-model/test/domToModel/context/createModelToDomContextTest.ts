@@ -11,8 +11,6 @@ import {
 describe('createModelToDomContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
-        zoomScale: 1,
-        isRightToLeft: false,
         getDarkColor: undefined,
     };
     const defaultResult: ModelToDomContext = {
@@ -44,8 +42,6 @@ describe('createModelToDomContext', () => {
     it('with content model context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
-            zoomScale: 2,
-            isRightToLeft: true,
             getDarkColor: () => '',
         };
 

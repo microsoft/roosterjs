@@ -20,8 +20,6 @@ export function createModelToDomContext(
     return {
         ...(editorContext || {
             isDarkMode: false,
-            isRightToLeft: false,
-            zoomScale: 1,
             getDarkColor: undefined,
         }),
         regularSelection: {

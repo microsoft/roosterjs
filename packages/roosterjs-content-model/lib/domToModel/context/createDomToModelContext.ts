@@ -16,8 +16,6 @@ export function createDomToModelContext(
     const context: DomToModelContext = {
         ...(editorContext || {
             isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
             getDarkColor: undefined,
         }),
 
