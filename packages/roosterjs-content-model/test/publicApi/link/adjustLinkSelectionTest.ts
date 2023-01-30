@@ -300,4 +300,54 @@ describe('adjustLinkSelection', () => {
             'http://test.com'
         );
     });
+
+    it('Doc without link, expand for word', () => {
+        const doc = createContentModelDocument();
+        const para = createParagraph();
+        const text0 = createText('test0 te');
+        const marker = createSelectionMarker();
+        const text1 = createText('st1 test2');
+
+        para.segments.push(text0, marker, text1);
+        doc.blocks.push(para);
+
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'test0 ',
+                            },
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'te',
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'st1',
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: ' test2',
+                            },
+                        ],
+                    },
+                ],
+            },
+            'test1',
+            null
+        );
+    });
 });

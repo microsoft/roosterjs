@@ -1,4 +1,5 @@
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
 import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -9,6 +10,7 @@ import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { FormatState } from 'roosterjs-editor-types';
 import { retrieveModelFormatState } from '../../../lib/modelApi/common/retrieveModelFormatState';
 
@@ -370,6 +372,74 @@ describe('retrieveModelFormatState', () => {
             tableHasHeader: false,
             isMultilineSelection: true,
             canMergeTableCell: true,
+        });
+    });
+
+    it('With multiple table cell selected, multiple content is in table cell', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const cell3 = createTableCell();
+        const table = createTable(1);
+
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+        const text3 = createText('text3');
+        const text4 = createText('text4');
+
+        cell2.isSelected = true;
+        cell3.isSelected = true;
+
+        addSegment(cell2, text1);
+        addSegment(cell2, text2);
+        addSegment(cell3, text3);
+        addSegment(cell3, text4);
+
+        table.cells[0] = [cell1, cell2, cell3];
+        model.blocks.push(table);
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isInTable: true,
+            tableHasHeader: false,
+            isMultilineSelection: true,
+            canMergeTableCell: true,
+        });
+    });
+
+    it('With selection marker under table cell', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const cell3 = createTableCell();
+        const table = createTable(1);
+
+        const marker = createSelectionMarker();
+        addSegment(cell2, marker);
+
+        table.cells[0] = [cell1, cell2, cell3];
+        model.blocks.push(table);
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+            isInTable: true,
+            tableHasHeader: false,
+            fontName: undefined,
+            fontSize: undefined,
+            backgroundColor: undefined,
+            textColor: undefined,
+            isItalic: undefined,
+            isUnderline: undefined,
+            isStrikeThrough: undefined,
         });
     });
 });
