@@ -23,6 +23,7 @@ export function createDomToModelContext(
 
         blockFormat: {},
         segmentFormat: {},
+        scaleFormat: {},
         isInSelection: false,
 
         listFormat: {
@@ -52,10 +53,6 @@ export function createDomToModelContext(
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
     };
-
-    if (editorContext?.isRightToLeft) {
-        context.blockFormat.direction = 'rtl';
-    }
 
     if (options?.alwaysNormalizeTable) {
         context.alwaysNormalizeTable = true;

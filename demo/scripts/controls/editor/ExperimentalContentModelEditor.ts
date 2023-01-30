@@ -11,7 +11,7 @@ import {
     ModelToDomOption,
 } from 'roosterjs-content-model';
 import {
-    getComputedStyles,
+    // getComputedStyles,
     Position,
     restoreContentWithEntityPlaceholder,
 } from 'roosterjs-editor-dom';
@@ -93,8 +93,6 @@ export default class ExperimentalContentModelEditor extends Editor
     private createEditorContext(): EditorContext {
         return {
             isDarkMode: this.isDarkMode(),
-            zoomScale: this.getZoomScale(),
-            isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
             getDarkColor: this.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
         };

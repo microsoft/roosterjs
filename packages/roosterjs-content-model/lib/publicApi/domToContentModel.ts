@@ -7,22 +7,22 @@ import { normalizeContentModel } from '../modelApi/common/normalizeContentModel'
 
 /**
  * Create Content Model from DOM tree in this editor
- * @param root Root element of DOM tree to create Content Model from
+ * @param rootElement Root element of DOM tree to create Content Model from
  * @param editorContext Context of content model editor
  * @param option The option to customize the behavior of DOM to Content Model conversion
  * @returns A ContentModelDocument object that contains all the models created from the give root element
  */
 export default function domToContentModel(
-    root: HTMLElement,
+    rootElement: HTMLElement,
     editorContext: EditorContext,
     option: DomToModelOption
 ): ContentModelDocument {
     const model = createContentModelDocument();
     const domToModelContext = createDomToModelContext(editorContext, option);
-    const { element, child } = domToModelContext.elementProcessors;
-    const processor = option.includeRoot ? element : child;
+    const { element, root } = domToModelContext.elementProcessors;
+    const processor = option.includeRoot ? element : root;
 
-    processor(model, root, domToModelContext);
+    processor(model, rootElement, domToModelContext);
 
     normalizeContentModel(model);
 
