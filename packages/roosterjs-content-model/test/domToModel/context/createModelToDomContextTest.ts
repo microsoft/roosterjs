@@ -34,7 +34,6 @@ describe('createModelToDomContext', () => {
         entities: {},
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
-        doNotReuseEntityDom: false,
     };
     it('no param', () => {
         const context = createModelToDomContext();
@@ -59,13 +58,11 @@ describe('createModelToDomContext', () => {
     });
 
     it('with overrides', () => {
-        const mockedMergingCallback = 'mergingCallback' as any;
         const mockedBoldApplier = 'bold' as any;
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
         const mockedAStyle = 'a' as any;
         const context = createModelToDomContext(undefined, {
-            mergingCallback: mockedMergingCallback,
             formatApplierOverride: {
                 bold: mockedBoldApplier,
             },

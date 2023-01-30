@@ -51,6 +51,5 @@ export function createModelToDomContext(
 
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
-        doNotReuseEntityDom: !!options?.doNotReuseEntityDom,
     };
 }

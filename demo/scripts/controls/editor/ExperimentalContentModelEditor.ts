@@ -37,27 +37,11 @@ export default class ExperimentalContentModelEditor extends Editor
     }
 
     /**
-     * Create a EditorContext object used by ContentModel API
-     */
-    createEditorContext(): EditorContext {
-        return {
-            isDarkMode: this.isDarkMode(),
-            zoomScale: this.getZoomScale(),
-            isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
-            getDarkColor: this.getDarkColor,
-            darkColorHandler: this.getDarkColorHandler(),
-        };
-    }
-
-    /**
      * Create Content Model from DOM tree in this editor
-     * @param startNode Optional start node. If provided, Content Model will be created from this node (including itself),
-     * otherwise it will create Content Model for the whole content in editor.
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(startNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument {
-        return domToContentModel(startNode || this.contentDiv, this.createEditorContext(), {
-            includeRoot: !!startNode,
+    createContentModel(option?: DomToModelOption): ContentModelDocument {
+        return domToContentModel(this.contentDiv, this.createEditorContext(), {
             selectionRange: this.getSelectionRangeEx(),
             alwaysNormalizeTable: true,
             ...(option || {}),
@@ -67,7 +51,6 @@ export default class ExperimentalContentModelEditor extends Editor
     /**
      * Set content with content model
      * @param model The content model to set
-     * @param mergingCallback A callback to indicate how should the new content be integrated into existing content
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
@@ -77,17 +60,16 @@ export default class ExperimentalContentModelEditor extends Editor
             this.createEditorContext(),
             option
         );
-        const mergingCallback = option?.mergingCallback || restoreContentWithEntityPlaceholder;
 
         if (range?.type == SelectionRangeTypes.Normal) {
             // Need to get start and end from range position before merge because range can be changed during merging
             const start = Position.getStart(range.ranges[0]);
             const end = Position.getEnd(range.ranges[0]);
 
-            mergingCallback(fragment, this.contentDiv, entityPairs);
+            restoreContentWithEntityPlaceholder(fragment, this.contentDiv, entityPairs);
             this.select(start, end);
         } else {
-            mergingCallback(fragment, this.contentDiv, entityPairs);
+            restoreContentWithEntityPlaceholder(fragment, this.contentDiv, entityPairs);
             this.select(range);
         }
     }
@@ -106,5 +88,15 @@ export default class ExperimentalContentModelEditor extends Editor
      */
     setPendingFormat(format: ContentModelSegmentFormat | null) {
         this.pendingFormat = format;
+    }
+
+    private createEditorContext(): EditorContext {
+        return {
+            isDarkMode: this.isDarkMode(),
+            zoomScale: this.getZoomScale(),
+            isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
+            getDarkColor: this.getDarkColor,
+            darkColorHandler: this.getDarkColorHandler(),
+        };
     }
 }
