@@ -17,15 +17,15 @@ const STYLES_NAMES: Record<string, string> = {
 
 const STYLES: Record<string, string> = {
     noShadow: '',
-    bottomRight: '0px 4px 3px 0px #aaaaaa',
-    bottom: '0px 0px 3px 0px #aaaaaa',
-    bottomLeft: '0px 0px 3px 3px #aaaaaa',
-    right: '0px 4px 0px 0px #aaaaaa',
-    center: '4px 4px 3px 3px #aaaaaa',
-    left: '0px 0px 0px 3px #aaaaaa',
-    topRight: '4px 4px 0px 0px #aaaaaa',
-    top: '4px 0px 0px 0px #aaaaaa',
-    topLeft: '4px 0px 0px 3px #aaaaaa',
+    bottomRight: '4px 4px 3px #aaaaaa',
+    bottom: '0px 4px  3px 0px #aaaaaa',
+    bottomLeft: '-4px 4px 3px 3px #aaaaaa',
+    right: '4px 0px 3px 0px #aaaaaa',
+    center: '0px 0px 3px 3px #aaaaaa',
+    left: '-4px 0px 3px 0px #aaaaaa',
+    topRight: '4px -4px 3px 3px #aaaaaa',
+    top: '0px -4px 3px 0px #aaaaaa',
+    topLeft: '-4px -4px 3px 0px #aaaaaa',
 };
 
 /**

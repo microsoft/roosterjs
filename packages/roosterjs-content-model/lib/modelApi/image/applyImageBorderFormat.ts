@@ -1,5 +1,5 @@
+import { Border, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
-import { extractBorderValues } from '../../domUtils/borderValues';
 import { ptToPx } from '../../formatHandlers/utils/pointsToPixels';
 
 /**
@@ -7,16 +7,16 @@ import { ptToPx } from '../../formatHandlers/utils/pointsToPixels';
  */
 export default function applyImageBorderFormat(
     image: ContentModelImage,
-    color?: string,
-    style?: string,
-    width?: string,
+    border: Border,
     isPt?: boolean
 ) {
     const format = image.format;
-    const border = extractBorderValues(format['borderTop']);
-    const borderColor = border.color;
-    const borderWidth = border.width;
-    const borderStyle = border.style;
+    const { width, style, color } = border;
+    const borderKey = 'borderTop';
+    const extractedBorder = extractBorderValues(format[borderKey]);
+    const borderColor = extractedBorder.color;
+    const borderWidth = extractedBorder.width;
+    const borderStyle = extractedBorder.style;
     let borderFormat = '';
 
     if (width) {

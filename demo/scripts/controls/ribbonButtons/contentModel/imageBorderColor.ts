@@ -19,7 +19,7 @@ export const imageBorderColor: RibbonButton<'buttonNameImageBorderColor'> = {
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameImageBorderColor' && isContentModelEditor(editor)) {
-            setImageBorder(editor, getTextColorValue(key).lightModeColor);
+            setImageBorder(editor, { color: getTextColorValue(key).lightModeColor });
         }
     },
 };

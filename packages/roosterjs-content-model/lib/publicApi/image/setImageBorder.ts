@@ -1,5 +1,6 @@
 import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat';
 import formatImageWithContentModel from './formatImageWithContentModel';
+import { Border } from '../../domUtils/borderValues';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
@@ -13,12 +14,10 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
  */
 export default function setImageBorder(
     editor: IExperimentalContentModelEditor,
-    color?: string,
-    style?: string,
-    width?: string,
+    border: Border,
     isPt?: boolean
 ) {
     formatImageWithContentModel(editor, 'setImageBorder', (image: ContentModelImage) => {
-        applyImageBorderFormat(image, color, style, width, isPt);
+        applyImageBorderFormat(image, border, isPt);
     });
 }

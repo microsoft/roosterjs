@@ -456,7 +456,7 @@ export default class ImageEdit implements EditorPlugin {
 
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
-            wrapper.style.textAlign = isRtl(wrapper.parentNode) ? 'right' : 'left';
+            wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';
 
             // Update size of the image
 

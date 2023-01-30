@@ -24,9 +24,9 @@ export const imageBorderWidth: RibbonButton<'buttonNameImageBorderWidth'> = {
         if (isContentModelEditor(editor)) {
             setImageBorder(
                 editor,
-                undefined /** color */,
-                undefined /** style */,
-                size,
+                {
+                    width: size,
+                },
                 true /**isPt */
             );
         }

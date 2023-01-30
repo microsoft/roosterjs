@@ -1,5 +1,6 @@
 import setImageBorder from '../../../lib/publicApi/image/setImageBorder';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
+import { Border } from '../../../lib/domUtils/borderValues';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
@@ -11,14 +12,12 @@ describe('setImageBorder', () => {
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number,
-        color?: string,
-        style?: string,
-        width?: string,
+        border?: Border,
         isPt?: boolean
     ) {
         segmentTestCommon(
             'setImageBorder',
-            editor => setImageBorder(editor, color, style, width, isPt),
+            editor => setImageBorder(editor, border, isPt),
             model,
             result,
             calledTimes
@@ -134,7 +133,7 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            'red'
+            { color: 'red' }
         );
     });
 
@@ -174,8 +173,7 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            undefined,
-            'groove'
+            { style: 'groove' }
         );
     });
 
@@ -215,9 +213,7 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            undefined,
-            undefined,
-            '10px'
+            { width: '10px' }
         );
     });
 
@@ -245,11 +241,11 @@ describe('setImageBorder', () => {
                                 isSelected: true,
                                 dataset: {},
                                 format: {
-                                    borderBottom: `${ptToPx(10)}px solid`,
-                                    borderLeft: `${ptToPx(10)}px solid`,
-                                    borderRight: `${ptToPx(10)}px solid`,
-                                    borderTop: `${ptToPx(10)}px solid`,
-                                    borderRadius: `5px`,
+                                    borderBottom: ptToPx(10) + 'px solid',
+                                    borderLeft: ptToPx(10) + 'px solid',
+                                    borderRight: ptToPx(10) + 'px solid',
+                                    borderTop: ptToPx(10) + 'px solid',
+                                    borderRadius: '5px',
                                 },
                             },
                         ],
@@ -257,9 +253,7 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            undefined,
-            undefined,
-            '10pt',
+            { width: '10pt' },
             true
         );
     });
@@ -300,9 +294,7 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            'red',
-            'groove',
-            '10pt',
+            { color: 'red', style: 'groove', width: '10pt' },
             true
         );
     });

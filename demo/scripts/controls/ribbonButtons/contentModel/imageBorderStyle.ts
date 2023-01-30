@@ -26,9 +26,9 @@ export const imageBorderStyle: RibbonButton<'buttonNameImageBorderStyle'> = {
         items: STYLES,
         allowLivePreview: true,
     },
-    onClick: (editor, size) => {
+    onClick: (editor, style) => {
         if (isContentModelEditor(editor)) {
-            setImageBorder(editor, undefined /*color*/, size);
+            setImageBorder(editor, { style: style });
         }
         return true;
     },
