@@ -1,9 +1,10 @@
 import isContentModelEditor from '../../editor/isContentModelEditor';
-import { SpacingButtonStringKey, RibbonButton } from 'roosterjs-react';
+import type { RibbonButton } from 'roosterjs-react';
 import { setSpacing } from 'roosterjs-content-model';
 
 const SPACING_OPTIONS = ['1.0', '1.15', '1.5', '2.0'];
 const NORMAL_SPACING = 1.2;
+const spacingButtonKey = 'buttonNameSpacing';
 
 function findClosest(lineHeight?: string) {
     if (Number.isNaN(+lineHeight)) {
@@ -17,8 +18,8 @@ function findClosest(lineHeight?: string) {
  * @internal
  * "Spacing" button on the format ribbon
  */
-export const spacingButton: RibbonButton<SpacingButtonStringKey> = {
-    key: 'buttonNameSpacing',
+export const spacingButton: RibbonButton<typeof spacingButtonKey> = {
+    key: spacingButtonKey,
     unlocalizedText: 'Spacing',
     iconName: 'LineSpacing',
     dropDownMenu: {

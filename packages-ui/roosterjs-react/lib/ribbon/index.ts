@@ -38,7 +38,6 @@ export {
     ClearFormatButtonStringKey,
     AllButtonStringKeys,
     CellShadeButtonStringKey,
-    SpacingButtonStringKey,
 } from './type/RibbonButtonStringKeys';
 
 export { default as Ribbon } from './component/Ribbon';
