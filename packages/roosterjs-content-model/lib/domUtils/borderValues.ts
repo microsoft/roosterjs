@@ -1,9 +1,5 @@
 import { Border } from '../publicTypes/interface/Border';
 
-/**
- * A combination of CSS border value.
- * See https://developer.mozilla.org/en-US/docs/Web/CSS/border for more information
- */
 const BorderStyles = [
     'none',
     'hidden',
