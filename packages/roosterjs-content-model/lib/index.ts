@@ -30,6 +30,7 @@ export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
 export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
+export { default as setSpacing } from './publicApi/block/setSpacing';
 export { default as getFormatState } from './publicApi/format/getFormatState';
 export { default as getSegmentFormat } from './publicApi/format/getSegmentFormat';
 export { default as clearFormat } from './publicApi/format/clearFormat';
