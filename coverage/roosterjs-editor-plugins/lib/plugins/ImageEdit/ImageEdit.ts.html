@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.15% </span>
+                <span class="strong">13.82% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/212</span>
+                <span class='fraction'>30/217</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/105</span>
+                <span class='fraction'>0/109</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">2.86% </span>
+                <span class="strong">2.78% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/35</span>
+                <span class='fraction'>1/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.63% </span>
+                <span class="strong">14.29% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/205</span>
+                <span class='fraction'>30/210</span>
             </div>
         
             
@@ -709,7 +709,22 @@
 <a name='L650'></a><a href='#L650'>650</a>
 <a name='L651'></a><a href='#L651'>651</a>
 <a name='L652'></a><a href='#L652'>652</a>
-<a name='L653'></a><a href='#L653'>653</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L653'></a><a href='#L653'>653</a>
+<a name='L654'></a><a href='#L654'>654</a>
+<a name='L655'></a><a href='#L655'>655</a>
+<a name='L656'></a><a href='#L656'>656</a>
+<a name='L657'></a><a href='#L657'>657</a>
+<a name='L658'></a><a href='#L658'>658</a>
+<a name='L659'></a><a href='#L659'>659</a>
+<a name='L660'></a><a href='#L660'>660</a>
+<a name='L661'></a><a href='#L661'>661</a>
+<a name='L662'></a><a href='#L662'>662</a>
+<a name='L663'></a><a href='#L663'>663</a>
+<a name='L664'></a><a href='#L664'>664</a>
+<a name='L665'></a><a href='#L665'>665</a>
+<a name='L666'></a><a href='#L666'>666</a>
+<a name='L667'></a><a href='#L667'>667</a>
+<a name='L668'></a><a href='#L668'>668</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1164,13 +1179,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1281,6 +1294,23 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1813,18 +1843,16 @@ export default class ImageEdit implements EditorPlugin {
             const cropBottomPx = <span class="cstat-no" title="statement not covered" >originalHeight * bottomPercent;</span>
 &nbsp;
             // Update size and margin of the wrapper
-<span class="cstat-no" title="statement not covered" >            wrapper.style.width = getPx(visibleWidth);</span>
-<span class="cstat-no" title="statement not covered" >            wrapper.style.height = getPx(visibleHeight);</span>
 <span class="cstat-no" title="statement not covered" >            wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;</span>
 <span class="cstat-no" title="statement not covered" >            wrapper.style.transform = `rotate(${angleRad}rad)`;</span>
-<span class="cstat-no" title="statement not covered" >            this.wrapper.style.width = getPx(visibleWidth);</span>
-<span class="cstat-no" title="statement not covered" >            this.wrapper.style.height = getPx(visibleHeight);</span>
+<span class="cstat-no" title="statement not covered" >            setWrapperSizeDimensions(wrapper, this.image, visibleWidth, visibleHeight);</span>
 &nbsp;
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
-<span class="cstat-no" title="statement not covered" >            wrapper.style.textAlign = isRtl(wrapper.parentNode) ? 'right' : 'left';</span>
+<span class="cstat-no" title="statement not covered" >            wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';</span>
 &nbsp;
             // Update size of the image
+&nbsp;
 <span class="cstat-no" title="statement not covered" >            this.clonedImage.style.width = getPx(originalWidth);</span>
 <span class="cstat-no" title="statement not covered" >            this.clonedImage.style.height = getPx(originalHeight);</span>
 &nbsp;
@@ -1937,6 +1965,23 @@ function <span class="fstat-no" title="function not covered" >setSize(</span>
 <span class="cstat-no" title="statement not covered" >    element.style.height = getPx(height);</span>
 }
 &nbsp;
+function <span class="fstat-no" title="function not covered" >setWrapperSizeDimensions(</span>
+    wrapper: HTMLElement,
+    image: HTMLImageElement,
+    width: number,
+    height: number
+) {
+    const hasBorder = <span class="cstat-no" title="statement not covered" >image.style.borderStyle;</span>
+<span class="cstat-no" title="statement not covered" >    if (hasBorder) {</span>
+        const borderWidth = <span class="cstat-no" title="statement not covered" >image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;</span>
+<span class="cstat-no" title="statement not covered" >        wrapper.style.width = getPx(width + borderWidth);</span>
+<span class="cstat-no" title="statement not covered" >        wrapper.style.height = getPx(height + borderWidth);</span>
+<span class="cstat-no" title="statement not covered" >        return;</span>
+    }
+<span class="cstat-no" title="statement not covered" >    wrapper.style.width = getPx(width);</span>
+<span class="cstat-no" title="statement not covered" >    wrapper.style.height = getPx(height);</span>
+}
+&nbsp;
 function <span class="fstat-no" title="function not covered" >getPx(</span>value: number): string {
 <span class="cstat-no" title="statement not covered" >    return value === undefined ? null : value + 'px';</span>
 }
@@ -2020,7 +2065,7 @@ function <span class="fstat-no" title="function not covered" >getColorString(</s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jan 31 2023 21:17:13 GMT+0000 (Coordinated Universal Time)
+                at Tue Jan 31 2023 22:01:30 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
