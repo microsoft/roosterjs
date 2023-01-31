@@ -1,5 +1,5 @@
 import applyImageBorderFormat from '../../../lib/modelApi/image/applyImageBorderFormat';
-import { Border } from '../../../lib/domUtils/borderValues';
+import { Border } from '../../../lib/publicTypes/interface/Border';
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 
 describe('applyImageBorderFormat', () => {
@@ -20,14 +20,9 @@ describe('applyImageBorderFormat', () => {
         };
     }
 
-    function runTest(
-        format: Border,
-        expectedBorder: string,
-        isPt?: boolean,
-        previousBorder?: string
-    ) {
+    function runTest(format: Border, expectedBorder: string, previousBorder?: string) {
         const image = createImage(previousBorder);
-        applyImageBorderFormat(image, format, isPt);
+        applyImageBorderFormat(image, format, '5px');
         expect(image.format.borderBottom).toBe(expectedBorder);
         expect(image.format.borderRadius).toBe('5px');
     }
@@ -55,8 +50,7 @@ describe('applyImageBorderFormat', () => {
             {
                 width: '3/4pt',
             },
-            '4px solid',
-            true
+            '5.333px solid'
         );
     });
 
@@ -75,7 +69,6 @@ describe('applyImageBorderFormat', () => {
                 color: 'red',
             },
             '10px groove red',
-            undefined,
             '10px groove blue'
         );
     });
@@ -86,7 +79,6 @@ describe('applyImageBorderFormat', () => {
                 width: '20px',
             },
             '20px groove blue',
-            undefined,
             '10px groove blue'
         );
     });
@@ -96,8 +88,7 @@ describe('applyImageBorderFormat', () => {
             {
                 width: '3/4pt',
             },
-            '4px groove blue',
-            true,
+            '5.333px groove blue',
             '10px groove blue'
         );
     });
@@ -108,7 +99,6 @@ describe('applyImageBorderFormat', () => {
                 style: 'dotted',
             },
             '10px dotted blue',
-            undefined,
             '10px groove blue'
         );
     });
@@ -119,7 +109,6 @@ describe('applyImageBorderFormat', () => {
                 style: 'dotted',
             },
             '10px dotted blue',
-            undefined,
             '10px groove blue'
         );
     });
@@ -131,7 +120,6 @@ describe('applyImageBorderFormat', () => {
                 style: 'dotted',
             },
             '10px dotted red',
-            undefined,
             '10px groove blue'
         );
     });
@@ -144,7 +132,6 @@ describe('applyImageBorderFormat', () => {
                 width: '20px',
             },
             '20px dotted red',
-            undefined,
             '10px groove blue'
         );
     });
@@ -155,8 +142,7 @@ describe('applyImageBorderFormat', () => {
                 color: 'red',
                 width: '20px',
             },
-            '20px solid red',
-            undefined
+            '20px solid red'
         );
     });
 
@@ -166,8 +152,7 @@ describe('applyImageBorderFormat', () => {
                 style: 'dotted',
                 width: '20px',
             },
-            '20px dotted',
-            undefined
+            '20px dotted'
         );
     });
 });

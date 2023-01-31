@@ -7,7 +7,7 @@ import { FormatHandler } from '../FormatHandler';
 export const boxShadowFormatHandler: FormatHandler<BoxShadowFormat> = {
     parse: (format, element) => {
         if (element.style?.boxShadow) {
-            format.boxShadow = element.style?.boxShadow;
+            format.boxShadow = element.style.boxShadow;
         }
     },
     apply: (format, element) => {

@@ -17,7 +17,7 @@ const STYLES: Record<string, string> = {
  * @internal
  * "Image Border Style" button on the format ribbon
  */
-export const imageBorderStyle: RibbonButton<'buttonNameImageBorderStyle'> = {
+export const imageBorderStyleButton: RibbonButton<'buttonNameImageBorderStyle'> = {
     key: 'buttonNameImageBorderStyle',
     unlocalizedText: 'Image Border Style',
     iconName: 'BorderDash',
@@ -28,7 +28,7 @@ export const imageBorderStyle: RibbonButton<'buttonNameImageBorderStyle'> = {
     },
     onClick: (editor, style) => {
         if (isContentModelEditor(editor)) {
-            setImageBorder(editor, { style: style });
+            setImageBorder(editor, { style: style }, '5px');
         }
         return true;
     },

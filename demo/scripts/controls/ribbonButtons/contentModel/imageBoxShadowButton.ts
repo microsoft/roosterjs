@@ -32,7 +32,7 @@ const STYLES: Record<string, string> = {
  * @internal
  * "Image Shadow" button on the format ribbon
  */
-export const imageBoxShadow: RibbonButton<'buttonNameImageBoxSHadow'> = {
+export const imageBoxShadowButton: RibbonButton<'buttonNameImageBoxSHadow'> = {
     key: 'buttonNameImageBoxSHadow',
     unlocalizedText: 'Image Shadow',
     iconName: 'Photo2',

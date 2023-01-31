@@ -1,23 +1,22 @@
 import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat';
-import formatImageWithContentModel from './formatImageWithContentModel';
-import { Border } from '../../domUtils/borderValues';
+import formatImageWithContentModel from '../utils/formatImageWithContentModel';
+import { Border } from '../../publicTypes/interface/Border';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 
 /**
  * Set image border style for all selected images at selection.
  * @param editor The editor instance
- * @param color border color
- * @param style border style
- * @param width border width
- * @param isPt (optional) if false it will consider the width in pixels
+ * @param border the border format object. Ex: { color: 'red', width: '10px', style: 'solid'}, if one of the value in object is undefined
+ * its value will not be changed
+ * @param borderRadius the border radius value, if undefined, the border radius will keep the actual value
  */
 export default function setImageBorder(
     editor: IExperimentalContentModelEditor,
     border: Border,
-    isPt?: boolean
+    borderRadius?: string
 ) {
     formatImageWithContentModel(editor, 'setImageBorder', (image: ContentModelImage) => {
-        applyImageBorderFormat(image, border, isPt);
+        applyImageBorderFormat(image, border, borderRadius);
     });
 }

@@ -6,6 +6,7 @@ import { backgroundColorButton } from './backgroundColorButton';
 import { blockQuoteButton } from './blockQuoteButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
+import { changeImageButton } from './changeImageButton';
 import { clearFormatButton } from './clearFormatButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
@@ -13,15 +14,14 @@ import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
 import { formatPainterButton } from './formatPainterButton';
 import { formatTableButton } from './formatTableButton';
-import { imageBorderColor } from './imageBorderColor';
-import { imageBorderStyle } from './imageBorderStyle';
-import { imageBorderWidth } from './imageBorderWidth';
-import { imageBoxShadow } from './imageBoxShadow';
+import { imageBorderColorButton } from './imageBorderColorButton';
+import { imageBorderStyleButton } from './imageBorderStyleButton';
+import { imageBorderWidthButton } from './imageBorderWidthButton';
+import { imageBoxShadowButton } from './imageBoxShadowButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertImageButton } from './insertImageButton';
 import { insertLinkButton } from './insertLinkButton';
-import { insertNewImage } from './changeImage';
 import { insertTableButton } from './insertTableButton';
 import { italicButton } from './italicButton';
 import { listStartNumberButton } from './listStartNumberButton';
@@ -91,11 +91,11 @@ const buttons = [
     tableSplitButton,
     tableAlignCellButton,
     tableAlignTableButton,
-    imageBorderColor,
-    imageBorderWidth,
-    imageBorderStyle,
-    insertNewImage,
-    imageBoxShadow,
+    imageBorderColorButton,
+    imageBorderWidthButton,
+    imageBorderStyleButton,
+    changeImageButton,
+    imageBoxShadowButton,
 ];
 
 export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {

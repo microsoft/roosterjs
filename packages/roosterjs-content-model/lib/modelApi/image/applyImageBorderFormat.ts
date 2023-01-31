@@ -1,6 +1,7 @@
-import { Border, extractBorderValues } from '../../domUtils/borderValues';
+import { Border } from '../../publicTypes/interface/Border';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
-import { ptToPx } from '../../formatHandlers/utils/pointsToPixels';
+import { extractBorderValues } from '../../domUtils/borderValues';
+import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 
 /**
  * @internal
@@ -8,7 +9,7 @@ import { ptToPx } from '../../formatHandlers/utils/pointsToPixels';
 export default function applyImageBorderFormat(
     image: ContentModelImage,
     border: Border,
-    isPt?: boolean
+    borderRadius?: string
 ) {
     const format = image.format;
     const { width, style, color } = border;
@@ -20,7 +21,7 @@ export default function applyImageBorderFormat(
     let borderFormat = '';
 
     if (width) {
-        borderFormat = isPt ? ptToPx(parseInt(width)) + 'px' : width;
+        borderFormat = parseValueWithUnit(width) + 'px';
     } else if (borderWidth) {
         borderFormat = borderWidth;
     } else {
@@ -41,7 +42,9 @@ export default function applyImageBorderFormat(
         borderFormat = `${borderFormat} ${borderColor}`;
     }
 
-    image.format.borderRadius = '5px';
+    if (borderRadius) {
+        image.format.borderRadius = borderRadius;
+    }
 
     image.format.borderLeft = borderFormat;
     image.format.borderTop = borderFormat;

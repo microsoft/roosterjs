@@ -17,7 +17,7 @@ const FileInput: CreateElementData = {
  * @internal
  * "Change Image" button on the format ribbon
  */
-export const insertNewImage: RibbonButton<'buttonNameChangeImage'> = {
+export const changeImageButton: RibbonButton<'buttonNameChangeImage'> = {
     key: 'buttonNameChangeImage',
     unlocalizedText: 'Change Image',
     iconName: 'ImageSearch',

@@ -11,7 +11,7 @@ const originalButton = getButtons([KnownRibbonButtonKey.TextColor])[0] as Ribbon
  * @internal
  * "Image Border Color" button on the format ribbon
  */
-export const imageBorderColor: RibbonButton<'buttonNameImageBorderColor'> = {
+export const imageBorderColorButton: RibbonButton<'buttonNameImageBorderColor'> = {
     ...originalButton,
     unlocalizedText: 'Image Border Color',
     iconName: 'Photo2',
@@ -19,7 +19,7 @@ export const imageBorderColor: RibbonButton<'buttonNameImageBorderColor'> = {
     onClick: (editor, key) => {
         // This check will always be true, add it here just to satisfy compiler
         if (key != 'buttonNameImageBorderColor' && isContentModelEditor(editor)) {
-            setImageBorder(editor, { color: getTextColorValue(key).lightModeColor });
+            setImageBorder(editor, { color: getTextColorValue(key).lightModeColor }, '5px');
         }
     },
 };

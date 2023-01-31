@@ -44,7 +44,7 @@ export { default as adjustImageSelection } from './publicApi/image/adjustImageSe
 
 export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';
 
-export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
+export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
 
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
@@ -169,6 +169,8 @@ export {
 export { ModelToDomEntityContext } from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
 export { ContentModelHandler } from './publicTypes/context/ContentModelHandler';
+
+export { Border } from './publicTypes/interface/Border';
 
 export {
     IExperimentalContentModelEditor,

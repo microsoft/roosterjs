@@ -1,4 +1,4 @@
-import formatImageWithContentModel from '../../../lib/publicApi/image/formatImageWithContentModel';
+import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';

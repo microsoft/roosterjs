@@ -1,5 +1,4 @@
 import { getComputedStyle } from 'roosterjs-editor-dom';
-import { ptToPx } from './pointsToPixels';
 
 const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 
@@ -45,4 +44,8 @@ function getFontSize(element: HTMLElement) {
     const floatInPx = ptToPx(floatInPt);
 
     return floatInPx;
+}
+
+function ptToPx(pt: number): number {
+    return Math.round((pt * 4000) / 3) / 1000;
 }

@@ -1,6 +1,6 @@
 import setImageBorder from '../../../lib/publicApi/image/setImageBorder';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { Border } from '../../../lib/domUtils/borderValues';
+import { Border } from '../../../lib/publicTypes/interface/Border';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
@@ -12,12 +12,12 @@ describe('setImageBorder', () => {
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number,
-        border?: Border,
-        isPt?: boolean
+        border: Border,
+        borderRadius?: string
     ) {
         segmentTestCommon(
             'setImageBorder',
-            editor => setImageBorder(editor, border, isPt),
+            editor => setImageBorder(editor, border, borderRadius),
             model,
             result,
             calledTimes
@@ -31,7 +31,8 @@ describe('setImageBorder', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            0
+            0,
+            {}
         );
     });
 
@@ -61,7 +62,8 @@ describe('setImageBorder', () => {
                     },
                 ],
             },
-            0
+            0,
+            {}
         );
     });
 
@@ -93,7 +95,8 @@ describe('setImageBorder', () => {
                     },
                 ],
             },
-            1
+            1,
+            {}
         );
     });
 
@@ -133,7 +136,8 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            { color: 'red' }
+            { color: 'red' },
+            '5px'
         );
     });
 
@@ -173,7 +177,8 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            { style: 'groove' }
+            { style: 'groove' },
+            '5px'
         );
     });
 
@@ -213,7 +218,8 @@ describe('setImageBorder', () => {
                 ],
             },
             1,
-            { width: '10px' }
+            { width: '10px' },
+            '5px'
         );
     });
 
@@ -254,7 +260,7 @@ describe('setImageBorder', () => {
             },
             1,
             { width: '10pt' },
-            true
+            '5px'
         );
     });
 
@@ -295,7 +301,7 @@ describe('setImageBorder', () => {
             },
             1,
             { color: 'red', style: 'groove', width: '10pt' },
-            true
+            '5px'
         );
     });
 });
