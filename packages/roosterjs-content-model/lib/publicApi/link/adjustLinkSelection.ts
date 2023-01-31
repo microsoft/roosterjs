@@ -1,8 +1,10 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
+import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { setSelection } from '../../modelApi/selection/setSelection';
 
 /**
  * Adjust selection to make sure select a hyperlink if any, or a word if original selection is collapsed
@@ -15,14 +17,22 @@ export default function adjustLinkSelection(
     let url: string | null = null;
 
     formatWithContentModel(editor, 'adjustLinkSelection', model => {
-        const changed = adjustSegmentSelection(
+        let changed = adjustSegmentSelection(
             model,
             target => !!target.isSelected && !!target.link,
             (target, ref) => !!target.link && areSameFormats(target.link.format, ref.link!.format)
         );
-        const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+        let segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+        const firstSegment = segments[0];
 
-        // TODO: expand selection to a word if selection is collapsed
+        if (segments.length == 1 && firstSegment.segmentType == 'SelectionMarker') {
+            segments = adjustWordSelection(model, firstSegment);
+
+            if (segments.length > 1) {
+                changed = true;
+                setSelection(model, segments[0], segments[segments.length - 1]);
+            }
+        }
 
         text = segments.map(x => (x.segmentType == 'Text' ? x.text : '')).join('');
         url = segments[0]?.link?.format.href || null;
