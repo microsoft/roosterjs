@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { ScaleFormat } from 'roosterjs-content-model/lib/publicTypes/format/formatParts/ScaleFormat';
+import { ScaleFormat } from '../../publicTypes/format/formatParts/ScaleFormat';
 
 /**
  * @internal
