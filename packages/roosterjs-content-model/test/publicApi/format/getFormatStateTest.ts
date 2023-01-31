@@ -33,7 +33,7 @@ describe('getFormatState', () => {
             isDarkMode: () => false,
             getZoomScale: () => 1,
             getPendingFormat: () => pendingFormat,
-            createContentModel: (root: Node, options: DomToModelOption) => {
+            createContentModel: (options: DomToModelOption) => {
                 const model = createContentModelDocument();
                 const editorDiv = document.createElement('div');
 

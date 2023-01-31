@@ -38,7 +38,7 @@ export const handleEntity: ContentModelHandler<ContentModelEntity> = (
         parent = span;
     }
 
-    if (context.doNotReuseEntityDom || !entity) {
+    if (!entity) {
         parent.appendChild(wrapper);
     } else {
         // Create a comment as placeholder and insert into DOM tree.
