@@ -187,6 +187,11 @@ export type UndoButtonStringKey = 'buttonNameUndo';
 export type CellShadeButtonStringKey = 'buttonNameCellShade' | BackgroundColorKeys;
 
 /**
+ * Key of localized strings of Spacing button
+ */
+export type SpacingButtonStringKey = 'buttonNameSpacing';
+
+/**
  * A public type for localized string keys of all buttons
  */
 export type AllButtonStringKeys =
