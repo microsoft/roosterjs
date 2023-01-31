@@ -7,12 +7,14 @@ import { DomToModelContext } from '../../lib/publicTypes/context/DomToModelConte
 describe('domToContentModel', () => {
     it('Not include root', () => {
         const elementProcessor = jasmine.createSpy('elementProcessor');
-        const rootProcessor = jasmine.createSpy('rootProcessor');
+        const childProcessor = jasmine.createSpy('childProcessor');
         const mockContext = ({
             elementProcessors: {
                 element: elementProcessor,
-                root: rootProcessor,
+                child: childProcessor,
             },
+            defaultStyles: {},
+            zoomScaleFormat: {},
         } as any) as DomToModelContext;
 
         spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(mockContext);
@@ -36,20 +38,22 @@ describe('domToContentModel', () => {
             options
         );
         expect(elementProcessor).not.toHaveBeenCalled();
-        expect(rootProcessor).toHaveBeenCalledTimes(1);
-        expect(rootProcessor).toHaveBeenCalledWith(result, rootElement, mockContext);
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledWith(result, rootElement, mockContext);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledTimes(1);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(result);
     });
 
     it('Include root', () => {
         const elementProcessor = jasmine.createSpy('elementProcessor');
-        const rootProcessor = jasmine.createSpy('rootProcessor');
+        const childProcessor = jasmine.createSpy('childProcessor');
         const mockContext = ({
             elementProcessors: {
                 element: elementProcessor,
-                root: rootProcessor,
+                child: childProcessor,
             },
+            defaultStyles: {},
+            zoomScaleFormat: {},
         } as any) as DomToModelContext;
 
         spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(mockContext);
@@ -72,7 +76,7 @@ describe('domToContentModel', () => {
             editorContext,
             options
         );
-        expect(rootProcessor).not.toHaveBeenCalled();
+        expect(childProcessor).not.toHaveBeenCalled();
         expect(elementProcessor).toHaveBeenCalledTimes(1);
         expect(elementProcessor).toHaveBeenCalledWith(result, rootElement, mockContext);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledTimes(1);

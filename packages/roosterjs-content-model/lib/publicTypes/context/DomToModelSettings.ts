@@ -83,11 +83,6 @@ export type ElementProcessorMap = {
         child: ElementProcessor<ParentNode>;
 
         /**
-         * Processor for root element when root is not included in Content Model since we still need to get some format from root (e.g. rtl direction)
-         */
-        root: ElementProcessor<HTMLElement>;
-
-        /**
          * Workaround for typescript 4.4.4 that doesn't have element "strike" in its element type
          */
         strike?: ElementProcessor<HTMLElement>;

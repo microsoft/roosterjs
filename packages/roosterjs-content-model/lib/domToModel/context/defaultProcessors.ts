@@ -11,7 +11,6 @@ import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
 import { listProcessor } from '../processors/listProcessor';
 import { quoteProcessor } from '../processors/quoteProcessor';
-import { rootProcessor } from '../processors/rootProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 
@@ -54,7 +53,6 @@ export const defaultProcessorMap: ElementProcessorMap = {
     '*': generalProcessor,
     '#text': textProcessor,
     element: elementProcessor,
-    root: rootProcessor,
     entity: entityProcessor,
     child: childProcessor,
 };
