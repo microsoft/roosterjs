@@ -19,11 +19,15 @@ export function retrieveModelFormatState(
     formatState: FormatState
 ) {
     let isFirst = true;
-    let previousTableContext: TableSelectionContext | undefined;
+    let firstTableContext: TableSelectionContext | undefined;
 
     iterateSelections(
         [model],
         (path, tableContext, block, segments) => {
+            if (tableContext && !firstTableContext) {
+                firstTableContext = tableContext;
+            }
+
             if (isFirst) {
                 if (block?.blockType == 'Paragraph' && segments?.[0]) {
                     retrieveFormatStateInternal(
@@ -36,14 +40,13 @@ export function retrieveModelFormatState(
                     );
                 } else if (tableContext) {
                     retrieveTableFormat(tableContext, formatState);
-                    previousTableContext = tableContext;
                 }
                 isFirst = false;
             } else {
                 formatState.isMultilineSelection = true;
 
-                if (tableContext && previousTableContext) {
-                    const { table, colIndex, rowIndex } = previousTableContext;
+                if (tableContext && firstTableContext) {
+                    const { table, colIndex, rowIndex } = firstTableContext;
 
                     if (
                         tableContext.table == table &&
@@ -52,9 +55,6 @@ export function retrieveModelFormatState(
                         formatState.canMergeTableCell = true;
                     }
                 }
-
-                // Return true to stop iteration since we have already got everything we need
-                return true;
             }
         },
         {
